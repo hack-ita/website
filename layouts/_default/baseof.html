@@ -4,22 +4,20 @@
     {{/*  head import  */}}
     {{ partial "essentials/head.html" . }}
 </head>
-<body>
+<body class="bg-dark">
+    <main class="max-w-[1900px] mx-auto">
     {{/*  header import  */}}
     {{ partial "shared/header.html" . }}
 
     {{/*  main  */}}
-    <main>
         {{ block "main" . }}
         {{ end }}
+        {{/*  /main  */}}
+        
+        {{/*  footer import  */}}
+        {{ partial "shared/footer.html" . }}
     </main>
-    {{/*  /main  */}}
-
-    {{/*  footer import  */}}
-    {{ partial "shared/footer.html" . }}
-
-    {{/*  js import  */}}
-    {{ partial "essentials/js.html" . }}
-    
+        {{/*  js import  */}}
+        {{ partial "essentials/js.html" . }}
 </body>
 </html>

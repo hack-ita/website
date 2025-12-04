@@ -1,252 +1,420 @@
 {{ define "main" }} {{/* hero */}}
-<section class="bg-dark">
+<section class="bg-[#000000]">
   <!-- <img
     src='{{ "images/dev/hero_lines.svg" | relURL }}'
     class="absolute size-full top-1/2 -translate-y-1/2 opacity-20"
   /> -->
   <div
-    class="max-w-3xl mx-auto pt-50 pb-30 px-5 flex flex-col gap-12 relative"
-    data-aos="zoom-out"
-    data-aos-duration="900"
-  >
-    <div class="flex items-center" data-aos="fade-up" data-aos-delay="200">
-      <span
-        class="font-primary text-light text-sm font-semibold uppercase bg-primary p-3 rounded-md -skew-y-12"
+    class="w-full mx-auto pt-30 pb-10 grid grid-cols-1 gap-10 lg:grid-cols-3 justify-between items-center">
+    <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full lg:hidden">
+    <div class="flex flex-col gap-7 px-5" data-aos="zoom-in" data-aos-duration="900"
+    >
+      <div data-aos="fade-up" data-aos-delay="100">
+        <span
+          class="font-primary text-light font-semibold uppercase p-3 text-sm rounded-md bg-primary"
+        >
+          hackita academy
+        </span>
+      </div>
+      <h1
+        class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter"
+        data-aos="fade-up"
+        data-aos-delay="200"
       >
-        hackita academy
-      </span>
-    </div>
-    <h1
-      class="font-primary text-5xl lg:text-7xl text-light font-black leading-14 lg:leading-20 text-center uppercase text-pretty"
-      data-aos="fade-up"
-      data-aos-delay="200"
-    >
-      Learn Cyber-Security
-    </h1>
-    <div
-      class="flex items-center justify-end"
-      data-aos="fade-up"
-      data-aos-delay="600"
-    >
-      <span
-        class="font-primary text-light text-sm font-semibold uppercase bg-primary p-3 rounded-md -skew-y-12"
+        Learn Cyber-Security
+      </h1>
+      <!-- <div
+        class="flex items-center"
+        data-aos="fade-up"
+        data-aos-delay="300"
       >
-        hack smarter
-      </span>
-    </div>
-    <p
-      class="font-primary text-light text-lg text-center text-balance"
-      data-aos="fade-up"
-      data-aos-delay="900"
-    >
-      From the basics to the OSCP level: <br />
-      <span id="typewriter" class="text-primary font-semibold"></span>
-      to become a true pentester.
-    </p>
+        <span
+          class="font-primary text-primary text-sm font-semibold uppercase italic"
+        >
+          hack smarter
+        </span>
+      </div> -->
+      <p
+        class="font-primary text-light text-lg text-balance"
+        data-aos="fade-up"
+        data-aos-delay="300"
+      >
+        From the basics to the OSCP level: <br />
+        <span id="typewriter" class="text-primary font-semibold"></span>
+        to become a true pentester.
+      </p>
 
-    <!-- Source words (hidden) -->
-    <div id="typewriter-data" class="hidden">
-      <span>technical walkthroughs</span>
-      <span>commands</span>
-      <span>common errors</span>
-      <span>real lab notes</span>
+      <!-- Source words (hidden) -->
+      <div id="typewriter-data" class="hidden">
+        <span>technical walkthroughs</span>
+        <span>commands</span>
+        <span>common errors</span>
+        <span>real lab notes</span>
+      </div>
+
+      <div class="flex gap-5 items-stretch" data-aos="fade-up" data-aos-delay="400">
+        {{ partial "components/button.html" (dict "link" "true" "label" "Get Started") }}
+        {{ partial "components/button.html" (dict "link" "true" "label" "About Us") }}
+      </div>
+    </div>
+    <div class="lg:col-span-2 hidden lg:block">
+      <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="w-full h-180 object-cover">
     </div>
   </div>
 </section>
 {{/* /hero */}}
 
 {{/* categories */}}
-<section class="bg-light py-15 px-5">
-  <div class="container mx-auto space-y-15" data-aos="zoom-out" data-aos-duration="900">
-    <div class="max-w-2xl mx-auto text-center flex flex-col gap-15">
-      <h3
-        class="font-primary text-5xl lg:text-7xl text-dark font-black leading-14 lg:leading-20 text-center uppercase"
+<section class="py-10 px-5">
+  <div class="container mx-auto space-y-10">
+    <div class="flex gap-5 flex-wrap justify-between items-center">
+      <h2
+        class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter"
         data-aos="fade-up"
-        data-aos-delay="200"
+        data-aos-delay="100"
       >
-        Browse HackITA Categories
-      </h3>
-      <p
-        class="font-primary text-dark text-lg"
-        data-aos="fade-up"
-        data-aos-delay="200"
-      >
-        Choose what you want to learn
-      </p>
+        Learn Cyber-Security
+      </h2>
+      {{ partial "components/button.html" (dict "link" "true" "label" "View All") }}
     </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
 
-    <div class="grid lg:grid-cols-3 gap-x-7 gap-y-15 items-start">
-      <!-- IMAGE SLIDER -->
-      <div class="lg:col-span-2 relative overflow-hidden" id="imageSlider" tabindex="0" aria-roledescription="carousel" aria-label="Feature images" data-aos="fade-up" data-aos-delay="200">
-        <img
-          data-slide="0"
-          src='images/guide-risorse.webp'
-          alt="Guides and Resources"
-          class="slide-image object-contain active"
-        />
-        <img
-          data-slide="1"
-          src='images/cve.webp'
-          alt="CVE"
-          class="slide-image object-contain inactive"
-        />
-        <img
-          data-slide="2"
-          src='images/linux.webp'
-          alt="Linux"
-          class="slide-image object-contain inactive"
-        />
-        <img
-          data-slide="3"
-          src='images/networking.webp'
-          alt="Networking"
-          class="slide-image object-contain inactive"
-        />
-        <img
-          data-slide="4"
-          src='images/tools.webp'
-          alt="Tools"
-          class="slide-image object-contain inactive"
-        />
-        <img
-          data-slide="5"
-          src='images/walkthrough.webp'
-          alt="Walkthroughs"
-          class="slide-image object-contain inactive"
-        />
-        <img
-          data-slide="6"
-          src='images/web-hacking.webp'
-          alt="Web Hacking"
-          class="slide-image object-contain inactive"
-        />
-        <img
-          data-slide="7"
-          src='images/windoes.webp'
-          alt="Windows"
-          class="slide-image object-contain inactive"
-        />
+      <div class="group shadow-xl lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
+        <div class="overflow-hidden">
+          <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+        </div>
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="font-primary text-primary text-xs lg:text-sm">1 Article</span>
+          </div>
+          <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </h5>
+          <div>
+            {{ partial "components/button.html" (dict "label" "Read More")}}
+          </div>
+        </div>
       </div>
 
-      <!-- TEXT BOXES -->
-      <div class="divide-y divide-dark/20" data-aos="fade-up" data-aos-delay="300">
-        <div
-          data-target="0"
-          class="image-box p-5 pt-0 space-y-5 cursor-pointer active"
-        >
-          <h5 class="font-primary text-dark text-2xl title font-semibold">
-            Guides and Resources
+      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+        <div class="overflow-hidden">
+          <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+        </div>
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="font-primary text-primary text-xs lg:text-sm">1 Article</span>
+          </div>
+          <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
           </h5>
-          <p class="font-primary text-dark dets">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum alias, libero ratione ad similique quibusdam eum laborum, veniam sed qui praesentium quisquam vitae.
-          </p>
-        </div>
-
-        <div
-          data-target="1"
-          class="image-box p-5 space-y-5 cursor-pointer"
-        >
-          <h5 class="font-primary text-dark text-2xl title font-semibold">CVE</h5>
-          <p class="font-primary text-dark dets">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum alias, libero ratione ad similique quibusdam eum laborum, veniam sed qui praesentium quisquam vitae.
-          </p>
-        </div>
-
-        <div
-          data-target="2"
-          class="image-box p-5 space-y-5 cursor-pointer"
-        >
-          <h5 class="font-primary text-dark text-2xl title font-semibold">Linux</h5>
-          <p class="font-primary text-dark dets">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum alias, libero ratione ad similique quibusdam eum laborum, veniam sed qui praesentium quisquam vitae.
-          </p>
-        </div>
-
-        <div
-          data-target="3"
-          class="image-box p-5 space-y-5 cursor-pointer"
-        >
-          <h5 class="font-primary text-dark text-2xl title font-semibold">
-            Networking
-          </h5>
-          <p class="font-primary text-dark dets">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum alias, libero ratione ad similique quibusdam eum laborum, veniam sed qui praesentium quisquam vitae.
-          </p>
-        </div>
-
-        <div
-          data-target="4"
-          class="image-box p-5 space-y-5 cursor-pointer"
-        >
-          <h5 class="font-primary text-dark text-2xl title font-semibold">Tools</h5>
-          <p class="font-primary text-dark dets">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum alias, libero ratione ad similique quibusdam eum laborum, veniam sed qui praesentium quisquam vitae.
-          </p>
-        </div>
-
-        <div
-          data-target="5"
-          class="image-box p-5 space-y-5 cursor-pointer"
-        >
-          <h5 class="font-primary text-dark text-2xl title font-semibold">
-            Walkthroughs
-          </h5>
-          <p class="font-primary text-dark dets">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum alias, libero ratione ad similique quibusdam eum laborum, veniam sed qui praesentium quisquam vitae.
-          </p>
-        </div>
-
-        <div
-          data-target="6"
-          class="image-box p-5 space-y-5 cursor-pointer"
-        >
-          <h5 class="font-primary text-dark text-2xl title font-semibold">
-            Web Hacking
-          </h5>
-          <p class="font-primary text-dark dets">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum alias, libero ratione ad similique quibusdam eum laborum, veniam sed qui praesentium quisquam vitae.
-          </p>
-        </div>
-
-        <div
-          data-target="7"
-          class="image-box p-5 pb-0 space-y-5 cursor-pointer"
-        >
-          <h5 class="font-primary text-dark text-2xl title font-semibold">Windows</h5>
-          <p class="font-primary text-dark dets">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum alias, libero ratione ad similique quibusdam eum laborum, veniam sed qui praesentium quisquam vitae.
-          </p>
+          <div>
+            {{ partial "components/button.html" (dict "label" "Read More")}}
+          </div>
         </div>
       </div>
+
+      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+        <div class="overflow-hidden">
+          <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+        </div>
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="font-primary text-primary text-xs lg:text-sm">1 Article</span>
+          </div>
+          <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </h5>
+          <div>
+            {{ partial "components/button.html" (dict "label" "Read More")}}
+          </div>
+        </div>
+      </div>
+
+      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+        <div class="overflow-hidden">
+          <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+        </div>
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="font-primary text-primary text-xs lg:text-sm">1 Article</span>
+          </div>
+          <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </h5>
+          <div>
+            {{ partial "components/button.html" (dict "label" "Read More")}}
+          </div>
+        </div>
+      </div>
+
+      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+        <div class="overflow-hidden">
+          <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+        </div>
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="font-primary text-primary text-xs lg:text-sm">1 Article</span>
+          </div>
+          <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </h5>
+          <div>
+            {{ partial "components/button.html" (dict "label" "Read More")}}
+          </div>
+        </div>
+      </div>
+
+      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+        <div class="overflow-hidden">
+          <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+        </div>
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="font-primary text-primary text-xs lg:text-sm">1 Article</span>
+          </div>
+          <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </h5>
+          <div>
+            {{ partial "components/button.html" (dict "label" "Read More")}}
+          </div>
+        </div>
+      </div>
+
+      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+        <div class="overflow-hidden">
+          <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+        </div>
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="font-primary text-primary text-xs lg:text-sm">1 Article</span>
+          </div>
+          <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </h5>
+          <div>
+            {{ partial "components/button.html" (dict "label" "Read More")}}
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 {{/* /categories */}}
 
+{{/* articles */}}
+<section class="py-10 px-5 relative">
+  <video
+    autoplay
+    loop
+    muted
+    playsinline
+    class="absolute inset-0 size-full object-cover"
+  >
+    <source src='{{ "videos/dev/articles_bg.mp4" | relURL }}' type="video/mp4" />
+  </video>
+  <div class="absolute inset-0 bg-black opacity-50"></div>
+  <div class="container mx-auto space-y-10 relative" data-aos="zoom-in" data-aos-duration="900">
+    <h2
+      class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter text-center"
+      data-aos="fade-up"
+      data-aos-delay="100"
+    >
+      Latest Articles
+    </h2>
+    <a href="" class="hidden lg:grid grid-cols-2 gap-5 group" data-aos="fade-up" data-aos-delay="300">
+      <div class="size-full overflow-hidden">
+        <img src='{{ "images/linux.webp" | relURL }}' alt="" class="group-hover:scale-115 transition-transform duration-500">
+      </div>
+      <div class="flex flex-col gap-y-5">
+        <div class="flex flex-wrap gap-5">
+          <span class="font-primary text-light text-xs lg:text-sm">Jan 24, 2025</span>
+          <span class="font-primary text-light text-xs lg:text-sm">2 Min Read</span>
+        </div>
+        <h5 class="font-primary text-light text-2xl font-bold text-pretty group-hover:text-primary transition-colors">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </h5>
+        <p class="font-primary text-light text-balance">
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur id corporis placeat nostrum inventore libero, voluptatum hic fugiat necessitatibus sed tempore.
+        </p>
+        <div>
+          {{ partial "components/button.html" (dict "label" "Read More")}}
+        </div>
+      </div>
+    </a>
+    <div class="relative" data-aos="fade-up" data-aos-delay="200" data-aos-duration="500">
+      <!-- prev -->
+      <button aria-label="next slide" class="prev-article cursor-pointer absolute top-1/2 -translate-y-1/2 -left-12 hidden lg:block">
+        <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
+        </svg>
+      </button>
+      <!-- /prev -->
+
+      <!-- next -->
+       <button aria-label="prev slide"  class="next-article cursor-pointer absolute top-1/2 -translate-y-1/2 -right-12 hidden lg:block">
+        <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
+        </svg>
+      </button>
+      <!-- /next -->
+      <div class="swiper articleSwiper">
+        <div class="swiper-wrapper">
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class="font-primary text-light text-xs lg:text-sm">Jan 24, 2025</span>
+                  <span class="font-primary text-light text-xs lg:text-sm">2 Min Read</span>
+                </div>
+                <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+            </a>
+          </div>
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class="font-primary text-light text-xs lg:text-sm">Jan 24, 2025</span>
+                  <span class="font-primary text-light text-xs lg:text-sm">2 Min Read</span>
+                </div>
+                <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+            </a>
+          </div>
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class="font-primary text-light text-xs lg:text-sm">Jan 24, 2025</span>
+                  <span class="font-primary text-light text-xs lg:text-sm">2 Min Read</span>
+                </div>
+                <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+            </a>
+          </div>
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class="font-primary text-light text-xs lg:text-sm">Jan 24, 2025</span>
+                  <span class="font-primary text-light text-xs lg:text-sm">2 Min Read</span>
+                </div>
+                <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+            </a>
+          </div>
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class="font-primary text-light text-xs lg:text-sm">Jan 24, 2025</span>
+                  <span class="font-primary text-light text-xs lg:text-sm">2 Min Read</span>
+                </div>
+                <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+            </a>
+          </div>
+           
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-center items-stretch">
+      {{ partial "components/button.html" (dict "label" "Explore All" "link" "true" ) }}
+    </div>
+  </div>
+</section>
+{{/* /articles */}}
+
+{{/* about */}}
+<section class="bg-mask py-10 px-5">
+  <div class="container mx-auto space-y-10" data-aos="zoom-in" data-aos-duration="400">
+    <h2
+      class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty text-center tracking-tighter"
+      data-aos="fade-up"
+      data-aos-delay="100"
+    >
+      About Us
+    </h2>
+    <div class="grid grid-cols-2 content-between items-center" data-aos="fade-up">
+      <div class="space-y-10">
+        <p
+          class="font-primary text-light text-lg text-balance"
+        >
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis rerum officiis dolores cupiditate perferendis optio. Itaque ipsum nobis dignissimos, distinctio vitae officiis voluptate mollitia ut sint nostrum harum reprehenderit blanditiis odio quos, cum, exercitationem non nisi totam accusantium quia pariatur. Harum blanditiis nulla consequuntur distinctio accusamus voluptatibus, nostrum, incidunt, sequi ducimus ab fugit. Impedit tempora esse quibusdam aut laborum vel blanditiis a minima distinctio, non tenetur numquam accusamus adipisci, aperiam perspiciatis ad rerum molestiae repellendus ducimus quo laudantium corrupti modi maiores sunt! Libero nobis cupiditate unde sunt aut culpa placeat vitae illum accusamus, incidunt adipisci a repellendus aspernatur ipsum natus? Est fugit expedita unde officia quisquam at? Animi alias maiores commodi itaque, quam ducimus laborum blanditiis voluptatum molestias velit sed officia temporibus dolorem?
+        </p>
+        {{ partial "components/button.html" (dict "link" "true" "label" "Read More") }}
+      </div>
+      <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="w-150 ml-auto">
+    </div>
+  </div>
+</section>
+{{/* /about */}}
+
 {{/* services */}}
-<section class="bg-linear-to-tr from-dark to-primary from-80%">
-  <div class="container py-30 px-5 mx-auto grid lg:grid-cols-2 gap-y-15">
-    <div class="flex flex-col gap-10">
-      <h3
-        class="font-primary text-5xl text-light text-balance font-bold leading-14"
-        data-aos="fade-up"
-        data-aos-delay="200"
+<section class="bg-mask">
+  <div class="container py-10 px-5 mx-auto grid lg:grid-cols-2 gap-y-10" data-aos="zoom-in" data-aos-duration="400">
+    <div class="flex flex-col gap-10" data-aos="fade-up">
+      <h2
+        class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter"
       >
-        Inside HackITA you will find:
-      </h3>
+        Inside Hackita You'll Find
+      </h2>
       <p
         class="font-primary text-light text-lg text-balance"
-        data-aos="fade-up"
-        data-aos-delay="400"
       >
         Everything you need to become a pentester.
       </p>
     </div>
-    <div id="stats-grid" class="relative md:columns-2 gap-5 space-y-5">
+    <div id="stats-grid" class="relative md:columns-2 gap-5 space-y-5" data-aos="fade-up" data-aos-delay="100">
       <div
-        data-aos="zoom-in"
-        data-aos-delay="200"
-        class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-7"
+        class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-5"
       >
         <span class="font-primary text-primary text-3xl font-black">12+</span>
         <h5 class="font-primary text-light text-2xl font-semibold">
@@ -256,9 +424,7 @@
       </div>
 
       <div
-        data-aos="zoom-in"
-        data-aos-delay="400"
-        class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-7"
+        class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-5"
       >
         <span class="font-primary text-primary text-3xl font-black">12+</span>
         <h5 class="font-primary text-light text-2xl font-semibold">
@@ -268,9 +434,7 @@
       </div>
 
       <div
-        data-aos="zoom-in"
-        data-aos-delay="600"
-        class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-7"
+        class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-5"
       >
         <span class="font-primary text-primary text-3xl font-black">OSCP</span>
         <h5 class="font-primary text-light text-2xl font-semibold">Focused</h5>
@@ -278,9 +442,7 @@
       </div>
 
       <div
-        data-aos="zoom-in"
-        data-aos-delay="800"
-        class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-7"
+        class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-5"
       >
         <span class="font-primary text-primary text-3xl font-black">100%</span>
         <h5 class="font-primary text-light text-2xl font-semibold">
@@ -292,165 +454,8 @@
   </div>
 </section>
 {{/* /services */}}
-{{/* articles */}}
-<section class="bg-light-bg py-15 px-5">
-  <div class="container mx-auto space-y-15" data-aos="zoom-out" data-aos-duration="900">
-    <h3
-      class="font-primary text-5xl lg:text-7xl text-dark font-black leading-14 lg:leading-20 text-center uppercase"
-      data-aos="fade-up"
-      data-aos-delay="200"
-    >
-      Latest Articles
-    </h3>
-    <a href="" class="hidden lg:grid grid-cols-2 gap-7 group" data-aos="fade-up" data-aos-delay="300">
-      <div class="size-full overflow-hidden">
-        <img src='{{ "images/linux.webp" | relURL }}' alt="" class="group-hover:scale-115 transition-transform duration-500">
-      </div>
-      <div class="flex flex-col gap-y-5">
-        <div class="flex flex-wrap gap-3">
-          <span class="font-primary text-dark text-xs lg:text-sm">Jan 24, 2025</span>
-          <span class="font-primary text-dark text-xs lg:text-sm">2 Min Read</span>
-        </div>
-        <h5 class="font-primary text-dark text-2xl font-bold text-pretty group-hover:text-primary transition-colors">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        </h5>
-        <p class="font-primary text-dark text-balance">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur id corporis placeat nostrum inventore libero, voluptatum hic fugiat necessitatibus sed tempore.
-        </p>
-        <div>
-          {{ partial "components/button.html" (dict "light" "true" "label" "Read More")}}
-        </div>
-      </div>
-    </a>
-    <div class="flex justify-between lg:justify-end gap-5 items-stretch" data-aos="fade-up" data-aos-delay="200">
-      <!-- prev -->
-      <button aria-label="next slide" class="prev-article cursor-pointer">
-        <svg class="size-14 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
-        </svg>
-      </button>
-      <!-- /prev -->
-
-      <!-- next -->
-       <button aria-label="prev slide"  class="next-article cursor-pointer">
-        <svg class="size-14 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
-        </svg>
-      </button>
-      <!-- /next -->
-    </div>
-    <div class="swiper articleSwiper" data-aos="fade-up" data-aos-delay="300">
-      <div class="swiper-wrapper">
-
-        <div class="swiper-slide">
-          <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
-            <div class="overflow-hidden h-1/3">
-              <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
-            </div>
-            <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-light p-3 lg:p-7">
-              <div class="flex flex-wrap gap-3">
-                <span class="font-primary text-dark text-xs lg:text-sm">Jan 24, 2025</span>
-                <span class="font-primary text-dark text-xs lg:text-sm">2 Min Read</span>
-              </div>
-              <h5 class="font-primary text-dark lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </h5>
-              <div>
-                {{ partial "components/button.html" (dict "light" "true" "label" "Read More")}}
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div class="swiper-slide">
-          <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
-            <div class="overflow-hidden h-1/3">
-              <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
-            </div>
-            <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-light p-3 lg:p-7">
-              <div class="flex flex-wrap gap-3">
-                <span class="font-primary text-dark text-xs lg:text-sm">Jan 24, 2025</span>
-                <span class="font-primary text-dark text-xs lg:text-sm">2 Min Read</span>
-              </div>
-              <h5 class="font-primary text-dark lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </h5>
-              <div>
-                {{ partial "components/button.html" (dict "light" "true" "label" "Read More")}}
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div class="swiper-slide">
-          <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
-            <div class="overflow-hidden h-1/3">
-              <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
-            </div>
-            <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-light p-3 lg:p-7">
-              <div class="flex flex-wrap gap-3">
-                <span class="font-primary text-dark text-xs lg:text-sm">Jan 24, 2025</span>
-                <span class="font-primary text-dark text-xs lg:text-sm">2 Min Read</span>
-              </div>
-              <h5 class="font-primary text-dark lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </h5>
-              <div>
-                {{ partial "components/button.html" (dict "light" "true" "label" "Read More")}}
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div class="swiper-slide">
-          <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
-            <div class="overflow-hidden h-1/3">
-              <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
-            </div>
-            <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-light p-3 lg:p-7">
-              <div class="flex flex-wrap gap-3">
-                <span class="font-primary text-dark text-xs lg:text-sm">Jan 24, 2025</span>
-                <span class="font-primary text-dark text-xs lg:text-sm">2 Min Read</span>
-              </div>
-              <h5 class="font-primary text-dark lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </h5>
-              <div>
-                {{ partial "components/button.html" (dict "light" "true" "label" "Read More")}}
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div class="swiper-slide">
-          <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
-            <div class="overflow-hidden h-1/3">
-              <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
-            </div>
-            <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 rounded-b-md bg-light p-3 lg:p-7">
-              <div class="flex flex-wrap gap-3">
-                <span class="font-primary text-dark text-xs lg:text-sm">Jan 24, 2025</span>
-                <span class="font-primary text-dark text-xs lg:text-sm">2 Min Read</span>
-              </div>
-              <h5 class="font-primary text-dark lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty group-hover:text-primary transition-colors">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </h5>
-              <div>
-                {{ partial "components/button.html" (dict "light" "true" "label" "Read More")}}
-              </div>
-            </div>
-          </a>
-        </div>
-         
-      </div>
-    </div>
-    <div class="flex justify-center items-stretch">
-      {{ partial "components/button.html" (dict "light" "true" "label" "Explore All" "link" "true" ) }}
-    </div>
-  </div>
-</section>
-{{/* /articles */}} {{/* track */}}
-<section class="bg-dark">
+{{/* track */}}
+<section>
   <div class="container mx-auto px-5 py-30 space-y-15">
     <div class="max-w-2xl mx-auto flex flex-col gap-10 text-center">
       <div class="flex items-center" data-aos="fade-up">

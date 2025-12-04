@@ -9,7 +9,7 @@
   --color-light: var(--color-white);
   --color-dark: var(--color-black);
   --color-light-bg: #EDF2F4;
-  --color-accent: #8D99AE;
+  --color-accent: #111111;
 }
 
 .header-glass {
@@ -88,4 +88,15 @@
   .image-box {
     @apply cursor-pointer;
   }
+}
+
+.bg-mask {
+  --dot-color: color-mix(in oklab, var(--color-light) /* var(--color-white) */ 15%, transparent);
+  background-image:
+    radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 8px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 24px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px);
+  background-size: 32px 32px;
+  background-repeat: repeat;
 }

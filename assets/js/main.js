@@ -67,7 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
         menuToggler.classList.toggle("gap-y-3");
         menuToggler.children[0]?.classList.toggle("rotate-45");
         menuToggler.children[1]?.classList.toggle("-rotate-45");
-        menu.classList.toggle("translate-x-full");
+        menu.classList.toggle("translate-y-10");
+        menu.classList.toggle("pointer-events-none");
+        menu.classList.toggle("opacity-0");
         document.body.classList.toggle("overflow-hidden");
 
         log("Menu toggled");
@@ -93,10 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
         isScrolled = shouldBeScrolled;
 
         header.classList.toggle("header-glass", shouldBeScrolled);
-        headerBar.classList.toggle("py-5", !shouldBeScrolled);
-        headerBar.classList.toggle("py-2", shouldBeScrolled);
-        headerLogo.classList.toggle("h-30", !shouldBeScrolled);
-        headerLogo.classList.toggle("h-20", shouldBeScrolled);
+        headerBar.classList.toggle("py-3", !shouldBeScrolled);
+        headerBar.classList.toggle("py-1", shouldBeScrolled);
         menu.classList.toggle("top-30", !shouldBeScrolled);
         menu.classList.toggle("top-23", shouldBeScrolled);
       }
@@ -453,13 +453,15 @@ document.addEventListener("DOMContentLoaded", () => {
         loop: true,
         slidesPerView: 2,
         spaceBetween: 20,
+        autoplay: true,
         navigation: {
           prevEl: ".prev-article",
           nextEl: ".next-article"
         },
         breakpoints: {
           1024: {
-            slidesPerView: 4
+            slidesPerView: 4,
+            autoplay: false
           }
         }
       });

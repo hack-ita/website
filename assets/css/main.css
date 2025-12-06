@@ -12,6 +12,10 @@
   --color-accent: #111111;
 }
 
+html {
+  @apply text-[87.5%]; 
+}
+
 .header-glass {
   @apply bg-dark/60 bg-clip-padding backdrop-filter backdrop-blur-sm;
 }
@@ -22,6 +26,32 @@
 
 .bg-glass {
   @apply bg-light/5 bg-clip-padding backdrop-filter backdrop-blur-sm;
+}
+
+.hero-swiper-pagination .swiper-pagination-bullet {
+  @apply bg-light w-10 rounded-none h-[3px];
+}
+
+.hero-swiper-pagination .swiper-pagination-bullet-active {
+  @apply bg-primary;
+}
+
+.heroTextSwiper .swiper-wrapper .swiper-slide.swiper-slide-active .title {
+  @apply text-primary;
+}
+
+.heroTextSwiper .swiper-wrapper .swiper-slide {
+  @apply lg:h-auto;
+}
+
+.heroTextSwiper .swiper-wrapper .swiper-slide .dets {
+  @apply max-h-0 overflow-hidden transition;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 150ms;
+}
+
+.heroTextSwiper .swiper-wrapper .swiper-slide.swiper-slide-active .dets {
+  @apply max-h-35 lg:max-h-60 2xl:max-h-35;
 }
 
 #typewriter::after {

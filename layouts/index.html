@@ -5,81 +5,149 @@
     class="absolute size-full top-1/2 -translate-y-1/2 opacity-20"
   /> -->
   <div
-    class="w-full mx-auto pt-30 pb-10 grid grid-cols-1 gap-10 lg:grid-cols-3 justify-between items-center">
-    <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full lg:hidden">
-    <div class="flex flex-col gap-7 px-5" data-aos="zoom-in" data-aos-duration="900"
-    >
-      <div data-aos="fade-up" data-aos-delay="100">
-        <span
-          class="font-primary text-light font-semibold uppercase p-3 text-sm rounded-md bg-primary"
-        >
-          hackita academy
-        </span>
-      </div>
-      <h1
-        class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter"
-        data-aos="fade-up"
-        data-aos-delay="200"
-      >
-        Learn Cyber-Security
-      </h1>
-      <!-- <div
-        class="flex items-center"
-        data-aos="fade-up"
-        data-aos-delay="300"
-      >
-        <span
-          class="font-primary text-primary text-sm font-semibold uppercase italic"
-        >
-          hack smarter
-        </span>
-      </div> -->
-      <p
-        class="font-primary text-light text-lg text-balance"
-        data-aos="fade-up"
-        data-aos-delay="300"
-      >
-        From the basics to the OSCP level: <br />
-        <span id="typewriter" class="text-primary font-semibold"></span>
-        to become a true pentester.
-      </p>
+    class="w-full mx-auto pt-30 grid grid-cols-1 lg:grid-cols-7 justify-between">
+    <div class="relative lg:col-span-5">
+      <div class="swiper heroImgSwiper h-100 lg:h-180">
+        <div class="swiper-wrapper">
+  
+          <div class="swiper-slide">
+            <div class="size-full">
+              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+            </div>
+          </div>
 
-      <!-- Source words (hidden) -->
-      <div id="typewriter-data" class="hidden">
-        <span>technical walkthroughs</span>
-        <span>commands</span>
-        <span>common errors</span>
-        <span>real lab notes</span>
-      </div>
+          <div class="swiper-slide">
+            <div class="size-full">
+              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+            </div>
+          </div>
 
-      <div class="flex gap-5 items-stretch" data-aos="fade-up" data-aos-delay="400">
-        {{ partial "components/button.html" (dict "link" "true" "label" "Get Started") }}
-        {{ partial "components/button.html" (dict "link" "true" "label" "About Us") }}
+          <div class="swiper-slide">
+            <div class="size-full">
+              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="size-full">
+              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="size-full">
+              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+            </div>
+          </div>
+  
+        </div>
       </div>
+      <div class="hero-swiper-pagination flex justify-center items-center my-10"></div>
     </div>
-    <div class="lg:col-span-2 hidden lg:block">
-      <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="w-full h-180 object-cover">
+    <div class="lg:h-180 lg:overflow-y-scroll 2xl:overflow-y-hidden lg:col-span-2 px-5">
+      <div class="swiper heroTextSwiper">
+          <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-light">
+  
+            <div class="swiper-slide pb-5">
+              <div class="space-y-5 px-5">
+                <h5 class="font-primary text-light text-xl leading-6 font-bold transition-colors title">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div class="dets space-y-5">
+                  <p class="font-primary text-light text-sm line-clamp-4">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
+                  </p>
+                  {{ partial "components/link.html" (dict "label" "Read More") }}
+                </div>
+              </div>
+            </div>
+  
+            <div class="swiper-slide py-5">
+              <div class="space-y-5 px-5">
+                <h5 class="font-primary text-light text-xl leading-6 font-bold transition-colors title">
+                  2 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div class="dets space-y-5">
+                  <p class="font-primary text-light text-sm line-clamp-4">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
+                  </p>
+                  {{ partial "components/link.html" (dict "label" "Read More") }}
+                </div>
+              </div>
+            </div>
+  
+            <div class="swiper-slide py-5">
+              <div class="space-y-5 px-5">
+                <h5 class="font-primary text-light text-xl leading-6 font-bold transition-colors title">
+                  3 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div class="dets space-y-5">
+                  <p class="font-primary text-light text-sm line-clamp-4">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
+                  </p>
+                  {{ partial "components/link.html" (dict "label" "Read More") }}
+                </div>
+              </div>
+            </div>
+
+            <div class="swiper-slide py-5">
+              <div class="space-y-5 px-5">
+                <h5 class="font-primary text-light text-xl leading-6 font-bold transition-colors title">
+                  4 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div class="dets space-y-5">
+                  <p class="font-primary text-light text-sm line-clamp-4">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
+                  </p>
+                  {{ partial "components/link.html" (dict "label" "Read More") }}
+                </div>
+              </div>
+            </div>
+  
+            <div class="swiper-slide py-5">
+              <div class="space-y-5 px-5">
+                <h5 class="font-primary text-light text-xl leading-6 font-bold transition-colors title">
+                  5 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div class="dets space-y-5">
+                  <p class="font-primary text-light text-sm">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
+                  </p>
+                  {{ partial "components/link.html" (dict "label" "Read More") }}
+                </div>
+              </div>
+            </div>
+  
+          </div>
+      </div>
     </div>
   </div>
 </section>
 {{/* /hero */}}
 
 {{/* categories */}}
-<section class="py-10 px-5">
+<section class="pt-3 pb-10 px-5 bg-mask relative overflow-hidden">
+  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -top-5 -left-5 sm:-top-11 sm:-left-10 lg:-top-20 lg:-left-20 xl:-top-27 xl:-left-27">
+    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full">
+  </div>
+  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -bottom-6 -right-5 sm:-bottom-12 sm:-right-10 lg:-bottom-21 lg:-right-20 xl:-bottom-29 xl:-right-27">
+    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full rotate-180">
+  </div>
   <div class="container mx-auto space-y-10">
-    <div class="flex gap-5 flex-wrap justify-between items-center">
+    <div class="w-fit mx-auto" 
+        data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+      </div>
       <h2
-        class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter"
-        data-aos="fade-up"
-        data-aos-delay="100"
+        class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter text-center relative"
       >
         Learn Cyber-Security
       </h2>
-      {{ partial "components/button.html" (dict "link" "true" "label" "View All") }}
     </div>
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
 
-      <div class="group shadow-xl lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
+      <div class="group shadow-xl lg:col-span-2" data-aos="fade-up">
         <div class="overflow-hidden">
           <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
         </div>
@@ -96,7 +164,7 @@
         </div>
       </div>
 
-      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="group shadow-xl" data-aos="fade-up">
         <div class="overflow-hidden">
           <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
         </div>
@@ -113,7 +181,7 @@
         </div>
       </div>
 
-      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="group shadow-xl" data-aos="fade-up">
         <div class="overflow-hidden">
           <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
         </div>
@@ -130,7 +198,7 @@
         </div>
       </div>
 
-      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="group shadow-xl" data-aos="fade-up">
         <div class="overflow-hidden">
           <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
         </div>
@@ -147,7 +215,7 @@
         </div>
       </div>
 
-      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="group shadow-xl" data-aos="fade-up">
         <div class="overflow-hidden">
           <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
         </div>
@@ -164,7 +232,7 @@
         </div>
       </div>
 
-      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="group shadow-xl" data-aos="fade-up">
         <div class="overflow-hidden">
           <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
         </div>
@@ -181,7 +249,24 @@
         </div>
       </div>
 
-      <div class="group shadow-xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="group shadow-xl" data-aos="fade-up">
+        <div class="overflow-hidden">
+          <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+        </div>
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="font-primary text-primary text-xs lg:text-sm">1 Article</span>
+          </div>
+          <h5 class="font-primary text-light lg:text-xl lg:leading-6 font-semibold lg:font-bold text-pretty">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </h5>
+          <div>
+            {{ partial "components/button.html" (dict "label" "Read More")}}
+          </div>
+        </div>
+      </div>
+
+      <div class="group shadow-xl" data-aos="fade-up">
         <div class="overflow-hidden">
           <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
         </div>
@@ -204,7 +289,7 @@
 {{/* /categories */}}
 
 {{/* articles */}}
-<section class="py-10 px-5 relative">
+<section class="pt-3 pb-10 px-5 relative">
   <video
     autoplay
     loop
@@ -215,15 +300,19 @@
     <source src='{{ "videos/dev/articles_bg.mp4" | relURL }}' type="video/mp4" />
   </video>
   <div class="absolute inset-0 bg-black opacity-50"></div>
-  <div class="container mx-auto space-y-10 relative" data-aos="zoom-in" data-aos-duration="900">
-    <h2
-      class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter text-center"
-      data-aos="fade-up"
-      data-aos-delay="100"
-    >
-      Latest Articles
-    </h2>
-    <a href="" class="hidden lg:grid grid-cols-2 gap-5 group" data-aos="fade-up" data-aos-delay="300">
+  <div class="container mx-auto space-y-10 relative">
+    <div class="w-fit mx-auto" 
+        data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+      </div>
+      <h2
+        class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter text-center relative"
+      >
+        Latest Articles
+      </h2>
+    </div>
+    <a href="" class="hidden lg:grid grid-cols-2 gap-5 group" data-aos="fade-up">
       <div class="size-full overflow-hidden">
         <img src='{{ "images/linux.webp" | relURL }}' alt="" class="group-hover:scale-115 transition-transform duration-500">
       </div>
@@ -243,9 +332,9 @@
         </div>
       </div>
     </a>
-    <div class="relative" data-aos="fade-up" data-aos-delay="200" data-aos-duration="500">
+    <div class="relative" data-aos="fade-up">
       <!-- prev -->
-      <button aria-label="next slide" class="prev-article cursor-pointer absolute top-1/2 -translate-y-1/2 -left-12 hidden lg:block">
+      <button aria-label="next slide" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
         <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
         </svg>
@@ -253,7 +342,7 @@
       <!-- /prev -->
 
       <!-- next -->
-       <button aria-label="prev slide"  class="next-article cursor-pointer absolute top-1/2 -translate-y-1/2 -right-12 hidden lg:block">
+       <button aria-label="prev slide"  class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
         <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
         </svg>
@@ -373,16 +462,20 @@
 {{/* /articles */}}
 
 {{/* about */}}
-<section class="bg-mask py-10 px-5">
-  <div class="container mx-auto space-y-10" data-aos="zoom-in" data-aos-duration="400">
-    <h2
-      class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty text-center tracking-tighter"
-      data-aos="fade-up"
-      data-aos-delay="100"
-    >
-      About Us
-    </h2>
-    <div class="flex flex-col-reverse lg:flex-row gap-10 content-between items-center" data-aos="fade-up">
+<section class="bg-mask pt-3 pb-10 px-5">
+  <div class="container mx-auto space-y-10">
+    <div class="w-fit mx-auto" 
+        data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+      </div>
+      <h2
+        class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter text-center relative"
+      >
+        About Us
+      </h2>
+    </div>
+    <div class="flex flex-col-reverse lg:flex-row gap-10 content-between" data-aos="fade-up">
       <div class="space-y-10 lg:w-1/2">
         <p
           class="font-primary text-light text-lg text-balance"
@@ -391,7 +484,7 @@
         </p>
         {{ partial "components/button.html" (dict "link" "true" "label" "Read More") }}
       </div>
-      <div class="lg:w-1/2">
+      <div class="lg:w-1/2" data-aos="fade-up">
         <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="w-150 ml-auto">
       </div>
     </div>
@@ -401,20 +494,47 @@
 
 {{/* services */}}
 <section class="bg-mask">
-  <div class="container py-10 px-5 mx-auto grid lg:grid-cols-2 gap-y-10" data-aos="zoom-in" data-aos-duration="400">
+  <div class="container py-10 px-5 mx-auto grid lg:grid-cols-2 gap-y-10">
     <div class="flex flex-col gap-10" data-aos="fade-up">
-      <h2
+      <div>
+        <span
+          class="font-primary text-light font-semibold uppercase p-3 text-sm rounded-md bg-primary"
+        >
+          hackita academy
+        </span>
+      </div>
+      <h1
         class="font-primary text-5xl lg:text-7xl text-light font-black uppercase text-pretty tracking-tighter"
       >
-        Inside Hackita You'll Find
-      </h2>
+        Learn Cyber-Security
+      </h1>
+      <!-- <div
+        class="flex items-center"
+        data-aos="fade-up"
+      >
+        <span
+          class="font-primary text-primary text-sm font-semibold uppercase italic"
+        >
+          hack smarter
+        </span>
+      </div> -->
       <p
         class="font-primary text-light text-lg text-balance"
       >
-        Everything you need to become a pentester.
+        From the basics to the OSCP level: <br />
+        <span id="typewriter" class="text-primary font-semibold"></span>
+        to become a true pentester.
       </p>
+
+      <!-- Source words (hidden) -->
+      <div id="typewriter-data" class="hidden">
+        <span>technical walkthroughs</span>
+        <span>commands</span>
+        <span>common errors</span>
+        <span>real lab notes</span>
+      </div>
     </div>
-    <div id="stats-grid" class="relative md:columns-2 gap-5 space-y-5" data-aos="fade-up" data-aos-delay="100">
+    <div id="stats-grid" class="relative md:columns-2 gap-5 space-y-5" data-aos="fade-up">
       <div
         class="card-spotlight flex flex-col gap-y-5 text-center rounded-md bg-glass border-light/20 border p-5"
       >
@@ -470,7 +590,6 @@
       <h3
         class="font-primary text-5xl text-light font-bold leading-14"
         data-aos="fade-up"
-        data-aos-delay="200"
       >
         Explore Our HackITA Training Tracks
       </h3>
@@ -486,7 +605,6 @@
           <div
             class="mb-8 flex justify-between items-center w-full right-timeline"
             data-aos="zoom-in"
-            data-aos-delay="300"
           >
             <div class="order-1 w-5/12"></div>
             <div
@@ -512,7 +630,6 @@
           <div
             class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline"
             data-aos="zoom-in"
-            data-aos-delay="300"
           >
             <div class="order-1 w-5/12"></div>
             <div
@@ -538,7 +655,6 @@
           <div
             class="mb-8 flex justify-between items-center w-full right-timeline"
             data-aos="zoom-in"
-            data-aos-delay="300"
           >
             <div class="order-1 w-5/12"></div>
             <div
@@ -564,7 +680,6 @@
           <div
             class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline"
             data-aos="zoom-in"
-            data-aos-delay="300"
           >
             <div class="order-1 w-5/12"></div>
             <div

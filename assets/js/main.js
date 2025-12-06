@@ -96,8 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
         header.classList.toggle("header-glass", shouldBeScrolled);
         headerBar.classList.toggle("py-3", !shouldBeScrolled);
         headerBar.classList.toggle("py-1", shouldBeScrolled);
-        menu.classList.toggle("top-30", !shouldBeScrolled);
-        menu.classList.toggle("top-23", shouldBeScrolled);
       }
 
       handleScroll();
@@ -308,13 +306,117 @@ document.addEventListener("DOMContentLoaded", () => {
   ============================ */
   try {
     if (FEATURES.aos && typeof AOS !== "undefined") {
-      AOS.init();
+      AOS.init({
+        offset: 1, // default is 120
+        duration: 500,
+        easing: "ease-out",
+        anchorPlacement: 'top-bottom'
+      });
       log("AOS initialized");
     } else {
       warn("AOS skipped");
     }
 
     if (FEATURES.swiper && typeof Swiper !== "undefined") {
+      let heroImgSwiper = new Swiper('.heroImgSwiper', {
+        loop: true,
+        spaceBetween: 10,
+        pagination: {
+          el: ".hero-swiper-pagination",
+          clickable: true
+        },
+        breakpoints: {
+          1024: {
+            allowTouchMove: false,
+            noSwiping: true,
+            pagination: {
+              clickable: false
+            }
+          }
+        }
+      });
+
+      let heroTextSwiper = new Swiper('.heroTextSwiper', {
+        loop: true,
+        spaceBetween: 10,
+        noSwiping: true,
+        allowTouchMove: false,
+        breakpoints: {
+          1024: {
+            direction: "vertical",
+            slidesPerView: 3,
+            allowTouchMove: true,
+            noSwiping: false,
+          }
+        }
+      });
+
+      // Small screen (default)
+      if (window.innerWidth < 1024) {
+        heroImgSwiper.controller.control = heroTextSwiper;
+      }
+
+      /* -------------------------------------------
+        LARGE SCREEN BEHAVIOR (hover sync)
+      -------------------------------------------- */
+      let desktopAutoPlayInterval = null;
+      const AUTOPLAY_DELAY = 5000;
+
+      function clearDesktopAutoplay() {
+        if (desktopAutoPlayInterval) {
+          clearInterval(desktopAutoPlayInterval);
+          desktopAutoPlayInterval = null;
+        }
+      }
+
+      function setActiveSlide(slides, index) {
+        slides.forEach(s => s.classList.remove('swiper-slide-active'));
+        slides[index].classList.add('swiper-slide-active');
+
+        heroImgSwiper.slideToLoop(index);
+      }
+
+      function setupDesktopHoverSync() {
+        heroTextSwiper.destroy();
+        clearDesktopAutoplay();
+
+        const slides = safeQueryAll('.heroTextSwiper .swiper-slide');
+        if (slides.length === 0) return;
+
+        setActiveSlide(slides, 0);
+
+        slides.forEach((slide, index) => {
+          slide.addEventListener('mouseenter', () => {
+            setActiveSlide(slides, index);
+          });
+        });
+
+        let currentIndex = 0;
+        desktopAutoPlayInterval = setInterval(() => {
+          currentIndex = (currentIndex + 1) % slides.length;
+          setActiveSlide(slides, currentIndex);
+        }, AUTOPLAY_DELAY);
+      }
+
+      function setupMobileSync() {
+        clearDesktopAutoplay();
+        heroImgSwiper.controller.control = heroTextSwiper;
+      }
+
+      function setupHoverSync() {
+        if (window.innerWidth >= 1024) {
+          setupDesktopHoverSync();
+        } else {
+          setupMobileSync();
+        }
+      }
+
+      window.addEventListener('resize', setupHoverSync);
+      setupHoverSync();
+
+      setupHoverSync();
+      window.addEventListener('resize', setupHoverSync);
+
       let articleSwiper = new Swiper('.articleSwiper', {
         loop: true,
         slidesPerView: 2,

@@ -27,7 +27,7 @@ const FEATURES = {
   menu: true,
   header: true,
   typewriter: true,
-  grid: true,
+  grid: false,
   counters: true,
   aos: true,
   swiper: true,
@@ -307,8 +307,8 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     if (FEATURES.aos && typeof AOS !== "undefined") {
       AOS.init({
-        offset: 10, // default is 120
-        duration: 300,
+        offset: 1, // default is 120
+        duration: 100,
         easing: "ease-out",
         anchorPlacement: 'top-bottom'
       });

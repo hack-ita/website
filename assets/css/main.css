@@ -14,11 +14,11 @@
 }
 
 h2 {
-  @apply text-[max(40px,min(150px,10vw))] tracking-[0.25px] font-bold leading-none;
+  @apply text-[max(50px,min(80px,5vw))] tracking-[0.25px] font-bold leading-none;
 }
 
 .heading-sm {
-  @apply font-primary text-light text-xl leading-none uppercase font-bold text-pretty;
+  @apply font-primary text-[max(15px,min(20px,1vw))] leading-none uppercase font-bold text-pretty;
 }
 
 .header-glass {
@@ -91,4 +91,69 @@ h2 {
     radial-gradient(circle at 24px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px);
   background-size: 32px 32px;
   background-repeat: repeat;
+}
+
+.hn-form {
+  @apply relative z-[1] flex flex-col gap-4 items-stretch w-full;
+}
+
+.hn-input-orbit {
+  @apply relative overflow-hidden p-0.5 rounded-[999px] before:content-[""] before:absolute before:animate-[hn-orbit-spin_9s_linear_infinite] before:opacity-[0.92] before:-inset-2/4 focus-within:shadow-[0_0_0_2px_rgba(240,214,124,0.4),0_0_22px_rgba(240,214,124,0.7)] focus-within:before:animate-[hn-orbit-spin-fast_4s_linear_infinite] bg-dark;
+}
+
+.hn-input-orbit::before {
+  background: conic-gradient(from 0deg, #f9e89a, #e1c46a, #b98216, #f9e89a);
+}
+
+.hn-input-orbit-border {
+  @apply relative z-1 m-0.5 rounded-[inherit];
+  background: radial-gradient(circle at top left, #161621 0, #050509 65%);
+}
+
+.hn-input {
+  @apply w-full text-[0.95rem] text-light relative z-2 px-4 py-[0.9rem] rounded-[inherit] border-none font-primary;
+  outline: none;
+}
+.hn-input::placeholder {
+  @apply text-light/30;
+}
+
+.hn-btn {
+  @apply cursor-pointer font-primary text-[0.9rem] font-bold tracking-[0.2em] uppercase text-[#3d2700] shadow-[0_14px_30px_rgba(199,155,42,0.85),0_0_0_1px_rgba(12,8,0,0.95)] relative overflow-hidden mt-[0.3rem] px-6 py-[0.9rem] rounded-[999px] border-[none] before:content-[""] before:absolute before:left-[-60%] before:w-2/5 before:h-full before:skew-x-[-22deg] before:opacity-0 before:top-0 hover:-translate-y-px hover:shadow-[0_18px_36px_rgba(199,155,42,1),0_0_0_1px_rgba(17,10,0,1)] hover:brightness-[1.03] hover:before:opacity-100 hover:before:animate-[hn-shine_0.9s_ease-out] active:translate-y-px active:shadow-[0_10px_16px_rgba(199,155,42,0.7),0_0_0_1px_rgba(17,10,0,0.9)] active:brightness-[0.97];
+  background: linear-gradient(135deg, #fff4c8, #f0c867, #c79b2a);
+  transition: transform 0.12s ease-out, box-shadow 0.16s ease-out, filter 0.16s ease-out;
+}
+
+/* riflesso sul bottone */
+.hn-btn::before {
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.45) 40%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+@keyframes hn-orbit-spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes hn-orbit-spin-fast {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes hn-shine {
+  0% {
+    transform: translateX(0) skewX(-22deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(260%) skewX(-22deg);
+    opacity: 0;
+  }
 }

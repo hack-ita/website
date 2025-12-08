@@ -1,161 +1,145 @@
-{{ define "main" }} {{/* hero */}}
-<section class="pt-50 pb-30 px-5 bg-dark">
-  <div class="max-w-2xl mx-auto space-y-10">
-    <h1
-      class="font-primary text-light text-5xl font-bold text-center text-balance leading-14"
-      data-aos="fade-up"
-      data-aos-delay="200"
-    >
-      {{ .Title }}
-    </h1>
-    <div
-      class="flex justify-center items-center"
-      data-aos="fade-up"
-      data-aos-delay="400"
-    >
-      {{ partial "components/breadcrumb.html" . }}
-    </div>
-  </div>
-</section>
-{{/* /hero */}}
+{{ define "main" }}
+<!-- hero -->
+{{ partial "shared/hero.html" (dict "title" .Title "page" .)}}
+<!-- /hero -->
 
-{{/* track */}}
-<section class="bg-light">
-  <div class="container mx-auto px-5 py-30 space-y-15">
-    <div class="max-w-2xl mx-auto flex flex-col gap-10 text-center">
-      <div class="flex items-center" data-aos="fade-up">
-        <span
-          class="font-primary text-light text-sm font-semibold uppercase bg-primary p-3 rounded-md -skew-y-12"
-        >
-          what we offer
-        </span>
+{{/* content */}}
+{{ with .Params.content }}
+{{ if .enable }}
+<section class="pt-3 pb-10 px-5 bg-mask relative overflow-hidden">
+  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -top-5 -left-5 sm:-top-11 sm:-left-10 lg:-top-20 lg:-left-20 xl:-top-27 xl:-left-27">
+    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full">
+  </div>
+  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -bottom-6 -right-5 sm:-bottom-12 sm:-right-10 lg:-bottom-21 lg:-right-20 xl:-bottom-29 xl:-right-27">
+    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full rotate-180">
+  </div>
+  <div class="max-w-7xl mx-auto space-y-10">
+    <div class="w-fit mx-auto" 
+        data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
-      <h3
-        class="font-primary text-5xl text-dark font-bold leading-14"
-        data-aos="fade-up"
-        data-aos-delay="200"
+      <h2
+        class=" text-light uppercase text-pretty text-center relative"
       >
-        Explore Our HackITA Training Tracks
-      </h3>
+        {{ .title | safeHTML }}
+      </h2>
     </div>
-    <div>
-      <!-- component -->
-      <div class="container mx-auto size-full">
-        <div class="relative wrap overflow-hidden h-full">
-          <div
-            class="border-2-2 absolute border-opacity-20 h-full w-0.5 bg-linear-to-b from-transparent via-primary/80 to-transparent left-1/2"
-          ></div>
-          <!-- right timeline -->
-          <div
-            class="mb-8 flex justify-between items-center w-full right-timeline"
-            data-aos="zoom-in"
-            data-aos-delay="300"
-          >
-            <div class="order-1 w-5/12"></div>
-            <div
-              class="z-20 flex items-center order-1 bg-primary/90 shadow-xl w-8 h-8 rounded-full"
-            >
-              <h1 class="mx-auto font-semibold text-lg text-light font-primary">
-                1
-              </h1>
-            </div>
-            <div class="order-1 bg-glass rounded-md shadow-xl w-5/12 p-5">
-              <h3 class="mb-3 font-bold text-dark text-xl font-primary">
-                Hands-On Pentesting Labs
-              </h3>
-              <p class="text-sm text-dark font-primary">
-                Train with real-world vulnerable machines and step-by-step
-                exploitation challenges designed to build practical offensive
-                security skills.
-              </p>
-            </div>
-          </div>
-
-          <!-- left timeline -->
-          <div
-            class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline"
-            data-aos="zoom-in"
-            data-aos-delay="300"
-          >
-            <div class="order-1 w-5/12"></div>
-            <div
-              class="z-20 flex items-center order-1 bg-primary/90 shadow-xl w-8 h-8 rounded-full"
-            >
-              <h1 class="mx-auto font-semibold text-lg text-light font-primary">
-                2
-              </h1>
-            </div>
-            <div class="order-1 bg-glass rounded-md shadow-xl w-5/12 p-5">
-              <h3 class="mb-3 font-bold text-dark text-xl font-primary">
-                CVE
-              </h3>
-              <p class="text-sm text-dark font-primary">
-                Master vulnerability research with deep dives into real CVEs,
-                exploit chains, patches, and how attackers weaponize weaknesses
-                in modern systems.
-              </p>
-            </div>
-          </div>
-
-          <!-- right timeline -->
-          <div
-            class="mb-8 flex justify-between items-center w-full right-timeline"
-            data-aos="zoom-in"
-            data-aos-delay="300"
-          >
-            <div class="order-1 w-5/12"></div>
-            <div
-              class="z-20 flex items-center order-1 bg-primary/90 shadow-xl w-8 h-8 rounded-full"
-            >
-              <h1 class="mx-auto font-semibold text-lg text-light font-primary">
-                3
-              </h1>
-            </div>
-            <div class="order-1 bg-glass rounded-md shadow-xl w-5/12 p-5">
-              <h3 class="mb-3 font-bold text-dark text-xl font-primary">
-                Linux & Windows Privilege Escalation
-              </h3>
-              <p class="text-sm text-dark font-primary">
-                Learn proven privesc techniques with hands-on scenarios covering
-                kernel exploits, misconfigurations, credentials, SUID/ACL abuse,
-                and AD escalation paths.
-              </p>
-            </div>
-          </div>
-
-          <!-- left timeline -->
-          <div
-            class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline"
-            data-aos="zoom-in"
-            data-aos-delay="300"
-          >
-            <div class="order-1 w-5/12"></div>
-            <div
-              class="z-20 flex items-center order-1 bg-primary/90 shadow-xl w-8 h-8 rounded-full"
-            >
-              <h1 class="mx-auto font-semibold text-lg text-light font-primary">
-                4
-              </h1>
-            </div>
-            <div class="order-1 bg-glass rounded-md shadow-xl w-5/12 p-5">
-              <h3 class="mb-3 font-bold text-dark text-xl font-primary">
-                Web Application Hacking & Bug Bounty Skills
-              </h3>
-              <p class="text-sm text-dark font-primary">
-                Understand critical web vulnerabilities through practical
-                exercises, modern attack vectors, and structured methodology
-                used by professional pentesters.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <p class="text-white text-center text-xl" data-aos="fade-up">
+      {{ .content | safeHTML }}
+    </p>
   </div>
 </section>
-{{/* /track */}}
+{{ end }}
+{{ end }}
+{{/* /content */}}
 
-{{/*  cta  */}}
-{{ partial "shared/cta.html" (dict "light" "true") }}
-{{/*  /cta  */}}
+{{/* stats */}}
+{{ with .Params.stats }}
+{{ if .enable }}
+<section class="bg-primary red-mask relative overflow-hidden">
+  
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -right-5">
+    <div class="mt-9 -ml-9 sm:mt-13 sm:-ml-13 lg:mt-17 lg:-ml-16 xl:mt-16 xl:-ml-15 size-full bg-primary red-mask"></div>
+  </div>
+
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -left-5 rotate-180">
+    <div class="mt-9 -ml-9 sm:mt-13 sm:-ml-13 lg:mt-17 lg:-ml-16 xl:mt-16 xl:-ml-15 size-full bg-primary red-mask"></div>
+  </div>
+
+    <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
+    <div class="flex flex-col justify-center gap-y-10" data-aos="fade-up">
+      <h2
+        class="text-light text-center"
+      >
+        {{ .title | safeHTML }}
+      </h2>
+      <p
+        class=" text-light text-balance text-center"
+      >
+        From the basics to the OSCP level: <br />
+        <span id="typewriter" class="text-dark font-semibold"></span>
+        to become a true pentester.
+      </p>
+
+      <!-- Source words (hidden) -->
+      <div id="typewriter-data" class="hidden">
+        <span>technical walkthroughs</span>
+        <span>commands</span>
+        <span>common errors</span>
+        <span>real lab notes</span>
+      </div>
+    </div>
+    <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
+
+      <div data-aos="fade-up"
+        class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5"
+      >
+        <span class=" text-primary text-4xl lg:text-6xl font-black">12+</span>
+        <h5 class="heading-sm text-xl text-light">Technical Articles</h5>
+      </div>
+
+      <div data-aos="fade-up"
+        class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5"
+      >
+        <span class=" text-primary text-4xl lg:text-6xl font-black">8</span>
+        <h5 class="heading-sm text-xl text-dark">Main Categories</h5>
+      </div>
+
+      <div data-aos="fade-up"
+        class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5"
+      >
+        <span class=" text-primary text-4xl lg:text-6xl font-black">OSCP</span>
+        <h5 class="heading-sm text-xl text-light">Focused</h5>
+      </div>
+
+      <div data-aos="fade-up"
+        class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5"
+      >
+        <span class=" text-primary text-4xl lg:text-6xl font-black">100%</span>
+        <h5 class="heading-sm text-xl text-dark">Red Team Vibes</h5>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+{{ end }}
+{{ end }}
+{{/* /stats */}}
+
+{{/* cards */}}
+ {{ with .Params.cards }}
+ {{ if .enable }}
+ <section class="bg-mask py-10 px-5">
+  <div class="max-w-7xl mx-auto flex flex-col gap-y-10">
+    {{ $items := .card }}
+    {{ range $i, $p := $items }}
+    {{ $odd := modBool $i 2 }}
+    {{ $last := eq (add $i 1) (len $items) }}
+    <div data-aos="fade-up"
+      class="flex flex-col-reverse items-center {{ if $odd }}lg:flex-row{{ else }}lg:flex-row-reverse{{ end }} lg:justify-between gap-5 {{ if eq $i 0}}lg:mb-10{{ else if $last }}lg:mt-10{{ else }}lg:my-10{{ end }}">
+      <div class="lg:w-5/12 space-y-5">
+        <h4 class="heading-sm text-light text-pretty">{{ .title | safeHTML }}</h4>
+        <p class="text-light text-pretty">
+          {{ .content | safeHTML }}
+        </p>
+      </div>
+      <div class="lg:w-6/12">
+        <img src="{{ .image | relURL }}" alt="" class="w-full h-80 object-cover">
+      </div>
+    </div>
+    {{ end }}
+  </div>
+ </section>
+ {{ end }}
+ {{ end }}
+{{/* /cards */}}
+
+{{/* cta */}}
+<section class="bg-mask py-10">
+    {{ partial "shared/cta.html" }}
+</section>
+{{/* /cta */}}
+
 {{ end }}

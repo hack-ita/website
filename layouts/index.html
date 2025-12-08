@@ -7,9 +7,21 @@
   <div
     class="w-full mx-auto pt-30 grid grid-cols-1 lg:grid-cols-7 justify-between">
     <div class="relative lg:col-span-5">
-      <div class="swiper heroImgSwiper h-100 lg:h-160">
+      <div class="swiper heroImgSwiper h-[80vh]">
         <div class="swiper-wrapper">
   
+          <div class="swiper-slide">
+            <div class="size-full">
+              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="size-full">
+              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+            </div>
+          </div>
+
           <div class="swiper-slide">
             <div class="size-full">
               <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
@@ -44,7 +56,7 @@
       </div>
       <div class="hero-swiper-pagination flex justify-center items-center my-10"></div>
     </div>
-    <div class="lg:h-160 lg:overflow-y-scroll 2xl:overflow-y-hidden lg:col-span-2 px-5">
+    <div class="lg:h-[80vh] lg:overflow-y-scroll 2xl:overflow-y-hidden lg:col-span-2 px-5">
       <div class="swiper heroTextSwiper">
           <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-light">
   
@@ -54,7 +66,7 @@
                   1 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </h5>
                 <div class="dets space-y-2">
-                  <p class="font-primary text-light line-clamp-4">
+                  <p class=" text-light line-clamp-4">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
                   </p>
                   {{ partial "components/link.html" (dict "label" "Read More") }}
@@ -68,7 +80,7 @@
                   2 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </h5>
                 <div class="dets space-y-2">
-                  <p class="font-primary text-light line-clamp-4">
+                  <p class=" text-light line-clamp-4">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
                   </p>
                   {{ partial "components/link.html" (dict "label" "Read More") }}
@@ -82,7 +94,7 @@
                   3 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </h5>
                 <div class="dets space-y-2">
-                  <p class="font-primary text-light line-clamp-4">
+                  <p class=" text-light line-clamp-4">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
                   </p>
                   {{ partial "components/link.html" (dict "label" "Read More") }}
@@ -96,7 +108,7 @@
                   4 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </h5>
                 <div class="dets space-y-2">
-                  <p class="font-primary text-light line-clamp-4">
+                  <p class=" text-light line-clamp-4">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
                   </p>
                   {{ partial "components/link.html" (dict "label" "Read More") }}
@@ -110,7 +122,35 @@
                   5 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </h5>
                 <div class="dets space-y-2">
-                  <p class="font-primary text-light line-clamp-4">
+                  <p class=" text-light line-clamp-4">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
+                  </p>
+                  {{ partial "components/link.html" (dict "label" "Read More") }}
+                </div>
+              </div>
+            </div>
+
+            <div class="swiper-slide py-5">
+              <div class="space-y-2 px-5">
+                <h5 class="heading-sm text-light transition-colors title">
+                  6 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div class="dets space-y-2">
+                  <p class=" text-light line-clamp-4">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
+                  </p>
+                  {{ partial "components/link.html" (dict "label" "Read More") }}
+                </div>
+              </div>
+            </div>
+
+            <div class="swiper-slide py-5">
+              <div class="space-y-2 px-5">
+                <h5 class="heading-sm text-light transition-colors title">
+                  7 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div class="dets space-y-2">
+                  <p class=" text-light line-clamp-4">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
                   </p>
                   {{ partial "components/link.html" (dict "label" "Read More") }}
@@ -140,7 +180,7 @@
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
       <h2
-        class="font-primary text-light uppercase text-pretty text-center relative"
+        class=" text-light uppercase text-pretty text-center relative"
       >
         Categories
       </h2>
@@ -154,7 +194,7 @@
           </div>
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class="font-primary text-primary uppercase">1 Article</span>
+              <span class=" text-primary uppercase">1 Article</span>
             </div>
             <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -163,7 +203,7 @@
               {{ partial "components/button.html" (dict "label" "Read More")}}
             </div>
           </div>
-          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
       </div>
 
@@ -174,7 +214,7 @@
           </div>
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class="font-primary text-primary uppercase">1 Article</span>
+              <span class=" text-primary uppercase">1 Article</span>
             </div>
             <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -183,7 +223,7 @@
               {{ partial "components/button.html" (dict "label" "Read More")}}
             </div>
           </div>
-          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
       </div>
 
@@ -194,7 +234,7 @@
           </div>
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class="font-primary text-primary uppercase">1 Article</span>
+              <span class=" text-primary uppercase">1 Article</span>
             </div>
             <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -203,7 +243,7 @@
               {{ partial "components/button.html" (dict "label" "Read More")}}
             </div>
           </div>
-          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
       </div>
 
@@ -214,7 +254,7 @@
           </div>
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class="font-primary text-primary uppercase">1 Article</span>
+              <span class=" text-primary uppercase">1 Article</span>
             </div>
             <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -223,7 +263,7 @@
               {{ partial "components/button.html" (dict "label" "Read More")}}
             </div>
           </div>
-          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
       </div>
 
@@ -234,7 +274,7 @@
           </div>
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class="font-primary text-primary uppercase">1 Article</span>
+              <span class=" text-primary uppercase">1 Article</span>
             </div>
             <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -243,7 +283,7 @@
               {{ partial "components/button.html" (dict "label" "Read More")}}
             </div>
           </div>
-          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
       </div>
 
@@ -254,7 +294,7 @@
           </div>
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class="font-primary text-primary uppercase">1 Article</span>
+              <span class=" text-primary uppercase">1 Article</span>
             </div>
             <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -263,7 +303,7 @@
               {{ partial "components/button.html" (dict "label" "Read More")}}
             </div>
           </div>
-          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
       </div>
 
@@ -274,7 +314,7 @@
           </div>
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class="font-primary text-primary uppercase">1 Article</span>
+              <span class=" text-primary uppercase">1 Article</span>
             </div>
             <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -283,7 +323,7 @@
               {{ partial "components/button.html" (dict "label" "Read More")}}
             </div>
           </div>
-          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
       </div>
 
@@ -294,7 +334,7 @@
           </div>
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class="font-primary text-primary uppercase">1 Article</span>
+              <span class=" text-primary uppercase">1 Article</span>
             </div>
             <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -303,7 +343,7 @@
               {{ partial "components/button.html" (dict "label" "Read More")}}
             </div>
           </div>
-          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+          <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
       </div>
 
@@ -334,7 +374,7 @@
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
       <h2
-        class="font-primary text-light uppercase text-pretty text-center relative"
+        class=" text-light uppercase text-pretty text-center relative"
       >
         Latest Articles
       </h2>
@@ -345,13 +385,13 @@
       </div>
       <div class="flex flex-col gap-y-5">
         <div class="flex flex-wrap gap-5">
-          <span class="font-primary text-light uppercase">Jan 24, 2025</span>
-          <span class="font-primary text-secondary uppercase">2 Min Read</span>
+          <span class=" text-light uppercase">Jan 24, 2025</span>
+          <span class=" text-primary uppercase">2 Min Read</span>
         </div>
         <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </h5>
-        <p class="font-primary text-light text-balance">
+        <p class=" text-light text-balance">
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur id corporis placeat nostrum inventore libero, voluptatum hic fugiat necessitatibus sed tempore.
         </p>
         <div>
@@ -385,8 +425,8 @@
               </div>
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
-                  <span class="font-primary text-light uppercase">Jan 24, 2025</span>
-                  <span class="font-primary text-secondary uppercase">2 Min Read</span>
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
                 </div>
                 <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -395,7 +435,7 @@
                   {{ partial "components/button.html" (dict "label" "Read More")}}
                 </div>
               </div>
-              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
             </a>
           </div>
   
@@ -406,8 +446,8 @@
               </div>
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
-                  <span class="font-primary text-light uppercase">Jan 24, 2025</span>
-                  <span class="font-primary text-secondary uppercase">2 Min Read</span>
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
                 </div>
                 <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -416,7 +456,7 @@
                   {{ partial "components/button.html" (dict "label" "Read More")}}
                 </div>
               </div>
-              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
             </a>
           </div>
   
@@ -427,8 +467,8 @@
               </div>
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
-                  <span class="font-primary text-light">Jan 24, 2025</span>
-                  <span class="font-primary text-secondary">2 Min Read</span>
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
                 </div>
                 <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -437,7 +477,7 @@
                   {{ partial "components/button.html" (dict "label" "Read More")}}
                 </div>
               </div>
-              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
             </a>
           </div>
   
@@ -448,8 +488,8 @@
               </div>
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
-                  <span class="font-primary text-light uppercase">Jan 24, 2025</span>
-                  <span class="font-primary text-secondary uppercase">2 Min Read</span>
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
                 </div>
                 <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -458,7 +498,7 @@
                   {{ partial "components/button.html" (dict "label" "Read More")}}
                 </div>
               </div>
-              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
             </a>
           </div>
   
@@ -469,8 +509,8 @@
               </div>
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
-                  <span class="font-primary text-light uppercase">Jan 24, 2025</span>
-                  <span class="font-primary text-secondary uppercase">2 Min Read</span>
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
                 </div>
                 <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -479,7 +519,7 @@
                   {{ partial "components/button.html" (dict "label" "Read More")}}
                 </div>
               </div>
-              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-light after:-translate-x-full group-hover:after:translate-x-0"></div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
             </a>
           </div>
            
@@ -494,6 +534,8 @@
 {{/* /articles */}}
 
 {{/* about */}}
+{{ with .Params.about }}
+{{ if .enable }}
 <section class="bg-mask pt-3 pb-10 px-5">
   <div class="max-w-7xl mx-auto space-y-10">
     <div class="w-fit mx-auto" 
@@ -502,37 +544,41 @@
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
       <h2
-        class="font-primary text-light uppercase text-pretty text-center relative"
+        class=" text-light uppercase text-pretty text-center relative"
       >
-        About Us
+        {{ .title | safeHTML }}
       </h2>
     </div>
-    <div class="flex flex-col-reverse lg:flex-row gap-10 content-between" data-aos="fade-up">
-      <div class="space-y-10 lg:w-1/2">
+    <div class="flex flex-col-reverse lg:flex-row gap-10 content-between">
+      <div class="space-y-10 lg:w-1/2" data-aos="fade-up">
         <p
-          class="font-primary text-light text-balance"
+          class=" text-light text-balance"
         >
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis rerum officiis dolores cupiditate perferendis optio. Itaque ipsum nobis dignissimos, distinctio vitae officiis voluptate mollitia ut sint nostrum harum reprehenderit blanditiis odio quos, cum, exercitationem non nisi totam accusantium quia pariatur. Harum blanditiis nulla consequuntur distinctio accusamus voluptatibus, nostrum, incidunt, sequi ducimus ab fugit. Impedit tempora esse quibusdam aut laborum vel blanditiis a minima distinctio, non tenetur numquam accusamus adipisci, aperiam perspiciatis ad rerum molestiae repellendus ducimus quo laudantium corrupti modi maiores sunt! Libero nobis cupiditate unde sunt aut culpa placeat vitae illum accusamus, incidunt adipisci a repellendus aspernatur ipsum natus? Est fugit expedita unde officia quisquam at? Animi alias maiores commodi itaque, quam ducimus laborum blanditiis voluptatum molestias velit sed officia temporibus dolorem?
+        {{ .content | safeHTML }}
         </p>
-        {{ partial "components/button.html" (dict "link" "true" "label" "Read More") }}
+        {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" "/about/") }}
       </div>
       <div class="lg:w-1/2" data-aos="fade-up">
-        <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="lg:w-150 lg:ml-auto">
+        <img src="{{ .image | relURL }}" alt="" class="lg:w-150 lg:ml-auto">
       </div>
     </div>
   </div>
 </section>
+{{ end }}
+{{ end }}
 {{/* /about */}}
 
-{{/* services */}}
-<section class="bg-primary relative overflow-hidden">
+{{/* stats */}}
+{{ with .Params.stats }}
+{{ if .enable }}
+<section class="bg-primary red-mask relative overflow-hidden">
   
-  <div class="bg-dark h-23 w-17 sm:h-41 sm:w-28 lg:h-65 lg:w-44 xl:h-80 xl:w-54 absolute -top-5 -left-5">
-    <div class="mt-9 ml-9 sm:mt-12 sm:ml-13 lg:mt-18 lg:ml-18 xl:mt-20 xl:ml-21 size-full bg-primary"></div>
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -left-5">
+    <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
   </div>
 
-  <div class="bg-dark h-23 w-17 sm:h-41 sm:w-28 lg:h-65 lg:w-44 xl:h-80 xl:w-54 absolute -bottom-5 -right-5 rotate-180">
-    <div class="mt-9 ml-9 sm:mt-12 sm:ml-13 lg:mt-18 lg:ml-18 xl:mt-20 xl:ml-21 size-full bg-primary"></div>
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -right-5 rotate-180">
+    <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
   </div>
 
     <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
@@ -540,10 +586,10 @@
       <h2
         class="text-light text-center"
       >
-        Learn Cyber-Security
+        {{ .title | safeHTML }}
       </h2>
       <p
-        class="font-primary text-light text-balance text-center"
+        class=" text-light text-balance text-center"
       >
         From the basics to the OSCP level: <br />
         <span id="typewriter" class="text-dark font-semibold"></span>
@@ -560,40 +606,45 @@
     </div>
     <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
 
-      <div
+      <div data-aos="fade-up"
         class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5"
       >
-        <span class="font-primary text-primary text-3xl font-black">12+</span>
-        <h5 class="heading-sm text-light">Technical Articles</h5>
+        <span class=" text-primary text-4xl lg:text-6xl font-black">12+</span>
+        <h5 class="heading-sm text-xl text-light">Technical Articles</h5>
       </div>
 
-      <div
+      <div data-aos="fade-up"
         class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5"
       >
-        <span class="font-primary text-primary text-3xl font-black">8</span>
-        <h5 class="heading-sm text-dark">Main Categories</h5>
+        <span class=" text-primary text-4xl lg:text-6xl font-black">8</span>
+        <h5 class="heading-sm text-xl text-dark">Main Categories</h5>
       </div>
 
-      <div
+      <div data-aos="fade-up"
         class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5"
       >
-        <span class="font-primary text-primary text-3xl font-black">OSCP</span>
-        <h5 class="heading-sm text-light">Focused</h5>
+        <span class=" text-primary text-4xl lg:text-6xl font-black">OSCP</span>
+        <h5 class="heading-sm text-xl text-light">Focused</h5>
       </div>
 
-      <div
+      <div data-aos="fade-up"
         class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5"
       >
-        <span class="font-primary text-primary text-3xl font-black">100</span>
-        <h5 class="heading-sm text-dark">Red Team Vibes</h5>
+        <span class=" text-primary text-4xl lg:text-6xl font-black">100</span>
+        <h5 class="heading-sm text-xl text-dark">Red Team Vibes</h5>
       </div>
 
     </div>
   </div>
 
 </section>
-{{/* /services */}}
-{{/* track */}}
+{{ end }}
+{{ end }}
+{{/* /stats */}}
+
+{{/* services */}}
+{{ with .Params.services }}
+{{ if .enable }}
 <section class="bg-mask">
   <div class="max-w-7xl mx-auto px-5 py-10 space-y-10">
     <div class="w-fit mx-auto" 
@@ -602,81 +653,41 @@
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
       <h2
-        class="font-primary text-light uppercase text-pretty text-center relative"
+        class=" text-light uppercase text-pretty text-center relative"
       >
-        HackITA Training Tracks
+        {{ .title | safeHTML }}
       </h2>
     </div>
 
     <div class="grid lg:grid-cols-2 gap-5" data-aos="fade-up">
-      <div class="flex gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
+      {{ range $i, $p := .cards }}
+      {{ $odd := modBool $i 2 }}
+      <div class="flex {{ if not $odd }}flex-row-reverse{{ end }} gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
         <div class="space-y-5 w-2/3">
            <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              {{ .title | safeHTML }}
             </h5>
-            <p class="font-primary text-light text-balance">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur.
+            <p class=" text-light text-balance">
+              {{ .content | safeHTML }}
             </p>
             <div>
-              {{ partial "components/button.html" (dict "label" "Read More") }}
+              {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" "/services/") }}
             </div>
         </div>
-        <h3 class="font-primary text-primary text-center text-[170px] font-bold w-1/3">1</h3>
+        <h3 class=" text-primary text-center text-[170px] font-bold w-1/3">{{ add $i 1 }}</h3>
       </div>
-
-      <div class="flex flex-row-reverse gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
-        <div class="space-y-5 w-2/3 text-right">
-           <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            </h5>
-            <p class="font-primary text-light text-balance">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur.
-            </p>
-            <div>
-              {{ partial "components/button.html" (dict "label" "Read More") }}
-            </div>
-        </div>
-        <h3 class="font-primary text-primary text-center text-[170px] font-bold w-1/3">2</h3>
-      </div>
-
-      <div class="flex gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
-        <div class="space-y-5 w-2/3">
-           <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            </h5>
-            <p class="font-primary text-light text-balance">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur.
-            </p>
-            <div>
-              {{ partial "components/button.html" (dict "label" "Read More") }}
-            </div>
-        </div>
-        <h3 class="font-primary text-primary text-center text-[170px] font-bold w-1/3">3</h3>
-      </div>
-
-      <div class="flex flex-row-reverse gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
-        <div class="space-y-5 w-2/3 text-right">
-           <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            </h5>
-            <p class="font-primary text-light text-balance">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur.
-            </p>
-            <div>
-              {{ partial "components/button.html" (dict "label" "Read More") }}
-            </div>
-        </div>
-        <h3 class="font-primary text-primary text-center text-[170px] font-bold w-1/3">4</h3>
-      </div>
+      {{ end }}
     </div>
   </div>
 </section>
-{{/* /track */}} 
+{{ end }}
+{{ end }}
+{{/* /services */}} 
+
 {{/* cta */}}
-<section class="bg-mask">
-  <div class="bg-linear-to-b from-transparent to-dark pb-10">
+<section class="bg-mask py-10">
     {{ partial "shared/cta.html" }}
-  </div>
 </section>
-{{/* /cta */}} {{
-end }}
+{{/* /cta */}}
+
+{{ end }}

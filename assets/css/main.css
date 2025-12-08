@@ -3,9 +3,10 @@
 @source inline("h-20, rotate-45, -rotate-45", "top-23", "top-30", "overflow-hidden");
 
 @theme {
-  --font-primary: "JetBrains Mono", monospace;
+  --font-heading: "Oswald", sans-serif;
+  --font-body: "Ubuntu", sans-serif;
 
-  --color-primary: #D90429;
+  --color-primary: #FD0001;
   --color-secondary: #C9A941;
   --color-light: var(--color-white);
   --color-dark: var(--color-black);
@@ -13,12 +14,20 @@
   --color-accent: #111111;
 }
 
-h2 {
+h1, h2, h3, h4, h5, h6, .heading {
+  @apply font-heading;
+}
+
+* {
+  @apply font-body;
+}
+
+h1, h2 {
   @apply text-[max(50px,min(80px,5vw))] tracking-[0.25px] font-bold leading-none;
 }
 
 .heading-sm {
-  @apply font-primary text-[max(15px,min(20px,1vw))] leading-none uppercase font-bold text-pretty;
+  @apply text-[max(20px,min(20px,1vw))] leading-none uppercase font-bold text-pretty;
 }
 
 .header-glass {
@@ -93,6 +102,18 @@ h2 {
   background-repeat: repeat;
 }
 
+.red-mask {
+  --dot-color: color-mix(in oklab, var(--color-dark) /* var(--color-white) */ 50%, transparent);
+  background-image:
+    radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 8px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 24px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px);
+  background-size: 32px 32px;
+  background-repeat: repeat;
+}
+
+
 .hn-form {
   @apply relative z-[1] flex flex-col gap-4 items-stretch w-full;
 }
@@ -111,7 +132,7 @@ h2 {
 }
 
 .hn-input {
-  @apply w-full text-[0.95rem] text-light relative z-2 px-4 py-[0.9rem] rounded-[inherit] border-none font-primary;
+  @apply w-full text-[0.95rem] text-light relative z-2 px-4 py-[0.9rem] rounded-[inherit] border-none;
   outline: none;
 }
 .hn-input::placeholder {
@@ -119,7 +140,7 @@ h2 {
 }
 
 .hn-btn {
-  @apply cursor-pointer font-primary text-[0.9rem] font-bold tracking-[0.2em] uppercase text-[#3d2700] shadow-[0_14px_30px_rgba(199,155,42,0.85),0_0_0_1px_rgba(12,8,0,0.95)] relative overflow-hidden mt-[0.3rem] px-6 py-[0.9rem] rounded-[999px] border-[none] before:content-[""] before:absolute before:left-[-60%] before:w-2/5 before:h-full before:skew-x-[-22deg] before:opacity-0 before:top-0 hover:-translate-y-px hover:shadow-[0_18px_36px_rgba(199,155,42,1),0_0_0_1px_rgba(17,10,0,1)] hover:brightness-[1.03] hover:before:opacity-100 hover:before:animate-[hn-shine_0.9s_ease-out] active:translate-y-px active:shadow-[0_10px_16px_rgba(199,155,42,0.7),0_0_0_1px_rgba(17,10,0,0.9)] active:brightness-[0.97];
+  @apply cursor-pointer text-[0.9rem] font-bold tracking-[0.2em] uppercase text-[#3d2700] shadow-[0_14px_30px_rgba(199,155,42,0.85),0_0_0_1px_rgba(12,8,0,0.95)] relative overflow-hidden mt-[0.3rem] px-6 py-[0.9rem] rounded-[999px] border-[none] before:content-[""] before:absolute before:left-[-60%] before:w-2/5 before:h-full before:skew-x-[-22deg] before:opacity-0 before:top-0 hover:-translate-y-px hover:shadow-[0_18px_36px_rgba(199,155,42,1),0_0_0_1px_rgba(17,10,0,1)] hover:brightness-[1.03] hover:before:opacity-100 hover:before:animate-[hn-shine_0.9s_ease-out] active:translate-y-px active:shadow-[0_10px_16px_rgba(199,155,42,0.7),0_0_0_1px_rgba(17,10,0,0.9)] active:brightness-[0.97];
   background: linear-gradient(135deg, #fff4c8, #f0c867, #c79b2a);
   transition: transform 0.12s ease-out, box-shadow 0.16s ease-out, filter 0.16s ease-out;
 }

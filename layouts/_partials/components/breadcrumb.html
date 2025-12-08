@@ -41,9 +41,9 @@ Features:
 
 {{/* Add section ancestors, skipping root site */}}
 {{ with .CurrentSection }}
-  {{ if ne .Title $site.Title }}
+  {{ if and (ne .Title $site.Title) (ne .RelPermalink "/") }}
     {{ range .Ancestors.Reverse }}
-      {{ if ne .Title $site.Title }}
+      {{ if and (ne .Title $site.Title) (ne .RelPermalink "/") }}
         {{ $crumbs = $crumbs | append (dict "title" .Title "url" .Permalink) }}
       {{ end }}
     {{ end }}
@@ -67,15 +67,17 @@ Features:
 
 {{/* HTML Output */}}
 <nav class="{{ $wrapClass }}" aria-label="Breadcrumb">
-  <ol class="flex gap-2.5 {{ $listClass }}">
+  <ol class="flex items-center gap-3 {{ $listClass }}">
     {{ range $i, $c := $crumbs }}
       {{ $isLast := eq (add $i 1) (len $crumbs) }}
-      <li class="font-primary text-light {{ $itemClass }}" {{ if $isLast }}aria-current="page"{{ end }}>
+      <li class="flex items-center gap-3 text-light {{ $itemClass }}" {{ if $isLast }}aria-current="page"{{ end }}>
         {{ if and (not $isLast) (ne $c.url "") }}
-          <a class="hover:text-primary transition-colors underline underline-offset-4 {{ $linkClass }}" href="{{ $c.url }}">{{ $c.title }}</a>
+          <span>
+            {{ partial "components/link.html" (dict "label" $c.title "url" $c.url) }}
+          </span>
           <span class="breadcrumb-sep text-primary" aria-hidden="true">{{ $sep }}</span>
         {{ else }}
-          <span class="breadcrumb-current">{{ $c.title }}</span>
+          <span class="breadcrumb-current font-semibold text-sm uppercase">{{ $c.title }}</span>
         {{ end }}
       </li>
     {{ end }}

@@ -306,12 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ============================ */
   try {
     if (FEATURES.aos && typeof AOS !== "undefined") {
-      AOS.init({
-        offset: 1, // default is 120
-        duration: 100,
-        easing: "ease-out",
-        anchorPlacement: 'top-bottom'
-      });
+      AOS.init();
       log("AOS initialized");
     } else {
       warn("AOS skipped");

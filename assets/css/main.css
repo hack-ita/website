@@ -12,6 +12,8 @@
   --color-dark: var(--color-black);
   --color-light-bg: #EDF2F4;
   --color-accent: #111111;
+
+  --breakpoint-max: 118.75rem;
 }
 
 h1, h2, h3, h4, h5, h6, .heading {
@@ -177,4 +179,25 @@ h1, h2 {
     transform: translateX(260%) skewX(-22deg);
     opacity: 0;
   }
+}
+
+.custom-input {
+  @apply relative overflow-hidden rounded-md before:absolute before:animate-[hn-orbit-spin_9s_linear_infinite] before:opacity-90 before:-inset-1/4 focus-within:shadow-[var(--color-accent),var(--color-dark)] focus-within:before:animate-[hn-orbit-spin-fast_4s_linear_infinite] bg-light;
+}
+
+.custom-input::before {
+  background: conic-gradient(from 0deg, var(--color-accent), var(--color-dark));
+}
+
+.custom-input-wrapper {
+  @apply relative z-1 -m-0.5 rounded-md;
+  background: radial-gradient(circle at top left, var(--color-light) 0, var(--color-light) 65%);
+}
+
+.custom-input {
+  @apply w-full text-dark relative z-2 p-2 rounded-md border-none;
+  outline: none;
+}
+.custom-input::placeholder {
+  @apply text-dark/30;
 }

@@ -1,0 +1,30 @@
+<div class="flex flex-col">
+    <label class="text-light text-lg font-semibold ml-3" for="{{ .for }}">{{ upper .for }}</label>
+    <div class="custom-input mt-2">
+        <div class="custom-input-wrapper">
+        {{ if eq .textarea "true" }}
+        <textarea
+            name="{{ .for }}"
+            id="{{ .for }}"
+            class="custom-input"
+            placeholder="{{ .placeholder }}"
+            {{ if eq .required "true" }}
+            required
+            {{ end }}
+            rows="4"
+        ></textarea>
+        {{ else }}
+        <input
+            type="{{ .type }}"
+            name="{{ .for }}"
+            id="{{ .for }}"
+            class="custom-input"
+            placeholder="{{ .placeholder }}"
+            {{ if eq .required "true" }}
+            required
+            {{ end }}
+        />
+        {{ end }}
+        </div>
+    </div>
+</div>

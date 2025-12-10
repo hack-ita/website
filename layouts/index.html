@@ -7,15 +7,9 @@
   <div
     class="w-full mx-auto pt-30 grid grid-cols-1 lg:grid-cols-7 justify-between">
     <div class="relative lg:col-span-5">
-      <div class="swiper heroImgSwiper h-[80vh]">
+      <div class="swiper heroImgSwiper h-[70vh]">
         <div class="swiper-wrapper">
   
-          <div class="swiper-slide">
-            <div class="size-full">
-              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
-            </div>
-          </div>
-
           <div class="swiper-slide">
             <div class="size-full">
               <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
@@ -134,20 +128,6 @@
               <div class="space-y-2 px-5">
                 <h5 class="heading-sm text-light transition-colors title">
                   6 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </h5>
-                <div class="dets space-y-2">
-                  <p class=" text-light line-clamp-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
-                  </p>
-                  {{ partial "components/link.html" (dict "label" "Read More") }}
-                </div>
-              </div>
-            </div>
-
-            <div class="swiper-slide py-5">
-              <div class="space-y-2 px-5">
-                <h5 class="heading-sm text-light transition-colors title">
-                  7 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </h5>
                 <div class="dets space-y-2">
                   <p class=" text-light line-clamp-4">
@@ -539,7 +519,7 @@
 <section class="bg-mask pt-3 pb-10 px-5">
   <div class="max-w-7xl mx-auto space-y-10">
     <div class="w-fit mx-auto" 
-        data-aos="fade-up">
+        data-aos="fade-up" data-aos-offset="-200">
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
@@ -550,7 +530,7 @@
       </h2>
     </div>
     <div class="flex flex-col-reverse lg:flex-row gap-10 content-between">
-      <div class="space-y-10 lg:w-1/2" data-aos="fade-up">
+      <div class="space-y-10 lg:w-1/2" data-aos="fade-up" data-aos-offset="-200">
         <p
           class=" text-light text-balance"
         >
@@ -558,7 +538,7 @@
         </p>
         {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" "/about/") }}
       </div>
-      <div class="lg:w-1/2" data-aos="fade-up">
+      <div class="lg:w-1/2" data-aos="fade-up" data-aos-offset="-200">
         <img src="{{ .image | relURL }}" alt="" class="lg:w-150 lg:ml-auto">
       </div>
     </div>
@@ -582,7 +562,7 @@
   </div>
 
     <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
-    <div class="flex flex-col justify-center gap-y-10" data-aos="fade-up">
+    <div class="flex flex-col justify-center gap-y-10" data-aos="fade-up" data-aos-offset="-400">
       <h2
         class="text-light text-center"
       >
@@ -606,28 +586,28 @@
     </div>
     <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
 
-      <div data-aos="fade-up"
+      <div data-aos="fade-up" data-aos-offset="-400"
         class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5"
       >
         <span class=" text-primary text-4xl lg:text-6xl font-black">12+</span>
         <h5 class="heading-sm text-xl text-light">Technical Articles</h5>
       </div>
 
-      <div data-aos="fade-up"
+      <div data-aos="fade-up" data-aos-offset="-400"
         class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5"
       >
         <span class=" text-primary text-4xl lg:text-6xl font-black">8</span>
         <h5 class="heading-sm text-xl text-dark">Main Categories</h5>
       </div>
 
-      <div data-aos="fade-up"
+      <div data-aos="fade-up" data-aos-offset="-400"
         class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5"
       >
         <span class=" text-primary text-4xl lg:text-6xl font-black">OSCP</span>
         <h5 class="heading-sm text-xl text-light">Focused</h5>
       </div>
 
-      <div data-aos="fade-up"
+      <div data-aos="fade-up" data-aos-offset="-400"
         class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5"
       >
         <span class=" text-primary text-4xl lg:text-6xl font-black">100</span>
@@ -643,35 +623,34 @@
 {{/* /stats */}}
 
 {{/* services */}}
-{{ with .Params.services }}
-{{ if .enable }}
+{{ with where .Site.RegularPages "Section" "services" }}
 <section class="bg-mask">
   <div class="max-w-7xl mx-auto px-5 py-10 space-y-10">
     <div class="w-fit mx-auto" 
-        data-aos="fade-up">
+        data-aos="fade-up" data-aos-offset="-300">
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
       <h2
         class=" text-light uppercase text-pretty text-center relative"
       >
-        {{ .title | safeHTML }}
+        Hackita Training Tracks
       </h2>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-5" data-aos="fade-up">
-      {{ range $i, $p := .cards }}
+    <div class="grid lg:grid-cols-2 gap-5" data-aos="fade-up" data-aos-offset="-300">
+      {{ range $i, $p := . }}
       {{ $odd := modBool $i 2 }}
       <div class="flex {{ if not $odd }}flex-row-reverse{{ end }} gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
         <div class="space-y-5 w-2/3">
            <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
-              {{ .title | safeHTML }}
+              {{ .Title }}
             </h5>
             <p class=" text-light text-balance">
-              {{ .content | safeHTML }}
+              {{ .Description }}
             </p>
             <div>
-              {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" "/services/") }}
+              {{ partial "components/button.html" (dict "link" "true" "label" "Learn More" "url" (printf "/services/#%s" (.Title | anchorize)) ) }}
             </div>
         </div>
         <h3 class=" text-primary text-center text-[170px] font-bold w-1/3">{{ add $i 1 }}</h3>
@@ -680,7 +659,6 @@
     </div>
   </div>
 </section>
-{{ end }}
 {{ end }}
 {{/* /services */}} 
 

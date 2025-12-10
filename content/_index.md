@@ -26,12 +26,12 @@ services:
     enable: true
     title: Hackita Training Tracks
     cards:
-        - title: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        - title: Corsi Per Aziende
           content: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur."
-        - title: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        - title: Formazione
           content: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur."
-        - title: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        - title: Penetration Testing
           content: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur."
-        - title: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        - title: Red Team
           content: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur."
 ---

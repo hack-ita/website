@@ -1,113 +1,289 @@
-{{ define "main" }} {{/* hero */}}
-<section class="pt-50 pb-30 px-5 bg-dark">
-  <div class="max-w-2xl mx-auto space-y-10">
-    <h1
-      class=" text-light text-5xl font-bold text-center text-balance leading-14"
-      data-aos="fade-up"
-      data-aos-delay="200"
-    >
-      {{ .Title }}
-    </h1>
-    <div
-      class="flex justify-center items-center"
-      data-aos="fade-up"
-      data-aos-delay="400"
-    >
-      {{ partial "components/breadcrumb.html" . }}
-    </div>
+{{ define "main" }}
+
+{{/* hero */}}
+{{ partial "shared/hero.html" (dict "title" .Title "page" .) }}
+{{/* /hero */}}
+
+{{/* content */}}
+{{ with .Params.content }}
+{{ if .enable }}
+<section class="pt-3 pb-10 px-5 bg-mask relative overflow-hidden">
+  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -top-5 -left-5 sm:-top-11 sm:-left-10 lg:-top-20 lg:-left-20 xl:-top-27 xl:-left-27">
+    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full">
   </div>
-</section>
-{{/* /hero */}} {{/* body */}}
-<section class="bg-light">
-  <div class="container py-30 px-5 mx-auto grid lg:grid-rows-2 gap-15">
-    <h3
-      class=" text-5xl text-dark text-balance font-bold leading-14 lg:max-w-1/2"
-      data-aos="fade-up"
-      data-aos-delay="200"
-    >
-      I’m the creator of HackITA — a platform built for practical cybersecurity,
-      OSCP-style learning and real pentesting notes.
-    </h3>
-    <p
-      class=" text-dark text-lg text-balance lg:max-w-1/2 ml-auto"
-      data-aos="fade-up"
-      data-aos-delay="400"
-    >
-      A content writer with over 12 years experience working across brand
-      identity, publishing and digital products. Maecenas sit amet purus eget
-      ipsum elementum venenatis. Aenean maximus urna magna elementum venenatis,
-      quis rutrum mi semper non purus eget.
-      <br /><br />
-      Purus eget ipsum elementum venenatis. Aenean maximus urna magna elementum
-      venenatis, quis rutrum mi semper non purus eget ipsum elementum venenatis.
+  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -bottom-6 -right-5 sm:-bottom-12 sm:-right-10 lg:-bottom-21 lg:-right-20 xl:-bottom-29 xl:-right-27">
+    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full rotate-180">
+  </div>
+  <div class="max-w-7xl mx-auto space-y-10">
+    <div class="w-fit mx-auto" 
+        data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+      </div>
+      <h2
+        class=" text-light uppercase text-pretty text-center relative"
+      >
+        {{ .title | safeHTML }}
+      </h2>
+    </div>
+    <p class="text-white text-center text-xl" data-aos="fade-up">
+      {{ .content | safeHTML }}
     </p>
   </div>
 </section>
-{{/* /body */}} {{/* cards */}}
-<section class="bg-dark">
-  <div class="container mx-auto py-30 px-5 space-y-15">
-    <div class="max-w-2xl mx-auto text-center flex flex-col gap-10">
-      <h3
-        class=" text-5xl text-light font-bold leading-14"
-        data-aos="fade-up"
-        data-aos-delay="200"
+{{ end }}
+{{ end }}
+{{/* /content */}}
+
+{{/* cards */}}
+{{ with .Params.cards }}
+{{ if .enable }}
+<section class="bg-primary red-mask relative overflow-hidden">
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -right-5">
+    <div class="mt-9 -ml-9 sm:mt-13 sm:-ml-13 lg:mt-17 lg:-ml-16 xl:mt-16 xl:-ml-15 size-full bg-primary red-mask"></div>
+  </div>
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -left-5 rotate-180">
+    <div class="mt-9 -ml-9 sm:mt-13 sm:-ml-13 lg:mt-17 lg:-ml-16 xl:mt-16 xl:-ml-15 size-full bg-primary red-mask"></div>
+  </div>
+  <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
+    <div class="flex flex-col justify-center gap-y-10" data-aos="fade-up">
+      <h2
+        class="text-light text-center"
       >
-        What I Do
-      </h3>
+        {{ .title }}
+      </h2>
     </div>
-    <div
-      id="stats-grid"
-      class="relative grid md:grid-cols-2 lg:grid-cols-3 gap-5"
-    >
-      <div
-        data-aos="zoom-in"
-        data-aos-delay="200"
-        class="card-spotlight grid grid-rows-3 text-center rounded-md bg-glass border-light/20 border p-7 gap-y-5"
+    <div id="stats-grid" class="relative grid lg:grid-cols-3 gap-5">
+      {{ range $i, $p := .card }}
+      {{ $odd := modBool $i 2 }}
+      <div data-aos="fade-up"
+        class="grid lg:grid-rows-2 gap-5 lg:gap-10 text-center {{ if $odd }}bg-dark{{ else }}bg-light{{ end }} p-5"
       >
-        <h5 class=" text-light text-2xl font-semibold">
-          Cybersecurity Research
-        </h5>
-
-        <p class=" text-light row-span-2">
-          I analyze vulnerabilities, CVEs, exploit chains, and document them in
-          simplified, actionable form for students and self-learners.
+        <h5 class=" text-primary text-4xl lg:text-6xl font-black">{{ .title | safeHTML }}</h5>
+        <p class="heading-sm {{ if $odd }}text-light{{ else }}text-dark{{ end }}">
+          {{ .content | safeHTML }}
         </p>
       </div>
-
-      <div
-        data-aos="zoom-in"
-        data-aos-delay="400"
-        class="card-spotlight grid grid-rows-3 text-center rounded-md bg-glass border-light/20 border p-7 gap-y-5"
-      >
-        <h5 class=" text-light text-2xl font-semibold">
-          Pentesting & Lab Walkthroughs
-        </h5>
-
-        <p class=" text-light row-span-2">
-          From Linux/Windows privilege escalation to AD attack paths, I create
-          detailed OSCP-style walkthroughs based on real lab machines.
-        </p>
-      </div>
-
-      <div
-        data-aos="zoom-in"
-        data-aos-delay="600"
-        class="card-spotlight grid grid-rows-3 text-center rounded-md bg-glass border-light/20 border p-7 gap-y-5"
-      >
-        <h5 class=" text-light text-2xl font-semibold">
-          Red Team Notes & Guides
-        </h5>
-
-        <p class=" text-light row-span-2">
-          Structured notes covering recon, exploitation, post-exploitation,
-          persistence and lateral movement — without any fluff.
-        </p>
-      </div>
+      {{ end }}
     </div>
   </div>
 </section>
+{{ end }}
+{{ end }}
 {{/* /cards */}}
-{{/*  cta  */}}
-{{ partial "shared/cta.html" }}
-{{/*  /cta  */}}
+
+{{/* faqs */}}
+{{ with .Params.faqs }}
+{{ if .enable }}
+<section class="bg-mask pt-3 pb-10 px-5">
+
+  <div class="max-w-7xl mx-auto space-y-10 ">
+    <div class="w-fit mx-auto" 
+        data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+      </div>
+      <h2
+        class=" text-light uppercase text-pretty text-center relative"
+      >
+        {{ .title | safeHTML }}
+      </h2>
+    </div>
+
+    <div class="flex flex-col gap-5">
+      {{ range $i, $p := .faq }}
+      <div class="bg-primary p-3 rounded-md group" data-aos="fade-up">
+        <input id="faq-{{ $i }}" type="checkbox" hidden>
+        <label for="faq-{{ $i }}" class="flex justify-between items-center text-light heading-sm cursor-pointer gap-3">
+          {{ .title | safeHTML }}
+          <span>
+            <span class="bg-light text-dark rounded-full size-7 flex justify-center items-center text-xl">+</span>
+          </span>
+        </label>
+        <div class="text-light max-h-0 opacity-0 pointer-events-none transition-[max-height] duration-300">
+          {{ .content | safeHTML }}
+        </div>
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const checkbox = document.getElementById("faq-{{ $i }}");
+            const content = checkbox.nextElementSibling.nextElementSibling;
+            const icon = checkbox.nextElementSibling.children[0].children[0];
+
+            checkbox.addEventListener("change", () => {
+              if (checkbox.checked) {
+                content.classList.remove("max-h-0", "opacity-0", "pointer-events-none");
+                content.classList.add("max-h-50", "opacity-100");
+                icon.innerHTML = '-';
+              } else {
+                content.classList.add("max-h-0", "opacity-0", "pointer-events-none");
+                content.classList.remove("max-h-50", "opacity-100");
+                icon.innerHTML = '+';
+              }
+            });
+          });
+          </script>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+{{/* /faqs */}}
+
+{{/* news */}}
+<section class="bg-mask py-10 px-5">
+
+  <div class="max-w-7xl mx-auto space-y-10 ">
+    <div class="w-fit mx-auto" 
+        data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+      </div>
+      <h2
+        class=" text-light uppercase text-pretty text-center relative"
+      >
+        News
+      </h2>
+    </div>
+    <div class="relative" data-aos="fade-up">
+      <!-- prev -->
+      <button aria-label="next slide" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
+        <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
+        </svg>
+      </button>
+      <!-- /prev -->
+
+      <!-- next -->
+       <button aria-label="prev slide"  class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
+        <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
+        </svg>
+      </button>
+      <!-- /next -->
+      <div class="swiper articleSwiper">
+        <div class="swiper-wrapper">
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
+                </div>
+                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+            </a>
+          </div>
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
+                </div>
+                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+            </a>
+          </div>
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
+                </div>
+                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+            </a>
+          </div>
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
+                </div>
+                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+            </a>
+          </div>
+  
+          <div class="swiper-slide">
+            <a href="" class="inline-flex flex-col items-stretch group shadow-xl">
+              <div class="overflow-hidden">
+                <img src='{{ "images/linux.webp" | relURL }}' alt="" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+              </div>
+              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
+                <div class="flex flex-wrap gap-3">
+                  <span class=" text-light uppercase">Jan 24, 2025</span>
+                  <span class=" text-primary uppercase">2 Min Read</span>
+                </div>
+                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h5>
+                <div>
+                  {{ partial "components/button.html" (dict "label" "Read More")}}
+                </div>
+              </div>
+              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+            </a>
+          </div>
+           
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-center items-stretch">
+      {{ partial "components/button.html" (dict "label" "Explore All" "link" "true" ) }}
+    </div>
+  </div>
+</section>
+{{/* /news */}}
+
+{{/* form */}}
+<section class="bg-mask py-10">
+  {{ partial "shared/form.html" . }}
+</section>
+{{/* /form */}}
+
 {{ end }}

@@ -5,6 +5,9 @@
     {{ partial "essentials/head.html" . }}
 </head>
 <body class="bg-dark">
+    {{ if eq .Section "blog" }}
+    {{ partial "essentials/js.html" . }}
+    {{ end }}
     <main class="max-w-[1900px] mx-auto">
     {{/*  header import  */}}
     {{ partial "shared/header.html" . }}
@@ -18,6 +21,8 @@
         {{ partial "shared/footer.html" . }}
     </main>
         {{/*  js import  */}}
+        {{ if ne .Section "blog" }}
         {{ partial "essentials/js.html" . }}
+        {{ end }}
 </body>
 </html>

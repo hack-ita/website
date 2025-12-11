@@ -1,6 +1,6 @@
 ---
 title: Services
-image: "images/services-hero.webp"
+image: "images/red-team.jpg"
 
 #####################
 ##### Content

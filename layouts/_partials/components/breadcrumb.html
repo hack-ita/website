@@ -1,13 +1,13 @@
 <nav aria-label="breadcrumb" class="text-light">
-  <ol class="flex items-stretch">
+  <ol class="flex flex-wrap items-center">
     {{ range .Ancestors.Reverse }}
-      <li>
-        {{ partial "components/link.html" (dict "label" .LinkTitle "url" .RelPermalink ) }}
+      <li class="flex items-center">
+        {{ partial "components/link.html" (dict "label" .LinkTitle "url" .RelPermalink "class" "text-xs" ) }}
         <span class="mx-3">/</span>
       </li>
     {{ end }}
-    <li class="active">
-      {{ partial "components/link.html" (dict "label" .LinkTitle "url" .RelPermalink ) }}
+    <li class="text-light/80 uppercase text-xs font-semibold">
+      {{ .Title }}
     </li>
   </ol>
 </nav>

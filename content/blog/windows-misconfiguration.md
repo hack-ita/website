@@ -2,11 +2,10 @@
 title: Abusing Windows service misconfigurations
 description: Real patterns you will actually see in labs and internal assessments.
 image: "images/windows.webp"
-categories: windows
-tags: services
+categories: ["windows"]
+tags: ["services"]
 ---
 
----
 __Advertisement :)__
 
 - __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image

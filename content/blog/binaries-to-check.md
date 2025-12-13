@@ -2,11 +2,10 @@
 title: SUID binaries you must always check
 description: Quick wins and manual checks to pop root in typical OSCP boxes.
 image: "images/linux.webp"
-categories: linux
-tags: suid
+categories: ["linux"]
+tags: ["suid"]
 ---
 
----
 __Advertisement :)__
 
 - __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image

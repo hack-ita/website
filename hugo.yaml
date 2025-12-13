@@ -3,6 +3,9 @@ baseURL: https://example.org/
 languageCode: en-us
 title: My New Hugo Site
 
+#### Extra settings
+enableEmoji: true
+
 #### Site menus
 menus:
   main: ## Main/header menu
@@ -25,6 +28,7 @@ menus:
 
 #### Site params
 params:
+  reading_speed: 170
   header: ## Header params
     logo: "images/logo-wobg.png"
 

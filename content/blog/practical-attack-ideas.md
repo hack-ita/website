@@ -2,11 +2,10 @@
 title: "Ports 0�100: practical attack ideas"
 description: "SSH, RDP, SMB, HTTP: what to try first when time matters."
 image: "images/networking.webp"
-categories: networking
-tags: services
+categories: ["networking"]
+tags: ["services"]
 ---
 
----
 __Advertisement :)__
 
 - __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image

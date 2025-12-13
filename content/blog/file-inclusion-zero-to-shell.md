@@ -3,11 +3,10 @@ title: Local File Inclusion From Zero To Shell
 description: Learn the exact steps to turn a boring file read into full RCE using logs and filters.
 image: "images/web-hacking.webp"
 featured: true
-categories: web-hacking
-tags: lfi / rfi
+categories: ["web-hacking"]
+tags: ["lfi / rfi"]
 ---
 
----
 __Advertisement :)__
 
 - __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image

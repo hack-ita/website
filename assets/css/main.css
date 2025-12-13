@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @source "hugo_stats.json";
 @source inline("h-20, rotate-45, -rotate-45", "top-23", "top-30", "overflow-hidden");
 
@@ -34,6 +35,38 @@ h1, h2 {
 
 .heading-sm {
   @apply text-[max(20px,min(20px,1vw))] leading-none uppercase font-bold text-pretty;
+}
+
+.prose > h1 h2 h3 h4 h5 h6 {
+  @apply text-primary;
+}
+
+.prose blockquote {
+  @apply border-primary;
+}
+
+.prose li::marker {
+  @apply text-primary;
+}
+
+.prose a:hover {
+  @apply text-primary;
+}
+
+.prose * {
+  @apply scroll-mt-30
+}
+
+#TableOfContents a:hover {
+  @apply text-primary;
+}
+
+#TableOfContents ul {
+  @apply flex flex-col gap-y-2;
+}
+
+#TableOfContents > ul ul {
+  @apply ml-5 mt-2;
 }
 
 .header-glass {

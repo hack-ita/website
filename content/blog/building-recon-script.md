@@ -2,11 +2,10 @@
 title: Building a recon script you actually use
 description: Glue nmap, httpx and custom logic into one clean workflow.
 image: "images/tools.webp"
-categories: tools
-tags: recon
+categories: ["tools"]
+tags: ["recon"]
 ---
 
----
 __Advertisement :)__
 
 - __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image

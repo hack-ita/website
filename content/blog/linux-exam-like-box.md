@@ -2,11 +2,10 @@
 title: "Full writeup of a Linux exam-like box"
 description: Enumeration, exploitation and privesc with reusable notes.
 image: "images/walkthrough.webp"
-categories: walkthrough
-tags: oscp-style
+categories: ["walkthrough"]
+tags: ["oscp-style"]
 ---
 
----
 __Advertisement :)__
 
 - __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image

@@ -1,8 +1,49 @@
 {{ define "main" }}
-    <div class="pt-30 pb-15">
-        <h1 class="text-light">{{ .Title }}</h1>
+    <div class="mt-30 lg:p-5 pt-0 flex flex-col-reverse lg:flex-row gap-5 max-w-7xl mx-auto">
+        <div class="flex-4/6 bg-glass rounded-md border border-light/20 border-l-4 border-l-primary shadow-xl p-5">
+            <article class="flex flex-col gap-5 items-start">
+                {{ partial "components/breadcrumb.html" . }}
+                {{ range .Params.categories }}
+                <span class="px-3 py-1 text-primary border border-primary rounded-full uppercase">{{ . }}</span>
+                {{ end }}
+                <h1 class="text-primary">{{ .Title }}</h1>
+                {{ with .Description }}
+                <p class="text-light text-pretty text-lg">{{ . }}</p>
+                {{ end }}
+                <ul class="flex flex-wrap gap-5 items-stretch">
+                    {{ with .PublishDate }}
+                    <li class="py-1 px-3 text-light border border-light rounded-full text-sm uppercase">Pubblicato il {{ . }}</li>
+                    {{ end }}
+                    {{ $readingTime := div (float .WordCount) 170 }}
+                    {{ $readingTime = math.Ceil $readingTime }}
+                    <li class="py-1 px-3 text-light border border-light rounded-full text-sm uppercase">Tempo di lettura: {{ $readingTime }} min</li>
+                    {{ with .Params.author }}
+                    <li class="py-1 px-3 text-light border border-light rounded-full text-sm uppercase">Autore: {{ . }}</li>
+                    {{ end }}
+                </ul>
+                <div class="pt-5 border-t border-light/20 prose prose-invert max-w-none">
+                    {{ .Content }}
+                </div>
+                <ul class="pt-5 border-t border-light/20 flex gap-5 items-stretch w-full">
+                    {{ range .Params.tags }}
+                    <li class="px-3 py-1 rounded-full text-light text-sm border border-light">#{{ . }}</li>
+                    {{ end }}
+                </ul>
+            </article>
+        </div>
+        <div class="flex-2/6 relative">
+            <div
+                class="bg-glass rounded-md border border-light/20 border-l-4 border-l-primary shadow-xl p-5 sticky top-30 text-light lg:max-h-[80vh] lg:overflow-y-scroll">
+                <h3 class="text-3xl mb-3">Table Of Contents</h3>
+                {{ .TableOfContents }}
+            </div>
+        </div>
     </div>
-    <div class="text-light py-10">
-        {{ .Content }}
-    </div>
+    {{ if eq .Parent.Title "Blog" }}
+    {{/* cta */}}
+    <section class="bg-mask py-10">
+        {{ partial "shared/cta.html" }}
+    </section>
+    {{/* /cta */}}
+    {{ end }}
 {{ end }}

@@ -9,43 +9,13 @@
     <div class="relative lg:col-span-5">
       <div class="swiper heroImgSwiper h-[70vh]">
         <div class="swiper-wrapper">
-  
+          {{ range where .Site.RegularPages "Section" "blog" | first 6 }}
           <div class="swiper-slide">
             <div class="size-full">
-              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+              <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
             </div>
           </div>
-
-          <div class="swiper-slide">
-            <div class="size-full">
-              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
-            </div>
-          </div>
-
-          <div class="swiper-slide">
-            <div class="size-full">
-              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
-            </div>
-          </div>
-
-          <div class="swiper-slide">
-            <div class="size-full">
-              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
-            </div>
-          </div>
-
-          <div class="swiper-slide">
-            <div class="size-full">
-              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
-            </div>
-          </div>
-
-          <div class="swiper-slide">
-            <div class="size-full">
-              <img src='{{ "images/hackita-hero.webp" | relURL }}' alt="" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
-            </div>
-          </div>
-  
+          {{ end }}
         </div>
       </div>
       <div class="hero-swiper-pagination flex justify-center items-center my-10"></div>
@@ -53,91 +23,21 @@
     <div class="lg:h-[80vh] lg:overflow-y-scroll 2xl:overflow-y-hidden lg:col-span-2 px-5">
       <div class="swiper heroTextSwiper">
           <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-light">
-  
-            <div class="swiper-slide pb-5">
+            {{ range $i, $p := where .Site.RegularPages "Section" "blog" | first 6 }}
+            <div class="swiper-slide {{ if eq $i 0 }}pb-5{{ else }}py-5{{ end }}">
               <div class="space-y-2 px-5">
                 <h5 class="heading-sm text-light transition-colors title">
-                  1 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  {{ .Title }}
                 </h5>
                 <div class="dets space-y-2">
                   <p class=" text-light line-clamp-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
+                    {{ .Description }}
                   </p>
-                  {{ partial "components/link.html" (dict "label" "Read More") }}
+                  {{ partial "components/link.html" (dict "label" "Read More" "url" .RelPermalink) }}
                 </div>
               </div>
             </div>
-  
-            <div class="swiper-slide py-5">
-              <div class="space-y-2 px-5">
-                <h5 class="heading-sm text-light transition-colors title">
-                  2 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </h5>
-                <div class="dets space-y-2">
-                  <p class=" text-light line-clamp-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
-                  </p>
-                  {{ partial "components/link.html" (dict "label" "Read More") }}
-                </div>
-              </div>
-            </div>
-  
-            <div class="swiper-slide py-5">
-              <div class="space-y-2 px-5">
-                <h5 class="heading-sm text-light transition-colors title">
-                  3 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </h5>
-                <div class="dets space-y-2">
-                  <p class=" text-light line-clamp-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
-                  </p>
-                  {{ partial "components/link.html" (dict "label" "Read More") }}
-                </div>
-              </div>
-            </div>
-
-            <div class="swiper-slide py-5">
-              <div class="space-y-2 px-5">
-                <h5 class="heading-sm text-light transition-colors title">
-                  4 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </h5>
-                <div class="dets space-y-2">
-                  <p class=" text-light line-clamp-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
-                  </p>
-                  {{ partial "components/link.html" (dict "label" "Read More") }}
-                </div>
-              </div>
-            </div>
-  
-            <div class="swiper-slide py-5">
-              <div class="space-y-2 px-5">
-                <h5 class="heading-sm text-light transition-colors title">
-                  5 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </h5>
-                <div class="dets space-y-2">
-                  <p class=" text-light line-clamp-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
-                  </p>
-                  {{ partial "components/link.html" (dict "label" "Read More") }}
-                </div>
-              </div>
-            </div>
-
-            <div class="swiper-slide py-5">
-              <div class="space-y-2 px-5">
-                <h5 class="heading-sm text-light transition-colors title">
-                  6 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </h5>
-                <div class="dets space-y-2">
-                  <p class=" text-light line-clamp-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi cumque nemo, corporis eligendi quas saepe dolorum rerum excepturi non consequatur nesciunt esse tempore!
-                  </p>
-                  {{ partial "components/link.html" (dict "label" "Read More") }}
-                </div>
-              </div>
-            </div>
-  
+            {{ end }}
           </div>
       </div>
     </div>

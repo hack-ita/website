@@ -57,6 +57,15 @@ h1, h2 {
   @apply scroll-mt-30
 }
 
+pre:has(> code) {
+  @apply bg-light text-dark;
+}
+
+.highlight pre {
+  background-color: var(--color-light) !important;
+  color: var(--color-dark) !important;
+}
+
 #TableOfContents a:hover {
   @apply text-primary;
 }

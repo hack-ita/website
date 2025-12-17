@@ -1,7 +1,7 @@
 ---
 title: Local File Inclusion From Zero To Shell
 description: Learn the exact steps to turn a boring file read into full RCE using logs and filters.
-image: "images/web-hacking.webp"
+image: "images/web-hacking-new.png"
 featured: true
 categories: ["web-hacking"]
 tags: ["lfi / rfi"]

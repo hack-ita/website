@@ -66,7 +66,7 @@
       <strong class="heading-sm text-light">Quick Links</strong>
       {{ range site.Menus.main }}
       <li>
-        {{ partial "components/link.html" (dict "link" .URL "label" .Name) }}
+        {{ partial "components/link.html" (dict "url" .URL "label" .Name) }}
       </li>
       {{ end }}
     </nav>

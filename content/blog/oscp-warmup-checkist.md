@@ -1,7 +1,7 @@
 ---
 title: "Daily OSCP warm-up checklist"
 description: A short, repeatable routine to keep your hands sharp between labs.
-image: "images/guide-risorse.webp"
+image: "images/guide-resources-new.png"
 categories: ["guides-resources"]
 tags: ["playbook"]
 ---

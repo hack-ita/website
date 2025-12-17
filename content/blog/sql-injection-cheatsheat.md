@@ -1,7 +1,7 @@
 ---
 title: Boolean & time-based SQL injection cheatsheat
 description: Payload patterns and tricks that speed up exploitation on exam-like machines.
-image: "images/web-hacking.webp"
+image: "images/web-hacking-new.png"
 categories: ["web-hacking"]
 tags: ["sqli"]
 ---

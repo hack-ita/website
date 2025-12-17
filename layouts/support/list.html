@@ -1,0 +1,140 @@
+{{ define "main" }}
+
+    {{/* hero */}}
+    {{ partial "shared/hero.html" (dict "title" .Title "description" .Description "page" .) }}
+    {{/* /hero */}}
+
+    {{/* content */}}
+    <section class="py-10 px-5 bg-light">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="uppercase mb-10">Donazioni in crypto</h3>
+            <ul class="rounded-md p-3 lg:p-10 shadow-xl border border-dark/10 bg-light-bg grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <p class="text-dark lg:col-span-3 max-w-3xl text-pretty">Le donazioni vengono usate per acquistare macchine vulnerabili, provare PoC su CVE reali, mantenere attivi i lab e continuare a pubblicare nuovi contenuti tecnici su HackIta.</p>
+                <li class="rounded-md p-3 lg:p-5 flex flex-col gap-5 relative bg-primary overflow-hidden">
+                    <span class="size-30 rotate-30 bg-[#8d0202] absolute -right-10 -top-5"></span>
+                    <span class="text-light text-sm uppercase relative">Wallet</span>
+                    <h4 class="text-light hero-heading uppercase relative">Bitcoin (BTC)</h4>
+                    <input
+                        id="btcAddress"
+                        type="text"
+                        value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+                        readonly
+                        onclick="this.select()"
+                        class="p-2 rounded-md bg-light-bg shadow-inner border border-dashed focus:outline-none cursor-pointer relative">
+                    <button
+                        class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase relative cursor-pointer"
+                        onclick="
+                            const btc = document.getElementById('btcAddress');
+                            btc.select();
+                            navigator.clipboard.writeText(btc.value);
+                            alert('Copied to clipboard!')
+                        "
+                        >
+                        Copy
+                    </button>
+                </li>
+
+                <li class="rounded-md p-3 lg:p-5 flex flex-col gap-5 relative bg-primary overflow-hidden">
+                    <span class="size-30 rotate-30 bg-[#8d0202] absolute -right-10 -top-5"></span>
+                    <span class="text-light text-sm uppercase relative">Wallet</span>
+                    <h4 class="text-light hero-heading uppercase relative">Ethereum (ETH)</h4>
+                    <input
+                        id="ethAddress"
+                        type="text"
+                        value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+                        readonly
+                        onclick="this.select()"
+                        class="p-2 rounded-md bg-light-bg shadow-inner border border-dashed focus:outline-none cursor-pointer relative">
+                    <button
+                        class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase relative cursor-pointer"
+                        onclick="
+                            const eth = document.getElementById('ethAddress');
+                            eth.select();
+                            navigator.clipboard.writeText(eth.value);
+                            alert('Copied to clipboard!')
+                        "
+                        >
+                        Copy
+                    </button>
+                </li>
+
+                <li class="rounded-md p-3 lg:p-5 flex flex-col gap-5 relative bg-primary overflow-hidden">
+                    <span class="size-30 rotate-30 bg-[#8d0202] absolute -right-10 -top-5"></span>
+                    <span class="text-light text-sm uppercase relative">Wallet</span>
+                    <h4 class="text-light hero-heading uppercase relative">Monero (XMR)</h4>
+                    <input
+                        id="xmrAddress"
+                        type="text"
+                        value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+                        readonly
+                        onclick="this.select()"
+                        class="p-2 rounded-md bg-light-bg shadow-inner border border-dashed focus:outline-none cursor-pointer relative">
+                    <button
+                        class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase relative cursor-pointer"
+                        onclick="
+                            const xmr = document.getElementById('xmrAddress');
+                            xmr.select();
+                            navigator.clipboard.writeText(xmr.value);
+                            alert('Copied to clipboard!')
+                        "
+                        >
+                        Copy
+                    </button>
+                </li>
+            </ul>
+
+
+            <div class="p-3 lg:p-10 shadow bg-light-bg mt-10 rounded-md">
+                <h2 class="uppercase mb-10">Cosa rende possibile</h3>
+                <ul class="grid lg:grid-cols-2 gap-5">
+                    <li class="rounded-md p-3 lg:p-5 border-2 bg-dark border-dark flex flex-col gap-5">
+                        <h4 class="text-light heading-sm">Spingere HackIta oltre il “semplice blog”</h4>
+                        <p class="text-light">Ogni donazione non è una mancia, ma un modo concreto per trasformare HackIta in una piattaforma di formazione offensiva che puoi usare in CTF, OSCP/OSCE3 e pro lab.</p>
+                        <ul class="text-light flex flex-col gap-3 list-disc list-inside">
+                            <li>Comprare macchine vulnerabili e scenari Active Directory.</li>
+                            <li>Testare exploit reali su CVE moderne e scrivere PoC chiari.</li>
+                            <li>Produrre walkthrough OSCP-style senza fuffa.</li>
+                            <li>Creare cheat sheet, script e mini-tool pronti all’uso.</li>
+                            <li>Mantenere il progetto indipendente e senza sponsor spazzatura.</li>
+                        </ul>
+                    </li>
+
+                    <li class="rounded-md p-3 lg:p-5 bg-light border-2 border-dark flex flex-col gap-5">
+                        {{ with where .Site.RegularPages "Section" "blog" }}
+                        <h2 class="text-primary">{{ . | len }}+</h2>
+                        {{ end }}
+                        <p class="text-dark uppercase">Articoli in roadmap</p>
+                        <div class="flex flex-wrap gap-3 items-center">
+                            <span class="uppercase py-1 px-3 text-sm bg-primary rounded-full text-light">walkthrough</span>
+                            <span class="uppercase py-1 px-3 text-sm bg-dark rounded-full text-light">cve & exploit</span>
+                        </div>
+                    </li>
+
+                    <li class="rounded-md p-3 lg:p-5 bg-light border-2 border-dark flex flex-col gap-5">
+                        <h2 class="text-primary">24/7</h2>
+                        <p class="text-dark uppercase">Lab & test continui</p>
+                        <div class="flex flex-wrap gap-3 items-center">
+                            <span class="uppercase py-1 px-3 text-sm bg-primary rounded-full text-light">oscp / osce3</span>
+                            <span class="uppercase py-1 px-3 text-sm bg-dark rounded-full text-light">red team</span>
+                        </div>
+                    </li>
+
+                    <li class="rounded-md p-3 lg:p-5 bg-light border-2 border-dark flex flex-col gap-5">
+                        <h2 class="text-primary">8</h2>
+                        <p class="text-dark uppercase">Pilastri di contenuti</p>
+                        <div class="flex flex-wrap gap-3 items-center">
+                            <span class="uppercase py-1 px-3 text-sm bg-primary rounded-full text-light">linux</span>
+                            <span class="uppercase py-1 px-3 text-sm bg-dark rounded-full text-light">windows</span>
+                            <span class="uppercase py-1 px-3 text-sm bg-primary rounded-full text-light">web hacking</span>
+                            <span class="uppercase py-1 px-3 text-sm bg-dark rounded-full text-light">tools</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+    {{/* /content */}}
+
+
+{{ end }}

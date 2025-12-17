@@ -1,13 +1,16 @@
 {{ $customBg := .page.Params.image | relURL }}
 {{ $heroBg := "images/hackita-hero.webp" | relURL }}
 <section
-    class="h-[80vh] mt-30 bg-cover bg-no-repeat {{ if eq .bg_top "true" }}{{ else }}bg-center{{ end }} relative after:absolute after:inset-0 after:bg-primary after:mix-blend-multiply {{ if .page.Params.image }}bg-[url('{{ $customBg }}')]{{ else if .bg }}bg-[url('{{ .bg | relURL }}')]{{ else }}bg-[url('{{ $heroBg }}')]{{ end }}">
-    <div class="size-full flex flex-col items-center justify-center gap-y-10 relative z-10">
+    class="h-[80vh] {{ if eq .bg_top "true" }}{{ else }}bg-center{{ end }} relative {{ if eq .page.Params.image "none" }}pt-30{{ else if .page.Params.image }}mt-30 bg-[url('{{ $customBg }}')] bg-cover bg-no-repeat after:absolute after:inset-0 after:bg-primary after:mix-blend-multiply{{ else }}bg-[url('{{ $heroBg }}')]bg-cover bg-no-repeat after:absolute after:inset-0 after:bg-primary after:mix-blend-multiply{{ end }}">
+    <div class="size-full max-w-2xl mx-auto flex flex-col items-center justify-center gap-y-10 relative z-10">
         <h1
             class=" text-light uppercase text-pretty text-center relative"
         >
             {{ .title }}
         </h1>
+        {{ with .description }}
+        <p class="text-light text-center text-pretty">{{ . }}</p>
+        {{ end }}
         {{ if eq .breadcrumb "disable" }}
         {{ else }}
         {{ partial "components/breadcrumb.html" .page }}

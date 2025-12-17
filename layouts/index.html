@@ -126,8 +126,12 @@
       </div>
       <div class="flex flex-col gap-y-5">
         <div class="flex flex-wrap gap-5">
-          <span class=" text-light uppercase">Jan 24, 2025</span>
-          <span class=" text-primary uppercase">2 Min Read</span>
+          {{ with .PublishDate }}
+          <span class=" text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
+          {{ end }}
+          {{ $readingTime := div (float .WordCount) (or .Site.Params.reading_speed 170) }}
+          {{ $readingTime = math.Ceil $readingTime }}
+          <span class=" text-primary uppercase">{{ $readingTime }} Min Read</span>
         </div>
         <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
           {{ .Title }}
@@ -165,7 +169,7 @@
         <div class="swiper-wrapper">
           {{ range after 1 (where .Site.RegularPages "Section" "blog" | first 10) }}
           <div class="swiper-slide">
-            <a href="{{ .RelPermalink }}" class="inline-flex flex-col items-stretch group shadow-xl">
+            <div href="{{ .RelPermalink }}" class="flex flex-col items-stretch group">
               <div class="overflow-hidden">
                 <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
               </div>
@@ -186,7 +190,7 @@
                 </div>
               </div>
               <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
-            </a>
+            </div>
           </div>
            {{ end }}
         </div>
@@ -225,7 +229,7 @@
         {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" "/about/") }}
       </div>
       <div class="lg:w-1/2" data-aos="fade-up" data-aos-offset="-200">
-        <img src="{{ .image | relURL }}" alt="" class="lg:w-150 lg:ml-auto">
+        <img src="{{ .image | relURL }}" alt="{{ .title }}" class="lg:w-150 lg:ml-auto">
       </div>
     </div>
   </div>

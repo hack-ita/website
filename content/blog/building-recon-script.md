@@ -1,7 +1,7 @@
 ---
 title: Building a recon script you actually use
 description: Glue nmap, httpx and custom logic into one clean workflow.
-image: "images/tools.webp"
+image: "images/tools-new.png"
 categories: ["tools"]
 tags: ["recon"]
 ---

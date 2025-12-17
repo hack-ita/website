@@ -1,7 +1,7 @@
 ---
 title: Abusing Windows service misconfigurations
 description: Real patterns you will actually see in labs and internal assessments.
-image: "images/windows.webp"
+image: "images/windows-new.png"
 categories: ["windows"]
 tags: ["services"]
 ---

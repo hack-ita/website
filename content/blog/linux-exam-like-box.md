@@ -1,7 +1,7 @@
 ---
 title: "Full writeup of a Linux exam-like box"
 description: Enumeration, exploitation and privesc with reusable notes.
-image: "images/walkthrough.webp"
+image: "images/walkthrough-new.png"
 categories: ["walkthrough"]
 tags: ["oscp-style"]
 ---

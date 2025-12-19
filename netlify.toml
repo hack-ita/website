@@ -8,6 +8,7 @@ TZ = "Europe/Oslo"
 [build]
 publish = "public"
 command = """\
+  node scripts/copyImages.js \
   git config core.quotepath false && \
   hugo --gc --minify --baseURL "${URL}"
   """

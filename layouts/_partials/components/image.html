@@ -1,0 +1,51 @@
+{{/* 
+Partial: image.html
+Usage: 
+{{ partial "image.html" (dict "src" "images/hero.jpg" "alt" "Hero Image" "class" "rounded-lg w-full" "width" 1200 "height" 800 "lazy" true) }}
+Parameters:
+- src: path to image in /static folder
+- alt: alt text
+- class: optional tailwind classes
+- width: desired width
+- height: desired height
+- lazy: boolean, whether to use loading="lazy"
+*/}}
+
+{{ $params := . }}
+{{ $src := $params.src }}
+{{ $alt := $params.alt | default "" }}
+{{ $class := $params.class | default "" }}
+{{ $width := $params.width | default 0 }}
+{{ $height := $params.height | default 0 }}
+{{ $lazy := $params.lazy | default true }}
+
+{{/* Extract file extension to auto-detect format */}}
+{{ $ext := strings.TrimPrefix (path.Ext $src) "." }}
+{{ $ext := lower $ext }}
+
+{{/* Get the image resource */}}
+{{ $img := resources.Get $src }}
+
+{{ if $img }}
+    {{/* Resize if width or height is specified */}}
+    {{ if or (gt $width 0) (gt $height 0) }}
+        {{ $img = $img.Fit (printf "%dx%d" $width $height) }}
+    {{ end }}
+
+    {{/* Convert to original format if Hugo requires it for processing */}}
+    {{ if in (slice "jpg" "jpeg" "png" "webp") $ext }}
+        {{ $img = $img | images.Convert $ext }}
+    {{ end }}
+
+    <img 
+        src="{{ $img.RelPermalink }}" 
+        alt="{{ $alt }}" 
+        {{ if $width }}width="{{ $width }}"{{ end }}
+        {{ if $height }}height="{{ $height }}"{{ end }}
+        class="{{ $class }}"
+        {{ if $lazy }}loading="lazy"{{ end }}
+        decoding="async"
+    >
+{{ else }}
+    {{ warnf "Image not found: %s" $src }}
+{{ end }}

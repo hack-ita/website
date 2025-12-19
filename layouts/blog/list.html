@@ -65,7 +65,7 @@
         <article class="rounded-md flex flex-col border border-primary hover:scale-125 transition-transform relative hover:z-10" aria-label="{{ .Title }}">
           <figure class="flex flex-col">
             <div class="h-30 overflow-hidden rounded-t-md">
-              <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover">
+              {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover") }}
             </div>
             <figcaption class="bg-glass flex-1 p-3 flex flex-col gap-5 justify-between items-start">
               <div class="w-full flex justify-between items-center uppercase">

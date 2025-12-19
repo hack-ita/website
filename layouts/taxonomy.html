@@ -4,7 +4,7 @@
 
     <!-- Image -->
     <figure class="lg:col-span-4">
-      <img src="{{ .Params.image | relURL }}" alt="{{ .Params.hero_title }}" class="size-full rounded-md lg:h-80 object-cover">
+      {{ partial "components/image.html" (dict "src" .Params.image "alt" .Params.hero_title "class" "size-full rounded-md lg:h-80 object-cover") }}
     </figure>
 
     <!-- Text Content -->
@@ -57,7 +57,7 @@
                 
                 <!-- Image -->
                 <figure class="lg:flex-2/5">
-                    <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="rounded-md">
+                  {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "rounded-md") }}
                 </figure>
                 
                 <!-- Content -->

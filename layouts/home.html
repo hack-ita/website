@@ -10,11 +10,7 @@
           {{ range where .Site.RegularPages "Section" "blog" | first 6 }}
           <div class="swiper-slide">
             <div class="lg:size-full">
-              <img 
-                src="{{ .Params.image | relURL }}" 
-                alt="{{ .Title }}" 
-                class="lg:size-full object-cover hover:scale-115 duration-300 transition-transform"
-              >
+              {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "lg:size-full object-cover hover:scale-115 duration-300 transition-transform") }}
             </div>
           </div>
           {{ end }}
@@ -80,7 +76,7 @@
           
           <!-- Category Image -->
           <div class="overflow-hidden">
-            <img src="{{ .Page.Params.image | relURL }}" alt="{{ .Page.Title }}" class="size-full object-cover rounded-t-md group-hover:scale-115 transition-transform duration-500">
+            {{ partial "components/image.html" (dict "src" .Page.Params.image "alt" .Page.Title "class" "lg:size-full object-cover rounded-t-md group-hover:scale-115 transition-transform duration-500") }}
           </div>
 
           <!-- Category Info -->
@@ -144,7 +140,7 @@
     {{ range where .Site.RegularPages "Section" "blog" | first 1 }}
     <a href="{{ .RelPermalink }}" class="hidden lg:grid grid-cols-2 gap-5 group" data-aos="fade-up">
       <div class="size-full overflow-hidden">
-        <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="group-hover:scale-115 transition-transform duration-500">
+        {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "group-hover:scale-115 transition-transform duration-500") }}
       </div>
       <article class="flex flex-col gap-y-5">
         <div class="flex flex-wrap gap-5">
@@ -192,7 +188,7 @@
           <div class="swiper-slide">
             <article class="flex flex-col items-stretch group">
               <div class="overflow-hidden">
-                <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+                {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover group-hover:scale-115 transition-transform duration-500") }}
               </div>
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
@@ -256,7 +252,7 @@
 
       <!-- Image Column -->
       <figure class="lg:w-1/2" data-aos="fade-up" data-aos-offset="-200">
-        <img src="{{ .image | relURL }}" alt="{{ .title }}" class="lg:w-150 lg:ml-auto">
+        {{ partial "components/image.html" (dict "src" .image "alt" .Title "class" "lg:w-150 lg:ml-auto") }}
       </figure>
 
     </div>

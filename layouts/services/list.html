@@ -118,7 +118,7 @@
       </header>
 
       <figure class="lg:w-6/12">
-        <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="w-full h-80 object-cover object-top rounded-md">
+        {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "w-full h-80 object-cover object-top rounded-md") }}
       </figure>
 
     </article>

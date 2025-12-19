@@ -3,7 +3,7 @@
     <!-- Heading -->
     <div class="w-fit mx-auto" data-aos="fade-up">
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
       <h2 class="text-light uppercase text-pretty text-center relative">News</h2>
     </div>
@@ -31,7 +31,7 @@
           <div class="swiper-slide">
             <a href="{{ .RelPermalink }}" class="inline-flex flex-col items-stretch group shadow-xl">
               <div class="overflow-hidden">
-                <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
+                {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover group-hover:scale-115 transition-transform duration-500") }}
               </div>
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">

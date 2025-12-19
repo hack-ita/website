@@ -52,10 +52,7 @@
 
     <!-- Image -->
     <figure class="lg:shrink-0">
-      <img
-        src="{{ .Params.image | relURL }}"
-        alt="Categoria {{ .Title }} – {{ .Params.hero_title }}"
-        class="h-full lg:h-80 object-cover rounded-md">
+      {{ partial "components/image.html" (dict "src" .Params.image "alt" ( print "Categoria " .Title " - " .Params.hero_title) "class" "h-full lg:h-80 object-cover rounded-md") }}
     </figure>
 
   </div>
@@ -76,10 +73,7 @@
         {{ range .Pages }}
         <li class="grid lg:grid-cols-5 gap-5 p-5 lg:p-3 bg-glass border border-light/10 rounded-md shadow-xl transition-shadow hover:shadow-primary/20">
             <figure class="lg:col-span-2">
-                <img 
-                    src="{{ .Params.image | relURL }}" 
-                    alt="{{ .Title }}" 
-                    class="size-full rounded-md lg:h-40 object-cover">
+              {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full lg:h-40 object-cover rounded-md") }}
             </figure>
 
             <div class="flex flex-col gap-5 lg:gap-3 justify-between lg:col-span-3">

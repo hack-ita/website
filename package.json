@@ -7,7 +7,7 @@
     "tailwindcss": "^4.1.17"
   },
   "scripts": {
-    "build:admin": "tina build",
+    "build:admin": "npx tina build",
     "build:hugo": "node scripts/copyImages.js && git config core.quotepath false && hugo --gc --minify --baseURL \"$URL\"",
     "build": "npm run build:admin && npm run build:hugo"
   },

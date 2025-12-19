@@ -1,4 +1,4 @@
 ---
 title: Blog
-image: "images/hackita-hero.webp"
+image: "/images/hackita-hero.webp"
 ---

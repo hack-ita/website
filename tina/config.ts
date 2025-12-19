@@ -1,6 +1,11 @@
 import { defineConfig } from "tinacms";
+import Home from "./collections/home";
+import About from "./collections/about";
+import BlogIndex from "./collections/blog-index";
+import Blog from "./collections/blog";
+import ServicesIndex from "./collections/services-index";
+import Services from "./collections/services";
 
-// Your hosting provider likely exposes this as an environment variable
 const branch =
   process.env.GITHUB_BRANCH ||
   process.env.VERCEL_GIT_COMMIT_REF ||
@@ -10,48 +15,29 @@ const branch =
 export default defineConfig({
   branch,
 
-  // Get this from tina.io
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
-  // Get this from tina.io
   token: process.env.TINA_TOKEN,
 
   build: {
     outputFolder: "admin",
     publicFolder: "public",
   },
+
   media: {
     tina: {
       mediaRoot: "",
-      publicFolder: "public",
+      publicFolder: "static",
     },
   },
-  // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/r/content-modelling-collections/
+
   schema: {
     collections: [
-      {
-        name: "post",
-        label: "Posts",
-        path: "content/posts",
-        fields: [
-          {
-            type: "string",
-            name: "title",
-            label: "Title",
-            isTitle: true,
-            required: true,
-          },
-          {
-            type: "rich-text",
-            name: "body",
-            label: "Body",
-            isBody: true,
-          },
-        ],
-        ui: {
-          // This is an DEMO router. You can remove this to fit your site
-          router: ({ document }) => `/demo/blog/${document._sys.filename}`,
-        },
-      },
+      Home,
+      About,
+      ServicesIndex,
+      Services,
+      BlogIndex,
+      Blog,
     ],
   },
 });

@@ -1,6 +1,6 @@
 ---
 title: Services
-image: "images/red-team.jpg"
+image: "/images/red-team.jpg"
 
 #####################
 ##### Content

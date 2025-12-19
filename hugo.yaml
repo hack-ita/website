@@ -5,6 +5,7 @@ title: My New Hugo Site
 
 #### Extra settings
 enableEmoji: true
+enableRobotsTXT: true
 
 #### Site menus
 menus:

@@ -1,20 +1,59 @@
-<div class="w-full rounded-md mx-auto relative overflow-hidden border border-secondary">
-  <div class="absolute -top-30 -right-30 size-60 bg-secondary/40 rounded-full"></div>
-  <div class="absolute -bottom-30 -left-30 size-60 bg-secondary/40 rounded-full"></div>
+<section
+  class="w-full rounded-md mx-auto relative overflow-hidden border border-secondary"
+  aria-labelledby="newsletter-title"
+>
+  <!-- Decorative blobs -->
+  <div class="absolute -top-30 -right-30 size-60 bg-secondary/40 rounded-full" aria-hidden="true"></div>
+  <div class="absolute -bottom-30 -left-30 size-60 bg-secondary/40 rounded-full" aria-hidden="true"></div>
+
   <div class="p-5 bg-light/5 bg-clip-padding backdrop-filter backdrop-blur-xl">
     <div class="max-w-3xl mx-auto flex flex-col justify-center items-center gap-5">
-      <span class="uppercase  text-secondary border border-secondary rounded-full py-1 px-3 text-sm">Newsletter HACKITA</span>
-      <h4 class="text-light text-center  text-3xl uppercase font-bold">Entra nella lista gold degli hacker.</h4>
-      <p class="text-light  text-center">Exploit reali, lab per OSCP/OSCE3 e guide pratiche di hacking etico. Niente spam, solo roba che userai davvero.</p>
-      <form action="#success" method="post" class="hn-form">
+
+      <!-- Badge -->
+      <span
+        class="uppercase text-secondary border border-secondary rounded-full py-1 px-3 text-sm"
+        aria-hidden="true"
+      >
+        Newsletter Hackita
+      </span>
+
+      <!-- Heading -->
+      <h2
+        id="newsletter-title"
+        class="text-light text-center text-3xl uppercase font-bold hero-heading"
+      >
+        Entra nella lista gold degli hacker.
+      </h2>
+
+      <!-- Description -->
+      <p class="text-light text-center">
+        Exploit reali, lab per OSCP/OSCE3 e guide pratiche di hacking etico.
+        Niente spam, solo roba che userai davvero.
+      </p>
+
+      <!-- Newsletter Form -->
+      <form
+        action="#success"
+        method="post"
+        class="hn-form"
+        aria-describedby="newsletter-disclaimer"
+      >
         <div class="hn-input-orbit">
           <div class="hn-input-orbit-border">
+
+            <label for="newsletter-email" class="sr-only">
+              Email address
+            </label>
+
             <input
+              id="newsletter-email"
               type="email"
               name="email"
               class="hn-input"
               placeholder="La tua email migliore"
               required
+              autocomplete="email"
+              inputmode="email"
             />
           </div>
         </div>
@@ -23,7 +62,16 @@
           Iscrivimi
         </button>
       </form>
-      <p class=" text-xs text-secondary text-center">Iscrivendoti accetti di ricevere la newsletter di HACKITA. Ti puoi disiscrivere in qualsiasi momento.</p>
+
+      <!-- Disclaimer -->
+      <p
+        id="newsletter-disclaimer"
+        class="text-xs text-secondary text-center"
+      >
+        Iscrivendoti accetti di ricevere la newsletter di HACKITA.
+        Ti puoi disiscrivere in qualsiasi momento.
+      </p>
+
     </div>
   </div>
-</div>
+</section>

@@ -23,3 +23,7 @@
 {{ with (templates.Defer (dict "key" "global")) }}
 {{ partial "essentials/css.html" . }}
 {{ end }}
+
+{{/* scehma import */}}
+{{ partial "schema.html" . }}
+{{/* /scehma import */}}

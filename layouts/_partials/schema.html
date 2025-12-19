@@ -1,0 +1,22 @@
+{{/* Global */}}
+{{ partial "schema/organization.html" . }}
+{{ partial "schema/website.html" . }}
+
+{{/* Homepage */}}
+{{ if .IsHome }}
+  {{ partial "schema/homepage.html" . }}
+
+{{/* Blog single posts */}}
+{{ else if and .IsPage (eq .Section "blog") }}
+  {{ partial "schema/blogposting.html" . }}
+  {{ partial "schema/breadcrumb.html" . }}
+
+{{/* Static pages */}}
+{{ else if .IsPage }}
+  {{ partial "schema/webpage.html" . }}
+  {{ partial "schema/breadcrumb.html" . }}
+
+{{/* List / taxonomy pages */}}
+{{ else }}
+  {{ partial "schema/webpage.html" . }}
+{{ end }}

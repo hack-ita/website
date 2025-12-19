@@ -1,19 +1,24 @@
 {{ $customBg := .page.Params.image | relURL }}
 {{ $heroBg := "images/hackita-hero.webp" | relURL }}
-<section
-    class="h-[90vh] {{ if eq .bg_top "true" }}{{ else }}bg-center{{ end }} relative {{ if eq .page.Params.image "none" }}pt-30{{ else if .page.Params.image }}pt-30 bg-[url('{{ $customBg }}')] bg-cover bg-top bg-no-repeat after:absolute after:inset-0 after:bg-primary after:mix-blend-multiply{{ else }}bg-[url('{{ $heroBg }}')]bg-cover bg-no-repeat after:absolute after:inset-0 after:bg-primary after:mix-blend-multiply{{ end }}">
+
+<header
+    class="h-[90vh] {{ if eq .bg_top "true" }}{{ else }}bg-center{{ end }} relative {{ if eq .page.Params.image "none" }}pt-30{{ else if .page.Params.image }}pt-30 bg-[url('{{ $customBg }}')] bg-cover bg-top bg-no-repeat{{ else }}bg-[url('{{ $heroBg }}')] bg-cover bg-no-repeat{{ end }}"
+    role="banner"
+>
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-dark/50" aria-hidden="true"></div>
+
     <div class="size-full max-w-2xl mx-auto flex flex-col items-center justify-center gap-y-10 relative z-10">
-        <h1
-            class=" text-light uppercase text-pretty text-center relative"
-        >
+        <h1 class="text-light uppercase text-pretty text-center relative">
             {{ .title }}
         </h1>
+
         {{ with .description }}
         <p class="text-light text-center text-pretty">{{ . }}</p>
         {{ end }}
-        {{ if eq .breadcrumb "disable" }}
-        {{ else }}
+
+        {{ if ne .breadcrumb "disable" }}
         {{ partial "components/breadcrumb.html" .page }}
         {{ end }}
     </div>
-</section>
+</header>

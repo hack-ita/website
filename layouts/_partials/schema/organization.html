@@ -1,0 +1,16 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "{{ site.BaseURL }}#organization",
+  "name": "{{ site.Title }}",
+  "url": "{{ site.BaseURL }}",
+  {{ with site.Params.header.logo }}
+  "logo": {
+    "@type": "ImageObject",
+    "url": "{{ . | absURL }}"
+  },
+  {{ end }}
+  "sameAs": []
+}
+</script>

@@ -25,6 +25,26 @@ menus:
       pageRef: "/categories/"
       weight: 50
 
+  footer: ## Footer menu
+    - name: "Home"
+      pageRef: "/"
+      weight: 10
+    - name: "About"
+      pageRef: "/about/"
+      weight: 20
+    - name: "Services"
+      pageRef: "/services/"
+      weight: 30
+    - name: "Blog"
+      pageRef: "/blog/"
+      weight: 40
+    - name: "Category"
+      pageRef: "/categories/"
+      weight: 50
+    - name: "Support"
+      pageRef: "/support/"
+      weight: 50
+
 
 #### Site params
 params:

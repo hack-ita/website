@@ -1,18 +1,20 @@
-{{ define "main" }} {{/* hero */}}
-<section class="bg-[#000000]">
-  <!-- <img
-    src='{{ "images/dev/hero_lines.svg" | relURL }}'
-    class="absolute size-full top-1/2 -translate-y-1/2 opacity-20"
-  /> -->
-  <div
-    class="w-full mx-auto pt-30 grid grid-cols-1 lg:grid-cols-7 justify-between">
+{{ define "main" }}
+{{/* hero */}}
+<section aria-label="Featured Blog Posts">
+  <div class="w-full mx-auto pt-30 grid grid-cols-1 lg:grid-cols-7 justify-between">
+    
+    <!-- Hero Image Swiper -->
     <div class="relative lg:col-span-5">
-      <div class="swiper heroImgSwiper h-[70vh]">
+      <div class="swiper heroImgSwiper lg:h-[70vh]" role="region" aria-label="Featured blog images">
         <div class="swiper-wrapper">
           {{ range where .Site.RegularPages "Section" "blog" | first 6 }}
           <div class="swiper-slide">
-            <div class="size-full">
-              <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover hover:scale-115 duration-300 transition-transform">
+            <div class="lg:size-full">
+              <img 
+                src="{{ .Params.image | relURL }}" 
+                alt="{{ .Title }}" 
+                class="lg:size-full object-cover hover:scale-115 duration-300 transition-transform"
+              >
             </div>
           </div>
           {{ end }}
@@ -20,123 +22,143 @@
       </div>
       <div class="hero-swiper-pagination flex justify-center items-center my-10"></div>
     </div>
+    
+    <!-- Hero Text Swiper -->
     <div class="lg:h-[80vh] lg:overflow-y-scroll 2xl:overflow-y-hidden lg:col-span-2 px-5">
-      <div class="swiper heroTextSwiper">
-          <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-light">
-            {{ range $i, $p := where .Site.RegularPages "Section" "blog" | first 6 }}
-            <div class="swiper-slide {{ if eq $i 0 }}pb-5{{ else }}py-5{{ end }}">
-              <div class="space-y-2 px-5">
-                <h5 class="heading-sm text-light transition-colors title">
-                  {{ .Title }}
-                </h5>
-                <div class="dets space-y-2">
-                  <p class=" text-light line-clamp-4">
-                    {{ .Description }}
-                  </p>
-                  {{ partial "components/link.html" (dict "label" "Read More" "url" .RelPermalink) }}
-                </div>
+      <div class="swiper heroTextSwiper" role="region" aria-label="Featured blog titles and summaries">
+        <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-light">
+          {{ range $i, $p := where .Site.RegularPages "Section" "blog" | first 6 }}
+          <div class="swiper-slide cursor-pointer {{ if eq $i 0 }}pb-5{{ else }}py-5{{ end }}">
+            <article class="space-y-2 px-5">
+              <h2 class="heading-sm text-light transition-colors title">
+                {{ .Title }}
+              </h2>
+              <div class="dets space-y-2">
+                <p class="text-light line-clamp-4">
+                  {{ .Description }}
+                </p>
+                {{ partial "components/link.html" (dict "label" "Read More" "url" .RelPermalink) }}
               </div>
-            </div>
-            {{ end }}
+            </article>
           </div>
+          {{ end }}
+        </div>
       </div>
     </div>
+
   </div>
 </section>
 {{/* /hero */}}
 
 {{/* categories */}}
-<section class="pt-3 pb-10 px-5 bg-mask relative overflow-hidden">
+<section class="pt-3 pb-10 px-5 bg-mask relative overflow-hidden" aria-label="Blog Categories">
+  
+  <!-- Decorative Quote Icons -->
   <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -top-5 -left-5 sm:-top-11 sm:-left-10 lg:-top-20 lg:-left-20 xl:-top-27 xl:-left-27">
-    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full">
+    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full" alt="">
   </div>
   <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -bottom-6 -right-5 sm:-bottom-12 sm:-right-10 lg:-bottom-21 lg:-right-20 xl:-bottom-29 xl:-right-27">
-    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full rotate-180">
+    <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full rotate-180" alt="">
   </div>
+
+  <!-- Section Heading -->
   <div class="max-w-7xl mx-auto space-y-10">
-    <div class="w-fit mx-auto" 
-        data-aos="fade-up">
+    <div class="w-fit mx-auto" data-aos="fade-up">
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2
-        class=" text-light uppercase text-pretty text-center relative"
-      >
+      <h2 class="text-light uppercase text-pretty text-center relative">
         Categories
       </h2>
     </div>
+
+    <!-- Categories Grid -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
       {{ range .Site.Taxonomies.categories }}
-      <div data-aos="fade-up" class="relative hover:z-10">
+      <article data-aos="fade-up" class="relative hover:z-10">
         <div class="group hover:scale-125 hover:shadow-2xl border hover:border-light/20 rounded-md transition-transform">
+          
+          <!-- Category Image -->
           <div class="overflow-hidden">
             <img src="{{ .Page.Params.image | relURL }}" alt="{{ .Page.Title }}" class="size-full object-cover rounded-t-md group-hover:scale-115 transition-transform duration-500">
           </div>
+
+          <!-- Category Info -->
           <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
             <div class="flex flex-wrap gap-3">
-              <span class=" text-primary uppercase">{{ .Pages.Len }} Article</span>
+              <span class="text-primary uppercase">{{ .Pages.Len }} Article</span>
             </div>
-            <h5 class="heading-sm text-light transition-colors group-hover:text-primary">
+            <h3 class="heading-sm text-light transition-colors group-hover:text-primary">
               {{ .Page.Title }}
-            </h5>
+            </h3>
             <div>
               {{ partial "components/button.html" (dict "link" "true" "label" "Learn More" "url" .Page.RelPermalink) }}
             </div>
           </div>
+
+          <!-- Hover Effect Bar -->
           <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
         </div>
-      </div>
+      </article>
       {{ end }}
     </div>
+
+    <!-- See More Button -->
     <div class="flex justify-center items-stretch" data-aos="fade-up">
       {{ partial "components/button.html" (dict "link" "true" "label" "See More" "url" "/categories/") }}
     </div>
+
   </div>
 </section>
 {{/* /categories */}}
 
 {{/* articles */}}
-<section class="pt-3 pb-10 px-5 relative">
+<section class="pt-3 pb-10 px-5 relative" aria-label="Latest Articles">
+  
+  <!-- Background Video -->
   <video
     autoplay
     loop
     muted
     playsinline
     class="absolute inset-0 size-full object-cover object-top-left"
+    aria-hidden="true"
   >
     <source src='{{ "videos/dev/articles_bg.mp4" | relURL }}' type="video/mp4" />
   </video>
-  <div class="absolute inset-0 bg-black opacity-50"></div>
+  <div class="absolute inset-0 bg-black opacity-50" aria-hidden="true"></div>
+
   <div class="max-w-7xl mx-auto space-y-10 relative">
-    <div class="w-fit mx-auto" 
-        data-aos="fade-up">
+    
+    <!-- Section Heading -->
+    <div class="w-fit mx-auto" data-aos="fade-up">
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2
-        class=" text-light uppercase text-pretty text-center relative"
-      >
+      <h2 class="text-light uppercase text-pretty text-center relative">
         Latest Articles
       </h2>
     </div>
+
+    <!-- First Featured Article -->
     {{ range where .Site.RegularPages "Section" "blog" | first 1 }}
     <a href="{{ .RelPermalink }}" class="hidden lg:grid grid-cols-2 gap-5 group" data-aos="fade-up">
       <div class="size-full overflow-hidden">
         <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="group-hover:scale-115 transition-transform duration-500">
       </div>
-      <div class="flex flex-col gap-y-5">
+      <article class="flex flex-col gap-y-5">
         <div class="flex flex-wrap gap-5">
           {{ with .PublishDate }}
-          <span class=" text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
+          <span class="text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
           {{ end }}
           {{ $readingTime := div (float .WordCount) (or .Site.Params.reading_speed 170) }}
           {{ $readingTime = math.Ceil $readingTime }}
-          <span class=" text-primary uppercase">{{ $readingTime }} Min Read</span>
+          <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
         </div>
-        <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
+        <h3 class="heading-sm text-light group-hover:text-primary transition-colors">
           {{ .Title }}
-        </h5>
-        <p class=" text-light text-balance">
+        </h3>
+        <p class="text-light text-balance">
           {{ if .Description }}
           {{ .Description }}
           {{ else }}
@@ -144,61 +166,63 @@
           {{ end }}
         </p>
         <div>
-          {{ partial "components/button.html" (dict "label" "Read More")}}
+          {{ partial "components/button.html" (dict "label" "Read More") }}
         </div>
-      </div>
+      </article>
     </a>
     {{ end }}
+
+    <!-- Swiper for Other Articles -->
     <div class="relative" data-aos="fade-up">
-      <!-- prev -->
-      <button aria-label="next slide" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
+      <!-- Prev / Next Buttons -->
+      <button aria-label="Previous article slide" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
         <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
         </svg>
       </button>
-      <!-- /prev -->
-
-      <!-- next -->
-       <button aria-label="prev slide"  class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
+      <button aria-label="Next article slide" class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
         <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
         </svg>
       </button>
-      <!-- /next -->
-      <div class="swiper articleSwiper">
+
+      <div class="swiper articleSwiper" role="region" aria-label="Additional articles">
         <div class="swiper-wrapper">
           {{ range after 1 (where .Site.RegularPages "Section" "blog" | first 10) }}
           <div class="swiper-slide">
-            <div href="{{ .RelPermalink }}" class="flex flex-col items-stretch group">
+            <article class="flex flex-col items-stretch group">
               <div class="overflow-hidden">
                 <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
               </div>
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
                   {{ with .PublishDate }}
-                  <span class=" text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
+                  <span class="text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
                   {{ end }}
                   {{ $readingTime := div (float .WordCount) (or .Site.Params.reading_speed 170) }}
                   {{ $readingTime = math.Ceil $readingTime }}
-                  <span class=" text-primary uppercase">{{ $readingTime }} Min Read</span>
+                  <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
                 </div>
-                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
+                <h3 class="heading-sm text-light group-hover:text-primary transition-colors">
                   {{ .Title }}
-                </h5>
+                </h3>
                 <div>
-                  {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" .RelPermalink )}}
+                  {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" .RelPermalink ) }}
                 </div>
               </div>
               <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
-            </div>
+            </article>
           </div>
-           {{ end }}
+          {{ end }}
         </div>
       </div>
     </div>
+
+    <!-- Explore All Button -->
     <div class="flex justify-center items-stretch">
       {{ partial "components/button.html" (dict "label" "Explore All" "link" "true" ) }}
     </div>
+
   </div>
 </section>
 {{/* /articles */}}
@@ -206,31 +230,35 @@
 {{/* about */}}
 {{ with .Params.about }}
 {{ if .enable }}
-<section class="bg-mask pt-3 pb-10 px-5">
+<section class="bg-mask pt-3 pb-10 px-5" aria-label="{{ .title }}">
   <div class="max-w-7xl mx-auto space-y-10">
-    <div class="w-fit mx-auto" 
-        data-aos="fade-up" data-aos-offset="-200">
+
+    <!-- Section Heading -->
+    <div class="w-fit mx-auto" data-aos="fade-up" data-aos-offset="-200">
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2
-        class=" text-light uppercase text-pretty text-center relative"
-      >
+      <h2 class="text-light uppercase text-pretty text-center relative">
         {{ .title | safeHTML }}
       </h2>
     </div>
+
+    <!-- Content -->
     <div class="flex flex-col-reverse lg:flex-row gap-10 content-between">
+      
+      <!-- Text Column -->
       <div class="space-y-10 lg:w-1/2" data-aos="fade-up" data-aos-offset="-200">
-        <p
-          class=" text-light text-balance"
-        >
-        {{ .content | safeHTML }}
+        <p class="text-light text-balance">
+          {{ .content | safeHTML }}
         </p>
         {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" "/about/") }}
       </div>
-      <div class="lg:w-1/2" data-aos="fade-up" data-aos-offset="-200">
+
+      <!-- Image Column -->
+      <figure class="lg:w-1/2" data-aos="fade-up" data-aos-offset="-200">
         <img src="{{ .image | relURL }}" alt="{{ .title }}" class="lg:w-150 lg:ml-auto">
-      </div>
+      </figure>
+
     </div>
   </div>
 </section>
@@ -239,70 +267,62 @@
 {{/* /about */}}
 
 {{/* stats */}}
-<section class="bg-primary red-mask relative overflow-hidden">
+<section class="bg-primary red-mask relative overflow-hidden" aria-label="Learn Cyber-Security Stats">
   
-  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -left-5">
+  <!-- Decorative Background Elements -->
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -left-5" aria-hidden="true">
+    <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
+  </div>
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -right-5 rotate-180" aria-hidden="true">
     <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
   </div>
 
-  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -right-5 rotate-180">
-    <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
-  </div>
-
-    <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
+  <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
+    
+    <!-- Section Heading & Typewriter -->
     <div class="flex flex-col justify-center gap-y-10" data-aos="fade-up" data-aos-offset="-400">
-      <h2
-        class="text-light text-center"
-      >
-        Learn Cyber-Security
-      </h2>
-      <p
-        class=" text-light text-balance text-center"
-      >
+      <h2 class="text-light text-center">Learn Cyber-Security</h2>
+      <p class="text-light text-balance text-center">
         From the basics to the OSCP level: <br />
-        <span id="typewriter" class="text-dark font-semibold"></span>
+        <span id="typewriter" class="text-dark font-semibold" aria-hidden="true"></span>
         to become a true pentester.
       </p>
 
-      <!-- Source words (hidden) -->
-      <div id="typewriter-data" class="hidden">
+      <!-- Hidden Typewriter Words (Decorative) -->
+      <div id="typewriter-data" class="hidden" aria-hidden="true">
         <span>technical walkthroughs</span>
         <span>commands</span>
         <span>common errors</span>
         <span>real lab notes</span>
       </div>
     </div>
+
+    <!-- Stats Grid -->
     <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
+      
+      <!-- Stats Cards -->
+      <article data-aos="fade-up" data-aos-offset="-400" class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary text-4xl lg:text-6xl font-black">{{ with where .Site.RegularPages "Section" "blog" }}{{ . | len }}{{ end }}+</span>
+        <h3 class="heading-sm text-xl text-light">Technical Articles</h3>
+      </article>
 
-      <div data-aos="fade-up" data-aos-offset="-400"
-        class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5"
-      >
-        <span class=" text-primary text-4xl lg:text-6xl font-black">{{ with where .Site.RegularPages "Section" "blog" }}{{ . | len }}{{ end }}+</span>
-        <h5 class="heading-sm text-xl text-light">Technical Articles</h5>
-      </div>
+      <article data-aos="fade-up" data-aos-offset="-400" class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
+        <span class="text-primary text-4xl lg:text-6xl font-black">8</span>
+        <h3 class="heading-sm text-xl text-dark">Main Categories</h3>
+      </article>
 
-      <div data-aos="fade-up" data-aos-offset="-400"
-        class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5"
-      >
-        <span class=" text-primary text-4xl lg:text-6xl font-black">8</span>
-        <h5 class="heading-sm text-xl text-dark">Main Categories</h5>
-      </div>
+      <article data-aos="fade-up" data-aos-offset="-400" class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary text-4xl lg:text-6xl font-black">OSCP</span>
+        <h3 class="heading-sm text-xl text-light">Focused</h3>
+      </article>
 
-      <div data-aos="fade-up" data-aos-offset="-400"
-        class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5"
-      >
-        <span class=" text-primary text-4xl lg:text-6xl font-black">OSCP</span>
-        <h5 class="heading-sm text-xl text-light">Focused</h5>
-      </div>
-
-      <div data-aos="fade-up" data-aos-offset="-400"
-        class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5"
-      >
-        <span class=" text-primary text-4xl lg:text-6xl font-black">100</span>
-        <h5 class="heading-sm text-xl text-dark">Red Team Vibes</h5>
-      </div>
+      <article data-aos="fade-up" data-aos-offset="-400" class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
+        <span class="text-primary text-4xl lg:text-6xl font-black">100</span>
+        <h3 class="heading-sm text-xl text-dark">Red Team Vibes</h3>
+      </article>
 
     </div>
+
   </div>
 
 </section>
@@ -310,39 +330,47 @@
 
 {{/* services */}}
 {{ with where .Site.RegularPages "Section" "services" }}
-<section class="bg-mask">
+<section class="bg-mask" aria-label="Hackita Training Tracks">
   <div class="max-w-7xl mx-auto px-5 py-10 space-y-10">
-    <div class="w-fit mx-auto" 
-        data-aos="fade-up" data-aos-offset="-300">
+
+    <!-- Section Heading -->
+    <div class="w-fit mx-auto" data-aos="fade-up" data-aos-offset="-300">
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2
-        class=" text-light uppercase text-pretty text-center relative"
-      >
+      <h2 class="text-light uppercase text-pretty text-center relative">
         Hackita Training Tracks
       </h2>
     </div>
 
+    <!-- Training Tracks Grid -->
     <div class="grid lg:grid-cols-2 gap-5" data-aos="fade-up" data-aos-offset="-300">
       {{ range $i, $p := . }}
       {{ $odd := modBool $i 2 }}
-      <div class="flex {{ if not $odd }}flex-row-reverse{{ end }} gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
+      <article class="flex {{ if not $odd }}flex-row-reverse{{ end }} gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
+
+        <!-- Text Content -->
         <div class="space-y-5 w-2/3">
-           <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
-              {{ .Title }}
-            </h5>
-            <p class=" text-light text-balance">
-              {{ .Description }}
-            </p>
-            <div>
-              {{ partial "components/button.html" (dict "link" "true" "label" "Learn More" "url" (printf "/services/#%s" (.Title | anchorize)) ) }}
-            </div>
+          <h3 class="heading-sm text-light group-hover:text-primary transition-colors">
+            {{ .Title }}
+          </h3>
+          <p class="text-light text-balance">
+            {{ .Description }}
+          </p>
+          <div>
+            {{ partial "components/button.html" (dict "link" "true" "label" "Learn More" "url" (printf "/services/#%s" (.Title | anchorize))) }}
+          </div>
         </div>
-        <h3 class=" text-primary text-center text-[170px] font-bold w-1/3">{{ add $i 1 }}</h3>
-      </div>
+
+        <!-- Numbering -->
+        <h3 class="text-primary text-center text-[170px] font-bold w-1/3" aria-hidden="true">
+          {{ add $i 1 }}
+        </h3>
+
+      </article>
       {{ end }}
     </div>
+
   </div>
 </section>
 {{ end }}

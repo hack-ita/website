@@ -8,27 +8,28 @@
 {{ with .Params.content }}
 {{ if .enable }}
 <section class="pt-3 pb-10 px-5 bg-mask relative overflow-hidden">
-  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -top-5 -left-5 sm:-top-11 sm:-left-10 lg:-top-20 lg:-left-20 xl:-top-27 xl:-left-27">
+  <!-- Decorative top-left quote -->
+  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -top-5 -left-5 sm:-top-11 sm:-left-10 lg:-top-20 lg:-left-20 xl:-top-27 xl:-left-27" aria-hidden="true">
     <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full">
   </div>
-  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -bottom-6 -right-5 sm:-bottom-12 sm:-right-10 lg:-bottom-21 lg:-right-20 xl:-bottom-29 xl:-right-27">
+
+  <!-- Decorative bottom-right quote -->
+  <div class="w-30 sm:w-60 lg:w-100 xl:size-fit absolute -bottom-6 -right-5 sm:-bottom-12 sm:-right-10 lg:-bottom-21 lg:-right-20 xl:-bottom-29 xl:-right-27" aria-hidden="true">
     <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full rotate-180">
   </div>
+
   <div class="max-w-7xl mx-auto space-y-10">
-    <div class="w-fit mx-auto" 
-        data-aos="fade-up">
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
+    <article class="w-fit mx-auto" data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
       </div>
-      <h2
-        class=" text-light uppercase text-pretty text-center relative"
-      >
+      <h2 class="text-light uppercase text-pretty text-center relative">
         {{ .title | safeHTML }}
       </h2>
-    </div>
-    <p class="text-white text-center text-xl" data-aos="fade-up">
-      {{ .content | safeHTML }}
-    </p>
+      <p class="text-white text-center text-xl mt-4" data-aos="fade-up">
+        {{ .content | safeHTML }}
+      </p>
+    </article>
   </div>
 </section>
 {{ end }}
@@ -38,32 +39,31 @@
 {{/* cards */}}
 {{ with .Params.cards }}
 {{ if .enable }}
-<section class="bg-primary red-mask relative overflow-hidden">
-  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -right-5">
+<section class="bg-primary red-mask relative overflow-hidden" aria-labelledby="stats-heading">
+  <!-- Decorative top-right block -->
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -right-5" aria-hidden="true">
     <div class="mt-9 -ml-9 sm:mt-13 sm:-ml-13 lg:mt-17 lg:-ml-16 xl:mt-16 xl:-ml-15 size-full bg-primary red-mask"></div>
   </div>
-  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -left-5 rotate-180">
+
+  <!-- Decorative bottom-left block -->
+  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -left-5 rotate-180" aria-hidden="true">
     <div class="mt-9 -ml-9 sm:mt-13 sm:-ml-13 lg:mt-17 lg:-ml-16 xl:mt-16 xl:-ml-15 size-full bg-primary red-mask"></div>
   </div>
+
   <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
-    <div class="flex flex-col justify-center gap-y-10" data-aos="fade-up">
-      <h2
-        class="text-light text-center"
-      >
-        {{ .title }}
-      </h2>
-    </div>
+    <h2 id="stats-heading" class="text-light text-center" data-aos="fade-up">
+      {{ .title }}
+    </h2>
+
     <div id="stats-grid" class="relative grid lg:grid-cols-3 gap-5">
       {{ range $i, $p := .card }}
       {{ $odd := modBool $i 2 }}
-      <div data-aos="fade-up"
-        class="grid lg:grid-rows-2 gap-5 lg:gap-10 text-center {{ if $odd }}bg-dark{{ else }}bg-light{{ end }} p-5"
-      >
-        <h5 class=" text-primary text-4xl lg:text-6xl font-black">{{ .title | safeHTML }}</h5>
+      <article data-aos="fade-up" class="grid lg:grid-rows-2 gap-5 lg:gap-10 text-center {{ if $odd }}bg-dark{{ else }}bg-light{{ end }} p-5 rounded-md">
+        <h3 class="text-primary text-4xl lg:text-6xl font-black">{{ .title | safeHTML }}</h3>
         <p class="heading-sm {{ if $odd }}text-light{{ else }}text-dark{{ end }}">
           {{ .content | safeHTML }}
         </p>
-      </div>
+      </article>
       {{ end }}
     </div>
   </div>
@@ -75,16 +75,14 @@
 {{/* content */}}
 {{ with .Params.extra_content }}
 {{ if .enable }}
-<section class="pt-3 pb-10 px-5 bg-light light-mask">
+<section class="pt-3 pb-10 px-5 bg-light light-mask" aria-labelledby="light-section-heading">
   <div class="max-w-7xl mx-auto space-y-10">
-    <div class="w-fit mx-auto" 
-        data-aos="fade-up">
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+    <div class="w-fit mx-auto" data-aos="fade-up">
+      <!-- Decorative icon -->
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2
-        class=" text-dark uppercase text-pretty text-center relative"
-      >
+      <h2 id="light-section-heading" class="text-dark uppercase text-pretty text-center relative">
         {{ .title | safeHTML }}
       </h2>
     </div>
@@ -100,57 +98,62 @@
 {{/* faqs */}}
 {{ with .Params.faqs }}
 {{ if .enable }}
-<section class="bg-mask pt-3 pb-10 px-5">
-
-  <div class="max-w-7xl mx-auto space-y-10 ">
-    <div class="w-fit mx-auto" 
-        data-aos="fade-up">
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+<section class="bg-mask pt-3 pb-10 px-5" aria-labelledby="faq-section-heading">
+  <div class="max-w-7xl mx-auto space-y-10">
+    <div class="w-fit mx-auto" data-aos="fade-up">
+      <!-- Decorative icon -->
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2
-        class=" text-light uppercase text-pretty text-center relative"
-      >
+      <h2 id="faq-section-heading" class="text-light uppercase text-pretty text-center relative">
         {{ .title | safeHTML }}
       </h2>
     </div>
 
     <div class="flex flex-col gap-5">
       {{ range $i, $p := .faq }}
-      <div class="bg-primary p-3 rounded-md group" data-aos="fade-up">
-        <input id="faq-{{ $i }}" type="checkbox" hidden>
-        <label for="faq-{{ $i }}" class="flex justify-between items-center text-light heading-sm cursor-pointer gap-3">
+      <section class="bg-primary p-3 rounded-md group" data-aos="fade-up">
+        <button 
+          id="faq-toggle-{{ $i }}" 
+          aria-expanded="false" 
+          aria-controls="faq-content-{{ $i }}" 
+          class="flex justify-between items-center text-light heading-sm cursor-pointer w-full gap-3">
           {{ .title | safeHTML }}
-          <span>
-            <span class="bg-light text-dark rounded-full size-7 flex justify-center items-center text-xl">+</span>
-          </span>
-        </label>
-        <div class="text-light max-h-0 opacity-0 pointer-events-none transition-[max-height] duration-300">
+          <span class="bg-light text-dark rounded-full size-7 flex justify-center items-center text-xl">+</span>
+        </button>
+        <div 
+          id="faq-content-{{ $i }}" 
+          class="text-light max-h-0 opacity-0 pointer-events-none transition-[max-height] duration-300 overflow-hidden mt-2">
           {{ .content | safeHTML }}
         </div>
-        <script>
-          document.addEventListener("DOMContentLoaded", () => {
-            const checkbox = document.getElementById("faq-{{ $i }}");
-            const content = checkbox.nextElementSibling.nextElementSibling;
-            const icon = checkbox.nextElementSibling.children[0].children[0];
-
-            checkbox.addEventListener("change", () => {
-              if (checkbox.checked) {
-                content.classList.remove("max-h-0", "opacity-0", "pointer-events-none");
-                content.classList.add("max-h-50", "opacity-100");
-                icon.innerHTML = '-';
-              } else {
-                content.classList.add("max-h-0", "opacity-0", "pointer-events-none");
-                content.classList.remove("max-h-50", "opacity-100");
-                icon.innerHTML = '+';
-              }
-            });
-          });
-          </script>
-      </div>
+      </section>
       {{ end }}
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggles = document.querySelectorAll("[id^='faq-toggle-']");
+      toggles.forEach(toggle => {
+        const content = document.getElementById(toggle.getAttribute("aria-controls"));
+        const icon = toggle.querySelector("span");
+
+        toggle.addEventListener("click", () => {
+          const expanded = toggle.getAttribute("aria-expanded") === "true";
+          toggle.setAttribute("aria-expanded", !expanded);
+          if (!expanded) {
+            content.classList.remove("max-h-0", "opacity-0", "pointer-events-none");
+            content.classList.add("max-h-50", "opacity-100");
+            icon.textContent = '-';
+          } else {
+            content.classList.add("max-h-0", "opacity-0", "pointer-events-none");
+            content.classList.remove("max-h-50", "opacity-100");
+            icon.textContent = '+';
+          }
+        });
+      });
+    });
+  </script>
 </section>
 {{ end }}
 {{ end }}
@@ -158,35 +161,32 @@
 
 {{/* news */}}
 <section class="bg-mask py-10 px-5">
-
-  <div class="max-w-7xl mx-auto space-y-10 ">
-    <div class="w-fit mx-auto" 
-        data-aos="fade-up">
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
+  <div class="max-w-7xl mx-auto space-y-10">
+    <!-- Heading -->
+    <div class="w-fit mx-auto" data-aos="fade-up">
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2
-        class=" text-light uppercase text-pretty text-center relative"
-      >
-        News
-      </h2>
+      <h2 class="text-light uppercase text-pretty text-center relative">News</h2>
     </div>
-    <div class="relative" data-aos="fade-up">
-      <!-- prev -->
-      <button aria-label="next slide" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
-        <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
-        </svg>
-      </button>
-      <!-- /prev -->
 
-      <!-- next -->
-       <button aria-label="prev slide"  class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
-        <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
+    <!-- Swiper Section -->
+    <div class="relative" data-aos="fade-up">
+      <!-- Prev Button -->
+      <button aria-label="Previous article" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
+        <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z"/>
         </svg>
       </button>
-      <!-- /next -->
+
+      <!-- Next Button -->
+      <button aria-label="Next article" class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
+        <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z"/>
+        </svg>
+      </button>
+
+      <!-- Swiper Wrapper -->
       <div class="swiper articleSwiper">
         <div class="swiper-wrapper">
           {{ range where .Site.RegularPages "Section" "blog" | first 6 }}
@@ -198,15 +198,12 @@
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
                   {{ with .PublishDate }}
-                  <span class=" text-light uppercase">{{ . | time.Format "02 Jan, 2006" }}</span>
+                  <span class="text-light uppercase">{{ . | time.Format "02 Jan, 2006" }}</span>
                   {{ end }}
-                  {{ $readingTime := div (float .WordCount) 170 }}
-                  {{ $readingTime = math.Ceil $readingTime }}
-                  <span class=" text-primary uppercase">{{ $readingTime }} Min Read</span>
+                  {{ $readingTime := div (float .WordCount) 170 | math.Ceil }}
+                  <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
                 </div>
-                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">
-                  {{ .Title }}
-                </h5>
+                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">{{ .Title }}</h5>
                 <div>
                   {{ partial "components/button.html" (dict "label" "Read More" "link" "true" "url" .RelPermalink) }}
                 </div>
@@ -214,12 +211,14 @@
               <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
             </a>
           </div>
-           {{ end }}
+          {{ end }}
         </div>
       </div>
     </div>
+
+    <!-- Explore All Button -->
     <div class="flex justify-center items-stretch">
-      {{ partial "components/button.html" (dict "label" "Explore All" "link" "true" "url" "/blog/" ) }}
+      {{ partial "components/button.html" (dict "label" "Explore All" "link" "true" "url" "/blog/") }}
     </div>
   </div>
 </section>

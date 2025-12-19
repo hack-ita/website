@@ -1,24 +1,58 @@
 <div class="w-full p-5 bg-primary red-mask rounded-md">
-    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-netlify-recaptcha="true" class="max-w-3xl mx-auto flex flex-col gap-5">
-      <h4 class="text-light text-center  text-3xl uppercase font-bold">Entra nella lista gold degli hacker.</h4>
+  <form 
+      name="contact" 
+      method="POST" 
+      data-netlify="true" 
+      netlify-honeypot="bot-field" 
+      data-netlify-recaptcha="true" 
+      class="max-w-3xl mx-auto flex flex-col gap-5">
 
-      
-      <input type="hidden" name="form-name" value="contact">
-      
-      <p class="hidden">
-        <label>
-          Don’t fill this out if you’re human: <input name="bot-field" type="text" />
-        </label>
-      </p>
+    <h4 class="text-light text-center text-3xl uppercase font-bold">
+      Entra nella lista gold degli hacker.
+    </h4>
 
-      {{ partial "components/input.html" (dict "type" "text" "required" "true" "for" "Name" "placeholder" "Enter your name...") }}
-    
-      {{ partial "components/input.html" (dict "type" "email" "required" "true" "for" "Email" "placeholder" "Enter your email...") }}
-    
-      {{ partial "components/input.html" (dict "type"  "textarea" "for" "Message" "placeholder" "Enter your message...") }}
-    
-      <div data-netlify-recaptcha="true"></div>
-    
-      {{ partial "components/button.html" (dict "light" "true" "size" "full" "label" "Send" "type" "Submit" "class" "hover:shadow-xl") }}
-    </form>
+    <!-- Netlify hidden inputs -->
+    <input type="hidden" name="form-name" value="contact">
+    <p class="hidden">
+      <label>
+        Don’t fill this out if you’re human: 
+        <input name="bot-field" type="text" />
+      </label>
+    </p>
+
+    <!-- Name input -->
+    {{ partial "components/input.html" (dict 
+        "type" "text" 
+        "required" "true" 
+        "for" "Name" 
+        "placeholder" "Enter your name..."
+    ) }}
+
+    <!-- Email input -->
+    {{ partial "components/input.html" (dict 
+        "type" "email" 
+        "required" "true" 
+        "for" "Email" 
+        "placeholder" "Enter your email..."
+    ) }}
+
+    <!-- Message textarea -->
+    {{ partial "components/input.html" (dict 
+        "type" "textarea" 
+        "for" "Message" 
+        "placeholder" "Enter your message..."
+    ) }}
+
+    <!-- Netlify reCAPTCHA -->
+    <div data-netlify-recaptcha="true"></div>
+
+    <!-- Submit button -->
+    {{ partial "components/button.html" (dict 
+        "light" "true" 
+        "size" "full" 
+        "label" "Send" 
+        "type" "submit" 
+        "class" "hover:shadow-xl"
+    ) }}
+  </form>
 </div>

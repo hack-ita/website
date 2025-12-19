@@ -1,32 +1,55 @@
 <header class="w-screen fixed top-0 left-0 right-0 z-50 header transition-all">
-    <div class="max-w-full lg:max-w-[1900px] mx-auto py-3 px-5 transition-all headerBar">
-        <div class="grid grid-cols-2 lg:grid-cols-3 items-center">
-            <div class="size-full">
-                <a href="{{ site.BaseURL }}">
-                    <img src='{{ site.Params.header.logo | relURL }}' alt="{{ site.Title }}" class="h-25 headerLogo transition-all">
-                </a>
-            </div>
-            <button class="flex flex-col items-end cursor-pointer gap-y-3 menuToggler lg:hidden">
-                <span class="w-9 h-0.5 bg-light rounded-full transition-transform"></span>
-                <span class="w-9 h-0.5 bg-light rounded-full transition-transform"></span>
-            </button>
-            <div class="menu absolute top-27 lg:static translate-y-10 pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100 lg:translate-y-0 transition duration-500 h-screen lg:h-auto header-glass glass-responsive left-0 w-svw lg:w-full lg:col-span-2 lg:grid grid-cols-2 space-y-5 lg:space-y-0 place-content-between">
-                <nav class="flex flex-col lg:flex-row justify-between items-center space-y-5 lg:space-y-0">
-                    {{ range site.Menus.main }}
-                    {{ if eq $.Page.RelPermalink .URL }}
-                    <a
-                        class="cursor-pointer text-sm font-bold uppercase relative after:absolute text-primary  after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:w-full after:origin-bottom after:scale-x-100 after:bg-primary after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)]">
-                        {{ .Name }}
-                    </a>
-                    {{ else }}
-                    {{ partial "components/link.html" (dict "label" .Name "url" .URL "class" "px-3") }}
-                    {{ end }}
-                    {{ end }}
-                </nav>
-                <div class="flex lg:justify-end">
-                    {{ partial "components/button.html" (dict "link" "true" "label" "Get Started" "size" "full" "class" "lg:w-auto" ) }}
-                </div>
-            </div> 
+  <div class="max-w-full lg:max-w-475 mx-auto py-3 px-5 transition-all headerBar">
+    <div class="grid grid-cols-2 lg:grid-cols-3 items-center">
+      
+      <!-- Logo -->
+      <div class="size-full">
+        <a href="{{ site.BaseURL }}" aria-label="{{ site.Title }} homepage">
+          <img src="{{ site.Params.header.logo | relURL }}" alt="{{ site.Title }}" class="h-25 headerLogo transition-all">
+        </a>
+      </div>
+      
+      <!-- Mobile Menu Toggle -->
+      <button 
+        class="flex flex-col items-end cursor-pointer gap-y-3 menuToggler lg:hidden"
+        aria-controls="primary-navigation"
+        aria-expanded="false"
+        aria-label="Toggle menu"
+      >
+        <span class="w-9 h-0.5 bg-light rounded-full transition-transform"></span>
+        <span class="w-9 h-0.5 bg-light rounded-full transition-transform"></span>
+      </button>
+      
+      <!-- Navigation and CTA -->
+      <div 
+        class="menu absolute top-27 lg:static translate-y-10 pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100 lg:translate-y-0 transition duration-500 h-screen lg:h-auto header-glass glass-responsive left-0 w-svw lg:w-full lg:col-span-2 lg:grid grid-cols-2 space-y-5 lg:space-y-0 place-content-between"
+      >
+        <nav 
+          id="primary-navigation" 
+          class="flex flex-col lg:flex-row justify-between items-center space-y-5 lg:space-y-0" 
+          role="navigation" 
+          aria-label="Primary"
+        >
+          {{ range site.Menus.main }}
+            {{ if eq $.Page.RelPermalink .URL }}
+              <span
+                class="cursor-pointer text-sm font-bold uppercase relative after:absolute text-primary after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:w-full after:origin-bottom after:scale-x-100 after:bg-primary after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)]"
+                aria-current="page"
+              >
+                {{ .Name }}
+              </span>
+            {{ else }}
+              {{ partial "components/link.html" (dict "label" .Name "url" .URL "class" "px-3") }}
+            {{ end }}
+          {{ end }}
+        </nav>
+        
+        <!-- CTA Button -->
+        <div class="flex lg:justify-end">
+          {{ partial "components/button.html" (dict "link" "true" "label" "Get Started" "size" "full" "class" "lg:w-auto" ) }}
         </div>
+      </div>
+      
     </div>
+  </div>
 </header>

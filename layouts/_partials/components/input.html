@@ -1,20 +1,25 @@
 <div class="relative">
+    {{ $id := .for | urlize }}
     {{ if eq .type "textarea" }}
     <textarea 
+        id="{{ $id }}"
         name="{{ .for }}"
         placeholder=" "
         rows="1"
-        class="input-field w-full px-4 py-3 text-light text-sm tracking-wider rounded-md"    
+        class="input-field w-full px-4 py-3 text-light text-sm tracking-wider rounded-md"
+        aria-label="{{ .for }}"
     ></textarea>
     {{ else }}
     <input 
+        id="{{ $id }}"
         type="{{ .type }}" 
         name="{{ .for }}"
         placeholder=" "
         class="input-field w-full px-4 py-3 text-light text-sm tracking-wider rounded-md"
+        aria-label="{{ .for }}"
     />
     {{ end }}
-    <label class="label text-light text-sm uppercase">
+    <label for="{{ $id }}" class="label text-light text-sm uppercase">
         <span class="inline-block">&#9656;</span> {{ .for }}
     </label>
 </div>

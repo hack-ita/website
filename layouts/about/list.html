@@ -160,68 +160,7 @@
 {{/* /faqs */}}
 
 {{/* news */}}
-<section class="bg-mask py-10 px-5">
-  <div class="max-w-7xl mx-auto space-y-10">
-    <!-- Heading -->
-    <div class="w-fit mx-auto" data-aos="fade-up">
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
-      </div>
-      <h2 class="text-light uppercase text-pretty text-center relative">News</h2>
-    </div>
-
-    <!-- Swiper Section -->
-    <div class="relative" data-aos="fade-up">
-      <!-- Prev Button -->
-      <button aria-label="Previous article" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
-        <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z"/>
-        </svg>
-      </button>
-
-      <!-- Next Button -->
-      <button aria-label="Next article" class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
-        <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z"/>
-        </svg>
-      </button>
-
-      <!-- Swiper Wrapper -->
-      <div class="swiper articleSwiper">
-        <div class="swiper-wrapper">
-          {{ range where .Site.RegularPages "Section" "blog" | first 6 }}
-          <div class="swiper-slide">
-            <a href="{{ .RelPermalink }}" class="inline-flex flex-col items-stretch group shadow-xl">
-              <div class="overflow-hidden">
-                <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover group-hover:scale-115 transition-transform duration-500">
-              </div>
-              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
-                <div class="flex flex-wrap gap-3">
-                  {{ with .PublishDate }}
-                  <span class="text-light uppercase">{{ . | time.Format "02 Jan, 2006" }}</span>
-                  {{ end }}
-                  {{ $readingTime := div (float .WordCount) 170 | math.Ceil }}
-                  <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
-                </div>
-                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">{{ .Title }}</h5>
-                <div>
-                  {{ partial "components/button.html" (dict "label" "Read More" "link" "true" "url" .RelPermalink) }}
-                </div>
-              </div>
-              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
-            </a>
-          </div>
-          {{ end }}
-        </div>
-      </div>
-    </div>
-
-    <!-- Explore All Button -->
-    <div class="flex justify-center items-stretch">
-      {{ partial "components/button.html" (dict "label" "Explore All" "link" "true" "url" "/blog/") }}
-    </div>
-  </div>
-</section>
+{{ partial "shared/news.html" . }}
 {{/* /news */}}
 
 {{/* form */}}

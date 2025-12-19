@@ -1,8 +1,14 @@
+/* ===========================
+   IMPORTS & PLUGINS
+=========================== */
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @source "hugo_stats.json";
 @source inline("h-20, rotate-45, -rotate-45", "top-23", "top-30", "overflow-hidden");
 
+/* ===========================
+   THEME VARIABLES
+=========================== */
 @theme {
   --font-heading: "Oswald", sans-serif;
   --font-body: "Ubuntu", sans-serif;
@@ -17,6 +23,9 @@
   --breakpoint-max: 118.75rem;
 }
 
+/* ===========================
+   TYPOGRAPHY
+=========================== */
 h1, h2, h3, h4, h5, h6, .heading, .heading-sm, .hero-heading {
   @apply font-heading;
 }
@@ -25,6 +34,7 @@ h1, h2, h3, h4, h5, h6, .heading, .heading-sm, .hero-heading {
   @apply font-body;
 }
 
+/* Large headings */
 h1, h2 {
   @apply text-[max(50px,min(80px,5vw))] tracking-[0.25px] font-bold leading-none text-pretty;
 }
@@ -37,8 +47,11 @@ h1, h2 {
   @apply text-[max(20px,min(20px,1vw))] leading-none uppercase font-bold text-pretty;
 }
 
-.prose > h1 h2 h3 h4 h5 h6 {
-  @apply text-primary;
+/* ===========================
+   PROSE / MARKDOWN STYLING
+=========================== */
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  color: text-primary !important;
 }
 
 .prose blockquote {
@@ -54,9 +67,12 @@ h1, h2 {
 }
 
 .prose * {
-  @apply scroll-mt-30
+  @apply scroll-mt-30;
 }
 
+/* ===========================
+   CODE & HIGHLIGHTING
+=========================== */
 pre:has(> code) {
   @apply bg-light text-dark;
 }
@@ -66,6 +82,9 @@ pre:has(> code) {
   color: var(--color-dark) !important;
 }
 
+/* ===========================
+   TABLE OF CONTENTS
+=========================== */
 #TableOfContents a:hover {
   @apply text-primary;
 }
@@ -78,6 +97,9 @@ pre:has(> code) {
   @apply ml-5 mt-2;
 }
 
+/* ===========================
+   GLASS / HEADER EFFECTS
+=========================== */
 .header-glass {
   @apply bg-dark/60 bg-clip-padding backdrop-filter backdrop-blur-sm;
 }
@@ -90,6 +112,9 @@ pre:has(> code) {
   @apply bg-light/5 bg-clip-padding backdrop-filter backdrop-blur-sm;
 }
 
+/* ===========================
+   HERO SWIPER
+=========================== */
 .hero-swiper-pagination .swiper-pagination-bullet {
   @apply bg-light w-10 rounded-none h-[3px];
 }
@@ -116,18 +141,25 @@ pre:has(> code) {
   @apply max-h-35 lg:max-h-60 2xl:max-h-35;
 }
 
+/* ===========================
+   TYPEWRITER CURSOR
+=========================== */
 #typewriter::after {
   @apply whitespace-pre content-["|"] animate-[tw-cursor_1s_infinite];
 }
 
 @keyframes tw-cursor {
-  50% {
-    opacity: 0;
-  }
+  50% { opacity: 0; }
 }
 
+/* ===========================
+   CARD SPOTLIGHT (HOVER EFFECT)
+=========================== */
 .card-spotlight {
-  @apply relative overflow-hidden before:content-[""] before:absolute before:transition-opacity before:duration-200 before:ease-[ease] before:pointer-events-none before:inset-0;
+  @apply relative overflow-hidden 
+         before:content-[""] before:absolute before:transition-opacity 
+         before:duration-200 before:ease-[ease] before:pointer-events-none 
+         before:inset-0;
 }
 
 .card-spotlight::before {
@@ -139,46 +171,47 @@ pre:has(> code) {
   opacity: var(--o, 0);
 }
 
+/* ===========================
+   BACKGROUND MASKS
+=========================== */
+.bg-mask, .red-mask, .light-mask {
+  background-size: 32px 32px;
+  background-repeat: repeat;
+}
+
 .bg-mask {
-  --dot-color: color-mix(in oklab, var(--color-light) /* var(--color-white) */ 15%, transparent);
+  --dot-color: color-mix(in oklab, var(--color-light) 15%, transparent);
   background-image:
     radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
     radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
     radial-gradient(circle at 8px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
     radial-gradient(circle at 24px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px);
-  background-size: 32px 32px;
-  background-repeat: repeat;
 }
 
 .red-mask {
-  --dot-color: color-mix(in oklab, var(--color-dark) /* var(--color-white) */ 30%, transparent);
-  background-image:
-    radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
-    radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
-    radial-gradient(circle at 8px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
-    radial-gradient(circle at 24px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px);
-  background-size: 32px 32px;
-  background-repeat: repeat;
+  --dot-color: color-mix(in oklab, var(--color-dark) 30%, transparent);
+  background-image: inherit;
 }
 
 .light-mask {
-  --dot-color: color-mix(in oklab, var(--color-dark) /* var(--color-white) */ 30%, transparent);
-  background-image:
-    radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
-    radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
-    radial-gradient(circle at 8px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
-    radial-gradient(circle at 24px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px);
-  background-size: 32px 32px;
-  background-repeat: repeat;
+  --dot-color: color-mix(in oklab, var(--color-dark) 30%, transparent);
+  background-image: inherit;
 }
 
-
+/* ===========================
+   FORM STYLING (HN FORM)
+=========================== */
 .hn-form {
   @apply relative z-[1] flex flex-col gap-4 items-stretch w-full;
 }
 
 .hn-input-orbit {
-  @apply relative overflow-hidden p-0.5 rounded-[999px] before:content-[""] before:absolute before:animate-[hn-orbit-spin_9s_linear_infinite] before:opacity-[0.92] before:-inset-2/4 focus-within:shadow-[0_0_0_2px_rgba(240,214,124,0.4),0_0_22px_rgba(240,214,124,0.7)] focus-within:before:animate-[hn-orbit-spin-fast_4s_linear_infinite] bg-dark;
+  @apply relative overflow-hidden p-0.5 rounded-[999px] 
+         before:content-[""] before:absolute before:animate-[hn-orbit-spin_9s_linear_infinite] 
+         before:opacity-[0.92] before:-inset-2/4
+         focus-within:shadow-[0_0_0_2px_rgba(240,214,124,0.4),0_0_22px_rgba(240,214,124,0.7)]
+         focus-within:before:animate-[hn-orbit-spin-fast_4s_linear_infinite] 
+         bg-dark;
 }
 
 .hn-input-orbit::before {
@@ -194,77 +227,71 @@ pre:has(> code) {
   @apply w-full text-[0.95rem] text-light relative z-2 px-4 py-[0.9rem] rounded-[inherit] border-none;
   outline: none;
 }
+
 .hn-input::placeholder {
   @apply text-light/30;
 }
 
+/* ===========================
+   HN BUTTONS
+=========================== */
 .hn-btn {
-  @apply cursor-pointer text-[0.9rem] font-bold tracking-[0.2em] uppercase text-[#3d2700] shadow-[0_14px_30px_rgba(199,155,42,0.85),0_0_0_1px_rgba(12,8,0,0.95)] relative overflow-hidden mt-[0.3rem] px-6 py-[0.9rem] rounded-[999px] border-[none] before:content-[""] before:absolute before:left-[-60%] before:w-2/5 before:h-full before:skew-x-[-22deg] before:opacity-0 before:top-0 hover:-translate-y-px hover:shadow-[0_18px_36px_rgba(199,155,42,1),0_0_0_1px_rgba(17,10,0,1)] hover:brightness-[1.03] hover:before:opacity-100 hover:before:animate-[hn-shine_0.9s_ease-out] active:translate-y-px active:shadow-[0_10px_16px_rgba(199,155,42,0.7),0_0_0_1px_rgba(17,10,0,0.9)] active:brightness-[0.97];
+  @apply cursor-pointer text-[0.9rem] font-bold tracking-[0.2em] uppercase text-[#3d2700] 
+         shadow-[0_14px_30px_rgba(199,155,42,0.85),0_0_0_1px_rgba(12,8,0,0.95)] 
+         relative overflow-hidden mt-[0.3rem] px-6 py-[0.9rem] rounded-[999px] border-[none]
+         before:content-[""] before:absolute before:left-[-60%] before:w-2/5 before:h-full 
+         before:skew-x-[-22deg] before:opacity-0 before:top-0
+         hover:-translate-y-px hover:shadow-[0_18px_36px_rgba(199,155,42,1),0_0_0_1px_rgba(17,10,0,1)]
+         hover:brightness-[1.03] hover:before:opacity-100 hover:before:animate-[hn-shine_0.9s_ease-out]
+         active:translate-y-px active:shadow-[0_10px_16px_rgba(199,155,42,0.7),0_0_0_1px_rgba(17,10,0,0.9)]
+         active:brightness-[0.97];
   background: linear-gradient(135deg, #fff4c8, #f0c867, #c79b2a);
   transition: transform 0.12s ease-out, box-shadow 0.16s ease-out, filter 0.16s ease-out;
 }
 
-/* riflesso sul bottone */
 .hn-btn::before {
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.45) 40%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.45) 40%, rgba(255, 255, 255, 0) 100%);
 }
 
-@keyframes hn-orbit-spin {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes hn-orbit-spin-fast {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes hn-shine {
-  0% {
-    transform: translateX(0) skewX(-22deg);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(260%) skewX(-22deg);
-    opacity: 0;
-  }
-}
-
-@keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5), 0 0 10px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1); }
-    50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.5), inset 0 0 20px rgba(0, 255, 255, 0.2); }
-}
-
-@keyframes flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
-}
-
+/* ===========================
+   INPUT FIELDS
+=========================== */
 .input-field {
-  @apply transition-all duration-300 ease-[ease] border-2 border-solid border-light/50 focus:animate-[pulse-glow_2s_infinite] focus:border-light;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.2),
-    rgba(255, 255, 255, 0.1)
-  );
+  @apply transition-all duration-300 ease-[ease] border-2 border-solid border-light/50
+         focus:animate-[pulse-glow_2s_infinite] focus:border-light;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
 }
+
 .input-field:focus {
   outline: none;
 }
+
 .input-field:focus + .label {
   @apply text-light -translate-y-6 animate-[flicker_3s_infinite] scale-[0.85];
 }
+
 .input-field:not(:placeholder-shown) + .label {
   @apply -translate-y-6 text-light scale-[0.85];
 }
+
 .label {
   @apply absolute -translate-y-2/4 transition-all duration-300 ease-[ease] pointer-events-none tracking-[2px] left-4 top-2/4;
 }
+
+/* ===========================
+   ANIMATIONS
+=========================== */
+@keyframes hn-orbit-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes hn-orbit-spin-fast { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes hn-shine {
+  0% { transform: translateX(0) skewX(-22deg); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateX(260%) skewX(-22deg); opacity: 0; }
+}
+
+@keyframes pulse-glow {
+  0%,100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5), 0 0 10px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.5), inset 0 0 20px rgba(0, 255, 255, 0.2); }
+}
+
+@keyframes flicker { 0%,100% { opacity: 1; } 50% { opacity: 0.8; } }

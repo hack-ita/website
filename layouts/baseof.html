@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {{/*  head import  */}}
+    {{/* Head import */}}
     {{ partial "essentials/head.html" . }}
 </head>
 <body class="bg-dark">
-    <main class="max-w-[1900px] mx-auto">
-    {{/*  header import  */}}
-    {{ partial "shared/header.html" . }}
 
-    {{/*  main  */}}
+    <!-- Optional Skip Link for Accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only">Skip to main content</a>
+
+    <!-- Header -->
+    <header>
+        {{ partial "shared/header.html" . }}
+    </header>
+
+    <!-- Main content -->
+    <main id="main-content" class="max-w-475 mx-auto" role="main">
         {{ block "main" . }}
         {{ end }}
-        {{/*  /main  */}}
-        
-        {{/*  footer import  */}}
-        {{ partial "shared/footer.html" . }}
     </main>
-        {{/*  js import  */}}
-        {{ partial "essentials/js.html" . }}
+
+    <!-- Footer -->
+    <footer>
+        {{ partial "shared/footer.html" . }}
+    </footer>
+
+    <!-- JS Scripts -->
+    {{ partial "essentials/js.html" . }}
 </body>
 </html>

@@ -1,12 +1,14 @@
 {{ define "main" }}
 
 {{/* hero */}}
-<section class="pt-30 pb-10 px-5">
+<section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading">
   {{ range first 1 (where .RegularPages "Params.featured" "eq" true) }}
+  {{ $readingTime := div (float .WordCount) 170 }}
+  {{ $readingTime = math.Ceil $readingTime }}
   <div class="max-w-7xl mx-auto grid lg:grid-cols-5 gap-10">
-    {{ $readingTime := div (float .WordCount) 170 }}
-    {{ $readingTime = math.Ceil $readingTime }}
-    <div class="rounded-md col-span-3 py-20 px-5 bg-cover bg-no-repeat bg-center relative bg-[url('{{ .Params.image | relURL }}')]">
+    
+    <!-- Featured Video / Image -->
+    <article class="rounded-md col-span-3 py-20 px-5 bg-cover bg-no-repeat bg-center relative bg-[url('{{ .Params.image | relURL }}')]" aria-label="Featured session: {{ .Title }}">
       <div class="absolute inset-0 bg-dark opacity-30 rounded-md"></div>
       <div class="relative flex flex-col justify-center items-start gap-10">
         <span 
@@ -21,57 +23,64 @@
         <div class="flex flex-wrap gap-5 items-center uppercase">
           <span class="text-light">HackITA TV</span>
           <span class="text-light/80">{{ .Params.tags }} / {{ .Params.categories }}</span>
-          <span class="text-light/80">{{ $readingTime }} min watch</span>
+          <time class="text-light/80" datetime='{{ .Date.Format "2006-01-02" }}'>{{ $readingTime }} min watch</time>
         </div>
       </div>
-    </div>
+    </article>
+
+    <!-- Featured Text -->
     <div class="flex flex-col gap-5 justify-between items-start col-span-2">
       <span class="text-primary"># Featured session</span>
-      <h3 class="text-light hero-heading uppercase">{{ .Title }}</h3>
+      <h3 id="featured-session-heading" class="text-light hero-heading uppercase">{{ .Title }}</h3>
       <p class="text-light">{{ .Description }}</p>
       <div class="flex items-stretch gap-5">
         {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Read More" "url" .RelPermalink) }}
         {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "All Articles" "url" (printf "/categories/%s" .Params.categories)) }}
       </div>
     </div>
+
   </div>
   {{ end }}
 </section>
 {{/* /hero */}}
 
 {{/* cards */}}
-<section class="max-w-7xl mx-auto py-10 px-5">
+<section class="max-w-7xl mx-auto py-10 px-5" aria-label="Exploits by category">
   {{ range .Site.Taxonomies.categories }}
   <div>
     <div class="w-full h-0.5 bg-linear-to-r from-transparent via-primary to-transparent"></div>
     <div class="py-10">
-      <div class="mb-5 flex gap-5 items-center justify-start">
+      <header class="mb-5 flex gap-5 items-center justify-start">
         <span 
           class="py-1 pl-9 pr-5 rounded-full text-center text-sm border border-primary text-primary uppercase relative">
           <span class="absolute size-3 rounded bg-primary rotate-45 left-4 top-2"></span>
-          {{ .Page.Title }}
+          <h3 class="inline">{{ .Page.Title }}</h3>
         </span>
         <p class="heading-sm text-light"><span class="text-primary">Latest</span> Exploits</p>
-      </div>
+      </header>
       <div class="grid grid-cols-2 lg:grid-cols-5 gap-5">
         {{ range .Pages }}
         {{ $readingTime := div (float .WordCount) (or $.Site.Params.reading_speed 170) }}
         {{ $readingTime = math.Ceil $readingTime }}
-        <div class="rounded-md flex flex-col border border-primary hover:scale-125 transition-transform relative hover:z-10">
-          <div class="h-30"><img src='{{ .Params.image | relURL }}' alt="{{ .Title }}" class="size-full rounded-t-md object-cover"></div>
-          <div class="bg-glass flex-1 p-3 flex flex-col gap-5 justify-between items-start">
-            <div class="w-full flex justify-between items-center uppercase">
-              {{ range first 1 .Params.tags }}
-              <span class="rounded-full border border-primary px-3 py-1 text-primary text-xs">{{ . }}</span>
-              {{ end }}
-              <span class="text-light text-sm">{{ $readingTime }} Min read</span>
+        <article class="rounded-md flex flex-col border border-primary hover:scale-125 transition-transform relative hover:z-10" aria-label="{{ .Title }}">
+          <figure class="flex flex-col">
+            <div class="h-30 overflow-hidden rounded-t-md">
+              <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="size-full object-cover">
             </div>
-            <a href="{{ .RelPermalink }}" class="heading-sm text-primary">
-              {{ .Title }}
-            </a>
-            <p class="text-light text-sm">{{ .Description }}</p>
-          </div>
-        </div>
+            <figcaption class="bg-glass flex-1 p-3 flex flex-col gap-5 justify-between items-start">
+              <div class="w-full flex justify-between items-center uppercase">
+                {{ range first 1 .Params.tags }}
+                <span class="rounded-full border border-primary px-3 py-1 text-primary text-xs">{{ . }}</span>
+                {{ end }}
+                <time class="text-light text-sm" datetime="{{ .Date.Format "2006-01-02" }}">{{ $readingTime }} Min read</time>
+              </div>
+              <a href="{{ .RelPermalink }}" class="heading-sm text-primary">
+                {{ .Title }}
+              </a>
+              <p class="text-light text-sm">{{ .Description }}</p>
+            </figcaption>
+          </figure>
+        </article>
         {{ end }}
       </div>
     </div>

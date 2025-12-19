@@ -1,5 +1,6 @@
 ---
 title: About Me
+image: "images/about.jpg" 
 
 #####################
 ##### Content

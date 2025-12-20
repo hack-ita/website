@@ -1,9 +1,3 @@
-import * as path from "path";
-import dotenv from "dotenv";
-
-// Explicitly load the env file from the project root
-dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
-
 import { defineConfig } from "tinacms";
 import Home from "./collections/home";
 import About from "./collections/about";

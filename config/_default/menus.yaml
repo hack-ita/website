@@ -2,17 +2,17 @@ main:
   - name: Home
     pageRef: /
     weight: 10
+  - name: Articoli
+    pageRef: /blog/
+    weight: 40
   - name: About
     pageRef: /about/
     weight: 20
   - name: Services
     pageRef: /services/
     weight: 30
-  - name: Articoli
-    pageRef: /blog/
-    weight: 40
-  - name: Categories
-    pageRef: /categories/
+  - name: Categorie
+    pageRef: /categorie/
     weight: 50
 footer:
   - name: Home

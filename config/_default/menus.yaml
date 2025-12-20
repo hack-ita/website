@@ -9,7 +9,7 @@ main:
     pageRef: /categories/
     weight: 50
   - name: Servizi
-    pageRef: /servizi/
+    pageRef: /services/
     weight: 30
   - name: About
     pageRef: /about/

@@ -64,10 +64,11 @@ faqs:
         Troverai articoli tecnici, walkthrough, guide pratiche e note di
         laboratorio. Tutto basato su esperienza reale, senza teoria inutile.
         L’obiettivo è imparare come ragiona e lavora davvero un hacker etico.
-    - title: '4 Lorem ipsum dolor, sit amet consectetur adipisicing.'
+    - title: 4. Offrite anche corsi o servizi per aziende?
       content: >-
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis
-        distinctio, ut natus est voluptas facere provident maiores veniam
-        aliquam optio enim veritatis assumenda praesentium atque debitis. Ut.
+        Sì. Organizziamo corsi e meeting aziendali per formare i team su
+        comportamenti sicuri e vulnerabilità comuni, oltre a penetration test e
+        simulazioni Red Team su infrastrutture reali. Tutto su misura, con un
+        approccio pratico e professionale.
 ---
 

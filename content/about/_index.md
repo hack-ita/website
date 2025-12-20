@@ -20,10 +20,13 @@ cards:
         ogni scoperta in modo pratico e comprensibile. L’obiettivo è diffondere
         conoscenza e mostrare come pensa un hacker etico: comprendere le falle
         per imparare a sfruttarle, studiarle e prevenirle nel mondo reale.
-    - title: Pentesting & Lab Walkthroughs
+    - title: Formazione e Servizi Professionali
       content: >-
-        From Linux/Windows privilege escalation to AD attack paths, I create
-        detailed OSCP-style walkthroughs based on real lab machines.
+        In Hackita formiamo nuovi hacker etici e accompagniamo studenti e
+        appassionati nel percorso verso l’hacking pratico. Inoltre offriamo un
+        approccio diretto e concreto, testando siti web, reti e infrastrutture
+        aziendali per scoprire vulnerabilità reali. Tutto ciò che facciamo è
+        guidato da etica, realismo e risultati tangibili.
     - title: Red Team Notes & Guides
       content: >-
         Structured notes covering recon, exploitation, post-exploitation,

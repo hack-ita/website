@@ -12,12 +12,14 @@ content:
     a pensare, agire e ragionare come un vero hacker etico.
 cards:
   enable: true
-  title: What I Do
+  title: Cosa Facciamo
   card:
-    - title: Cybersecurity Research
+    - title: Ricerca sull’Hacking Etico
       content: >-
-        I analyze vulnerabilities, CVEs, exploit chains, and document them in
-        simplified, actionable form for students and self-learners.
+        Analizziamo vulnerabilità reali, CVE e catene di exploit, documentando
+        ogni scoperta in modo pratico e comprensibile. L’obiettivo è diffondere
+        conoscenza e mostrare come pensa un hacker etico: comprendere le falle
+        per imparare a sfruttarle, studiarle e prevenirle nel mondo reale.
     - title: Pentesting & Lab Walkthroughs
       content: >-
         From Linux/Windows privilege escalation to AD attack paths, I create

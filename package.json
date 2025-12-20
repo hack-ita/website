@@ -2,11 +2,14 @@
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.17",
     "@tailwindcss/typography": "^0.5.19",
+    "@tinacms/cli": "^1.11.0",
     "@types/node": "^25.0.3",
+    "dotenv": "^17.2.3",
+    "dotenv-cli": "^11.0.0",
     "tailwindcss": "^4.1.17"
   },
   "scripts": {
-    "build:admin": "npx tina build",
+    "build:admin": "dotenv -e .env.local -- npx tinacms build",
     "build:hugo": "node scripts/copyImages.js && git config core.quotepath false && hugo --gc --minify --baseURL \"$URL\"",
     "build": "npm run build:admin && npm run build:hugo"
   },
@@ -14,7 +17,6 @@
     "fs": "^0.0.1-security",
     "fse": "^4.0.1",
     "path": "^0.12.7",
-    "tinacms": "^3.1.1",
-    "@tinacms/cli": "^1.11.0"
+    "tinacms": "^3.1.1"
   }
 }

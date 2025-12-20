@@ -48,11 +48,12 @@ faqs:
   enable: true
   title: FAQs
   faq:
-    - title: 'Lorem ipsum dolor, sit amet consectetur adipisicing.'
+    - title: 1. Tutto quello che fate è legale?
       content: >-
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis
-        distinctio, ut natus est voluptas facere provident maiores veniam
-        aliquam optio enim veritatis assumenda praesentium atque debitis. Ut.
+        Assolutamente sì. Tutte le attività di Hackita – formazione, test e
+        simulazioni – vengono svolte in modo etico, controllato e nel pieno
+        rispetto delle leggi italiane e internazionali. Il nostro obiettivo è
+        diffondere conoscenza, non danneggiare.
     - title: '2 Lorem ipsum dolor, sit amet consectetur adipisicing.'
       content: >-
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis

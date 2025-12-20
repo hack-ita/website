@@ -13,6 +13,6 @@ content:
     pienamente legale.
 stats:
   enable: true
-  title: Learn Cyber-Security
+  title: Curiosità su HackIta
 ---
 

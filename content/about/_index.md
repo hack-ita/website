@@ -21,11 +21,9 @@ cards:
         vuole comprendere davvero il mondo dell’hacking etico.
     - title: Formazione e Servizi Professionali
       content: >-
-        In Hackita formiamo nuovi hacker etici e accompagniamo studenti e
-        appassionati nel percorso verso l’hacking pratico. Inoltre offriamo un
-        approccio diretto e concreto, testando siti web, reti e infrastrutture
-        aziendali per scoprire vulnerabilità reali. Tutto ciò che facciamo è
-        guidato da etica, realismo e risultati tangibili.
+        Formiamo nuovi hacker etici e collaboriamo con aziende per testare siti,
+        reti e infrastrutture reali. Tutto con un approccio pratico, etico e
+        orientato ai risultati.
     - title: 'Articoli, Guide e Risorse Pratiche'
       content: >-
         Su Hackita condividiamo articoli tecnici, walkthrough e appunti di

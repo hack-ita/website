@@ -6,7 +6,7 @@ main:
     pageRef: /blog/
     weight: 40
   - name: Categorie
-    pageRef: /categorie/
+    pageRef: /categories/
     weight: 50
   - name: Servizi
     pageRef: /servizi/

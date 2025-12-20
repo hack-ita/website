@@ -9,7 +9,7 @@
     "tailwindcss": "^4.1.17"
   },
   "scripts": {
-    "build:admin": "dotenv -e .env.local -- npx tinacms build",
+    "build:admin": "npx tinacms build",
     "build:hugo": "node scripts/copyImages.js && git config core.quotepath false && hugo --gc --minify --baseURL \"$URL\"",
     "build": "npm run build:admin && npm run build:hugo"
   },

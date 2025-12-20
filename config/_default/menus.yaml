@@ -3,7 +3,7 @@ main:
     pageRef: /
     weight: 10
   - name: Articoli
-    pageRef: /articoli/
+    pageRef: /blog/
     weight: 40
   - name: Categorie
     pageRef: /categorie/

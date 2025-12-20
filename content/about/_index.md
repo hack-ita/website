@@ -16,10 +16,9 @@ cards:
   card:
     - title: Ricerca sull’Hacking Etico
       content: >-
-        Analizziamo vulnerabilità reali, CVE e catene di exploit, documentando
-        ogni scoperta in modo pratico e comprensibile. L’obiettivo è diffondere
-        conoscenza e mostrare come pensa un hacker etico: comprendere le falle
-        per imparare a sfruttarle, studiarle e prevenirle nel mondo reale.
+        Studiamo vulnerabilità reali, CVE e exploit per capire come agiscono gli
+        attaccanti. Ogni analisi diventa conoscenza utile da condividere con chi
+        vuole comprendere davvero il mondo dell’hacking etico.
     - title: Formazione e Servizi Professionali
       content: >-
         In Hackita formiamo nuovi hacker etici e accompagniamo studenti e

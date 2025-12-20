@@ -56,9 +56,11 @@ faqs:
         diffondere conoscenza, non danneggiare.
     - title: 2. Posso imparare da zero?
       content: >-
-        Certo. Hackita è pensato anche per chi parte da zero. I nostri percorsi
-        ti guidano passo dopo passo con esempi pratici su Windows, Linux e Web
-        App, fino a farti acquisire le competenze di un vero ethical hacker.
+        Certo. Hackita è pensato anche per chi parte da zero o ha difficoltà a
+        orientarsi nel mondo dell’hacking etico. Ti guidiamo passo dopo passo
+        con esempi pratici su Windows, Linux e Web App. Inoltre, puoi
+        contattarci per organizzare sessioni 1:1 personalizzate, analizzare le
+        tue debolezze e migliorare le tue competenze in modo mirato.
     - title: 3. Che tipo di contenuti troverò?
       content: >-
         Troverai articoli tecnici, walkthrough, guide pratiche e note di

@@ -1,0 +1,8 @@
+#### Base Settings
+baseURL: "https://example.org/"
+languageCode: "en-us"
+title: "My New Hugo Site"
+
+#### Plugins
+enableEmoji: true
+enableRobotsTXT: true

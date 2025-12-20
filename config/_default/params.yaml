@@ -1,0 +1,4 @@
+params:
+  reading_speed: 170
+  header:
+    logo: "/images/logo-wobg.png"

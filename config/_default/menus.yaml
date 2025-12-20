@@ -1,0 +1,36 @@
+main:
+    - name: "Home"
+      pageRef: "/"
+      weight: 10
+    - name: "About"
+      pageRef: "/about/"
+      weight: 20
+    - name: "Services"
+      pageRef: "/services/"
+      weight: 30
+    - name: "Blog"
+      pageRef: "/blog/"
+      weight: 40
+    - name: "Categories"
+      pageRef: "/categories/"
+      weight: 50
+
+footer:
+  - name: "Home"
+    pageRef: "/"
+    weight: 10
+  - name: "About"
+    pageRef: "/about/"
+    weight: 20
+  - name: "Services"
+    pageRef: "/services/"
+    weight: 30
+  - name: "Blog"
+    pageRef: "/blog/"
+    weight: 40
+  - name: "Categories"
+    pageRef: "/categories/"
+    weight: 50
+  - name: "Support"
+    pageRef: "/support/"
+    weight: 60

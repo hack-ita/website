@@ -5,6 +5,8 @@ import BlogIndex from "./collections/blog-index";
 import Blog from "./collections/blog";
 import ServicesIndex from "./collections/services-index";
 import Services from "./collections/services";
+import CategoriesIndex from "./collections/categories-index";
+import Categories from "./collections/categories";
 
 const branch =
   process.env.GITHUB_BRANCH ||
@@ -38,6 +40,8 @@ export default defineConfig({
       Services,
       BlogIndex,
       Blog,
+      CategoriesIndex,
+      Categories
     ],
   },
 });

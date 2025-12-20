@@ -1,7 +1,9 @@
 ---
 title: Corsi Per Aziende
-description: Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-image: "/images/corsi-per-aziende-new.jpg"
+description: >-
+  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor
+  sit amet consectetur adipisicing elit.
+image: /images/corsi-per-aziende-new.jpg
 ---
 
-Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio officiis alias obcaecati ullam quos animi quam, quia pariatur itaque recusandae aliquid inventore voluptatibus! Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur.
+Hackita propone meeting e sessioni pratiche pensati per le aziende che desiderano formare il proprio team su aspetti concreti della sicurezza. Aiutiamo i dipendenti a comprendere come agiscono gli attaccanti e a riconoscere errori comuni, per evitare comportamenti rischiosi. Tutto con un approccio etico, chiaro e orientato alla realtà.

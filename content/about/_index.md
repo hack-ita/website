@@ -12,7 +12,7 @@ content:
     a pensare, agire e ragionare come un vero hacker etico.
 cards:
   enable: true
-  title: Cosa Facciamo
+  title: Cosa Offriamo?
   card:
     - title: Ricerca sull’Hacking Etico
       content: >-

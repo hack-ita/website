@@ -27,10 +27,15 @@ cards:
         approccio diretto e concreto, testando siti web, reti e infrastrutture
         aziendali per scoprire vulnerabilità reali. Tutto ciò che facciamo è
         guidato da etica, realismo e risultati tangibili.
-    - title: Red Team Notes & Guides
+    - title: L’EVOLUZIONE DELL’HACKING IN ITALIA.
       content: >-
-        Structured notes covering recon, exploitation, post-exploitation,
-        persistence and lateral movement — without any fluff.
+        Hackita è un blog e un progetto dedicato all’hacking etico, alla
+        formazione pratica e ai servizi professionali nel campo della sicurezza
+        offensiva. Il nostro obiettivo è chiaro: diventare la Wikipedia
+        dell’hacking in Italia, un punto di riferimento per chi vuole imparare,
+        crescere e vivere davvero questo mondo. Ogni guida, articolo e progetto
+        nasce con una sola direzione: l’eccellenza. E sappiamo che ci
+        arriveremo.
 extra_content:
   enable: true
   title: Lorem ipsum dolor sit amet.

@@ -38,17 +38,14 @@ cards:
         arriveremo.
 extra_content:
   enable: true
-  title: Lorem ipsum dolor sit amet.
+  title: L’EVOLUZIONE DELL’HACKING IN ITALIA.
   content: >-
-    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui quasi
-    obcaecati nisi natus doloremque maxime quisquam soluta quidem consectetur
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam sequi
-    aspernatur eius voluptatem sit consequuntur officiis hic sed earum
-    dignissimos repellendus ex facere nobis necessitatibus culpa, quo, est
-    expedita quam ratione tempora ipsum maxime animi? Sint amet, nobis
-    doloremque excepturi sunt voluptas officia. Quod fugiat velit pariatur
-    voluptas vitae eligendi tempore odit atque placeat impedit! itaque,
-    cupiditate dolor ducimus eaque, optio repellat! Quis.
+    Hackita è un blog e un progetto dedicato all’hacking etico, alla formazione
+    pratica e ai servizi professionali nel campo della sicurezza offensiva. Il
+    nostro obiettivo è chiaro: diventare la Wikipedia dell’hacking in Italia, un
+    punto di riferimento per chi vuole imparare, crescere e vivere davvero
+    questo mondo. Ogni guida, articolo e progetto nasce con una sola direzione:
+    l’eccellenza. E sappiamo che ci arriveremo.
 faqs:
   enable: true
   title: FAQs

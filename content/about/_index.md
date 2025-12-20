@@ -54,16 +54,16 @@ faqs:
         simulazioni – vengono svolte in modo etico, controllato e nel pieno
         rispetto delle leggi italiane e internazionali. Il nostro obiettivo è
         diffondere conoscenza, non danneggiare.
-    - title: '2 Lorem ipsum dolor, sit amet consectetur adipisicing.'
+    - title: 2. Posso imparare da zero?
       content: >-
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis
-        distinctio, ut natus est voluptas facere provident maiores veniam
-        aliquam optio enim veritatis assumenda praesentium atque debitis. Ut.
-    - title: '3 Lorem ipsum dolor, sit amet consectetur adipisicing.'
+        Certo. Hackita è pensato anche per chi parte da zero. I nostri percorsi
+        ti guidano passo dopo passo con esempi pratici su Windows, Linux e Web
+        App, fino a farti acquisire le competenze di un vero ethical hacker.
+    - title: 3. Che tipo di contenuti troverò?
       content: >-
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis
-        distinctio, ut natus est voluptas facere provident maiores veniam
-        aliquam optio enim veritatis assumenda praesentium atque debitis. Ut.
+        Troverai articoli tecnici, walkthrough, guide pratiche e note di
+        laboratorio. Tutto basato su esperienza reale, senza teoria inutile.
+        L’obiettivo è imparare come ragiona e lavora davvero un hacker etico.
     - title: '4 Lorem ipsum dolor, sit amet consectetur adipisicing.'
       content: >-
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis

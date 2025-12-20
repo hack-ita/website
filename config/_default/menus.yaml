@@ -5,15 +5,15 @@ main:
   - name: Articoli
     pageRef: /articoli/
     weight: 40
+  - name: Categorie
+    pageRef: /categorie/
+    weight: 50
   - name: About
     pageRef: /about/
     weight: 20
   - name: Servizi
     pageRef: /servizi/
     weight: 30
-  - name: Categorie
-    pageRef: /categorie/
-    weight: 50
 footer:
   - name: Home
     pageRef: /

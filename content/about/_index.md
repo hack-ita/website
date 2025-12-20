@@ -26,11 +26,8 @@ cards:
         orientato ai risultati.
     - title: 'Articoli, Guide e Risorse Pratiche'
       content: >-
-        Su Hackita condividiamo articoli tecnici, walkthrough e appunti di
-        laboratorio per aiutare chi vuole imparare davvero l’hacking etico. Ogni
-        contenuto nasce da esperienza reale e ha un solo obiettivo: trasmettere
-        conoscenza utile, chiara e applicabile. Qui non leggi solo teoria —
-        impari come si agisce sul campo.
+        Condividiamo contenuti tecnici e walkthrough basati su esperienza reale.
+        Qui impari come si agisce davvero: meno teoria, più pratica.
 extra_content:
   enable: true
   title: L’EVOLUZIONE DELL’HACKING IN ITALIA.

@@ -1,7 +1,9 @@
 ---
-title: Formazione
-description: Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-image: "/images/formazione.jpg"
+title: 'Formazione 1:1'
+description: >-
+  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor
+  sit amet consectetur adipisicing elit.
+image: /images/formazione.jpg
 ---
 
-Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio officiis alias obcaecati ullam quos animi quam, quia pariatur itaque recusandae aliquid inventore voluptatibus! Possimus natus, sit aut mollitia commodi vitae officiis. Sapiente dolor quas iusto at magni consequatur.
+Vuoi diventare un vero ethical hacker ma non sai da dove cominciare? Hai incontrato difficoltà o ti senti bloccato nel tuo percorso? Con Hackita impari davvero: sessioni live 1:1, formazione pratica e percorsi personalizzati su Windows, Linux e Web App. Ti guidiamo passo dopo passo fino a diventare un professionista dell’hacking etico.

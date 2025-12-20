@@ -1,4 +1,7 @@
 import { defineConfig } from "tinacms";
+import BaseSettings from "./collections/base";
+import MenuSettings from "./collections/menus";
+import ParamSettings from "./collections/params";
 import Home from "./collections/home";
 import About from "./collections/about";
 import BlogIndex from "./collections/blog-index";
@@ -34,6 +37,9 @@ export default defineConfig({
 
   schema: {
     collections: [
+      BaseSettings,
+      MenuSettings,
+      ParamSettings,
       Home,
       About,
       ServicesIndex,
@@ -41,7 +47,7 @@ export default defineConfig({
       BlogIndex,
       Blog,
       CategoriesIndex,
-      Categories
+      Categories,
     ],
   },
 });

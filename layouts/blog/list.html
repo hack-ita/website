@@ -44,8 +44,11 @@
 </section>
 {{/* /hero */}}
 
+
+
 {{/* cards */}}
 <section class="max-w-7xl mx-auto py-10 px-5" aria-label="Exploits by category">
+  {{ partial "search.html" . }}
   {{ range .Site.Taxonomies.categories }}
   <div>
     <div class="w-full h-0.5 bg-linear-to-r from-transparent via-primary to-transparent"></div>

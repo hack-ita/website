@@ -4,12 +4,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="robots" content="index, follow">
 
-{{/* AOS import & link */}}
-{{ $aos := resources.Get "plugins/aos/aos.css" | minify }}
-{{ with $aos }}
-<link rel="stylesheet" href="{{ .RelPermalink }}">
-{{ end }}
-
 {{/* Title */}}
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Page.Title }} - {{ site.Title }}{{ end }}</title>
 <meta name="description" content="{{ with .Description }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description | default "HackIta - Offensive security blog" }}{{ end }}">
@@ -27,5 +21,7 @@
 {{ partial "essentials/css.html" . }}
 {{ end }}
 
-{{/* Schema import */}}
+{{/* Plugins import */}}
 {{ partial "schema.html" . }}
+{{ partial "opengraph.html" . }}
+{{ partial "twitter_cards.html" . }}

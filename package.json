@@ -6,12 +6,14 @@
     "@types/node": "^25.0.3",
     "dotenv": "^17.2.3",
     "dotenv-cli": "^11.0.0",
+    "pagefind": "^1.4.0",
     "tailwindcss": "^4.1.17"
   },
   "scripts": {
     "build:admin": "npx tinacms build",
     "build:hugo": "node scripts/copyImages.js && git config core.quotepath false && hugo --gc --minify --baseURL \"$URL\"",
-    "build": "npm run build:admin && npm run build:hugo"
+    "build:index": "npx pagefind --site public",
+    "build": "npm run build:admin && npm run build:hugo && npm run build:index"
   },
   "dependencies": {
     "fs": "^0.0.1-security",

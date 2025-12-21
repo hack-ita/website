@@ -3,7 +3,7 @@
 /* ===========================
   GLOBAL DEBUG & LOGGING
 =========================== */
-const DEBUG = false; // Set FALSE in production
+const DEBUG = true; // Set FALSE in production
 const log = (...args) => DEBUG && console.log("LOG:", ...args);
 const warn = (...args) => DEBUG && console.warn("WARN:", ...args);
 const error = (...args) => console.error("ERROR:", ...args);
@@ -23,7 +23,7 @@ const FEATURES = {
   typewriter: true,
   grid: false,
   counters: true,
-  aos: true,
+  search: true,
   swiper: true,
 };
 
@@ -50,7 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // UTILITY WRAPPER
   // ===========================
   const safeExecute = (fn, name) => {
-    try { fn(); } catch (e) { error(`${name} crash:`, e); }
+    try {
+      fn();
+    } catch (e) {
+      error(`${name} crash:`, e);
+    }
   };
 
   // ===========================
@@ -75,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // HEADER SCROLL EFFECT
   // ===========================
   safeExecute(() => {
-    if (!FEATURES.header || !header || !headerBar) return warn("Header scroll skipped");
+    if (!FEATURES.header || !header || !headerBar)
+      return warn("Header scroll skipped");
     log("Header scroll effect enabled");
     const handleScroll = () => {
       const scrolled = window.scrollY > 0;
@@ -84,7 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
       headerBar.classList.toggle("py-1", scrolled);
     };
     handleScroll();
-    window.addEventListener("scroll", () => requestAnimationFrame(handleScroll));
+    window.addEventListener("scroll", () =>
+      requestAnimationFrame(handleScroll)
+    );
   }, "Header");
 
   // ===========================
@@ -94,24 +101,46 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!FEATURES.typewriter) return warn("Typewriter feature disabled");
     const dataContainer = safeQuery("#typewriter-data");
     const target = safeQuery("#typewriter");
-    if (!dataContainer || !target) return warn("Typewriter skipped (missing elements)");
+    if (!dataContainer || !target)
+      return warn("Typewriter skipped (missing elements)");
     log("Typewriter initialized");
 
-    const words = Array.from(dataContainer.children).map((s) => s.textContent.trim());
+    const words = Array.from(dataContainer.children).map((s) =>
+      s.textContent.trim()
+    );
     if (!words.length) return warn("Typewriter skipped (no words found)");
 
-    let wordIndex = 0, charIndex = 0, isDeleting = false, pendingPause = false;
-    const TYPING_SPEED = 90, DELETING_SPEED = 50, HOLD_AFTER_TYPE = 2200, HOLD_AFTER_DELETE = 400;
+    let wordIndex = 0,
+      charIndex = 0,
+      isDeleting = false,
+      pendingPause = false;
+    const TYPING_SPEED = 90,
+      DELETING_SPEED = 50,
+      HOLD_AFTER_TYPE = 2200,
+      HOLD_AFTER_DELETE = 400;
 
     const typeEffect = () => {
       const word = words[wordIndex];
       let delay = isDeleting ? DELETING_SPEED : TYPING_SPEED;
       if (!isDeleting) {
-        if (charIndex < word.length) target.textContent = word.substring(0, ++charIndex);
-        else { if (!pendingPause) { pendingPause = true; delay = HOLD_AFTER_TYPE; } else { pendingPause = false; isDeleting = true; } }
+        if (charIndex < word.length)
+          target.textContent = word.substring(0, ++charIndex);
+        else {
+          if (!pendingPause) {
+            pendingPause = true;
+            delay = HOLD_AFTER_TYPE;
+          } else {
+            pendingPause = false;
+            isDeleting = true;
+          }
+        }
       } else {
         if (charIndex > 0) target.textContent = word.substring(0, --charIndex);
-        else { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; delay = HOLD_AFTER_DELETE; }
+        else {
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          delay = HOLD_AFTER_DELETE;
+        }
       }
       setTimeout(typeEffect, delay);
     };
@@ -122,10 +151,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // GRID HOVER EFFECT
   // ===========================
   safeExecute(() => {
-    if (!FEATURES.grid || !grid || !cards.length) return warn("Grid hover skipped");
+    if (!FEATURES.grid || !grid || !cards.length)
+      return warn("Grid hover skipped");
     log("Grid hover enabled");
     grid.addEventListener("mousemove", (e) => {
-      const gx = e.clientX, gy = e.clientY;
+      const gx = e.clientX,
+        gy = e.clientY;
       cards.forEach((card) => {
         const rect = card.getBoundingClientRect();
         const x = Math.min(Math.max(gx - rect.left, 0), rect.width);
@@ -135,7 +166,9 @@ document.addEventListener("DOMContentLoaded", () => {
         card.style.setProperty("--o", `1`);
       });
     });
-    grid.addEventListener("mouseleave", () => { cards.forEach(c => c.style.setProperty("--o", "0")); });
+    grid.addEventListener("mouseleave", () => {
+      cards.forEach((c) => c.style.setProperty("--o", "0"));
+    });
   }, "Grid");
 
   // ===========================
@@ -148,17 +181,20 @@ document.addEventListener("DOMContentLoaded", () => {
     counters.forEach((span) => {
       const finalText = span.textContent.trim();
       const isNumber = /^[0-9]+$/.test(finalText);
-      const duration = 2000, delay = 800;
+      const duration = 2000,
+        delay = 800;
       let started = false;
       span.textContent = isNumber ? "0" : "";
 
       const animate = () => {
-        if (started) return; started = true;
+        if (started) return;
+        started = true;
 
         if (isNumber) {
           const match = finalText.match(/^(\d+)(.*)$/);
           if (!match) return;
-          const target = parseInt(match[1], 10), suffix = match[2] || "";
+          const target = parseInt(match[1], 10),
+            suffix = match[2] || "";
           const startTime = performance.now();
           const update = (time) => {
             const progress = Math.min((time - startTime) / duration, 1);
@@ -171,7 +207,14 @@ document.addEventListener("DOMContentLoaded", () => {
           const chars = "!<>-_\\/[]{}—=+*^?#________";
           let frame = 0;
           const scramble = () => {
-            span.textContent = finalText.split("").map((char, i) => i < frame ? finalText[i] : chars[Math.floor(Math.random() * chars.length)]).join("");
+            span.textContent = finalText
+              .split("")
+              .map((char, i) =>
+                i < frame
+                  ? finalText[i]
+                  : chars[Math.floor(Math.random() * chars.length)]
+              )
+              .join("");
             frame++;
             if (frame <= finalText.length) setTimeout(scramble, 30);
             else span.textContent = finalText;
@@ -180,71 +223,224 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => { if (entry.isIntersecting) animate(); });
-      }, { threshold: 0.6 });
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) animate();
+          });
+        },
+        { threshold: 0.6 }
+      );
       observer.observe(span);
     });
   }, "Counters");
 
   // ===========================
-  // PLUGINS: AOS & SWIPER
+  // SEARCH (PAGEFIND + PREVIEW)
   // ===========================
   safeExecute(() => {
-    if (FEATURES.aos && typeof AOS !== "undefined") { AOS.init(); log("AOS initialized"); }
-    else warn("AOS skipped");
+    if (!FEATURES.search) return warn("Search feature disabled");
 
-    if (!FEATURES.swiper || typeof Swiper === "undefined") return warn("Swiper skipped");
+    const input = safeQuery("#search-input");
+    const suggList = safeQuery("#search-suggestions");
+    const previewRoot = safeQuery("#preview-root");
+
+    if (!input || !suggList || !previewRoot) {
+      return warn("Search skipped (missing elements)");
+    }
+
+    log("Search initialized");
+
+    // preview card
+    const preview = document.createElement("div");
+    preview.className = "link-preview";
+    preview.style.display = "none";
+    previewRoot.appendChild(preview);
+
+    let pagefind = null;
+    let timer = null;
+
+    // ---------------------------
+    // INIT PAGEFIND
+    // ---------------------------
+    const initPagefind = async () => {
+      try {
+        pagefind = await import("/pagefind/pagefind.js");
+        await pagefind.options({
+          baseUrl: "/",
+          bundlePath: "/pagefind/",
+          excerptLength: 25,
+          highlightParam: "highlight",
+        });
+        pagefind.init();
+        log("Pagefind ready");
+      } catch (e) {
+        error("Pagefind init failed:", e);
+      }
+    };
+    initPagefind();
+
+    // ---------------------------
+    // INPUT HANDLER (DEBOUNCED)
+    // ---------------------------
+    input.addEventListener("input", (e) => {
+      clearTimeout(timer);
+
+      const term = e.target.value.trim();
+      if (!term) {
+        suggList.innerHTML = "";
+        preview.style.display = "none";
+        return;
+      }
+
+      timer = setTimeout(async () => {
+        if (!pagefind) return warn("Search attempted before Pagefind ready");
+
+        try {
+          const res = await pagefind.search(term);
+          suggList.innerHTML = "";
+
+          res.results.slice(0, 8).forEach(async (hit) => {
+            try {
+              const data = await hit.data();
+              const li = document.createElement("li");
+
+              li.innerHTML = `
+                <a href="${data.url}">
+                  <strong>${data.meta?.title || data.url}</strong>
+                  <p>${data.excerpt || ""}</p>
+                </a>
+              `;
+
+              suggList.appendChild(li);
+            } catch (e) {
+              warn("Search result render failed:", e);
+            }
+          });
+        } catch (e) {
+          error("Search failed:", e);
+        }
+      }, 200);
+    });
+
+    // ---------------------------
+    // HOVER PREVIEW
+    // ---------------------------
+    suggList.addEventListener("mouseover", (e) => {
+      const item = e.target.closest("li");
+      if (!item) return;
+
+      const a = item.querySelector("a");
+      if (!a) return;
+
+      const title = a.querySelector("strong")?.textContent || "";
+      const desc = a.querySelector("p")?.textContent || "";
+      const url = a.href;
+
+      preview.innerHTML = `
+        <h4>${title}</h4>
+        <p>${desc}</p>
+        <small>${url}</small>
+      `;
+
+      preview.style.display = "block";
+      preview.style.left = `${e.pageX + 12}px`;
+      preview.style.top = `${e.pageY + 6}px`;
+    });
+
+    suggList.addEventListener("mouseleave", () => {
+      preview.style.display = "none";
+    });
+  }, "Search");
+
+  // ===========================
+  // PLUGINS: SWIPER
+  // ===========================
+  safeExecute(() => {
+    if (!FEATURES.swiper || typeof Swiper === "undefined")
+      return warn("Swiper skipped");
     log("Swiper initialization started");
 
     // HERO IMAGE SWIPER
-    const heroImgSwiper = new Swiper('.heroImgSwiper', {
+    const heroImgSwiper = new Swiper(".heroImgSwiper", {
       loop: true,
       spaceBetween: 10,
       pagination: { el: ".hero-swiper-pagination", clickable: true },
-      breakpoints: { 1024: { allowTouchMove: false, noSwiping: true, pagination: { clickable: false } } }
+      breakpoints: {
+        1024: {
+          allowTouchMove: false,
+          noSwiping: true,
+          pagination: { clickable: false },
+        },
+      },
     });
 
     // HERO TEXT SWIPER
-    let heroTextSwiper = new Swiper('.heroTextSwiper', {
+    let heroTextSwiper = new Swiper(".heroTextSwiper", {
       loop: true,
       spaceBetween: 10,
       noSwiping: true,
       allowTouchMove: false,
-      breakpoints: { 1024: { direction: "vertical", slidesPerView: 3, allowTouchMove: true, noSwiping: false } }
+      breakpoints: {
+        1024: {
+          direction: "vertical",
+          slidesPerView: 3,
+          allowTouchMove: true,
+          noSwiping: false,
+        },
+      },
     });
 
     const AUTOPLAY_DELAY = 5000;
     let desktopAutoPlayInterval = null;
 
-    const clearDesktopAutoplay = () => { if (desktopAutoPlayInterval) { clearInterval(desktopAutoPlayInterval); desktopAutoPlayInterval = null; } };
-    const setActiveSlide = (slides, index) => { slides.forEach(s => s.classList.remove('swiper-slide-active')); slides[index].classList.add('swiper-slide-active'); heroImgSwiper.slideToLoop(index); };
+    const clearDesktopAutoplay = () => {
+      if (desktopAutoPlayInterval) {
+        clearInterval(desktopAutoPlayInterval);
+        desktopAutoPlayInterval = null;
+      }
+    };
+    const setActiveSlide = (slides, index) => {
+      slides.forEach((s) => s.classList.remove("swiper-slide-active"));
+      slides[index].classList.add("swiper-slide-active");
+      heroImgSwiper.slideToLoop(index);
+    };
 
     const setupDesktopHoverSync = () => {
       heroTextSwiper.destroy();
       clearDesktopAutoplay();
-      const slides = safeQueryAll('.heroTextSwiper .swiper-slide');
+      const slides = safeQueryAll(".heroTextSwiper .swiper-slide");
       if (!slides.length) return;
       setActiveSlide(slides, 0);
-      slides.forEach((slide, i) => slide.addEventListener('mouseenter', () => setActiveSlide(slides, i)));
+      slides.forEach((slide, i) =>
+        slide.addEventListener("mouseenter", () => setActiveSlide(slides, i))
+      );
       let idx = 0;
-      desktopAutoPlayInterval = setInterval(() => { idx = (idx + 1) % slides.length; setActiveSlide(slides, idx); }, AUTOPLAY_DELAY);
+      desktopAutoPlayInterval = setInterval(() => {
+        idx = (idx + 1) % slides.length;
+        setActiveSlide(slides, idx);
+      }, AUTOPLAY_DELAY);
     };
 
-    const setupMobileSync = () => { clearDesktopAutoplay(); heroImgSwiper.controller.control = heroTextSwiper; };
-    const setupHoverSync = () => { window.innerWidth >= 1024 ? setupDesktopHoverSync() : setupMobileSync(); };
+    const setupMobileSync = () => {
+      clearDesktopAutoplay();
+      heroImgSwiper.controller.control = heroTextSwiper;
+    };
+    const setupHoverSync = () => {
+      window.innerWidth >= 1024 ? setupDesktopHoverSync() : setupMobileSync();
+    };
 
-    window.addEventListener('resize', setupHoverSync);
+    window.addEventListener("resize", setupHoverSync);
     setupHoverSync();
 
     // ARTICLE SWIPER
-    new Swiper('.articleSwiper', {
+    new Swiper(".articleSwiper", {
       loop: true,
       slidesPerView: 2,
       spaceBetween: 20,
       autoplay: true,
       navigation: { prevEl: ".prev-article", nextEl: ".next-article" },
-      breakpoints: { 1024: { slidesPerView: 4, autoplay: false } }
+      breakpoints: { 1024: { slidesPerView: 4, autoplay: false } },
     });
 
     log("Swiper initialized");

@@ -1,7 +1,6 @@
-{{ $aos := resources.Get "plugins/aos/aos.js" }}
 {{ $swiper := resources.Get "plugins/swiper/swiper.js" }}
 {{ $global := resources.Get "js/main.js" }}
-{{ $js := slice $aos $swiper $global | resources.Concat "js/bundle.js" }}
+{{ $js := slice $swiper $global | resources.Concat "js/bundle.js" }}
 
 {{ with $js }}
 {{ with . | minify | fingerprint "sha256" }}

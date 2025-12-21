@@ -48,6 +48,45 @@ h1, h2 {
 }
 
 /* ===========================
+   Search UI
+=========================== */
+
+/* Search container */
+#search-wrapper {
+  @apply relative w-full mb-10;
+}
+#search-input {
+  @apply w-full p-3 bg-accent text-light shadow-xl border border-light/20;
+}
+
+/* Suggestion list */
+.suggestions {
+  @apply list-none m-0 p-0 bg-accent overflow-hidden shadow-xl divide-y divide-light/20;
+}
+.suggestions li {
+  @apply p-3 cursor-pointer transition-colors text-light;
+}
+
+.suggestions li strong {
+  @apply uppercase;
+}
+
+.suggestions li:hover {
+  @apply bg-primary;
+}
+
+/* Preview card */
+.link-preview {
+  @apply absolute bg-dark text-light border border-light/20 p-3 hidden w-70 rounded-md z-100;
+}
+.link-preview h4 {
+  @apply mb-2 font-semibold text-light uppercase;
+}
+.link-preview small {
+  @apply text-light;
+}
+
+/* ===========================
    PROSE / MARKDOWN STYLING
 =========================== */
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {

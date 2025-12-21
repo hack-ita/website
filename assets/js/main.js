@@ -27,7 +27,8 @@ const FEATURES = {
   backToTop: true,
   readingProgress: true,
   search: true,
-  swiper: true
+  swiper: true,
+  glightbox: true
 };
 
 /* ===========================
@@ -238,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }, "Counters");
 
-    // ===========================
+  // ===========================
   // CODE BLOCK COPY BUTTON
   // ===========================
   safeExecute(() => {
@@ -286,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }, "CodeCopy");
 
-    // ===========================
+  // ===========================
   // BACK TO TOP BUTTON
   // ===========================
   safeExecute(() => {
@@ -316,7 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateVisibility();
   }, "BackToTop");
 
-    // ===========================
+  // ===========================
   // READING PROGRESS BAR
   // ===========================
   safeExecute(() => {
@@ -564,4 +565,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     log("Swiper initialized");
   }, "Plugins");
+
+  // ===========================
+  // IMAGE LIGHTBOX
+  // ===========================
+  safeExecute(() => {
+    if (!FEATURES.glightbox || typeof GLightbox === "undefined")
+      return warn("GLightbox skipped");
+
+    const selector = ".glightbox";
+    const items = document.querySelectorAll(selector);
+
+    if (!items.length) return warn("Lightbox skipped (no images found)");
+
+    log(`Initializing lightbox for ${items.length} images`);
+
+    GLightbox({
+      selector,
+      zoomable: true,
+      draggable: true,
+      touchNavigation: true,
+      keyboardNavigation: true,
+      closeButton: true,
+      loop: false,
+      openEffect: "zoom",
+      closeEffect: "fade",
+      slideEffect: "slide",
+      moreLength: 0,
+      download: true,
+    });
+  }, "Lightbox");
 });

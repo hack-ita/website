@@ -1,10 +1,12 @@
 {{ $swiper := resources.Get "plugins/swiper/swiper.css" }}
+{{ $glightbox := resources.Get "plugins/glightbox/glightbox.css" }}
+{{ $bundle := slice $swiper $glightbox | resources.Concat "css/bundle.css" }}
 
-{{ with $swiper }}
+{{ with $bundle }}
 {{ if hugo.IsDevelopment }}
 <link rel="stylesheet" href="{{ .RelPermalink }}">
 {{ else }}
-{{ with $swiper | minify | fingerprint }}
+{{ with $bundle| minify | fingerprint }}
 <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
 {{ end }}
 {{ end }}

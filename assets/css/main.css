@@ -109,6 +109,14 @@ h1, h2 {
   @apply scroll-mt-30;
 }
 
+.prose a > img {
+  @apply cursor-zoom-in;
+}
+
+.prose img {
+  @apply rounded-md;
+}
+
 /* ===========================
    CODE & HIGHLIGHTING
 =========================== */

@@ -1,0 +1,21 @@
+{{- $src := .Destination | safeURL -}}
+{{- $alt := .Text | plainify -}}
+{{- $title := .Title | plainify -}}
+
+{{- if not (strings.HasSuffix $src ".svg") -}}
+<a
+  href="{{ $src }}"
+  class="glightbox"
+  data-gallery="content"
+  {{ with $alt }}data-title="{{ . }}"{{ end }}
+  data-description="<a href='{{ $src }}' download class='underline underline-offset-4 hover:text-primary transition-colors'>Download Image</a>"
+>
+  <img
+    src="{{ $src }}"
+    alt="{{ $alt }}"
+    loading="lazy"
+    decoding="async"
+    {{ with $title }}title="{{ . }}"{{ end }}
+  />
+</a>
+{{ end }}

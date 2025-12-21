@@ -9,3 +9,9 @@ header:
 
 footer:
   logo: "/images/logo.webp"
+
+social:
+  facebook: "https://facebook.com"
+  instagram: "https://instagram.com"
+  twitter: "https://x.com"
+  linkedin: "https://linkedin.com"

@@ -1,6 +1,11 @@
 {{ define "main" }}
 <img data-pagefind-meta="image[src]" src="{{ .Params.image | relURL }}" style="display:none">
 <meta data-pagefind-meta="description[content]" content="{{ .Description }}">
+{{ if eq .Parent.Title "Blog" }}
+<div id="reading-progress" class="fixed z-60 top-0 left-0 w-full h-1 bg-transparent">
+    <div id="reading-progress-bar" class="h-full bg-primary"></div>
+</div>
+{{ end }}
 <section class="bg-mask pt-30">
   <div class="lg:p-5 flex flex-col-reverse lg:flex-row gap-5 max-w-7xl mx-auto">
 

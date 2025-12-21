@@ -3,7 +3,7 @@
 /* ===========================
   GLOBAL DEBUG & LOGGING
 =========================== */
-const DEBUG = true; // Set FALSE in production
+const DEBUG = false; // Set FALSE in production
 const log = (...args) => DEBUG && console.log("LOG:", ...args);
 const warn = (...args) => DEBUG && console.warn("WARN:", ...args);
 const error = (...args) => console.error("ERROR:", ...args);
@@ -23,8 +23,11 @@ const FEATURES = {
   typewriter: true,
   grid: false,
   counters: true,
+  codeCopy: true,
+  backToTop: true,
+  readingProgress: true,
   search: true,
-  swiper: true,
+  swiper: true
 };
 
 /* ===========================
@@ -234,6 +237,122 @@ document.addEventListener("DOMContentLoaded", () => {
       observer.observe(span);
     });
   }, "Counters");
+
+    // ===========================
+  // CODE BLOCK COPY BUTTON
+  // ===========================
+  safeExecute(() => {
+    if (!FEATURES.codeCopy) return warn("Code copy feature disabled");
+
+    const codeBlocks = document.querySelectorAll("pre > code");
+
+    if (!codeBlocks.length) {
+      return warn("No code blocks found for copy button");
+    }
+
+    log(`Initializing copy buttons for ${codeBlocks.length} code blocks`);
+
+    codeBlocks.forEach((codeBlock, index) => {
+      const pre = codeBlock.parentElement;
+      if (!pre) return;
+
+      // Prevent duplicate buttons (important for client-side nav / hot reload)
+      if (pre.querySelector(".copy-btn")) return;
+
+      pre.style.position = "relative";
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy-btn";
+      button.textContent = "Copy";
+
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(codeBlock.innerText);
+          button.textContent = "Copied!";
+          log(`Code block ${index + 1} copied`);
+
+          setTimeout(() => {
+            button.textContent = "Copy";
+          }, 1500);
+        } catch (e) {
+          error("Clipboard copy failed:", e);
+          button.textContent = "Error";
+          setTimeout(() => (button.textContent = "Copy"), 1500);
+        }
+      });
+
+      pre.appendChild(button);
+    });
+  }, "CodeCopy");
+
+    // ===========================
+  // BACK TO TOP BUTTON
+  // ===========================
+  safeExecute(() => {
+    if (!FEATURES.backToTop) return warn("Back-to-top feature disabled");
+
+    const btn = safeQuery("#back-to-top");
+    if (!btn) return warn("Back-to-top skipped (button not found)");
+
+    log("Back-to-top initialized");
+
+    const VISIBILITY_OFFSET = 300;
+
+    const updateVisibility = () => {
+      const visible = window.scrollY > VISIBILITY_OFFSET;
+      btn.classList.toggle("translate-y-70", !visible);
+    };
+
+    window.addEventListener("scroll", () =>
+      requestAnimationFrame(updateVisibility)
+    );
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      log("Back-to-top clicked");
+    });
+
+    updateVisibility();
+  }, "BackToTop");
+
+    // ===========================
+  // READING PROGRESS BAR
+  // ===========================
+  safeExecute(() => {
+    if (!FEATURES.readingProgress)
+      return warn("Reading progress feature disabled");
+
+    const progressRoot = safeQuery("#reading-progress");
+    const progressBar = safeQuery("#reading-progress-bar");
+
+    if (!progressRoot || !progressBar) {
+      return warn("Reading progress skipped (elements not found)");
+    }
+
+    log("Reading progress initialized");
+
+    const updateProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      if (docHeight <= 0) return;
+
+      const progress = Math.min(scrollTop / docHeight, 1);
+      progressBar.style.transform = `scaleX(${progress})`;
+    };
+
+    // Use transform for better performance
+    progressBar.style.transformOrigin = "left";
+    progressBar.style.transform = "scaleX(0)";
+
+    window.addEventListener("scroll", () =>
+      requestAnimationFrame(updateProgress)
+    );
+
+    updateProgress();
+  }, "ReadingProgress");
 
   // ===========================
   // SEARCH (PAGEFIND + PREVIEW)

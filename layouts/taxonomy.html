@@ -11,30 +11,30 @@
     <header class="lg:col-span-5 flex flex-col justify-start items-start gap-5">
       {{ partial "components/breadcrumb.html" . }}
 
-      <span class="py-1 px-3 rounded-full text-center text-sm border border-primary text-light uppercase relative">
+      <span class="py-1 px-3 rounded-full text-center text-sm border border-primary text-dark dark:text-light uppercase relative">
         Browse Categories
       </span>
 
-      <h1 class="text-light hero-heading uppercase">{{ .Params.hero_title }}</h1>
+      <h1 class="text-dark dark:text-light hero-heading uppercase">{{ .Params.hero_title }}</h1>
 
-      <p class="text-light">{{ .Description }}</p>
+      <p class="text-dark dark:text-light">{{ .Description }}</p>
 
       <!-- Stats -->
       <dl class="flex gap-x-10 gap-y-5 items-stretch flex-wrap">
         <div class="flex flex-col gap-2">
-          <dt class="text-light">Categorie</dt>
-          <dd class="heading-sm text-light">
+          <dt class="text-dark dark:text-light">Categorie</dt>
+          <dd class="heading-sm text-dark dark:text-light">
             <span class="text-primary heading-sm">{{ .Data.Terms | len }}</span> Percorsi
           </dd>
         </div>
         <div class="flex flex-col gap-2">
-          <dt class="text-light">Articoli</dt>
+          <dt class="text-dark dark:text-light">Articoli</dt>
           <dd class="heading-sm text-light">
             <span class="text-primary heading-sm">{{ where $.Site.RegularPages "Section" "blog" | len }}+</span> Note
           </dd>
         </div>
         <div class="flex flex-col gap-2">
-          <dt class="text-light">Focus</dt>
+          <dt class="text-dark dark:text-light">Focus</dt>
           <dd class="heading-sm text-light">
             <span class="text-primary heading-sm">OSCP</span> Red Team
           </dd>
@@ -53,7 +53,7 @@
         {{ range $i, $p := .Pages }}
         {{ $odd := modBool $i 2 }}
         <li>
-            <article class="flex flex-col bg-glass {{ if $odd }}lg:flex-row{{ else }}lg:flex-row-reverse{{ end }} gap-5 rounded-md p-5 shadow-xl transition-shadow hover:shadow-primary/20 border border-light/10">
+            <article class="flex flex-col bg-glass {{ if $odd }}lg:flex-row{{ else }}lg:flex-row-reverse{{ end }} gap-5 rounded-md p-5 shadow-xl transition-shadow hover:shadow-primary/20 border border-dark/20 dark:border-light/20">
                 
                 <!-- Image -->
                 <figure class="lg:flex-2/5">
@@ -64,15 +64,15 @@
                 <div class="flex flex-col gap-5 lg:flex-3/5">
                     <header class="flex flex-col gap-5 ">
                         <span class="text-primary uppercase"># {{ .Title }}</span>
-                        <h3 class="heading-sm text-light">{{ .Title }}</h3>
-                        <p class="text-light">{{ .Description }}</p>
+                        <h3 class="heading-sm text-dark dark:text-light">{{ .Title }}</h3>
+                        <p class="text-dark dark:text-light">{{ .Description }}</p>
                     </header>
 
                     <!-- Tags -->
                     {{ if .Params.tags }}
                     <ul class="flex flex-wrap gap-3 items-stretch">
                         {{ range .Params.tags }}
-                        <li class="py-1 px-3 uppercase text-sm rounded-full border border-light text-light">{{ . }}</li>
+                        <li class="py-1 px-3 uppercase text-sm rounded-full border border-dark dark:border-light text-dark dark:text-light">{{ . }}</li>
                         {{ end }}
                     </ul>
                     {{ end }}

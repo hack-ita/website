@@ -1,6 +1,6 @@
 {{ $light := eq .light "true" }}
 <a href="{{ .url | relURL }}"
-   class="font-bold uppercase text-sm relative after:absolute {{ if $light }}text-dark{{ else }}text-light{{ end }} hover:text-primary after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:w-full after:origin-bottom after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:origin-bottom hover:after:scale-x-100 {{ .class }}"
+   class="font-bold uppercase text-sm relative after:absolute {{ if $light }}text-light dark:text-dark{{ else }}text-dark dark:text-light{{ end }} hover:text-primary after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:w-full after:origin-bottom after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:origin-bottom hover:after:scale-x-100 {{ .class }}"
    title="{{ .label }}"
    aria-label="{{ .label }}">
    {{ .label }}

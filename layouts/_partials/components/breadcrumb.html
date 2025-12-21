@@ -1,4 +1,4 @@
-<nav data-pagefind-ignore aria-label="breadcrumb" class="text-light">
+<nav data-pagefind-ignore aria-label="breadcrumb" class="text-dark dark:text-light">
   <ol class="flex flex-wrap items-center list-none p-0 m-0">
     {{ range .Ancestors.Reverse }}
       <li class="flex items-center">
@@ -6,7 +6,7 @@
         <span class="mx-3">/</span>
       </li>
     {{ end }}
-    <li class="text-light/90 uppercase text-xs font-semibold" aria-current="page">
+    <li class="text-dark/70 dark:text-light/90 uppercase text-xs font-semibold" aria-current="page">
       {{ .Title }}
     </li>
   </ol>

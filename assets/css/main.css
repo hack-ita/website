@@ -6,6 +6,8 @@
 @source "hugo_stats.json";
 @source inline("h-20, rotate-45, -rotate-45", "top-23", "top-30", "overflow-hidden");
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ===========================
    THEME VARIABLES
 =========================== */
@@ -47,6 +49,7 @@ h1, h2 {
   @apply text-[max(20px,min(20px,1vw))] leading-none uppercase font-bold text-pretty;
 }
 
+
 /* ===========================
    Search UI
 =========================== */
@@ -56,15 +59,15 @@ h1, h2 {
   @apply relative w-full mb-10;
 }
 #search-input {
-  @apply w-full p-3 bg-accent text-light shadow-xl border border-light/20;
+  @apply w-full p-3 bg-light-bg dark:bg-accent text-dark dark:text-light shadow-xl border border-dark/20 dark:border-light/20;
 }
 
 /* Suggestion list */
 .suggestions {
-  @apply list-none m-0 p-0 bg-accent overflow-hidden shadow-xl divide-y divide-light/20;
+  @apply list-none m-0 p-0 bg-light-bg dark:bg-accent overflow-hidden shadow-xl divide-y divide-dark/20 dark:divide-light/20;
 }
 .suggestions li {
-  @apply p-3 cursor-pointer transition-colors text-light;
+  @apply p-3 cursor-pointer transition-colors text-dark dark:text-light;
 }
 
 .suggestions li strong {
@@ -77,13 +80,13 @@ h1, h2 {
 
 /* Preview card */
 .link-preview {
-  @apply absolute bg-dark text-light border border-light/20 p-3 hidden w-70 rounded-md z-100;
+  @apply absolute bg-light dark:bg-dark text-dark dark:text-light border border-dark/20 dark:border-light/20 p-3 hidden w-70 rounded-md z-100;
 }
 .link-preview h4 {
-  @apply mb-2 font-semibold text-light uppercase;
+  @apply mb-2 font-semibold text-dark dark:text-light uppercase;
 }
 .link-preview small {
-  @apply text-light;
+  @apply text-dark dark:text-light;
 }
 
 /* ===========================
@@ -159,7 +162,7 @@ pre:has(> code) {
    GLASS / HEADER EFFECTS
 =========================== */
 .header-glass {
-  @apply bg-dark/60 bg-clip-padding backdrop-filter backdrop-blur-sm;
+  @apply bg-light/5 dark:bg-dark/60 bg-clip-padding backdrop-filter backdrop-blur-sm;
 }
 
 .glass-responsive {
@@ -167,14 +170,14 @@ pre:has(> code) {
 }
 
 .bg-glass {
-  @apply bg-light/5 bg-clip-padding backdrop-filter backdrop-blur-sm;
+  @apply bg-dark/5 dark:bg-light/5 bg-clip-padding backdrop-filter backdrop-blur-sm;
 }
 
 /* ===========================
    HERO SWIPER
 =========================== */
 .hero-swiper-pagination .swiper-pagination-bullet {
-  @apply bg-light w-10 rounded-none h-[3px];
+  @apply bg-dark dark:bg-light w-10 rounded-none h-0.75;
 }
 
 .hero-swiper-pagination .swiper-pagination-bullet-active {
@@ -248,19 +251,27 @@ pre:has(> code) {
 
 .red-mask {
   --dot-color: color-mix(in oklab, var(--color-dark) 30%, transparent);
-  background-image: inherit;
+    background-image:
+    radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 8px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 24px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px);
 }
 
 .light-mask {
   --dot-color: color-mix(in oklab, var(--color-dark) 30%, transparent);
-  background-image: inherit;
+    background-image:
+    radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 8px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
+    radial-gradient(circle at 24px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px);
 }
 
 /* ===========================
    FORM STYLING (HN FORM)
 =========================== */
 .hn-form {
-  @apply relative z-[1] flex flex-col gap-4 items-stretch w-full;
+  @apply relative z-1 flex flex-col gap-4 items-stretch w-full;
 }
 
 .hn-input-orbit {
@@ -269,7 +280,7 @@ pre:has(> code) {
          before:opacity-[0.92] before:-inset-2/4
          focus-within:shadow-[0_0_0_2px_rgba(240,214,124,0.4),0_0_22px_rgba(240,214,124,0.7)]
          focus-within:before:animate-[hn-orbit-spin-fast_4s_linear_infinite] 
-         bg-dark;
+         bg-light dark:bg-dark;
 }
 
 .hn-input-orbit::before {
@@ -287,7 +298,7 @@ pre:has(> code) {
 }
 
 .hn-input::placeholder {
-  @apply text-light/30;
+  @apply text-light/20;
 }
 
 /* ===========================
@@ -315,8 +326,8 @@ pre:has(> code) {
    INPUT FIELDS
 =========================== */
 .input-field {
-  @apply transition-all duration-300 ease-[ease] border-2 border-solid border-light/50
-         focus:animate-[pulse-glow_2s_infinite] focus:border-light;
+  @apply transition-all duration-300 ease-[ease] border-2 border-solid border-dark/50 dark:border-light/50
+         focus:animate-[pulse-glow_2s_infinite] focus:border-dark dark:focus:border-light;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
 }
 
@@ -325,11 +336,11 @@ pre:has(> code) {
 }
 
 .input-field:focus + .label {
-  @apply text-light -translate-y-6 animate-[flicker_3s_infinite] scale-[0.85];
+  @apply text-dark dark:text-light -translate-y-6 animate-[flicker_3s_infinite] scale-[0.85];
 }
 
 .input-field:not(:placeholder-shown) + .label {
-  @apply -translate-y-6 text-light scale-[0.85];
+  @apply -translate-y-6 text-dark dark:text-light scale-[0.85];
 }
 
 .label {

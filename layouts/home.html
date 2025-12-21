@@ -22,15 +22,15 @@
     <!-- Hero Text Swiper -->
     <div class="lg:h-[80vh] lg:overflow-y-scroll 2xl:overflow-y-hidden lg:col-span-2 px-5">
       <div class="swiper heroTextSwiper" role="region" aria-label="Featured blog titles and summaries">
-        <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-light">
+        <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-dark dark:divide-light">
           {{ range $i, $p := where .Site.RegularPages "Section" "blog" | first 6 }}
           <div class="swiper-slide cursor-pointer {{ if eq $i 0 }}pb-5{{ else }}py-5{{ end }}">
             <article class="space-y-2 px-5">
-              <h2 class="heading-sm text-light transition-colors title">
+              <h2 class="heading-sm text-dark dark:text-light transition-colors title">
                 {{ .Title }}
               </h2>
               <div class="dets space-y-2">
-                <p class="text-light line-clamp-4">
+                <p class="text-dark dark:text-light line-clamp-4">
                   {{ .Description }}
                 </p>
                 {{ partial "components/link.html" (dict "label" "Read More" "url" .RelPermalink) }}
@@ -63,7 +63,7 @@
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2 class="text-light uppercase text-pretty text-center relative">
+      <h2 class="text-dark dark:text-light uppercase text-pretty text-center relative">
         Categories
       </h2>
     </div>
@@ -73,7 +73,7 @@
     {{ with site.GetPage "/categories" }}
     {{ range .Pages.ByWeight }}
     <article  class="relative hover:z-10">
-    <div class="group hover:scale-125 hover:shadow-2xl border hover:border-light/20 rounded-md transition-transform">
+    <div class="group hover:scale-125 hover:shadow-2xl border border-dark/20 dark:border-dark hover:border-dark/50 dark:hover:border-light/20 rounded-md transition-transform">
       
       <!-- Category Image -->
       <div class="overflow-hidden">
@@ -88,7 +88,7 @@
         <div class="flex flex-wrap gap-3">
           <span class="text-primary uppercase">{{ .Pages.Len }} Article{{ if ne .Pages.Len 1 }}s{{ end }}</span>
         </div>
-        <h3 class="heading-sm text-light transition-colors group-hover:text-primary">
+        <h3 class="heading-sm text-dark dark:text-light transition-colors group-hover:text-primary">
           {{ .Title }}
         </h3>
         <div>
@@ -100,7 +100,7 @@
       </div>
 
       <!-- Hover Effect Bar -->
-      <div class="h-1 rounded-b-md w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+      <div class="h-1 rounded-b-md w-full bg-dark/20 dark:bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
     </div>
     </article>
     {{ end }}
@@ -242,7 +242,7 @@
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2 class="text-light uppercase text-pretty text-center relative">
+      <h2 class="text-dark dark:text-light uppercase text-pretty text-center relative">
         {{ .title | safeHTML }}
       </h2>
     </div>
@@ -252,7 +252,7 @@
       
       <!-- Text Column -->
       <div class="space-y-10 lg:w-1/2"  >
-        <p class="text-light text-balance">
+        <p class="text-dark dark:text-light text-balance">
           {{ .content | safeHTML }}
         </p>
         {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" "/about/") }}
@@ -274,10 +274,10 @@
 <section class="bg-primary red-mask relative overflow-hidden" aria-label="Learn Cyber-Security Stats">
   
   <!-- Decorative Background Elements -->
-  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -left-5" aria-hidden="true">
+  <div class="bg-light dark:bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -left-5" aria-hidden="true">
     <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
   </div>
-  <div class="bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -right-5 rotate-180" aria-hidden="true">
+  <div class="bg-light dark:bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -right-5 rotate-180" aria-hidden="true">
     <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
   </div>
 
@@ -342,7 +342,7 @@
       <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
-      <h2 class="text-light uppercase text-pretty text-center relative">
+      <h2 class="text-dark dark:text-light uppercase text-pretty text-center relative">
         Hackita Training Tracks
       </h2>
     </div>
@@ -351,14 +351,14 @@
     <div class="grid lg:grid-cols-2 gap-5"  >
       {{ range $i, $p := . }}
       {{ $odd := modBool $i 2 }}
-      <article class="flex {{ if not $odd }}flex-row-reverse{{ end }} gap-5 items-center justify-between p-7 bg-glass rounded-md border border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
+      <article class="flex {{ if not $odd }}flex-row-reverse{{ end }} gap-5 items-center justify-between p-7 bg-glass rounded-md border border-dark/20 dark:border-transparent hover:border-primary transition-all group hover:scale-125 relative hover:z-10">
 
         <!-- Text Content -->
         <div class="space-y-5 w-2/3">
-          <h3 class="heading-sm text-light group-hover:text-primary transition-colors">
+          <h3 class="heading-sm text-dark dark:text-light group-hover:text-primary transition-colors">
             {{ .Title }}
           </h3>
-          <p class="text-light text-balance">
+          <p class="text-dark dark:text-light text-balance">
             {{ .Description }}
           </p>
           <div>

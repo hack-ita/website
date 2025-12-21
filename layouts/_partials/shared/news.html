@@ -29,7 +29,7 @@
         <div class="swiper-wrapper">
           {{ range where .Site.RegularPages "Section" "blog" | first 6 }}
           <div class="swiper-slide">
-            <a href="{{ .RelPermalink }}" class="inline-flex flex-col items-stretch group shadow-xl">
+            <div class="flex flex-col items-stretch group shadow-xl">
               <div class="overflow-hidden">
                 {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover group-hover:scale-115 transition-transform duration-500") }}
               </div>
@@ -47,7 +47,7 @@
                 </div>
               </div>
               <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
-            </a>
+            </div>
           </div>
           {{ end }}
         </div>

@@ -9,16 +9,16 @@
       {{ partial "components/breadcrumb.html" . }}
 
       <span
-        class="py-1 px-3 rounded-full text-center text-sm border border-primary text-light uppercase relative">
+        class="py-1 px-3 rounded-full text-center text-sm border border-primary text-dark dark:text-light uppercase relative">
         Categoria {{ .Title }}
       </span>
 
-      <h1 id="category-title" class="text-light hero-heading uppercase">
+      <h1 id="category-title" class="text-dark dark:text-light hero-heading uppercase">
         {{ .Params.hero_title }}
       </h1>
 
       {{ with .Description }}
-      <p class="text-light max-w-2xl text-pretty">
+      <p class="text-dark dark:text-light max-w-2xl text-pretty">
         {{ . }}
       </p>
       {{ end }}
@@ -27,22 +27,22 @@
       <dl class="flex gap-x-10 gap-y-5 items-stretch flex-wrap">
 
         <div class="flex flex-col gap-2">
-          <dt class="text-light">Articoli</dt>
-          <dd class="heading-sm text-light">
+          <dt class="text-dark dark:text-light">Articoli</dt>
+          <dd class="heading-sm text-dark dark:text-light">
             <strong class="text-primary">{{ .Pages.Len }}+</strong> Note
           </dd>
         </div>
 
         <div class="flex flex-col gap-2">
-          <dt class="text-light">Focus</dt>
-          <dd class="heading-sm text-light">
+          <dt class="text-dark dark:text-light">Focus</dt>
+          <dd class="heading-sm text-dark dark:text-light">
             <strong class="text-primary">OSCP</strong> · Red Team
           </dd>
         </div>
 
         <div class="flex flex-col gap-2">
-          <dt class="text-light">Struttura</dt>
-          <dd class="heading-sm text-light">
+          <dt class="text-dark dark:text-light">Struttura</dt>
+          <dd class="heading-sm text-dark dark:text-light">
             <strong class="text-primary">Recon</strong> → Exploit
           </dd>
         </div>
@@ -64,23 +64,23 @@
 {{/* list */}}
 <section class="max-w-7xl mx-auto py-10" aria-labelledby="category-articles-title">
     <header class="mb-10">
-        <h2 id="category-articles-title" class="text-light hero-heading">
+        <h2 id="category-articles-title" class="text-dark dark:text-light hero-heading">
             <span class="text-primary">{{ .Title }}</span> Articles
         </h2>
     </header>
 
     <ul class="flex flex-col gap-10">
         {{ range .Pages }}
-        <li class="grid lg:grid-cols-5 gap-5 p-5 lg:p-3 bg-glass border border-light/10 rounded-md shadow-xl transition-shadow hover:shadow-primary/20">
+        <li class="grid lg:grid-cols-5 gap-5 p-5 lg:p-3 bg-glass border border-dark/20 dark:border-light/20 rounded-md shadow-xl transition-shadow hover:shadow-primary/20">
             <figure class="lg:col-span-2">
               {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full lg:h-40 object-cover rounded-md") }}
             </figure>
 
             <div class="flex flex-col gap-5 lg:gap-3 justify-between lg:col-span-3">
-                <span class="text-light uppercase">{{ index .Params.categories 0 | default "Recon & mapping" }}</span>
+                <span class="text-dark dark:text-light uppercase">{{ index .Params.categories 0 | default "Recon & mapping" }}</span>
                 <h3 class="heading-sm text-primary">{{ .Title }}</h3>
                 {{ with .Description }}
-                <p class="text-light">{{ . }}</p>
+                <p class="text-dark dark:text-light">{{ . }}</p>
                 {{ end }}
                 <div>
                     {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" .RelPermalink) }}

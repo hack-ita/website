@@ -80,6 +80,51 @@ document.addEventListener("DOMContentLoaded", () => {
   }, "Menu");
 
   // ===========================
+  // THEME DROPDOWN: SYSTEM / LIGHT / DARK
+  // ===========================
+  safeExecute(() => {
+    const selector = safeQuery("#theme-selector");
+    if (!selector) return warn("Theme selector not found");
+
+    const html = document.documentElement;
+
+    const applyTheme = (theme) => {
+      html.classList.remove("dark");
+      html.removeAttribute("data-theme");
+
+      if (theme === "system") {
+        localStorage.removeItem("theme");
+        log("Theme set to system");
+        return;
+      }
+      if (theme === "dark") {
+        html.classList.add("dark");
+        log("Theme set to dark");
+      } else {
+        log("Theme set to light");
+      }
+      localStorage.setItem("theme", theme);
+    };
+
+    const saved = localStorage.getItem("theme") || "system";
+    selector.value = saved;
+    applyTheme(saved);
+
+    selector.addEventListener("change", (e) => {
+      applyTheme(e.target.value);
+    });
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", () => {
+        if (localStorage.getItem("theme") === "system") {
+          log("System preference changed");
+          applyTheme("system");
+        }
+      });
+  }, "ThemeToggle");
+
+  // ===========================
   // HEADER SCROLL EFFECT
   // ===========================
   safeExecute(() => {

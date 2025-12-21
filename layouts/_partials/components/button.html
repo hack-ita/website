@@ -6,13 +6,13 @@
 <a href="{{ .url }}"
    role="button"
    aria-label="{{ .label }}"
-   class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border {{ if $secondary }}border-secondary{{ else }}border-primary{{ end }} {{ if $light }}bg-light{{ else }}bg-dark{{ end }} transition duration-500 font-medium {{ if $fullBtn }}w-full{{ end }} {{ .class }}">
+   class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border {{ if $secondary }}border-secondary{{ else }}border-primary{{ end }} {{ if $light }}bg-dark dark:bg-light{{ else }}bg-light dark:bg-dark{{ end }} transition duration-500 font-medium {{ if $fullBtn }}w-full{{ end }} {{ .class }}">
    
    <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 {{ if $secondary }}text-secondary{{ else }}text-primary{{ end }} font-bold transition duration-500 group-hover:-translate-y-[150%]">
        {{ .label }}
    </span>
    
-   <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-light transition duration-500 group-hover:translate-y-0">
+   <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-dark dark:text-light transition duration-500 group-hover:translate-y-0">
        <span class="absolute h-full w-full translate-y-full skew-y-12 scale-y-0 {{ if $secondary }}bg-secondary{{ else }}bg-primary{{ end }} transition duration-500 group-hover:translate-y-0 {{ if $fullBtn }}group-hover:scale-700{{ else }}group-hover:scale-160{{ end }}"></span>
        <span class="z-10 font-bold">{{ .label }}</span>
    </span>
@@ -20,13 +20,13 @@
 {{ else }}
 <button type="button"
    aria-label="{{ .label }}"
-   class="group uppercase cursor-pointer relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border {{ if $secondary }}border-secondary{{ else }}border-primary{{ end }} {{ if $light }}bg-light{{ else }}bg-dark{{ end }} transition duration-500 font-medium {{ if $fullBtn }}w-full{{ end }} {{ .class }}">
+   class="group uppercase cursor-pointer relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border {{ if $secondary }}border-secondary{{ else }}border-primary{{ end }} {{ if $light }}bg-dark dark:bg-light{{ else }}bg-light dark:bg-dark{{ end }} transition duration-500 font-medium {{ if $fullBtn }}w-full{{ end }} {{ .class }}">
    
    <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 {{ if $secondary }}text-secondary{{ else }}text-primary{{ end }} font-bold transition duration-500 group-hover:-translate-y-[150%]">
        {{ .label }}
    </span>
    
-   <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-light transition duration-500 group-hover:translate-y-0">
+   <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-dark dark:text-light transition duration-500 group-hover:translate-y-0">
        <span class="absolute h-full w-full translate-y-full skew-y-12 scale-y-0 {{ if $secondary }}bg-secondary{{ else }}bg-primary{{ end }} transition duration-500 group-hover:translate-y-0 {{ if $fullBtn }}group-hover:scale-700{{ else }}group-hover:scale-160{{ end }}"></span>
        <span class="z-10 font-bold">{{ .label }}</span>
    </span>

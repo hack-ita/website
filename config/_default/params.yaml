@@ -1,3 +1,11 @@
 reading_speed: 170
+
 header:
   logo: "/images/logo-wobg.png"
+  cta:
+    enable: true
+    label: Get Started
+    link: "/services/"
+
+footer:
+  logo: "/images/logo.webp"

@@ -16,8 +16,8 @@
         aria-expanded="false"
         aria-label="Toggle menu"
       >
-        <span class="w-9 h-0.5 bg-light rounded-full transition-transform"></span>
-        <span class="w-9 h-0.5 bg-light rounded-full transition-transform"></span>
+        <span class="w-9 h-0.5 bg-dark dark:bg-light rounded-full transition-transform"></span>
+        <span class="w-9 h-0.5 bg-dark dark:bg-light rounded-full transition-transform"></span>
       </button>
       
       <!-- Navigation and CTA -->
@@ -45,8 +45,21 @@
         </nav>
         
         <!-- CTA Button -->
-        <div class="flex lg:justify-end">
-          {{ partial "components/button.html" (dict "link" "true" "label" "Get Started" "size" "full" "class" "lg:w-auto" ) }}
+        <div class="flex gap-3 items-stretch lg:justify-end">
+          <div class="relative inline-block">
+            <label for="theme-selector" class="sr-only">Theme</label>
+            <select
+              id="theme-selector"
+              class="appearance-none p-3 rounded-md border border-dark bg-light text-dark dark:bg-dark dark:text-light dark:border-light focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          {{ if site.Params.header.cta.enable }}
+          {{ partial "components/button.html" (dict "link" "true" "label" site.Params.header.cta.label "url" site.Params.header.cta.link "size" "full" "class" "lg:w-auto" ) }}
+          {{ end }}
         </div>
       </div>
       

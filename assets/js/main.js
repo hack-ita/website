@@ -3,7 +3,7 @@
 /* ===========================
   GLOBAL DEBUG & LOGGING
 =========================== */
-const DEBUG = true; // Set FALSE in production
+const DEBUG = false; // Set FALSE in production
 const log = (...args) => DEBUG && console.log("LOG:", ...args);
 const warn = (...args) => DEBUG && console.warn("WARN:", ...args);
 const error = (...args) => console.error("ERROR:", ...args);

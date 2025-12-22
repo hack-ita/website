@@ -45,13 +45,13 @@
           {{ range site.Menus.main }}
             {{ if eq $.Page.RelPermalink .URL }}
               <span
-                class="cursor-pointer text-sm font-bold uppercase relative after:absolute text-primary after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:w-full after:origin-bottom after:scale-x-100 after:bg-primary after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)]"
+                class="cursor-pointer lg:px-5 text-sm font-bold uppercase relative after:absolute text-primary after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:w-full after:origin-bottom after:scale-x-100 after:bg-primary after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)]"
                 aria-current="page"
               >
                 {{ .Name }}
               </span>
             {{ else }}
-              {{ partial "components/link.html" (dict "label" .Name "url" .URL "class" "px-3") }}
+              {{ partial "components/link.html" (dict "label" .Name "url" .URL "class" "lg:px-6") }}
             {{ end }}
           {{ end }}
         </nav>

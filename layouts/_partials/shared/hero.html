@@ -6,15 +6,15 @@
     role="banner"
 >
     <!-- Overlay -->
-    <div class="absolute inset-0 bg-dark/50" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-light/20 dark:bg-dark/50" aria-hidden="true"></div>
 
     <div class="size-full max-w-2xl mx-auto flex flex-col items-center justify-center gap-y-10 relative z-10">
-        <h1 class="text-light uppercase text-pretty text-center relative">
+        <h1 class="text-dark dark:text-light uppercase text-pretty text-center relative">
             {{ .title }}
         </h1>
 
         {{ with .description }}
-        <p class="text-light text-center text-pretty">{{ . }}</p>
+        <p class="text-dark dark:text-light text-center text-pretty">{{ . }}</p>
         {{ end }}
 
         {{ if ne .breadcrumb "disable" }}

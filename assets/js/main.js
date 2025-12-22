@@ -3,7 +3,7 @@
 /* ===========================
   GLOBAL DEBUG & LOGGING
 =========================== */
-const DEBUG = false; // Set FALSE in production
+const DEBUG = true; // Set FALSE in production
 const log = (...args) => DEBUG && console.log("LOG:", ...args);
 const warn = (...args) => DEBUG && console.warn("WARN:", ...args);
 const error = (...args) => console.error("ERROR:", ...args);
@@ -401,7 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, "ReadingProgress");
 
   // ===========================
-  // SEARCH (PAGEFIND + PREVIEW)
+  // SEARCH
   // ===========================
   safeExecute(() => {
     if (!FEATURES.search) return warn("Search feature disabled");
@@ -416,7 +416,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     log("Search initialized");
 
-    // preview card
+    // ---------------------------
+    // PREVIEW CARD
+    // ---------------------------
     const preview = document.createElement("div");
     preview.className = "link-preview";
     preview.style.display = "none";
@@ -424,6 +426,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let pagefind = null;
     let timer = null;
+
+    // ---------------------------
+    // SEARCH STATES (NO INITIAL STATE)
+    // ---------------------------
+    const STATES = {
+      loading: "Searching…",
+      empty: "No results found",
+      error: "Search failed. Try again.",
+    };
+
+    const showResults = () => {
+      suggList.style.display = "block";
+    };
+
+    const hideResults = () => {
+      suggList.innerHTML = "";
+      suggList.style.display = "none";
+      preview.style.display = "none";
+    };
+
+    const setState = (state) => {
+      showResults();
+      suggList.innerHTML = `
+      <li class="search-state" data-state="${state}">
+        ${STATES[state] || ""}
+      </li>
+    `;
+    };
+
+    // Start hidden (initial page state)
+    hideResults();
 
     // ---------------------------
     // INIT PAGEFIND
@@ -452,18 +485,32 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(timer);
 
       const term = e.target.value.trim();
+
+      // Empty input → fully reset to initial invisible state
       if (!term) {
-        suggList.innerHTML = "";
-        preview.style.display = "none";
+        hideResults();
         return;
       }
 
+      setState("loading");
+
       timer = setTimeout(async () => {
-        if (!pagefind) return warn("Search attempted before Pagefind ready");
+        if (!pagefind) {
+          warn("Search attempted before Pagefind ready");
+          setState("error");
+          return;
+        }
 
         try {
           const res = await pagefind.search(term);
+
+          if (!res.results.length) {
+            setState("empty");
+            return;
+          }
+
           suggList.innerHTML = "";
+          showResults();
 
           res.results.slice(0, 8).forEach(async (hit) => {
             try {
@@ -471,11 +518,11 @@ document.addEventListener("DOMContentLoaded", () => {
               const li = document.createElement("li");
 
               li.innerHTML = `
-                <a href="${data.url}">
-                  <strong>${data.meta?.title || data.url}</strong>
-                  <p>${data.excerpt || ""}</p>
-                </a>
-              `;
+              <a href="${data.url}">
+                <strong>${data.meta?.title || data.url}</strong>
+                <p>${data.excerpt || ""}</p>
+              </a>
+            `;
 
               suggList.appendChild(li);
             } catch (e) {
@@ -484,6 +531,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         } catch (e) {
           error("Search failed:", e);
+          setState("error");
         }
       }, 200);
     });
@@ -493,7 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ---------------------------
     suggList.addEventListener("mouseover", (e) => {
       const item = e.target.closest("li");
-      if (!item) return;
+      if (!item || item.classList.contains("search-state")) return;
 
       const a = item.querySelector("a");
       if (!a) return;
@@ -503,10 +551,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const url = a.href;
 
       preview.innerHTML = `
-        <h4>${title}</h4>
-        <p>${desc}</p>
-        <small>${url}</small>
-      `;
+      <h4>${title}</h4>
+      <p>${desc}</p>
+      <small>${url}</small>
+    `;
 
       preview.style.display = "block";
       preview.style.left = `${e.pageX + 12}px`;

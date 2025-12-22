@@ -1,12 +1,24 @@
 <header class="w-screen fixed top-0 left-0 right-0 z-50 header transition-all">
   <div class="max-w-full lg:max-w-475 mx-auto py-3 px-5 transition-all headerBar">
-    <div class="grid grid-cols-2 lg:grid-cols-3 items-center">
+    <div class="flex items-center justify-between gap-3">
       
       <!-- Logo -->
-      <div class="size-full">
+      <div class="grow">
         <a href="{{ site.BaseURL }}" aria-label="{{ site.Title }} homepage">
           <img src="{{ site.Params.header.logo | relURL }}" alt="{{ site.Title }}" class="h-25 headerLogo transition-all">
         </a>
+      </div>
+
+      <div class="lg:order-3 relative inline-block mr-3 lg:mr-0">
+        <label for="theme-selector" class="sr-only">Theme</label>
+        <select
+          id="theme-selector"
+          class="appearance-none p-3 rounded-md border border-dark bg-light text-dark dark:bg-dark dark:text-light dark:border-light focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
       </div>
       
       <!-- Mobile Menu Toggle -->
@@ -22,7 +34,7 @@
       
       <!-- Navigation and CTA -->
       <div 
-        class="menu absolute top-27 lg:static translate-y-10 pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100 lg:translate-y-0 transition duration-500 h-screen lg:h-auto header-glass glass-responsive left-0 w-svw lg:w-full lg:col-span-2 lg:grid grid-cols-2 space-y-5 lg:space-y-0 place-content-between"
+        class="menu lg:grow absolute top-27 lg:static translate-y-10 pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100 lg:translate-y-0 transition duration-500 h-screen lg:h-auto menu-glass left-0 w-svw lg:w-auto lg:flex lg:justify-between space-y-5 lg:space-y-0"
       >
         <nav 
           id="primary-navigation" 
@@ -46,17 +58,6 @@
         
         <!-- CTA Button -->
         <div class="flex gap-3 items-stretch lg:justify-end">
-          <div class="relative inline-block">
-            <label for="theme-selector" class="sr-only">Theme</label>
-            <select
-              id="theme-selector"
-              class="appearance-none p-3 rounded-md border border-dark bg-light text-dark dark:bg-dark dark:text-light dark:border-light focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="system">System</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
           {{ if site.Params.header.cta.enable }}
           {{ partial "components/button.html" (dict "link" "true" "label" site.Params.header.cta.label "url" site.Params.header.cta.link "size" "full" "class" "lg:w-auto" ) }}
           {{ end }}

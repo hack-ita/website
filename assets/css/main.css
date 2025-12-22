@@ -165,8 +165,8 @@ pre:has(> code) {
   @apply bg-light/5 dark:bg-dark/60 bg-clip-padding backdrop-filter backdrop-blur-sm;
 }
 
-.glass-responsive {
-  @apply lg:bg-transparent lg:bg-clip-border lg:backdrop-blur-none;
+.menu-glass {
+  @apply bg-light/60 dark:bg-dark/60 bg-clip-padding backdrop-filter backdrop-blur-2xl lg:bg-transparent dark:lg:bg-transparent lg:bg-clip-border lg:backdrop-blur-none;
 }
 
 .bg-glass {

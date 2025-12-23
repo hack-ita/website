@@ -28,7 +28,8 @@ const FEATURES = {
   readingProgress: true,
   search: true,
   swiper: true,
-  glightbox: true
+  glightbox: true,
+  newsletter: true
 };
 
 /* ===========================
@@ -688,4 +689,59 @@ document.addEventListener("DOMContentLoaded", () => {
       download: true,
     });
   }, "Lightbox");
+
+  // ===========================
+  // NEWSLETTER SUBSCRIPTION
+  // ===========================
+  safeExecute(() => {
+    if (!FEATURES.newsletter) return warn("Newsletter feature disabled");
+
+    const form = safeQuery(".hn-form");
+    if (!form) return warn("Newsletter skipped (form not found)");
+
+    const emailInput = safeQuery("#newsletter-email");
+    const button = form.querySelector("button");
+
+    if (!emailInput || !button) {
+      return warn("Newsletter skipped (missing input or button)");
+    }
+
+    log("Newsletter subscription initialized");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = emailInput.value.trim();
+      if (!email) {
+        warn("Newsletter submit blocked (empty email)");
+        return;
+      }
+
+      button.disabled = true;
+      log("Newsletter submit started", email);
+
+      try {
+        const res = await fetch("/.netlify/functions/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        if (res.ok) {
+          form.reset();
+          log("Newsletter subscription success");
+          alert("🎉 Sei iscritto alla newsletter!");
+        } else {
+          warn("Newsletter subscription failed", res.status);
+          alert("❌ Errore durante l’iscrizione.");
+        }
+      } catch (e) {
+        error("Newsletter request failed:", e);
+        alert("❌ Connessione fallita.");
+      } finally {
+        button.disabled = false;
+        log("Newsletter submit finished");
+      }
+    });
+  }, "Newsletter");
 });

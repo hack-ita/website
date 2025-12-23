@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, "Menu");
 
   // ===========================
-  // THEME DROPDOWN: SYSTEM / LIGHT / DARK
+  // THEME DROPDOWN: DARK / LIGHT (NO PERSISTENCE)
   // ===========================
   safeExecute(() => {
     const selector = safeQuery("#theme-selector");
@@ -91,38 +91,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const applyTheme = (theme) => {
       html.classList.remove("dark");
-      html.removeAttribute("data-theme");
 
-      if (theme === "system") {
-        localStorage.removeItem("theme");
-        log("Theme set to system");
-        return;
-      }
       if (theme === "dark") {
         html.classList.add("dark");
         log("Theme set to dark");
       } else {
         log("Theme set to light");
       }
-      localStorage.setItem("theme", theme);
     };
 
-    const saved = localStorage.getItem("theme") || "system";
-    selector.value = saved;
-    applyTheme(saved);
+    // Always start in dark mode
+    selector.value = "dark";
+    applyTheme("dark");
 
     selector.addEventListener("change", (e) => {
       applyTheme(e.target.value);
     });
-
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", () => {
-        if (localStorage.getItem("theme") === "system") {
-          log("System preference changed");
-          applyTheme("system");
-        }
-      });
   }, "ThemeToggle");
 
   // ===========================

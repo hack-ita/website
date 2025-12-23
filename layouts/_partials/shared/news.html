@@ -36,17 +36,17 @@
               <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
                 <div class="flex flex-wrap gap-3">
                   {{ with .PublishDate }}
-                  <span class="text-light uppercase">{{ . | time.Format "02 Jan, 2006" }}</span>
+                  <span class="text-dark dark:text-light uppercase">{{ . | time.Format "02 Jan, 2006" }}</span>
                   {{ end }}
                   {{ $readingTime := div (float .WordCount) 170 | math.Ceil }}
                   <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
                 </div>
-                <h5 class="heading-sm text-light group-hover:text-primary transition-colors">{{ .Title }}</h5>
+                <h5 class="heading-sm text-dark dark:text-light group-hover:text-primary transition-colors">{{ .Title }}</h5>
                 <div>
                   {{ partial "components/button.html" (dict "label" "Read More" "link" "true" "url" .RelPermalink) }}
                 </div>
               </div>
-              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+              <div class="h-1 w-full bg-dark/20 dark:bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
             </div>
           </div>
           {{ end }}

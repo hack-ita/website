@@ -3,7 +3,7 @@ title: Home
 about:
   enable: true
   image: /images/hackita-hero.webp
-  title: About Us
+  title: Chi siamo
   content: >-
     Hackita è la nuova frontiera dell’ethical hacking in Italia. Non solo un
     blog, ma un progetto ambizioso che mira a diventare il punto di riferimento

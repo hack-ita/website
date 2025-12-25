@@ -25,6 +25,21 @@
   --breakpoint-max: 118.75rem;
 }
 
+/* .body::-webkit-scrollbar-track {
+  background: var(--color-primary);
+} */
+
+ /* ===========================
+   GLOBAL
+=========================== */
+* {
+  scrollbar-color: var(--color-primary) var(--color-light-bg);
+  @variant dark {
+  scrollbar-color: var(--color-primary) var(--color-accent);
+  }
+  scrollbar-width: thin;
+}
+
 /* ===========================
    TYPOGRAPHY
 =========================== */
@@ -184,10 +199,6 @@ pre:has(> code) {
   @apply text-primary;
 }
 
-.heroTextSwiper .swiper-wrapper .swiper-slide {
-  @apply lg:h-auto;
-}
-
 .heroTextSwiper .swiper-wrapper .swiper-slide .dets {
   @apply max-h-0 overflow-hidden transition;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -196,6 +207,10 @@ pre:has(> code) {
 
 .heroTextSwiper .swiper-wrapper .swiper-slide.swiper-slide-active .dets {
   @apply max-h-35 lg:max-h-60 2xl:max-h-35;
+}
+
+.swiper .swiper-wrapper .swiper-slide {
+  height: auto !important;
 }
 
 /* ===========================
@@ -237,7 +252,12 @@ pre:has(> code) {
 }
 
 .bg-mask {
+  --dot-color: color-mix(in oklab, var(--color-dark) 30%, transparent);
+  @variant dark {
   --dot-color: color-mix(in oklab, var(--color-light) 15%, transparent);
+  }
+  background-size: 32px 32px;
+  background-repeat: repeat;
   background-image:
     radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
     radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
@@ -246,8 +266,10 @@ pre:has(> code) {
 }
 
 .red-mask {
-  --dot-color: color-mix(in oklab, var(--color-dark) 30%, transparent);
-    background-image:
+  --dot-color: color-mix(in oklab, var(--color-dark) 40%, transparent);
+  background-size: 32px 32px;
+  background-repeat: repeat;
+  background-image:
     radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
     radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
     radial-gradient(circle at 8px 24px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
@@ -255,7 +277,10 @@ pre:has(> code) {
 }
 
 .light-mask {
+  --dot-color: color-mix(in oklab, var(--color-light) 15%, transparent);
+  @variant dark {
   --dot-color: color-mix(in oklab, var(--color-dark) 30%, transparent);
+  }
     background-image:
     radial-gradient(circle at 8px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),
     radial-gradient(circle at 24px 8px, var(--dot-color) 0, var(--dot-color) 0.5px, transparent 1px),

@@ -1,5 +1,5 @@
 ---
-title: About Me
+title: Chi siamo
 image: /images/about.jpg
 content:
   enable: true

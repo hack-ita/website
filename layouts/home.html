@@ -33,7 +33,7 @@
                 <p class="text-dark dark:text-light line-clamp-4">
                   {{ .Description }}
                 </p>
-                {{ partial "components/link.html" (dict "label" "Read More" "url" .RelPermalink) }}
+                {{ partial "components/link.html" (dict "label" "Continua a leggere" "url" .RelPermalink) }}
               </div>
             </article>
           </div>
@@ -72,37 +72,38 @@
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
     {{ with site.GetPage "/categories" }}
     {{ range .Pages.ByWeight }}
-    <article  class="relative hover:z-10">
-    <div class="group hover:scale-125 hover:shadow-2xl border border-dark/20 dark:border-dark hover:border-dark/50 dark:hover:border-light/20 rounded-md transition-transform">
-      
-      <!-- Category Image -->
-      <div class="overflow-hidden">
-        {{ partial "components/image.html" (dict 
-            "src" .Params.image 
-            "alt" .Title 
-            "class" "lg:size-full object-cover rounded-t-md group-hover:scale-115 transition-transform duration-500") }}
-      </div>
-
-      <!-- Category Info -->
-      <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
-        <div class="flex flex-wrap gap-3">
-          <span class="text-primary uppercase">{{ .Pages.Len }} Article{{ if ne .Pages.Len 1 }}s{{ end }}</span>
+    <div>
+    <a href="{{ .RelPermalink }}" class="block">
+      <div class="group border border-dark/20 dark:border-dark rounded-md transition-transform">
+        <!-- Category Image -->
+        <div class="overflow-hidden">
+          {{ partial "components/image.html" (dict 
+              "src" .Params.image 
+              "alt" .Title 
+              "class" "lg:size-full object-cover rounded-t-md group-hover:scale-115 transition-transform duration-500") }}
         </div>
-        <h3 class="heading-sm text-dark dark:text-light transition-colors group-hover:text-primary">
-          {{ .Title }}
-        </h3>
-        <div>
-          {{ partial "components/button.html" (dict 
-              "link" "true" 
-              "label" "Learn More" 
-              "url" .RelPermalink) }}
+  
+        <!-- Category Info -->
+        <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
+          <div class="flex flex-wrap gap-3">
+            <span class="text-primary uppercase">{{ .Pages.Len }} Article{{ if ne .Pages.Len 1 }}s{{ end }}</span>
+          </div>
+          <h3 class="heading-sm text-dark dark:text-light transition-colors group-hover:text-primary">
+            {{ .Title }}
+          </h3>
+          <div>
+            {{ partial "components/button.html" (dict 
+                "link" "true" 
+                "label" "Continua a leggere" 
+                "url" .RelPermalink) }}
+          </div>
         </div>
+  
+        <!-- Hover Effect Bar -->
+        <div class="h-1 rounded-b-md w-full bg-dark/20 dark:bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
       </div>
-
-      <!-- Hover Effect Bar -->
-      <div class="h-1 rounded-b-md w-full bg-dark/20 dark:bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+    </a>
     </div>
-    </article>
     {{ end }}
     {{ end }}
     </div>
@@ -170,7 +171,7 @@
           {{ end }}
         </p>
         <div>
-          {{ partial "components/button.html" (dict "label" "Read More") }}
+          {{ partial "components/button.html" (dict "label" "Continua a leggere") }}
         </div>
       </article>
     </a>
@@ -194,28 +195,30 @@
         <div class="swiper-wrapper">
           {{ range after 1 (where .Site.RegularPages "Section" "blog" | first 10) }}
           <div class="swiper-slide">
-            <article class="flex flex-col items-stretch group">
-              <div class="overflow-hidden">
-                {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover group-hover:scale-115 transition-transform duration-500") }}
-              </div>
-              <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
-                <div class="flex flex-wrap gap-3">
-                  {{ with .PublishDate }}
-                  <span class="text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
-                  {{ end }}
-                  {{ $readingTime := div (float .WordCount) (or .Site.Params.reading_speed 170) }}
-                  {{ $readingTime = math.Ceil $readingTime }}
-                  <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
+            <a href="{{ .RelPermalink }}" class="block">
+              <article class="flex flex-col items-stretch group h-full">
+                <div class="overflow-hidden">
+                  {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover group-hover:scale-115 transition-transform duration-500") }}
                 </div>
-                <h3 class="heading-sm text-light group-hover:text-primary transition-colors">
-                  {{ .Title }}
-                </h3>
-                <div>
-                  {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" .RelPermalink ) }}
+                <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
+                  <div class="flex flex-wrap gap-3">
+                    {{ with .PublishDate }}
+                    <span class="text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
+                    {{ end }}
+                    {{ $readingTime := div (float .WordCount) (or .Site.Params.reading_speed 170) }}
+                    {{ $readingTime = math.Ceil $readingTime }}
+                    <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
+                  </div>
+                  <h3 class="h-15 heading-sm text-light group-hover:text-primary transition-colors">
+                    {{ .Title }}
+                  </h3>
+                  <div>
+                    {{ partial "components/button.html" (dict "link" "true" "label" "Continua a leggere" "url" .RelPermalink ) }}
+                  </div>
                 </div>
-              </div>
-              <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
-            </article>
+                <div class="h-1 w-full bg-light/20 relative overflow-hidden after:transition-transform after:duration-300 after:absolute after:inset-0 after:bg-primary after:-translate-x-full group-hover:after:translate-x-0"></div>
+              </article>
+            </a>
           </div>
           {{ end }}
         </div>
@@ -255,7 +258,7 @@
         <p class="text-dark dark:text-light text-balance">
           {{ .content | safeHTML }}
         </p>
-        {{ partial "components/button.html" (dict "link" "true" "label" "Read More" "url" "/about/") }}
+        {{ partial "components/button.html" (dict "link" "true" "label" "Continua a leggere" "url" "/about/") }}
       </div>
 
       <!-- Image Column -->
@@ -307,22 +310,22 @@
       <!-- Stats Cards -->
       <article   class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
         <span class="text-primary text-4xl lg:text-6xl font-black">{{ with where .Site.RegularPages "Section" "blog" }}{{ . | len }}{{ end }}+</span>
-        <h3 class="heading-sm text-xl text-light">Technical Articles</h3>
+        <h3 class="heading-sm text-xl text-light">Articoli</h3>
       </article>
 
       <article   class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
         <span class="text-primary text-4xl lg:text-6xl font-black">8</span>
-        <h3 class="heading-sm text-xl text-dark">Main Categories</h3>
+        <h3 class="heading-sm text-xl text-dark">Categorie Principali</h3>
       </article>
 
       <article   class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">OSCP</span>
+        <span class="text-primary text-4xl lg:text-6xl font-black">Training</span>
         <h3 class="heading-sm text-xl text-light">Focused</h3>
       </article>
 
       <article   class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">100</span>
-        <h3 class="heading-sm text-xl text-dark">Red Team Vibes</h3>
+        <span class="text-primary text-4xl lg:text-6xl font-black">100%</span>
+        <h3 class="heading-sm text-xl text-dark">Ethical Hacking</h3>
       </article>
 
     </div>
@@ -343,7 +346,7 @@
         <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
       </div>
       <h2 class="text-dark dark:text-light uppercase text-pretty text-center relative">
-        Hackita Training Tracks
+        HACKITA ACADEMY
       </h2>
     </div>
 
@@ -362,7 +365,7 @@
             {{ .Description }}
           </p>
           <div>
-            {{ partial "components/button.html" (dict "link" "true" "label" "Learn More" "url" (printf "/services/#%s" (.Title | anchorize))) }}
+            {{ partial "components/button.html" (dict "link" "true" "label" "Continua a leggere" "url" (printf "/services/#%s" (.Title | anchorize))) }}
           </div>
         </div>
 

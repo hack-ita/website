@@ -11,6 +11,11 @@
 {{/* Favicon */}}
 <link rel="shortcut icon" href="{{ "favicon.png" | relURL }}" type="image/x-icon">
 
+{{/* RSS Integeration */}}
+{{ with .OutputFormats.Get "rss" }}
+  {{ printf `<link rel=%q type=%q href=%q title=%q>` .Rel .MediaType.Type .Permalink site.Title | safeHTML }}
+{{ end }}
+
 {{/* Fonts import */}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

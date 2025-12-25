@@ -26,14 +26,6 @@
 }
 
 /* ===========================
-   GLOBAL
-=========================== */
-* {
-  @apply transition-colors;
-}
-
-
-/* ===========================
    TYPOGRAPHY
 =========================== */
 h1, h2, h3, h4, h5, h6, .heading, .heading-sm, .hero-heading {
@@ -101,7 +93,7 @@ h1, h2 {
    PROSE / MARKDOWN STYLING
 =========================== */
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-  color: text-primary !important;
+  @apply text-primary;
 }
 
 .prose blockquote {
@@ -109,10 +101,6 @@ h1, h2 {
 }
 
 .prose li::marker {
-  @apply text-primary;
-}
-
-.prose a:hover {
   @apply text-primary;
 }
 

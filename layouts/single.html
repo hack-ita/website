@@ -72,10 +72,9 @@
 </section>
 
 {{/*  related articles  */}}
-{{ $current := . }}
-{{ $categories := .Params.categories }}
-
-{{ if $categories }}
+{{ if eq .Section "blog" }}
+{{ $related := site.RegularPages.Related . | first 7 }}
+{{ with $related }}
 <section class="bg-mask py-10 px-5">
   <div class="max-w-7xl mx-auto space-y-10">
     <!-- Heading -->
@@ -105,8 +104,7 @@
       <!-- Swiper Wrapper -->
       <div class="swiper articleSwiper">
         <div class="swiper-wrapper">
-          {{ range first 6 (where .Site.RegularPages "Params.categories" "intersect" $categories) }}
-          {{ if ne .Permalink $current.Permalink }}
+          {{ range . }}
           <div class="swiper-slide">
             <div class="flex flex-col items-stretch group shadow-xl">
               <div class="overflow-hidden">
@@ -129,12 +127,12 @@
             </div>
           </div>
           {{ end }}
-          {{ end }}
         </div>
       </div>
     </div>
   </div>
 </section>
+{{ end }}
 {{ end }}
 {{/*  /related articles  */}}
 

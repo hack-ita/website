@@ -23,6 +23,34 @@
   --color-accent: #111111;
 
   --breakpoint-max: 118.75rem;
+
+  --animate-underline-slide: underline-slide 2s linear infinite;
+
+  @keyframes underline-slide {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    20% {
+      transform: translateX(0%);
+    }
+
+    40% {
+      transform: translateX(100%);
+    }
+
+    60% {
+      transform: translateX(200%);
+    }
+
+    80% {
+      transform: translateX(100%);
+    }
+
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 }
 
 /* .body::-webkit-scrollbar-track {

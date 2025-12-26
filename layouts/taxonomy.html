@@ -50,7 +50,7 @@
 
 <section class="max-w-7xl mx-auto py-10">
     <ul class="flex flex-col gap-10">
-        {{ range $i, $p := .Pages }}
+        {{ range $i, $p := .Pages.ByWeight }}
         {{ $odd := modBool $i 2 }}
         <li>
             <article class="flex flex-col bg-glass {{ if $odd }}lg:flex-row{{ else }}lg:flex-row-reverse{{ end }} gap-5 rounded-md p-5 shadow-xl transition-shadow hover:shadow-primary/20 border border-dark/20 dark:border-light/20">

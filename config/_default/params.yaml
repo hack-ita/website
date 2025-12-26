@@ -4,8 +4,8 @@ header:
   logo: "/images/logo-wobg.png"
   cta:
     enable: true
-    label: Get Started
-    link: "/services/"
+    label: Contattami
+    link: "/contact/"
 
 footer:
   logo: "/images/logo.webp"

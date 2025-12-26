@@ -4,32 +4,32 @@ main:
     weight: 10
   - name: Articoli
     pageRef: /blog/
-    weight: 40
+    weight: 20
   - name: Categorie
     pageRef: /categories/
-    weight: 50
+    weight: 30
   - name: Servizi
     pageRef: /services/
-    weight: 30
+    weight: 40
   - name: About
     pageRef: /about/
-    weight: 20
+    weight: 50
 footer:
   - name: Home
     pageRef: /
     weight: 10
   - name: About
     pageRef: /about/
-    weight: 20
+    weight: 50
   - name: Services
     pageRef: /services/
-    weight: 30
+    weight: 40
   - name: Blog
     pageRef: /blog/
-    weight: 40
+    weight: 20
   - name: Categories
     pageRef: /categories/
-    weight: 50
+    weight: 30
   - name: Support
     pageRef: /support/
     weight: 60

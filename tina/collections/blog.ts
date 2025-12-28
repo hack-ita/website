@@ -44,6 +44,11 @@ const Blog: Collection = {
       label: "Tags",
       list: true,
     },
+    {
+      type: "boolean",
+      name: "featured",
+      label: "Featured",
+    },
 
     /* =====================
      * Post Body

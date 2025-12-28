@@ -66,6 +66,7 @@
         {{ $readingTime := div (float .WordCount) (or $.Site.Params.reading_speed 170) }}
         {{ $readingTime = math.Ceil $readingTime }}
         <article class="rounded-md flex flex-col border border-primary hover:scale-125 transition-transform relative hover:z-10" aria-label="{{ .Title }}">
+          <a href="{{ .RelPermalink }}" class="absolute inset-0 z-10"></a>
           <figure class="flex flex-col h-full">
             <div class="h-30 overflow-hidden rounded-t-md">
               {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover") }}

@@ -88,7 +88,7 @@
           <div class="flex flex-wrap gap-3">
             <span class="text-primary uppercase">{{ .Pages.Len }} Article{{ if ne .Pages.Len 1 }}s{{ end }}</span>
           </div>
-          <h3 class="heading-sm text-dark dark:text-light transition-colors group-hover:text-primary">
+          <h3 class="min-h-10 heading-sm text-dark dark:text-light transition-colors group-hover:text-primary">
             {{ .Title }}
           </h3>
           <div>
@@ -216,7 +216,7 @@
                     {{ $readingTime = math.Ceil $readingTime }}
                     <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
                   </div>
-                  <h3 class="h-15 heading-sm text-light group-hover:text-primary transition-colors">
+                  <h3 class="min-h-15 heading-sm text-light group-hover:text-primary transition-colors line-clamp-3">
                     {{ .Title }}
                   </h3>
                   <div>

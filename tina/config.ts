@@ -11,11 +11,7 @@ import Services from "./collections/services";
 import CategoriesIndex from "./collections/categories-index";
 import Categories from "./collections/categories";
 
-const branch =
-  process.env.GITHUB_BRANCH ||
-  process.env.VERCEL_GIT_COMMIT_REF ||
-  process.env.HEAD ||
-  "main";
+const branch = "main";
 
 export default defineConfig({
   branch,

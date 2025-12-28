@@ -31,7 +31,10 @@ const ParamSettings: Collection = {
       type: "object",
       name: "footer",
       label: "Footer Params",
-      fields: [{ type: "image", name: "logo", label: "Footer Logo" }],
+      fields: [
+        { type: "image", name: "logo", label: "Footer Logo" },
+        { type: "string", name: "disclaimer", label: "Disclaimer" },
+      ],
     },
     {
       type: "object",

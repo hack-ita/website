@@ -26,6 +26,7 @@ const FEATURES = {
   codeCopy: true,
   backToTop: true,
   readingProgress: true,
+  sideBar: true,
   search: true,
   swiper: true,
   glightbox: true,
@@ -119,8 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const handleScroll = () => {
       const scrolled = window.scrollY > 0;
       header.classList.toggle("header-glass", scrolled);
-      headerBar.classList.toggle("py-3", !scrolled);
-      headerBar.classList.toggle("py-1", scrolled);
     };
     handleScroll();
     window.addEventListener("scroll", () =>
@@ -384,6 +383,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateProgress();
   }, "ReadingProgress");
+
+  // ===========================
+  // SIDEBAR TOGGLER
+  // ===========================
+  safeExecute(() => {
+    if (!FEATURES.sideBar) return warn("SideBar feature is disabled");
+
+    const toggler = safeQuery(".sideBarToggler");
+    const sideBar = safeQuery(".sideBar");
+
+    log("Sidebar function initialized");
+
+    toggler.addEventListener('click', () => {
+      sideBar.classList.toggle("translate-x-[100vw]");
+    });
+  });
 
   // ===========================
   // SEARCH

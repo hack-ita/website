@@ -94,7 +94,7 @@
           <div>
             {{ partial "components/button.html" (dict 
                 "link" "true" 
-                "label" "Continua a leggere" 
+                "label" "Esplora" 
                 "url" .RelPermalink) }}
           </div>
         </div>
@@ -117,7 +117,7 @@
 
     <!-- See More Button -->
     <div class="flex justify-center items-stretch" >
-      {{ partial "components/button.html" (dict "link" "true" "label" "See More" "url" "/categories/") }}
+      {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di piú" "url" "/categories/") }}
     </div>
 
   </div>
@@ -272,7 +272,7 @@
         <p class="text-dark dark:text-light text-balance">
           {{ .content | safeHTML }}
         </p>
-        {{ partial "components/button.html" (dict "link" "true" "label" "Continua a leggere" "url" "/about/") }}
+        {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di piú" "url" "/about/") }}
       </div>
 
       <!-- Image Column -->
@@ -379,7 +379,7 @@
             {{ .Description }}
           </p>
           <div>
-            {{ partial "components/button.html" (dict "link" "true" "label" "Continua a leggere" "url" (printf "/services/#%s" (.Title | anchorize))) }}
+            {{ partial "components/button.html" (dict "link" "true" "label" "Richiedi informazioni" "url" (printf "/services/#%s" (.Title | anchorize))) }}
           </div>
         </div>
 

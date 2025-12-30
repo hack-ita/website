@@ -392,6 +392,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const toggler = safeQuery(".sideBarToggler");
     const sideBar = safeQuery(".sideBar");
+    if (!toggler || !sideBar) {
+      return warn("Sidebar skipped (missing elements)");
+    }
 
     log("Sidebar function initialized");
 

@@ -1,0 +1,75 @@
+{{ $site := .site }}
+{{ $section := .section }}
+
+{{ $pages := where $site.RegularPages "Section" $section }}
+
+{{/* collect terms ONLY from blog */}}
+{{ $tags := slice }}
+{{ $cats := slice }}
+
+{{ range $pages }}
+  {{ with .Params.tags }}{{ range . }}{{ $tags = $tags | append . }}{{ end }}{{ end }}
+  {{ with .Params.categories }}{{ range . }}{{ $cats = $cats | append . }}{{ end }}{{ end }}
+{{ end }}
+
+<div id="taxonomyFilters" class="flex flex-wrap gap-4 mb-5">
+
+  <select id="filter-tags" class="taxonomy-select">
+    <option value="all">All Tags</option>
+    {{ range ($tags | uniq | sort) }}
+    <option value="{{ . | urlize }}">{{ . }}</option>
+    {{ end }}
+  </select>
+
+  <select id="filter-categories" class="taxonomy-select">
+    <option value="all">All Categories</option>
+    {{ range ($cats | uniq | sort) }}
+    <option value="{{ . | urlize }}">{{ . }}</option>
+    {{ end }}
+  </select>
+
+</div>
+
+<script>
+(() => {
+  const selects = document.querySelectorAll('.taxonomy-select');
+  const posts   = document.querySelectorAll('.post-item');
+  const groups  = document.querySelectorAll('.category-group');
+  const noRes   = document.getElementById('noResults');
+
+  function filter() {
+    let visiblePosts = 0;
+
+    const active = {};
+    selects.forEach(s => active[s.id.replace('filter-', '')] = s.value);
+
+    posts.forEach(post => {
+      let show = true;
+
+      for (const tax in active) {
+        if (active[tax] === 'all') continue;
+
+        const data = post.dataset[tax] || "";
+        if (!data.split(',').includes(active[tax])) {
+          show = false;
+          break;
+        }
+      }
+
+      post.style.display = show ? "" : "none";
+      if (show) visiblePosts++;
+    });
+
+    /* hide empty category sections */
+    groups.forEach(group => {
+      const hasVisible = [...group.querySelectorAll('.post-item')]
+        .some(p => p.style.display !== 'none');
+      group.style.display = hasVisible ? "" : "none";
+    });
+
+    noRes.classList.toggle('hidden', visiblePosts !== 0);
+  }
+
+  selects.forEach(s => s.addEventListener('change', filter));
+})();
+</script>

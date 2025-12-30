@@ -2,4 +2,58 @@
     {{/*  hero  */}}
     {{ partial "shared/hero.html" (dict "title" .Title "page" .) }}
     {{/*  /hero  */}}
+
+    {{/*  form  */}}
+    <section class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 py-10 px-5">
+        {{ with .Params.form_text }}
+        <p class="text-dark dark:text-light text-center lg:text-left text-xl mt-4" >
+            {{ . | safeHTML }}
+        </p>
+        {{ end }}
+        
+        <form 
+            action="POST" 
+            name="query" 
+            data-netlify="true" 
+            netlify-honeypot="bot-field" 
+            data-netlify-recaptcha="true"
+            class="lg:p-5 rounded-md lg:border border-primary flex flex-col gap-5">
+                <!-- Netlify hidden inputs -->
+                <p class="hidden">
+                    <label>
+                        Don’t fill this out if you’re human: 
+                        <input name="bot-field" type="text" />
+                    </label>
+                </p>
+
+                <!-- ORG name input -->
+                {{ partial "components/input.html" (dict 
+                    "for" "orgnization name" 
+                    "type" "text"
+                ) }}
+
+                <!-- ORG email input -->
+                {{ partial "components/input.html" (dict 
+                    "for" "orgnization email" 
+                    "type" "email"
+                ) }}
+
+                <!-- Additional message textarea -->
+                {{ partial "components/input.html" (dict 
+                    "for" "additional message" 
+                    "type" "textarea"
+                ) }}
+
+                <!-- Netlify reCAPTCHA -->
+                <div data-netlify-recaptcha="true"></div>
+
+                <!-- Submit button -->
+                {{ partial "components/button.html" (dict 
+                    "type" "submit" 
+                    "size" "full" 
+                    "label" "Submit"
+                ) }}
+        </form>
+    </section>
+    {{/*  /form  */}}
 {{ end }}

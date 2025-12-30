@@ -18,7 +18,7 @@
    </span>
 </a>
 {{ else }}
-<button type="button"
+<button {{ if eq .type "submit" }}type="submit"{{ else }}type="button"{{ end }}
    aria-label="{{ .label }}"
    class="group uppercase cursor-pointer relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border {{ if $secondary }}border-secondary{{ else }}border-primary{{ end }} {{ if $light }}bg-dark dark:bg-light{{ else }}bg-light dark:bg-dark{{ end }} transition duration-500 font-medium {{ if $fullBtn }}w-full{{ end }} {{ .class }}">
    

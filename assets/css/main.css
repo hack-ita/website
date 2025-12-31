@@ -121,6 +121,10 @@ h1, h2 {
   @apply bg-primary;
 }
 
+.suggestions mark {
+  @apply bg-primary;
+}
+
 /* Preview card */
 .link-preview {
   @apply absolute bg-light dark:bg-dark text-dark dark:text-light border border-dark/20 dark:border-light/20 p-3 hidden w-70 rounded-md z-100;

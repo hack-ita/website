@@ -9,65 +9,63 @@
 {{ $pages := where $site.RegularPages "Section" $section }}
 {{ $taxonomies := $site.Taxonomies }}
 
-<div class="flex flex-col gap-4 mb-6">
-  <div class="flex justify-between items-center">
-    <h4 class="heading-sm text-dark dark:text-light">
-      Filters
-    </h4>
+<div class="flex flex-col gap-5 lg:flex-row lg:justify-between lg:items-center mb-10">
+  <h4 class="heading-sm text-dark dark:text-light">
+    Filters
+  </h4>
 
-    <div
-      id="taxonomyFilters"
-      class="flex flex-wrap gap-4 items-end"
-      aria-live="polite"
-    >
+  <div
+    id="taxonomyFilters"
+    class="flex flex-wrap gap-4 items-end"
+    aria-live="polite"
+  >
 
-      {{/* LOOP THROUGH ALL TAXONOMIES */}}
-      {{ range $taxName, $taxMap := $taxonomies }}
+    {{/* LOOP THROUGH ALL TAXONOMIES */}}
+    {{ range $taxName, $taxMap := $taxonomies }}
 
-        {{/* Collect ONLY terms used in this section */}}
-        {{ $terms := slice }}
+      {{/* Collect ONLY terms used in this section */}}
+      {{ $terms := slice }}
 
-        {{ range $term, $termPages := $taxMap }}
-          {{ range $termPages }}
-            {{ if eq .Section $section }}
-              {{ $terms = $terms | append $term }}
-              {{ break }}
-            {{ end }}
+      {{ range $term, $termPages := $taxMap }}
+        {{ range $termPages }}
+          {{ if eq .Section $section }}
+            {{ $terms = $terms | append $term }}
+            {{ break }}
           {{ end }}
         {{ end }}
-
-        {{ if gt (len $terms) 0 }}
-        <div class="flex flex-col gap-1">
-          <label
-            for="filter-{{ $taxName }}"
-            class="text-sm font-medium text-dark dark:text-light capitalize"
-          >
-            {{ $taxName }}
-          </label>
-
-          <select
-            id="filter-{{ $taxName }}"
-            class="taxonomy-select min-w-40 rounded-md border border-primary bg-white dark:bg-accent py-2 text-sm
-                   focus:outline-none focus:ring-2 focus:ring-primary
-                   transition text-dark dark:text-light"
-          >
-            <option value="all">All</option>
-
-            {{ range ($terms | uniq | sort) }}
-              <option value="{{ . | urlize }}">{{ . }}</option>
-            {{ end }}
-          </select>
-        </div>
-        {{ end }}
-
       {{ end }}
 
-      <button
-        type="button"
-        class="clear-filters text-sm font-medium text-primary hover:underline transition"
-      >
-        Clear all
-      </button>
-    </div>
+      {{ if gt (len $terms) 0 }}
+      <div class="flex flex-col gap-1">
+        <label
+          for="filter-{{ $taxName }}"
+          class="text-sm font-medium text-dark dark:text-light capitalize"
+        >
+          {{ $taxName }}
+        </label>
+
+        <select
+          id="filter-{{ $taxName }}"
+          class="taxonomy-select min-w-40 rounded-md border border-primary bg-white dark:bg-accent py-2 text-sm
+                  focus:outline-none focus:ring-2 focus:ring-primary
+                  transition text-dark dark:text-light"
+        >
+          <option value="all">All</option>
+
+          {{ range ($terms | uniq | sort) }}
+            <option value="{{ . | urlize }}">{{ . }}</option>
+          {{ end }}
+        </select>
+      </div>
+      {{ end }}
+
+    {{ end }}
+
+    <button
+      type="button"
+      class="clear-filters text-sm font-medium text-primary hover:underline transition"
+    >
+      Clear all
+    </button>
   </div>
 </div>

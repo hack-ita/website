@@ -1,75 +1,162 @@
+{{/* ================================
+   TAXONOMY FILTERS (AUTO)
+   Works for ALL taxonomies
+   Section-aware
+================================ */}}
+
 {{ $site := .site }}
 {{ $section := .section }}
-
 {{ $pages := where $site.RegularPages "Section" $section }}
+{{ $taxonomies := $site.Taxonomies }}
 
-{{/* collect terms ONLY from blog */}}
-{{ $tags := slice }}
-{{ $cats := slice }}
+<div class="flex flex-col gap-4 mb-6">
+  <div class="flex justify-between items-center">
+    <h4 class="heading-sm text-dark dark:text-light">
+      Filters
+    </h4>
 
-{{ range $pages }}
-  {{ with .Params.tags }}{{ range . }}{{ $tags = $tags | append . }}{{ end }}{{ end }}
-  {{ with .Params.categories }}{{ range . }}{{ $cats = $cats | append . }}{{ end }}{{ end }}
-{{ end }}
+    <div
+      id="taxonomyFilters"
+      class="flex flex-wrap gap-4 items-end"
+      aria-live="polite"
+    >
 
-<div id="taxonomyFilters" class="flex flex-wrap gap-4 mb-5">
+      {{/* LOOP THROUGH ALL TAXONOMIES */}}
+      {{ range $taxName, $taxMap := $taxonomies }}
 
-  <select id="filter-tags" class="taxonomy-select">
-    <option value="all">All Tags</option>
-    {{ range ($tags | uniq | sort) }}
-    <option value="{{ . | urlize }}">{{ . }}</option>
-    {{ end }}
-  </select>
+        {{/* Collect ONLY terms used in this section */}}
+        {{ $terms := slice }}
 
-  <select id="filter-categories" class="taxonomy-select">
-    <option value="all">All Categories</option>
-    {{ range ($cats | uniq | sort) }}
-    <option value="{{ . | urlize }}">{{ . }}</option>
-    {{ end }}
-  </select>
+        {{ range $term, $termPages := $taxMap }}
+          {{ range $termPages }}
+            {{ if eq .Section $section }}
+              {{ $terms = $terms | append $term }}
+              {{ break }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
 
+        {{ if gt (len $terms) 0 }}
+        <div class="flex flex-col gap-1">
+          <label
+            for="filter-{{ $taxName }}"
+            class="text-sm font-medium text-dark dark:text-light capitalize"
+          >
+            {{ $taxName }}
+          </label>
+
+          <select
+            id="filter-{{ $taxName }}"
+            class="taxonomy-select min-w-40 rounded-md border border-primary bg-white dark:bg-accent py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-primary
+                   transition text-dark dark:text-light"
+          >
+            <option value="all">All</option>
+
+            {{ range ($terms | uniq | sort) }}
+              <option value="{{ . | urlize }}">{{ . }}</option>
+            {{ end }}
+          </select>
+        </div>
+        {{ end }}
+
+      {{ end }}
+
+      <button
+        type="button"
+        class="clear-filters text-sm font-medium text-primary hover:underline transition"
+      >
+        Clear all
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
-(() => {
-  const selects = document.querySelectorAll('.taxonomy-select');
-  const posts   = document.querySelectorAll('.post-item');
-  const groups  = document.querySelectorAll('.category-group');
-  const noRes   = document.getElementById('noResults');
+document.addEventListener('DOMContentLoaded', () => {
+
+  const selects   = document.querySelectorAll('.taxonomy-select');
+  const posts     = document.querySelectorAll('.post-item');
+  const groups    = document.querySelectorAll('.category-group');
+  const noRes     = document.getElementById('noResults');
+  const clearBtns = document.querySelectorAll('.clear-filters');
+
+  if (!selects.length || !posts.length) return;
+
+  function anyFilterActive(active) {
+    return Object.values(active).some(v => v !== 'all');
+  }
+
+  function getDatasetValues(el, key) {
+    return (el.dataset[key] || "")
+      .split(',')
+      .map(v => v.trim())
+      .filter(Boolean);
+  }
+
+  function setVisibility(el, show) {
+    el.style.display = show ? "" : "none";
+    el.classList.toggle('opacity-0', !show);
+    el.classList.toggle('scale-95', !show);
+  }
 
   function filter() {
     let visiblePosts = 0;
 
     const active = {};
-    selects.forEach(s => active[s.id.replace('filter-', '')] = s.value);
+    selects.forEach(s => {
+      active[s.id.replace('filter-', '')] = s.value;
+    });
+
+    const filtering = anyFilterActive(active);
 
     posts.forEach(post => {
       let show = true;
 
-      for (const tax in active) {
-        if (active[tax] === 'all') continue;
+      if (filtering) {
+        for (const tax in active) {
+          if (active[tax] === 'all') continue;
 
-        const data = post.dataset[tax] || "";
-        if (!data.split(',').includes(active[tax])) {
-          show = false;
-          break;
+          const values = getDatasetValues(post, tax);
+          if (!values.includes(active[tax])) {
+            show = false;
+            break;
+          }
         }
       }
 
-      post.style.display = show ? "" : "none";
+      setVisibility(post, show);
       if (show) visiblePosts++;
     });
 
-    /* hide empty category sections */
     groups.forEach(group => {
+      if (!filtering) {
+        group.style.display = "";
+        return;
+      }
+
       const hasVisible = [...group.querySelectorAll('.post-item')]
         .some(p => p.style.display !== 'none');
+
       group.style.display = hasVisible ? "" : "none";
     });
 
-    noRes.classList.toggle('hidden', visiblePosts !== 0);
+    if (noRes) {
+      noRes.classList.toggle('hidden', visiblePosts !== 0);
+    }
+
+    selects.forEach(s => {
+      s.classList.toggle('ring-2', s.value !== 'all');
+      s.classList.toggle('ring-[color:var(--color-primary)]', s.value !== 'all');
+    });
+  }
+
+  function clearFilters() {
+    selects.forEach(s => s.value = 'all');
+    filter();
   }
 
   selects.forEach(s => s.addEventListener('change', filter));
-})();
+  clearBtns.forEach(btn => btn.addEventListener('click', clearFilters));
+});
 </script>

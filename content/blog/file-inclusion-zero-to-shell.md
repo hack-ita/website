@@ -4,7 +4,7 @@ description: Learn the exact steps to turn a boring file read into full RCE usin
 image: "/images/web-hacking-new.png"
 featured: true
 categories: ["web-hacking"]
-tags: ["lfi / rfi"]
+tags: ["Recon & mapping"]
 ---
 
 

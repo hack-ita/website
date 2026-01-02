@@ -1,159 +1,101 @@
 {{/* ================================
-   CATEGORY → SUB‑CATEGORY FILTERS
+   CONTEXT-AWARE TAXONOMY FILTERS
 ================================ */}}
 
-{{ $catMap := dict }}
-{{ range $term, $termPages := .Site.Taxonomies.categories }}
+{{ $site := .Site }}
+{{ $kind := .Kind }}
+{{ $taxonomy := .Data.Plural | default "" }}
 
-  {{ $slug := $term | urlize }}
-
-  {{ with .Site.GetPage (printf "categories/%s/_index.md" $slug) }}
-    {{ $tags := .Params.tags | default (slice) }}
-    {{ $catMap = merge $catMap (dict $slug $tags) }}
-  {{ else }}
-    {{/* Fallback: collect all tags from posts */}}
-    {{ $collected := slice }}
-    {{ range $termPages.Pages }}
-      {{ $collected = $collected | append .Params.tags }}
-    {{ end }}
-    {{ $catMap = merge $catMap (dict $slug ($collected | uniq | sort)) }}
+{{/* MODE DETECTION */}}
+{{ $mode := "blog" }}
+{{ if eq $kind "term" }}
+  {{ if eq $taxonomy "categories" }}
+    {{ $mode = "category-term" }}
+  {{ else if eq $taxonomy "tags" }}
+    {{ $mode = "tag-term" }}
   {{ end }}
-
 {{ end }}
 
 <div class="flex flex-col gap-5 lg:flex-row lg:justify-between lg:items-center mb-10">
   <h4 class="heading-sm text-dark dark:text-light">Filters</h4>
 
-  <div id="taxonomyFilters" class="flex flex-wrap gap-4 items-end">
+  <div
+    id="taxonomyFilters"
+    class="flex flex-wrap gap-4 items-end"
+    data-filter-mode="{{ $mode }}"
+    {{ if eq $mode "category-term" }}
+      data-current-category="{{ .Title | urlize }}"
+    {{ end }}
+  >
 
-    <!-- CATEGORY FILTER -->
+    {{/* CATEGORY FILTER */}}
+    {{ if or (eq $mode "blog") (eq $mode "tag-term") }}
     <div class="flex flex-col gap-1">
-      <label for="filter-category" class="text-sm font-medium text-dark dark:text-light capitalize">
+      <label class="text-sm font-medium uppercase text-dark dark:text-light">
         Category
       </label>
-
-      <select id="filter-category" class="taxonomy-select min-w-40 rounded-md border border-primary bg-white dark:bg-accent py-2 text-sm text-dark dark:text-light focus:outline-none focus:ring-2 focus:ring-primary transition">
-        <option value="all">All</option>
-
-        {{ range $slug, $_ := $catMap }}
-          <option value="{{ $slug }}">{{ $slug | humanize }}</option>
+      <select
+        id="filter-category"
+        class="taxonomy-select min-w-40 rounded-md border border-primary
+               bg-white dark:bg-accent
+               py-2 px-3 text-sm uppercase
+               text-dark dark:text-light
+               focus:outline-none focus:ring-2 focus:ring-primary transition">
+        <option value="all">ALL</option>
+        {{ range $site.Taxonomies.categories }}
+          <option value="{{ .Page.Title | urlize }}">
+            {{ .Page.Title }}
+          </option>
         {{ end }}
       </select>
     </div>
+    {{ end }}
 
-    <!-- SUB‑CATEGORY FILTER -->
+    {{/* TAG / SUB-CATEGORY FILTER */}}
+    {{ if or (eq $mode "blog") (eq $mode "category-term") }}
     <div class="flex flex-col gap-1">
-      <label for="filter-subcategory" class="text-sm font-medium text-dark dark:text-light capitalize">
-        Sub‑category
+      <label class="text-sm font-medium uppercase text-dark dark:text-light">
+        Sub-category
       </label>
-
-      <select id="filter-subcategory" disabled class="taxonomy-select min-w-40 rounded-md border border-primary bg-white dark:bg-accent py-2 text-sm text-dark dark:text-light opacity-60 cursor-not-allowed">
-        <option>Select category first</option>
+      <select
+        id="filter-tag"
+        disabled
+        class="taxonomy-select min-w-40 rounded-md border border-primary
+               bg-white dark:bg-accent
+               py-2 px-3 text-sm uppercase
+               text-dark dark:text-light
+               opacity-60 cursor-not-allowed
+               focus:outline-none focus:ring-2 focus:ring-primary transition">
+        <option>SELEZIONA CATEGORIA</option>
       </select>
     </div>
+    {{ end }}
 
-    <button type="button" class="clear-filters text-sm font-medium text-primary hover:underline transition">
+    <button
+      type="button"
+      class="clear-filters text-sm font-medium text-primary hover:underline transition uppercase">
       Clear all
     </button>
 
   </div>
 </div>
 
-<script type="application/json" id="categoryMap">{{ $catMap | jsonify }}</script>
-
-<script>
-(() => {
-  // --------------------------
-  // Setup
-  // --------------------------
-  const catMap = JSON.parse(document.getElementById("categoryMap").textContent);
-  console.log("Category map:", catMap);
-
-  const catSelect = document.getElementById("filter-category");
-  const subSelect = document.getElementById("filter-subcategory");
-  const posts = document.querySelectorAll(".post-item");
-  const clearBtn = document.querySelector(".clear-filters");
-  const noRes = document.getElementById("noResults");
-
-  // --------------------------
-  // Helpers
-  // --------------------------
-  const getVals = (el, key) =>
-    (el.dataset[key] || "").split(",").map(v => v.trim().toLowerCase()).filter(Boolean);
-
-  const setVisibility = (el, show) => {
-    el.style.display = show ? "" : "none";
-    el.classList.toggle("opacity-0", !show);
-    el.classList.toggle("scale-95", !show);
-  };
-
-  // --------------------------
-  // Populate sub-categories
-  // --------------------------
-  const populateSub = category => {
-    const tags = catMap[category] || [];
-    console.log("Sub-categories for:", category, tags);
-
-    subSelect.innerHTML = `<option value="all">All</option>`;
-    tags.forEach(tag => {
-      const o = document.createElement("option");
-      o.value = tag;
-      o.textContent = tag;
-      subSelect.appendChild(o);
-    });
-
-    subSelect.disabled = tags.length === 0;
-    subSelect.classList.toggle("opacity-60", subSelect.disabled);
-    subSelect.classList.toggle("cursor-not-allowed", subSelect.disabled);
-  };
-
-  // --------------------------
-  // Filter posts
-  // --------------------------
-  const filterPosts = () => {
-    const activeCat = catSelect.value;
-    const activeSub = subSelect.value;
-
-    let visiblePosts = 0;
-
-    posts.forEach(post => {
-      const pcats = getVals(post, "categories");
-      const ptags = getVals(post, "tags");
-      let show = true;
-
-      if (activeCat !== "all" && !pcats.includes(activeCat.toLowerCase())) show = false;
-      if (!subSelect.disabled && activeSub !== "all" && !ptags.includes(activeSub.toLowerCase())) show = false;
-
-      setVisibility(post, show);
-      if (show) visiblePosts++;
-    });
-
-    if (noRes) noRes.classList.toggle("hidden", visiblePosts !== 0);
-  };
-
-  // --------------------------
-  // Event listeners
-  // --------------------------
-  catSelect.addEventListener("change", () => {
-    if (catSelect.value === "all") {
-      subSelect.disabled = true;
-      subSelect.innerHTML = `<option>Select category first</option>`;
-      subSelect.classList.add("opacity-60", "cursor-not-allowed");
-    } else {
-      populateSub(catSelect.value);
-    }
-    filterPosts();
-  });
-
-  subSelect.addEventListener("change", filterPosts);
-
-  clearBtn.addEventListener("click", () => {
-    catSelect.value = "all";
-    subSelect.disabled = true;
-    subSelect.innerHTML = `<option>Select category first</option>`;
-    subSelect.classList.add("opacity-60", "cursor-not-allowed");
-    filterPosts();
-  });
-
-})();
+{{/* CATEGORY → TAG MAP (BLOG + CATEGORY TERM) */}}
+{{ if or (eq $mode "blog") (eq $mode "category-term") }}
+<script type="application/json" id="categoryTagMap">
+{{ $map := dict }}
+{{ range $term, $termPages := $site.Taxonomies.categories }}
+  {{ $tags := slice }}
+  {{ range $termPages.Pages }}
+    {{ range .Params.tags }}
+      {{ $tags = $tags | append (dict
+          "label" .
+          "value" (. | urlize)
+      ) }}
+    {{ end }}
+  {{ end }}
+  {{ $map = merge $map (dict ($term | urlize) ($tags | uniq)) }}
+{{ end }}
+{{ $map | jsonify | safeJS }}
 </script>
+{{ end }}

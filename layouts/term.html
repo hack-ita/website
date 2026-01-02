@@ -69,9 +69,24 @@
         </h2>
     </header>
 
+  {{ partial "components/filters.html" . }}
+
     <ul class="flex flex-col gap-10">
         {{ range .Pages }}
-        <li class="grid lg:grid-cols-5 gap-5 p-5 lg:p-3 bg-glass border border-dark/20 dark:border-light/20 rounded-md shadow-xl transition-shadow hover:shadow-primary/20">
+          <li
+            class="post-item grid relative lg:grid-cols-5 gap-5 p-5 lg:p-3 bg-glass border border-dark/20 dark:border-light/20 rounded-md shadow-xl transition-shadow hover:shadow-primary/20"
+            {{ with .Params.categories }}
+              data-categories="{{ delimit (apply . "urlize" ".") "," }}"
+            {{ else }}
+              data-categories=""
+            {{ end }}
+            {{ with .Params.tags }}
+              data-tags="{{ delimit (apply . "urlize" ".") "," }}"
+            {{ else }}
+              data-tags=""
+            {{ end }}
+          >
+            <a href="{{ .RelPermalink }}" class="absolute inset-0"></a>
             <figure class="lg:col-span-2">
               {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full lg:h-40 object-cover rounded-md") }}
             </figure>

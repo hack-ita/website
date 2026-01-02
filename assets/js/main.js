@@ -570,6 +570,113 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }, "Search");
 
+  /* ===========================
+    FILTERS
+  ============================ */
+  safeExecute(() => {
+    if (!FEATURES.filters) return warn("Filters disabled");
+
+    const wrapper = safeQuery("#taxonomyFilters");
+    if (!wrapper) return;
+
+    const mode = wrapper.dataset.filterMode;
+    const posts = [...safeQueryAll(".post-item")];
+    const groups = [...safeQueryAll(".category-group")];
+    const cat = safeQuery("#filter-category");
+    const tag = safeQuery("#filter-tag");
+    const clear = [...safeQueryAll(".clear-filters")];
+    const noRes = safeQuery("#noResults");
+    const mapEl = safeQuery("#categoryTagMap");
+    const catMap = mapEl ? JSON.parse(mapEl.textContent) : {};
+
+    const get = (el, key) =>
+      (el.dataset[key] || "")
+        .split(",")
+        .map((v) => v.trim().toLowerCase())
+        .filter(Boolean);
+
+    const populateTags = (category) => {
+      if (!tag) return;
+      tag.innerHTML = `<option value="all">ALL</option>`;
+      (catMap[category] || []).forEach((t) => {
+        const o = document.createElement("option");
+        o.value = t.value;
+        o.textContent = t.label;
+        o.classList.add("uppercase");
+        tag.appendChild(o);
+      });
+      tag.disabled = false;
+      tag.classList.remove("opacity-60", "cursor-not-allowed");
+    };
+
+    const applyFilters = () => {
+      let visible = 0;
+      posts.forEach((post) => {
+        const cats = get(post, "categories");
+        const tags = get(post, "tags");
+        let show = true;
+        if (cat && cat.value !== "all" && !cats.includes(cat.value)) show = false;
+        if (tag && !tag.disabled && tag.value !== "all" && !tags.includes(tag.value)) show = false;
+        post.style.display = show ? "" : "none";
+        if (show) visible++;
+      });
+
+      if (mode === "blog") {
+        groups.forEach((group) => {
+          const hasVisible = group.querySelector(".post-item:not([style*='display: none'])");
+          group.style.display = hasVisible ? "" : "none";
+        });
+      }
+
+      noRes?.classList.toggle("hidden", visible > 0);
+    };
+
+    // CATEGORY CHANGE
+    cat?.addEventListener("change", () => {
+      if (mode === "blog") {
+        if (cat.value === "all") {
+          tag.disabled = true;
+          tag.innerHTML = `<option>SELEZIONA CATEGORIA</option>`;
+          tag.classList.add("opacity-60", "cursor-not-allowed");
+        } else populateTags(cat.value);
+      }
+      applyFilters();
+    });
+
+    // TAG CHANGE
+    tag?.addEventListener("change", applyFilters);
+
+    // CLEAR FILTERS
+    clear.forEach((btn) =>
+      btn.addEventListener("click", () => {
+        cat && (cat.value = "all");
+        if (tag) {
+          tag.value = "all";
+          if (mode === "blog") {
+            tag.disabled = true;
+            tag.innerHTML = `<option>SELEZIONA CATEGORIA</option>`;
+            tag.classList.add("opacity-60", "cursor-not-allowed");
+          }
+        }
+        posts.forEach((p) => (p.style.display = ""));
+        groups.forEach((g) => (g.style.display = ""));
+        noRes?.classList.add("hidden");
+      })
+    );
+
+    // AUTO-POPULATE TAGS ON CATEGORY TERM PAGE
+    if (mode === "category-term" && tag) {
+      const currentCategory = wrapper.dataset.currentCategory;
+      if (currentCategory && catMap[currentCategory]) {
+        populateTags(currentCategory);
+        tag.value = "all";
+        applyFilters();
+      }
+    }
+
+    log("Filters initialized");
+  }, "Filters");
+
   // ===========================
   // PLUGINS: SWIPER
   // ===========================

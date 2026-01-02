@@ -46,11 +46,10 @@
 {{/* /hero */}}
 
 {{/* ================= LIST ================= */}}
-{{/* cards */}}
 <section class="max-w-7xl mx-auto py-10 px-5" aria-label="Exploits by category">
 
   {{ partial "components/search.html" . }}
-  {{/*  {{ partial "components/filters.html" . }}  */}}
+  {{ partial "components/filters.html" . }}
 
   <!-- NO RESULTS -->
   <div id="noResults"
@@ -91,10 +90,15 @@
             {{ $post := . }}
             <article
               class="post-item rounded-md flex flex-col border border-primary hover:scale-125 transition-transform relative hover:z-10"
-              {{ range $tax, $_ := $.Site.Taxonomies }}
-                {{ with index $post.Params $tax }}
-                  data-{{ $tax }}="{{ delimit (apply . "urlize" ".") "," }}"
-                {{ end }}
+              {{ with .Params.categories }}
+                data-categories="{{ delimit (apply . "urlize" ".") "," }}"
+              {{ else }}
+                data-categories=""
+              {{ end }}
+              {{ with .Params.tags }}
+                data-tags="{{ delimit (apply . "urlize" ".") "," }}"
+              {{ else }}
+                data-tags=""
               {{ end }}
             >
             <a href="{{ .RelPermalink }}" class="absolute inset-0 z-10"></a>

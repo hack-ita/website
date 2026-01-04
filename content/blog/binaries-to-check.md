@@ -2,8 +2,12 @@
 title: SUID binaries you must always check
 description: Quick wins and manual checks to pop root in typical OSCP boxes.
 image: "/images/linux-new.png"
-categories: ["linux"]
-tags: ["SUID & GTFOBins"]
+categories: 
+    - linux
+subcategories: 
+    - filesystem
+tags: 
+    - "SUID & GTFOBins"
 ---
 
 

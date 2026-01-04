@@ -2,8 +2,10 @@
 title: Abusing Windows service misconfigurations
 description: Real patterns you will actually see in labs and internal assessments.
 image: /images/windows-new.png
-categories:
+categories: 
   - windows
+subcategories: 
+  - privilege escalation
 tags:
   - "Services abuse"
 ---

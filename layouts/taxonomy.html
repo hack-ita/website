@@ -70,10 +70,12 @@
                     </header>
 
                     <!-- Tags -->
-                    {{ if .Params.tags }}
-                    <ul class="flex flex-wrap gap-3 items-stretch">
-                        {{ range .Params.tags }}
-                        <li class="py-1 px-3 uppercase text-sm rounded-full border border-dark dark:border-light text-dark dark:text-light">{{ . }}</li>
+                    {{ if .Params.subcategories }}
+                    <ul class="flex flex-wrap gap-3 items-stretch relative z-20">
+                        {{ range .Params.subcategories }}
+                        <li class="py-1 px-3 uppercase text-sm rounded-full border border-dark dark:border-light text-dark dark:text-light">
+                          <a href="{{ printf "/subcategories/%s" (. | urlize) }}">{{ . }}</a>
+                        </li>
                         {{ end }}
                     </ul>
                     {{ end }}

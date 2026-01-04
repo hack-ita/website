@@ -1,38 +1,24 @@
-{{/* ================================
-   CONTEXT-AWARE TAXONOMY FILTERS
-================================ */}}
+{{/* =====================================
+   TAXONOMY FILTERS (CATEGORY + SUBCATEGORY)
+   Source of truth:
+   - Categories  → .Site.Taxonomies.categories
+   - Subcategories → category _index.md (subcategories)
+===================================== */}}
 
 {{ $site := .Site }}
-{{ $kind := .Kind }}
-{{ $taxonomy := .Data.Plural | default "" }}
-
-{{/* MODE DETECTION */}}
-{{ $mode := "blog" }}
-{{ if eq $kind "term" }}
-  {{ if eq $taxonomy "categories" }}
-    {{ $mode = "category-term" }}
-  {{ else if eq $taxonomy "tags" }}
-    {{ $mode = "tag-term" }}
-  {{ end }}
-{{ end }}
 
 <div class="flex flex-col gap-5 lg:flex-row lg:justify-between lg:items-center mb-10">
-  <h4 class="heading-sm text-dark dark:text-light">Filters</h4>
+  <h4 class="heading-sm text-dark dark:text-light">Filtri</h4>
 
   <div
     id="taxonomyFilters"
     class="flex flex-wrap gap-4 items-end"
-    data-filter-mode="{{ $mode }}"
-    {{ if eq $mode "category-term" }}
-      data-current-category="{{ .Title | urlize }}"
-    {{ end }}
   >
 
     {{/* CATEGORY FILTER */}}
-    {{ if or (eq $mode "blog") (eq $mode "tag-term") }}
     <div class="flex flex-col gap-1">
       <label class="text-sm font-medium uppercase text-dark dark:text-light">
-        Category
+        Categoria
       </label>
       <select
         id="filter-category"
@@ -41,7 +27,7 @@
                py-2 px-3 text-sm uppercase
                text-dark dark:text-light
                focus:outline-none focus:ring-2 focus:ring-primary transition">
-        <option value="all">ALL</option>
+        <option value="all">TUTTE</option>
         {{ range $site.Taxonomies.categories }}
           <option value="{{ .Page.Title | urlize }}">
             {{ .Page.Title }}
@@ -49,16 +35,14 @@
         {{ end }}
       </select>
     </div>
-    {{ end }}
 
-    {{/* TAG / SUB-CATEGORY FILTER */}}
-    {{ if or (eq $mode "blog") (eq $mode "category-term") }}
+    {{/* SUBCATEGORY FILTER */}}
     <div class="flex flex-col gap-1">
       <label class="text-sm font-medium uppercase text-dark dark:text-light">
-        Sub-category
+        Sottocategoria
       </label>
       <select
-        id="filter-tag"
+        id="filter-subcategory"
         disabled
         class="taxonomy-select min-w-40 rounded-md border border-primary
                bg-white dark:bg-accent
@@ -69,33 +53,122 @@
         <option>SELEZIONA CATEGORIA</option>
       </select>
     </div>
-    {{ end }}
 
     <button
       type="button"
-      class="clear-filters text-sm font-medium text-primary hover:underline transition uppercase">
-      Clear all
+      class="text-sm font-medium text-primary hover:underline transition uppercase clear-filters">
+      Azzera filtri
     </button>
 
   </div>
 </div>
 
-{{/* CATEGORY → TAG MAP (BLOG + CATEGORY TERM) */}}
-{{ if or (eq $mode "blog") (eq $mode "category-term") }}
-<script type="application/json" id="categoryTagMap">
-{{ $map := dict }}
-{{ range $term, $termPages := $site.Taxonomies.categories }}
-  {{ $tags := slice }}
-  {{ range $termPages.Pages }}
-    {{ range .Params.tags }}
-      {{ $tags = $tags | append (dict
-          "label" .
-          "value" (. | urlize)
-      ) }}
-    {{ end }}
-  {{ end }}
-  {{ $map = merge $map (dict ($term | urlize) ($tags | uniq)) }}
-{{ end }}
-{{ $map | jsonify | safeJS }}
+{{/* =====================================
+   CATEGORY → SUBCATEGORY MAP
+===================================== */}}
+<script type="application/json" id="categorySubcategoryMap">
+{
+{{- $first := true -}}
+{{- range $term, $termPages := $site.Taxonomies.categories -}}
+  {{- $catPage := $termPages.Page -}}
+  {{- if not $first }},{{ end -}}
+  "{{ $term | urlize }}": [
+    {{- with $catPage.Params.subcategories -}}
+      {{- range $i, $sc := . -}}
+        {{- if $i }},{{ end -}}
+        {
+          "label": "{{ $sc }}",
+          "value": "{{ $sc | urlize }}"
+        }
+      {{- end -}}
+    {{- end -}}
+  ]
+  {{- $first = false -}}
+{{- end -}}
+}
 </script>
-{{ end }}
+
+{{/* =====================================
+   FILTER LOGIC (INLINE JS)
+===================================== */}}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  console.group("🧪 FILTERS DEBUG INIT");
+
+  const catSelect = document.querySelector("#filter-category");
+  const subSelect = document.querySelector("#filter-subcategory");
+  const clearButtons = document.querySelectorAll(".clear-filters");
+  const posts = [...document.querySelectorAll(".post-item")];
+  const mapEl = document.querySelector("#categorySubcategoryMap");
+  const noRes = document.querySelector("#noResults");
+
+  if (!catSelect || !subSelect || !mapEl) return;
+
+  const map = JSON.parse(mapEl.textContent);
+
+  const normalize = raw =>
+    raw.split(",").map(v => v.trim().toLowerCase()).filter(Boolean);
+
+  const applyFilters = () => {
+    const selectedCat = catSelect.value.toLowerCase();
+    const selectedSub = subSelect.value.toLowerCase();
+    let visible = 0;
+
+    posts.forEach(post => {
+      const cats = normalize(post.dataset.categories || "");
+      const subs = normalize(post.dataset.tags || "");
+      let show = true;
+
+      if (selectedCat !== "all" && !cats.includes(selectedCat)) show = false;
+      if (!subSelect.disabled && selectedSub !== "all" && !subs.includes(selectedSub)) show = false;
+
+      post.style.display = show ? "" : "none";
+      if (show) visible++;
+    });
+
+    const groups = document.querySelectorAll(".category-group");
+    groups.forEach(group => {
+      const hasVisible = group.querySelector(".post-item:not([style*='display: none'])");
+      group.style.display = hasVisible ? "" : "none";
+    });
+
+    noRes?.classList.toggle("hidden", visible > 0);
+  };
+
+  const populateSubcategories = category => {
+    subSelect.innerHTML = `<option value="all">TUTTE</option>`;
+    (map[category] || []).forEach(sc => {
+      const opt = document.createElement("option");
+      opt.value = sc.value;
+      opt.textContent = sc.label;
+      subSelect.appendChild(opt);
+    });
+    subSelect.disabled = false;
+    subSelect.classList.remove("opacity-60", "cursor-not-allowed");
+  };
+
+  catSelect.addEventListener("change", () => {
+    const value = catSelect.value.toLowerCase();
+    if (value === "all") {
+      subSelect.disabled = true;
+      subSelect.innerHTML = `<option>SELEZIONA CATEGORIA</option>`;
+      subSelect.classList.add("opacity-60", "cursor-not-allowed");
+    } else {
+      populateSubcategories(value);
+    }
+    applyFilters();
+  });
+
+  subSelect.addEventListener("change", applyFilters);
+
+  clearButtons.forEach(btn =>
+    btn.addEventListener("click", () => {
+      catSelect.value = "all";
+      subSelect.disabled = true;
+      subSelect.innerHTML = `<option>SELEZIONA CATEGORIA</option>`;
+      subSelect.classList.add("opacity-60", "cursor-not-allowed");
+      applyFilters();
+    })
+  );
+});
+</script>

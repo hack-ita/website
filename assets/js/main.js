@@ -399,7 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     log("Sidebar function initialized");
 
-    toggler.addEventListener('click', () => {
+    toggler.addEventListener("click", () => {
       sideBar.classList.toggle("translate-x-[100vw]");
     });
   });
@@ -571,8 +571,116 @@ document.addEventListener("DOMContentLoaded", () => {
   }, "Search");
 
   /* ===========================
-    FILTERS
-  ============================ */
+    FILTERS (CATEGORIES + SUBCATEGORIES)
+  =========================== */
+    safeExecute(() => {
+      if (!FEATURES.filters) return warn("Filters disabled");
+
+      const catSelect = document.querySelector("#filter-category");
+      const subSelect = document.querySelector("#filter-subcategory");
+      const clearButtons = document.querySelectorAll(".clear-filters");
+      const posts = [...document.querySelectorAll(".post-item")];
+      const mapEl = document.querySelector("#categorySubcategoryMap");
+      const noRes = document.querySelector("#noResults");
+      const groups = document.querySelectorAll(".category-group");
+
+      if (!catSelect || !subSelect || !mapEl || !posts.length) {
+        return warn("Filters skipped (missing elements)");
+      }
+
+      let map = {};
+      try {
+        map = JSON.parse(mapEl.textContent);
+      } catch (e) {
+        return error("Invalid categorySubcategoryMap JSON", e);
+      }
+
+      const normalize = (raw = "") =>
+        raw
+          .split(",")
+          .map((v) => v.trim().toLowerCase())
+          .filter(Boolean);
+
+      const applyFilters = () => {
+        const selectedCat = catSelect.value.toLowerCase();
+        const selectedSub = subSelect.value.toLowerCase();
+        let visibleCount = 0;
+
+        posts.forEach((post) => {
+          const cats = normalize(post.dataset.categories);
+          const subs = normalize(post.dataset.tags);
+          let show = true;
+
+          if (selectedCat !== "all" && !cats.includes(selectedCat)) show = false;
+          if (
+            !subSelect.disabled &&
+            selectedSub !== "all" &&
+            !subs.includes(selectedSub)
+          )
+            show = false;
+
+          post.style.display = show ? "" : "none";
+          if (show) visibleCount++;
+        });
+
+        /* BLOG LIST PAGE → hide empty category sections */
+        if (groups.length) {
+          groups.forEach((group) => {
+            const hasVisible = group.querySelector(
+              ".post-item:not([style*='display: none'])"
+            );
+            group.style.display = hasVisible ? "" : "none";
+          });
+        }
+
+        noRes?.classList.toggle("hidden", visibleCount > 0);
+      };
+
+      const populateSubcategories = (category) => {
+        subSelect.innerHTML = `<option value="all">TUTTE</option>`;
+
+        (map[category] || []).forEach((sc) => {
+          const opt = document.createElement("option");
+          opt.value = sc.value.toLowerCase();
+          opt.textContent = sc.label;
+          subSelect.appendChild(opt);
+        });
+
+        subSelect.disabled = false;
+        subSelect.classList.remove("opacity-60", "cursor-not-allowed");
+      };
+
+      catSelect.addEventListener("change", () => {
+        const value = catSelect.value.toLowerCase();
+
+        if (value === "all") {
+          subSelect.disabled = true;
+          subSelect.innerHTML = `<option>SELEZIONA CATEGORIA</option>`;
+          subSelect.classList.add("opacity-60", "cursor-not-allowed");
+        } else {
+          populateSubcategories(value);
+        }
+
+        applyFilters();
+      });
+
+      subSelect.addEventListener("change", applyFilters);
+
+      clearButtons.forEach((btn) =>
+        btn.addEventListener("click", () => {
+          catSelect.value = "all";
+
+          subSelect.disabled = true;
+          subSelect.innerHTML = `<option>SELEZIONA CATEGORIA</option>`;
+          subSelect.classList.add("opacity-60", "cursor-not-allowed");
+
+          applyFilters();
+        })
+      );
+
+      applyFilters(); // initial sync
+      log("Filters initialized");
+    }, "Filters");
 
   // ===========================
   // PLUGINS: SWIPER

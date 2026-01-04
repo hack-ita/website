@@ -340,6 +340,18 @@ pre:has(> code) {
   background: conic-gradient(from 0deg, #f9e89a, #e1c46a, #b98216, #f9e89a);
 }
 
+#search-wrapper .hn-input-orbit {
+  @apply relative overflow-hidden p-0.5 rounded-[999px] 
+         before:content-[""] before:absolute before:animate-[hn-orbit-spin_9s_linear_infinite] 
+         before:opacity-[0.92] before:-inset-2/4
+         focus-within:shadow-[0_0_0_2px_rgba(253,0,1,0.4),0_0_22px_rgba(253,0,1,0.7)]
+         focus-within:before:animate-[hn-orbit-spin-fast_4s_linear_infinite] 
+         bg-light dark:bg-dark;
+}
+
+#search-wrapper .hn-input-orbit::before {
+  background: conic-gradient(from 0deg, var(--color-red-700), var(--color-red-800), var(--color-primary));
+}
 .hn-input-orbit-border {
   @apply relative z-1 m-0.5 rounded-[inherit];
   background: radial-gradient(circle at top left, #161621 0, #050509 65%);

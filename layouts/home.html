@@ -100,12 +100,12 @@
         </div>
   
         <!-- Hover Effect Bar -->
-        <div class="group relative">
+        <div class="relative">
           <div
             class="h-1 w-full rounded-b-md bg-dark/20 dark:bg-light/20 overflow-hidden relative
                   after:absolute after:inset-0 after:bg-primary
                   after:-translate-x-full
-                  group-hover:after:animate-underline-slide">
+                  after:animate-underline-slide">
           </div>
         </div>
       </div>
@@ -223,12 +223,12 @@
                     {{ partial "components/button.html" (dict "link" "true" "label" "Continua a leggere" "url" .RelPermalink ) }}
                   </div>
                 </div>
-                <div class="group relative">
+                <div class="relative">
                   <div
                     class="h-1 w-full rounded-b-md bg-dark/20 dark:bg-light/20 overflow-hidden relative
                           after:absolute after:inset-0 after:bg-primary
                           after:-translate-x-full
-                          group-hover:after:animate-underline-slide">
+                          after:animate-underline-slide">
                   </div>
                 </div>
               </article>
@@ -302,19 +302,19 @@
     
     <!-- Section Heading & Typewriter -->
     <div class="flex flex-col justify-center gap-y-10"  >
-      <h2 class="text-light text-center">Learn Cyber-Security</h2>
+      <h2 class="text-light text-center">Impara la sicurezza informatica</h2>
       <p class="text-light text-balance text-center">
-        From the basics to the OSCP level: <br />
+        Dalle basi al livello OSCP: <br />
         <span id="typewriter" class="text-dark font-semibold" aria-hidden="true"></span>
-        to become a true pentester.
+        per diventare un vero pentester.
       </p>
 
       <!-- Hidden Typewriter Words (Decorative) -->
       <div id="typewriter-data" class="hidden" aria-hidden="true">
-        <span>technical walkthroughs</span>
-        <span>commands</span>
-        <span>common errors</span>
-        <span>real lab notes</span>
+        <span>guide tecniche</span>
+        <span>comandi</span>
+        <span>errori comuni</span>
+        <span>appunti di laboratorio reali</span>
       </div>
     </div>
 
@@ -322,24 +322,24 @@
     <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
       
       <!-- Stats Cards -->
-      <article   class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">{{ with where .Site.RegularPages "Section" "blog" }}{{ . | len }}{{ end }}+</span>
+      <article class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary text-4xl lg:text-5xl font-black">{{ with where .Site.RegularPages "Section" "blog" }}{{ . | len }}{{ end }}+</span>
         <h3 class="heading-sm text-xl text-light">Articoli</h3>
       </article>
 
-      <article   class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">8</span>
+      <article class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
+        <span class="text-primary text-4xl lg:text-5xl font-black">8</span>
         <h3 class="heading-sm text-xl text-dark">Categorie Principali</h3>
       </article>
 
-      <article   class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">Training</span>
-        <h3 class="heading-sm text-xl text-light">Focused</h3>
+      <article class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary text-4xl lg:text-5xl font-black">Formazione</span>
+        <h3 class="heading-sm text-xl text-light">Focalizzata</h3>
       </article>
 
-      <article   class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">100%</span>
-        <h3 class="heading-sm text-xl text-dark">Ethical Hacking</h3>
+      <article class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
+        <span class="text-primary text-4xl lg:text-5xl font-black">100%</span>
+        <h3 class="heading-sm text-xl text-dark">Hacking etico</h3>
       </article>
 
     </div>

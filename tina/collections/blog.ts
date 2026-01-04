@@ -40,6 +40,12 @@ const Blog: Collection = {
     },
     {
       type: "string",
+      name: "subcategories",
+      label: "Sub Categories",
+      list: true,
+    },
+    {
+      type: "string",
       name: "tags",
       label: "Tags",
       list: true,

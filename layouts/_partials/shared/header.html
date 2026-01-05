@@ -5,7 +5,7 @@
       <!-- Logo -->
       <div class="grow">
         <a href="{{ site.BaseURL }}" aria-label="{{ site.Title }} homepage">
-          <img src="{{ site.Params.header.logo | relURL }}" alt="{{ site.Title }}" class="h-25 headerLogo transition-all">
+          {{ partial "components/image.html" (dict "src" site.Params.header.logo "alt" site.Title "class" "h-25 header-logo transition-all" "highFetchPrio" "true") }}
         </a>
       </div>
 

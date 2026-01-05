@@ -3,7 +3,7 @@
 
     <!-- Logo + Socials -->
     <div class="space-y-10">
-      <img src="{{ site.Params.footer.logo | relURL }}" alt="{{ site.Title }}" class="w-40" />
+      {{ partial "components/image.html" (dict "src" site.Params.footer.logo "alt" site.Title "class" "w-40") }}
       
       <ul class="flex flex-wrap gap-7 items-stretch" aria-label="Follow Hackita on social media">
         {{/* facebook */}}

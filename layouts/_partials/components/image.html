@@ -17,7 +17,7 @@ Parameters:
 {{ $class := $params.class | default "" }}
 {{ $width := $params.width | default 0 }}
 {{ $height := $params.height | default 0 }}
-{{ $lazy := $params.lazy | default true }}
+{{ $lazy := $params.lazy | default false }}
 
 {{/* Extract file extension to auto-detect format */}}
 {{ $ext := strings.TrimPrefix (path.Ext $src) "." }}
@@ -36,6 +36,8 @@ Parameters:
     {{ if in (slice "jpg" "jpeg" "png" "webp") $ext }}
         {{ $img = $img | images.Convert $ext }}
     {{ end }}
+
+    {{ $img = $img.Process "webp" }}
 
     <img 
         src="{{ $img.RelPermalink }}" 

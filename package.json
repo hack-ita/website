@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build:admin": "npx tinacms build",
-    "build:hugo": "node scripts/copyImages.js && git config core.quotepath false && hugo --gc --minify --baseURL \"$URL\"",
+    "build:hugo": "git config core.quotepath false && hugo --gc --minify --baseURL \"$URL\"",
     "build:index": "npx pagefind --site public",
     "build": "npm run build:admin && npm run build:hugo && npm run build:index"
   },

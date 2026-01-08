@@ -1,13 +1,18 @@
 {{ $swiper := resources.Get "plugins/swiper/swiper.js" }}
 {{ $glightbox := resources.Get "plugins/glightbox/glightbox.js" }}
-{{ $global := resources.Get "js/main.js" }}
-{{ $js := slice $swiper $glightbox $global | resources.Concat "js/bundle.js" }}
+{{ $plugins := slice $swiper $glightbox | resources.Concat "js/plugins.js" }}
 
-{{ with $js }}
+{{ with $plugins }}
+{{ with . | minify | fingerprint "sha256" }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous" defer></script>
+{{ end }}
+{{ end }}
+
+{{ with resources.Get "js/main.js" }}
 {{ with . | minify | fingerprint "sha256" }}
 <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous"></script>
 {{ end }}
 {{ end }}
 
 <script data-goatcounter="https://hackita.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+        async src="//gc.zgo.at/count.js" defer></script>

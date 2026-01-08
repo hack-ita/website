@@ -1,0 +1,7 @@
+<div class="w-fit mx-auto relative">
+    <img src='{{ "images/dev/heading-icon.webp" | relURL }}' 
+        class="w-10 sm:w-20 max-h-30 absolute -left-7 -top-3 sm:-left-17 sm:-top-5">
+    <h2 class="{{ if eq .invert "true"}}text-light dark:text-dark{{ else }}text-dark dark:text-light{{ end }} uppercase text-center text-pretty relative">
+    {{ .text }}
+    </h2>
+</div>

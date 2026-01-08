@@ -18,19 +18,12 @@
     <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full rotate-180">
   </div>
 
-  <div class="max-w-7xl mx-auto space-y-10">
-    <article class="w-fit mx-auto" >
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
-      </div>
-      <h2 class="text-dark dark:text-light uppercase text-pretty text-center relative">
-        {{ .title | safeHTML }}
-      </h2>
-      <p class="text-dark dark:text-light text-center text-xl mt-4" >
-        {{ .content | safeHTML }}
-      </p>
-    </article>
-  </div>
+  <article class="max-w-7xl mx-auto space-y-10 py-10">
+    {{ partial "components/heading.html" (dict "text" .title) }}
+    <p class="text-dark dark:text-light text-center text-xl mt-4" >
+      {{ .content | safeHTML }}
+    </p>
+  </article>
 </section>
 {{ end }}
 {{ end }}
@@ -76,20 +69,12 @@
 {{ with .Params.extra_content }}
 {{ if .enable }}
 <section class="pt-3 pb-10 px-5 bg-dark dark:bg-light light-mask" aria-labelledby="light-section-heading">
-  <div class="max-w-7xl mx-auto space-y-10">
-    <div class="w-fit mx-auto" >
-      <!-- Decorative icon -->
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
-      </div>
-      <h2 id="light-section-heading" class="text-light dark:text-dark uppercase text-pretty text-center relative">
-        {{ .title | safeHTML }}
-      </h2>
-    </div>
-    <p class="text-light dark:text-dark text-center text-xl" >
+  <article class="max-w-7xl mx-auto space-y-10 py-10">
+    {{ partial "components/heading.html" (dict "text" .title "invert" "true") }}
+    <p class="text-light dark:text-dark text-center text-xl mt-4" >
       {{ .content | safeHTML }}
     </p>
-  </div>
+  </article>
 </section>
 {{ end }}
 {{ end }}
@@ -98,17 +83,9 @@
 {{/* faqs */}}
 {{ with .Params.faqs }}
 {{ if .enable }}
-<section class="bg-mask pt-3 pb-10 px-5" aria-labelledby="faq-section-heading">
-  <div class="max-w-7xl mx-auto space-y-10">
-    <div class="w-fit mx-auto" >
-      <!-- Decorative icon -->
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
-      </div>
-      <h2 id="faq-section-heading" class="text-dark dark:text-light uppercase text-pretty relative">
-        {{ .title | safeHTML }}
-      </h2>
-    </div>
+<section class="bg-mask" aria-labelledby="faq-section-heading">
+  <div class="max-w-7xl mx-auto space-y-10 py-10 px-5">
+    {{ partial "components/heading.html" (dict "text" .title) }}
 
     <div class="flex flex-col gap-5">
       {{ range $i, $p := .faq }}

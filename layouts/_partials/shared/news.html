@@ -1,12 +1,7 @@
 <section class="bg-mask py-10 px-5">
   <div class="max-w-7xl mx-auto space-y-10">
     <!-- Heading -->
-    <div class="w-fit mx-auto" >
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full">
-      </div>
-      <h2 class="text-light uppercase text-pretty text-center relative">News</h2>
-    </div>
+    {{ partial "components/heading.html" (dict "text" "News") }}
 
     <!-- Swiper Section -->
     <div class="relative" >

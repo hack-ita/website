@@ -2,7 +2,7 @@
 {{ $heroBg := "images/hackita-hero.webp" | relURL }}
 
 <header
-    class="h-[90vh] {{ if eq .bg_top "true" }}{{ else }}bg-center{{ end }} relative {{ if eq .page.Params.image "none" }}pt-30{{ else if .page.Params.image }}pt-30 bg-[url('{{ $customBg }}')] bg-cover bg-top bg-no-repeat{{ else }}bg-[url('{{ $heroBg }}')] bg-cover bg-no-repeat{{ end }}"
+    class="lg:h-[90vh] mt-30 py-20 md:py-40 lg:mt-0 lg:py-0 {{ if eq .bg_top "true" }}{{ else }}bg-center{{ end }} relative {{ if eq .page.Params.image "none" }}lg:pt-30{{ else if .page.Params.image }}lg:pt-30 bg-[url('{{ $customBg }}')] bg-cover bg-top bg-no-repeat{{ else }}bg-[url('{{ $heroBg }}')] bg-cover bg-no-repeat{{ end }}"
     role="banner"
 >
     <!-- Overlay -->

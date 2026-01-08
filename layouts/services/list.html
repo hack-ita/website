@@ -15,15 +15,8 @@
     <img src='{{ "images/dev/quote-icon.webp" | relURL }}' class="size-full rotate-180" alt="">
   </div>
 
-  <div class="max-w-7xl mx-auto space-y-10">
-    <div class="w-fit mx-auto" >
-      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5">
-        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' class="size-full" alt="">
-      </div>
-      <h2 class="text-dark dark:text-light uppercase text-pretty text-center relative">
-        {{ .title | safeHTML }}
-      </h2>
-    </div>
+  <div class="max-w-7xl mx-auto space-y-10 pt-15">
+    {{ partial "components/heading.html" (dict "text" .title) }}
 
     <blockquote class="text-dark dark:text-light text-center text-xl" >
       {{ .content | safeHTML }}

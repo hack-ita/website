@@ -33,11 +33,17 @@
             <h3 class="text-light hero-heading uppercase">Bitcoin (BTC)</h3>
           </header>
 
+          {{ partial "components/qr.html" (dict
+            "currency" "btc"
+            "address" "bc1pdmfsepjye2x9e9t77ga737puf4j2d9v56z6wk9jvcg38498xqx0qcl6r9e"
+            "class" "mx-auto size-40"
+          ) }}
+
           <address class="not-italic relative">
             <input
               id="btcAddress"
               type="text"
-              value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+              value="bc1pdmfsepjye2x9e9t77ga737puf4j2d9v56z6wk9jvcg38498xqx0qcl6r9e"
               readonly
               onclick="this.select()"
               class="p-2 rounded-md bg-light-bg shadow-inner border border-dashed focus:outline-none cursor-pointer w-full"
@@ -58,41 +64,6 @@
         </article>
       </li>
 
-      <!-- ETH -->
-      <li>
-        <article class="rounded-md p-3 lg:p-5 flex flex-col gap-5 relative bg-primary overflow-hidden">
-          <span class="size-30 rotate-30 bg-[#8d0202] absolute -right-10 -top-5"></span>
-
-          <header class="relative">
-            <span class="text-light text-sm uppercase">Wallet</span>
-            <h3 class="text-light hero-heading uppercase">Ethereum (ETH)</h3>
-          </header>
-
-          <address class="not-italic relative">
-            <input
-              id="ethAddress"
-              type="text"
-              value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
-              readonly
-              onclick="this.select()"
-              class="p-2 rounded-md bg-light-bg shadow-inner border border-dashed focus:outline-none cursor-pointer w-full"
-              aria-label="Ethereum wallet address">
-          </address>
-
-          <button
-            type="button"
-            class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase cursor-pointer"
-            onclick="
-              const eth = document.getElementById('ethAddress');
-              eth.select();
-              navigator.clipboard.writeText(eth.value);
-              alert('Copied to clipboard!')
-            ">
-            Copy
-          </button>
-        </article>
-      </li>
-
       <!-- XMR -->
       <li>
         <article class="rounded-md p-3 lg:p-5 flex flex-col gap-5 relative bg-primary overflow-hidden">
@@ -103,11 +74,17 @@
             <h3 class="text-light hero-heading uppercase">Monero (XMR)</h3>
           </header>
 
+          {{ partial "components/qr.html" (dict
+            "currency" "xmr"
+            "address" "48j1LhT6QQGRCFTwJSTnDz1V3twpAvg6mjL5WYSqV5v5R7EgK8u1tKTMx7XvHTgd2dGNxkruaAxbFeZcVmEtjik3HnSWhPN"
+            "class" "mx-auto size-40"
+          ) }}
+
           <address class="not-italic relative">
             <input
               id="xmrAddress"
               type="text"
-              value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+              value="48j1LhT6QQGRCFTwJSTnDz1V3twpAvg6mjL5WYSqV5v5R7EgK8u1tKTMx7XvHTgd2dGNxkruaAxbFeZcVmEtjik3HnSWhPN"
               readonly
               onclick="this.select()"
               class="p-2 rounded-md bg-light-bg shadow-inner border border-dashed focus:outline-none cursor-pointer w-full"

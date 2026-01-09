@@ -9,7 +9,8 @@
         <div class="swiper-wrapper">
           {{ range where .Site.RegularPages "Section" "blog" | first 6 }}
           <div class="swiper-slide">
-            <div class="lg:size-full">
+            <div class="lg:size-full relative">
+              <a href="{{ .RelPermalink }}" class="absolute inset-0"></a>
               {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "lg:size-full object-cover hover:scale-115 duration-300 transition-transform" "highFetchPrio" "true") }}
             </div>
           </div>
@@ -24,7 +25,7 @@
       <div class="swiper heroTextSwiper" role="region" aria-label="Featured blog titles and summaries">
         <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-dark dark:divide-light">
           {{ range $i, $p := where .Site.RegularPages "Section" "blog" | first 6 }}
-          <div class="swiper-slide cursor-pointer {{ if eq $i 0 }}pb-5{{ else }}py-5{{ end }}">
+          <div class="swiper-slide cursor-pointer {{ if eq $i 0 }}pb-5 swiper-slide-active{{ else }}py-5{{ end }}">
             <article class="space-y-2 px-5">
               <h2 class="heading-sm text-dark dark:text-light transition-colors title">
                 {{ .Title }}

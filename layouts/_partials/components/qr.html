@@ -1,0 +1,85 @@
+{{- /*
+Partial: crypto-qr.html
+
+Generates a QR code image for crypto payment addresses (BTC / XMR).
+
+Required params:
+- address   (string)  Crypto address
+- currency  (string)  "btc" or "xmr"
+
+Optional params (same as Hugo qr shortcode):
+- level     (low | medium | quartile | high)  default: medium
+- scale     (int >= 2)                        default: 4
+- targetDir (string)
+- alt       (string)
+- class     (string)
+- id        (string)
+- title     (string)
+- loading   (lazy | eager)
+
+Usage example:
+{{ partial "crypto-qr.html" (dict "currency" "btc" "address" "1ABC..." ) }}
+*/}}
+
+{{- /* Constants */ -}}
+{{- $validLevels := slice "low" "medium" "quartile" "high" -}}
+{{- $minimumScale := 2 -}}
+
+{{- /* Required args */ -}}
+{{- $address := .address | default "" -}}
+{{- $currency := lower (.currency | default "") -}}
+
+{{- if not $address }}
+  {{- errorf "crypto-qr partial requires an 'address' parameter" -}}
+{{- end }}
+
+{{- if not (in (slice "btc" "xmr") $currency) }}
+  {{- errorf "crypto-qr partial: 'currency' must be 'btc' or 'xmr'" -}}
+{{- end }}
+
+{{- /* Optional args */ -}}
+{{- $level := .level | default "medium" -}}
+{{- $scale := .scale | default 4 -}}
+{{- $targetDir := .targetDir | default "" -}}
+{{- $alt := .alt | default "" -}}
+{{- $class := .class | default "" -}}
+{{- $id := .id | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $loading := .loading | default "" -}}
+
+{{- /* Validate options */ -}}
+{{- if not (in $validLevels $level) }}
+  {{- errorf "crypto-qr partial: invalid level '%s'" $level -}}
+{{- end }}
+
+{{- if or (lt $scale $minimumScale) (ne $scale (int $scale)) }}
+  {{- errorf "crypto-qr partial: scale must be an integer >= %d" $minimumScale -}}
+{{- end }}
+
+{{- /* Build crypto URI */ -}}
+{{- $uri := "" -}}
+{{- if eq $currency "btc" -}}
+  {{- $uri = printf "bitcoin:%s" $address -}}
+{{- else if eq $currency "xmr" -}}
+  {{- $uri = printf "monero:%s" $address -}}
+{{- end -}}
+
+{{- /* Generate QR */ -}}
+{{- $opts := dict
+  "level" $level
+  "scale" $scale
+  "targetDir" $targetDir
+-}}
+
+{{- with images.QR $uri $opts }}
+  <img
+    src="{{ .RelPermalink }}"
+    width="{{ .Width }}"
+    height="{{ .Height }}"
+    {{- with $alt }} alt="{{ . }}"{{ end -}}
+    {{- with $class }} class="{{ . }}"{{ end -}}
+    {{- with $id }} id="{{ . }}"{{ end -}}
+    {{- with $title }} title="{{ . }}"{{ end -}}
+    {{- with $loading }} loading="{{ . }}"{{ end -}}
+  >
+{{- end }}

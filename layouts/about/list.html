@@ -94,9 +94,11 @@
           id="faq-toggle-{{ $i }}" 
           aria-expanded="false" 
           aria-controls="faq-content-{{ $i }}" 
-          class="flex justify-between items-center text-light heading-sm cursor-pointer w-full gap-3">
+          class="flex justify-between items-start text-start text-light heading-sm cursor-pointer w-full gap-3">
           {{ .title | safeHTML }}
-          <span class="bg-light text-dark rounded-full size-7 flex justify-center items-center text-xl">+</span>
+          <span>
+            <span class="bg-light text-dark rounded-full size-7 flex justify-center items-center text-xl">+</span>
+          </span>
         </button>
         <div 
           id="faq-content-{{ $i }}" 
@@ -107,30 +109,6 @@
       {{ end }}
     </div>
   </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const toggles = document.querySelectorAll("[id^='faq-toggle-']");
-      toggles.forEach(toggle => {
-        const content = document.getElementById(toggle.getAttribute("aria-controls"));
-        const icon = toggle.querySelector("span");
-
-        toggle.addEventListener("click", () => {
-          const expanded = toggle.getAttribute("aria-expanded") === "true";
-          toggle.setAttribute("aria-expanded", !expanded);
-          if (!expanded) {
-            content.classList.remove("max-h-0", "opacity-0", "pointer-events-none");
-            content.classList.add("max-h-50", "opacity-100");
-            icon.textContent = '-';
-          } else {
-            content.classList.add("max-h-0", "opacity-0", "pointer-events-none");
-            content.classList.remove("max-h-50", "opacity-100");
-            icon.textContent = '+';
-          }
-        });
-      });
-    });
-  </script>
 </section>
 {{ end }}
 {{ end }}

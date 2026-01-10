@@ -92,6 +92,10 @@ h1, h2 {
   @apply text-[max(20px,min(20px,1vw))] leading-none uppercase font-bold text-pretty;
 }
 
+.card-spotlight span {
+  @apply text-2xl lg:text-4xl xl:text-5xl;
+}
+
 
 /* ===========================
    Search UI

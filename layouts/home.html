@@ -302,24 +302,24 @@
     <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
       
       <!-- Stats Cards -->
-      <article class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary text-4xl lg:text-5xl font-black text-wrap">{{ with where .Site.RegularPages "Section" "blog" }}{{ . | len }}{{ end }}+</span>
-        <h3 class="heading-sm text-xl text-light">Articoli</h3>
+      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary font-black">{{ with where .Site.RegularPages "Section" "blog" }}{{ . | len }}{{ end }}+</span>
+        <h3 class="text-bold lg:text-xl text-light">Articoli</h3>
       </article>
 
-      <article class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
-        <span class="text-primary text-4xl lg:text-5xl font-black text-wrap">8</span>
-        <h3 class="heading-sm text-xl text-dark">Categorie Principali</h3>
+      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
+        <span class="text-primary font-black">8</span>
+        <h3 class="text-bold lg:text-xl text-dark">Categorie Principali</h3>
       </article>
 
-      <article class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary text-4xl lg:text-5xl font-black text-wrap">Formazione</span>
-        <h3 class="heading-sm text-xl text-light">Focalizzata</h3>
+      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary font-black">Formazione</span>
+        <h3 class="text-bold lg:text-xl text-light">Focalizzata</h3>
       </article>
 
-      <article class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
-        <span class="text-primary text-4xl lg:text-5xl font-black text-wrap">100%</span>
-        <h3 class="heading-sm text-xl text-dark">Hacking etico</h3>
+      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
+        <span class="text-primary font-black">100%</span>
+        <h3 class="text-bold lg:text-xl text-dark">Hacking etico</h3>
       </article>
 
     </div>

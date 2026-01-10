@@ -42,44 +42,42 @@
 
   <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
     
-    <header class="flex flex-col justify-center gap-y-10" >
-      <h2 class="text-light text-center">
-        {{ .title | safeHTML }}
-      </h2>
+    <header class="flex flex-col justify-center gap-y-10">
+      <h2 class="text-light text-center">{{ .title | safeHTML }}</h2>
       <p class="text-light text-balance text-center">
-        From the basics to the OSCP level: <br />
-        <span id="typewriter" class="text-dark font-semibold"></span>
-        to become a true pentester.
+        Dalle basi al livello OSCP: <br />
+        <span id="typewriter" class="text-dark font-semibold" aria-hidden="true"></span>
+        per diventare un vero pentester.
       </p>
 
-      <!-- Hidden typewriter words -->
-      <div id="typewriter-data" class="hidden">
-        <span>technical walkthroughs</span>
-        <span>commands</span>
-        <span>common errors</span>
-        <span>real lab notes</span>
+      <!-- Hidden Typewriter Words (Decorative) -->
+      <div id="typewriter-data" class="hidden" aria-hidden="true">
+        <span>guide tecniche</span>
+        <span>comandi</span>
+        <span>errori comuni</span>
+        <span>appunti di laboratorio reali</span>
       </div>
     </header>
 
     <section id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5" aria-label="Stats Overview">
-      <div  class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">12+</span>
-        <h5 class="heading-sm text-xl text-light">Technical Articles</h5>
+      <div  class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary font-black">12+</span>
+        <h5 class="text-bold lg:text-xl text-light">Technical Articles</h5>
       </div>
 
-      <div  class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">8</span>
-        <h5 class="heading-sm text-xl text-dark">Main Categories</h5>
+      <div  class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
+        <span class="text-primary font-black">8</span>
+        <h5 class="text-bold lg:text-xl text-dark">Main Categories</h5>
       </div>
 
-      <div  class="card-spotlight flex flex-col gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">OSCP</span>
-        <h5 class="heading-sm text-xl text-light">Focused</h5>
+      <div  class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary font-black">OSCP</span>
+        <h5 class="text-bold lg:text-xl text-light">Focused</h5>
       </div>
 
-      <div  class="card-spotlight flex flex-col gap-y-5 text-center bg-light p-5">
-        <span class="text-primary text-4xl lg:text-6xl font-black">100%</span>
-        <h5 class="heading-sm text-xl text-dark">Red Team Vibes</h5>
+      <div  class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
+        <span class="text-primary font-black">100%</span>
+        <h5 class="text-bold lg:text-xl text-dark">Red Team Vibes</h5>
       </div>
     </section>
     

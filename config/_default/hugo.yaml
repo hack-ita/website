@@ -1,5 +1,5 @@
-enableEmoji: true
-enableRobotsTXT: true
-baseURL: 'https://example.org/'
-languageCode: en-us
+baseURL: 'https://hackita.it'
+languageCode: it-IT
 title: HackIta
+enableRobotsTXT: true
+enableEmoji: true

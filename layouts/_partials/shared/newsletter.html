@@ -22,13 +22,12 @@
         id="newsletter-title"
         class="text-dark dark:text-light text-center text-3xl uppercase font-bold hero-heading"
       >
-        Entra nella lista gold degli hacker.
+        DIVENTA PARTE DELL’ÉLITE DELL’HACKING ETICO.
       </h2>
 
       <!-- Description -->
       <p class="text-dark dark:text-light text-center">
-        Exploit reali, lab per OSCP/OSCE3 e guide pratiche di hacking etico.
-        Niente spam, solo roba che userai davvero.
+        Accedi a risorse avanzate, lab esclusivi e strategie usate dai veri professionisti della cybersecurity.
       </p>
 
       <!-- Newsletter Form -->
@@ -36,6 +35,7 @@
         action="#success"
         method="post"
         class="hn-form"
+        data-captcha-form
         aria-describedby="newsletter-disclaimer"
       >
         <div class="hn-input-orbit">
@@ -60,7 +60,27 @@
 
         <input type="text" name="company" tabindex="-1" autocomplete="off" hidden>
 
-        <button type="submit" class="hn-btn">
+        <!-- Captcha Container -->
+        <div class="captcha-wrapper flex">
+          <div class="captcha-container">
+            <div class="checkbox-wrapper">
+              <div class="spinner"></div>
+              <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="captcha-text">Non sono un robot</span>
+            <div class="captcha-logo">
+              <svg class="captcha-logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="#555" stroke-width="2"/>
+                <path d="M9 12L11 14L15 10" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Verifica</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="hn-btn submit-btn" style="display: none; justify-content: center;">
           Iscrivimi
         </button>
       </form>

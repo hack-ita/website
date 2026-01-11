@@ -1,8 +1,7 @@
 ---
 title: Red Team
 description: >-
-  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor
-  sit amet consectetur adipisicing elit.
+  Non solo test: una vera simulazione di attacco.<br> Agiamo come un gruppo di hacker reali per mettere alla prova persone, processi e tecnologie della tua azienda.<br> Scopri quanto sei davvero pronto a difenderti.
 image: /images/red-team-new.jpeg
 ---
 

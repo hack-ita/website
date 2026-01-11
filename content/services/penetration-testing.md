@@ -1,8 +1,7 @@
 ---
 title: Penetration Testing
 description: >-
-  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor
-  sit amet consectetur adipisicing elit.
+  Proteggi la tua azienda prima che sia troppo tardi.<br> Simuliamo attacchi reali per individuare ogni punto debole e rafforzare la tua sicurezza.
 image: /images/penetration-testing.jpg
 ---
 

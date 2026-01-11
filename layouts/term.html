@@ -62,7 +62,8 @@
 {{/* /hero */}}
 
 {{/* list */}}
-<section class="max-w-7xl mx-auto py-10" aria-labelledby="category-articles-title">
+<section class="bg-mask">
+  <div class="max-w-7xl mx-auto py-10" aria-labelledby="category-articles-title">
     <header class="mb-10">
         <h2 id="category-articles-title" class="text-dark dark:text-light hero-heading">
             <span class="text-primary">{{ .Title }}</span> Articles
@@ -114,6 +115,7 @@
         </li>
         {{ end }}
     </ul>
+  </div>
 </section>
 {{/* /list */}}
 {{ end }}

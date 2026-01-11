@@ -3,19 +3,19 @@
       name="contact" 
       method="POST" 
       data-netlify="true" 
-      netlify-honeypot="bot-field" 
-      data-netlify-recaptcha="true" 
+      netlify-honeypot="bot-field"
+      data-captcha-form
       class="max-w-3xl mx-auto flex flex-col gap-5">
 
     <h4 class="text-dark dark:text-light text-center text-3xl uppercase font-bold">
-      Entra nella lista gold degli hacker.
+      lascia un messaggio
     </h4>
 
     <!-- Netlify hidden inputs -->
     <input type="hidden" name="form-name" value="contact">
     <p class="hidden">
       <label>
-        Don’t fill this out if you’re human: 
+        Don't fill this out if you're human: 
         <input name="bot-field" type="text" />
       </label>
     </p>
@@ -24,35 +24,50 @@
     {{ partial "components/input.html" (dict 
         "type" "text" 
         "required" "true" 
-        "for" "Name" 
-        "placeholder" "Enter your name..."
+        "for" "Nome"
     ) }}
 
     <!-- Email input -->
     {{ partial "components/input.html" (dict 
         "type" "email" 
         "required" "true" 
-        "for" "Email" 
-        "placeholder" "Enter your email..."
+        "for" "E-mail"
     ) }}
 
     <!-- Message textarea -->
     {{ partial "components/input.html" (dict 
         "type" "textarea" 
-        "for" "Message" 
-        "placeholder" "Enter your message..."
+        "for" "Messaggio"
     ) }}
 
-    <!-- Netlify reCAPTCHA -->
-    <div data-netlify-recaptcha="true"></div>
+    <!-- Captcha Container -->
+    <div class="captcha-wrapper flex">
+      <div class="captcha-container">
+        <div class="checkbox-wrapper">
+          <div class="spinner"></div>
+          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <span class="captcha-text">Non sono un robot</span>
+        <div class="captcha-logo">
+          <svg class="captcha-logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="2" stroke="#555" stroke-width="2"/>
+            <path d="M9 12L11 14L15 10" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Verifica</span>
+        </div>
+      </div>
+    </div>
 
     <!-- Submit button -->
     {{ partial "components/button.html" (dict 
         "light" "true" 
         "size" "full" 
-        "label" "Send" 
+        "label" "Inviare" 
         "type" "submit" 
-        "class" "hover:shadow-xl"
+        "class" "submit-btn hover:shadow-xl"
+        "style" "display: none;"
     ) }}
   </form>
 </div>

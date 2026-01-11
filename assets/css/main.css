@@ -96,6 +96,136 @@ h1, h2 {
   @apply text-2xl lg:text-4xl xl:text-5xl;
 }
 
+/* ===========================
+   Search UI
+=========================== */
+.captcha-container {
+  background: #f9f9f9;
+  border: 2px solid #d3d3d3;
+  border-radius: 4px;
+  padding: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.captcha-container:hover {
+  background: #e8e8e8;
+}
+
+.checkbox-wrapper {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #c1c1c1;
+  border-radius: 3px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.checkbox-wrapper.checking {
+  border-color: #4285f4;
+}
+
+.checkbox-wrapper.verified {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.checkmark.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #4285f4;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.spinner.show {
+  opacity: 1;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.captcha-text {
+  color: #000;
+  font-size: 14px;
+}
+
+.captcha-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 8px;
+  color: #555;
+  margin-left: auto;
+}
+
+.captcha-logo-icon {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 2px;
+}
+
+.button-enter {
+  animation: buttonSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+@keyframes buttonSlideIn {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.captcha-fade-out {
+  animation: fadeOut 0.4s ease forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
 
 /* ===========================
    Search UI
@@ -368,6 +498,10 @@ pre:has(> code) {
 
 .hn-input::placeholder {
   @apply text-light/20;
+}
+
+.hn-input-search::placeholder {
+  @apply text-dark/50 dark:text-light/20;
 }
 
 /* ===========================

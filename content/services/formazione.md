@@ -1,8 +1,7 @@
 ---
 title: 'Formazione 1:1'
 description: >-
-  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor
-  sit amet consectetur adipisicing elit.
+  Scopri il tuo potenziale nel mondo dell’ethical hacking.<br> Con un percorso personalizzato e guidato, ti aiutiamo a diventare uno dei migliori hacker etici al mondo.
 image: /images/formazione.jpg
 ---
 

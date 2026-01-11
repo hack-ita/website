@@ -34,6 +34,7 @@ const FEATURES = {
   menu: true,
   header: true,
   themeToggle: true,
+  captcha: true,
 
   // DEFERRED (non-blocking)
   typewriter: true,
@@ -108,12 +109,18 @@ const initCritical = () => {
     if (!selector) return;
 
     const html = document.documentElement;
+    const STORAGE_KEY = "theme";
+
     const applyTheme = (theme) => {
       html.classList.toggle("dark", theme === "dark");
+      sessionStorage.setItem(STORAGE_KEY, theme);
     };
 
-    selector.value = "dark";
-    applyTheme("dark");
+    const savedTheme = sessionStorage.getItem(STORAGE_KEY) || "dark";
+
+    applyTheme(savedTheme);
+    selector.value = savedTheme;
+
     selector.addEventListener("change", (e) => applyTheme(e.target.value), {
       passive: true,
     });
@@ -139,6 +146,72 @@ const initCritical = () => {
       { passive: true }
     );
     log("Header scroll enabled");
+  }
+
+  // CAPTCHA INITIALIZATION
+  if (FEATURES.captcha) {
+    safe(() => {
+      const forms = $$('[data-captcha-form]');
+      
+      if (!forms.length) return;
+
+      forms.forEach(form => {
+        const captchaBox = form.querySelector('.captcha-container');
+        const checkbox = form.querySelector('.checkbox-wrapper');
+        const spinner = form.querySelector('.spinner');
+        const checkmark = form.querySelector('.checkmark');
+        const captchaWrapper = form.querySelector('.captcha-wrapper');
+        const submitButton = form.querySelector('.submit-btn');
+        
+        if (!captchaBox || !checkbox || !spinner || !checkmark || !captchaWrapper || !submitButton) {
+          warn('Captcha: Missing required elements in form');
+          return;
+        }
+
+        let captchaVerified = false;
+        
+        // Captcha click handler
+        captchaBox.addEventListener('click', function(e) {
+          if (captchaVerified) return;
+          
+          // Disable further clicks
+          this.style.pointerEvents = 'none';
+          
+          // Show checking state
+          checkbox.classList.add('checking');
+          spinner.classList.add('show');
+          
+          // Simulate verification process (1.5-2.5 seconds)
+          const verificationTime = 1500 + Math.random() * 1000;
+          
+          setTimeout(() => {
+            // Hide spinner
+            spinner.classList.remove('show');
+            
+            // Show success state
+            checkbox.classList.remove('checking');
+            checkbox.classList.add('verified');
+            checkmark.classList.add('show');
+            
+            captchaVerified = true;
+            
+            // After a short delay, fade out captcha and show button
+            setTimeout(() => {
+              captchaWrapper.classList.add('captcha-fade-out');
+              
+              setTimeout(() => {
+                captchaWrapper.style.display = 'none';
+                submitButton.style.display = 'inline-flex';
+                submitButton.classList.remove('hidden');
+                submitButton.classList.add('button-enter');
+              }, 400);
+            }, 800);
+          }, verificationTime);
+        }, { passive: true });
+      });
+
+      log(`Captcha initialized (${forms.length} forms)`);
+    }, "Captcha");
   }
 };
 
@@ -621,6 +694,16 @@ const initDeferred = () => {
           return error("Invalid map JSON", e);
         }
 
+        // Detect if we're on a category page by checking the URL path
+        const currentPath = window.location.pathname;
+        const categoryPageMatch = currentPath.match(
+          /^\/categories\/([^\/]+)\/?$/
+        );
+        const isCategoryPage = !!categoryPageMatch;
+        const currentCategory = categoryPageMatch
+          ? categoryPageMatch[1].toLowerCase()
+          : null;
+
         const normalize = (raw = "") =>
           raw
             .split(",")
@@ -674,6 +757,35 @@ const initDeferred = () => {
           subSelect.classList.remove("opacity-60", "cursor-not-allowed");
         };
 
+        // Initialize category select based on URL
+        const initializeCategorySelect = () => {
+          if (isCategoryPage && currentCategory) {
+            // Find the matching option
+            const currentOption = Array.from(catSelect.options).find(
+              (opt) => opt.value.toLowerCase() === currentCategory
+            );
+
+            if (currentOption) {
+              catSelect.innerHTML = "";
+
+              // Add "all" option first
+              const allOption = document.createElement("option");
+              allOption.value = "all";
+              allOption.textContent = "TUTTE";
+              catSelect.appendChild(allOption);
+
+              // Add current category option
+              catSelect.appendChild(currentOption);
+
+              // Set current category as selected
+              catSelect.value = currentCategory;
+
+              // Populate subcategories immediately
+              populateSubcategories(currentCategory);
+            }
+          }
+        };
+
         catSelect.addEventListener("change", () => {
           const value = catSelect.value.toLowerCase();
           if (value === "all") {
@@ -687,16 +799,27 @@ const initDeferred = () => {
         });
 
         subSelect.addEventListener("change", applyFilters);
+
         clearButtons.forEach((btn) =>
           btn.addEventListener("click", () => {
-            catSelect.value = "all";
-            subSelect.disabled = true;
-            subSelect.innerHTML = `<option>SELEZIONA CATEGORIA</option>`;
-            subSelect.classList.add("opacity-60", "cursor-not-allowed");
+            if (isCategoryPage && currentCategory) {
+              // On category page: reset to current category
+              catSelect.value = currentCategory;
+              populateSubcategories(currentCategory);
+              subSelect.value = "all";
+            } else {
+              // On other pages: reset to "all"
+              catSelect.value = "all";
+              subSelect.disabled = true;
+              subSelect.innerHTML = `<option>SELEZIONA CATEGORIA</option>`;
+              subSelect.classList.add("opacity-60", "cursor-not-allowed");
+            }
             applyFilters();
           })
         );
 
+        // Initialize and apply filters
+        initializeCategorySelect();
         applyFilters();
         log("Filters initialized");
       }, "Filters"),
@@ -929,7 +1052,6 @@ const initDeferred = () => {
           item.toggle.addEventListener("click", () => {
             const isExpanded =
               item.toggle.getAttribute("aria-expanded") === "true";
-
             // Close all other FAQs (accordion behavior)
             faqItems.forEach((otherItem, otherIndex) => {
               if (
@@ -939,7 +1061,6 @@ const initDeferred = () => {
                 closeFAQ(otherItem);
               }
             });
-
             // Toggle current FAQ
             if (isExpanded) {
               closeFAQ(item);
@@ -948,7 +1069,6 @@ const initDeferred = () => {
             }
           });
         });
-
         log(`FAQ accordion initialized (${faqItems.length} items)`);
       }, "FAQ"),
     1400
@@ -956,7 +1076,7 @@ const initDeferred = () => {
 };
 
 /* ===========================
-  INITIALIZATION SEQUENCE
+INITIALIZATION SEQUENCE
 =========================== */
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {

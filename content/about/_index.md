@@ -1,6 +1,6 @@
 ---
 title: Chi siamo
-image: /images/about.jpg
+image: /images/about-edit.png
 content:
   enable: true
   title: CHI È HACKITA.

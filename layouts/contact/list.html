@@ -16,7 +16,7 @@
             name="query" 
             data-netlify="true" 
             netlify-honeypot="bot-field" 
-            data-netlify-recaptcha="true"
+            data-captcha-form
             class="lg:p-5 rounded-md lg:border border-primary flex flex-col gap-5">
                 <!-- Netlify hidden inputs -->
                 <p class="hidden">
@@ -28,30 +28,49 @@
 
                 <!-- ORG name input -->
                 {{ partial "components/input.html" (dict 
-                    "for" "orgnization name" 
+                    "for" "nome dell'organizzazione" 
                     "type" "text"
                 ) }}
 
                 <!-- ORG email input -->
                 {{ partial "components/input.html" (dict 
-                    "for" "orgnization email" 
+                    "for" "e-mail dell'organizzazione" 
                     "type" "email"
                 ) }}
 
                 <!-- Additional message textarea -->
                 {{ partial "components/input.html" (dict 
-                    "for" "additional message" 
+                    "for" "messaggio aggiuntivo" 
                     "type" "textarea"
                 ) }}
 
-                <!-- Netlify reCAPTCHA -->
-                <div data-netlify-recaptcha="true"></div>
+                <!-- Captcha Container -->
+                <div class="captcha-wrapper flex">
+                <div class="captcha-container">
+                    <div class="checkbox-wrapper">
+                    <div class="spinner"></div>
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    </div>
+                    <span class="captcha-text">Non sono un robot</span>
+                    <div class="captcha-logo">
+                    <svg class="captcha-logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="#555" stroke-width="2"/>
+                        <path d="M9 12L11 14L15 10" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Verifica</span>
+                    </div>
+                </div>
+                </div>
 
                 <!-- Submit button -->
                 {{ partial "components/button.html" (dict 
                     "type" "submit" 
                     "size" "full" 
                     "label" "Submit"
+                    "class" "submit-btn"
+                    "style" "display: none;"
                 ) }}
         </form>
     </section>

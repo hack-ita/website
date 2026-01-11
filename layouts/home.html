@@ -349,7 +349,7 @@
             {{ .Title }}
           </h3>
           <p class="text-dark dark:text-light text-balance">
-            {{ .Description }}
+            {{ .Description | safeHTML }}
           </p>
           <div>
             {{ partial "components/button.html" (dict "link" "true" "label" "Richiedi informazioni" "url" (printf "/services/#%s" (.Title | anchorize))) }}

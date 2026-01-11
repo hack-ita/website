@@ -5,7 +5,7 @@
 {{ if eq .link  "true" }}
 <a href="{{ .url }}"
    role="button"
-   aria-label="{{ .label }}"
+   aria-label="{{ .label }}" {{ with .style }}style="{{ . }}"{{ end }}
    class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border {{ if $secondary }}border-secondary{{ else }}border-primary{{ end }} {{ if $light }}bg-dark dark:bg-light{{ else }}bg-light dark:bg-dark{{ end }} transition duration-500 font-medium {{ if $fullBtn }}w-full{{ end }} {{ .class }}">
    
    <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 {{ if $secondary }}text-secondary{{ else }}text-primary{{ end }} font-bold transition duration-500 group-hover:-translate-y-[150%]">
@@ -19,7 +19,7 @@
 </a>
 {{ else }}
 <button {{ if eq .type "submit" }}type="submit"{{ else }}type="button"{{ end }}
-   aria-label="{{ .label }}"
+   aria-label="{{ .label }}" {{ with .style }}style="{{ . | safeCSS }}"{{ end }}
    class="group uppercase cursor-pointer relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border {{ if $secondary }}border-secondary{{ else }}border-primary{{ end }} {{ if $light }}bg-dark dark:bg-light{{ else }}bg-light dark:bg-dark{{ end }} transition duration-500 font-medium {{ if $fullBtn }}w-full{{ end }} {{ .class }}">
    
    <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 {{ if $secondary }}text-secondary{{ else }}text-primary{{ end }} font-bold transition duration-500 group-hover:-translate-y-[150%]">

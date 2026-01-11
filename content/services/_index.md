@@ -1,6 +1,6 @@
 ---
 title: Servizi
-image: /images/services.jpeg
+image: /images/servizi-edit.png
 content:
   enable: true
   title: I NOSTRI SERVIZI DI ETICHAL HACKING

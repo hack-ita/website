@@ -6,6 +6,16 @@
 ===================================== */}}
 
 {{ $site := .Site }}
+{{ $currentCategory := "" }}
+{{ $isCategoryPage := false }}
+
+{{/* Detect if we're on a category taxonomy page */}}
+{{ if eq .Kind "taxonomy" }}
+  {{ if eq .Type "categories" }}
+    {{ $isCategoryPage = true }}
+    {{ $currentCategory = .Title | urlize }}
+  {{ end }}
+{{ end }}
 
 <div class="flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-center mb-10">
   <h4 class="heading-sm text-dark dark:text-light">Filtri</h4>
@@ -22,6 +32,8 @@
       </label>
       <select
         id="filter-category"
+        data-current-category="{{ $currentCategory }}"
+        data-is-category-page="{{ $isCategoryPage }}"
         class="taxonomy-select min-w-40 rounded-md border border-primary
                bg-white dark:bg-accent
                py-2 text-sm uppercase

@@ -3,13 +3,13 @@ main:
     pageRef: /
     weight: 10
   - name: Articoli
-    pageRef: /blog/
+    pageRef: /articoli/
     weight: 20
   - name: Categorie
     pageRef: /categories/
     weight: 30
   - name: Servizi
-    pageRef: /services/
+    pageRef: /servizi/
     weight: 40
   - name: About
     pageRef: /about/
@@ -21,15 +21,15 @@ footer:
   - name: About
     pageRef: /about/
     weight: 50
-  - name: Services
-    pageRef: /services/
+  - name: Servizi
+    pageRef: /servizi/
     weight: 40
-  - name: Blog
-    pageRef: /blog/
+  - name: Articoli
+    pageRef: /articoli/
     weight: 20
-  - name: Categories
+  - name: Categorie
     pageRef: /categories/
     weight: 30
-  - name: Support
-    pageRef: /support/
+  - name: Supporto
+    pageRef: /supporto/
     weight: 60

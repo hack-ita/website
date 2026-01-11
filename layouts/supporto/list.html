@@ -141,7 +141,7 @@
         <!-- Roadmap -->
         <li>
           <article class="h-full rounded-md p-3 lg:p-5 bg-light border-2 border-dark flex flex-col gap-5">
-            {{ with where .Site.RegularPages "Section" "blog" }}
+            {{ with where .Site.RegularPages "Section" "articoli" }}
             <h3 class="text-primary hero-heading">{{ . | len }}+</h3>
             {{ end }}
             <p class="text-dark uppercase">Articoli in roadmap</p>

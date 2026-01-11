@@ -4,7 +4,7 @@ const Blog: Collection = {
   name: "blog",
   label: "Blog Posts",
 
-  path: "content/blog",
+  path: "content/articoli",
   format: "md",
 
   match: {

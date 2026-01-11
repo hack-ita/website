@@ -22,7 +22,7 @@
       <!-- Swiper Wrapper -->
       <div class="swiper articleSwiper">
         <div class="swiper-wrapper">
-          {{ range where .Site.RegularPages "Section" "blog" | first 6 }}
+          {{ range where .Site.RegularPages "Section" "articoli" | first 6 }}
           <div class="swiper-slide">
             <a href="{{ .RelPermalink }}" class="block">
               <article class="flex flex-col items-stretch group h-full">
@@ -63,7 +63,7 @@
 
     <!-- Explore All Button -->
     <div class="flex justify-center items-stretch">
-      {{ partial "components/button.html" (dict "label" "Explore All" "link" "true" "url" "/blog/") }}
+      {{ partial "components/button.html" (dict "label" "Explore All" "link" "true" "url" "/articoli/") }}
     </div>
   </div>
 </section>

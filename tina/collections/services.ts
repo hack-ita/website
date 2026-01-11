@@ -4,7 +4,7 @@ const Services: Collection = {
   name: "services",
   label: "Service Pages",
 
-  path: "content/services",
+  path: "content/servizi",
   format: "md",
 
   match: {

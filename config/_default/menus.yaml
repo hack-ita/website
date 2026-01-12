@@ -6,7 +6,7 @@ main:
     pageRef: /articoli/
     weight: 20
   - name: Categorie
-    pageRef: /categories/
+    url: /categorie/
     weight: 30
   - name: Servizi
     pageRef: /servizi/
@@ -28,7 +28,7 @@ footer:
     pageRef: /articoli/
     weight: 20
   - name: Categorie
-    pageRef: /categories/
+    url: /categorie/
     weight: 30
   - name: Supporto
     pageRef: /supporto/

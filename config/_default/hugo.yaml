@@ -3,3 +3,6 @@ languageCode: it-IT
 title: HackIta
 enableRobotsTXT: true
 enableEmoji: true
+
+sitemap:
+  disable: true

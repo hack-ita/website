@@ -1,5 +1,8 @@
 ---
 title: Home
+sitemap:
+  disable: false
+  priority: 1
 about:
   enable: true
   image: /images/hackita-hero.webp

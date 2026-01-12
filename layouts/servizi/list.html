@@ -109,7 +109,7 @@
       </header>
 
       <figure class="lg:w-6/12">
-        {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "w-full h-80 object-cover object-top rounded-md") }}
+        {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "w-full h-80 object-contain object-end lg:object-cover lg:object-top rounded-md") }}
       </figure>
 
     </article>

@@ -1,5 +1,8 @@
 ---
 title: Servizi
+sitemap:
+  disable: false
+  priority: 4
 image: /images/servizi-edit.png
 content:
   enable: true

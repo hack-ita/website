@@ -5,7 +5,7 @@ header:
   cta:
     enable: true
     label: Contattami
-    link: "/contact/"
+    link: "/contatto/"
 
 footer:
   logo: "/images/logo.webp"

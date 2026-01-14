@@ -1,5 +1,6 @@
 ---
 title: Windows
+url: "categorie/windows"
 weight: 30
 description: Abusi di servizi, registry, token, scheduled tasks e prime nozioni di Active Directory per muoverti in ambienti enterprise.
 image: "/images/windows-new.png"

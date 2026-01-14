@@ -68,6 +68,7 @@
   scrollbar-width: thin;
 }
 
+
 /* ===========================
    TYPOGRAPHY
 =========================== */
@@ -501,7 +502,8 @@ pre:has(> code) {
 }
 
 .hn-input-search::placeholder {
-  @apply text-dark/50 dark:text-light/20;
+  @apply text-primary/50;
+
 }
 
 /* ===========================

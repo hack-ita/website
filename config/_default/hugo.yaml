@@ -4,5 +4,4 @@ title: HackIta
 enableRobotsTXT: true
 enableEmoji: true
 
-sitemap:
-  disable: true
+enableGitInfo: true

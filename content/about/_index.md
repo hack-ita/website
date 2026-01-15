@@ -2,7 +2,6 @@
 title: Chi siamo
 sitemap:
   disable: false
-  priority: 5
 image: /images/about-edit.png
 content:
   enable: true

@@ -8,6 +8,8 @@ categories:
   - linux
 subcategories:
   - low
+tags: 
+  - "Servizi comuni"
 ---
 
 test is test, but tomorrow

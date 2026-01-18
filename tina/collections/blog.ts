@@ -62,6 +62,7 @@ const Blog: Collection = {
       type: "string",
       name: "categories",
       label: "Categories",
+      required: true,
       list: true,
       ui: {
         component: "select",
@@ -81,6 +82,7 @@ const Blog: Collection = {
       type: "string",
       name: "subcategories",
       label: "Sub Category",
+      required: true,
       list: true,
       ui: {
         component: "select",
@@ -119,6 +121,7 @@ const Blog: Collection = {
       name: "tags",
       label: "Tags",
       list: true,
+      required: true,
     },
 
     {

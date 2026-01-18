@@ -1,5 +1,6 @@
 baseURL: 'https://hackita.it'
-languageCode: it-IT
+languageCode: it
+defaultContentLanguage: it
 title: HackIta
 enableRobotsTXT: true
 enableEmoji: true

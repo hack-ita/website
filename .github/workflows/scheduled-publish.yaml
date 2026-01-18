@@ -25,7 +25,7 @@ jobs:
 
       - name: Publish scheduled posts
         run: |
-          node .github/scripts/scheduled-publish.js
+          node .github/scripts/schedule.js
 
       - name: Commit and push changes
         run: |

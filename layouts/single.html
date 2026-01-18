@@ -32,7 +32,7 @@
         <!-- Meta Information -->
         <ul data-pagefind-ignore="" class="flex flex-wrap gap-5 items-stretch pb-5">
           {{ with .PublishDate }}
-          <li class="py-1 px-3 text-dark dark:text-light border border-dark dark:border-light rounded-full text-sm uppercase">Pubblicato il {{ . }}</li>
+          <li class="py-1 px-3 text-dark dark:text-light border border-dark dark:border-light rounded-full text-sm uppercase">Pubblicato il {{ . | time.Format "2006-01-02"}}</li>
           {{ end }}
           {{ $readingTime := div (float .WordCount) 170 }}
           {{ $readingTime = math.Ceil $readingTime }}

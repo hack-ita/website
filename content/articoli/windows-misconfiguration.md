@@ -2,6 +2,7 @@
 title: Abusing Windows service misconfigurations
 description: Real patterns you will actually see in labs and internal assessments.
 image: /images/windows-new.png
+date: 2025-12-20
 categories: 
   - windows
 subcategories: 

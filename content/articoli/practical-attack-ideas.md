@@ -2,6 +2,7 @@
 title: "Ports 0�100: practical attack ideas"
 description: "SSH, RDP, SMB, HTTP: what to try first when time matters."
 image: "/images/networking-new.png"
+date: 2025-12-20
 categories: 
     - networking
 subcategories: 

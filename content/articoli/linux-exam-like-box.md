@@ -2,6 +2,7 @@
 title: "Full writeup of a Linux exam-like box"
 description: Enumeration, exploitation and privesc with reusable notes.
 image: "/images/walkthrough-new.png"
+date: 2025-12-20
 categories: 
     - walkthroughs
 subcategories: 

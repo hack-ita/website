@@ -2,6 +2,7 @@
 title: Local File Inclusion From Zero To Shell
 description: Learn the exact steps to turn a boring file read into full RCE using logs and filters.
 image: "/images/web-hacking-new.png"
+date: 2025-12-20
 featured: true
 categories: 
     - web-hacking

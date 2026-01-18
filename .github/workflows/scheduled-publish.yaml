@@ -25,7 +25,6 @@ jobs:
         uses: actions/setup-node@v4 # Updated to v4
         with:
           node-version: "20" # LTS version
-          cache: "npm" # Cache npm dependencies
 
       - name: Install dependencies
         run: npm install gray-matter date-fns date-fns-tz

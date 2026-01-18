@@ -32,6 +32,17 @@ const Blog: Collection = {
       name: "image",
       label: "Featured Image",
     },
+    {
+      type: "datetime",
+      name: "date",
+      label: "Publish Date",
+      required: true,
+    },
+    {
+      type: "datetime",
+      name: "lastmod",
+      label: "Last Updated",
+    },
 
     /* =====================
      * Categories (Dropdown)

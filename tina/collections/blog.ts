@@ -42,21 +42,27 @@ const Blog: Collection = {
       name: "date",
       label: "Publish Date",
       required: true,
+      ui: {
+        dateFormat: "YYYY-MM-DD",
+      },
     },
     {
       type: "datetime",
       name: "lastmod",
       label: "Last Updated",
+      ui: {
+        dateFormat: "YYYY-MM-DD",
+      },
     },
 
     /* =====================
      * Categories (Dropdown)
      * ===================== */
-
     {
       type: "string",
       name: "categories",
-      label: "Category",
+      label: "Categories",
+      list: true,
       ui: {
         component: "select",
       },
@@ -75,6 +81,7 @@ const Blog: Collection = {
       type: "string",
       name: "subcategories",
       label: "Sub Category",
+      list: true,
       ui: {
         component: "select",
       },
@@ -125,13 +132,10 @@ const Blog: Collection = {
      * ===================== */
 
     {
-      type: "string",
-      name: "body",
       label: "Content",
+      name: "body",
       isBody: true,
-      ui: {
-        component: "textarea",
-      },
+      type: "rich-text",
     },
   ],
 };

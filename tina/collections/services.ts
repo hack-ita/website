@@ -38,13 +38,10 @@ const Services: Collection = {
      * ===================== */
 
     {
-      type: "string",
+      label: "Content",
       name: "body",
-      label: "Page Content",
       isBody: true,
-      ui: {
-        component: "textarea",
-      },
+      type: "rich-text",
     },
   ],
 };

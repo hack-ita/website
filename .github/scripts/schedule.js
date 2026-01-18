@@ -35,11 +35,11 @@ const todayItaly = startOfDay(
 );
 
 console.log("=".repeat(60));
-console.log("📅 SCHEDULED POST PUBLISHER");
+console.log("SCHEDULED POST PUBLISHER");
 console.log("=".repeat(60));
-console.log(`⏰ Current time (Italy): ${italyNow}`);
+console.log(`Current time (Italy): ${italyNow}`);
 console.log(
-  `📆 Publishing posts scheduled for: ${formatInTimeZone(
+  `Publishing posts scheduled for: ${formatInTimeZone(
     todayItaly,
     ITALY_TZ,
     "yyyy-MM-dd",
@@ -50,11 +50,11 @@ console.log("=".repeat(60));
 const files = getMarkdownFiles(postsDir);
 
 if (files.length === 0) {
-  console.log("⚠️  No markdown files found in", postsDir);
+  console.log("No markdown files found in", postsDir);
   process.exit(0);
 }
 
-console.log(`📝 Found ${files.length} markdown file(s) to check\n`);
+console.log(`Found ${files.length} markdown file(s) to check\n`);
 
 let publishedCount = 0;
 let skippedCount = 0;
@@ -72,7 +72,7 @@ files.forEach((file) => {
     }
 
     if (!parsed.data.date) {
-      console.log(`⚠️  ${fileName}: No date field found, skipping`);
+      console.log(`${fileName}: No date field found, skipping`);
       skippedCount++;
       return;
     }
@@ -85,7 +85,7 @@ files.forEach((file) => {
       postDate = parsed.data.date;
     } else {
       console.log(
-        `❌ ${fileName}: Invalid date format (${typeof parsed.data.date})`,
+        `${fileName}: Invalid date format (${typeof parsed.data.date})`,
       );
       errorCount++;
       return;
@@ -93,7 +93,7 @@ files.forEach((file) => {
 
     // Validate parsed date
     if (isNaN(postDate.getTime())) {
-      console.log(`❌ ${fileName}: Could not parse date "${parsed.data.date}"`);
+      console.log(`${fileName}: Could not parse date "${parsed.data.date}"`);
       errorCount++;
       return;
     }
@@ -107,38 +107,38 @@ files.forEach((file) => {
       fs.writeFileSync(file, newContent);
 
       const scheduledDate = formatInTimeZone(postDate, ITALY_TZ, "yyyy-MM-dd");
-      console.log(`✅ PUBLISHED: ${fileName}`);
-      console.log(`   📅 Scheduled for: ${scheduledDate}`);
+      console.log(`PUBLISHED: ${fileName}`);
+      console.log(`Scheduled for: ${scheduledDate}`);
       publishedCount++;
     } else {
       const scheduledDate = formatInTimeZone(postDate, ITALY_TZ, "yyyy-MM-dd");
       console.log(
-        `⏳ ${fileName}: Still scheduled for future (${scheduledDate})`,
+        `${fileName}: Still scheduled for future (${scheduledDate})`,
       );
       skippedCount++;
     }
   } catch (error) {
-    console.error(`❌ Error processing ${path.basename(file)}:`, error.message);
+    console.error(`Error processing ${path.basename(file)}:`, error.message);
     errorCount++;
   }
 });
 
 // Summary
 console.log("\n" + "=".repeat(60));
-console.log("📊 SUMMARY");
+console.log("SUMMARY");
 console.log("=".repeat(60));
-console.log(`✅ Published: ${publishedCount}`);
-console.log(`⏳ Skipped (future): ${skippedCount}`);
-console.log(`❌ Errors: ${errorCount}`);
+console.log(`Published: ${publishedCount}`);
+console.log(`Skipped (future): ${skippedCount}`);
+console.log(`Errors: ${errorCount}`);
 console.log("=".repeat(60));
 
 if (publishedCount === 0 && errorCount === 0) {
-  console.log("\n✨ All good! No posts ready to publish today.");
+  console.log("All good! No posts ready to publish today.");
   process.exit(0);
 } else if (errorCount > 0) {
-  console.log("\n⚠️  Completed with errors. Please review the output above.");
+  console.log("Completed with errors. Please review the output above.");
   process.exit(0); // Don't fail the workflow, just warn
 } else {
-  console.log(`\n🎉 Successfully published ${publishedCount} post(s)!`);
+  console.log(`Successfully published ${publishedCount} post(s)!`);
   process.exit(0);
 }

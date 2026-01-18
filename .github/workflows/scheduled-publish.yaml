@@ -50,7 +50,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content/
-          git commit -m "🤖 Publish scheduled posts [skip ci]
+          git commit -m "GitHub Bot: Publish scheduled posts
           
           Published on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
           git push
@@ -62,18 +62,18 @@ jobs:
             curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOK }}
             echo "✓ Netlify build triggered"
           else
-            echo "⚠️  NETLIFY_BUILD_HOOK not configured, relying on auto-deploy"
+            echo "NETLIFY_BUILD_HOOK not configured, relying on auto-deploy"
           fi
 
       - name: Workflow summary
         if: always()
         run: |
-          echo "## 📅 Scheduled Publish Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Scheduled Publish Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
-            echo "✅ **Posts published and pushed to repository**" >> $GITHUB_STEP_SUMMARY
+            echo "**Posts published and pushed to repository**" >> $GITHUB_STEP_SUMMARY
           else
-            echo "ℹ️ **No posts were ready to publish**" >> $GITHUB_STEP_SUMMARY
+            echo "**No posts were ready to publish**" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Workflow run:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY

@@ -29,10 +29,12 @@ files.forEach((file) => {
   const content = fs.readFileSync(file, "utf8");
   const parsed = matter(content);
 
-  // If draft is true and date <= now, publish it
+  // Ensure postDate is a proper Date object
+  const postDate = new Date(parsed.data.date);
+
   if (parsed.data.draft === true) {
-    const postDate = parseISO(parsed.data.date);
-    if (isBefore(postDate, now) || postDate.getTime() === now.getTime()) {
+    const now = new Date();
+    if (postDate <= now) {
       parsed.data.draft = false;
       const newContent = matter.stringify(parsed.content, parsed.data);
       fs.writeFileSync(file, newContent);

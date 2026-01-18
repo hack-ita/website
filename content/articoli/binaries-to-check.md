@@ -2,6 +2,7 @@
 title: SUID binaries you must always check
 description: Quick wins and manual checks to pop root in typical OSCP boxes.
 image: "/images/linux-new.png"
+draft: false
 date: 2025-12-20
 lastmod: 2026-01-18
 categories: 

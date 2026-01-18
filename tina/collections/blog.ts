@@ -33,6 +33,11 @@ const Blog: Collection = {
       label: "Featured Image",
     },
     {
+      type: "boolean",
+      name: "draft",
+      label: "Draft",
+    },
+    {
       type: "datetime",
       name: "date",
       label: "Publish Date",

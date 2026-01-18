@@ -1,0 +1,38 @@
+name: Scheduled Publish
+
+# Cron schedule: daily at 12:00 AM Italy time (CET)
+on:
+  schedule:
+    - cron: "0 23 * * *"  # 23:00 UTC = 00:00 Italy CET
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  publish_posts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js (required for frontmatter parsing)
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          npm install gray-matter date-fns
+
+      - name: Publish scheduled posts
+        run: |
+          node .github/scripts/scheduled-publish.js
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Publish scheduled posts [skip ci]" || echo "No posts to publish"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

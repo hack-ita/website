@@ -2,6 +2,7 @@
 title: Building a recon script you actually use
 description: Glue nmap, httpx and custom logic into one clean workflow.
 image: "/images/tools-new.png"
+draft: false
 date: 2025-12-20
 lastmod: 2026-01-18
 categories: 

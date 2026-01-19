@@ -7,7 +7,7 @@ description: >-
   con Key Log File, profili e color rules, confronto con tcpdump/tshark e
   playbook operativo per trovare la pista giusta in pochi minuti.
 image: /WIRESHARK.webp
-draft: true
+draft: false
 date: 2026-01-20T00:00:00.000Z
 categories:
   - tools

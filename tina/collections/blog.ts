@@ -75,6 +75,7 @@ const Blog: Collection = {
         { label: "Tools", value: "tools" },
         { label: "Web Hacking", value: "web-hacking" },
         { label: "Windows", value: "windows" },
+        { label: "Walkthroughs", value: "walkthroughs" },
       ],
     },
 

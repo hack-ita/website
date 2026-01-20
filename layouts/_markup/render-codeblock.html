@@ -1,0 +1,14 @@
+{{ $result := transform.HighlightCodeBlock . }}
+
+<div class="shadow-xl border border-primary h-fit rounded-md">
+    <div 
+        class="w-full rounded-t-md py-3 px-[0.8571429em] header-glass flex justify-between items-center">
+        <div class="flex gap-x-2">
+            <span class="size-3 bg-red-500 rounded-full"></span>
+            <span class="size-3 bg-yellow-500 rounded-full"></span>
+            <span class="size-3 bg-green-500 rounded-full"></span>
+        </div>
+        <span class="uppercase text-sm">{{ .Type | default "text" }}</span>
+    </div>
+  {{ $result.Wrapped | safeHTML }}
+</div>

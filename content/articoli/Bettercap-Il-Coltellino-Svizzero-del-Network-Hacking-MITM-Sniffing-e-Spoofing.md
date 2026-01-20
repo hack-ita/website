@@ -7,7 +7,7 @@ description: >-
   sniffing e spoofing. Scopri come usarlo da terminale per dominare le reti in
   modo rapido ed efficace.
 image: /BETTERCAP.webp
-draft: true
+draft: false
 date: 2026-01-21T00:00:00.000Z
 categories:
   - tools

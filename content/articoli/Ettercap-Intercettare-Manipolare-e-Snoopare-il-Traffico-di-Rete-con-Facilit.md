@@ -7,7 +7,7 @@ description: >-
   manipolazione del traffico di rete. Una guida tecnica chiara pensata per chi
   esplora le basi dell'hacking etico e dell'analisi delle comunicazioni.
 image: /ettercap.webp
-draft: true
+draft: false
 date: 2026-01-21T00:00:00.000Z
 categories:
   - tools

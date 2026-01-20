@@ -5,7 +5,7 @@ description: >-
   riga di comando. Una guida tecnica accessibile, ideale per chi vuole esplorare
   il lato oscuro del traffico dati.
 image: /TSHARK.webp
-draft: true
+draft: false
 date: 2026-01-21T00:00:00.000Z
 categories:
   - tools

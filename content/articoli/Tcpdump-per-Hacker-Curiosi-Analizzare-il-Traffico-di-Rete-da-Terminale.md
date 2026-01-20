@@ -5,7 +5,7 @@ description: >-
   terminale. Una guida semplice e pratica pensata per hacker etici, curiosi e
   aspiranti professionisti della cybersecurity.
 image: /tcpdump.webp
-draft: true
+draft: false
 date: 2026-01-21T00:00:00.000Z
 categories:
   - tools

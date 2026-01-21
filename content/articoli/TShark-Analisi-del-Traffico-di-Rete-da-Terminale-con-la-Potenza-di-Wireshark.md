@@ -1,9 +1,8 @@
 ---
-title: 'TShark: Analisi del Traffico di Rete da Terminale con la Potenza di Wireshark'
-description: >-
-  Impara a usare TShark da terminale come un senior pentester. Guida pratica per
-  catturare, filtrare e analizzare traffico di rete in lab come HTB. Comandi
-  reali, filtri avanzati e playbook per estrarre credenziali e indizi da PCAP.
+title: 'TShark: Analizzare il Traffico di Rete da Terminale'
+description: >
+  Usa TShark da terminale come Wireshark CLI. Cattura, filtra e analizza
+  traffico di rete in lab di pentesting con comandi reali e filtri avanzati.
 image: /TSHARK.webp
 draft: false
 date: 2026-01-21T00:00:00.000Z
@@ -19,6 +18,7 @@ tags:
 URL CONSIGLIATO: /tshark-analisi-traffico-rete-da-terminale-wireshark/
 TITLE SEO: TShark: Sniffare e Analizzare il Traffico da Terminale Come un Pro
 META DESCRIPTION: Usa TShark da linea di comando come Wireshark in terminale. Cattura, filtra e analizza traffico di rete in lab di pentesting con comandi pratici e filtri avanzati.
+-->
 
 <script type="application/ld+json">
 {
@@ -31,9 +31,8 @@ META DESCRIPTION: Usa TShark da linea di comando come Wireshark in terminale. Ca
   "about": "tshark, wireshark, analisi traffico, pcap, filtri bpf, sniffing, ethical hacking, kali linux"
 }
 </script>
--->
 
-# TShark: Analisi del Traffico di Rete da Terminale con la Potenza di Wireshark
+# TShark: Analisi del Traffico di Rete da Terminale
 
 TShark è la versione a riga di comando di Wireshark. È lo strumento che usi quando lavori su server remoti senza interfaccia grafica, o quando vuoi automatizzare l'analisi di tracce di rete in un lab di pentesting. In questa guida, imparerai a usarlo per catturare e filtrare traffico in ambienti controllati come HackTheBox o macchine virtuali, trasformando flussi di pacchetti in indizi utilizzabili.
 

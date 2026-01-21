@@ -8,7 +8,7 @@ description: >-
   intercettare credenziali e rubare hash NTLM in modo silenzioso e mirato.
   Ideale per red team e test interni.
 image: /INVEIGH.webp
-draft: true
+draft: false
 date: 2026-01-22T00:00:00.000Z
 categories:
   - tools

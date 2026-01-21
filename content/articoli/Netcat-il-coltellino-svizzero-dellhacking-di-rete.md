@@ -4,7 +4,7 @@ description: >-
   Scopri come usare Netcat per exploit, backdoor e port scanning. Guida tecnica
   per red teamer e hacker etici. Comandi reali ed esempi pratici.
 image: /netcat.webp
-draft: true
+draft: false
 date: 2026-01-22T00:00:00.000Z
 categories:
   - tools

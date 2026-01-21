@@ -4,7 +4,7 @@ description: >-
   Telnet è ancora usato in ambienti legacy. Scopri come sfruttarlo per attacchi
   reali, accessi remoti e test su vecchi sistemi. Comandi e scenari pratici.
 image: /telnet.webp
-draft: true
+draft: false
 date: 2026-01-22T00:00:00.000Z
 categories:
   - networking

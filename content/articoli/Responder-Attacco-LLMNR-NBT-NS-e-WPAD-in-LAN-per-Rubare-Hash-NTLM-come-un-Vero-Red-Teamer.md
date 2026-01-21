@@ -8,7 +8,7 @@ description: >-
   completa e realistica per chi fa pentesting interno o vuole capire davvero
   come funzionano gli attacchi alle LAN Windows.
 image: /responder.webp
-draft: true
+draft: false
 date: 2026-01-22T00:00:00.000Z
 categories:
   - tools

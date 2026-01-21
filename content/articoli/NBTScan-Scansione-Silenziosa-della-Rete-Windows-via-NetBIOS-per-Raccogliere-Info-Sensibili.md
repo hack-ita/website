@@ -8,7 +8,7 @@ description: >-
   e sessioni aperte in modo silenzioso e mirato. Ecco come sfruttarlo per
   mappare la rete come un vero red teamer.
 image: /ntbscan.webp
-draft: true
+draft: false
 date: 2026-01-22T00:00:00.000Z
 lastmod: 2026-01-22T00:00:00.000Z
 categories:

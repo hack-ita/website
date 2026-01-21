@@ -54,15 +54,20 @@ jobs:
           
           Published on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
           git push
+          
+          # Give Git/TinaCMS a moment to fully sync before Netlify builds
+          echo "⏳ Waiting 30 seconds for changes to propagate..."
+          sleep 10
 
-      - name: Trigger Netlify build
+      - name: Trigger Netlify build with cache clear
         if: steps.check_changes.outputs.changes == 'true'
         run: |
           if [ -n "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
-            curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOK }}
-            echo "✓ Netlify build triggered"
+            curl -X POST -d '{"clear_cache": true}' ${{ secrets.NETLIFY_BUILD_HOOK }}
+            echo "✓ Netlify build triggered with cache cleared"
           else
-            echo "NETLIFY_BUILD_HOOK not configured, relying on auto-deploy"
+            echo "⚠️  NETLIFY_BUILD_HOOK not configured"
+            echo "⚠️  You may need to manually clear cache if posts don't appear"
           fi
 
       - name: Workflow summary
@@ -71,9 +76,9 @@ jobs:
           echo "## Scheduled Publish Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
-            echo "**Posts published and pushed to repository**" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Posts published and pushed to repository**" >> $GITHUB_STEP_SUMMARY
           else
-            echo "**No posts were ready to publish**" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ **No posts were ready to publish**" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Workflow run:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY

@@ -82,8 +82,6 @@
   
             {{ range .Pages }}
             {{ $readingTime := math.Ceil (div (float .WordCount) 170) }}
-  
-            <!-- 🔴 CARD (UNCHANGED UI) -->
               {{ $post := . }}
               <article
                 class="post-item rounded-md flex flex-col border border-primary hover:scale-125 transition-transform relative hover:z-10"
@@ -106,18 +104,18 @@
                 </div>
   
                 <figcaption class="bg-glass flex-1 p-3 flex flex-col gap-5 justify-between items-start">
-                  <div class="w-full flex justify-between items-center uppercase">
+                  <div class="w-full flex flex-col sm:flex-row gap-y-5 justify-between items-start sm:items-center uppercase">
                     {{ range first 1 .Params.tags }}
                     <span class="rounded-full border border-primary px-3 py-1 text-primary text-xs">{{ . }}</span>
                     {{ end }}
                     <time class="text-dark dark:text-light text-sm">{{ $readingTime }} Min read</time>
                   </div>
   
-                  <a href="{{ .RelPermalink }}" class="heading-sm text-primary">
+                  <a href="{{ .RelPermalink }}" class="heading-sm text-primary xl:h-25">
                     {{ .Title }}
                   </a>
   
-                  <p class="text-dark dark:text-light text-sm">{{ .Description }}</p>
+                  <p class="text-dark dark:text-light text-sm xl:h-[45%]">{{ .Description | truncate 175 }}</p>
                 </figcaption>
               </figure>
             </article>

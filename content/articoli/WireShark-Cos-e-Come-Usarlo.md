@@ -15,6 +15,7 @@ subcategories:
   - recon
 tags:
   - Wireshark
+featured: true
 ---
 
 # Wireshark: guida pratica per analisi PCAP in lab

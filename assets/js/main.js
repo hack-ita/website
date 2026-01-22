@@ -511,9 +511,24 @@ const initDeferred = () => {
         const sideBar = $(".sideBar");
         if (!toggler || !sideBar) return;
 
+        function openSidebar() {
+          sideBar.classList.remove("translate-x-[100vw]");
+          document.body.classList.add("overflow-hidden");
+        }
+
+        function closeSidebar() {
+          sideBar.classList.add("translate-x-[100vw]");
+          document.body.classList.remove("overflow-hidden");
+        }
+
         toggler.addEventListener("click", () => {
-          sideBar.classList.toggle("translate-x-[100vw]");
+          if (sideBar.classList.contains("translate-x-[100vw]")) {
+            openSidebar();
+          } else {
+            closeSidebar();
+          };
         });
+        sideBar.addEventListener("click", () => closeSidebar() );
         log("Sidebar initialized");
       }, "Sidebar"),
     800

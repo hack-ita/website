@@ -1,5 +1,6 @@
 ---
-title: 'Telnet: sfruttare l''accesso remoto nei sistemi obsoleti'
+title: >-
+    Telnet: sfruttare l''accesso remoto nei sistemi obsoleti
 description: >-
   Telnet è ancora usato in ambienti legacy. Scopri come sfruttarlo per attacchi
   reali, accessi remoti e test su vecchi sistemi. Comandi e scenari pratici.

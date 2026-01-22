@@ -278,6 +278,10 @@ h1, h2 {
   @apply text-primary;
 }
 
+.prose h2 {
+  @apply mt-15 mb-10;
+}
+
 .prose blockquote {
   @apply border-primary;
 }

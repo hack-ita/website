@@ -7,4 +7,19 @@ TZ = "Europe/Oslo"
 
 [build]
 publish = "public"
-command = "npm run build"
+# Force clean build by removing public directory first
+command = "rm -rf public .cache && npm run build"
+
+# This ensures Netlify doesn't cache between builds
+[build.processing]
+  skip_processing = false
+[build.processing.css]
+  bundle = true
+  minify = true
+[build.processing.js]
+  bundle = true
+  minify = true
+[build.processing.html]
+  pretty_urls = true
+[build.processing.images]
+  compress = true

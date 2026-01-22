@@ -6,3 +6,16 @@ enableRobotsTXT: true
 enableEmoji: true
 
 enableGitInfo: true
+
+outputFormats:
+  articolisitemap:
+    baseName: 'sitemap'
+    mediaType: 'application/xml'
+    isPlainText: false
+    notAlternative: true
+
+outputs:
+  section:
+    - html
+    - articolisitemap
+    - rss

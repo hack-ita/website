@@ -19,214 +19,226 @@ tags:
   - mitm
 ---
 
-# Ettercap: guida pratica in lab (sniffing, ARP, difese)
+<!--
+URL CONSIGLIATO: /ettercap-intercettare-manipolare-traffico-rete
+TITLE SEO: Ettercap: Guida Pratica al MITM su Kali Linux (Lab)
+META DESCRIPTION: Impara a usare Ettercap per attacchi MITM in lab sicuri. Setup, filtri custom, sniffing e difese. Trucchi da pentester per CTF e HTB.
+-->
 
-**Ettercap** è una suite “storica” per analisi di rete e scenari **adversary-in-the-middle** su LAN: sniffing, dissezione protocolli, log e filtri.
-In questa guida lo usiamo **in ottica lab/difesa**: capire cosa fa, analizzare traffico in modo safe (anche da file `.pcap`) e soprattutto chiudere le condizioni che rendono possibili MITM come **ARP cache poisoning**.
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Ettercap: Guida Pratica al MITM su Kali Linux (Lab)",
+  "description": "Impara a usare Ettercap per attacchi MITM in lab sicuri. Setup, filtri custom, sniffing e difese. Trucchi da pentester per CTF e HTB.",
+  "author": { "@type": "Organization", "name": "HackIta" },
+  "publisher": { "@type": "Organization", "name": "HackIta" },
+  "about": "ETTERCAP, MITM, ARP Spoofing, Sniffing, Filtri, Kali Linux, Sicurezza di Rete, Ethical Hacking"
+}
+</script>
 
-> Nota secca: qui **non** trovi comandi “pronti” per fare ARP poisoning/MITM su reti reali. In lab, la parte che ti fa crescere davvero è **capire il pattern e difenderlo**.
+# Ettercap: Intercettare, Manipolare e Snoopare il Traffico di Rete
 
-***
+Ettercap è il coltellino svizzero per gli attacchi Man-in-the-Middle (MITM) in ambito di penetration testing. In parole povere, ti permette di metterti in mezzo alla comunicazione tra due dispositivi in una rete locale (come il tuo lab), intercettando, modificando o registrando tutto il traffico che passa. In contesti come HackTheBox, TryHackMe o i tuoi lab virtuali, è uno strumento indispensabile per capire le vulnerabilità di rete, catturare credenziali in chiaro e testare le difese. In questa guida, passiamo dalla teoria all’azione: vedremo come installarlo, lanciare attacchi ARP spoofing, scrivere filtri per manipolare i pacchetti in tempo reale e come difenderti da queste tecniche. Ricorda: tutto solo su macchine di tua proprietà o in ambienti espressamente autorizzati.
 
-## Cos’è Ettercap e quando ti serve davvero
+## Cos’è Ettercap e Perché Usarlo in un Lab?
 
-Ettercap torna utile quando vuoi **trasformare traffico in evidenze**: log, `.pcap`, contesto sui protocolli e una lettura “più umana” di cosa sta succedendo in LAN.
-Se il tuo obiettivo è **web testing puro** (API, cookie, JWT, CORS), in genere Burp/mitmproxy sono più comodi. Se invece stai ragionando di **LAN, ARP, posizionarsi in mezzo** e vuoi fare pratica “di rete”, Ettercap (o alternative moderne) ha senso.
+> **In breve:** Ettercap è un tool suite per attacchi MITM via ARP spoofing, sniffing di rete e iniezione di pacchetti. Nel pentesting, lo usi per analizzare il traffico in un lab, individuando credenziali non cifrate e vulnerabilità di protocollo.
 
-***
+Se stai affrontando una macchina su HackTheBox che ha servizi in chiaro (HTTP, FTP, Telnet), Ettercap può essere la chiave per sniffare password. È molto più leggero e integrato di Wireshark per certi tipi di attacchi attivi. Funziona su più sistemi, ma noi ci concentreremo su Kali Linux, la distro di riferimento. Il suo punto di forza? La capacità di eseguire **ARP poisoning** in modo silenzioso e di applicare **filtri** (scritti in C) che modificano i pacchetti al volo, prima che raggiungano la destinazione.
 
-## Il concetto chiave: ARP e perché su LAN si può fare AiTM
+## Installazione e Configurazione Rapida su Kali Linux
 
-ARP serve a tradurre **IP → MAC** dentro una rete locale. Ogni host mantiene una **ARP cache**, cioè una tabella con associazioni del tipo: “questo IP corrisponde a quel MAC”.
+> **In breve:** Su Kali Linux, Ettercap è preinstallato. Verificalo con `ettercap --version`. Se manca, installalo con `sudo apt update && sudo apt install ettercap-graphical`. La versione GUI (`-G`) è comoda, ma impariamo la CLI per automatizzare.
 
-Se quella tabella viene “sporcata” (cache poisoning), il traffico può finire a passare da un host non previsto. È il cuore degli scenari **Adversary-in-the-Middle** su LAN.
-
-Spiegazione super semplice:
-
-* **IP** = indirizzo “logico” (es. `10.10.10.5`)
-* **MAC** = indirizzo “fisico” della scheda di rete
-* **ARP cache** = tabella locale con “IP ↔ MAC”
-
-Se qualcuno riesce a far associare “IP del gateway → MAC dell’attaccante”, può diventare un “ponte” involontario tra vittima e gateway (e quindi osservare o tentare manipolazioni, a seconda dei casi e delle protezioni).
-
-***
-
-## Installazione su Kali e modalità UI (graphical, curses, text)
-
-Su Kali puoi installare Ettercap in versione GUI o text-only. In lab è utile conoscere anche la modalità terminale, così non dipendi dalla GUI.
-
-Install (GUI):
+Kali di solito lo ha già. Apri un terminale e controlla:
 
 ```bash
-sudo apt update
-sudo apt install ettercap-graphical
+ettercap --version
 ```
 
-Modalità utili (da pratica reale):
-
-* `-T` = text interface
-* `-C` = curses UI (menu in terminale)
-* `-G` = GTK UI
-* `-I` = lista interfacce disponibili
-
-Esempi “safe”:
+Se restituisce la versione (es. `0.8.3`), sei a posto. Altrimenti:
 
 ```bash
-sudo ettercap -I
-sudo ettercap -T
-sudo ettercap -C
+sudo apt update && sudo apt install ettercap-graphical -y
 ```
 
-***
-
-## Uso sicuro #1: analisi OFFLINE da file `.pcap` (super utile in lab)
-
-Il modo più pulito per imparare è lavorare **offline**: dai a Ettercap un file `.pcap` e lui fa dissezione/sniffing **senza toccare la rete**.
-Questo ti allena su protocolli e su dati “in chiaro” (quando presenti), senza dover fare MITM.
-
-Leggere un pcap:
+Per prima cosa, modifica il file di configurazione per evitare warning inutili:
 
 ```bash
-sudo ettercap -T -r capture.pcap
+sudo nano /etc/ettercap/etter.conf
 ```
 
-Versione più “quiet” (meno rumore):
+Trova la sezione `[privs]` e assicurati che ci sia `ec_uid = 0` e `ec_gid = 0`. Poi, cerca `redir_command_on` e `redir_command_off` e decommentali (togli il `#`). Questo ti permetterà di usare il port forwarding se necessario. Salva e esci (`Ctrl+X`, `Y`, `Invio`).
+
+## Anatomia di un Attacco MITM con ARP Spoofing
+
+> **In breve:** L’attacco base avvelena le cache ARP di vittima e gateway, facendo credere a entrambi che il tuo IP sia l’altro. Così, tutto il traffico passa dalla tua macchina.
+
+Il cuore di Ettercap è l’ARP spoofing. In una tipica rete lab (es. `192.168.1.0/24`), la vittima (`192.168.1.10`) comunica con il gateway (`192.168.1.1`). Tu (`192.168.1.100`) dici alla vittima: “Ehi, io sono il gateway”, e al gateway: “Ehi, io sono la vittima”. Risultato: i pacchetti di entrambi passano da te.
+
+**Avvertenza:** Questo funziona solo su reti locali (LAN) e se l’obiettivo non ha difese come ARP inspection statico. Nei lab virtuali (VirtualBox, VMware) assicurati che le schede di rete siano in modalità bridge o NAT network per vedere il traffico reale.
+
+## Comandi da Terminale: Sniffing Passivo e Attivo
+
+> **In breve:** Usa `ettercap -Tq -i eth0` per sniffing passivo in testo. Per un MITM attivo, specifica target con `-M arp:remote /VITTIMA// /GATEWAY//`.
+
+Lo sniffing passivo ascolta solo, senza iniettare traffico. Utile per mappare la rete.
 
 ```bash
-sudo ettercap -Tq -r capture.pcap
+sudo ettercap -Tq -i eth0
 ```
 
-***
+* `-T`: usa l’interfaccia testo (no GUI).
+* `-q`: “quiet”, meno output rumoroso.
+* `-i`: specifica l’interfaccia di rete (sostituisci `eth0` con la tua, trovata con `ip a`).
 
-## Uso sicuro #2: logging e “trasformare pacchetti in evidenze”
-
-Se l’obiettivo è produrre prove (per studio, report, troubleshooting), ragiona sempre così:
-**cattura → log → analisi → conclusione**
-
-Log binari (poi li leggi con gli strumenti di Ettercap, tipo `etterlog`):
+Per l’attacco MITM vero e proprio, il comando classico è:
 
 ```bash
-sudo ettercap -Tq -L labdump -r capture.pcap
+sudo ettercap -T -i eth0 -M arp:remote /192.168.1.10// /192.168.1.1//
 ```
 
-Nota: l’output “serio” spesso lo fai salvando traffico e analizzandolo con strumenti dedicati (Wireshark/tcpdump/tshark), mentre Ettercap qui lo usi per **dissezione e logging**.
+* `-M arp:remote`: avvia il mitm con metodo ARP poisoning (remote).
+* `//` separa IP e porta (se vuoi specificare una porta, es. `/192.168.1.10/80/`).
+  Questo comando inizia l’attacco e mostrerà tutto il traffico intercettato in tempo reale. Per fermarlo, premi `q`.
 
-***
+**Problema comune:** Non vedi traffico? Controlla il firewall di Kali: `sudo systemctl stop firewalld`. Assicurati anche che l’IP forwarding sia abilitato: `echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward`.
 
-## Ettercap vs Bettercap vs Wireshark/mitmproxy (scelta rapida)
+## Scrivere e Usare Filtri Custom per Manipolare il Traffico
 
-Regola pratica da lab:
+> **In breve:** I filtri Ettercap sono piccoli programmi in C che modificano i pacchetti. Li compili con `etterfilter` e li carichi durante l’attacco con `-F file.ef`.
 
-* Devi ragionare su **LAN / ARP / AiTM** e vuoi log “di rete” → Ettercap / Bettercap (focus difensivo)
-* Devi analizzare **pacchetti** in profondità e ricostruire conversazioni → Wireshark
-* Devi lavorare su **HTTP(S) applicativo** (cookie, header, request/response) → mitmproxy / Burp
+Questo è dove Ettercap spacca. Immagina di voler sostituire ogni occorrenza della parola “password” con “HACKED” in una richiesta HTTP. Crei un file `filter.ex`:
 
-In breve: Ettercap non sostituisce Wireshark e non sostituisce Burp. È uno strumento diverso, utile quando il problema è “di LAN”.
+```c
+if (ip.proto == TCP && tcp.dst == 80) {
+    if (search(DATA.data, "password")) {
+        replace("password", "HACKED");
+        msg("Filtro HTTP triggered!\n");
+    }
+}
+```
 
-***
-
-## Mini-playbook operativo (difesa): scoprire e bloccare ARP poisoning
-
-Obiettivo: anche se qualcuno prova a “mettersi in mezzo”, la rete **lo blocca** oppure l’attacco diventa **inutile**.
-
-### Step 1 — Cerca segnali (anomalie ARP)
-
-Indicatori tipici:
-
-* ARP reply **non richiesti**
-* cambi frequenti nelle associazioni IP↔MAC
-* pattern sospetti tipo “molti IP → stesso MAC”
-
-Comandi rapidi (Linux) per vedere vicini/cambi e osservare ARP:
+Poi lo compili:
 
 ```bash
-ip neigh
-sudo tcpdump -ni eth0 arp
+etterfilter filter.ex -o filter.ef
 ```
 
-### Step 2 — Conferma su endpoint
+E lo carichi durante l’MITM:
 
-Se vedi che il MAC del “gateway” cambia spesso nella cache, è un red flag.
+```bash
+sudo ettercap -T -i eth0 -M arp:remote /192.168.1.10// /192.168.1.1// -F filter.ef
+```
 
-### Step 3 — Mitigazione di rete (quella vera)
+Ora, ogni volta che la vittima invia “password” in una richiesta web, il pacchetto verrà alterato. Puoi scrivere filtri per redirect, drop di pacchetti, sostituzione di stringhe in download… la creatività è il limite (nel lab!).
 
-Se hai switch gestiti, la difesa migliore è lato rete:
+## Playbook 10 Minuti: Sniffare Credenziali FTP in un Lab
 
-* **DHCP snooping** per costruire la tabella di binding IP↔MAC “attendibile”
-* **Dynamic ARP Inspection (DAI)** per validare pacchetti ARP contro quella tabella e droppare inconsistenze
+### Step 1 – Mappatura della Rete
 
-### Step 4 — Mitigazione applicativa (web)
+Prima di attaccare, scopri chi c’è in rete. Usa un semplice scan ARP con `netdiscover` o `nmap` per trovare l’IP della vittima e del gateway nel tuo lab.
 
-Sul web, riduci tantissimo l’impatto di AiTM con configurazioni corrette:
+```bash
+sudo netdiscover -r 192.168.1.0/24 -i eth0
+```
 
-* **HTTPS ovunque**
-* **HSTS (Strict-Transport-Security)** per evitare downgrade a HTTP e rendere più difficile l’intercettazione “utile” lato browser
+### Step 2 – Avvio MITM su Specifici Target
 
-***
+Identificati vittima (`192.168.1.10`) e gateway (`192.168.1.1`). Lancia Ettercap in sniffing silenzioso mirato, loggando tutto su file.
 
-## Checklist pratica (lab / esami / lavoro)
+```bash
+sudo ettercap -Tqi eth0 -M arp:remote /192.168.1.10// /192.168.1.1// -L logfile
+```
 
-* So spiegare cos’è ARP cache poisoning in 2 frasi (AiTM su LAN).
-* So riconoscere segnali: ARP reply non richiesti, “molti IP → un MAC”, cambi improvvisi.
-* So lavorare **offline** con `.pcap` usando `-r` (zero rischio).
-* Se ho switch gestiti: valuto **DAI + DHCP snooping**.
-* Per servizi web: abilito HTTPS e configuro **HSTS**.
+L’opzione `-L logfile` crea tre file: `logfile.ecp`, `logfile.eci` e `logfile.eco` con pacchetti, info e traffico.
 
-***
+### Step 3 – Filtrare e Isolare il Traffico FTP
 
-## Promemoria 80/20
+Il log si riempirà velocemente. In un altro terminale, analizza in tempo reale il traffico catturato per cercare stringhe come “USER” e “PASS” tipiche di FTP.
 
-| Obiettivo             | Azione pratica        | Comando/Strumento                     |
-| --------------------- | --------------------- | ------------------------------------- |
-| Installare su Kali    | install GUI           | `sudo apt install ettercap-graphical` |
-| Vedere interfacce     | lista NIC             | `sudo ettercap -I`                    |
-| Imparare senza rischi | sniff offline da pcap | `sudo ettercap -T -r capture.pcap`    |
-| Ridurre rumore        | quiet + offline       | `sudo ettercap -Tq -r capture.pcap`   |
-| Produrre evidenze     | log files             | `-L labdump`                          |
-| Bloccare AiTM su LAN  | validazione ARP       | DAI + DHCP snooping                   |
-| Ridurre MITM sul web  | forza HTTPS           | HSTS                                  |
+```bash
+sudo tail -f logfile.eco | grep -E "USER|PASS"
+```
 
-***
+### Step 4 – Estrazione delle Credenziali
 
-## Concetti controintuitivi (minimo 3)
+Quando la vittima esegue un login FTP non cifrato, vedrai nel log qualcosa come `USER mario` e `PASS secret123`. Prendi nota: quelle sono le credenziali compromesse.
 
-1. **“Se uso HTTPS sono immune al MITM” → quasi, ma non sempre.**
-   HTTPS fatto bene ti salva, ma se esistono downgrade/HTTP o configurazioni deboli, restano finestre. HSTS serve proprio a chiudere la porta del “torno su HTTP”.
-2. **“Basta vedere traffico ARP = c’è attacco” → falso.**
-   ARP è normale. Il segnale vero è l’anomalia: reply non richiesti, cambi improvvisi, pattern ripetuti.
-3. **“La difesa è bloccare Ettercap” → sbagliato.**
-   La difesa è strutturale: DAI + DHCP snooping sullo switch validano ARP e droppano pacchetti non coerenti.
-4. **“Per imparare MITM devo farlo live” → no.**
-   Spesso impari più velocemente su `.pcap` offline: ripeti, confronti, capisci protocolli senza rischi e senza “rompere” la rete.
+### Step 5 – Pulizia e Riallineamento ARP
 
-***
+Finito l’esercizio, ferma Ettercap (`q`) e manda pacchetti ARP “honest” per ripristinare le cache di rete. Puoi usare `ettercap -M arp:remote /192.168.1.10// /192.168.1.1//` con l’opzione `--reverse` o semplicemente riavviare le macchine nel tuo lab virtuale.
+
+## Checklist Rapida Ettercap
+
+1. Verificare che Ettercap sia installato e configurato (`sudo ettercap --version`).
+2. Identificare l’interfaccia di rete corretta per lo sniffing (`ip a`).
+3. Disabilitare il firewall locale di Kali per evitare blocchi (`sudo systemctl stop firewalld`).
+4. Abilitare l’IP forwarding per non interrompere il traffico della vittima (`echo 1 > /proc/sys/net/ipv4/ip_forward`).
+5. Mappare la rete lab per individuare IP di vittima e gateway (`netdiscover` o `nmap -sn`).
+6. Usare l’opzione `-L` per loggare il traffico catturato e analizzarlo offline.
+7. Testare i filtri custom su una macchina di test prima di usarli in un scenario complesso.
+8. Avere sempre a portata il comando per fermare l’MITM (premere `q` nell’interfaccia TUI).
+9. Ricordarsi di ripristinare le tabelle ARP delle vittime dopo il test (riavvio o invio pacchetti ARP corretti).
+10. Usare Ettercap solo su reti e dispositivi di cui si ha esplicito permesso di testare.
+
+## Riassunto 80/20 Ettercap
+
+| Obiettivo                         | Azione pratica                                            |                          Comando/Strumento |
+| :-------------------------------- | :-------------------------------------------------------- | -----------------------------------------: |
+| Sniffing passivo di rete          | Avviare Ettercap in modalità testo senza attacco MITM     |                     `ettercap -Tq -i eth0` |
+| Avviare MITM via ARP spoofing     | Specificare target1 (vittima) e target2 (gateway)         |      `-M arp:remote /VITTIMA// /GATEWAY//` |
+| Loggare traffico per analisi      | Salvare la cattura in file per esaminarla dopo            |                              `-L nomefile` |
+| Compilare un filtro custom        | Scrivere codice C in `.ex` e generare file `.ef`          | `etterfilter miofiltro.ex -o miofiltro.ef` |
+| Caricare filtro durante MITM      | Applicare il filtro compilato per manipolare pacchetti    |                          `-F miofiltro.ef` |
+| Intercettare credenziali HTTP/FTP | Cercare stringhe “USER”, “PASS”, “Authorization:” nel log |         `grep -E "USER\|PASS" logfile.eco` |
+| Fermare l’attacco MITM            | Uscire dall’interfaccia TUI e ripristinare ARP            | Premere `q`, poi riavviare macchine target |
+
+## Concetti Controintuitivi su Ettercap
+
+**“L’MITM funziona sempre e su tutti”**\
+Falso. Switch moderni con protezioni (Port Security, DHCP Snooping) possono rilevare e bloccare l’ARP poisoning. Inoltre, connessioni cifrate (HTTPS, SSH) rendono lo sniffing inutile senza tecniche aggiuntive come SSL stripping (che funziona solo in condizioni specifiche).
+
+**“Ettercap è invisibile”**\
+Non proprio. Un sistema con un IDS/IPS di rete o anche un client con tool come `arpwatch` può rilevare anomalie ARP e generare allarmi. Nel mondo reale, un attacco MITM attivo è rumoroso.
+
+**“Basta sniffare per avere le password”**\
+Vero solo per protocolli non cifrati. Oggi la maggior parte del traffico è cifrata. L’uso di Ettercap in lab serve proprio a dimostrare i pericoli di servizi come FTP, Telnet o HTTP di base, spingendo per l’adozione di cifratura.
 
 ## FAQ su Ettercap
 
-**Ettercap serve ancora oggi?**
-Sì, soprattutto per studio e per workflow classici di sniffing/log/filtri in LAN. Esistono alternative più moderne, ma i concetti restano gli stessi.
+**D: Ettercap non trova l’interfaccia di rete, cosa fare?**\
+R: Verifica il nome dell’interfaccia con `ip a`. Su Kali in VM, spesso è `eth0` o `ens33`. Se usi una connessione wireless, potrebbe essere `wlan0`. Usa quel nome esatto nell’opzione `-i`.
 
-**Posso usarlo senza fare MITM?**
-Sì: la modalità offline `-r` ti fa analizzare da file `.pcap`.
+**D: Posso usare Ettercap per intercettare traffico HTTPS?**\
+R: Non direttamente. Ettercap da solo non può decifrare HTTPS. Puoi provare tecniche come SSL stripping (con tool come `sslstrip`) per degradare HTTPS a HTTP, ma funziona solo se la vittima non usa HSTS. L’obiettivo in lab è evidenziare l’importanza di HSTS.
 
-**Che cos’è un file `.pcap`?**
-È una cattura pacchetti (generata ad esempio da tcpdump/Wireshark). Ettercap può leggerla con `-r`.
+**D: Come faccio a sniffare solo il traffico di una specifica porta?**\
+R: Puoi usare i filtri di cattura nella GUI, o dalla CLI specificare la porta nei target. Esempio: `/192.168.1.10/80/` catturerà solo traffico HTTP da/quella vittima. In alternativa, usa filtri di visualizzazione nel log post-cattura.
 
-**Come capisco se in LAN c’è ARP poisoning?**
-Osserva anomalie ARP: reply non richiesti, più IP verso lo stesso MAC, cambi frequenti nella cache, incongruenze tra quanto “dovrebbe” essere il gateway e quanto vedi.
+**D: Perché il mio computer vittima perde la connessione Internet durante l’attacco?**\
+R: Probabilmente non hai abilitato l’IP forwarding su Kali. Il sistema riceve i pacchetti ma non li inoltra. Esegui `echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward` prima di lanciare Ettercap.
 
-**Qual è la mitigazione migliore in azienda?**
-Su switch gestiti: **DAI + DHCP snooping**. È la difesa più solida contro ARP poisoning.
+**D: Esiste un’alternativa a Ettercap per MITM?**\
+R: Sì, tool come `bettercap` (più moderno e estendibile) e `arpspoof` (più semplice) possono fare parti del lavoro. Ettercap rimane uno strumento storico e completo, ma `bettercap` sta diventando lo standard per molti pentester.
 
-**HSTS c’entra?**
-Sì: lato web riduce fortemente scenari di downgrade e rende la vita molto più dura a molte forme di intercettazione “utile” dal punto di vista dell’utente.
+## Riferimenti Autorevoli
+
+* [Documentazione Ufficiale di Ettercap](https://www.kali.org/tools/ettercap/) - Per approfondire ogni opzione e funzionalità.
+* [Repository GitHub di Bettercap](https://github.com/bettercap/bettercap) - Per esplorare l’evoluzione moderna degli strumenti MITM.
+
+## Link Utili su HackIta
+
+* [Come supportare HackIta](https://hackita.it/supporto/) – Se questa guida ti è stata utile, considera di sostenere il progetto per permetterci di creare più contenuti.
+* [Tutti gli articoli di HackIta](https://hackita.it/articoli/) – Esplora altre guide pratiche su tool e tecniche di hacking etico.
+* [Servizi professionali di HackIta](https://hackita.it/servizi/) – Se cerchi consulenza o formazione personalizzata per la tua azienda, contattaci.
+* [Chi c’è dietro HackIta](https://hackita.it/about/) – Scopri la missione e le persone dietro questa community.
 
 ***
 
-## Supporto e servizi (HackITA)
+Se questa guida ti ha aiutato a prendere il controllo di un lab di rete, considera di supportare HackIta con una donazione. Ci permette di mantenere il sito e produrre contenuti di qualità per tutta la community.
 
-Se questa guida ti è stata utile, puoi supportare il progetto nella sezione **Supporta**: ci aiuta a pubblicare più contenuti tecnici e mantenere tutto aggiornato.
+Vuoi trasformare queste conoscenze in una skill professionale? Scopri i nostri percorsi di **formazione 1:1** su misura, dove approfondiamo tool come Ettercap in scenari realistici complessi.
 
-Se invece sei bloccato su un lab, un esame o vuoi accelerare davvero: facciamo **formazione 1:1** (percorsi pratici, debugging insieme, metodo).
-
-E se hai un’azienda o un progetto reale, possiamo supportarti con lavori su misura: assessment, hardening, review e attività di sicurezza **su richiesta e in contesti autorizzati**.
+La tua azienda ha bisogno di testare la resilienza alle tecniche MITM? I nostri **servizi di assessment di sicurezza** includono penetration test interni ed esterni per identificare e risolvere queste vulnerabilità.

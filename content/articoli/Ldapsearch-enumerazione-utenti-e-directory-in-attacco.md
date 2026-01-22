@@ -4,7 +4,7 @@ description: >-
   Scopri come utilizzare ldapsearch per raccogliere informazioni su utenti,
   gruppi e strutture AD. Tecniche di enumeration reali per Red Team e pentester.
 image: /LDAPSEARCH.webp
-draft: true
+draft: false
 date: 2026-01-23T00:00:00.000Z
 categories:
   - tools

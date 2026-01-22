@@ -5,7 +5,7 @@ description: >-
   escalation di privilegi. Tool essenziale per Red Team e attacchi interni
   simulati.
 image: /BH.webp
-draft: true
+draft: false
 date: 2026-01-23T00:00:00.000Z
 categories:
   - tools

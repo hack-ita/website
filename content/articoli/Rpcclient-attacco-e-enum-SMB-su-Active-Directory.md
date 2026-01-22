@@ -3,7 +3,7 @@ title: 'Rpcclient: attacco e enum SMB su Active Directory'
 description: >-
   Rpcclient consente di interrogare AD via SMB per ottenere utenti, SID e
   informazioni critiche. Tecniche offensive per pentest e Red Team.
-draft: true
+draft: false
 date: 2026-01-23T00:00:00.000Z
 categories:
   - tools

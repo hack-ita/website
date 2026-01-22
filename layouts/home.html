@@ -150,7 +150,8 @@
           {{ with .PublishDate }}
           <span class="text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
           {{ end }}
-          {{ $readingTime := div (float .WordCount) (or .Site.Params.reading_speed 170) }}
+          {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
+          {{ $readingTime := div (float .WordCount) $readingSpeed }}
           {{ $readingTime = math.Ceil $readingTime }}
           <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
         </div>
@@ -195,11 +196,12 @@
                   {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover group-hover:scale-115 transition-transform duration-500") }}
                 </div>
                 <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
-                  <div class="flex flex-wrap gap-3">
+                  <div class="flex flex-wrap gap-3 mb-3 lg:mb-5">
                     {{ with .PublishDate }}
                     <span class="text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
                     {{ end }}
-                    {{ $readingTime := div (float .WordCount) (or .Site.Params.reading_speed 170) }}
+                    {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
+                    {{ $readingTime := div (float .WordCount) $readingSpeed }}
                     {{ $readingTime = math.Ceil $readingTime }}
                     <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
                   </div>

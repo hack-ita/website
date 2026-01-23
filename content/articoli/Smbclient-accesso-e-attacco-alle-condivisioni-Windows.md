@@ -4,7 +4,7 @@ description: >-
   Con smbclient puoi accedere, leggere e scrivere file su condivisioni SMB.
   Scopri come usarlo per attacchi interni, enumeration e pivoting in AD.
 image: /smbcliehnt.webp
-draft: true
+draft: false
 date: 2026-01-24T00:00:00.000Z
 categories:
   - tools

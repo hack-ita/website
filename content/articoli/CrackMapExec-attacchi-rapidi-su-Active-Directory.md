@@ -3,7 +3,7 @@ title: 'CrackMapExec: attacchi rapidi su Active Directory'
 description: >-
   CrackMapExec è lo strumento all-in-one per testare credenziali, eseguire
   comandi e muoversi lateralmente in reti Windows. Usato da ogni Red Teamer.
-draft: true
+draft: false
 date: 2026-01-24T00:00:00.000Z
 categories:
   - tools

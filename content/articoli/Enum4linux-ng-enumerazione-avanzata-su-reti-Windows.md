@@ -5,7 +5,7 @@ description: >-
   SID da sistemi Windows. Strumento essenziale per ogni fase di information
   gathering.
 image: /enum4linux.webp
-draft: true
+draft: false
 date: 2026-01-24T00:00:00.000Z
 categories:
   - tools

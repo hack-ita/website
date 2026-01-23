@@ -12,7 +12,7 @@ permissions:
 jobs:
   publish_posts:
     runs-on: ubuntu-latest
-    timeout-minutes: 15 # Increased to accommodate 10-minute sleep
+    timeout-minutes: 10 # Reduced back since we removed the long sleep
     
     steps:
       - name: Checkout repository

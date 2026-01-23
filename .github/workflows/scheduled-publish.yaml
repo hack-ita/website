@@ -50,30 +50,34 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content/
-          git commit -m "GitHub Bot: Publish scheduled posts
+          git commit -m "🤖 Publish scheduled posts
           
           Published on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
           git push
           
-          # Give Git/TinaCMS a moment to fully sync before Netlify builds
-          echo "⏳ Waiting 30 seconds for changes to propagate..."
-          sleep 10
+          # Wait for Git to fully propagate and Netlify webhook to settle
+          echo "⏳ Waiting 10 minutes for Git to sync and auto-deploy to complete..."
+          sleep 600
 
       - name: Trigger Netlify build with cache clear
         if: steps.check_changes.outputs.changes == 'true'
         run: |
           if [ -n "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
-            curl -X POST -d '{"clear_cache": true}' ${{ secrets.NETLIFY_BUILD_HOOK }}
+            # Trigger build with clear_cache parameter
+            curl -X POST -d '{"clear_cache": true}' \
+              -H "Content-Type: application/json" \
+              ${{ secrets.NETLIFY_BUILD_HOOK }}
             echo "✓ Netlify build triggered with cache cleared"
           else
-            echo "⚠️  NETLIFY_BUILD_HOOK not configured"
-            echo "⚠️  You may need to manually clear cache if posts don't appear"
+            echo "ℹ️  NETLIFY_BUILD_HOOK not configured"
+            echo "ℹ️  Netlify will auto-deploy, but may use cached build"
+            echo "⚠️  If posts don't appear, check your netlify.toml has 'rm -rf public' in the build command"
           fi
 
       - name: Workflow summary
         if: always()
         run: |
-          echo "## Scheduled Publish Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## 📅 Scheduled Publish Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
             echo "✅ **Posts published and pushed to repository**" >> $GITHUB_STEP_SUMMARY

@@ -12,7 +12,7 @@ permissions:
 jobs:
   publish_posts:
     runs-on: ubuntu-latest
-    timeout-minutes: 10 # Prevent hanging workflows
+    timeout-minutes: 15 # Increased to accommodate 10-minute sleep
     
     steps:
       - name: Checkout repository
@@ -56,8 +56,8 @@ jobs:
           git push
           
           # Wait for Git to fully propagate and Netlify webhook to settle
-          echo "⏳ Waiting 10 minutes for Git to sync and auto-deploy to complete..."
-          sleep 600
+          echo "⏳ Waiting 3 minutes for Git to sync and auto-deploy to complete..."
+          sleep 180
 
       - name: Trigger Netlify build with cache clear
         if: steps.check_changes.outputs.changes == 'true'

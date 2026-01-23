@@ -1,35 +1,45 @@
+{{/* schema/breadcrumb.html */}}
+
 {{ $items := slice }}
 {{ $position := 1 }}
 
-{{ $items = $items | append (dict
-  "@type" "ListItem"
-  "position" $position
-  "name" "Home"
-  "item" site.BaseURL
-) }}
+{{ if not .IsHome }}
 
-{{ range .Ancestors.Reverse }}
-  {{ $position = add $position 1 }}
   {{ $items = $items | append (dict
     "@type" "ListItem"
     "position" $position
-    "name" .Title
-    "item" .Permalink
+    "name" "Home"
+    "item" site.BaseURL
   ) }}
+
+  {{ range .Ancestors.Reverse }}
+    {{ $position = add $position 1 }}
+    {{ $items = $items | append (dict
+      "@type" "ListItem"
+      "position" $position
+      "name" .Title
+      "item" .Permalink
+    ) }}
+  {{ end }}
+
+  {{ if gt (len $items) 1 }}
+    {{ $position = add $position 1 }}
+    {{ $items = $items | append (dict
+      "@type" "ListItem"
+      "position" $position
+      "name" .Title
+      "item" .Permalink
+    ) }}
+  {{ end }}
+
 {{ end }}
 
-{{ $position = add $position 1 }}
-{{ $items = $items | append (dict
-  "@type" "ListItem"
-  "position" $position
-  "name" .Title
-  "item" .Permalink
-) }}
-
+{{ if gt (len $items) 1 }}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": {{ jsonify $items }}
+  "itemListElement": {{ jsonify $items | safeJS }}
 }
 </script>
+{{ end }}

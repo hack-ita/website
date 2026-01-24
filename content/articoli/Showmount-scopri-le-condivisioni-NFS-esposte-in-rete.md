@@ -5,7 +5,7 @@ description: >-
   per identificare risorse accessibili e punti d’ingresso in ambienti
   Unix/Linux.
 image: /showmount.webp
-draft: true
+draft: false
 date: 2026-01-25T00:00:00.000Z
 categories:
   - tools

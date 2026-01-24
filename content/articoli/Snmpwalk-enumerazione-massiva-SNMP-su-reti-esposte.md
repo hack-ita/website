@@ -5,7 +5,7 @@ description: >-
   dettagliate su dispositivi di rete. Usato per recon low-noise e attacchi
   mirati.
 image: /snmpwalk.webp
-draft: true
+draft: false
 date: 2026-01-25T00:00:00.000Z
 categories:
   - tools

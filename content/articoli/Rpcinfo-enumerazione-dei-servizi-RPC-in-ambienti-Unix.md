@@ -4,7 +4,7 @@ description: >-
   Rpcinfo permette di identificare i servizi RPC attivi su host Unix/Linux.
   Fondamentale per il recon e l’analisi di potenziali vettori di attacco remoti.
 image: /rpcinfo.webp
-draft: true
+draft: false
 date: 2026-01-25T00:00:00.000Z
 categories:
   - tools

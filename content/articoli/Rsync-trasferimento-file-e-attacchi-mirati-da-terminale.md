@@ -4,7 +4,7 @@ description: >-
   Rsync è un potente strumento per sincronizzare e trasferire file da terminale.
   Scopri come viene usato anche in attacchi interni per esfiltrazione dati.
 image: /rsync.webp
-draft: true
+draft: false
 date: 2026-01-25T00:00:00.000Z
 categories:
   - networking

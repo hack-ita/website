@@ -2,21 +2,9 @@ name: Scheduled Publish
 
 on:
   schedule:
-    # Runs at 23:00 UTC daily (00:00 CET Italy time) - Updates files
+    # Runs at 23:00 UTC daily (00:00 CET/01:00 CEST Italy time)
     - cron: "0 23 * * *"
-    # Runs at 01:00 UTC daily (02:00 CET Italy time) - Triggers deploy
-    - cron: "0 1 * * *"
   workflow_dispatch: # Manual trigger option
-    inputs:
-      action:
-        description: 'Action to perform'
-        required: true
-        default: 'both'
-        type: choice
-        options:
-          - both
-          - publish_only
-          - deploy_only
 
 permissions:
   contents: write # Required to push changes
@@ -25,11 +13,6 @@ jobs:
   publish_posts:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Run this job only at 23:00 UTC or when manually triggered with 'publish_only' or 'both'
-    if: |
-      github.event.schedule == '0 23 * * *' || 
-      github.event_name == 'workflow_dispatch' && 
-      (github.event.inputs.action == 'publish_only' || github.event.inputs.action == 'both')
     
     steps:
       - name: Checkout repository
@@ -61,7 +44,7 @@ jobs:
             echo "✓ No changes to commit"
           fi
 
-      - name: Commit and push changes (skip CI)
+      - name: Commit and push changes
         if: steps.check_changes.outputs.changes == 'true'
         run: |
           git config user.name "github-actions[bot]"
@@ -69,12 +52,11 @@ jobs:
           git add content/
           git commit -m "🤖 Publish scheduled posts [skip ci]
           
-          Published on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
-          
-          Note: Deploy will be triggered automatically in 2 hours"
+          Published on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
           git push
           
-          echo "✅ Changes pushed to repository (without triggering deploy)"
+          echo "✅ Changes pushed to repository"
+          echo "ℹ️  Netlify deploy will be triggered automatically at 02:00 Italy time via cron-job.org"
 
       - name: Workflow summary
         if: always()
@@ -84,42 +66,9 @@ jobs:
           if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
             echo "✅ **Posts published and pushed to repository**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "⏰ **Netlify deploy will trigger automatically at 01:00 UTC (02:00 Italy time)**" >> $GITHUB_STEP_SUMMARY
+            echo "⏰ **Netlify scheduled function will auto-deploy at 02:00 Italy time**" >> $GITHUB_STEP_SUMMARY
           else
             echo "ℹ️ **No posts were ready to publish**" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Workflow run:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
-
-  trigger_deploy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    # Run this job only at 01:00 UTC or when manually triggered with 'deploy_only' or 'both'
-    if: |
-      github.event.schedule == '0 1 * * *' || 
-      github.event_name == 'workflow_dispatch' && 
-      (github.event.inputs.action == 'deploy_only' || github.event.inputs.action == 'both')
-    
-    steps:
-      - name: Trigger Netlify deploy
-        run: |
-          if [ -z "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
-            echo "❌ ERROR: NETLIFY_BUILD_HOOK secret not configured!"
-            echo "Please add your Netlify build hook URL to GitHub secrets"
-            exit 1
-          fi
-          
-          curl -X POST -d '{}' ${{ secrets.NETLIFY_BUILD_HOOK }}
-          echo "✅ Netlify deploy triggered successfully"
-          echo "ℹ️  This will build with the latest commit from 2 hours ago"
-
-      - name: Deploy summary
-        if: always()
-        run: |
-          echo "## 🚀 Netlify Deploy Triggered" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **Build hook called successfully**" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "ℹ️  Netlify is now building with the latest Git commit" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Deploy triggered at:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY

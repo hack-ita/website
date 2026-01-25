@@ -16,6 +16,7 @@
     "build": "npm run build:admin && npm run build:hugo && npm run build:index"
   },
   "dependencies": {
+    "@netlify/functions": "^5.1.2",
     "fs": "^0.0.1-security",
     "fse": "^4.0.1",
     "path": "^0.12.7",

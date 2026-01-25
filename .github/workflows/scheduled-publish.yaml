@@ -2,9 +2,21 @@ name: Scheduled Publish
 
 on:
   schedule:
-    # Runs at 23:00 UTC daily (00:00 CET/01:00 CEST Italy time)
+    # Runs at 23:00 UTC daily (00:00 CET Italy time) - Updates files
     - cron: "0 23 * * *"
+    # Runs at 01:00 UTC daily (02:00 CET Italy time) - Triggers deploy
+    - cron: "0 1 * * *"
   workflow_dispatch: # Manual trigger option
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - both
+          - publish_only
+          - deploy_only
 
 permissions:
   contents: write # Required to push changes
@@ -12,19 +24,24 @@ permissions:
 jobs:
   publish_posts:
     runs-on: ubuntu-latest
-    timeout-minutes: 10 # Reduced back since we removed the long sleep
+    timeout-minutes: 10
+    # Run this job only at 23:00 UTC or when manually triggered with 'publish_only' or 'both'
+    if: |
+      github.event.schedule == '0 23 * * *' || 
+      github.event_name == 'workflow_dispatch' && 
+      (github.event.inputs.action == 'publish_only' || github.event.inputs.action == 'both')
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # Updated to v4
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch full history for proper git operations
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4 # Updated to v4
+        uses: actions/setup-node@v4
         with:
-          node-version: "20" # LTS version
+          node-version: "20"
 
       - name: Install dependencies
         run: npm install gray-matter date-fns date-fns-tz
@@ -44,35 +61,20 @@ jobs:
             echo "✓ No changes to commit"
           fi
 
-      - name: Commit and push changes
+      - name: Commit and push changes (skip CI)
         if: steps.check_changes.outputs.changes == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content/
-          git commit -m "🤖 Publish scheduled posts
+          git commit -m "🤖 Publish scheduled posts [skip ci]
           
-          Published on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          Published on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          Note: Deploy will be triggered automatically in 2 hours"
           git push
           
-          # Wait for Git to fully propagate and Netlify webhook to settle
-          echo "⏳ Waiting 3 minutes for Git to sync and auto-deploy to complete..."
-          sleep 180
-
-      - name: Trigger Netlify build with cache clear
-        if: steps.check_changes.outputs.changes == 'true'
-        run: |
-          if [ -n "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
-            # Trigger build with clear_cache parameter
-            curl -X POST -d '{"clear_cache": true}' \
-              -H "Content-Type: application/json" \
-              ${{ secrets.NETLIFY_BUILD_HOOK }}
-            echo "✓ Netlify build triggered with cache cleared"
-          else
-            echo "ℹ️  NETLIFY_BUILD_HOOK not configured"
-            echo "ℹ️  Netlify will auto-deploy, but may use cached build"
-            echo "⚠️  If posts don't appear, check your netlify.toml has 'rm -rf public' in the build command"
-          fi
+          echo "✅ Changes pushed to repository (without triggering deploy)"
 
       - name: Workflow summary
         if: always()
@@ -81,8 +83,43 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
             echo "✅ **Posts published and pushed to repository**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⏰ **Netlify deploy will trigger automatically at 01:00 UTC (02:00 Italy time)**" >> $GITHUB_STEP_SUMMARY
           else
             echo "ℹ️ **No posts were ready to publish**" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Workflow run:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
+
+  trigger_deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Run this job only at 01:00 UTC or when manually triggered with 'deploy_only' or 'both'
+    if: |
+      github.event.schedule == '0 1 * * *' || 
+      github.event_name == 'workflow_dispatch' && 
+      (github.event.inputs.action == 'deploy_only' || github.event.inputs.action == 'both')
+    
+    steps:
+      - name: Trigger Netlify deploy
+        run: |
+          if [ -z "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
+            echo "❌ ERROR: NETLIFY_BUILD_HOOK secret not configured!"
+            echo "Please add your Netlify build hook URL to GitHub secrets"
+            exit 1
+          fi
+          
+          curl -X POST -d '{}' ${{ secrets.NETLIFY_BUILD_HOOK }}
+          echo "✅ Netlify deploy triggered successfully"
+          echo "ℹ️  This will build with the latest commit from 2 hours ago"
+
+      - name: Deploy summary
+        if: always()
+        run: |
+          echo "## 🚀 Netlify Deploy Triggered" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Build hook called successfully**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "ℹ️  Netlify is now building with the latest Git commit" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deploy triggered at:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY

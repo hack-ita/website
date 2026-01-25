@@ -3,7 +3,7 @@
 {{/* ================= HERO ================= */}}
 {{/* hero */}}
 <section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading">
-  {{ range first 1 (where .RegularPages "Params.featured" "eq" true) }}
+  {{ range first 1 ((where .RegularPages "Params.featured" "eq" true) | default .RegularPages) }}
   {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
   {{ $readingTime := div (float .WordCount) $readingSpeed }}
   {{ $readingTime = math.Ceil $readingTime }}

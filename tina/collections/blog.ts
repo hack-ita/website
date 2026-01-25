@@ -11,12 +11,42 @@ const Blog: Collection = {
     exclude: "_index",
   },
 
+  ui: {
+    defaultItem: {
+      slug: "",
+      draft: true,
+      date: new Date().toISOString(),
+    },
+    beforeSubmit: async ({ values }: { values: Record<string, any> }) => {
+      if (!values.slug && values.title) {
+        const firstWord = values.title
+          .trim()
+          .split(" ")[0]
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "");
+
+        return {
+          ...values,
+          slug: firstWord || "post",
+        };
+      }
+      return values;
+    },
+  } as any,
+
   fields: [
+    {
+      type: "string",
+      name: "title",
+      label: "Title",
+      isTitle: true,
+      required: true,
+    },
     {
       type: "string",
       name: "slug",
       label: "Custom URL",
-      description: "URL slug (leave empty to auto-generate from title)",
+      description: "Defaults to first word of title",
       ui: {
         validate: (value) => {
           if (!value) return;
@@ -25,13 +55,6 @@ const Blog: Collection = {
           }
         },
       },
-    },
-    {
-      type: "string",
-      name: "title",
-      label: "Title",
-      isTitle: true,
-      required: true,
     },
     {
       type: "string",

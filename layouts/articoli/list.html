@@ -34,7 +34,7 @@
       <p class="text-dark dark:text-light">{{ .Description }}</p>
       <div class="flex items-stretch gap-5">
         {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Continua a leggere" "url" .RelPermalink) }}
-        {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "All Articles" "url" (printf "/categories/%s" .Params.categories)) }}
+        {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "All Articles" "url" ((printf "/categorie/%s" .Params.categories) | urlize)) }}
       </div>
     </div>
 

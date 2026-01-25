@@ -25,6 +25,7 @@
         <h1 class="text-primary" data-pagefind-weight="10">{{ .Title }}</h1>
 
         <!-- Image -->
+        {{ if .Params.image }}
         {{- $src := .Params.image -}}
         {{- $alt := .Title | plainify -}}
         {{- $title := .Title | plainify -}}
@@ -46,6 +47,7 @@
             class="rounded-md cursor-zoom-in"
           />
         </a>
+        {{ end }}
         {{ end }}
 
         <!-- Description -->

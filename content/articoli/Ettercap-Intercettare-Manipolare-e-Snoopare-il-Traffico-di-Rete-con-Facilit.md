@@ -2,6 +2,7 @@
 title: >-
   Ettercap: Intercettare, Manipolare e Snoopare il Traffico di Rete con
   Facilità"
+slug: ettercap
 description: >-
   Scopri come usare Ettercap per attacchi man-in-the-middle, sniffing e
   manipolazione del traffico di rete. Una guida tecnica chiara pensata per chi

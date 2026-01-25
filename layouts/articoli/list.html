@@ -62,74 +62,113 @@
   
     <!-- ALL POSTS WRAPPER -->
     <div id="allPosts">
-  
       {{ range .Site.Taxonomies.categories }}
       <div class="category-group">
   
         <div class="w-full h-0.5 bg-linear-to-r from-transparent via-primary to-transparent"></div>
   
         <div class="py-10">
-          <header class="mb-5 flex gap-5 items-center justify-start">
-            <span class="py-1 pl-9 pr-5 rounded-full text-sm border border-primary text-primary uppercase relative">
-              <span class="absolute size-3 rounded bg-primary rotate-45 left-4 top-2"></span>
-              <h3 class="inline">{{ .Page.Title }}</h3>
-            </span>
-            <p class="heading-sm text-dark dark:text-light">
-              <span class="text-primary">Latest</span> Exploits
-            </p>
+          <header class="mb-5 flex justify-between items-center gap-2">
+            <div class="flex gap-5 items-center justify-start">
+              <span class="py-1 pl-9 pr-5 rounded-full text-sm border border-primary text-primary uppercase relative">
+                <span class="absolute size-3 rounded bg-primary rotate-45 left-4 top-2"></span>
+                <h3 class="inline">{{ .Page.Title }}</h3>
+              </span>
+              <p class="heading-sm text-dark dark:text-light">
+                <span class="text-primary">Latest</span> {{ .Page.Title }}
+              </p>
+            </div>
+            <div class="flex justify-between">
+              <!-- Navigation buttons (optional) -->
+              <button class="{{ .Page.Title | urlize }}-button-prev text-primary cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-7" viewBox="0 0 16 16">
+                  <path fill="currentColor" fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+                </svg>
+              </button>
+              <button class="{{ .Page.Title | urlize }}-button-next text-primary cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-7" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+              </button>
+            </div>
           </header>
   
-          <div class="grid grid-cols-2 lg:grid-cols-5 gap-5">
-  
-            {{ range .Pages }}
-              {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
-              {{ $readingTime := div (float .WordCount) $readingSpeed }}
-              {{ $readingTime = math.Ceil $readingTime }}
-              {{ $post := . }}
-              <article
-                class="post-item rounded-md flex flex-col border border-primary hover:scale-125 transition-transform relative hover:z-10"
-                {{ with .Params.categories }}
-                  data-categories="{{ delimit (apply . "urlize" ".") "," }}"
-                {{ else }}
-                  data-categories=""
-                {{ end }}
-                {{ with .Params.subcategories }}
-                  data-tags="{{ delimit (apply . "urlize" ".") "," }}"
-                {{ else }}
-                  data-tags=""
-                {{ end }}
-              >
-              <a href="{{ .RelPermalink }}" class="absolute inset-0 z-10"></a>
-  
-              <figure class="flex flex-col h-full">
-                <div class="h-30 overflow-hidden rounded-t-md">
-                  {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover") }}
-                </div>
-  
-                <figcaption class="bg-glass flex-1 p-3 flex flex-col gap-5 justify-between items-start">
-                  <div class="w-full flex flex-col sm:flex-row gap-y-5 justify-between items-start sm:items-center uppercase">
-                    {{ range first 1 .Params.tags }}
-                    <span class="rounded-full border border-primary px-3 py-1 text-primary text-xs">{{ . }}</span>
+          <div class="swiper {{ .Page.Title | urlize }}Swiper">
+
+            <div class="swiper-wrapper">
+
+              {{ range .Pages }}
+                {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
+                {{ $readingTime := div (float .WordCount) $readingSpeed }}
+                {{ $readingTime = math.Ceil $readingTime }}
+                {{ $post := . }}
+                <div class="swiper-slide">
+                  <article
+                    class="post-item rounded-md flex flex-col border border-primary group"
+                    {{ with .Params.categories }}
+                      data-categories="{{ delimit (apply . "urlize" ".") "," }}"
+                    {{ else }}
+                      data-categories=""
                     {{ end }}
-                    <time class="text-dark dark:text-light text-sm">{{ $readingTime }} Min read</time>
-                  </div>
-  
-                  <a href="{{ .RelPermalink }}" class="heading-sm text-primary xl:h-25">
-                    {{ .Title }}
-                  </a>
-  
-                  <p class="text-dark dark:text-light text-sm xl:h-[45%]">{{ .Description | truncate 175 }}</p>
-                </figcaption>
-              </figure>
-            </article>
-  
-            {{ end }}
+                    {{ with .Params.subcategories }}
+                      data-tags="{{ delimit (apply . "urlize" ".") "," }}"
+                    {{ else }}
+                      data-tags=""
+                    {{ end }}
+                  >
+                  <a href="{{ .RelPermalink }}" class="absolute inset-0 z-10"></a>
+      
+                  <figure class="flex flex-col h-full">
+                    <div class="h-30 overflow-hidden rounded-t-md">
+                      {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover group-hover:scale-125 transition-transform") }}
+                    </div>
+      
+                    <figcaption class="bg-glass flex-1 p-3 flex flex-col gap-5 justify-between items-start">
+                      <div class="w-full flex flex-col sm:flex-row gap-y-5 justify-between items-start sm:items-center uppercase">
+                        {{ range first 1 .Params.tags }}
+                        <span class="rounded-full border border-primary px-3 py-1 text-primary text-xs">{{ . }}</span>
+                        {{ end }}
+                        <time class="text-dark dark:text-light text-sm">{{ $readingTime }} Min read</time>
+                      </div>
+      
+                      <a href="{{ .RelPermalink }}" class="heading-sm text-primary h-20 line-clamp-4">
+                        {{ .Title }}
+                      </a>
+      
+                      <p class="text-dark dark:text-light text-sm line-clamp-4">{{ .Description }}</p>
+                    </figcaption>
+                  </figure>
+                </article>
+                </div>
+    
+              {{ end }}
+
+            </div>
   
           </div>
         </div>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            new Swiper('.{{ .Page.Title | urlize }}Swiper', {
+              slidesPerView: 2,
+              spaceBetween: 20,
+              loop: false,
+              autoplay: true,
+              navigation: {
+                nextEl: '.{{ .Page.Title | urlize }}-button-next',
+                prevEl: '.{{ .Page.Title | urlize }}-button-prev',
+              },
+              breakpoints: {
+                1024: {
+                  slidesPerView: 5,
+                },
+              }
+            });
+          });
+        </script>
       </div>
       {{ end }}
-  
     </div>
   </div>
 

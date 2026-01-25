@@ -24,10 +24,35 @@
         <!-- Title -->
         <h1 class="text-primary" data-pagefind-weight="10">{{ .Title }}</h1>
 
+        <!-- Image -->
+        {{- $src := .Params.image -}}
+        {{- $alt := .Title | plainify -}}
+        {{- $title := .Title | plainify -}}
+
+        {{- if not (strings.HasSuffix $src ".svg") -}}
+        <a
+          href="{{ $src }}"
+          class="glightbox"
+          data-gallery="content"
+          {{ with $alt }}data-title="{{ . }}"{{ end }}
+          data-description="<a href='{{ $src }}' download class='underline underline-offset-4 hover:text-primary transition-colors'>Download Image</a>"
+        >
+          <img
+            src="{{ $src }}"
+            alt="{{ $alt }}"
+            loading="lazy"
+            decoding="async"
+            {{ with $title }}title="{{ . }}"{{ end }}
+            class="rounded-md cursor-zoom-in"
+          />
+        </a>
+        {{ end }}
+
         <!-- Description -->
         {{ with .Description }}
         <p class="text-dark dark:text-light text-pretty text-lg">{{ . }}</p>
         {{ end }}
+
 
         <!-- Meta Information -->
         <ul data-pagefind-ignore="" class="flex flex-wrap gap-5 items-stretch pb-5">

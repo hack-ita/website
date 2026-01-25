@@ -14,6 +14,20 @@ const Blog: Collection = {
   fields: [
     {
       type: "string",
+      name: "slug",
+      label: "Custom URL",
+      description: "URL slug (leave empty to auto-generate from title)",
+      ui: {
+        validate: (value) => {
+          if (!value) return;
+          if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value)) {
+            return "Use lowercase letters, numbers, and hyphens only";
+          }
+        },
+      },
+    },
+    {
+      type: "string",
       name: "title",
       label: "Title",
       isTitle: true,

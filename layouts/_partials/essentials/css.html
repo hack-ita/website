@@ -1,6 +1,7 @@
 {{ $swiper := resources.Get "plugins/swiper/swiper.css" }}
 {{ $glightbox := resources.Get "plugins/glightbox/glightbox.css" }}
-{{ $bundle := slice $swiper $glightbox | resources.Concat "css/bundle.css" }}
+{{ $syntax := resources.Get "css/syntax.css" }}
+{{ $bundle := slice $swiper $glightbox $syntax | resources.Concat "css/bundle.css" }}
 
 {{ with $bundle }}
 {{ if hugo.IsDevelopment }}

@@ -7,7 +7,7 @@
     <div class="relative lg:col-span-5">
       <div class="swiper heroImgSwiper lg:h-[70vh]" role="region" aria-label="Featured blog images">
         <div class="swiper-wrapper">
-          {{ range where .Site.RegularPages "Section" "articoli" | first 6 }}
+          {{ range first 6 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) }}
           <div class="swiper-slide">
             <div class="lg:size-full relative">
               <a href="{{ .RelPermalink }}" class="absolute inset-0"></a>
@@ -24,7 +24,7 @@
     <div class="lg:h-[80vh] lg:overflow-y-scroll 2xl:overflow-y-hidden lg:col-span-2 px-5">
       <div class="swiper heroTextSwiper" role="region" aria-label="Featured blog titles and summaries">
         <div class="swiper-wrapper lg:flex-col lg:overflow-visible lg:divide-y divide-dark dark:divide-light">
-          {{ range $i, $p := where .Site.RegularPages "Section" "articoli" | first 6 }}
+          {{ range $i, $p := first 6 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) }}
           <div class="swiper-slide cursor-pointer {{ if eq $i 0 }}pb-5 swiper-slide-active{{ else }}py-5{{ end }}">
             <article class="space-y-2 px-5">
               <h2 class="heading-sm text-dark dark:text-light transition-colors title">
@@ -140,7 +140,7 @@
     {{ partial "components/heading.html" (dict "text" "ULTIMI ARTICOLI") }}
 
     <!-- First Featured Article -->
-    {{ range where .Site.RegularPages "Section" "articoli" | first 1 }}
+    {{ range first 1 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) }}
     <a href="{{ .RelPermalink }}" class="hidden lg:grid grid-cols-2 gap-5 group" >
       <div class="size-full overflow-hidden">
         {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "group-hover:scale-115 transition-transform duration-500") }}
@@ -188,7 +188,7 @@
 
       <div class="swiper articleSwiper" role="region" aria-label="Additional articles">
         <div class="swiper-wrapper">
-          {{ range after 1 (where .Site.RegularPages "Section" "articoli" | first 10) }}
+          {{ range after 1 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 10 }}
           <div class="swiper-slide">
             <a href="{{ .RelPermalink }}" class="block">
               <article class="flex flex-col items-stretch group h-full">

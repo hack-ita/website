@@ -42,8 +42,9 @@
 
   <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
     
-    <header class="flex flex-col justify-center gap-y-10">
-      <h2 class="text-light text-center">{{ .title | safeHTML }}</h2>
+    <!-- Section Heading & Typewriter -->
+    <div class="flex flex-col justify-center gap-y-10"  >
+      <h2 class="text-light text-center">Impara la sicurezza informatica</h2>
       <p class="text-light text-balance text-center">
         Dalle basi al livello OSCP: <br />
         <span id="typewriter" class="text-dark font-semibold" aria-hidden="true"></span>
@@ -57,30 +58,34 @@
         <span>errori comuni</span>
         <span>appunti di laboratorio reali</span>
       </div>
-    </header>
+    </div>
 
-    <section id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5" aria-label="Stats Overview">
-      <div  class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary font-black">12+</span>
-        <h5 class="text-bold lg:text-xl text-light">Technical Articles</h5>
-      </div>
+    <!-- Stats Grid -->
+    <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
+      
+      <!-- Stats Cards -->
+      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary font-black">{{ with where $.Site.RegularPages "Section" "articoli" }}{{ . | len }}{{ end }}+</span>
+        <h3 class="text-bold lg:text-xl text-light">Articoli</h3>
+      </article>
 
-      <div  class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
+      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
         <span class="text-primary font-black">8</span>
-        <h5 class="text-bold lg:text-xl text-dark">Main Categories</h5>
-      </div>
+        <h3 class="text-bold lg:text-xl text-dark">Categorie Principali</h3>
+      </article>
 
-      <div  class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary font-black">OSCP</span>
-        <h5 class="text-bold lg:text-xl text-light">Focused</h5>
-      </div>
+      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
+        <span class="text-primary font-black">Formazione</span>
+        <h3 class="text-bold lg:text-xl text-light">Focalizzata</h3>
+      </article>
 
-      <div  class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
+      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
         <span class="text-primary font-black">100%</span>
-        <h5 class="text-bold lg:text-xl text-dark">Red Team Vibes</h5>
-      </div>
-    </section>
-    
+        <h3 class="text-bold lg:text-xl text-dark">Hacking etico</h3>
+      </article>
+
+    </div>
+
   </div>
 
 </section>

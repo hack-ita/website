@@ -5,7 +5,7 @@ description: >-
   rete locale. Ideale per il recon silenzioso tramite ARP su ambienti privi di
   DNS o DHCP.
 image: /NETDISCOVER.webp
-draft: true
+draft: false
 date: 2026-01-26T00:00:00.000Z
 categories:
   - tools

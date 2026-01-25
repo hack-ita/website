@@ -4,7 +4,7 @@ description: >-
   Analizza il comportamento della rete con ping, fping e hping3. Tecniche di
   ricognizione ICMP, host discovery e test su firewall usati nei pentest.
 image: /ping.webp
-draft: true
+draft: false
 date: 2026-01-26T00:00:00.000Z
 categories:
   - tools

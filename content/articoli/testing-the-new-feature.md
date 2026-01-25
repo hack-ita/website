@@ -1,7 +1,7 @@
 ---
 title: testing the new feature
 slug: testing
-draft: true
+draft: false
 date: 2026-01-25T15:18:13.677Z
 categories:
   - linux

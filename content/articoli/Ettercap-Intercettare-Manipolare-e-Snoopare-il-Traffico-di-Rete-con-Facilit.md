@@ -10,6 +10,7 @@ description: >-
 image: /ettercap.webp
 draft: false
 date: 2026-01-21T00:00:00.000Z
+lastmod: 2026-01-25T00:00:00.000Z
 categories:
   - tools
 subcategories:

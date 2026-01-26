@@ -14,6 +14,7 @@ subcategories:
 tags:
   - snmpwalk
   - snmp
+slug: "snmpwalk"
 ---
 
 ##

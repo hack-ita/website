@@ -15,6 +15,7 @@ tags:
   - bloodhound
   - active directory
 featured: false
+slug: "bloodhound"
 ---
 
 # BloodHound: La Mappa per Dominare l'Active Directory - Guida Offensiva

@@ -13,6 +13,7 @@ tags:
   - crackmapexec
   - cme
 featured: false
+slug: "crackmapexec"
 ---
 
 # CrackMapExec / NetExec: scanner d'elite per hacking.

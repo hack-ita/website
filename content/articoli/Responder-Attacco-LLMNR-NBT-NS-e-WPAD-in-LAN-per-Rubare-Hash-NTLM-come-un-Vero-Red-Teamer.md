@@ -17,6 +17,7 @@ subcategories:
 tags:
   - responder
   - mitm
+slug: "responder"
 ---
 
 # From Broadcast to Domain Admin: Una Simulazione di Attacco con LLMNR/NBNS Poisoning e SMB Relay

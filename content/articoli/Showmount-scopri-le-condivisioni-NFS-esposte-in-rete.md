@@ -14,6 +14,7 @@ subcategories:
 tags:
   - showmount
   - nfs
+slug: "showmount"
 ---
 
 ## Introduzione

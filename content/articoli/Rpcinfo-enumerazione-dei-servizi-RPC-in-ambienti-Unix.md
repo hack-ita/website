@@ -13,6 +13,7 @@ subcategories:
 tags:
   - rpcinfo
   - rpc
+slug: "rpcinfo"
 ---
 
 ## Rpcinfo: enumerazione dei servizi RPC in ambienti Unix

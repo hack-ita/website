@@ -17,6 +17,7 @@ tags:
   - bettercap
   - mitm
   - spoofing
+slug: "bettercap"
 ---
 
 # Bettercap: guida pratica per network recon in lab

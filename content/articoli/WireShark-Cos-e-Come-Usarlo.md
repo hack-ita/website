@@ -15,6 +15,7 @@ subcategories:
 tags:
   - Wireshark
 featured: true
+slug: "wireshark"
 ---
 
 <!--

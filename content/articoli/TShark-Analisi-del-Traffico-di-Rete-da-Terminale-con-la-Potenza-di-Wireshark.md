@@ -12,6 +12,7 @@ subcategories:
   - recon
 tags:
   - TShark
+slug: "tshark"
 ---
 
 <!--

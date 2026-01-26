@@ -13,6 +13,7 @@ subcategories:
 tags:
   - ldapsearch
   - active directory
+slug: "ldapsearch"
 ---
 
 # ldapsearch: L'Arte dell'Enumerazione LDAP per Dominare l'Active Directory

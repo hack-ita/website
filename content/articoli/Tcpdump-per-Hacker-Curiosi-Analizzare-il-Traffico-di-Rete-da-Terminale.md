@@ -15,6 +15,7 @@ tags:
   - Tcpdump
   - ''
 featured: false
+slug: "tcpdump"
 ---
 
 # Tcpdump: guida pratica per catture e filtri in lab

@@ -17,6 +17,7 @@ subcategories:
 tags:
   - inveigh
   - ''
+slug: "inveigh"
 ---
 
 # Il Dominio della Rete Windows: Una Guida Offensiva con Inveigh

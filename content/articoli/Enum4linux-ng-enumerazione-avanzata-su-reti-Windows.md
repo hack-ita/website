@@ -14,6 +14,7 @@ subcategories:
 tags:
   - enum4linux-ng
 featured: true
+slug: "enum4linux-ng"
 ---
 
 # Enum4linux-ng: La Lente d'Ingrandimento per il Cuore di Windows e Samba

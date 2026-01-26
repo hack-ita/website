@@ -18,6 +18,7 @@ tags:
   - mitmproxy
   - mitm
   - ''
+slug: "mitmproxy"
 ---
 
 # mitmproxy: guida pratica per intercettare HTTP/HTTPS in lab

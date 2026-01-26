@@ -13,6 +13,7 @@ subcategories:
   - recon
 tags:
   - Netdiscover
+slug: "netdiscover"
 ---
 
 # Netdiscover: scoprire host in LAN con ARP (guida lab)

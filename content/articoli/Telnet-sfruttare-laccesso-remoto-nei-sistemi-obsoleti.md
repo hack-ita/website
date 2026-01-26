@@ -15,6 +15,7 @@ tags:
   - telnet
   - '23'
   - ''
+slug: "telnet"
 ---
 
 # Telnet: Il Vecchio Maestro dell'Accesso Remoto - Guida Offensiva Completa

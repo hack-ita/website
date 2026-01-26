@@ -18,6 +18,7 @@ subcategories:
 tags:
   - nbtscan
   - netbios
+slug: "nbtscan"
 ---
 
 # NetBIOS Enumeration Offensiva: Scoprire, Mappare e Colpire con NBTScan

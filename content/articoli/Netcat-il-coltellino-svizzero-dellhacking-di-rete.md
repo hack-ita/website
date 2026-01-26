@@ -13,6 +13,7 @@ subcategories:
 tags:
   - netcat
   - nc
+slug: "netcat"
 ---
 
 # Netcat: Il Coltellino Svizzero dell'Attaccante - Guida Offensiva Completa

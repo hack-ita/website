@@ -13,6 +13,7 @@ subcategories:
   - recon
 tags:
   - arp-scan
+slug: "arp-scan"
 ---
 
 # Arp-scan: scoprire host in LAN con ARP (guida lab)

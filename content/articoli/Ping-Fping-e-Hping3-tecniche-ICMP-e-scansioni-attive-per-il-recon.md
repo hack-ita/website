@@ -13,6 +13,7 @@ subcategories:
 tags:
   - icmp
   - ping
+slug: "ping"
 ---
 
 ### 1. Ping, Fping e Hping3: tecniche ICMP e scansioni attive per il recon

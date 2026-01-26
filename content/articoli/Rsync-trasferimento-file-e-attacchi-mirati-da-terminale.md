@@ -14,6 +14,7 @@ tags:
   - rsync
   - ''
 featured: true
+slug: "rsync"
 ---
 
 # Rsync: il canale silenzioso per l’esfiltrazione dei dati

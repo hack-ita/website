@@ -13,6 +13,7 @@ subcategories:
 tags:
   - smbclient
   - smb
+slug: "smbclient"
 ---
 
 # SMBclient: dall’accesso alla share al dominio

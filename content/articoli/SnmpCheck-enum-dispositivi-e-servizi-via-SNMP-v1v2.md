@@ -13,6 +13,7 @@ subcategories:
 tags:
   - snmp
   - ''
+slug: "snmpcheck"
 ---
 
 # Snmpcheck (snmp-check): enumerazione SNMP facile in lab

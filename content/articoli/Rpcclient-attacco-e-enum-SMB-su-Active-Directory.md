@@ -11,6 +11,7 @@ subcategories:
   - recon
 tags:
   - rpcclient
+slug: "rpcclient"
 ---
 
 # Rpcclient: il canale diretto per interrogare Active Directory via MS-RPC

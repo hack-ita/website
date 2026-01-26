@@ -21,24 +21,6 @@ tags:
   - mitm
 ---
 
-<!--
-URL CONSIGLIATO: /ettercap-intercettare-manipolare-traffico-rete
-TITLE SEO: Ettercap: Guida Pratica al MITM su Kali Linux (Lab)
-META DESCRIPTION: Impara a usare Ettercap per attacchi MITM in lab sicuri. Setup, filtri custom, sniffing e difese. Trucchi da pentester per CTF e HTB.
--->
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Ettercap: Guida Pratica al MITM su Kali Linux (Lab)",
-  "description": "Impara a usare Ettercap per attacchi MITM in lab sicuri. Setup, filtri custom, sniffing e difese. Trucchi da pentester per CTF e HTB.",
-  "author": { "@type": "Organization", "name": "HackIta" },
-  "publisher": { "@type": "Organization", "name": "HackIta" },
-  "about": "ETTERCAP, MITM, ARP Spoofing, Sniffing, Filtri, Kali Linux, Sicurezza di Rete, Ethical Hacking"
-}
-</script>
-
 # Ettercap: Intercettare, Manipolare e Snoopare il Traffico di Rete
 
 Ettercap è il coltellino svizzero per gli attacchi Man-in-the-Middle (MITM) in ambito di penetration testing. In parole povere, ti permette di metterti in mezzo alla comunicazione tra due dispositivi in una rete locale (come il tuo lab), intercettando, modificando o registrando tutto il traffico che passa. In contesti come HackTheBox, TryHackMe o i tuoi lab virtuali, è uno strumento indispensabile per capire le vulnerabilità di rete, catturare credenziali in chiaro e testare le difese. In questa guida, passiamo dalla teoria all’azione: vedremo come installarlo, lanciare attacchi ARP spoofing, scrivere filtri per manipolare i pacchetti in tempo reale e come difenderti da queste tecniche. Ricorda: tutto solo su macchine di tua proprietà o in ambienti espressamente autorizzati.

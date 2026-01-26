@@ -15,24 +15,6 @@ tags:
 slug: "tshark"
 ---
 
-<!--
-URL CONSIGLIATO: /tshark-analisi-traffico-rete-da-terminale-wireshark/
-TITLE SEO: TShark: Sniffare e Analizzare il Traffico da Terminale Come un Pro
-META DESCRIPTION: Usa TShark da linea di comando come Wireshark in terminale. Cattura, filtra e analizza traffico di rete in lab di pentesting con comandi pratici e filtri avanzati.
--->
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "TShark: Sniffare e Analizzare il Traffico da Terminale Come un Pro",
-  "description": "Usa TShark da linea di comando come Wireshark in terminale. Cattura, filtra e analizza traffico di rete in lab di pentesting con comandi pratici e filtri avanzati.",
-  "author": { "@type": "Organization", "name": "HackIta" },
-  "publisher": { "@type": "Organization", "name": "HackIta" },
-  "about": "tshark, wireshark, analisi traffico, pcap, filtri bpf, sniffing, ethical hacking, kali linux"
-}
-</script>
-
 # TShark: Analisi del Traffico di Rete da Terminale
 
 TShark è la versione a riga di comando di Wireshark. È lo strumento che usi quando lavori su server remoti senza interfaccia grafica, o quando vuoi automatizzare l'analisi di tracce di rete in un lab di pentesting. In questa guida, imparerai a usarlo per catturare e filtrare traffico in ambienti controllati come HackTheBox o macchine virtuali, trasformando flussi di pacchetti in indizi utilizzabili.

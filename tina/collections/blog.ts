@@ -15,7 +15,6 @@ const Blog: Collection = {
     defaultItem: {
       slug: "",
       draft: true,
-      date: new Date().toISOString(),
     },
     beforeSubmit: async ({ values }: { values: Record<string, any> }) => {
       if (!values.slug && values.title) {

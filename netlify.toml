@@ -8,7 +8,7 @@ TZ = "Europe/Oslo"
 [build]
 publish = "public"
 # Force clean build by removing public directory first
-command = "rm -rf public && npm run build"
+command = "npm run build"
 
 # This ensures Netlify doesn't cache between builds
 [build.processing]

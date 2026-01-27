@@ -1,5 +1,6 @@
 ---
 title: 'Tcpdump per Hacker Curiosi: Analizzare il Traffico di Rete da Terminale'
+slug: tcpdump
 description: >-
   Scopri come usare Tcpdump per analizzare il traffico di rete direttamente dal
   terminale. Una guida semplice e pratica pensata per hacker etici, curiosi e
@@ -15,298 +16,171 @@ tags:
   - Tcpdump
   - ''
 featured: false
-slug: "tcpdump"
 ---
 
-# Tcpdump: guida pratica per catture e filtri in lab
+# **Tcpdump per Hacker Curiosi: Analizzare il Traffico di Rete da Terminale**
 
-Tcpdump è il tool “da terminale” che usi quando vuoi **vedere e salvare pacchetti** in modo rapido: cattura da un’interfaccia, filtra con espressioni **BPF/pcap-filter** e può salvare tutto in un file per analisi dopo (Wireshark/Tshark). In un lab (HTB/Proving Grounds/CTF) ti serve soprattutto per fare una cosa: **confermare cosa sta succedendo davvero**, senza supposizioni. DNS che risolve, HTTP che parla, SMB che prova autenticazioni, connessioni in uscita “strane”: lo vedi subito. Sempre e solo in ambienti autorizzati.
+### **Introduzione Tattica**
 
-Link autorevoli:
+In un contesto di internal pentest su rete enterprise, ti trovi all’interno di un segmento dove convivono servizi moderni e protocolli legacy. Il traffico è intenso, i sistemi di monitoraggio sono attivi e non puoi basarti solo su scan attivi: devi osservare direttamente ciò che attraversa il wire. L’obiettivo è individuare credenziali in chiaro, token di sessione, metadati di autenticazione e pattern di comunicazione utili per escalation o movimento laterale. In questo scenario, tcpdump diventa lo strumento di osservazione a basso livello per validare cosa accade realmente sulla rete.
 
-* Manpage tcpdump (Debian): `https://manpages.debian.org/testing/tcpdump/tcpdump.8.en.html` (\[Debian Manpages]\[1])
-* Sintassi filtri (pcap-filter): `https://manpages.debian.org/testing/libpcap0.8/pcap-filter.7.en.html` (\[man7.org]\[2])
-* BPF nel kernel (per capire perché filtra “veloce”): `https://docs.kernel.org/networking/filter.html` (\[docs.kernel.org]\[3])
+### **TL;DR Operativo (Flusso a Step)**
 
-***
+1. Identifica l'interfaccia di rete corretta (`tun0`, `eth0`) su cui transitare il traffico target.
+2. Avvia una cattura minimale e filtrata per confermare reachability e servizi attivi.
+3. Stringi il filtro sui servizi in plaintext (es. HTTP, FTP) per catturare credenziali e sessioni.
+4. Salva il PCAP come evidenza incontrovertibile per il report e per analisi offline.
+5. Analizza il traffico intercettato per individuare password riutilizzabili, token o indizi per privilege escalation.
+6. Sfrutta le credenziali raccolte per tentare l'accesso ad altri sistemi (lateral movement).
+7. Pulisci le tracce e comprendi come un defender avrebbe potuto rilevare la tua attività di sniffing.
 
-## Cos’è tcpdump (e perché è ancora il re in CLI)
+### **Fase 1 – Ricognizione & Enumeration**
 
-**Tcpdump è “packet capture + stampa veloce”: se sai filtrare, ti dice la verità in 10 secondi.**
-**Quando ti perdi, tcpdump è il sanity check: “sto vedendo traffico? dove? su quale porta?”**
+Fingerprinting della situazione di rete per individuare il punto di ascolto ottimale e il traffico sensibile.
 
-In pratica tcpdump stampa i pacchetti che matchano un’espressione e può anche scrivere i pacchetti su file con `-w` oppure leggere da file con `-r`. I filtri sono quelli di libpcap/pcap-filter (la stessa “famiglia” di sintassi usata come capture filter anche in Wireshark). (\[Debian Manpages]\[1])
-
-***
-
-## Setup: interfacce, permessi e “perché non vedo niente”
-
-**Se non scegli l’interfaccia giusta o non hai permessi di cattura, tcpdump sembra rotto… ma stai sniffando il nulla.**
-**Prima regola da lab: lista interfacce → cattura corta → poi filtra.**
-
-Lista interfacce catturabili:
+**Comando: Identificazione Interfaccia**
 
 ```bash
 sudo tcpdump -D
 ```
 
-`-D` stampa le interfacce disponibili e i relativi nomi/ID.
+**Azione:** Determina se sei su VPN (`tun0`), LAN (`eth0`), o altro. Il traffico target deve transitare dall'interfaccia scelta.
 
-Permessi: sniffare da interfaccia può richiedere privilegi; leggere un file PCAP no.
-
-***
-
-## I comandi base che usi sempre (senza diventare matto)
-
-**Se impari questi 6 flag, tcpdump diventa “facile”: interfaccia, niente DNS lookup, conta, snaplen, salva/leggi file.**
-**Tutto il resto è ottimizzazione e comfort.**
-
-### Starter pack (copy/paste)
-
-Cattura 20 pacchetti, senza risolvere nomi (più veloce/meno casino):
+**Comando: Sanity Check e Conferma Traffico**
 
 ```bash
-sudo tcpdump -i eth0 -nn -c 20
+sudo tcpdump -i tun0 -nn -c 10 host 10.10.10.10
 ```
 
-Salva su file (PCAP) per aprirlo dopo:
+**Azione:** Conferma che i pacchetti verso/da il target siano visibili. Niente pacchetti = interfaccia sbagliata o routing errato.
+
+**Comando: Banner Grabbing Passivo e Service Detection**
 
 ```bash
-sudo tcpdump -i eth0 -nn -s 0 -w lab.pcap
+sudo tcpdump -i tun0 -nn -s 0 -A 'tcp and host 10.10.10.10 and (port 80 or port 21)' | head -30
 ```
 
-* `-s snaplen` controlla quanti byte prendi per pacchetto; `-s 0` = prendi tutto (utile in lab).
-* `-w` salva “packet data” per analisi dopo. (\[Debian Manpages]\[1])
+**Azione:** Cattura i banner e le prime risposte dei servizi in plaintext per identificare versioni e comportamenti senza inviare pacchetti attivi.
 
-Leggi un file salvato:
+### **Fase 2 – Initial Exploitation**
+
+Sfrutta misconfigurazioni di protocolli non cifrati per intercettare dati sensibili, il primo passo verso il compromissione di un endpoint.
+
+**Comando: Cattura Credenziali HTTP Basic o POST**
 
 ```bash
-tcpdump -nn -r lab.pcap
+sudo tcpdump -i eth0 -nn -s 0 -A 'tcp port 80 and host 192.168.1.50 and (((tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354) or (tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x47455420)))'
 ```
 
-`-r` legge da savefile invece che da interfaccia. (\[Debian Manpages]\[1])
+**Azione:** Filtra specificamente i pacchetti HTTP POST o GET per catturare form di login, parametri, token di sessione o file upload in chiaro.
 
-Output più “parlante” (payload in ASCII o hex):
+**Comando: Intercettazione Sessioni FTP o Telnet**
 
 ```bash
-sudo tcpdump -i eth0 -nn -A -c 10
-sudo tcpdump -i eth0 -nn -X -c 10
+sudo tcpdump -i eth0 -nn -s 0 -X 'tcp port 21 and host 192.168.1.50'
 ```
 
-`-A` stampa ASCII (comodo per HTTP in chiaro), `-X` fa hex+ASCII.
+**Azione:** Cattura comandi FTP (USER, PASS) o interazioni Telnet. L'output in esadecimale (`-X`) aiuta a vedere i caratteri di controllo.
 
-***
+### **Fase 3 – Post-Compromise & Privilege Escalation**
 
-## Filtri BPF: la sintassi che ti fa vincere i lab
+Dopo aver ottenuto l'accesso iniziale, usa il sniffing per osservare il traffico interno al sistema compromesso o verso altri server, cercando segreti.
 
-**I filtri di tcpdump sono espressioni pcap-filter (BPF): “host/net/port + src/dst + proto + parentesi”.**
-**Se ti incasini con le parentesi, metti tutto tra apici: eviti che la shell ti rovini l’espressione.** (\[Stack Overflow]\[4])
-
-Cosa devi sapere (60 secondi):
-
-* **type qualifier**: `host`, `net`, `port`, `portrange`
-* **dir qualifier**: `src`, `dst`, `src or dst`, `src and dst`
-* **proto qualifier**: `tcp`, `udp`, `ip`, `ip6`, `arp`, …
-* operatori: `and`, `or`, `not` + parentesi `()` (quote consigliato)
-
-Esempi utili (IP fittizi da lab):
-
-Solo traffico verso/da una VM:
+**Scenario: Sniffing del Traffico Locale (lo) per Indizi**
 
 ```bash
-sudo tcpdump -i eth0 -nn 'host 10.10.20.5'
+# Sulla macchina compromessa
+sudo tcpdump -i lo -nn -s 0 -A 'port 3306 or port 5432' -c 20
 ```
 
-Solo DNS:
+**Azione:** Molte applicazioni comunicano con DB locali in plaintext sull'interfaccia di loopback. Intercetta query SQL che possono contenere credenziali di altri servizi.
+
+**Scenario: Cattura di Chiavi SSH o Token in Transito (In Lab)**
 
 ```bash
-sudo tcpdump -i eth0 -nn 'udp port 53'
+# In un lab, se riesci a posizionarti tra due host che comunicano
+sudo tcpdump -i eth0 -nn -s 0 -w ssh_handshake.pcap 'tcp port 22 and host 10.10.10.5'
 ```
 
-Solo HTTP/HTTPS:
+**Azione:** Sebbene non decifrato, puoi analizzare timing, dimensioni e metadati della connessione. In scenari specifici (es. downgrade o misconfigurazioni), parti di handshake possono essere sfruttate.
+
+**Comando: Ricerca di Pattern di Password e Secret**
 
 ```bash
-sudo tcpdump -i eth0 -nn 'tcp port 80 or tcp port 443'
+tcpdump -nn -r captured.pcap -A | grep -i -E "pass=|pwd=|token=|secret=|key="
 ```
 
-Solo SMB e niente broadcast/multicast (meno rumore):
+**Azione:** Analisi offline del PCAP per estrarre rapidamente stringhe sospette che possono portare a privilege escalation tramite password reuse.
+
+### **Fase 4 – Lateral Movement & Pivoting**
+
+Riutilizza le credenziali e gli indizi raccolti per muoverti lateralmente, utilizzando tcpdump per verificare la connettività verso nuovi segmenti di rete.
+
+**Comando: Verifica Connessioni da un Pivot Point**
 
 ```bash
-sudo tcpdump -i eth0 -nn 'tcp port 445 and not broadcast and not multicast'
+# Sul pivot (host compromesso)
+sudo tcpdump -i any -nn 'host 172.16.5.20 and not arp' -c 5
 ```
 
-L’idea “not broadcast/multicast” è un trucco classico anche in esempi di capture filter: in lab tagli via rumore inutile e ti restano i pacchetti che contano.
+**Azione:** Conferma che dal pivot sia raggiungibile un nuovo target nella rete interna (`172.16.5.20`), prima di lanciare attacchi diretti.
 
-***
-
-## Salvare PCAP “bene”: rotazione file e compressione
-
-`-w` salva PCAP per analisi dopo; con `-C` o `-G` ruoti i file e non distruggi il disco. **In lab serio, catturi a finestre (size/time) e poi analizzi con Wireshark/Tshark.** (\[Debian Manpages]\[1])
-
-Salvataggio base:
+**Comando: Sniffing per Mappare Comunicazioni Orizzontali**
 
 ```bash
-sudo tcpdump -i eth0 -nn -s 0 -w cap.pcap
+sudo tcpdump -i eth1 -nn 'net 172.16.5.0/24 and (port 445 or port 5985)' -w lateral_capture.pcap
 ```
 
-`-w` scrive i pacchetti su file; `-r` e `-V` servono per leggere uno o più file salvati.
+**Azione:** Cattura il traffico SMB o WinRM verso una nuova subnet per identificare altri potenziali target per il movimento laterale.
 
-Rotazione per dimensione (file da N “milioni di byte”):
+### **Fase 5 – Detection & Hardening**
 
-```bash
-sudo tcpdump -i eth0 -nn -w cap.pcap -C 50
-```
+Comprendi come un Blue Team potrebbe rilevare la tua attività e quali contromisure concrete implementare.
 
-`-C` chiude e apre un nuovo file quando supera la soglia. (\[Debian Manpages]\[1])
+**Indicatori di Compromissione (IoC) Reali:**
 
-Rotazione per tempo (ogni X secondi) + limite numero file:
+* Processo `tcpdump` o `libpcap` in esecuzione su host non autorizzati.
+* Interfacce di rete impostate in modalità promiscua (visibile via `ip link` o tool come `promiscdetect`).
+* Picchi anomali di traffico ARP su uno switch, possibili di ARP spoofing per MITM.
+* Log di servizi (es. web server) che mostrano indirizzi IP sorgente improbabili (tipo gateway) per richieste sensibili.
 
-```bash
-sudo tcpdump -i eth0 -nn -w cap.pcap -G 300 -W 20
-```
+**Hardening Concreto:**
 
-`-G` ruota ogni `rotate_seconds`, `-W` limita il numero di file. (\[Debian Manpages]\[1])
+* **Eliminare Plaintext:** Disabilitare definitivamente HTTP, FTP, Telnet, SNMP v2. Forzare TLS/SSH.
+* **Segmentazione di Rete:** Implementare VLAN e firewall di micro-segmentazione per limitare la visibilità del traffico broadcast/unicast.
+* **Controllo Privilegi:** Rimuovere i privilegi `sudo` per tcpdump e limitare le capability `CAP_NET_RAW` agli utenti strettamente necessari.
+* **Monitoraggio Attivo:** Implementare regole IDS/IPS (Suricata/Snort) che alertano su tentativi di avvio di sniffer o su protocolli plaintext in reti considerate sicure.
 
-Compressione post-rotate (pratica):
+### **Errori Comuni Che Vedo Negli Assessment Reali**
 
-```bash
-sudo tcpdump -i eth0 -nn -w cap.pcap -C 50 -z gzip
-```
+* **Sniffare sull'interfaccia sbagliata:** Perdersi `tun0` vs `eth0` e credere che il target non sia raggiungibile.
+* **Filtri BPF troppo ampi o sbagliati:** Catturare GB di traffico inutile invece di stringere su `host` e `port`. Dimenticare le parentesi nelle espressioni complesse.
+* **Non salvare il PCAP:** Perdere l'evidenza forense per il report o l'analisi successiva.
+* **Interpretare male i "bad checksum":** Pensare a traffico corrotto invece di disabilitare `checksum offloading` con `ethtool -K eth0 tx off rx off` in lab.
+* **Provare a decifrare TLS con tcpdump:** Non comprendere i limiti dello strumento; per ispezione TLS serve un proxy MITM configurato (mitmproxy).
+* **Fare sniffing prolungato senza rotazione:** Riempire il disco del pivot point e causare denial of service.
 
-`-z` esegue un comando dopo ogni rotazione (es. gzip). (\[Debian Manpages]\[1])
+### **Mini Tabella 80/20 Finale**
 
-***
+| Obiettivo                  | Azione                           | Comando                                                  |
+| :------------------------- | :------------------------------- | :------------------------------------------------------- |
+| **Identifica Interfaccia** | Lista interfacce disponibili     | `tcpdump -D`                                             |
+| **Cattura Rapida**         | Conferma traffico verso target   | `tcpdump -i tun0 -nn -c 5 host 10.10.10.10`              |
+| **Exploitation Creds**     | Intercetta login HTTP in chiaro  | `tcpdump -i eth0 -nn -A 'tcp port 80 and host X'`        |
+| **Salva Evidenza**         | Cattura per report e replay      | `tcpdump -i any -s 0 -w proof.pcap 'port 21 and host X'` |
+| **Analisi Post-Exploit**   | Cerca secret nel traffico locale | `tcpdump -i lo -nn -A 'port 3306' -c 50`                 |
 
-## tcpdump vs Tshark/Wireshark: quando scegliere cosa
+## 🔗 Approfondisci e Metti in Pratica
 
-**Tcpdump è perfetto per catture veloci e filtri BPF; Tshark/Wireshark sono migliori per analisi “ricca” e filtri display avanzati.**
-**In pratica: cattura con tcpdump → analizza con Wireshark/Tshark.**
+Se vuoi applicare queste tecniche in scenari reali di **internal pentest, traffic sniffing e post-compromise analysis**, puoi esplorare:
 
-Punto che confonde tutti: **capture filter ≠ display filter**. I capture filter (BPF) riducono cosa viene catturato; i display filter cambiano solo cosa vedi in analisi e puoi modificarli al volo.
+👉 [https://hackita.it/servizi](https://hackita.it/servizi)
+👉 [https://hackita.it/supporta](https://hackita.it/supporta)
 
-***
+Per rafforzare la tua padronanza tecnica su tcpdump e BPF filtering:
 
-## Mini-playbook operativo (step-by-step): “che traffico fa questa VM?”
+* Tcpdump Manual Ufficiale: [https://www.tcpdump.org/manpages/tcpdump.1.html](https://www.tcpdump.org/manpages/tcpdump.1.html)
+* pcap-filter Reference (Sintassi BPF): [https://www.tcpdump.org/manpages/pcap-filter.7.html](https://www.tcpdump.org/manpages/pcap-filter.7.html)
+* RFC 793 – TCP Protocol: [https://datatracker.ietf.org/doc/html/rfc793](https://datatracker.ietf.org/doc/html/rfc793)
 
-**Playbook da lab: 1) scegli interfaccia, 2) cattura stretta con filtro, 3) riproduci l’azione (login/upload), 4) salva PCAP, 5) analizza con calma.**
-**Obiettivo: passare da “boh non va” a “ecco la porta/host/protocollo che spacca tutto”.**
-
-**Step 1 — Trova l’interfaccia giusta**
-
-```bash
-sudo tcpdump -D
-```
-
-**Step 2 — Cattura solo il minimo (esempio: target 10.10.20.5:8081)**
-
-```bash
-sudo tcpdump -i eth0 -nn -s 0 -w lab.pcap 'host 10.10.20.5 and tcp port 8081'
-```
-
-(qui usi pcap-filter: `host` + `tcp port` + `and`).
-
-**Step 3 — Riproduci l’azione**
-Apri browser/curl nel lab e fai la request (login, upload, ecc.). Poi stoppa con Ctrl+C: tcpdump ti stampa anche i contatori (captured/received/dropped).
-
-**Step 4 — Se vedi “dropped by kernel”, aumenta buffer**
-
-```bash
-sudo tcpdump -i eth0 -nn -B 4096 -s 0 -w lab.pcap 'host 10.10.20.5'
-```
-
-`-B` setta la capture buffer size del sistema (in KiB). Se la macchina è sotto carico o il traffico è “bursty”, i drop possono aumentare: alzare buffer aiuta, ma se il sistema è saturo devi anche ridurre rumore o catturare più stretto. (\[Unix & Linux Stack Exchange]\[5])
-
-**Step 5 — Analizza**
-
-```bash
-tcpdump -nn -r lab.pcap
-```
-
-Poi, se serve, apri in Wireshark/Tshark per display filter e follow stream.
-
-***
-
-## Checklist pratica (lab / esami OSCP-style)
-
-**Questa checklist ti evita l’errore classico: “catturo tutto e poi non capisco nulla”.**
-**Prima restringi, poi allarghi.**
-
-* Ho l’autorizzazione (lab/VM/rete mia).
-* Ho scelto l’interfaccia corretta ( `tcpdump -D`).
-* Uso `-nn` (niente DNS/porte risolte) per velocità/leggibilità.
-* Uso un filtro pcap-filter sensato ( `host/net/port`, `src/dst`, `tcp/udp`).
-* Quando ci sono parentesi, metto l’espressione tra apici.
-* Se devo analizzare davvero: salvo con `-w` e poi leggo con `-r`.
-* Se perdo pacchetti: controllo “dropped by kernel” e aumento buffer ( `-B`).
-
-***
-
-## Promemoria 80/20
-
-| Obiettivo              | Azione pratica           | Comando/Strumento                     |
-| ---------------------- | ------------------------ | ------------------------------------- |
-| Scegliere NIC          | lista interfacce         | `sudo tcpdump -D`                     |
-| Vedere subito traffico | cattura corta, no lookup | `sudo tcpdump -i eth0 -nn -c 20`      |
-| Filtrare bene          | usa pcap-filter          | `'host 10.10.20.5 and tcp port 8081'` |
-| Salvare per analisi    | scrivi PCAP              | `-w lab.pcap`                         |
-| Leggere dopo           | read savefile            | `tcpdump -nn -r lab.pcap`             |
-| Non saturare disco     | ruota per size/time      | `-C 50` / `-G 300 -W 20`              |
-| Ridurre drop           | aumenta buffer           | `-B 4096`                             |
-
-***
-
-## Concetti controintuitivi (minimo 3)
-
-**Queste sono le trappole che fanno impazzire gli skiddie (e pure i junior).**
-**Capiscile e diventi 10x più veloce.**
-
-1. **“Il filtro non funziona” ma è la shell che mangia le parentesi**
-   Se usi `(` `)` senza quote, spesso la shell interpreta roba e ti esplode il comando. Metti l’espressione tra apici quando usi parentesi o combinazioni complesse. (\[Stack Overflow]\[4])
-2. **“Ho salvato con -w, perché non vedo testo nel file?”**
-   Perché `-w` salva pacchetti raw (PCAP), non un report. Il “testo” lo vedi a schermo durante la cattura oppure lo ottieni rileggendo il file con `-r` (o aprendo in Wireshark/Tshark). (\[Debian Manpages]\[1])
-3. **“Ho catturato tutto ma non posso cambiare filtro al volo”**
-   Con tcpdump il filtro è un capture filter (BPF): si applica prima e decide cosa entra nella cattura. I display filter sono roba da Wireshark/Tshark in fase di analisi.
-4. **“Perché BPF è così veloce?”**
-   Perché i filtri vengono compilati e agganciati al kernel/socket filtering: tanti pacchetti vengono scartati prima di arrivare in user-space, quindi consumi meno risorse e l’output è più gestibile. (\[docs.kernel.org]\[3])
-
-***
-
-## FAQ su tcpdump
-
-**Tcpdump è legale da usare?**
-Sì, se lo usi su reti/host dove hai autorizzazione (lab, test interni, ambienti di training). Su reti altrui senza consenso è un no secco.
-
-**Qual è la differenza tra** `-w` e `-r`?
-`-w` scrive su file (savefile/PCAP), `-r` legge da file invece che sniffare live. (\[Debian Manpages]\[1])
-
-**Come faccio a filtrare “solo DNS” o “solo SMB” velocemente?**
-DNS:
-
-```bash
-sudo tcpdump -i eth0 -nn 'udp port 53'
-```
-
-SMB:
-
-```bash
-sudo tcpdump -i eth0 -nn 'tcp port 445'
-```
-
-La logica è pcap-filter: `proto + port`.
-
-**Perché devo usare** `-nn` quasi sempre?
-Per evitare risoluzioni di nomi/servizi che rendono l’output più lento e più confuso (in lab vuoi numeri chiari).
-
-**Tcpdump o Tshark: quale scelgo?**
-Tcpdump per cattura rapida e filtri BPF; Tshark/Wireshark per analisi ricca e display filter. Capture filter e display filter non sono la stessa cosa.
-
-**Come evito di riempire il disco con catture lunghe?**
-Rotazione: `-C` (size) o `-G` (time) + `-W` (limite file), e se serve compressione con `-z`.
-
-***
-
-## Supporta HackITA
-
-Se questa guida ti è stata utile, puoi supportarci dalla pagina **Supporta**: anche un contributo piccolo ci aiuta a pubblicare più contenuti pratici e lab-oriented.
-
-Se invece sei bloccato o vuoi accelerare, facciamo **formazione 1:1** (hacking etico, cybersecurity, networking, CTF/lab, metodo di analisi e troubleshooting). E se hai un’azienda o un progetto, possiamo valutare anche **lavori/consulenze** su attività di sicurezza e assessment, sempre in contesti autorizzati e concordati.
+La differenza tra semplice packet capture e offensive network intelligence sta nella precisione dei filtri, nella lettura corretta dei protocolli e nella capacità di trasformare traffico grezzo in vantaggio operativo reale.

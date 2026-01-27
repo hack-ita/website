@@ -2,6 +2,7 @@
 title: >-
   NBTScan: Scansione Silenziosa della Rete Windows via NetBIOS per Raccogliere
   Info Sensibili
+slug: nbtscan
 description: >-
   NBTScan è uno strumento essenziale per la fase di ricognizione su reti
   Windows. Permette di identificare host attivi, nomi NetBIOS, gruppi di lavoro
@@ -18,397 +19,567 @@ subcategories:
 tags:
   - nbtscan
   - netbios
-slug: "nbtscan"
 ---
 
-# NetBIOS Enumeration Offensiva: Scoprire, Mappare e Colpire con NBTScan
+# NBTScan: Scansione Silenziosa della Rete Windows via NetBIOS per Raccogliere Info Sensibili
 
-**Scenario Red Team | Ambiente Controllato Autorizzato**
+Raccogli nomi host, dominio/workgroup e “ruoli” Windows via NetBIOS in pochi minuti, senza affidarti a DNS: tutto verificabile in un lab e pronto da usare per i passi SMB/AD.
 
-La fase di post-exploitation in una rete Windows spesso inizia con una domanda semplice: "Chi c'è là fuori?". Mentre strumenti moderni come gli scanner di rete generici possono identificare host attivi, c'è un protocollo che parla un linguaggio più ricco, più informativo. È il momento di interrogare **NetBIOS**, un vecchio ma loquace abitante delle reti Windows che ancora oggi rivela segreti preziosi.
+## Intro
 
-## Perché NetBIOS è il Sogno di un Red Teamer
+NBTScan è un tool CLI che scansiona una rete IP interrogando NetBIOS per ottenere informazioni come nome host, user loggato e tabella nomi/servizi associati.
 
-NetBIOS over TCP/IP (NBT) non è solo legacy; è una **miniera di intelligence**. Rispondendo sulle porte UDP 137 e talvolta TCP 139, può rivelare:
+In un pentest interno “da lab” è utile quando vuoi una fotografia rapida e leggibile dell’ecosistema Windows (workstation, file server, DC) anche in ambienti dove ICMP/DNS non aiutano.
 
-* **Nomi NetBIOS degli host**: fondamentali per attacchi successivi di spoofing (LLMNR/NBNS Poisoning).
-* **Ruoli dei server**: identificare Domain Controller, File Server, SQL Server.
-* **Account utente**: a volte, gli utenti loggati su macchine specifiche.
-* **Dettagli del dominio**: il nome del dominio di lavoro o di Active Directory.
+Cosa farai in questa guida:
 
-Questa non è semplice "osservazione". È **ricognizione attiva e offensiva**, il primo passo per trasformare un accesso iniziale in un pivot verso asset critici.
+* Capire dove nbtscan entra nel workflow di recon interno.
+* Usare 3 pattern di comandi che coprono il 90% dei casi.
+* Interpretare suffix NetBIOS per identificare DC/file server/browser.
+* Esportare output “script-friendly” per automatizzare follow-up.
 
-## Configurazione dell'Ambiente di Attacco
+Nota etica: usa questi passaggi solo su VM personali o ambienti autorizzati (CTF/HTB/PG/lab).
 
-Per questa simulazione, utilizzeremo **Kali Linux** come piattaforma di attacco. NBTScan è tipicamente preinstallato. Verifichiamo e prepariamoci:
+## Cos’è nbtscan e dove si incastra nel workflow
+
+> **In breve:** nbtscan invia query NetBIOS (tipicamente su UDP 137) e stampa info utili (nomi, user, MAC, tabella servizi) per trasformare una subnet Windows in una lista di target prioritizzati.
+
+nbtscan non è “uno scanner generico”: è un acceleratore di **NetBIOS intelligence**. Quando funziona bene, ti fa risparmiare tempo nel distinguere “host qualsiasi” da “host Windows interessante” (file server, DC, browser master). (\[Debian Manpages]\[1])
+
+Quando usarlo (in lab):
+
+* Hai subnet interna e vuoi nomi/ruoli senza dipendere da DNS.
+* Vuoi identificare rapidamente host con **File Server Service** e **Domain Controllers** per guidare i passi SMB/AD.
+
+Quando NON usarlo:
+
+* Stai lavorando su segmenti non Windows (router/IoT): NetBIOS spesso non risponde o non ha senso.
+* Ti serve enumerare condivisioni: nbtscan **non** fa share scanning (è volutamente fuori scope). (\[Debian Manpages]\[1])
+
+## Installazione, versione e quick sanity check
+
+> **In breve:** su Kali lo installi via `apt`, poi verifichi sintassi e opzioni con `--help` prima di fidarti di timeout/flag.
+
+Perché: assicurarti di avere nbtscan e capire subito come interpreta le opzioni nel tuo sistema (timeout, verbose, parsing). (\[Kali Linux]\[2])
+
+Cosa aspettarti: una schermata help con opzioni tipo `-v`, `-r`, `-s`, `-f`, versione installata.
+
+Comando:
 
 ```bash
-# Verifica dell'installazione e versione
-nbtscan --help | head -20
-
-# Configurazione dell'interfaccia di rete (adatta al tuo lab)
-sudo ip addr show eth0
+sudo apt update && sudo apt install -y nbtscan
+nbtscan --help | head -40
 ```
 
-**Output di verifica:**
+Esempio di output (può variare):
 
-```
-NBTscan version 1.7.1
-Usage: nbtscan [options] [targets]
-Options:
-  -r           Use local port 137 for scans
-  -v           Verbose output
-  -h           Human-readable names for services
-  -s separator Column separator (default is tab)
-  -q           Don't display banners and error messages
+```text
+NBTscan version 1.7.2.
+Usage:
+nbtscan [-v] [-d] [-e] [-l] [-t timeout] [-b bandwidth] [-r] [-q] [-s separator] [-m retransmits] (-f filename)|(<scan_range>)
 ...
 ```
 
-## Fase 1: Scansione di Rete Aggressiva con NBTScan
+Interpretazione: se vedi `-r` e `-s`, sei già pronto per i due pattern più utili: affidabilità (porta 137) e parsing.
 
-Il comando base è semplice ma potente. Eseguiamo uno sweep completo della subnet target.
+Errore comune + fix: `-r` può richiedere privilegi elevati (bind della porta 137). Se fallisce, rilancia con `sudo` o evita `-r` (sapendo che potresti perdere risposte). (\[Debian Manpages]\[1])
 
-```bash
-# Scansione di base di un'intera subnet
-nbtscan -r 192.168.1.0/24
-```
+Nota anti-hallucination: l’unità di `-t` (timeout) può differire tra build/documentazione (secondi vs millisecondi). Regola pratica: fidati del tuo `nbtscan --help` e calibra con test su 1 host. (\[Debian Manpages]\[1])
 
-**Parametro critico**: `-r` forza l'uso della porta sorgente 137, aumentando significativamente l'affidabilità delle risposte in reti Windows moderne.
+## Sintassi base e 3 pattern che userai sempre
 
-**Output reale da un lab interno:**
+> **In breve:** (1) sweep subnet, (2) deep dive su host, (3) lista target da file/STDIN: con questi copri quasi tutto il recon NetBIOS.
 
-```
-Doing NBT name scan for addresses from 192.168.1.0/24
+### Pattern 1 — Sweep subnet (mappa veloce)
 
-IP address       NetBIOS Name     Server    User             MAC address      
-------------------------------------------------------------------------------
-192.168.1.1      GATEWAY          <server>  <unknown>        00:50:56:c0:00:08
-192.168.1.10     FILESRV01        <server>  <unknown>        00:0c:29:45:78:9a
-192.168.1.20     WEBDEV01         <server>  DEV_USER         00:0c:29:12:34:56
-192.168.1.25     DC01             <server>  <unknown>        00:0c:29:ab:cd:ef
-192.168.1.30     WS-ACCOUNTING    <server>  ADMIN            00:0c:29:78:90:12
-192.168.1.45     SQLPROD          <server>  <unknown>        00:0c:29:34:56:78
-```
+Perché: scoprire host Windows “parlanti” e ottenere subito nome + user + MAC.
 
-**Analisi offensiva immediata:**
+Cosa aspettarti: righe con `IP`, `NetBIOS Name`, indicatore server, user e MAC.
 
-1. **DC01** (192.168.1.25) - Il Domain Controller. L'obiettivo principale.
-2. **FILESRV01** (192.168.1.10) - Server di file, potenziale vettore per SMB attacks.
-3. **WS-ACCOUNTING** (192.168.1.30) - Workstation con utente "ADMIN" loggato. Target ad alto valore.
-4. **SQLPROD** (192.168.1.45) - Server SQL, potenziale per attacchi tramite autenticazione Windows.
-
-## Fase 2: Enumerazione Avanzata - Estrazione dei Servizi NetBIOS
-
-L'informazione più preziosa arriva dai **codici servizio NetBIOS**. Questi identificano esattamente i ruoli di ogni host.
+Comando:
 
 ```bash
-# Enumerazione verbosa con dettagli dei servizi
-nbtscan -v -h 192.168.1.25
+sudo nbtscan -r 10.10.10.0/24
 ```
 
-**Output dettagliato del Domain Controller:**
+Esempio di output (può variare):
 
+```text
+Doing NBT name scan for addresses from 10.10.10.0/24
+IP address       NetBIOS Name     Server    User             MAC address
+-----------------------------------------------------------------------
+10.10.10.10      WS-DEV           <server>  DEV\devuser      00:0c:29:12:34:56
+10.10.10.20      FILESRV          <server>  <unknown>        00:0c:29:aa:bb:cc
+10.10.10.25      DC01             <server>  <unknown>        00:0c:29:11:22:33
 ```
-NetBIOS Name Table for Host 192.168.1.25:
 
-Name             Service          Type             
+Interpretazione: `DC01` e `FILESRV` entrano subito nella “shortlist” per follow-up SMB/AD.
+
+Errore comune + fix: nessun risultato → prova senza `-r` (alcune reti/host rispondono comunque), oppure verifica che UDP 137 non sia filtrato nel lab.
+
+### Pattern 2 — Deep dive su un host (tabella nomi/servizi)
+
+Perché: confermare “ruolo” (DC, browser, file server) leggendo i suffix NetBIOS.
+
+Cosa aspettarti: tabella `Name / <suffix> / UNIQUE|GROUP` e (se usi `-h`) descrizioni leggibili.
+
+Comando:
+
+```bash
+nbtscan -v -h 10.10.10.25
+```
+
+Esempio di output (può variare):
+
+```text
+NetBIOS Name Table for Host 10.10.10.25:
+Name             Service          Type
 -----------------------------------------------
-DC01             <00>             UNIQUE      Workstation Service
-CORPORATE        <00>             GROUP       Domain Name
-DC01             <03>             UNIQUE      Messenger Service
-DC01             <20>             UNIQUE      File Server Service
-CORPORATE        <1B>             UNIQUE      Domain Master Browser
-CORPORATE        <1C>             GROUP       Domain Controller
-DC01             <1B>             UNIQUE      Domain Master Browser
-DC01             <1C>             GROUP       Domain Controller
-...__MSBROWSE__  <01>             GROUP       Master Browser
+DC01             <00>             UNIQUE
+LAB              <00>             GROUP
+DC01             <20>             UNIQUE
+LAB              <1B>             UNIQUE
+LAB              <1C>             GROUP
+..__MSBROWSE__.. <01>             GROUP
 ```
 
-**Decodifica dei servizi critici per l'attacco:**
+Interpretazione: `<1C>` (Domain Controllers) + `<1B>` (Domain Master Browser) = host altamente interessante in ottica AD.
 
-* **`<1C>` - Domain Controller**: Conferma definitiva del ruolo. Questo host custodisce il database degli account di dominio (NTDS.dit).
-* **`<20>` - File Server Service**: Il DC espone condivisioni SMB. Potenziale vettore per SMB Relay se signing non è forzato.
-* **`<1B>` - Domain Master Browser**: Informazioni sul segmento di rete e gestione delle browse list.
+Errore comune + fix: `-h` funziona solo con `-v`. Se ottieni errore o output strano, usa solo `-v` e interpreta i suffix manualmente. (\[Debian Manpages]\[1])
 
-## Fase 3: Tecniche di Scansione Avanzate per Evasione
+### Pattern 3 — Target list (file o STDIN)
 
-In ambienti più controllati, possiamo adattare le nostre tecniche:
+Perché: lavorare “precisione chirurgica” su IP già selezionati (da ARP/DHCP/Nmap).
+
+Cosa aspettarti: scansione solo degli IP in lista, meno rumore, più controllo.
+
+Comando:
 
 ```bash
-# Scansione silenziosa (senza banner)
-nbtscan -q 192.168.1.10-20
-
-# Scansione con formato personalizzato per parsing automatico
-nbtscan -s ',' 192.168.1.25 > dc_enum.csv
-
-# Scansione di un range specifico con output verboso
-nbtscan -v -h 192.168.1.1 192.168.1.50 192.168.1.100
+printf "10.10.10.10\n10.10.10.20\n10.10.10.25\n" > targets.txt
+nbtscan -f targets.txt
 ```
 
-**Script per scansione stealth con ritardi casuali:**
+Esempio di output (può variare):
+
+```text
+10.10.10.10      WS-DEV           <server>  DEV\devuser      00:0c:29:12:34:56
+10.10.10.20      FILESRV          <server>  <unknown>        00:0c:29:aa:bb:cc
+10.10.10.25      DC01             <server>  <unknown>        00:0c:29:11:22:33
+```
+
+Interpretazione: perfetto quando il discovery L2 l’hai già fatto (es. con ARP). In quel caso, nbtscan diventa “identificazione + priorità”, non discovery puro: vedi anche la guida su [ARP-Scan per host discovery in LAN](https://hackita.it/articoli/arp-scan/).
+
+Errore comune + fix: se `-f` non legge come ti aspetti, assicurati che il file contenga un IP per riga e nessun trailing “strano” (spazi, CRLF).
+
+## Interpretare output e suffix NetBIOS (la parte che conta davvero)
+
+> **In breve:** i suffix NetBIOS ti dicono “che cosa è” un host: `<00>` workstation/domain, `<20>` file server, `<1B>/<1C>` indicatori forti di AD/DC.
+
+Quello che ti interessa non è “un nome”: è il **significato operativo** dei suffix. In un lab Windows/AD, questi sono i più utili: (\[Debian Manpages]\[1])
+
+* `<00>`: Workstation Service (nome macchina) o Domain Name (group).
+* `<20>`: File Server Service (candidato naturale per follow-up SMB).
+* `<1B>`: Domain Master Browser.
+* `<1C>`: Domain Controllers (group).
+* `<1D>/<1E>`: Master Browser / Browser elections.
+* `__MSBROWSE__<01>`: segnali legati al browser service.
+
+Perché: se vedi `<1C>`, la tua “kill chain da lab” cambia: stai guardando un nodo AD-centrico, quindi i passi dopo sono orientati a SMB/LDAP/cred hygiene.
+
+Cosa aspettarti: su DC o server “ricchi” vedrai più righe (group + unique) rispetto a una workstation “pulita”.
+
+Comando:
 
 ```bash
-#!/bin/bash
-# stealth_nbtscan.sh - Scansione NetBIOS con evasione basilare
-
-TARGETS="192.168.1.0/24"
-OUTPUT_FILE="nbtscan_results_$(date +%s).txt"
-
-echo "[*] Iniziando scansione NetBIOS stealth su $TARGETS"
-
-for ip in $(seq 1 254); do
-    TARGET="192.168.1.$ip"
-    echo "[*] Scansionando $TARGET"
-    
-    # Esegui nbtscan su singolo host con output minimo
-    nbtscan -q $TARGET >> $OUTPUT_FILE 2>/dev/null
-    
-    # Ritardo casuale tra 1 e 5 secondi
-    sleep $((1 + RANDOM % 5))
-done
-
-echo "[+] Scansione completata. Risultati in $OUTPUT_FILE"
+nbtscan -v 10.10.10.25
 ```
 
-## Fase 4: Integrazione nel Toolchain Offensivo
+Esempio di output (può variare):
 
-NBTScan non è un'isola. Ecco come integrare i suoi risultati con altri strumenti offensivi:
+```text
+LAB              <1C>             GROUP
+LAB              <1B>             UNIQUE
+DC01             <20>             UNIQUE
+```
 
-### Integrazione con Responder per LLMNR/NBNS Poisoning Mirato
+Interpretazione: `<1C>` = “qui ci sono Domain Controllers”, `<20>` = “qui parla SMB/file server service”. A quel punto il follow-up tipico (sempre in lab) è validare SMB e capire cosa è esposto: vedi [Smbclient per enumerare condivisioni Windows](https://hackita.it/articoli/smbclient/).
+
+Errore comune + fix: MAC `00-00-00-00-00-00` su Samba/non-Windows può capitare: nbtscan stampa quello che riceve, non “inventa” MAC. (\[Debian Manpages]\[1])
+
+## Casi d’uso offensivi “da lab” e validazione (con mitigazioni)
+
+> **In breve:** nbtscan ti dà una lista di host Windows con ruoli; la parte “offensiva” è come usi quella lista per decisioni rapide, e come misuri rumore + detection.
+
+### Caso 1 — Selezionare target SMB “sensati” senza perdere tempo
+
+Perché: evitare di buttare minuti/ore su host irrilevanti e puntare ai candidati con `<20>`.
+
+Cosa aspettarti: una lista IP “SMB-likely” da passare a tool SMB/AD.
+
+Comando:
 
 ```bash
-# Estrai nomi NetBIOS per targeting specifico
-nbtscan -r 192.168.1.0/24 | awk '{print $2}' | grep -v "NetBIOS" | grep -v "address" > target_names.txt
-
-# Avvia Responder avvelenando SOLO i nomi trovati
-sudo responder -I eth0 -wFb --disable-ess -f -P -v < target_names.txt
+nbtscan -v 10.10.10.0/24 | grep "<20>" | awk '{print $1}' > smb_targets.txt
 ```
 
-### Targeting per SMB Relay Attacks
+Esempio di output (può variare):
+
+```text
+10.10.10.20
+10.10.10.25
+```
+
+Interpretazione: ora hai target “con motivo”, non una subnet a caso.
+
+Errore comune + fix: output non standard tra versioni/locale → usa `-s` (separator) e fai parsing robusto (vedi sezione “Parsing e automazione”).
+
+Mitigazione/detection (lab → blue-team):
+
+* Logga e allerta raffiche di query NetBIOS (UDP 137) su subnet.
+* Segmenta e filtra 137/139 dove non serve; disabilita NetBIOS over TCP/IP sui client quando possibile.
+
+### Caso 2 — Collegare “identity” (NetBIOS) a attacchi di poisoning (solo lab)
+
+Perché: i nomi NetBIOS sono benzina per scenari LLMNR/NBNS in LAN.
+
+Cosa aspettarti: una lista di nomi macchina/dominio da usare per test controllati.
+
+Comando:
 
 ```bash
-# Identifica host con servizio File Server (<20>) attivo
-nbtscan -v 192.168.1.0/24 | grep "<20>" | awk '{print $1}' > smb_targets.txt
-
-# Verifica SMB Signing su questi target
-while read ip; do
-    echo "[*] Verifica SMB Signing per $ip"
-    nmap --script smb2-security-mode -p 445 $ip | grep "Message signing"
-done < smb_targets.txt
+nbtscan -r 10.10.10.0/24 | awk '{print $2}' | grep -E '^[A-Z0-9_-]+$' | sort -u > netbios_names.txt
 ```
 
-### Enumerazione Share per Password Spraying
+Esempio di output (può variare):
+
+```text
+DC01
+FILESRV
+WS-DEV
+```
+
+Interpretazione: in un lab, puoi usare questa lista per costruire test mirati su risoluzione nomi debole e cattive pratiche in LAN; se vuoi la catena completa (sempre autorizzata) collega qui la guida su [Responder per LLMNR/NBT-NS/WPAD](https://hackita.it/articoli/responder/).
+
+Validazione in lab:
+
+* Genera una richiesta name-resolution controllata (es. share inesistente) da una VM client.
+* Osserva se NBNS/LLMNR viene usato e se “cade” su risposte malevole (solo in ambiente isolato).
+
+Mitigazione/detection:
+
+* Disabilita LLMNR/NBNS quando non necessari.
+* Abilita SMB signing e controlla WPAD/proxy auto-discovery in modo esplicito.
+
+## Parsing e automazione (output “script-friendly”)
+
+> **In breve:** `-s` ti permette di esportare risultati senza header e con separatore custom: perfetto per CSV e pipeline.
+
+Perché: quando fai recon serio, vuoi trasformare output in oggetti (CSV/JSON/hostlist), non “leggere a occhio”.
+
+Cosa aspettarti: righe senza intestazioni e campi separati dal carattere scelto.
+
+Comando:
 
 ```bash
-# Crea lista di host Windows per attacchi di autenticazione
-nbtscan -r 192.168.1.0/24 | grep -v "GATEWAY" | awk '{print $1}' > windows_hosts.txt
-
-# Usa CrackMapExec per enumerazione share
-crackmapexec smb -f windows_hosts.txt --shares -u 'generic_user' -p 'Password123!'
+sudo nbtscan -r -s ',' 10.10.10.0/24 > nbtscan.csv
+head -5 nbtscan.csv
 ```
 
-## Fase 5: Scenario di Attacco Completo - Dalla Ricognizione al Dominio
+Esempio di output (può variare):
 
-**Contesto**: Abbiamo ottenuto accesso a una workstation standard (192.168.1.100). Obiettivo: compromettere il Domain Controller.
+```text
+10.10.10.10,WS-DEV,<server>,DEV\devuser,00:0c:29:12:34:56
+10.10.10.20,FILESRV,<server>,<unknown>,00:0c:29:aa:bb:cc
+10.10.10.25,DC01,<server>,<unknown>,00:0c:29:11:22:33
+```
 
-**Step 1 - Ricognizione iniziale:**
+Interpretazione: ora puoi filtrare/ordinare per `NetBIOS Name` o “server flag” in 2 secondi, e passare la lista ai tool successivi.
+
+Errore comune + fix: `-s` non si combina con alcune modalità (es. dump). Se ti serve debug, usa `-v` o `-d`, non `-s`. (\[Debian Manpages]\[1])
+
+Extra (follow-up da lab): se vuoi subito passare dalla lista a test SMB/AD, collega il flusso con [CrackMapExec/NetExec per mappare SMB e privilegi](https://hackita.it/articoli/crackmapexec/).
+
+## Errori comuni e troubleshooting (quelli che ti bloccano davvero)
+
+> **In breve:** la maggior parte dei “non funziona” è: UDP 137 filtrato, `-r` senza privilegi, o rumore di rete/host che rispondono male.
+
+### “Nessun risultato” su una subnet che sai essere Windows
+
+Perché succede: firewall locale o segmentazione blocca UDP 137, oppure NetBIOS disabilitato.
+
+Fix in lab:
+
+* Prova su un singolo host certo (IP noto).
+* Se hai discovery L2, usa la lista target da file invece dello sweep.
+
+Comando:
 
 ```bash
-# Scansione NetBIOS dalla workstation compromessa
-nbtscan -r 192.168.1.0/24 > initial_scan.txt
-
-# Identificazione del DC
-cat initial_scan.txt | grep -i "dc\|domain"
+nbtscan 10.10.10.10
 ```
 
-**Step 2 - Analisi dei servizi sul DC:**
+Esempio di output (può variare):
+
+```text
+10.10.10.10      WS-DEV           <server>  DEV\devuser      00:0c:29:12:34:56
+```
+
+### “Permission denied” o problemi con `-r`
+
+Perché succede: `-r` usa la porta locale 137 e può richiedere privilegi elevati. (\[Debian Manpages]\[1])
+
+Fix in lab:
+
+* Rilancia con `sudo`.
+* Se non puoi, prova senza `-r` (accettando possibile minor affidabilità).
+
+Comando:
 
 ```bash
-# Enumerazione dettagliata del DC
-nbtscan -v -h 192.168.1.25
-
-# Output rivela: <1C> Domain Controller, <20> File Server Service
+sudo nbtscan -r 10.10.10.0/24
 ```
 
-**Step 3 - Preparazione attacco SMB Relay:**
+### “Connection reset by peer” (o errori simili) su host Windows legacy
+
+Perché succede: se la porta è chiusa, l’host può rispondere con ICMP “port unreachable” che alcuni OS riportano come errore applicativo.
+
+Fix: spesso puoi ignorarlo se stai scansionando range e alcuni host non parlano NetBIOS. (\[Debian Manpages]\[1])
+
+## Alternative e tool correlati (quando preferirli)
+
+> **In breve:** nbtscan è perfetto per NetBIOS name intel; per share enum, SMB posture o traffico, serve altro.
+
+* Se vuoi discovery L2 (LAN) più affidabile: usa ARP-based (vedi [Netdiscover per discovery in rete locale](https://hackita.it/articoli/netdiscover/)).
+* Se vuoi enumerare share e permessi SMB: passa a [smbclient](https://hackita.it/articoli/smbclient/).
+* Se vuoi posture SMB e triage AD rapido (lab): considera [CrackMapExec/NetExec](https://hackita.it/articoli/crackmapexec/).
+* Se vuoi detection/triage del traffico (blue-team in lab): cattura e filtra (vedi [Wireshark per analisi traffico](https://hackita.it/articoli/wireshark/)).
+
+Quando NON sostituirlo: nbtscan non è un sostituto di uno scanner di porte o di un framework SMB; è uno strumento “mirato” su NetBIOS.
+
+## Hardening & detection (NetBIOS sotto controllo)
+
+> **In breve:** se NetBIOS non serve, riducilo; se serve, monitoralo: UDP 137/139 sono segnali forti e spesso evitabili.
+
+Hardening (ambienti enterprise / lab harden):
+
+* Disabilita NetBIOS over TCP/IP dove non necessario (client moderni, segmenti non legacy).
+* Filtra e segmenta UDP 137 e TCP 139 tra VLAN.
+* Riduci l’impatto di poisoning: disabilita LLMNR/NBNS e configura WPAD in modo esplicito.
+* Per SMB: abilita SMB signing e controlla l’esposizione share.
+
+Detection (cosa cercare):
+
+* Spike di query NetBIOS su subnet (pattern “sweep”).
+* Host che interrogano molti IP su UDP 137 in finestra breve.
+* Correlazione con eventi SMB successivi (tentativi login, enumerazioni, share listing).
+
+## Scenario pratico: nbtscan su una macchina HTB/PG
+
+> **In breve:** in 3 mosse identifichi host Windows, confermi il ruolo via suffix e avvii un follow-up SMB controllato, documentando anche segnali di detection.
+
+Ambiente: attacker Kali (lab), target subnet `10.10.10.0/24`, host Windows “interessante” `10.10.10.10`.
+
+Obiettivo: ottenere nome NetBIOS + ruolo e preparare un follow-up SMB “pulito”.
+
+Azione 1 — Sweep rapido
+
+Perché: trovare host che rispondono a NetBIOS.
+
+Cosa aspettarti: lista di host con nome e possibile flag server.
+
+Comando:
 
 ```bash
-# Verifica SMB Signing sul DC
-nmap --script smb2-security-mode -p 445 192.168.1.25
-
-# Se "Message signing enabled but not required", procediamo
+sudo nbtscan -r 10.10.10.0/24
 ```
 
-**Step 4 - Configurazione NTLM Relay:**
+Azione 2 — Conferma ruolo (verbose)
+
+Perché: leggere suffix e capire se stai guardando un DC/file server/browser.
+
+Cosa aspettarti: tabella nomi con `<20>`, `<1C>`, ecc.
+
+Comando:
 
 ```bash
-# Avvia ntlmrelayx targettizzando il DC
-python3 ntlmrelayx.py -t smb://192.168.1.25 -smb2support -c "powershell -enc <payload>"
-
-# In parallelo, avvia Responder per catturare hash
-sudo responder -I eth0 -dwv
+nbtscan -v -h 10.10.10.10
 ```
 
-**Step 5 - Trigger dell'Autenticazione:**
+Azione 3 — Follow-up SMB controllato (solo lab)
+
+Perché: se vedi `<20>`, ha senso verificare condivisioni esposte.
+
+Cosa aspettarti: lista share o errore di accesso (che è comunque informazione).
+
+Comando:
 
 ```bash
-# Usa i nomi NetBIOS scoperti per triggerare richieste
-# Esempio: forzare una connessione a \\FILESRV01\fake
-echo "open \\\\FILESRV01\\fake" | smbclient -L 192.168.1.10 -N
+smbclient -L //10.10.10.10 -N
 ```
 
-**Step 6 - Compromissione del DC:**
-Quando un utente (preferibilmente admin) tenta di accedere a una risorsa avvelenata, il suo hash viene relayato al DC. Se l'account ha privilegi, otteniamo esecuzione di codice sul Domain Controller.
+Risultato atteso concreto: un elenco share (anche vuoto) o un messaggio di accesso negato da includere nel report.
 
-## Automazione Offensiva con Scripting
+Detection + hardening: lo sweep NetBIOS genera traffico evidente su UDP 137; in un ambiente monitorato lo vedi facilmente. Se vuoi “hardenare” il lab, filtra 137/139 dove non serve e disabilita NetBIOS/LLMNR/NBNS sui client.
 
-Ecco uno script Python che automatizza l'intero processo:
+## Playbook 10 minuti: nbtscan in un lab
 
-```python
-#!/usr/bin/env python3
-"""
-Automated NetBIOS Enumeration & Attack Pipeline
-Per uso esclusivo in ambienti controllati autorizzati
-"""
+> **In breve:** sequenza corta, ripetibile e “report-ready” per passare da subnet a target list con motivazione tecnica.
 
-import subprocess
-import re
-import json
-from concurrent.futures import ThreadPoolExecutor
+### Step 1 – Verifica tool e opzioni “reali” sulla tua distro
 
-def run_nbtscan(target):
-    """Esegue NBTScan su un target e analizza i risultati"""
-    cmd = f"nbtscan -r {target}"
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    
-    hosts = []
-    for line in result.stdout.split('\n'):
-        if re.match(r'\d+\.\d+\.\d+\.\d+', line):
-            parts = line.split()
-            if len(parts) >= 2:
-                host_info = {
-                    'ip': parts[0],
-                    'name': parts[1],
-                    'services': []
-                }
-                hosts.append(host_info)
-    
-    return hosts
-
-def enumerate_services(ip):
-    """Enumerazione verbosa dei servizi per un IP specifico"""
-    cmd = f"nbtscan -v -h {ip}"
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    
-    services = []
-    for line in result.stdout.split('\n'):
-        if '<' in line and '>' in line:
-            service_match = re.search(r'<(\w{2})>\s+(\w+)\s+(.+)', line)
-            if service_match:
-                services.append({
-                    'code': service_match.group(1),
-                    'type': service_match.group(2),
-                    'description': service_match.group(3).strip()
-                })
-    
-    return services
-
-def main():
-    target_network = "192.168.1.0/24"
-    
-    print(f"[*] Iniziando scansione NetBIOS offensiva su {target_network}")
-    
-    # Scansione iniziale
-    hosts = run_nbtscan(target_network)
-    
-    print(f"[+] Trovati {len(hosts)} host rispondenti")
-    
-    # Enumerazione avanzata in parallelo
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        future_to_host = {executor.submit(enumerate_services, host['ip']): host for host in hosts}
-        
-        for future in future_to_host:
-            host = future_to_host[future]
-            try:
-                services = future.result()
-                host['services'] = services
-                
-                # Identifica target critici
-                for service in services:
-                    if service['code'] == '1C':  # Domain Controller
-                        print(f"[!] DOMAIN CONTROLLER TROVATO: {host['ip']} ({host['name']})")
-                    elif service['code'] == '20':  # File Server
-                        print(f"[!] FILE SERVER TROVATO: {host['ip']} - Potenziale per SMB Relay")
-                        
-            except Exception as e:
-                print(f"[-] Errore su {host['ip']}: {e}")
-    
-    # Salva risultati per tool successivi
-    with open('nbtscan_results.json', 'w') as f:
-        json.dump(hosts, f, indent=2)
-    
-    print("[+] Risultati salvati in nbtscan_results.json")
-    print("[*] Utilizzare con: responder, ntlmrelayx, crackmapexec")
-
-if __name__ == "__main__":
-    main()
-```
-
-## Considerazioni Avanzate per Red Team
-
-### Evasione dai Sistemi di Detection
-
-1. **Timing Attacks**: Modificare i ritardi tra le query per evitare threshold-based detection.
-2. **Source Port Randomization**: NBTScan di default usa porta 137 sorgente. In ambienti più sicuri, considerare l'uso di tecniche di spoofing.
-3. **Distributed Scanning**: Eseguire scansioni da più host compromessi per diluire il traffice.
-
-### Integrazione con Cobalt Strike & Framework Commerciali
+Allinea aspettative su `-t`, `-r`, `-s` guardando l’help locale.
 
 ```bash
-# Dopo aver raccolto gli IP con NBTScan, importarli in Cobalt Strike
-> targets import /path/to/nbtscan_results.txt
-> beacon> net view /domain
+nbtscan --help | head -60
 ```
 
-### Perquisizione Avanzata dei Servizi
+### Step 2 – Sweep subnet con focus affidabilità
 
-Alcuni servizi NetBIOS meno comuni possono rivelare vulnerabilità specifiche:
+Usa `-r` se puoi (con `sudo`) per aumentare la qualità delle risposte.
 
-* **`<1D>`**: Master Browser per subnet
-* **`<1E>`**: Browser Service Election
-* **`<00>` e `<20>`**: Presenza di servizi specifici dell'applicazione
+```bash
+sudo nbtscan -r 10.10.10.0/24
+```
 
-## Conclusione Operativa
+### Step 3 – Seleziona 3 host “candidati” (DC/file server/workstation admin)
 
-NBTScan dimostra che la vera potenza nella sicurezza offensiva spesso risiede negli strumenti semplici ma utilizzati con precisione chirurgica. In un'epoca di tool complessi e framework automatizzati, la capacità di eseguire ricognizione mirata, interpretare i risultati e integrarli in una catena di attacco coesa è ciò che separa un principiante da un Red Teamer esperto.
+Non inseguire tutto: scegli per nome e segnali `server`.
 
-NetBIOS, spesso dimenticato negli sforzi di hardening, rimane una **fonte di intelligence operativa insostituibile** in ambienti Windows. La sua enumerazione non è solo un passo preliminare; è il fondamento su cui costruire attacchi sofisticati come il poisoning di risoluzione nomi, relay NTLM e movimento laterale privilegiato.
+```bash
+sudo nbtscan -r 10.10.10.0/24 | head -20
+```
 
-***
+### Step 4 – Deep dive su 1 host ad alto valore
 
-### Vuoi Padroneggiare Queste Teccniche in Ambiente Reale?
+Conferma suffix e ruoli (cerca `<20>`, `<1C>`, `<1B>`).
 
-Questa guida mostra solo la superficie delle possibilità offensive. Per imparare a progettare, eseguire e documentare operazioni di Red Team complete—dall'enumerazione iniziale alla compromissione del dominio—serve formazione strutturata e mentorship esperta.
+```bash
+nbtscan -v -h 10.10.10.25
+```
 
-**HackIta** offre percorsi formativi d'eccellenza:
+### Step 5 – Esporta output parsabile per report e automazione
 
-* **Formazione 1:1 e Mentorship** personalizzata con professionisti del settore
-* **Corsi Aziendali** su misura per addestrare team di sicurezza offensiva
-* **Laboratori Pratici** in ambienti controllati che replicano scenari reali
+Passa a `-s` per CSV e filtri.
 
-Il nostro approccio è **etico, pratico e focalizzato sui risultati**. Crediamo che la miglior difesa nasca dalla comprensione profonda delle tecniche offensive.
+```bash
+sudo nbtscan -r -s ',' 10.10.10.0/24 > nbtscan.csv
+```
 
-Se condividi questa visione, puoi:
+### Step 6 – Costruisci una lista “SMB-likely” da seguire
 
-* [Esplorare i nostri servizi formativi](https://hackita.it/servizi/)
-* [Supportare il progetto con una donazione](https://hackita.it/supporto/) per aiutarci a mantenere e migliorare i nostri laboratori
+Estrai i target con segnali compatibili con file server service.
 
-**Risorse Esterne Consigliate:**
+```bash
+nbtscan -v 10.10.10.0/24 | grep "<20>" | awk '{print $1}' > smb_targets.txt
+```
 
-* [Manuale Ufficiale NBTScan](https://www.inetcat.org/software/nbtscan.html)
-* [NetBIOS Technical Reference - Microsoft Docs](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc940063\(v=technet.10\))
-* [SMB Security Hardening Guide](https://docs.microsoft.com/en-us/windows-server/storage/file-server/smb-security-hardening)
+### Step 7 – Follow-up controllato e documentato
 
-**Addestra la Tua Mente. Affina le Tue Abilità. Solo in Ambienti Autorizzati.**
+Usa tool SMB/AD solo sui target filtrati e annota risultati + log/detection.
 
-[HackIta – Excellence in Offensive Security Training](https://hackita.it)
+```bash
+while read ip; do smbclient -L "//$ip" -N; done < smb_targets.txt
+```
+
+## Checklist operativa
+
+> **In breve:** spunta questi punti e nbtscan diventa “metodo”, non un comando random.
+
+* Sempre contesto autorizzato: lab/CTF/HTB/PG o VM personali.
+* Verifica `nbtscan --help` prima di usare `-t` (unità timeout).
+* Se usi `-r`, esegui con `sudo` (porta locale 137).
+* Parti da subnet piccola, poi scala (evita rumore inutile).
+* Usa `-v` su host selezionati per leggere suffix e ruolo.
+* Ricorda: `<20>` = candidato SMB; `<1C>` = indicatori DC.
+* Per output parsabile, preferisci `-s` e salva su file.
+* Non confondere “nome NetBIOS trovato” con “accesso”: sono cose diverse.
+* Se hai già discovery L2, usa `-f targets.txt` invece dello sweep.
+* Logga sempre i comandi eseguiti e i risultati (report-ready).
+* Se stai hardenando il lab, filtra UDP 137/139 dove non serve.
+* Monitora spike UDP 137 come segnale di sweep.
+
+## Riassunto 80/20
+
+> **In breve:** tre comandi (sweep, verbose, export) ti danno quasi tutto quello che serve per decidere i passi successivi.
+
+| Obiettivo                        | Azione pratica               | Comando/Strumento                                    |                |
+| -------------------------------- | ---------------------------- | ---------------------------------------------------- | -------------- |
+| Scoprire host Windows “parlanti” | Sweep NetBIOS su subnet      | `sudo nbtscan -r 10.10.10.0/24`                      |                |
+| Capire ruolo di un host          | Verbose + suffix             | `nbtscan -v -h 10.10.10.10`                          |                |
+| Esportare per parsing            | CSV con separatore           | `sudo nbtscan -r -s ',' 10.10.10.0/24 > nbtscan.csv` |                |
+| Target SMB rapidi                | Filtra `<20>`                | \`nbtscan -v 10.10.10.0/24                           | grep '\<20>'\` |
+| Follow-up share enum             | Lista share senza auth (lab) | `smbclient -L //10.10.10.10 -N`                      |                |
+| Triage AD/SMB (opzionale)        | Postura SMB e mapping        | `nxc smb 10.10.10.0/24`                              |                |
+
+## Concetti controintuitivi
+
+> **In breve:** gli errori più comuni nascono da aspettative sbagliate, non dal comando.
+
+* **“Se nbtscan vede un host allora posso entrare”**
+  No: ti dà intelligence, non accesso. Usalo per priorità e follow-up, non per conclusioni.
+* **“`-r` è stealth”**
+  No: è più affidabile, non invisibile. In detection, UDP 137 a raffica è un faro.
+* **“NetBIOS = sempre Windows”**
+  Spesso sì, ma anche Samba può rispondere. Interpreta output e contesto, non solo il nome.
+* **“MAC sempre affidabile”**
+  Su alcuni sistemi (Samba) puoi ricevere MAC nullo: è un limite della risposta, non un bug “tuo”. (\[Debian Manpages]\[1])
+
+## FAQ
+
+> **In breve:** risposte rapide ai blocchi più frequenti usando nbtscan in lab.
+
+D: nbtscan usa quali porte?
+
+R: Tipicamente interroga NetBIOS su UDP 137 per ottenere la tabella nomi e servizi. Se 137 è filtrata o NetBIOS è disabilitato, vedrai pochi o zero risultati. (\[Debian Manpages]\[1])
+
+D: Perché `-r` richiede `sudo`?
+
+R: Perché tenta di usare la porta locale 137 come sorgente; su Unix il bind su porte “basse” richiede privilegi elevati. Se non puoi, prova senza `-r`. (\[Debian Manpages]\[1])
+
+D: Perché vedo “Connection reset by peer”?
+
+R: Può succedere quando l’host risponde con ICMP “port unreachable” e il sistema lo espone come errore applicativo. In scansioni di rete è spesso ignorabile se stai mappando range e alcuni host non parlano NetBIOS. (\[Debian Manpages]\[1])
+
+D: nbtscan può enumerare le condivisioni SMB?
+
+R: No: per design non fa share scanning (richiede TCP ed è un altro problema). Usa tool SMB dedicati per quel passo. (\[Debian Manpages]\[1])
+
+D: `-t` è in secondi o millisecondi?
+
+R: Dipende dalla build/documentazione: controlla `nbtscan --help` sul tuo sistema e calibra su 1 host prima di scansionare una subnet. (\[Debian Manpages]\[1])
+
+## Link utili su HackIta.it
+
+> **In breve:** questi link sono “spoke” naturali: discovery LAN, follow-up SMB/AD e analisi traffico.
+
+* [ARP-Scan: host discovery e pivoting interno](https://hackita.it/articoli/arp-scan/)
+* [Netdiscover: scopri dispositivi e IP in LAN](https://hackita.it/articoli/netdiscover/)
+* [Responder: attacco LLMNR/NBT-NS/WPAD in LAN](https://hackita.it/articoli/responder/)
+* [Smbclient: accesso e attacco alle condivisioni Windows](https://hackita.it/articoli/smbclient/)
+* [CrackMapExec/NetExec: attacchi rapidi su Active Directory](https://hackita.it/articoli/crackmapexec/)
+* [Wireshark: analizza traffico e credenziali in lab](https://hackita.it/articoli/wireshark/)
+* /supporto/
+* /contatto/
+* /articoli/
+* /servizi/
+* /about/
+* /categorie/
+
+## Riferimenti autorevoli
+
+> **In breve:** fonti primarie per opzioni, comportamento e limiti del tool.
+
+* [https://manpages.debian.org/testing/nbtscan/nbtscan.1.en.html](https://manpages.debian.org/testing/nbtscan/nbtscan.1.en.html) (\[Debian Manpages]\[1])
+* [https://www.kali.org/tools/nbtscan/](https://www.kali.org/tools/nbtscan/) (\[Kali Linux]\[2])
+
+## CTA finale HackITA
+
+Se questo articolo ti ha sbloccato il recon interno, puoi supportare il progetto qui: /supporto/
+
+Se vuoi accelerare davvero (lab guidati, metodologia, report-ready), trovi la formazione 1:1 qui: /servizi/
+
+Per aziende e team: assessment e simulazioni di attacco autorizzate con hardening e detection inclusi su /servizi/
+
+(1): [https://manpages.debian.org/testing/nbtscan/nbtscan.1.en.html](https://manpages.debian.org/testing/nbtscan/nbtscan.1.en.html) "nbtscan(1) — nbtscan — Debian testing — Debian Manpages"
+(2): [https://www.kali.org/tools/nbtscan/](https://www.kali.org/tools/nbtscan/) "nbtscan | Kali Linux Tools"

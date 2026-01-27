@@ -4,6 +4,7 @@ slug: rpcclient
 description: >-
   Rpcclient consente di interrogare AD via SMB per ottenere utenti, SID e
   informazioni critiche. Tecniche offensive per pentest e Red Team.
+image: /Gemini_Generated_Image_qeb7nqeb7nqeb7nq.webp
 draft: false
 date: 2026-01-23T00:00:00.000Z
 categories:

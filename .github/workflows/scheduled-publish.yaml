@@ -36,9 +36,10 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if [[ -n $(git status --porcelain) ]]; then
+          # Only check for changes in content/ directory
+          if [[ -n $(git status --porcelain content/) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
-            echo "✓ Changes detected, will commit"
+            echo "✓ Changes detected in content/, will commit"
           else
             echo "changes=false" >> $GITHUB_OUTPUT
             echo "✓ No changes to commit"

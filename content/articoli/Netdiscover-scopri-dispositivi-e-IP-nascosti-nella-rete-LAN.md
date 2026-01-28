@@ -13,7 +13,7 @@ tags:
   - Netdiscover
 ---
 
-# Netdiscover: host discovery ARP low-noise in LAN (lab)
+# Netdiscover: Scopri Dispositivi e IP Nascosti Nella Rete LAN
 
 Se in lab il ping “non risponde” o vuoi scoprire subito **gateway + host vivi** nel tuo segmento L2, qui fai reconnaissance con netdiscover in modo controllato e verificabile.
 
@@ -485,7 +485,7 @@ R: Nella pratica sì: sniff e invio ARP richiedono privilegi/capabilities. Se no
 ## Riferimenti autorevoli
 
 * Kali Linux Tools – netdiscover: [https://www.kali.org/tools/netdiscover/](https://www.kali.org/tools/netdiscover/)
-* Kali Package Tracker – netdiscover: [https://pkg.kali.org/pkg/netdiscover](https://pkg.kali.org/pkg/netdiscover) 
+* Kali Package Tracker – netdiscover: [https://pkg.kali.org/pkg/netdiscover](https://pkg.kali.org/pkg/netdiscover)
 
 ## CTA finale HackIta
 

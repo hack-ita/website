@@ -1,18 +1,15 @@
-reading_speed: 250
-
+reading_speed: 315
 header:
-  logo: "/images/logo-wobg.png"
+  logo: /images/logo-wobg.png
   cta:
     enable: true
     label: Contattami
-    link: "/contatto/"
-
+    link: /contatto/
 footer:
-  logo: "/images/logo.webp"
-  disclaimer: "HACKITA promuove esclusivamente la cybersecurity etica e legale. Tutti i contenuti, laboratori e materiali presenti sul sito hanno scopo educativo e formativo. Non incoraggiamo né supportiamo in alcun modo attività illegali o dannose. L’utilizzo improprio delle informazioni fornite è sotto la piena responsabilità dell’utente."
-
+  logo: /images/logo.webp
+  disclaimer: 'HACKITA promuove esclusivamente la cybersecurity etica e legale. Tutti i contenuti, laboratori e materiali presenti sul sito hanno scopo educativo e formativo. Non incoraggiamo né supportiamo in alcun modo attività illegali o dannose. L’utilizzo improprio delle informazioni fornite è sotto la piena responsabilità dell’utente.'
 social:
-  facebook: "https://facebook.com"
-  instagram: "https://instagram.com"
-  twitter: "https://x.com"
-  linkedin: "https://linkedin.com"
+  facebook: 'https://facebook.com'
+  instagram: 'https://instagram.com'
+  twitter: 'https://x.com'
+  linkedin: 'https://linkedin.com'

@@ -8,7 +8,7 @@ description: >-
   reali, e perché è fondamentale per attività di post-exploitation, enumerazione
   e movimento laterale in ambienti Active Directory.
 image: /Gemini_Generated_Image_9aprd09aprd09apr.webp
-draft: true
+draft: false
 date: 2026-01-29T00:00:00.000Z
 categories:
   - tools

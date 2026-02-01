@@ -11,10 +11,10 @@ const scheduledHandler = async (event) => {
 
   try {
     // Get the build hook URL from environment variable
-    const buildHookUrl = process.env.NETLIFY_BUILD_HOOK;
+    const buildHookUrl = process.env.NETLIFY_BUILD_HOOKS;
 
     if (!buildHookUrl) {
-      console.error("❌ NETLIFY_BUILD_HOOK environment variable not set!");
+      console.error("❌ NETLIFY_BUILD_HOOKS environment variable not set!");
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -72,4 +72,4 @@ const scheduledHandler = async (event) => {
 // Export the handler wrapped with the schedule function
 // Runs at 01:00 UTC daily (02:00 CET/03:00 CEST Italy time)
 // export const handler = schedule("0 1 * * *", scheduledHandler);
-export const handler = schedule("15 14 * * *", scheduledHandler);
+export const handler = schedule("15 24 * * *", scheduledHandler);

@@ -71,5 +71,4 @@ const scheduledHandler = async (event) => {
 
 // Export the handler wrapped with the schedule function
 // Runs at 01:00 UTC daily (02:00 CET/03:00 CEST Italy time)
-// export const handler = schedule("0 1 * * *", scheduledHandler);
-export const handler = schedule("30 14 * * *", scheduledHandler);
+export const handler = schedule("0 1 * * *", scheduledHandler);

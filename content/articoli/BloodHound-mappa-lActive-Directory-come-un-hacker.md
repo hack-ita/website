@@ -77,7 +77,7 @@ Interfaccia per:
 
 ***
 
-# **Installazione: da zero al primo grafico (parte DA QUI)**
+# **Installazione: da zero al primo grafico**
 
 Qui ti metto **le 2 strade migliori** (come nei link che hai incollato), ordinate per utilità nel 2026:
 

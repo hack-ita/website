@@ -102,10 +102,8 @@
                 {{ $readingTime := div (float .WordCount) $readingSpeed }}
                 {{ $readingTime = math.Ceil $readingTime }}
                 {{ $post := . }}
-                <div class="swiper-slide">
-                  <article
-                    class="post-item rounded-md flex flex-col border border-primary group"
-                    {{ with .Params.categories }}
+                <div class="swiper-slide post-item"
+                  {{ with .Params.categories }}
                       data-categories="{{ delimit (apply . "urlize" ".") "," }}"
                     {{ else }}
                       data-categories=""
@@ -116,6 +114,8 @@
                       data-tags=""
                     {{ end }}
                   >
+                  <article
+                    class="rounded-md flex flex-col border border-primary group">
                   <a href="{{ .RelPermalink }}" class="absolute inset-0 z-10"></a>
       
                   <figure class="flex flex-col h-full">
@@ -154,7 +154,6 @@
               slidesPerView: 2,
               spaceBetween: 20,
               loop: false,
-              autoplay: true,
               navigation: {
                 nextEl: '.{{ .Page.Title | urlize }}-button-next',
                 prevEl: '.{{ .Page.Title | urlize }}-button-prev',

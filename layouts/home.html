@@ -11,7 +11,7 @@
           <div class="swiper-slide">
             <div class="lg:size-full relative">
               <a href="{{ .RelPermalink }}" class="absolute inset-0"></a>
-              {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "lg:size-full object-cover object-top hover:scale-115 duration-300 transition-transform" "highFetchPrio" "true") }}
+              {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "lg:size-full object-cover hover:scale-115 duration-300 transition-transform" "highFetchPrio" "true") }}
             </div>
           </div>
           {{ end }}
@@ -140,10 +140,10 @@
     {{ partial "components/heading.html" (dict "text" "ULTIMI ARTICOLI") }}
 
     <!-- First Featured Article -->
-    {{ range first 1 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) }}
+    {{ range after 6 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 1 }}
     <a href="{{ .RelPermalink }}" class="hidden lg:grid grid-cols-2 gap-5 group" >
       <div class="size-full overflow-hidden">
-        {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "group-hover:scale-115 transition-transform duration-500 h-100 w-full object-cover object-top") }}
+        {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "group-hover:scale-115 transition-transform duration-500 h-100 w-full object-cover") }}
       </div>
       <article class="flex flex-col gap-y-5">
         <div class="flex flex-wrap gap-5">
@@ -188,7 +188,7 @@
 
       <div class="swiper articleSwiper" role="region" aria-label="Additional articles">
         <div class="swiper-wrapper">
-          {{ range after 1 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 10 }}
+          {{ range after 7 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 10 }}
           <div class="swiper-slide">
             <a href="{{ .RelPermalink }}" class="block">
               <article class="flex flex-col items-stretch group h-full">

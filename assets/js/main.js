@@ -273,7 +273,7 @@ const initDeferred = () => {
         typeEffect();
         log("Typewriter initialized");
       }, "Typewriter"),
-    200
+    200,
   );
 
   // GRID HOVER EFFECT
@@ -305,7 +305,7 @@ const initDeferred = () => {
               rafId = null;
             });
           },
-          { passive: true }
+          { passive: true },
         );
 
         grid.addEventListener(
@@ -313,11 +313,11 @@ const initDeferred = () => {
           () => {
             cards.forEach((c) => c.style.setProperty("--o", "0"));
           },
-          { passive: true }
+          { passive: true },
         );
         log("Grid hover enabled");
       }, "Grid"),
-    300
+    300,
   );
 
   // COUNTERS (IntersectionObserver)
@@ -368,7 +368,7 @@ const initDeferred = () => {
                     .map((char, i) =>
                       i < frame
                         ? finalText[i]
-                        : chars[Math.floor(Math.random() * chars.length)]
+                        : chars[Math.floor(Math.random() * chars.length)],
                     )
                     .join("");
                   frame++;
@@ -379,13 +379,13 @@ const initDeferred = () => {
               }
             });
           },
-          { threshold: 0.6, rootMargin: "50px" }
+          { threshold: 0.6, rootMargin: "50px" },
         );
 
         counters.forEach((span) => observer.observe(span));
         log("Counters initialized");
       }, "Counters"),
-    400
+    400,
   );
 
   // CODE COPY BUTTONS
@@ -402,10 +402,37 @@ const initDeferred = () => {
           if (!pre || pre.querySelector(".copy-btn")) return;
 
           pre.style.position = "relative";
+          pre.style.overflow = "auto";
+
           const button = document.createElement("button");
           button.type = "button";
           button.className = "copy-btn";
           button.textContent = "Copy";
+
+          // Position button relative to pre element
+          const updateButtonPosition = () => {
+            const rect = pre.getBoundingClientRect();
+            button.style.top = `${rect.top + 8}px`; // 8px = top-2
+            button.style.left = `${rect.right - button.offsetWidth - 8}px`; // 8px from right
+          };
+
+          pre.insertBefore(button, pre.firstChild);
+          updateButtonPosition();
+
+          // Update position on scroll
+          let scrollTimeout;
+          const handleScroll = () => {
+            button.style.opacity = "0.3";
+            clearTimeout(scrollTimeout);
+            updateButtonPosition();
+            scrollTimeout = setTimeout(() => {
+              button.style.opacity = "0.7";
+            }, 150);
+          };
+
+          window.addEventListener("scroll", updateButtonPosition);
+          window.addEventListener("resize", updateButtonPosition);
+          pre.addEventListener("scroll", handleScroll);
 
           button.addEventListener("click", async () => {
             try {
@@ -418,12 +445,10 @@ const initDeferred = () => {
               setTimeout(() => (button.textContent = "Copy"), 1500);
             }
           });
-
-          pre.appendChild(button);
         });
         log("Code copy initialized");
       }, "CodeCopy"),
-    500
+    500,
   );
 
   // BACK TO TOP BUTTON
@@ -449,16 +474,16 @@ const initDeferred = () => {
               ticking = true;
             }
           },
-          { passive: true }
+          { passive: true },
         );
 
         btn.addEventListener("click", () =>
-          window.scrollTo({ top: 0, behavior: "smooth" })
+          window.scrollTo({ top: 0, behavior: "smooth" }),
         );
         updateVisibility();
         log("Back-to-top initialized");
       }, "BackToTop"),
-    600
+    600,
   );
 
   // READING PROGRESS BAR
@@ -492,13 +517,13 @@ const initDeferred = () => {
               ticking = true;
             }
           },
-          { passive: true }
+          { passive: true },
         );
 
         updateProgress();
         log("Reading progress initialized");
       }, "ReadingProgress"),
-    700
+    700,
   );
 
   // SIDEBAR TOGGLER
@@ -526,12 +551,12 @@ const initDeferred = () => {
             openSidebar();
           } else {
             closeSidebar();
-          };
+          }
         });
-        sideBar.addEventListener("click", () => closeSidebar() );
+        sideBar.addEventListener("click", () => closeSidebar());
         log("Sidebar initialized");
       }, "Sidebar"),
-    800
+    800,
   );
 
   // SEARCH (lazy load Pagefind)
@@ -673,17 +698,17 @@ const initDeferred = () => {
             preview.style.left = `${e.pageX + 12}px`;
             preview.style.top = `${e.pageY + 6}px`;
           },
-          { passive: true }
+          { passive: true },
         );
 
         suggList.addEventListener(
           "mouseleave",
           () => (preview.style.display = "none"),
-          { passive: true }
+          { passive: true },
         );
         log("Search initialized");
       }, "Search"),
-    900
+    900,
   );
 
   // FILTERS
@@ -712,7 +737,7 @@ const initDeferred = () => {
         // Detect if we're on a category page by checking the URL path
         const currentPath = window.location.pathname;
         const categoryPageMatch = currentPath.match(
-          /^\/categories\/([^\/]+)\/?$/
+          /^\/categories\/([^\/]+)\/?$/,
         );
         const isCategoryPage = !!categoryPageMatch;
         const currentCategory = categoryPageMatch
@@ -751,7 +776,7 @@ const initDeferred = () => {
           if (groups.length) {
             groups.forEach((group) => {
               const hasVisible = group.querySelector(
-                ".post-item:not([style*='display: none'])"
+                ".post-item:not([style*='display: none'])",
               );
               group.style.display = hasVisible ? "" : "none";
             });
@@ -777,7 +802,7 @@ const initDeferred = () => {
           if (isCategoryPage && currentCategory) {
             // Find the matching option
             const currentOption = Array.from(catSelect.options).find(
-              (opt) => opt.value.toLowerCase() === currentCategory
+              (opt) => opt.value.toLowerCase() === currentCategory,
             );
 
             if (currentOption) {
@@ -830,7 +855,7 @@ const initDeferred = () => {
               subSelect.classList.add("opacity-60", "cursor-not-allowed");
             }
             applyFilters();
-          })
+          }),
         );
 
         // Initialize and apply filters
@@ -838,7 +863,7 @@ const initDeferred = () => {
         applyFilters();
         log("Filters initialized");
       }, "Filters"),
-    1000
+    1000,
   );
 
   // SWIPER (only if library loaded)
@@ -901,8 +926,8 @@ const initDeferred = () => {
             slide.addEventListener(
               "mouseenter",
               () => setActiveSlide(slides, i),
-              { passive: true }
-            )
+              { passive: true },
+            ),
           );
           let idx = 0;
           desktopAutoPlayInterval = setInterval(() => {
@@ -936,7 +961,7 @@ const initDeferred = () => {
 
         log("Swiper initialized");
       }, "Swiper"),
-    1100
+    1100,
   );
 
   // GLIGHTBOX (only if library loaded)
@@ -964,7 +989,7 @@ const initDeferred = () => {
         });
         log("Lightbox initialized");
       }, "Lightbox"),
-    1200
+    1200,
   );
 
   // NEWSLETTER
@@ -1009,7 +1034,7 @@ const initDeferred = () => {
         });
         log("Newsletter initialized");
       }, "Newsletter"),
-    1300
+    1300,
   );
 
   // FAQ ACCORDION
@@ -1046,7 +1071,7 @@ const initDeferred = () => {
           item.content.classList.add(
             "max-h-0",
             "opacity-0",
-            "pointer-events-none"
+            "pointer-events-none",
           );
           item.content.classList.remove("max-h-50", "opacity-100");
           item.icon.textContent = "+";
@@ -1057,7 +1082,7 @@ const initDeferred = () => {
           item.content.classList.remove(
             "max-h-0",
             "opacity-0",
-            "pointer-events-none"
+            "pointer-events-none",
           );
           item.content.classList.add("max-h-50", "opacity-100");
           item.icon.textContent = "-";
@@ -1086,7 +1111,7 @@ const initDeferred = () => {
         });
         log(`FAQ accordion initialized (${faqItems.length} items)`);
       }, "FAQ"),
-    1400
+    1400,
   );
 };
 

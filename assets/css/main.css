@@ -319,14 +319,14 @@ pre:has(> code) {
 }
 
 .prose pre {
-  @apply relative;
+  @apply relative overflow-x-auto;
 }
 
 .copy-btn {
-  @apply absolute top-2 right-2 z-10 rounded-md
+  @apply fixed rounded-md
          bg-accent text-light text-xs
          px-2 py-1 opacity-70
-         hover:opacity-100 transition;
+         hover:opacity-100 transition z-10;
 }
 
 /* ===========================

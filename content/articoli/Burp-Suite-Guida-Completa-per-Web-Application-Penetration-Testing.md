@@ -1,9 +1,11 @@
 ---
 title: 'Burp Suite: Guida Completa per Web Application Penetration Testing'
 slug: burp-suite
-description: 'Burp Suite guida pratica al web application penetration testing: Proxy, Repeater, Intruder, SQLi, XSS, CSRF e API exploitation reali.'
+description: >-
+  Burp Suite guida pratica al web application penetration testing: Proxy,
+  Repeater, Intruder, SQLi, XSS, CSRF e API exploitation reali.
 image: /Gemini_Generated_Image_f9v38cf9v38cf9v3 (3).webp
-draft: true
+draft: false
 date: 2026-02-05T00:00:00.000Z
 categories:
   - web-hacking

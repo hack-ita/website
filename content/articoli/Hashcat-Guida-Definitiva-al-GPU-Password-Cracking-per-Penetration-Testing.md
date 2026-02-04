@@ -3,7 +3,7 @@ title: 'Hashcat: Guida Definitiva al GPU Password Cracking per Penetration Testi
 slug: hashcat
 description: 'Hashcat: guida pratica GPU password cracking per hash NTLM, MD5, SHA, bcrypt. Attack modes, mask patterns, wordlist rules e tecniche reali da CTF e penetration testing.'
 image: /Gemini_Generated_Image_mzi4bgmzi4bgmzi4.webp
-draft: true
+draft: false
 date: 2026-02-04T00:00:00.000Z
 categories:
   - tools

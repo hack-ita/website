@@ -1,9 +1,14 @@
 ---
-title: 'SafetyKatz: Wrapper Mimikatz Memory-Only per Credential Dumping LSASS ed Evasione EDR'
+title: >-
+  SafetyKatz: Wrapper Mimikatz Memory-Only per Credential Dumping LSASS ed
+  Evasione EDR
 slug: safetykatz
-description: 'SafetyKatz è un wrapper di Mimikatz per il credential dumping in memoria da LSASS, senza scrittura su disco. Supporta evasione EDR, estrazione hash NTLM e integrazione con Cobalt Strike per post-exploitation in Active Directory.'
+description: >-
+  SafetyKatz è un wrapper di Mimikatz per il credential dumping in memoria da
+  LSASS, senza scrittura su disco. Supporta evasione EDR, estrazione hash NTLM e
+  integrazione con Cobalt Strike per post-exploitation in Active Directory.
 image: /Gemini_Generated_Image_n45aktn45aktn45a.webp
-draft: true
+draft: false
 date: 2026-02-06T00:00:00.000Z
 categories:
   - tools

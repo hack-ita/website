@@ -1,9 +1,12 @@
 ---
 title: 'Certutil.exe: Download e Encoding per Living Off The Land su Windows'
 slug: certutilexe
-description: 'Guida pratica Certutil.exe per penetration testing Windows: download file, encoding Base64, hash verification e bypass AV. Living off the Land con tool nativo.'
+description: >-
+  Guida pratica Certutil.exe per penetration testing Windows: download file,
+  encoding Base64, hash verification e bypass AV. Living off the Land con tool
+  nativo.
 image: /Gemini_Generated_Image_q6sgc6q6sgc6q6sg.webp
-draft: true
+draft: false
 date: 2026-02-06T00:00:00.000Z
 categories:
   - windows

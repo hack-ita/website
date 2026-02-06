@@ -1,9 +1,11 @@
 ---
 title: 'Crontab Backdoor: Persistenza Linux con Cron Job nel Penetration Testing'
 slug: crontab
-description: 'Crontab Backdoor: guida operativa per creare persistenza Linux con cron job in penetration test. Setup, evasion e cleanup completi.'
+description: >-
+  Crontab Backdoor: guida operativa per creare persistenza Linux con cron job in
+  penetration test. Setup, evasion e cleanup completi.
 image: /Gemini_Generated_Image_huoubbhuoubbhuou.webp
-draft: true
+draft: false
 date: 2026-02-07T00:00:00.000Z
 categories:
   - linux

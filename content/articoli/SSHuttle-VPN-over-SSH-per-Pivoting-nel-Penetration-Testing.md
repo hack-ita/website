@@ -1,9 +1,11 @@
 ---
 title: 'SSHuttle: VPN over SSH per Pivoting nel Penetration Testing'
 slug: sshuttle
-description: 'SSHuttle: guida completa per creare VPN over SSH nel penetration testing. Pivoting, tunneling e accesso a reti interne senza configurazioni.'
+description: >-
+  SSHuttle: guida completa per creare VPN over SSH nel penetration testing.
+  Pivoting, tunneling e accesso a reti interne senza configurazioni.
 image: /Gemini_Generated_Image_56102d56102d5610.webp
-draft: true
+draft: false
 date: 2026-02-07T00:00:00.000Z
 categories:
   - networking

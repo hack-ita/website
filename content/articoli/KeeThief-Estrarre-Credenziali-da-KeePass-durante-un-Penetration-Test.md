@@ -1,9 +1,11 @@
 ---
 title: 'KeeThief: Estrarre Credenziali da KeePass durante un Penetration Test'
 slug: keethief
-description: 'KeeThief: come estrarre master key e credenziali da KeePass in un pentest. Dump memoria, decryption database e integrazione post-exploitation.'
+description: >-
+  KeeThief: come estrarre master key e credenziali da KeePass in un pentest.
+  Dump memoria, decryption database e integrazione post-exploitation.
 image: /Gemini_Generated_Image_1uaqry1uaqry1uaq.webp
-draft: true
+draft: false
 date: 2026-02-07T00:00:00.000Z
 categories:
   - tools

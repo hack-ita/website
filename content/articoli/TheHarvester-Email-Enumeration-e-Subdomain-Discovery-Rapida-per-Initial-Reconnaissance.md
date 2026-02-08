@@ -1,9 +1,14 @@
 ---
-title: 'TheHarvester: Email Enumeration e Subdomain Discovery Rapida per Initial Reconnaissance'
+title: >-
+  TheHarvester: Email Enumeration e Subdomain Discovery Rapida per Initial
+  Reconnaissance
 slug: theharvester
-description: 'TheHarvester è uno strumento OSINT per enumerare email, subdomain, host e informazioni pubbliche da motori di ricerca e data source esterni. Guida pratica all’uso in reconnaissance e penetration testing.'
+description: >-
+  TheHarvester è uno strumento OSINT per enumerare email, subdomain, host e
+  informazioni pubbliche da motori di ricerca e data source esterni. Guida
+  pratica all’uso in reconnaissance e penetration testing.
 image: /Gemini_Generated_Image_t3i9idt3i9idt3i9.webp
-draft: true
+draft: false
 date: 2026-02-08T00:00:00.000Z
 categories:
   - tools

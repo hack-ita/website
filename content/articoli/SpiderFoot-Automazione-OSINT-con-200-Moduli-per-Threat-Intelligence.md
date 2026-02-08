@@ -1,9 +1,12 @@
 ---
 title: 'SpiderFoot: Automazione OSINT con 200+ Moduli per Threat Intelligence'
 slug: spiderfoot
-description: 'SpiderFoot è uno strumento OSINT automatizzato con oltre 200 moduli per la raccolta e correlazione di intelligence su domini, IP, email e breach. Guida completa all’uso in ambito penetration testing e threat intelligence.'
+description: >-
+  SpiderFoot è uno strumento OSINT automatizzato con oltre 200 moduli per la
+  raccolta e correlazione di intelligence su domini, IP, email e breach. Guida
+  completa all’uso in ambito penetration testing e threat intelligence.
 image: /Gemini_Generated_Image_saexy2saexy2saex.webp
-draft: true
+draft: false
 date: 2026-02-08T00:00:00.000Z
 categories:
   - tools

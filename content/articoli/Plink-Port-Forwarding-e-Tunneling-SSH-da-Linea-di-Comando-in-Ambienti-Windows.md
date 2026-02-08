@@ -1,9 +1,12 @@
 ---
 title: 'Plink: Port Forwarding e Tunneling SSH da Linea di Comando in Ambienti Windows'
 slug: plink
-description: 'Plink è la versione command-line di PuTTY che consente tunneling SSH, port forwarding e pivoting da sistemi Windows. Guida pratica all’uso in penetration testing e Red Team.'
+description: >-
+  Plink è la versione command-line di PuTTY che consente tunneling SSH, port
+  forwarding e pivoting da sistemi Windows. Guida pratica all’uso in penetration
+  testing e Red Team.
 image: /Gemini_Generated_Image_81406f81406f8140.webp
-draft: true
+draft: false
 date: 2026-02-09T00:00:00.000Z
 categories:
   - tools

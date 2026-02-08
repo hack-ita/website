@@ -1,9 +1,14 @@
 ---
-title: 'Maltego: Guida Completa alla Visual Link Analysis per OSINT e Threat Intelligence'
+title: >-
+  Maltego: Guida Completa alla Visual Link Analysis per OSINT e Threat
+  Intelligence
 slug: maltego
-description: 'Maltego è uno strumento di visual link analysis per OSINT che trasforma domini, IP, email e aziende in grafi interattivi per investigazioni avanzate, threat intelligence e Red Team.'
+description: >-
+  Maltego è uno strumento di visual link analysis per OSINT che trasforma
+  domini, IP, email e aziende in grafi interattivi per investigazioni avanzate,
+  threat intelligence e Red Team.
 image: /Gemini_Generated_Image_ded8faded8faded8.webp
-draft: true
+draft: false
 date: 2026-02-08T00:00:00.000Z
 categories:
   - tools

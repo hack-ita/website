@@ -1,9 +1,12 @@
 ---
 title: 'Adfind: Enumerazione Active Directory Avanzata nel Penetration Testing'
 slug: adfind
-description: AdFind è un tool per enumerare oggetti Active Directory tramite query LDAP da linea di comando. Guida pratica all’uso in fase di domain enumeration durante un penetration test.
+description: >-
+  AdFind è un tool per enumerare oggetti Active Directory tramite query LDAP da
+  linea di comando. Guida pratica all’uso in fase di domain enumeration durante
+  un penetration test.
 image: /Gemini_Generated_Image_tupqq5tupqq5tupq.webp
-draft: true
+draft: false
 date: 2026-02-09T00:00:00.000Z
 categories:
   - windows

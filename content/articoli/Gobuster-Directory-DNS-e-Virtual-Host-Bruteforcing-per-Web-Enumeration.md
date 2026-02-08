@@ -1,9 +1,12 @@
 ---
 title: 'Gobuster: Directory, DNS e Virtual Host Bruteforcing per Web Enumeration'
 slug: gobuster
-description: 'Gobuster è uno strumento veloce per brute-force di directory, DNS e virtual host. Guida pratica all’uso in fase di web enumeration durante un penetration test.'
+description: >-
+  Gobuster è uno strumento veloce per brute-force di directory, DNS e virtual
+  host. Guida pratica all’uso in fase di web enumeration durante un penetration
+  test.
 image: /Gemini_Generated_Image_6kltpu6kltpu6klt.webp
-draft: true
+draft: false
 date: 2026-02-09T00:00:00.000Z
 categories:
   - web-hacking

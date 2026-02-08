@@ -1,9 +1,12 @@
 ---
 title: 'Dirsearch: Directory e File Enumeration per Web Application Testing'
 slug: dirsearch
-description: Dirsearch è uno strumento per enumerare directory e file nascosti su applicazioni web tramite wordlist personalizzate. Guida pratica all’uso in fase di web reconnaissance durante un penetration test.
+description: >-
+  Dirsearch è uno strumento per enumerare directory e file nascosti su
+  applicazioni web tramite wordlist personalizzate. Guida pratica all’uso in
+  fase di web reconnaissance durante un penetration test.
 image: /Gemini_Generated_Image_sd9wawsd9wawsd9w.webp
-draft: true
+draft: false
 date: 2026-02-09T00:00:00.000Z
 categories:
   - web-hacking

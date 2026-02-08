@@ -2,6 +2,7 @@
 title: 'Nikto: Web Server Scanner per Vulnerabilità e Misconfiguration'
 slug: nikto
 description: 'Nikto è uno scanner web per individuare vulnerabilità note, file sensibili, configurazioni errate e software obsoleto su server HTTP/HTTPS.'
+image: /Gemini_Generated_Image_ghwknrghwknrghwk.webp
 draft: true
 date: 2026-02-19T00:00:00.000Z
 categories:

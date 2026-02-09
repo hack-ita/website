@@ -1,9 +1,13 @@
 ---
 title: 'AWS Privilege Escalation: 21+ Tecniche per Passare da Low-Priv a Admin in IAM'
 slug: aws-privilege-escalation
-description: 'AWS Privilege Escalation è l’insieme di tecniche per ottenere privilegi più elevati abusando di misconfigurazioni IAM in ambienti cloud. Analisi di policy, role assumption e abuse di servizi AWS in contesti di penetration test autorizzati.'
+description: >-
+  AWS Privilege Escalation è l’insieme di tecniche per ottenere privilegi più
+  elevati abusando di misconfigurazioni IAM in ambienti cloud. Analisi di
+  policy, role assumption e abuse di servizi AWS in contesti di penetration test
+  autorizzati.
 image: /AWS.webp
-draft: true
+draft: false
 date: 2026-02-10T00:00:00.000Z
 lastmod: 2026-02-10T00:00:00.000Z
 categories:

@@ -1,9 +1,14 @@
 ---
-title: 'Amass: Subdomain Enumeration Avanzata per Reconnaissance e Attack Surface Mapping'
+title: >-
+  Amass: Subdomain Enumeration Avanzata per Reconnaissance e Attack Surface
+  Mapping
 slug: amass
-description: 'Amass è uno strumento OSINT e active reconnaissance per enumerare subdomain, mappare asset esterni e analizzare relazioni DNS. Guida pratica all’uso in fase di attack surface discovery durante un penetration test.'
+description: >-
+  Amass è uno strumento OSINT e active reconnaissance per enumerare subdomain,
+  mappare asset esterni e analizzare relazioni DNS. Guida pratica all’uso in
+  fase di attack surface discovery durante un penetration test.
 image: /Gemini_Generated_Image_4wvv9n4wvv9n4wvv.webp
-draft: true
+draft: false
 date: 2026-02-10T00:00:00.000Z
 categories:
   - web-hacking

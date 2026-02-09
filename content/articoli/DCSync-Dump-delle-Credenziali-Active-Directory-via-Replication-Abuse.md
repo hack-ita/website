@@ -1,9 +1,13 @@
 ---
 title: 'DCSync: Dump delle Credenziali Active Directory via Replication Abuse'
 slug: dcsync
-description: DCSync è una tecnica di Active Directory che permette di estrarre hash delle credenziali abusando del meccanismo di replica del dominio. Utilizzata in post-exploitation per ottenere NTLM hash di utenti privilegiati senza accesso diretto al Domain Controller.
+description: >-
+  DCSync è una tecnica di Active Directory che permette di estrarre hash delle
+  credenziali abusando del meccanismo di replica del dominio. Utilizzata in
+  post-exploitation per ottenere NTLM hash di utenti privilegiati senza accesso
+  diretto al Domain Controller.
 image: /Gemini_Generated_Image_k0byulk0byulk0by.webp
-draft: true
+draft: false
 date: 2026-02-10T00:00:00.000Z
 categories:
   - windows

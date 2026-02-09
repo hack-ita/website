@@ -1,9 +1,12 @@
 ---
 title: 'Arjun: HTTP Parameter Discovery per Web Application Recon Avanzata'
 slug: arjun
-description: 'Arjun è un tool per scoprire parametri HTTP nascosti in applicazioni web durante il penetration testing. Automatizza l’identificazione di parametri GET e POST non documentati utili per IDOR, XSS e injection.'
+description: >-
+  Arjun è un tool per scoprire parametri HTTP nascosti in applicazioni web
+  durante il penetration testing. Automatizza l’identificazione di parametri GET
+  e POST non documentati utili per IDOR, XSS e injection.
 image: /Gemini_Generated_Image_777q1o777q1o777q.png
-draft: true
+draft: false
 date: 2026-02-10T00:00:00.000Z
 categories:
   - tools

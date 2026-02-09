@@ -1,9 +1,12 @@
 ---
 title: 'Assetfinder: Subdomain Enumeration Rapida per Attack Surface Mapping'
 slug: assetfinder
-description: Assetfinder è un tool OSINT per enumerare subdomain da fonti pubbliche durante la fase di reconnaissance. Ideale per mappare rapidamente la superficie d’attacco di un dominio in penetration test.
+description: >-
+  Assetfinder è un tool OSINT per enumerare subdomain da fonti pubbliche durante
+  la fase di reconnaissance. Ideale per mappare rapidamente la superficie
+  d’attacco di un dominio in penetration test.
 image: /Gemini_Generated_Image_czu74wczu74wczu7.webp
-draft: true
+draft: false
 date: 2026-02-10T00:00:00.000Z
 categories:
   - tools

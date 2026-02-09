@@ -1,9 +1,12 @@
 ---
 title: 'Aquatone: Visual Recon e Screenshot Automatici per Subdomain Enumeration'
 slug: aquatone
-description: Aquatone è un tool di visual reconnaissance che cattura screenshot automatici di host e subdomain scoperti durante la fase di recon. Ideale per mappare rapidamente superfici web in penetration test.
+description: >-
+  Aquatone è un tool di visual reconnaissance che cattura screenshot automatici
+  di host e subdomain scoperti durante la fase di recon. Ideale per mappare
+  rapidamente superfici web in penetration test.
 image: /Gemini_Generated_Image_2smu2n2smu2n2smu.webp
-draft: true
+draft: false
 date: 2026-02-10T00:00:00.000Z
 categories:
   - web-hacking

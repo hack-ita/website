@@ -1,9 +1,11 @@
 ---
 title: 'Evilginx2: Bypass 2FA con Phishing Proxy Man-in-the-Middle'
 slug: evilginx2
-description: 'Guida pratica Evilginx2 per bypass autenticazione 2FA: man-in-the-middle phishing, session hijacking e credential theft. Attacchi avanzati contro MFA.'
+description: >-
+  Guida pratica Evilginx2 per bypass autenticazione 2FA: man-in-the-middle
+  phishing, session hijacking e credential theft. Attacchi avanzati contro MFA.
 image: /Gemini_Generated_Image_rgx63lrgx63lrgx6.webp
-draft: true
+draft: false
 date: 2026-02-11T00:00:00.000Z
 categories:
   - tools

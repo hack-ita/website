@@ -1,9 +1,12 @@
 ---
 title: 'Cloud_enum: Enumerazione Asset Cloud per Recon su AWS, Azure e GCP'
 slug: cloudenum
-description: 'Cloud_enum è un tool OSINT per enumerare risorse cloud pubblicamente esposte su AWS, Azure e GCP. Utile nella fase di reconnaissance per mappare bucket, storage account e asset correlati a un dominio target.'
+description: >-
+  Cloud_enum è un tool OSINT per enumerare risorse cloud pubblicamente esposte
+  su AWS, Azure e GCP. Utile nella fase di reconnaissance per mappare bucket,
+  storage account e asset correlati a un dominio target.
 image: /Gemini_Generated_Image_st6mr9st6mr9st6m.webp
-draft: true
+draft: false
 date: 2026-02-11T00:00:00.000Z
 categories:
   - tools

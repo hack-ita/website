@@ -61,7 +61,8 @@
           {{ with .PublishDate }}
           <li class="py-1 px-3 text-dark dark:text-light border border-dark dark:border-light rounded-full text-sm uppercase">Pubblicato il {{ . | time.Format "2006-01-02"}}</li>
           {{ end }}
-          {{ $readingTime := div (float .WordCount) 170 }}
+          {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
+          {{ $readingTime := div (float .WordCount) $readingSpeed }}
           {{ $readingTime = math.Ceil $readingTime }}
           <li class="py-1 px-3 text-dark dark:text-light border border-dark dark:border-light rounded-full text-sm uppercase">Tempo di lettura: {{ $readingTime }} min</li>
           {{ with .Params.author }}

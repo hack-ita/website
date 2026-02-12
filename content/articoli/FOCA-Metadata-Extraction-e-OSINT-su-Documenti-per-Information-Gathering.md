@@ -1,9 +1,12 @@
 ---
 title: 'FOCA: Metadata Extraction e OSINT su Documenti per Information Gathering'
 slug: foca
-description: 'FOCA è uno strumento OSINT per estrarre metadata da documenti pubblici, mappare infrastruttura interna e identificare utenti, server e percorsi esposti.'
+description: >-
+  FOCA è uno strumento OSINT per estrarre metadata da documenti pubblici,
+  mappare infrastruttura interna e identificare utenti, server e percorsi
+  esposti.
 image: /Gemini_Generated_Image_5np0265np0265np0.webp
-draft: true
+draft: false
 date: 2026-02-13T00:00:00.000Z
 categories:
   - web-hacking

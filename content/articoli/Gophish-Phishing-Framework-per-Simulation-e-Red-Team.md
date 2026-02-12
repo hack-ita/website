@@ -1,9 +1,11 @@
 ---
 title: 'Gophish: Phishing Framework per Simulation e Red Team'
 slug: gophish
-description: 'Gophish è una piattaforma open-source per phishing simulation e red team engagement. Campaign management, tracking e reporting centralizzato.'
+description: >-
+  Gophish è una piattaforma open-source per phishing simulation e red team
+  engagement. Campaign management, tracking e reporting centralizzato.
 image: /Gemini_Generated_Image_wfub0owfub0owfub.webp
-draft: true
+draft: false
 date: 2026-02-13T00:00:00.000Z
 categories:
   - web-hacking

@@ -1,9 +1,12 @@
 ---
 title: 'Feroxbuster: Directory Bruteforcing Veloce e Ricorsivo per Web Hacking'
 slug: feroxbuster
-description: 'Feroxbuster è uno strumento ad alte prestazioni per directory e content discovery. Bruteforce ricorsivo, multi-thread e supporto proxy per test web avanzati.'
+description: >-
+  Feroxbuster è uno strumento ad alte prestazioni per directory e content
+  discovery. Bruteforce ricorsivo, multi-thread e supporto proxy per test web
+  avanzati.
 image: /Gemini_Generated_Image_msyul3msyul3msyu.webp
-draft: true
+draft: false
 date: 2026-02-13T00:00:00.000Z
 categories:
   - web-hacking

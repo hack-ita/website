@@ -1,9 +1,12 @@
 ---
 title: 'Getcap: Enumerazione Linux Capabilities per Privilege Escalation'
 slug: getcap
-description: Getcap permette di individuare file con Linux capabilities per identificare vettori di privilege escalation senza SUID. Tecnica chiave in post-exploitation.
+description: >-
+  Getcap permette di individuare file con Linux capabilities per identificare
+  vettori di privilege escalation senza SUID. Tecnica chiave in
+  post-exploitation.
 image: /Gemini_Generated_Image_3d33a03d33a03d33.webp
-draft: true
+draft: false
 date: 2026-02-13T00:00:00.000Z
 categories:
   - linux

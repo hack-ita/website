@@ -1,9 +1,11 @@
 ---
 title: 'Gitrob: OSINT e Secret Discovery su Repository GitHub'
 slug: gitrob
-description: Gitrob analizza repository GitHub per individuare file sensibili e credenziali esposte. Strumento utile in fase di reconnaissance e secret hunting.
+description: >-
+  Gitrob analizza repository GitHub per individuare file sensibili e credenziali
+  esposte. Strumento utile in fase di reconnaissance e secret hunting.
 image: /Gemini_Generated_Image_l2qx4fl2qx4fl2qx.webp
-draft: true
+draft: false
 date: 2026-02-13T00:00:00.000Z
 categories:
   - web-hacking

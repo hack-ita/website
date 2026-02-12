@@ -1,9 +1,11 @@
 ---
 title: 'Eyewitness: Visual Recon e Screenshot Automation per Triage Web su larga scala'
 slug: eyewitness
-description: Eyewitness automatizza screenshot e analisi di servizi web e RDP. Visual recon rapida per identificare pannelli admin e superfici d’attacco esposte.
+description: >-
+  Eyewitness automatizza screenshot e analisi di servizi web e RDP. Visual recon
+  rapida per identificare pannelli admin e superfici d’attacco esposte.
 image: /Gemini_Generated_Image_54xpwy54xpwy54xp.webp
-draft: true
+draft: false
 date: 2026-02-13T00:00:00.000Z
 categories:
   - web-hacking

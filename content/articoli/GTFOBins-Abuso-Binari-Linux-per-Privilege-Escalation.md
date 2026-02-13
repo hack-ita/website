@@ -1,9 +1,11 @@
 ---
 title: 'GTFOBins: Abuso Binari Linux per Privilege Escalation'
 slug: gtfobins
-description: 'GTFOBins è il database definitivo per sfruttare binari Linux legittimi in privilege escalation, bypass sudo e shell escape in lab autorizzati.'
+description: >-
+  GTFOBins è il database definitivo per sfruttare binari Linux legittimi in
+  privilege escalation, bypass sudo e shell escape in lab autorizzati.
 image: /Gemini_Generated_Image_kdyka9kdyka9kdyk.webp
-draft: true
+draft: false
 date: 2026-02-14T00:00:00.000Z
 categories:
   - linux

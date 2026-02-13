@@ -1,9 +1,12 @@
 ---
 title: 'Mimikatz: Dump Credenziali, DCSync e Golden Ticket in Active Directory'
 slug: mimikatz
-description: 'Guida tecnica a Mimikatz: come estrarre password da LSASS, eseguire DCSync e creare Golden Ticket in ambienti Active Directory. Focus offensivo, comandi pratici e varianti evasive.'
+description: >-
+  Guida tecnica a Mimikatz: come estrarre password da LSASS, eseguire DCSync e
+  creare Golden Ticket in ambienti Active Directory. Focus offensivo, comandi
+  pratici e varianti evasive.
 image: '/ChatGPT Image Feb 13, 2026, 01_16_48 AM.webp'
-draft: true
+draft: false
 date: 2026-02-14T00:00:00.000Z
 categories:
   - windows

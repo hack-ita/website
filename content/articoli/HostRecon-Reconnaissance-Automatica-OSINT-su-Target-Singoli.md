@@ -1,9 +1,11 @@
 ---
 title: 'HostRecon: Reconnaissance Automatica OSINT su Target Singoli'
 slug: hostrecon
-description: 'HostRecon automatizza OSINT e reconnaissance su singolo dominio: DNS, whois, subdomain, breach data e exposure mapping in un solo comando.'
+description: >-
+  HostRecon automatizza OSINT e reconnaissance su singolo dominio: DNS, whois,
+  subdomain, breach data e exposure mapping in un solo comando.
 image: /Gemini_Generated_Image_sxz0r4sxz0r4sxz0.webp
-draft: true
+draft: false
 date: 2026-02-14T00:00:00.000Z
 categories:
   - tools

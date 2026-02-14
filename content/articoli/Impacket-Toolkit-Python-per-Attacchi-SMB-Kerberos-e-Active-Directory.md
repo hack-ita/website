@@ -1,9 +1,11 @@
 ---
 title: 'Impacket: Toolkit Python per Attacchi SMB, Kerberos e Active Directory'
 slug: impacket
-description: 'Impacket è una suite Python per interagire con protocolli di rete (SMB, LDAP, Kerberos, RPC) e condurre attacchi AD come DCSync e Pass-the-Hash.'
+description: >-
+  Impacket è una suite Python per interagire con protocolli di rete (SMB, LDAP,
+  Kerberos, RPC) e condurre attacchi AD come DCSync e Pass-the-Hash.
 image: /Gemini_Generated_Image_ggu0akggu0akggu0.webp
-draft: true
+draft: false
 date: 2026-02-15T00:00:00.000Z
 categories:
   - tools

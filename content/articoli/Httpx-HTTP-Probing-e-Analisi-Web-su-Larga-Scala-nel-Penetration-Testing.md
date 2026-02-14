@@ -1,9 +1,11 @@
 ---
 title: 'Httpx: HTTP Probing e Analisi Web su Larga Scala nel Penetration Testing'
 slug: httpx
-description: 'httpx è il tool di probing HTTP per filtrare host attivi, rilevare tecnologie, status code e screenshot in pipeline con subdomain enumeration.'
+description: >-
+  httpx è il tool di probing HTTP per filtrare host attivi, rilevare tecnologie,
+  status code e screenshot in pipeline con subdomain enumeration.
 image: /Gemini_Generated_Image_opsqi3opsqi3opsq.webp
-draft: true
+draft: false
 date: 2026-02-15T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,11 @@
 ---
 title: 'Hydra: Brute Force Login per Servizi di Rete'
 slug: hydra
-description: 'Hydra è un tool di brute force per testare credenziali su SSH, FTP, RDP, HTTP e altri servizi durante penetration test autorizzati.'
+description: >-
+  Hydra è un tool di brute force per testare credenziali su SSH, FTP, RDP, HTTP
+  e altri servizi durante penetration test autorizzati.
 image: /Gemini_Generated_Image_524p3j524p3j524p.webp
-draft: true
+draft: false
 date: 2026-02-15T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,11 @@
 ---
 title: 'Invoke-Manipulation: PowerShell Obfuscation per Evasion AV'
 slug: invokemanipulation
-description: Invoke-Manipulation è un modulo PowerShell per offuscare script e bypassare controlli statici durante operazioni di red team autorizzate.
+description: >-
+  Invoke-Manipulation è un modulo PowerShell per offuscare script e bypassare
+  controlli statici durante operazioni di red team autorizzate.
 image: /Gemini_Generated_Image_c1r03dc1r03dc1r0.webp
-draft: true
+draft: false
 date: 2026-02-15T00:00:00.000Z
 categories:
   - tools

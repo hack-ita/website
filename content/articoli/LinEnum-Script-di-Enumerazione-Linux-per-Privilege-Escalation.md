@@ -1,9 +1,11 @@
 ---
 title: 'LinEnum: Script di Enumerazione Linux per Privilege Escalation'
 slug: linenum
-description: 'LinEnum è uno script Bash per enumerazione automatica su sistemi Linux, utile per identificare vettori di privilege escalation in post-exploitation.'
+description: >-
+  LinEnum è uno script Bash per enumerazione automatica su sistemi Linux, utile
+  per identificare vettori di privilege escalation in post-exploitation.
 image: /Gemini_Generated_Image_5bg0lj5bg0lj5bg0.webp
-draft: true
+draft: false
 date: 2026-02-16T00:00:00.000Z
 categories:
   - linux

@@ -1,9 +1,11 @@
 ---
 title: 'LinPEAS: Linux Privilege Escalation Enumeration Script'
 slug: linpeas
-description: 'LinPEAS è uno script di enumerazione automatica per Linux che identifica SUID, capabilities, credenziali esposte e vettori di privilege escalation.'
+description: >-
+  LinPEAS è uno script di enumerazione automatica per Linux che identifica SUID,
+  capabilities, credenziali esposte e vettori di privilege escalation.
 image: /Gemini_Generated_Image_u0bu6ku0bu6ku0bu.webp
-draft: true
+draft: false
 date: 2026-02-16T00:00:00.000Z
 categories:
   - linux

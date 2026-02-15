@@ -1,9 +1,11 @@
 ---
 title: 'LaZagne: Estrazione Password da Browser e Applicazioni'
 slug: lazagne
-description: 'LaZagne è un tool open-source per recuperare password salvate su Windows e Linux da browser, client email e software locali in post-exploitation.'
+description: >-
+  LaZagne è un tool open-source per recuperare password salvate su Windows e
+  Linux da browser, client email e software locali in post-exploitation.
 image: /Gemini_Generated_Image_fbk2s6fbk2s6fbk2.webp
-draft: true
+draft: false
 date: 2026-02-16T00:00:00.000Z
 categories:
   - tools

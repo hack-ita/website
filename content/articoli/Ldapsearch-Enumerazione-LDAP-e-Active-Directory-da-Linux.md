@@ -1,9 +1,11 @@
 ---
 title: 'Ldapsearch: Enumerazione LDAP e Active Directory da Linux'
 slug: ldapsearch
-description: 'Ldapsearch è il tool CLI per interrogare LDAP e Active Directory da Linux. Utile per enumerazione utenti, gruppi, SPN e oggetti di dominio.'
+description: >-
+  Ldapsearch è il tool CLI per interrogare LDAP e Active Directory da Linux.
+  Utile per enumerazione utenti, gruppi, SPN e oggetti di dominio.
 image: /Gemini_Generated_Image_m1v8som1v8som1v8.webp
-draft: true
+draft: false
 date: 2026-02-16T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,12 @@
 ---
 title: 'Mitmproxy: Intercettazione e Manipolazione Traffico HTTP/HTTPS'
 slug: mitmproxy
-description: 'mitmproxy è un proxy interattivo per analisi e manipolazione del traffico HTTP/HTTPS. Ideale per testing API, debugging e security assessment autorizzato.'
+description: >-
+  mitmproxy è un proxy interattivo per analisi e manipolazione del traffico
+  HTTP/HTTPS. Ideale per testing API, debugging e security assessment
+  autorizzato.
 image: /Gemini_Generated_Image_qw11lxqw11lxqw11.webp
-draft: true
+draft: false
 date: 2026-02-17T00:00:00.000Z
 categories:
   - tools

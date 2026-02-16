@@ -3,7 +3,7 @@ title: 'LSE (Linux Smart Enumeration): Automated Linux Privilege Escalation Chec
 slug: lse
 description: 'LSE (Linux Smart Enumeration): Automated Linux Privilege Escalation Checklist'
 image: /Gemini_Generated_Image_45b6l045b6l045b6.webp
-draft: true
+draft: false
 date: 2026-02-17T00:00:00.000Z
 categories:
   - tools

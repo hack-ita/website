@@ -1,9 +1,12 @@
 ---
 title: 'Medusa: High-Speed Login Brute-Force Tool per Servizi di Rete'
 slug: medusa
-description: 'Medusa è un tool parallelo per brute-force di autenticazioni su SSH, FTP, SMB, HTTP e altri servizi. Veloce, modulare e ideale per password auditing autorizzato.'
+description: >-
+  Medusa è un tool parallelo per brute-force di autenticazioni su SSH, FTP, SMB,
+  HTTP e altri servizi. Veloce, modulare e ideale per password auditing
+  autorizzato.
 image: /Gemini_Generated_Image_ww9l6zww9l6zww9l.webp
-draft: true
+draft: false
 date: 2026-02-17T00:00:00.000Z
 categories:
   - tools

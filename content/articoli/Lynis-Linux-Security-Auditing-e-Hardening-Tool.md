@@ -1,9 +1,12 @@
 ---
 title: 'Lynis: Linux Security Auditing e Hardening Tool'
 slug: lynis
-description: 'Lynis è uno strumento di auditing per sistemi Unix/Linux che analizza configurazioni, permessi, patch e hardening. Ideale per penetration tester e blue team.'
+description: >-
+  Lynis è uno strumento di auditing per sistemi Unix/Linux che analizza
+  configurazioni, permessi, patch e hardening. Ideale per penetration tester e
+  blue team.
 image: /Gemini_Generated_Image_yzklspyzklspyzkl.webp
-draft: true
+draft: false
 date: 2026-02-17T00:00:00.000Z
 categories:
   - linux

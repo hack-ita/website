@@ -1,9 +1,11 @@
 ---
 title: 'Msfconsole: Interfaccia Principale di Metasploit Framework'
 slug: msfconsole
-description: 'msfconsole è la console interattiva di Metasploit per exploit, payload e gestione sessioni. Guida pratica ai comandi fondamentali per penetration test.'
+description: >-
+  msfconsole è la console interattiva di Metasploit per exploit, payload e
+  gestione sessioni. Guida pratica ai comandi fondamentali per penetration test.
 image: /Gemini_Generated_Image_bgdadgbgdadgbgda.webp
-draft: true
+draft: false
 date: 2026-02-18T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,11 @@
 ---
 title: 'NBTSscan: NetBIOS Enumeration Rapida su Reti Windows'
 slug: nbtsscan
-description: 'NBTSscan è un tool leggero per enumerazione NetBIOS su reti Windows. Identifica hostname, domain e MAC address tramite query NetBIOS.'
+description: >-
+  NBTSscan è un tool leggero per enumerazione NetBIOS su reti Windows.
+  Identifica hostname, domain e MAC address tramite query NetBIOS.
 image: /Gemini_Generated_Image_cw5ihecw5ihecw5i.webp
-draft: true
+draft: false
 date: 2026-02-19T00:00:00.000Z
 categories:
   - networking

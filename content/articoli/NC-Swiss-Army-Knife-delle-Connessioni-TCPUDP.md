@@ -1,9 +1,11 @@
 ---
 title: 'NC: Swiss Army Knife delle Connessioni TCP/UDP'
 slug: nc
-description: 'NC è uno strumento versatile per connessioni TCP/UDP, port scanning, banner grabbing e reverse shell nel penetration testing autorizzato.'
+description: >-
+  NC è uno strumento versatile per connessioni TCP/UDP, port scanning, banner
+  grabbing e reverse shell nel penetration testing autorizzato.
 image: /Gemini_Generated_Image_3jlglh3jlglh3jlg.webp
-draft: true
+draft: false
 date: 2026-02-19T00:00:00.000Z
 categories:
   - networking

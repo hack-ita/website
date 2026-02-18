@@ -560,6 +560,7 @@ const initDeferred = () => {
   );
 
   // SEARCH (lazy load Pagefind)
+  // SEARCH (lazy load Pagefind)
   defer(
     () =>
       safe(() => {
@@ -577,6 +578,7 @@ const initDeferred = () => {
 
         let pagefind = null;
         let timer = null;
+        let currentSearchTerm = "";
 
         const STATES = {
           loading: "Searching…",
@@ -596,6 +598,100 @@ const initDeferred = () => {
         };
 
         hideResults();
+
+        // Calculate relevance score for a result
+        const calculateRelevance = (data, term) => {
+          let score = 0;
+          const termLower = term.toLowerCase();
+          const termWords = termLower.split(/\s+/).filter((w) => w.length > 1);
+
+          // Title match (highest weight)
+          const title = (data.meta?.title || data.url || "").toLowerCase();
+          if (title.includes(termLower)) score += 100;
+
+          // Check for word matches in title
+          for (const word of termWords) {
+            if (title.includes(word)) score += 50;
+            if (title.startsWith(word)) score += 75; // Title starts with word
+          }
+
+          // Excerpt match (medium weight)
+          const excerpt = (data.excerpt || "").toLowerCase();
+          if (excerpt.includes(termLower)) score += 30;
+
+          // Count occurrences in excerpt
+          let lastIndex = -1;
+          let count = 0;
+          while (
+            (lastIndex = excerpt.indexOf(termLower, lastIndex + 1)) !== -1
+          ) {
+            count++;
+          }
+          score += count * 10;
+
+          // Check for word matches in excerpt
+          for (const word of termWords) {
+            if (excerpt.includes(word)) score += 15;
+
+            // Count word occurrences
+            let wordCount = 0;
+            let wordIndex = -1;
+            while ((wordIndex = excerpt.indexOf(word, wordIndex + 1)) !== -1) {
+              wordCount++;
+            }
+            score += wordCount * 5;
+          }
+
+          // URL match (lower weight)
+          const url = (data.url || "").toLowerCase();
+          if (url.includes(termLower)) score += 20;
+
+          // Proximity bonus: if term appears early in the content
+          const firstIndex = excerpt.indexOf(termLower);
+          if (firstIndex !== -1) {
+            // Bonus for early appearance (up to 25 points)
+            score += Math.max(0, 25 - Math.floor(firstIndex / 50));
+          }
+
+          return score;
+        };
+
+        // Highlight matching terms in text
+        const highlightMatches = (text, term) => {
+          if (!text || !term) return text;
+
+          const terms = term.split(/\s+/).filter((w) => w.length > 1);
+          let highlighted = text;
+
+          for (const word of terms) {
+            const regex = new RegExp(`(${word})`, "gi");
+            highlighted = highlighted.replace(regex, "<mark>$1</mark>");
+          }
+
+          return highlighted;
+        };
+
+        // Get best excerpt with context around the matched term
+        const getContextualExcerpt = (data, term) => {
+          const excerpt = data.excerpt || "";
+          const termLower = term.toLowerCase();
+          const excerptLower = excerpt.toLowerCase();
+
+          const termIndex = excerptLower.indexOf(termLower);
+          if (termIndex === -1) return excerpt;
+
+          // Get 50 chars before and after the match
+          const start = Math.max(0, termIndex - 50);
+          const end = Math.min(excerpt.length, termIndex + term.length + 50);
+
+          let context = excerpt.substring(start, end);
+
+          // Add ellipsis if we truncated
+          if (start > 0) context = "…" + context;
+          if (end < excerpt.length) context = context + "…";
+
+          return highlightMatches(context, term);
+        };
 
         // Lazy load Pagefind on first interaction
         let pagefindLoaded = false;
@@ -626,6 +722,7 @@ const initDeferred = () => {
         input.addEventListener("input", (e) => {
           clearTimeout(timer);
           const term = e.target.value.trim();
+          currentSearchTerm = term;
 
           if (!term) {
             hideResults();
@@ -651,26 +748,73 @@ const initDeferred = () => {
                 return;
               }
 
+              // Process all results with relevance scoring
+              const scoredResults = [];
+
+              for (const hit of res.results) {
+                try {
+                  const data = await hit.data();
+                  const score = calculateRelevance(data, term);
+
+                  scoredResults.push({
+                    url: data.url,
+                    title: data.meta?.title || data.url,
+                    excerpt: data.excerpt || "",
+                    contextualExcerpt: getContextualExcerpt(data, term),
+                    score: score,
+                    data: data,
+                  });
+                } catch (e) {
+                  warn("Result processing failed:", e);
+                }
+              }
+
+              // Sort by relevance score (highest first)
+              scoredResults.sort((a, b) => b.score - a.score);
+
+              // Deduplicate by URL, keeping the highest scoring version
+              const uniqueResults = new Map();
+              for (const result of scoredResults) {
+                if (
+                  !uniqueResults.has(result.url) ||
+                  result.score > uniqueResults.get(result.url).score
+                ) {
+                  uniqueResults.set(result.url, result);
+                }
+              }
+
+              if (uniqueResults.size === 0) {
+                setState("empty");
+                return;
+              }
+
               suggList.innerHTML = "";
               showResults();
 
               const fragment = document.createDocumentFragment();
-              const results = res.results.slice(0, 8);
 
-              for (const hit of results) {
-                try {
-                  const data = await hit.data();
-                  const li = document.createElement("li");
-                  li.innerHTML = `
-                <a href="${data.url}">
-                  <strong>${data.meta?.title || data.url}</strong>
-                  <p>${data.excerpt || ""}</p>
-                </a>
-              `;
-                  fragment.appendChild(li);
-                } catch (e) {
-                  warn("Result render failed:", e);
-                }
+              // Convert Map to array, sort by score again (in case we kept lower scores), and limit
+              const results = Array.from(uniqueResults.values())
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 8);
+
+              for (const result of results) {
+                const li = document.createElement("li");
+
+                // Use contextual excerpt with highlighting
+                const displayExcerpt =
+                  result.contextualExcerpt || result.excerpt;
+
+                li.innerHTML = `
+                  <a href="${result.url}">
+                    <strong>${highlightMatches(
+                      result.title,
+                      currentSearchTerm,
+                    )}</strong>
+                    <p>${displayExcerpt}</p>
+                  </a>
+                `;
+                fragment.appendChild(li);
               }
 
               suggList.appendChild(fragment);
@@ -690,8 +834,10 @@ const initDeferred = () => {
             const a = item.querySelector("a");
             if (!a) return;
 
-            const title = a.querySelector("strong")?.textContent || "";
-            const desc = a.querySelector("p")?.textContent || "";
+            const title =
+              a.querySelector("strong")?.innerHTML.replace(/<\/?mark>/g, "") || "";
+            const desc =
+              a.querySelector("p")?.innerHTML.replace(/<\/?mark>/g, "") || "";
 
             preview.innerHTML = `<h4>${title}</h4><p>${desc}</p><small>${a.href}</small>`;
             preview.style.display = "block";
@@ -701,11 +847,6 @@ const initDeferred = () => {
           { passive: true },
         );
 
-        suggList.addEventListener(
-          "mouseleave",
-          () => (preview.style.display = "none"),
-          { passive: true },
-        );
         log("Search initialized");
       }, "Search"),
     900,

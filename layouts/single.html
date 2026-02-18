@@ -1,7 +1,7 @@
 {{ define "main" }}
 <img data-pagefind-meta="image[src]" src="{{ .Params.image | relURL }}" style="display:none">
 <meta data-pagefind-meta="description[content]" content="{{ .Description }}">
-{{ if eq .Parent.Title "Blog" }}
+{{ if eq .Section "articoli" }}
 <div id="reading-progress" class="fixed z-60 top-0 left-0 w-full h-1 bg-transparent">
     <div id="reading-progress-bar" class="h-full bg-primary"></div>
 </div>
@@ -10,7 +10,7 @@
   <div class="lg:p-5 grid grid-cols-1 lg:grid-cols-6 gap-5 max-w-7xl mx-auto relative lg:static overflow-hidden lg:overflow-visible">
 
     <!-- Blog Post Content -->
-    <article {{ if eq .Parent.Title "Blog" }}data-pagefind-body{{ end }} class="lg:col-span-4 bg-light-bg dark:bg-accent rounded-md border border-dark/20 dark:border-light/20 border-l-4 border-l-primary p-5">
+    <article {{ if eq .Section "articoli" }}data-pagefind-body{{ end }} class="lg:col-span-4 bg-light-bg dark:bg-accent rounded-md border border-dark/20 dark:border-light/20 border-l-4 border-l-primary p-5">
       {{ partial "components/breadcrumb.html" . }}
       
       <header data-pagefind-ignore class="flex flex-col gap-5 items-start mt-5">

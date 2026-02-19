@@ -796,7 +796,7 @@ const initDeferred = () => {
               // Convert Map to array, sort by score again (in case we kept lower scores), and limit
               const results = Array.from(uniqueResults.values())
                 .sort((a, b) => b.score - a.score)
-                .slice(0, 8);
+                .slice(0, 5);
 
               for (const result of results) {
                 const li = document.createElement("li");

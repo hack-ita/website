@@ -2,7 +2,7 @@
 
 {{/* ================= HERO ================= */}}
 {{/* hero */}}
-<section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading">
+<section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading" fetchpriority="high" loading="eager">
   {{ range first 1 ((where .RegularPages "Params.featured" "eq" true) | default .RegularPages) }}
   {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
   {{ $readingTime := div (float .WordCount) $readingSpeed }}
@@ -10,7 +10,8 @@
   <div class="max-w-7xl mx-auto grid lg:grid-cols-5 gap-10">
 
     <!-- Featured Video / Image -->
-    <article class="rounded-md col-span-3 py-20 px-5 bg-cover bg-no-repeat bg-center relative bg-[url('{{ .Params.image | relURL }}')]" aria-label="Featured session: {{ .Title }}">
+    {{ $image := resources.Get .Params.image }}
+    <article class="rounded-md col-span-3 py-20 px-5 bg-cover bg-no-repeat bg-center relative bg-[url('{{ $image.RelPermalink }}')]" aria-label="Featured session: {{ .Title }}">
       <div class="absolute inset-0 bg-dark opacity-30 rounded-md"></div>
       <div class="relative flex flex-col justify-center items-start gap-10">
         <span 

@@ -242,10 +242,10 @@ h1, h2 {
 
 /* Suggestion list */
 .suggestions {
-  @apply list-none m-0 p-0 bg-light-bg dark:bg-accent overflow-hidden shadow-xl divide-y divide-dark/20 dark:divide-light/20;
+  @apply list-none m-0 mt-3 rounded-md p-0 bg-primary overflow-hidden shadow-2xl divide-y divide-dark/20;
 }
 .suggestions li {
-  @apply p-3 cursor-pointer transition-colors text-dark dark:text-light;
+  @apply p-3 cursor-pointer transition-colors text-light;
 }
 
 .suggestions li strong {

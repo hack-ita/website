@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: {{ "sitemap.xml" | absURL }}
+Sitemap: {{ "articoli/sitemap.xml" | absURL }}

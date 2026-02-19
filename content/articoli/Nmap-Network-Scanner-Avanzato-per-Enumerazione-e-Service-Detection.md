@@ -3,7 +3,7 @@ title: 'Nmap: Network Scanner Avanzato per Enumerazione e Service Detection'
 slug: nmap
 description: 'Nmap: Network Scanner Avanzato per Enumerazione e Service Detection'
 image: /Gemini_Generated_Image_8mre5n8mre5n8mre.webp
-draft: true
+draft: false
 date: 2026-02-20T00:00:00.000Z
 categories:
   - tools

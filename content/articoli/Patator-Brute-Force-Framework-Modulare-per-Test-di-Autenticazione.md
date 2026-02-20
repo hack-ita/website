@@ -3,7 +3,7 @@ title: 'Patator: Brute-Force Framework Modulare per Test di Autenticazione'
 slug: patator
 description: 'Patator: Brute-Force Framework Modulare per Test di Autenticazione'
 image: /Gemini_Generated_Image_e4rtue4rtue4rtue.webp
-draft: true
+draft: false
 date: 2026-02-21T00:00:00.000Z
 lastmod: 2026-02-21T00:00:00.000Z
 categories:

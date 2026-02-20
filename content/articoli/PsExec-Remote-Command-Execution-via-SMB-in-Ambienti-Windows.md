@@ -1,9 +1,11 @@
 ---
 title: 'PsExec: Remote Command Execution via SMB in Ambienti Windows'
 slug: psexec
-description: PsExec permette l’esecuzione remota di comandi su sistemi Windows tramite SMB. Strumento chiave per lateral movement e amministrazione remota.
+description: >-
+  PsExec permette l’esecuzione remota di comandi su sistemi Windows tramite SMB.
+  Strumento chiave per lateral movement e amministrazione remota.
 image: /Gemini_Generated_Image_ffbojyffbojyffbo.webp
-draft: true
+draft: false
 date: 2026-02-21T00:00:00.000Z
 categories:
   - windows

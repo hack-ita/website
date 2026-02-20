@@ -1,9 +1,11 @@
 ---
 title: 'Psutil: Enumerazione Processi e Risorse di Sistema con Python'
 slug: psutil
-description: 'Psutil è una libreria Python per monitorare processi, CPU, memoria e connessioni di rete. Utile per script di enumerazione e post-exploitation.'
+description: >-
+  Psutil è una libreria Python per monitorare processi, CPU, memoria e
+  connessioni di rete. Utile per script di enumerazione e post-exploitation.
 image: /Gemini_Generated_Image_j91p4gj91p4gj91p.webp
-draft: true
+draft: false
 date: 2026-02-21T00:00:00.000Z
 categories:
   - tools

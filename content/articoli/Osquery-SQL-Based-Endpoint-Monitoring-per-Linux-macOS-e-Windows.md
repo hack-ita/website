@@ -1,9 +1,11 @@
 ---
 title: 'Osquery: SQL-Based Endpoint Monitoring per Linux, macOS e Windows'
 slug: osquery
-description: 'Osquery permette di interrogare sistemi operativi con query SQL per analizzare processi, utenti, file e configurazioni in ottica security monitoring.'
+description: >-
+  Osquery permette di interrogare sistemi operativi con query SQL per analizzare
+  processi, utenti, file e configurazioni in ottica security monitoring.
 image: /Gemini_Generated_Image_7mmmr37mmmr37mmm.webp
-draft: true
+draft: false
 date: 2026-02-21T00:00:00.000Z
 categories:
   - tools

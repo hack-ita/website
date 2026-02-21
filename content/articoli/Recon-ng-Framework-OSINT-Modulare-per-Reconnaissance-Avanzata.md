@@ -1,9 +1,11 @@
 ---
 title: 'Recon-ng: Framework OSINT Modulare per Reconnaissance Avanzata'
 slug: reconng
-description: 'Recon-ng è un framework OSINT modulare con interfaccia stile Metasploit. Ideale per raccolta automatizzata di domini, email e asset esterni.'
+description: >-
+  Recon-ng è un framework OSINT modulare con interfaccia stile Metasploit.
+  Ideale per raccolta automatizzata di domini, email e asset esterni.
 image: /Gemini_Generated_Image_w57h06w57h06w57h.webp
-draft: true
+draft: false
 date: 2026-02-22T00:00:00.000Z
 categories:
   - web-hacking

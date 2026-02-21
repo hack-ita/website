@@ -1,9 +1,11 @@
 ---
 title: 'RevSocks: Reverse SOCKS Proxy per Pivoting e Accesso Interno'
 slug: revsocks
-description: 'RevSocks crea un reverse SOCKS proxy tra attacker e target compromesso, permettendo pivoting e accesso a reti interne in pentest autorizzati.'
+description: >-
+  RevSocks crea un reverse SOCKS proxy tra attacker e target compromesso,
+  permettendo pivoting e accesso a reti interne in pentest autorizzati.
 image: /Gemini_Generated_Image_2q8fux2q8fux2q8f.webp
-draft: true
+draft: false
 date: 2026-02-22T00:00:00.000Z
 categories:
   - networking

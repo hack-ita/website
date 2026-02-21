@@ -1,9 +1,11 @@
 ---
 title: 'Pspy: Monitoraggio Processi Linux Senza Privilegi Root'
 slug: pspy
-description: Pspy è uno strumento per osservare processi e cron job in esecuzione su Linux senza privilegi root. Ideale per identificare vettori di privilege escalation.
+description: >-
+  Pspy è uno strumento per osservare processi e cron job in esecuzione su Linux
+  senza privilegi root. Ideale per identificare vettori di privilege escalation.
 image: /Gemini_Generated_Image_wihpn1wihpn1wihp.webp
-draft: true
+draft: false
 date: 2026-02-22T00:00:00.000Z
 categories:
   - linux

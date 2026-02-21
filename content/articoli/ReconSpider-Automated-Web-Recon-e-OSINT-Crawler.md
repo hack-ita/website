@@ -1,9 +1,11 @@
 ---
 title: 'ReconSpider: Automated Web Recon e OSINT Crawler'
 slug: reconspider
-description: 'ReconSpider è uno strumento di web reconnaissance che raccoglie email, metadati e informazioni pubbliche tramite crawling automatico.'
+description: >-
+  ReconSpider è uno strumento di web reconnaissance che raccoglie email,
+  metadati e informazioni pubbliche tramite crawling automatico.
 image: /Gemini_Generated_Image_c0i9crc0i9crc0i9.webp
-draft: true
+draft: false
 date: 2026-02-22T00:00:00.000Z
 categories:
   - web-hacking

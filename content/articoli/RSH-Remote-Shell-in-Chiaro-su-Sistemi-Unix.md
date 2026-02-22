@@ -3,7 +3,7 @@ title: 'RSH: Remote Shell in Chiaro su Sistemi Unix'
 slug: rsh
 description: 'RSH: Remote Shell in Chiaro su Sistemi Unix'
 image: /Gemini_Generated_Image_9neg979neg979neg.webp
-draft: true
+draft: false
 date: 2026-02-23T00:00:00.000Z
 categories:
   - networking

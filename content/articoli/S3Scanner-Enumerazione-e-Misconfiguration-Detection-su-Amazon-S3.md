@@ -3,7 +3,7 @@ title: 'S3Scanner: Enumerazione e Misconfiguration Detection su Amazon S3'
 slug: s3scanner
 description: 'S3Scanner: Enumerazione e Misconfiguration Detection su Amazon S3'
 image: /Gemini_Generated_Image_8okwn48okwn48okw.webp
-draft: true
+draft: false
 date: 2026-02-24T00:00:00.000Z
 categories:
   - web-hacking

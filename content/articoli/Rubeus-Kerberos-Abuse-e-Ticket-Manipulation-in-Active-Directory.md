@@ -3,7 +3,7 @@ title: 'Rubeus: Kerberos Abuse e Ticket Manipulation in Active Directory'
 slug: rubeus
 description: 'Rubeus: Kerberos Abuse e Ticket Manipulation in Active Directory'
 image: /Gemini_Generated_Image_n5kq2an5kq2an5kq.webp
-draft: true
+draft: false
 date: 2026-02-24T00:00:00.000Z
 categories:
   - windows

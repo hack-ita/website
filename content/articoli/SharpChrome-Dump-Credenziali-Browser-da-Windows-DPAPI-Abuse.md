@@ -3,7 +3,7 @@ title: 'SharpChrome: Dump Credenziali Browser da Windows (DPAPI Abuse)'
 slug: sharpchrome
 description: 'SharpChrome: Dump Credenziali Browser da Windows (DPAPI Abuse)'
 image: /Gemini_Generated_Image_6ez9mm6ez9mm6ez9.webp
-draft: true
+draft: false
 date: 2026-02-25T00:00:00.000Z
 categories:
   - windows
@@ -11,7 +11,9 @@ subcategories:
   - privilege-escalation
 tags:
   - dpapi
-  - SharpChrome estrae password e cookie salvati in Google Chrome su Windows sfruttando DPAPI. Tool chiave per credential access in post-exploitation.
+  - >-
+    SharpChrome estrae password e cookie salvati in Google Chrome su Windows
+    sfruttando DPAPI. Tool chiave per credential access in post-exploitation.
 ---
 
 SharpChrome è un tool C# sviluppato dal team GhostPack che estrae password salvate e cookie di sessione da browser Chromium-based (Chrome, Edge, Brave, Slack) attraverso decryption DPAPI dei database SQLite locali. Il tool gestisce nativamente l'encryption AES-GCM introdotta in Chrome v80+ e implementa accesso lockless per leggere i database anche con browser aperto.

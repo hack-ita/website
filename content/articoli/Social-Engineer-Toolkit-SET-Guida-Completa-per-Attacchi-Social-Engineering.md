@@ -1,9 +1,11 @@
 ---
 title: 'Social-Engineer Toolkit (SET): Guida Completa per Attacchi Social Engineering'
 slug: socialengineer
-description: 'SET è un framework per simulazioni di social engineering in ambienti autorizzati: phishing, credential harvester e attacchi client-side.'
+description: >-
+  SET è un framework per simulazioni di social engineering in ambienti
+  autorizzati: phishing, credential harvester e attacchi client-side.
 image: /Gemini_Generated_Image_bdfrnxbdfrnxbdfr.webp
-draft: true
+draft: false
 date: 2026-02-25T00:00:00.000Z
 categories:
   - tools

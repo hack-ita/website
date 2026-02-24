@@ -1,9 +1,12 @@
 ---
 title: 'SMBExec: Esecuzione Remota Fileless su Windows via SMB'
 slug: smbexec
-description: SMBExec è una tecnica di remote command execution su SMB 445 senza drop di binari persistenti. Alternativa più stealth a PsExec in ambienti Active Directory.
+description: >-
+  SMBExec è una tecnica di remote command execution su SMB 445 senza drop di
+  binari persistenti. Alternativa più stealth a PsExec in ambienti Active
+  Directory.
 image: /Gemini_Generated_Image_m9xvwym9xvwym9xv.webp
-draft: true
+draft: false
 date: 2026-02-25T00:00:00.000Z
 categories:
   - tools

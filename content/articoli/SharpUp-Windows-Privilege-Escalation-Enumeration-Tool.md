@@ -1,9 +1,12 @@
 ---
 title: 'SharpUp: Windows Privilege Escalation Enumeration Tool'
 slug: sharpup
-description: 'SharpUp enumera misconfigurazioni locali su Windows per identificare vettori di privilege escalation: servizi vulnerabili, ACL deboli, registry e path hijacking.'
+description: >-
+  SharpUp enumera misconfigurazioni locali su Windows per identificare vettori
+  di privilege escalation: servizi vulnerabili, ACL deboli, registry e path
+  hijacking.
 image: /Gemini_Generated_Image_ml40maml40maml40.webp
-draft: true
+draft: false
 date: 2026-02-25T00:00:00.000Z
 categories:
   - windows

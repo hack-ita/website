@@ -1,9 +1,12 @@
 ---
 title: 'Sherlock: Automated Windows Privilege Escalation Checker'
 slug: sherlock
-description: Sherlock identifica vulnerabilità di privilege escalation su Windows confrontando patch installate e CVE note. Tool rapido per local privesc discovery.
+description: >-
+  Sherlock identifica vulnerabilità di privilege escalation su Windows
+  confrontando patch installate e CVE note. Tool rapido per local privesc
+  discovery.
 image: /Gemini_Generated_Image_oh9wsxoh9wsxoh9w.webp
-draft: true
+draft: false
 date: 2026-02-25T00:00:00.000Z
 categories:
   - windows

@@ -1,9 +1,11 @@
 ---
 title: 'Shodan: Search Engine per Device Esposti su Internet'
 slug: shodan
-description: 'Shodan è il motore di ricerca per servizi, server e dispositivi esposti online. Essenziale per attack surface mapping e reconnaissance avanzata.'
+description: >-
+  Shodan è il motore di ricerca per servizi, server e dispositivi esposti
+  online. Essenziale per attack surface mapping e reconnaissance avanzata.
 image: /Gemini_Generated_Image_3r03eh3r03eh3r03.webp
-draft: true
+draft: false
 date: 2026-02-25T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,11 @@
 ---
 title: 'SharpDPAPI: Abuso di DPAPI per Decrypt Credenziali su Windows'
 slug: sharpdpapi
-description: SharpDPAPI permette di estrarre e decriptare credenziali protette da DPAPI su Windows. Tool avanzato per credential access e lateral movement.
+description: >-
+  SharpDPAPI permette di estrarre e decriptare credenziali protette da DPAPI su
+  Windows. Tool avanzato per credential access e lateral movement.
 image: /Gemini_Generated_Image_xaa08qxaa08qxaa0.webp
-draft: true
+draft: false
 date: 2026-02-25T00:00:00.000Z
 categories:
   - windows

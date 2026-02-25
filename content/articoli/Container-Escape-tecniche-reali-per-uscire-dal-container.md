@@ -1,9 +1,11 @@
 ---
 title: 'Container Escape: tecniche reali per uscire dal container'
 slug: container-escape
-description: 'Container escape: scopri tecniche reali di fuga da Docker e Kubernetes per privilege escalation e breakout in ambienti reali.'
+description: >-
+  Container escape: scopri tecniche reali di fuga da Docker e Kubernetes per
+  privilege escalation e breakout in ambienti reali.
 image: '/ChatGPT Image Feb 22, 2026, 03_40_21 PM.webp'
-draft: true
+draft: false
 date: 2026-02-26T00:00:00.000Z
 categories:
   - linux

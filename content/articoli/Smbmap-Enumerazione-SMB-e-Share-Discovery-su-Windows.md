@@ -1,9 +1,11 @@
 ---
 title: 'Smbmap: Enumerazione SMB e Share Discovery su Windows'
 slug: smbmap
-description: 'smbmap spiegato per pentest: enumerazione share SMB, permessi, file access e credential testing su sistemi Windows e Active Directory.'
+description: >-
+  smbmap spiegato per pentest: enumerazione share SMB, permessi, file access e
+  credential testing su sistemi Windows e Active Directory.
 image: /smbmap.webp
-draft: true
+draft: false
 date: 2026-02-27T00:00:00.000Z
 categories:
   - tools

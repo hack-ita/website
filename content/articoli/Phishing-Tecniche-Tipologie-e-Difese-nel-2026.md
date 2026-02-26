@@ -1,9 +1,11 @@
 ---
 title: 'Phishing: Tecniche, Tipologie e Difese nel 2026'
 slug: phishing
-description: 'Phishing spiegato in modo tecnico: spear phishing, credential harvesting, OAuth phishing, MFA bypass e difese pratiche per aziende e utenti.'
+description: >-
+  Phishing spiegato in modo tecnico: spear phishing, credential harvesting,
+  OAuth phishing, MFA bypass e difese pratiche per aziende e utenti.
 image: '/ChatGPT Image Feb 22, 2026, 04_17_05 PM.webp'
-draft: true
+draft: false
 date: 2026-02-27T00:00:00.000Z
 categories:
   - web-hacking

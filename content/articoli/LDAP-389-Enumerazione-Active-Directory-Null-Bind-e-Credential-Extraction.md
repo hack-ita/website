@@ -1,9 +1,12 @@
 ---
 title: 'LDAP 389: Enumerazione Active Directory, Null Bind e Credential Extraction'
 slug: porta-389-ldap
-description: 'LDAP porta 389: guida completa all’enumerazione Active Directory con null bind, estrazione di utenti, gruppi, SPN e tecniche offensive per ottenere credenziali e preparare la privilege escalation.'
+description: >-
+  LDAP porta 389: guida completa all’enumerazione Active Directory con null
+  bind, estrazione di utenti, gruppi, SPN e tecniche offensive per ottenere
+  credenziali e preparare la privilege escalation.
 image: /9ac49e51-a47e-4a10-8cba-b8fca57b2f64.webp
-draft: true
+draft: false
 date: 2026-02-01T00:00:00.000Z
 categories:
   - windows

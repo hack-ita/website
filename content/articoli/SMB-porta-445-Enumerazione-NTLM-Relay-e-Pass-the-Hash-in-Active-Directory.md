@@ -1,9 +1,11 @@
 ---
 title: 'SMB porta 445: Enumerazione, NTLM Relay e Pass-the-Hash in Active Directory'
 slug: smb
-description: 'Guida completa alla porta 445 SMB: enumerazione share, NTLM relay, pass-the-hash ed esecuzione remota per lateral movement in Active Directory.'
+description: >-
+  Guida completa alla porta 445 SMB: enumerazione share, NTLM relay,
+  pass-the-hash ed esecuzione remota per lateral movement in Active Directory.
 image: '/ChatGPT Image 26 feb 2026, 12_53_15.webp'
-draft: true
+draft: false
 date: 2026-02-01T00:00:00.000Z
 categories:
   - windows

@@ -1,9 +1,11 @@
 ---
 title: 'Linux PrivEsc: tecniche reali di escalation root'
 slug: linux-privesc
-description: 'Linux PrivEsc: tecniche reali di privilege escalation per ottenere root. Workflow pratico da CTF e pentest reali.'
+description: >-
+  Linux PrivEsc: tecniche reali di privilege escalation per ottenere root.
+  Workflow pratico da CTF e pentest reali.
 image: '/ChatGPT%20Image%20Feb%2022,%202026,%2003_55_21%20PM.webp'
-draft: true
+draft: false
 date: 2026-02-27T00:00:00.000Z
 categories:
   - linux

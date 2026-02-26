@@ -1,9 +1,12 @@
 ---
 title: 'MSSQL Porta 1433: RCE con xp_cmdshell, Linked Server e Lateral Movement'
 slug: porta-1433-mssql
-description: 'MSSQL porta 1433: guida pratica al pentest di SQL Server con xp_cmdshell, linked server, Kerberoasting e tecniche reali per ottenere RCE, credenziali e movimento laterale.'
+description: >-
+  MSSQL porta 1433: guida pratica al pentest di SQL Server con xp_cmdshell,
+  linked server, Kerberoasting e tecniche reali per ottenere RCE, credenziali e
+  movimento laterale.
 image: /mssqlù.webp
-draft: true
+draft: false
 date: 2026-02-01T00:00:00.000Z
 categories:
   - windows

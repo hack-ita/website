@@ -1,9 +1,11 @@
 ---
 title: 'Smbexec: Esecuzione Remota SMB e Lateral Movement in Active Directory'
 slug: smbexec
-description: 'SMBExec guida pratica per esecuzione remota Windows: lateral movement stealth via SMB senza file su disco. Alternativa fileless a PsExec per pentest AD.'
+description: >-
+  SMBExec guida pratica per esecuzione remota Windows: lateral movement stealth
+  via SMB senza file su disco. Alternativa fileless a PsExec per pentest AD.
 image: /ae81ef90-bc2d-4684-b823-5c5ae5f81000.webp
-draft: true
+draft: false
 date: 2026-02-27T00:00:00.000Z
 categories:
   - windows

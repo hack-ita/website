@@ -1,9 +1,11 @@
 ---
 title: 'Top 100 Comandi Linux: lista essenziale hacker'
 slug: top-100-comandi-linux
-description: 'Top 100 comandi Linux: lista completa e pratica per pentester e sysadmin. Essenziali per enumerazione, exploit e post-exploitation.'
+description: >-
+  Top 100 comandi Linux: lista completa e pratica per pentester e sysadmin.
+  Essenziali per enumerazione, exploit e post-exploitation.
 image: /toop100.webp
-draft: true
+draft: false
 date: 2026-02-28T00:00:00.000Z
 categories:
   - linux

@@ -1,9 +1,11 @@
 ---
 title: 'Mimikatz: Guida Completa Credential Dumping e Active Directory Attack'
 slug: mimikatz
-description: 'Mimikatz spiegato per pentest: estrazione credenziali LSASS, DCSync, Golden Ticket, pass-the-hash e attacchi Active Directory con esempi pratici.'
+description: >-
+  Mimikatz spiegato per pentest: estrazione credenziali LSASS, DCSync, Golden
+  Ticket, pass-the-hash e attacchi Active Directory con esempi pratici.
 image: '/ChatGPT%20Image%20Feb%2022,%202026,%2004_09_03%20PM.webp'
-draft: true
+draft: false
 date: 2026-02-28T00:00:00.000Z
 categories:
   - windows

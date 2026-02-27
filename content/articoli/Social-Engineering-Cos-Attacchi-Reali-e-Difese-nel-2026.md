@@ -1,9 +1,12 @@
 ---
 title: 'Social Engineering: Cos''è, Attacchi Reali e Difese nel 2026'
 slug: social
-description: 'Social Engineering: framework psicologici, pretexting, vishing, impersonation, physical access, OSINT per targeting e tecniche operative. Dalla teoria all''engagement reale.'
+description: >-
+  Social Engineering: framework psicologici, pretexting, vishing, impersonation,
+  physical access, OSINT per targeting e tecniche operative. Dalla teoria
+  all'engagement reale.
 image: /social.webp
-draft: true
+draft: false
 date: 2026-02-28T00:00:00.000Z
 categories:
   - guides-resources

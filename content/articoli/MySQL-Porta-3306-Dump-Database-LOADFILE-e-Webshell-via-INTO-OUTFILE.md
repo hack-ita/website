@@ -1,9 +1,12 @@
 ---
 title: 'MySQL Porta 3306: Dump Database, LOAD_FILE e Webshell via INTO OUTFILE'
 slug: porta-3306-mysql
-description: 'MySQL porta 3306: guida pratica al pentest con brute force credenziali, dump database, LOAD_FILE, webshell via INTO OUTFILE, UDF per RCE e tecniche di escalation.'
+description: >-
+  MySQL porta 3306: guida pratica al pentest con brute force credenziali, dump
+  database, LOAD_FILE, webshell via INTO OUTFILE, UDF per RCE e tecniche di
+  escalation.
 image: /3306.webp
-draft: true
+draft: false
 date: 2026-03-01T00:00:00.000Z
 categories:
   - networking

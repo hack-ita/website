@@ -1,9 +1,12 @@
 ---
 title: 'Kerberos Attacchi Active Directory: Kerberoasting, AS-REP, Golden Ticket'
 slug: kerberos
-description: 'Porta 88 Kerberos: guida completa al penetration testing Active Directory. Scopri Kerberoasting, AS-REP Roasting, Golden Ticket, Silver Ticket e Pass-the-Ticket per privilege escalation e lateral movement.'
+description: >-
+  Porta 88 Kerberos: guida completa al penetration testing Active Directory.
+  Scopri Kerberoasting, AS-REP Roasting, Golden Ticket, Silver Ticket e
+  Pass-the-Ticket per privilege escalation e lateral movement.
 image: '/ChatGPT Image 26 feb 2026, 12_46_57.webp'
-draft: true
+draft: false
 date: 2026-03-01T00:00:00.000Z
 categories:
   - windows

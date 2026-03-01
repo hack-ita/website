@@ -1,9 +1,12 @@
 ---
 title: 'Blind SQL Injection: Extraction Boolean-Based con SQLMap (Guida 2026)'
 slug: blind-sql-injection
-description: 'Blind SQL Injection: detection boolean-based, extraction con SUBSTRING e ASCII, binary search e automazione completa con SQLMap per dump database, credenziali e escalation.'
+description: >-
+  Blind SQL Injection: detection boolean-based, extraction con SUBSTRING e
+  ASCII, binary search e automazione completa con SQLMap per dump database,
+  credenziali e escalation.
 image: /blind.webp
-draft: true
+draft: false
 date: 2026-03-02T00:00:00.000Z
 categories:
   - web-hacking

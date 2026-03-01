@@ -1,9 +1,12 @@
 ---
 title: 'SQL Injection Classica: UNION SELECT ed Error-Based (Guida Operativa 2026)'
 slug: sql-injection-classica
-description: 'SQL Injection Classica (In-Band): guida pratica a UNION SELECT ed Error-Based con ORDER BY, data extraction, bypass WAF, SQLMap e dump completo del database passo passo.'
+description: >-
+  SQL Injection Classica (In-Band): guida pratica a UNION SELECT ed Error-Based
+  con ORDER BY, data extraction, bypass WAF, SQLMap e dump completo del database
+  passo passo.
 image: /sqlcl.webp
-draft: true
+draft: false
 date: 2026-03-02T00:00:00.000Z
 categories:
   - web-hacking

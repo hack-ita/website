@@ -1,9 +1,11 @@
 ---
 title: 'noPac Active Directory: exploit da utente standard a Domain Admin'
 slug: nopac
-description: 'noPac su Active Directory: sfrutta CVE-2021-42278 e CVE-2021-42287 per impersonare un Domain Controller, fare DCSync e ottenere Domain Admin'
+description: >-
+  noPac su Active Directory: sfrutta CVE-2021-42278 e CVE-2021-42287 per
+  impersonare un Domain Controller, fare DCSync e ottenere Domain Admin
 image: /file_00000000b52072438e3782606fa644e1.webp
-draft: true
+draft: false
 date: 2026-03-03T00:00:00.000Z
 categories:
   - cve

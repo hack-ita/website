@@ -1,9 +1,13 @@
 ---
-title: 'SQL Injection su API REST e GraphQL: JSON Body, Header Injection e SQLMap (Guida 2026)'
+title: >-
+  SQL Injection su API REST e GraphQL: JSON Body, Header Injection e SQLMap
+  (Guida 2026)
 slug: sql-injection-api-rest
-description: 'SQL Injection su API REST: JSON body injection, GraphQL SQLi, header injection e bypass WAF. Guida pratica con SQLMap, fuzzing API e exploitation reale.'
+description: >-
+  SQL Injection su API REST: JSON body injection, GraphQL SQLi, header injection
+  e bypass WAF. Guida pratica con SQLMap, fuzzing API e exploitation reale.
 image: '/ChatGPT Image 3 mar 2026, 20_38_41.webp'
-draft: true
+draft: false
 date: 2026-03-04T00:00:00.000Z
 categories:
   - web-hacking

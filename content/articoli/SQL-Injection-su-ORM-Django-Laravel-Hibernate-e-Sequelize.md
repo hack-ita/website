@@ -1,9 +1,11 @@
 ---
 title: 'SQL Injection su ORM: Django, Laravel, Hibernate e Sequelize'
 slug: sql-injection-orm
-description: 'SQL Injection su ORM: vulnerabilità in Django, Laravel, Hibernate e Sequelize. Raw query, extra(), orderByRaw e exploitation reale con esempi pratici.'
+description: >-
+  SQL Injection su ORM: vulnerabilità in Django, Laravel, Hibernate e Sequelize.
+  Raw query, extra(), orderByRaw e exploitation reale con esempi pratici.
 image: '/ChatGPT Image 3 mar 2026, 20_44_06.webp'
-draft: true
+draft: false
 date: 2026-03-04T00:00:00.000Z
 categories:
   - web-hacking

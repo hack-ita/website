@@ -1,9 +1,12 @@
 ---
 title: 'Brute Force Attack: Tecniche, Tool e Bypass nel Penetration Testing'
 slug: brute-force
-description: 'Brute Force attack nel penetration testing: password cracking, credential stuffing, wordlist, Hydra, Burp Intruder e bypass rate limit nei sistemi di autenticazione.'
+description: >-
+  Brute Force attack nel penetration testing: password cracking, credential
+  stuffing, wordlist, Hydra, Burp Intruder e bypass rate limit nei sistemi di
+  autenticazione.
 image: /brute (1).webp
-draft: true
+draft: false
 date: 2026-03-05T00:00:00.000Z
 categories:
   - web-hacking

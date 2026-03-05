@@ -1,9 +1,14 @@
 ---
-title: 'AD CS Privilege Escalation: Tutte le Tecniche ESC1–ESC16 con Certipy (Active Directory Attack Guide)'
+title: >-
+  AD CS Privilege Escalation: Tutte le Tecniche ESC1–ESC16 con Certipy (Active
+  Directory Attack Guide)
 slug: adcs-esc1-esc16
-description: 'AD CS Privilege Escalation su Active Directory: guida completa alle tecniche ESC1–ESC16 con Certipy. Scopri come ottenere Domain Admin sfruttando certificate template e CA misconfigurate.'
+description: >-
+  AD CS Privilege Escalation su Active Directory: guida completa alle tecniche
+  ESC1–ESC16 con Certipy. Scopri come ottenere Domain Admin sfruttando
+  certificate template e CA misconfigurate.
 image: /Copilot_20260304_203545.webp
-draft: true
+draft: false
 date: 2026-03-06T00:00:00.000Z
 categories:
   - windows

@@ -354,7 +354,7 @@
             {{ .Description | safeHTML }}
           </p>
           <div>
-            {{ partial "components/button.html" (dict "link" "true" "label" "Richiedi informazioni" "url" (printf "/services/#%s" (.Title | anchorize))) }}
+            {{ partial "components/button.html" (dict "link" "true" "label" "Richiedi informazioni" "url" (printf "/servizi/#%s" (.Title | anchorize))) }}
           </div>
         </div>
 

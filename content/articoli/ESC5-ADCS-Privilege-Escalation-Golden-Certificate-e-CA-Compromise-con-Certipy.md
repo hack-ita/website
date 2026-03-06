@@ -1,9 +1,11 @@
 ---
 title: 'ESC5 ADCS Privilege Escalation: Golden Certificate e CA Compromise con Certipy'
 slug: esc5-adcs
-description: 'ESC5 ADCS Privilege Escalation: compromettere la PKI Active Directory e forgiare Golden Certificate tramite la chiave privata della CA usando Certipy.'
+description: >-
+  ESC5 ADCS Privilege Escalation: compromettere la PKI Active Directory e
+  forgiare Golden Certificate tramite la chiave privata della CA usando Certipy.
 image: /esc5.webp
-draft: true
+draft: false
 date: 2026-03-07T00:00:00.000Z
 categories:
   - windows

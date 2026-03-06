@@ -1,9 +1,11 @@
 ---
 title: 'ESC4 ADCS Privilege Escalation: Template Hijacking con Certipy'
 slug: esc4-adcs
-description: 'ESC4 ADCS Privilege Escalation: sfruttare ACL deboli sui certificate template Active Directory per trasformarli in ESC1 e ottenere Domain Admin con Certipy.'
+description: >-
+  ESC4 ADCS Privilege Escalation: sfruttare ACL deboli sui certificate template
+  Active Directory per trasformarli in ESC1 e ottenere Domain Admin con Certipy.
 image: /BCO.9ce6ba52-ce57-472f-b167-52ab8931a51e.webp
-draft: true
+draft: false
 date: 2026-03-07T00:00:00.000Z
 categories:
   - windows

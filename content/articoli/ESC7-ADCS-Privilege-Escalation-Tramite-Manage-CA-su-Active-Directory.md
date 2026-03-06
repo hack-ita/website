@@ -1,9 +1,12 @@
 ---
 title: 'ESC7 ADCS: Privilege Escalation Tramite Manage CA su Active Directory'
 slug: esc7-adcs
-description: ESC7 su AD CS permette privilege escalation abusando dei permessi Manage CA e Manage Certificates. Guida pratica con Certipy per ottenere certificati Administrator.
+description: >-
+  ESC7 su AD CS permette privilege escalation abusando dei permessi Manage CA e
+  Manage Certificates. Guida pratica con Certipy per ottenere certificati
+  Administrator.
 image: /esc7.webp
-draft: true
+draft: false
 date: 2026-03-07T00:00:00.000Z
 categories:
   - windows

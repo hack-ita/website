@@ -1,9 +1,12 @@
 ---
 title: 'ESC8 ADCS: NTLM Relay contro Web Enrollment per Domain Admin'
 slug: esc8-adcs
-description: 'ESC8 privilege escalation, sfrutta NTLM Relay contro gli endpoint /certsrv/ di AD CS per ottenere certificati privilegiati. Guida pratica con Certipy e coercion NTLM.'
+description: >-
+  ESC8 privilege escalation, sfrutta NTLM Relay contro gli endpoint /certsrv/ di
+  AD CS per ottenere certificati privilegiati. Guida pratica con Certipy e
+  coercion NTLM.
 image: /8.webp
-draft: true
+draft: false
 date: 2026-03-08T00:00:00.000Z
 categories:
   - windows

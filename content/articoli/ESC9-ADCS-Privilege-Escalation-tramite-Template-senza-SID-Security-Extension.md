@@ -1,9 +1,11 @@
 ---
 title: 'ESC9 ADCS: Privilege Escalation tramite Template senza SID Security Extension'
 slug: esc9-adcs
-description: ESC9 sfrutta template AD CS senza SID Security Extension per impersonare utenti privilegiati. Guida pratica con Certipy e UPN manipulation.
+description: >-
+  ESC9 sfrutta template AD CS senza SID Security Extension per impersonare
+  utenti privilegiati. Guida pratica con Certipy e UPN manipulation.
 image: /9.webp
-draft: true
+draft: false
 date: 2026-03-08T00:00:00.000Z
 categories:
   - windows

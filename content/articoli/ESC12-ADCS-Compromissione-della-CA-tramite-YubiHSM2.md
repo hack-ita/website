@@ -1,9 +1,12 @@
 ---
 title: 'ESC12 ADCS: Compromissione della CA tramite YubiHSM2'
 slug: esc12-adcs
-description: 'ESC12 riguarda vulnerabilità nello stack YubiHSM2 usato da AD CS. Se la chiave privata della CA viene compromessa, un attaccante può forgiare Golden Certificates.'
+description: >-
+  ESC12 riguarda vulnerabilità nello stack YubiHSM2 usato da AD CS. Se la chiave
+  privata della CA viene compromessa, un attaccante può forgiare Golden
+  Certificates.
 image: /12.webp
-draft: true
+draft: false
 date: 2026-03-09T00:00:00.000Z
 categories:
   - windows

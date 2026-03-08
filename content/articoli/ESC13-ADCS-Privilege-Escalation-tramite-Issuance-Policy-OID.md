@@ -1,9 +1,12 @@
 ---
 title: 'ESC13 ADCS: Privilege Escalation tramite Issuance Policy OID'
 slug: esc13-adcs
-description: ESC13 sfrutta Issuance Policy OID collegati a gruppi Active Directory. Un certificato può aggiungere SID privilegiati al TGT Kerberos e portare a Domain Admin.
+description: >-
+  ESC13 sfrutta Issuance Policy OID collegati a gruppi Active Directory. Un
+  certificato può aggiungere SID privilegiati al TGT Kerberos e portare a Domain
+  Admin.
 image: /13.webp
-draft: true
+draft: false
 date: 2026-03-09T00:00:00.000Z
 categories:
   - windows

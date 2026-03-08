@@ -1,9 +1,11 @@
 ---
 title: 'ESC10 ADCS: Privilege Escalation tramite Weak Certificate Mapping Schannel'
 slug: esc10-adcs
-description: ESC10 sfrutta weak certificate mapping in Schannel per impersonare account AD via LDAPS. Guida pratica con Certipy e UPN manipulation.
+description: >-
+  ESC10 sfrutta weak certificate mapping in Schannel per impersonare account AD
+  via LDAPS. Guida pratica con Certipy e UPN manipulation.
 image: /10.webp
-draft: true
+draft: false
 date: 2026-03-09T00:00:00.000Z
 categories:
   - windows

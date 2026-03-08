@@ -1,9 +1,12 @@
 ---
 title: 'ESC14 ADCS: Weak Explicit Certificate Mapping via altSecurityIdentities'
 slug: adesc14-adcs
-description: ESC14 sfrutta configurazioni deboli di altSecurityIdentities in Active Directory. Un certificato può essere mappato a un account privilegiato e permettere impersonation.
+description: >-
+  ESC14 sfrutta configurazioni deboli di altSecurityIdentities in Active
+  Directory. Un certificato può essere mappato a un account privilegiato e
+  permettere impersonation.
 image: /14.webp
-draft: true
+draft: false
 date: 2026-03-09T00:00:00.000Z
 categories:
   - windows

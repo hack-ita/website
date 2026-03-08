@@ -1,9 +1,12 @@
 ---
 title: 'ESC11 ADCS: NTLM Relay verso RPC Enrollment della Certificate Authority'
 slug: esc11-adcs
-description: ESC11 sfrutta NTLM relay verso l’interfaccia RPC di AD CS quando la CA non richiede encryption. Guida pratica con Certipy per ottenere certificati privilegiati.
+description: >-
+  ESC11 sfrutta NTLM relay verso l’interfaccia RPC di AD CS quando la CA non
+  richiede encryption. Guida pratica con Certipy per ottenere certificati
+  privilegiati.
 image: /BCO.69cae626-2e95-48f7-8cbd-824dad0ae6f0.webp
-draft: true
+draft: false
 date: 2026-03-09T00:00:00.000Z
 categories:
   - windows

@@ -1,9 +1,12 @@
 ---
 title: 'ESC16 ADCS: CA con SID Security Extension Disabilitata'
 slug: esc16-adcs
-description: ESC16 sfrutta una CA configurata per non includere la SID Security Extension nei certificati. Questo indebolisce il certificate mapping e può permettere impersonation.
+description: >-
+  ESC16 sfrutta una CA configurata per non includere la SID Security Extension
+  nei certificati. Questo indebolisce il certificate mapping e può permettere
+  impersonation.
 image: /BCO.52f4c812-c2f0-4287-a6c2-cc8fe8e63860.webp
-draft: true
+draft: false
 date: 2026-03-10T00:00:00.000Z
 categories:
   - windows

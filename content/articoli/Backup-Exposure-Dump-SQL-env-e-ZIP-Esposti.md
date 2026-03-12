@@ -1,9 +1,11 @@
 ---
 title: 'Backup Exposure: Dump SQL, .env e ZIP Esposti'
 slug: backup-exposure
-description: 'Scopri come trovare file backup esposti nel pentesting web: dump SQL, .env, ZIP e config.bak con feroxbuster, ffuf e tecniche reali.'
+description: >-
+  Scopri come trovare file backup esposti nel pentesting web: dump SQL, .env,
+  ZIP e config.bak con feroxbuster, ffuf e tecniche reali.
 image: /backup-exposure.webp
-draft: true
+draft: false
 date: 2026-03-13T00:00:00.000Z
 categories:
   - web-hacking

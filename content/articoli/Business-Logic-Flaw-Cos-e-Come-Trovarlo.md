@@ -1,9 +1,11 @@
 ---
 title: 'Business Logic Flaw: Cos’è e Come Trovarlo'
 slug: business-logic-flaw
-description: 'Scopri cos’è un business logic flaw e come individuarlo nel pentesting web: prezzi negativi, coupon abuse, step bypass e workflow flaws.'
+description: >-
+  Scopri cos’è un business logic flaw e come individuarlo nel pentesting web:
+  prezzi negativi, coupon abuse, step bypass e workflow flaws.
 image: /business-logic-flaw.webp
-draft: true
+draft: false
 date: 2026-03-13T00:00:00.000Z
 categories:
   - web-hacking

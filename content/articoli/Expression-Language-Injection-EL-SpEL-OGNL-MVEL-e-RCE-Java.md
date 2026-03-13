@@ -1,9 +1,11 @@
 ---
 title: 'Expression Language Injection (EL): SpEL, OGNL ,MVEL e RCE Java'
 slug: expression-language-injection
-description: 'Scopri cos’è la Expression Language Injection e come sfruttarla nelle app Java: SpEL, OGNL, Spring, Struts2, RCE e casi reali come Equifax.'
+description: >-
+  Scopri cos’è la Expression Language Injection e come sfruttarla nelle app
+  Java: SpEL, OGNL, Spring, Struts2, RCE e casi reali come Equifax.
 image: /expression-language-injection.webp
-draft: true
+draft: false
 date: 2026-03-14T00:00:00.000Z
 categories:
   - web-hacking

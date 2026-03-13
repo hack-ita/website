@@ -1,9 +1,11 @@
 ---
 title: 'CSRF Attack: Token, SameSite e Bypass Reali'
 slug: csrf
-description: 'Scopri come individuare e testare un CSRF attack nel pentesting web: PoC HTML, bypass token, SameSite, API JSON e account takeover.'
+description: >-
+  Scopri come individuare e testare un CSRF attack nel pentesting web: PoC HTML,
+  bypass token, SameSite, API JSON e account takeover.
 image: /csrf.webp
-draft: true
+draft: false
 date: 2026-03-14T00:00:00.000Z
 categories:
   - web-hacking

@@ -1,9 +1,11 @@
 ---
 title: 'File & Path Attacks: LFI, Upload e Path Traversal'
 slug: file-path-attacks-guida-completa
-description: 'Guida ai file & path attacks nel pentesting web: path traversal, LFI, file upload, web shell, Zip Slip, backup exposure e file read.'
+description: >-
+  Guida ai file & path attacks nel pentesting web: path traversal, LFI, file
+  upload, web shell, Zip Slip, backup exposure e file read.
 image: /file-path-attacks-guida-completa.webp
-draft: true
+draft: false
 date: 2026-03-14T00:00:00.000Z
 categories:
   - web-hacking

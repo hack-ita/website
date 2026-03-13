@@ -1,9 +1,11 @@
 ---
 title: 'CRLF Injection: Header Injection, XSS e Cache Poisoning'
 slug: crlf-injection
-description: 'Scopri come sfruttare una CRLF injection nel pentesting web: header injection, HTTP response splitting, session fixation e cache poisoning.'
+description: >-
+  Scopri come sfruttare una CRLF injection nel pentesting web: header injection,
+  HTTP response splitting, session fixation e cache poisoning.
 image: /crlf-injection.webp
-draft: true
+draft: false
 date: 2026-03-14T00:00:00.000Z
 categories:
   - web-hacking

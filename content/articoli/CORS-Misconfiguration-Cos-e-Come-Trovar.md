@@ -1,8 +1,10 @@
 ---
 title: 'CORS Misconfiguration: Cos’è e Come Trovar'
 slug: cors-misconfiguration
-description: 'Scopri cos’è una CORS misconfiguration e come individuarla nel pentesting web: origin reflection, null origin, bypass e data theft via CORS.'
-draft: true
+description: >-
+  Scopri cos’è una CORS misconfiguration e come individuarla nel pentesting web:
+  origin reflection, null origin, bypass e data theft via CORS.
+draft: false
 date: 2026-03-14T00:00:00.000Z
 categories:
   - web-hacking

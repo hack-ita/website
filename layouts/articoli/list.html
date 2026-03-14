@@ -63,7 +63,9 @@
   
     <!-- ALL POSTS WRAPPER -->
     <div id="allPosts">
-      {{ range .Site.Taxonomies.categories }}
+      {{ $taxPage := .Site.GetPage "taxonomyTerm" "categories" }}
+      {{ range $taxPage.Pages.ByWeight }}
+        {{ $term := index $.Site.Taxonomies.categories .Title }}
       <div class="category-group">
   
         <div class="w-full h-0.5 bg-linear-to-r from-transparent via-primary to-transparent"></div>

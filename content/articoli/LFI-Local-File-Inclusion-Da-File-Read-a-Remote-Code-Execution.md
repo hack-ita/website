@@ -1,9 +1,12 @@
 ---
 title: 'LFI (Local File Inclusion): Da File Read a Remote Code Execution'
 slug: lfi
-description: 'Scopri come sfruttare una LFI (Local File Inclusion) nel pentesting web. LFI to Rce. Lettura di file sensibili, dump del source code con php://filter e RCE tramite PHP filter chain e log poisoning. '
+description: >-
+  Scopri come sfruttare una LFI (Local File Inclusion) nel pentesting web. LFI
+  to Rce. Lettura di file sensibili, dump del source code con php://filter e RCE
+  tramite PHP filter chain e log poisoning. 
 image: /lfi-Local-FIle-Inclusion.webp
-draft: true
+draft: false
 date: 2026-03-15T00:00:00.000Z
 categories:
   - web-hacking

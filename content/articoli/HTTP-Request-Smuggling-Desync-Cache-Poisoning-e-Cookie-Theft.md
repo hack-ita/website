@@ -1,9 +1,11 @@
 ---
 title: 'HTTP Request Smuggling: Desync, Cache Poisoning e Cookie Theft'
 slug: http-request-smuggling
-description: 'Scopri come testare HTTP Request Smuggling nel pentesting web: CL.TE, TE.CL, desync proxy-backend, cache poisoning e furto di cookie.'
+description: >-
+  Scopri come testare HTTP Request Smuggling nel pentesting web: CL.TE, TE.CL,
+  desync proxy-backend, cache poisoning e furto di cookie.
 image: /http-request-smuggling.webp
-draft: true
+draft: false
 date: 2026-03-15T00:00:00.000Z
 categories:
   - web-hacking

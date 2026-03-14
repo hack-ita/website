@@ -1,9 +1,11 @@
 ---
 title: 'GraphQL Attacks: Introspection, Batching e Data Breach'
 slug: graphql-exploitation
-description: 'Scopri come testare GraphQL nel pentesting web: introspection, batching, authorization bypass, IDOR, brute force e data leak via query.'
+description: >-
+  Scopri come testare GraphQL nel pentesting web: introspection, batching,
+  authorization bypass, IDOR, brute force e data leak via query.
 image: /graphql-exploitation.webp
-draft: true
+draft: false
 date: 2026-03-15T00:00:00.000Z
 categories:
   - web-hacking

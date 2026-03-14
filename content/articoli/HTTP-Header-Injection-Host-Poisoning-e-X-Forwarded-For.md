@@ -1,9 +1,12 @@
 ---
 title: 'HTTP Header Injection: Host Poisoning e X-Forwarded-For'
 slug: http-header-injection
-description: 'Scopri come sfruttare una HTTP Header Injection nel pentesting web: Host Header Poisoning, X-Forwarded-For bypass, cache poisoning e reset password takeover.'
+description: >-
+  Scopri come sfruttare una HTTP Header Injection nel pentesting web: Host
+  Header Poisoning, X-Forwarded-For bypass, cache poisoning e reset password
+  takeover.
 image: /http-header-injection.webp
-draft: true
+draft: false
 date: 2026-03-15T00:00:00.000Z
 categories:
   - web-hacking

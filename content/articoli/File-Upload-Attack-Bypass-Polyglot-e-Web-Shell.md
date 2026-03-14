@@ -1,9 +1,11 @@
 ---
 title: 'File Upload Attack: Bypass, Polyglot e Web Shell'
 slug: file-upload-attack
-description: 'Scopri come sfruttare un file upload attack nel pentesting web: bypass estensione, Content-Type, magic bytes, polyglot e RCE via web shell.'
+description: >-
+  Scopri come sfruttare un file upload attack nel pentesting web: bypass
+  estensione, Content-Type, magic bytes, polyglot e RCE via web shell.
 image: /file-upload-attack.webp
-draft: true
+draft: false
 date: 2026-03-15T00:00:00.000Z
 categories:
   - web-hacking

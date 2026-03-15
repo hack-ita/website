@@ -1,9 +1,12 @@
 ---
 title: 'Porta 8080 TCP: Tomcat, Jenkins e Vulnerabilità Web ad Alto Impatto'
 slug: porta-8080-tomcat
-description: 'La porta 8080 ospita spesso Apache Tomcat e Jenkins, due target chiave nei pentest web. Scopri enumerazione, Tomcat Manager, Jenkins RCE e i test più utili sulle vulnerabilità web più critiche.'
+description: >-
+  La porta 8080 ospita spesso Apache Tomcat e Jenkins, due target chiave nei
+  pentest web. Scopri enumerazione, Tomcat Manager, Jenkins RCE e i test più
+  utili sulle vulnerabilità web più critiche.
 image: /porta-8080-tomcat.webp
-draft: true
+draft: false
 date: 2026-03-12T00:00:00.000Z
 categories:
   - networking

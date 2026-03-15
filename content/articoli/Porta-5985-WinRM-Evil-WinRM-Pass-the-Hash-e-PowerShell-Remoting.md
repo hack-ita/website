@@ -1,9 +1,12 @@
 ---
 title: 'Porta 5985 WinRM: Evil-WinRM, Pass-the-Hash e PowerShell Remoting'
 slug: porta-5985-winrm
-description: 'La porta 5985 espone WinRM su HTTP, il servizio Microsoft usato da PowerShell Remoting. Scopri enumerazione, accesso con Evil-WinRM, Pass-the-Hash, lateral movement e hardening in ambienti Active Directory.'
+description: >-
+  La porta 5985 espone WinRM su HTTP, il servizio Microsoft usato da PowerShell
+  Remoting. Scopri enumerazione, accesso con Evil-WinRM, Pass-the-Hash, lateral
+  movement e hardening in ambienti Active Directory.
 image: /porta-5985-winrm.webp
-draft: true
+draft: false
 date: 2026-03-11T00:00:00.000Z
 categories:
   - networking

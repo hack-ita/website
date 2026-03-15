@@ -1,9 +1,12 @@
 ---
 title: 'LDAP Injection: Bypass Autenticazione Active Directory e Enumerazione Utenti'
 slug: ldap-injection
-description: 'Scopri come sfruttare una LDAP Injection nei portali enterprise: bypass autenticazione Active Directory, enumerazione utenti e estrazione attributi sensibili dalla directory aziendale.'
+description: >-
+  Scopri come sfruttare una LDAP Injection nei portali enterprise: bypass
+  autenticazione Active Directory, enumerazione utenti e estrazione attributi
+  sensibili dalla directory aziendale.
 image: /ldap-injection.webp
-draft: true
+draft: false
 date: 2026-03-16T00:00:00.000Z
 categories:
   - web-hacking

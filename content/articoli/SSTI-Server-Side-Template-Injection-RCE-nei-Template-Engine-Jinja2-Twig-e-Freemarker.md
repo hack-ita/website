@@ -3,7 +3,7 @@ title: 'SSTI (Server-Side Template Injection): RCE nei Template Engine Jinja2, T
 slug: ssti
 description: 'Guida completa alla SSTI: come identificare Server-Side Template Injection, riconoscere il template engine e ottenere RCE con Jinja2, Twig o Freemarker.'
 image: /ssti.webp
-draft: true
+draft: false
 date: 2026-03-15T00:00:00.000Z
 categories:
   - web-hacking

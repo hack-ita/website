@@ -1,9 +1,11 @@
 ---
 title: 'OAuth Attack: Vulnerabilità OAuth, Token Theft e Account Takeover'
 slug: oauth-attack
-description: 'Scopri come sfruttare vulnerabilità OAuth: redirect_uri manipulation, CSRF senza state, token leak nel Referer e takeover account nel pentesting web.'
+description: >-
+  Scopri come sfruttare vulnerabilità OAuth: redirect_uri manipulation, CSRF
+  senza state, token leak nel Referer e takeover account nel pentesting web.
 image: /oauth-attack.webp
-draft: true
+draft: false
 date: 2026-03-17T00:00:00.000Z
 categories:
   - web-hacking

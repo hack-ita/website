@@ -1,9 +1,11 @@
 ---
 title: 'Open Redirect: Cos’è, Come Sfruttarlo e Chain con OAuth e SSRF'
 slug: open-redirect
-description: 'Open Redirect nel pentesting web: detection, bypass della validazione URL e chain con OAuth token theft, SSRF bypass e phishing credibile. Guida pratica.'
+description: >-
+  Open Redirect nel pentesting web: detection, bypass della validazione URL e
+  chain con OAuth token theft, SSRF bypass e phishing credibile. Guida pratica.
 image: /open-redirect.webp
-draft: true
+draft: false
 date: 2026-03-17T00:00:00.000Z
 categories:
   - web-hacking

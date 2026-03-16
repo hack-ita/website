@@ -1,9 +1,11 @@
 ---
 title: 'DPAPI Attack in Active Directory: Estrarre Password Cifrate e Masterkey'
 slug: dpapi
-description: 'Come estrarre e decriptare blob DPAPI in Active Directory con impacket. Guida pratica con masterkey, domain backup key e tool.'
+description: >-
+  Come estrarre e decriptare blob DPAPI in Active Directory con impacket. Guida
+  pratica con masterkey, domain backup key e tool.
 image: /dpapi.webp
-draft: true
+draft: false
 date: 2026-03-17T00:00:00.000Z
 categories:
   - windows

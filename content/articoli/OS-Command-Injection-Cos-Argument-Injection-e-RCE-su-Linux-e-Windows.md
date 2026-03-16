@@ -1,9 +1,11 @@
 ---
 title: 'OS Command Injection: Cos’è, Argument Injection e RCE su Linux e Windows'
 slug: os-command-injection
-description: 'OS Command Injection nel pentesting: separatori, argument injection, exploit su Linux e Windows (curl, tar, ffmpeg, Git, ImageMagick) e post-exploitation.'
+description: >-
+  OS Command Injection nel pentesting: separatori, argument injection, exploit
+  su Linux e Windows (curl, tar, ffmpeg, Git, ImageMagick) e post-exploitation.
 image: /os-command-injection.webp
-draft: true
+draft: false
 date: 2026-03-17T00:00:00.000Z
 categories:
   - web-hacking

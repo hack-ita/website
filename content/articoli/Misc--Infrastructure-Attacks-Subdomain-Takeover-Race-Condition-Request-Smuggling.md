@@ -1,9 +1,14 @@
 ---
-title: 'Misc & Infrastructure Attacks: Subdomain Takeover, Race Condition, Request Smuggling'
+title: >-
+  Misc & Infrastructure Attacks: Subdomain Takeover, Race Condition, Request
+  Smuggling
 slug: misc-infra-attacks-guida-completa
-description: 'Guida completa alle vulnerabilità più sottovalutate nel pentesting web: Subdomain Takeover, HTTP Request Smuggling, Race Condition, Deserialization e Cache Poisoning. Tecniche reali, payload e attack chain enterprise.'
+description: >-
+  Guida completa alle vulnerabilità più sottovalutate nel pentesting web:
+  Subdomain Takeover, HTTP Request Smuggling, Race Condition, Deserialization e
+  Cache Poisoning. Tecniche reali, payload e attack chain enterprise.
 image: /misc-infra-attacks-guida-completa.webp
-draft: true
+draft: false
 date: 2026-03-17T00:00:00.000Z
 categories:
   - web-hacking

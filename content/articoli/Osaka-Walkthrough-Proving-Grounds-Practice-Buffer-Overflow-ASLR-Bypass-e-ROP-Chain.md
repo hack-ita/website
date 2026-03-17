@@ -122,21 +122,36 @@ Base       | ASLR  | NXCompat | SafeSEH | Rebase
 
 ***
 
-## Scoperta della Format String Vulnerability
+### Come abbiamo trovato il comando DEBUG vulnerabile
 
-Analizzando il binario troviamo un comando `DEBUG` non documentato. Il problema è nel codice:
+Analizzando il binario con un disassembler troviamo che il server implementa
+un comando `DEBUG` non documentato. Nel codice vediamo due chiamate a sprintf:
 
 ```c
-// Normale — format string fissa, sicuro
+// Comando normale — format string fissa, sicuro
 sub_401060(v27, "%d.%d.%d.%d", v41[0]);
 
-// DEBUG — format string controllata dall'utente, VULNERABILE
+// Comando DEBUG — il secondo parametro è v26, cioè il nostro input
 sub_401060(&v23, v26, (char)sub_4010F0);
+sub_401060(&v23, "%s\r\n", (char)&v23);
 ```
 
-`v26` è l'input dell'utente che diventa direttamente la format string. Questo è una **Format String Vulnerability**.
+Nel primo caso la format string è `"%d.%d.%d.%d"` — fissa, sicura.
+Nel secondo caso la format string è `v26` — cioè l'input dell'utente.
 
-***
+La funzione `sub_401060` è una sprintf/printf. Il secondo parametro
+dovrebbe essere sempre una stringa fissa come `"%s"`. Qui invece è
+direttamente l'input — classica format string vulnerability.
+
+Per verificarlo ci colleghiamo via FTP e testiamo:
+
+```bash
+ftp 192.168.14.152
+quote DEBUG %x
+# risposta: DEBUG a310f0
+```
+
+Il server risponde con un indirizzo di memoria. Confermata la vulnerabilità.
 
 ## Format String Vulnerability — Teoria e Pratica
 

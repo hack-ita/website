@@ -3,7 +3,7 @@ title: 'Remote File Inclusion (RFI): RCE via URL, Wrapper Bypass e SMB Attack'
 slug: rfi
 description: 'Remote File Inclusion (RFI): RCE via URL, Wrapper Bypass e SMB Attack'
 image: /rfi.webp
-draft: true
+draft: false
 date: 2026-03-18T00:00:00.000Z
 categories:
   - web-hacking

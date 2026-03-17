@@ -1,9 +1,12 @@
 ---
 title: 'Privilege Escalation Web: Verticale, Orizzontale e Mass Assignment'
 slug: privilege-escalation-web
-description: 'Privilege Escalation nelle web app: mass assignment, role=admin, JWT manipulation e multi-tenant bypass. Tecniche pratiche di pentesting per escalation utente→admin.'
+description: >-
+  Privilege Escalation nelle web app: mass assignment, role=admin, JWT
+  manipulation e multi-tenant bypass. Tecniche pratiche di pentesting per
+  escalation utente→admin.
 image: /privilege-escalation-web.webp
-draft: true
+draft: false
 date: 2026-03-18T00:00:00.000Z
 categories:
   - web-hacking

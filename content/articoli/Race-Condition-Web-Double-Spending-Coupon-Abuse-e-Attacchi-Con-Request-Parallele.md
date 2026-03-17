@@ -1,9 +1,14 @@
 ---
-title: 'Race Condition Web: Double Spending, Coupon Abuse e Attacchi Con Request Parallele'
+title: >-
+  Race Condition Web: Double Spending, Coupon Abuse e Attacchi Con Request
+  Parallele
 slug: race-condition
-description: 'Race Condition nelle web app: double spending, coupon abuse e bypass dei limiti con request parallele. Tecniche di detection con Turbo Intruder e exploit reali.'
+description: >-
+  Race Condition nelle web app: double spending, coupon abuse e bypass dei
+  limiti con request parallele. Tecniche di detection con Turbo Intruder e
+  exploit reali.
 image: /race-condition.webp
-draft: true
+draft: false
 date: 2026-03-18T00:00:00.000Z
 categories:
   - web-hacking

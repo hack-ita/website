@@ -28,7 +28,7 @@ Questo è un esempio reale di Windows exploit development: buffer overflow Windo
 
 Un buffer overflow avviene quando un programma scrive più dati di quanti un buffer possa contenere, sovrascrivendo memoria adiacente. Questo permette di corrompere lo stack, controllare l'esecuzione del programma ed eseguire codice arbitrario.
 
-Nel caso dello stack overflow, l'obiettivo è sovrascrivere l'EIP — il registro che punta alla prossima istruzione da eseguire — per dirottare il flusso del programma verso il nostro shellcode.
+Nel caso dello stack overflow, l'obiettivo è sovrascrivere l'EIP — il registro che punta alla prossima istruzione da eseguire — per dirottare il flusso del programma verso il nostro shellcode. Leggi anche la guida completa sul [buffer overflow di windows.](https://hackita.it/articoli/windows-buffer-overflow-exploit)
 
 ***
 

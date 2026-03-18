@@ -1,9 +1,11 @@
 ---
 title: 'Session Hijacking: Furto Cookie, XSS e Session Fixation nelle Web App'
 slug: session-hijacking
-description: 'Session Hijacking nel pentesting web: furto cookie via XSS, session fixation, sniffing HTTP e takeover account. Analisi flag HttpOnly, Secure e SameSite.'
+description: >-
+  Session Hijacking nel pentesting web: furto cookie via XSS, session fixation,
+  sniffing HTTP e takeover account. Analisi flag HttpOnly, Secure e SameSite.
 image: /session-hijacking.webp
-draft: true
+draft: false
 date: 2026-03-19T00:00:00.000Z
 categories:
   - web-hacking

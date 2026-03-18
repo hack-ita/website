@@ -1,9 +1,12 @@
 ---
 title: 'Source Code Disclosure: .git Esposto, Credenziali nei Commit e Git-Dumper'
 slug: source-code-disclosure
-description: 'Source Code Disclosure nel pentesting: .git esposto, git-dumper, credenziali nella git history e trufflehog per segreti. Da repository dump a cloud takeover.'
+description: >-
+  Source Code Disclosure nel pentesting: .git esposto, git-dumper, credenziali
+  nella git history e trufflehog per segreti. Da repository dump a cloud
+  takeover.
 image: /source-code-disclosure.webp
-draft: true
+draft: false
 date: 2026-03-19T00:00:00.000Z
 categories:
   - web-hacking

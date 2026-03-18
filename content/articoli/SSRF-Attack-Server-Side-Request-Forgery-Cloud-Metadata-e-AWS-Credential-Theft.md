@@ -1,9 +1,13 @@
 ---
-title: 'SSRF Attack: Server-Side Request Forgery, Cloud Metadata e AWS Credential Theft'
+title: >-
+  SSRF Attack: Server-Side Request Forgery, Cloud Metadata e AWS Credential
+  Theft
 slug: ssrf
-description: 'Guida completa alla SSRF: come trovare Server-Side Request Forgery, bypass filtri IP, leggere metadata AWS e ottenere credenziali cloud.'
+description: >-
+  Guida completa alla SSRF: come trovare Server-Side Request Forgery, bypass
+  filtri IP, leggere metadata AWS e ottenere credenziali cloud.
 image: /ssrf.webp
-draft: true
+draft: false
 date: 2026-03-19T00:00:00.000Z
 categories:
   - web-hacking

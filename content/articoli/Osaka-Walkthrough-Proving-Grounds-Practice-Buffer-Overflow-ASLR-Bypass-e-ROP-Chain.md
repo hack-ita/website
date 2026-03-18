@@ -1,11 +1,7 @@
 ---
-title: >-
-  Osaka Walkthrough Proving Grounds Practice: Buffer Overflow Windows, ASLR e
-  DEP Bypass, ROP Chain
+title: 'Osaka Walkthrough Proving Grounds Practice: Buffer Overflow Windows, ASLR e DEP Bypass, ROP Chain'
 slug: osaka
-description: >-
-  Walkthrough Osaka Proving Grounds Practice(OffSec): format string leak, ASLR
-  bypass, buffer overflow, ROP chain per bypassare DEP e SeDebugPrivilege.
+description: 'Walkthrough Osaka Proving Grounds Practice(OffSec): format string leak, ASLR bypass, buffer overflow, ROP chain per bypassare DEP e SeDebugPrivilege.'
 image: /osaka.webp
 draft: false
 date: 2026-03-18T00:00:00.000Z
@@ -405,7 +401,7 @@ rop_gadgets = [
 
 ***
 
-### ![](/rop_chain_flow%20\(1\).svg)
+![](/rop_chain_flow%20\(1\).svg)
 
 ## Exploit Completo
 

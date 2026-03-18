@@ -105,7 +105,7 @@ const Blog: Collection = {
       },
       options: [
         { label: "CVE", value: "cve" },
-        { label: "Guides & Resources", value: "guides-resources" },
+        { label: "Guide e Risorse", value: "guides-resources" },
         { label: "Linux", value: "linux" },
         { label: "Networking", value: "networking" },
         { label: "Tools", value: "tools" },

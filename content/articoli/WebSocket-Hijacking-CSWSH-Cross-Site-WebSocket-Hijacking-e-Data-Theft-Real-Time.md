@@ -1,9 +1,13 @@
 ---
-title: 'WebSocket Hijacking (CSWSH): Cross-Site WebSocket Hijacking e Data Theft Real-Time'
+title: >-
+  WebSocket Hijacking (CSWSH): Cross-Site WebSocket Hijacking e Data Theft
+  Real-Time
 slug: websocket-hijacking
-description: 'WebSocket Hijacking spiegato: CSWSH, handshake vulnerabile, Origin check mancante e furto dati real-time da chat, notifiche e dashboard.'
+description: >-
+  WebSocket Hijacking spiegato: CSWSH, handshake vulnerabile, Origin check
+  mancante e furto dati real-time da chat, notifiche e dashboard.
 image: /websocket-hijacking.webp
-draft: true
+draft: false
 date: 2026-03-20T00:00:00.000Z
 categories:
   - web-hacking

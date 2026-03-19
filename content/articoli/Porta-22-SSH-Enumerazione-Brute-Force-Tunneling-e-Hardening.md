@@ -1,9 +1,12 @@
 ---
 title: 'Porta 22 SSH: Enumerazione, Brute Force, Tunneling e Hardening'
 slug: ssh
-description: 'Scopri cos''è la porta 22 SSH ,uno dei target più frequenti nei pentest: scopri enumerazione, brute force, user enumeration, chiavi rubate, tunneling SSH e hardening efficace del protocollo Secure Shell.'
+description: >-
+  Scopri cos'è la porta 22 SSH ,uno dei target più frequenti nei pentest: scopri
+  enumerazione, brute force, user enumeration, chiavi rubate, tunneling SSH e
+  hardening efficace del protocollo Secure Shell.
 image: /ssh.webp
-draft: true
+draft: false
 date: 2026-03-20T00:00:00.000Z
 categories:
   - networking

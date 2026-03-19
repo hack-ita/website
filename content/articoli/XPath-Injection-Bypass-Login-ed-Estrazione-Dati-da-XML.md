@@ -1,9 +1,12 @@
 ---
 title: 'XPath Injection: Bypass Login ed Estrazione Dati da XML'
 slug: xpath-injection
-description: 'XPath Injection nel pentesting: bypass autenticazione, estrazione dati da documenti XML e tecniche di blind XPath injection nelle applicazioni enterprise.'
+description: >-
+  XPath Injection nel pentesting: bypass autenticazione, estrazione dati da
+  documenti XML e tecniche di blind XPath injection nelle applicazioni
+  enterprise.
 image: /xpath-injection.webp
-draft: true
+draft: false
 date: 2026-03-20T00:00:00.000Z
 categories:
   - web-hacking

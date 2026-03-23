@@ -1,9 +1,12 @@
 ---
 title: 'IPSec: VPN Enterprise, IKE, ESP e Errori di Configurazione da Sfruttare'
 slug: ipsec
-description: 'Scopri come funziona IPSec e perché è cruciale nel pentesting di VPN enterprise: IKEv1/IKEv2, ESP, tunnel mode, Aggressive Mode, PSK deboli, ike-scan e difese.'
+description: >-
+  Scopri come funziona IPSec e perché è cruciale nel pentesting di VPN
+  enterprise: IKEv1/IKEv2, ESP, tunnel mode, Aggressive Mode, PSK deboli,
+  ike-scan e difese.
 image: /ipsec.webp
-draft: true
+draft: false
 date: 2026-03-24T00:00:00.000Z
 categories:
   - networking

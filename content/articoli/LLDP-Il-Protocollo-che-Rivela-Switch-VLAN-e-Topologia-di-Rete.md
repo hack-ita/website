@@ -1,9 +1,11 @@
 ---
 title: 'LLDP: Il Protocollo che Rivela Switch, VLAN e Topologia di Rete'
 slug: lldp
-description: 'Scopri cos’è LLDP, come funziona e perché è utile nel pentesting: discovery passivo, neighbor table, VLAN, management IP, LLDP-MED, spoofing e difese.'
+description: >-
+  Scopri cos’è LLDP, come funziona e perché è utile nel pentesting: discovery
+  passivo, neighbor table, VLAN, management IP, LLDP-MED, spoofing e difese.
 image: /lldp.webp
-draft: true
+draft: false
 date: 2026-03-24T00:00:00.000Z
 categories:
   - networking

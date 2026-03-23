@@ -1,9 +1,12 @@
 ---
 title: 'NTP: Come Funziona, Come si Sfrutta e Perché Può Rompere un’Intera Rete'
 slug: ntp
-description: 'Scopri cos’è NTP, come funziona e perché è critico nel pentesting: monlist, amplification DDoS, rogue NTP server, skew temporale, Kerberos, TLS, log e difese.'
+description: >-
+  Scopri cos’è NTP, come funziona e perché è critico nel pentesting: monlist,
+  amplification DDoS, rogue NTP server, skew temporale, Kerberos, TLS, log e
+  difese.
 image: /ntp.webp
-draft: true
+draft: false
 date: 2026-03-24T00:00:00.000Z
 categories:
   - networking

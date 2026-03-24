@@ -1,9 +1,12 @@
 ---
 title: 'RARP Cos''è: il Reverse ARP che rivela reti legacy e OT'
 slug: rarp
-description: 'RARP cos’è, come funziona e perché conta ancora in pentest su reti legacy, OT/ICS e boot PXE: request/reply, spoofing, boot hijacking e differenze con ARP e DHCP.'
+description: >-
+  RARP cos’è, come funziona e perché conta ancora in pentest su reti legacy,
+  OT/ICS e boot PXE: request/reply, spoofing, boot hijacking e differenze con
+  ARP e DHCP.
 image: /rarp.webp
-draft: true
+draft: false
 date: 2026-03-25T00:00:00.000Z
 categories:
   - windows

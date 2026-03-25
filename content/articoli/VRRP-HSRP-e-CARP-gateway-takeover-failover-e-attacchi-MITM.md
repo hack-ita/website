@@ -1,9 +1,12 @@
 ---
 title: 'VRRP, HSRP e CARP: gateway takeover, failover e attacchi MITM'
 slug: vrrp-hsrp-carp
-description: 'Scopri come funzionano VRRP, HSRP e CARP, come avviene il failover del gateway e perché takeover, priority abuse e MITM sono rischi reali nei pentest di rete.'
+description: >-
+  Scopri come funzionano VRRP, HSRP e CARP, come avviene il failover del gateway
+  e perché takeover, priority abuse e MITM sono rischi reali nei pentest di
+  rete.
 image: /vrrp-hsrp-carp.webp
-draft: true
+draft: false
 date: 2026-03-26T00:00:00.000Z
 categories:
   - networking

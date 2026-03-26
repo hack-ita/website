@@ -1,9 +1,12 @@
 ---
 title: 'STP e RSTP sotto attacco: Root Bridge, BPDU e takeover di rete'
 slug: stp
-description: 'Scopri come funzionano STP e RSTP, cos’è il Root Bridge,Spanning Tree Protocol e come avviene l’elezione tramite BPDU e quali rischi reali esistono in pentest: takeover, TCN flood e attacchi layer 2.'
+description: >-
+  Scopri come funzionano STP e RSTP, cos’è il Root Bridge,Spanning Tree Protocol
+  e come avviene l’elezione tramite BPDU e quali rischi reali esistono in
+  pentest: takeover, TCN flood e attacchi layer 2.
 image: /stp.webp
-draft: true
+draft: false
 date: 2026-03-27T00:00:00.000Z
 categories:
   - networking

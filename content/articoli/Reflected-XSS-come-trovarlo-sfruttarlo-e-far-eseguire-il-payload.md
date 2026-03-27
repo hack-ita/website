@@ -1,9 +1,12 @@
 ---
 title: 'Reflected XSS: come trovarlo, sfruttarlo e far eseguire il payload'
 slug: reflected-xss
-description: 'Guida completa al Reflected XSS: reflection point, context analysis, payload per HTML e JavaScript, delivery via link, cookie stealing, dalfox e tecniche di exploit reali.'
+description: >-
+  Guida completa al Reflected XSS: reflection point, context analysis, payload
+  per HTML e JavaScript, delivery via link, cookie stealing, dalfox e tecniche
+  di exploit reali.
 image: /reflected-xss.webp
-draft: true
+draft: false
 date: 2026-03-28T00:00:00.000Z
 categories:
   - web-hacking

@@ -1,9 +1,12 @@
 ---
 title: 'Blind XSS: cos''è e come scoprirlo con callback out-of-band e XSS Hunter'
 slug: blind-xss
-description: 'Guida completa al Blind XSS: detection out-of-band, callback server, XSS Hunter, payload invisibili, punti di iniezione admin e analisi dei trigger lato pannelli interni.'
+description: >-
+  Guida completa al Blind XSS: detection out-of-band, callback server, XSS
+  Hunter, payload invisibili, punti di iniezione admin e analisi dei trigger
+  lato pannelli interni.
 image: /blind-xss.webp
-draft: true
+draft: false
 date: 2026-03-28T00:00:00.000Z
 categories:
   - networking

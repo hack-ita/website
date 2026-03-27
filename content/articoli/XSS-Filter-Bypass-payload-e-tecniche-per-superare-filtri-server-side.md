@@ -1,9 +1,12 @@
 ---
 title: 'XSS Filter Bypass: payload e tecniche per superare filtri server-side'
 slug: xss-filter-bypass
-description: 'Guida pratica ai bypass XSS: tag alternativi, keyword obfuscation, encoding, regex bypass, contesti HTML e JavaScript e tecniche reali per superare filtri server-side.'
+description: >-
+  Guida pratica ai bypass XSS: tag alternativi, keyword obfuscation, encoding,
+  regex bypass, contesti HTML e JavaScript e tecniche reali per superare filtri
+  server-side.
 image: /xss-filter-bypass.webp
-draft: true
+draft: false
 date: 2026-03-28T00:00:00.000Z
 categories:
   - web-hacking

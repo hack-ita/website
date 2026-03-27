@@ -1,9 +1,12 @@
 ---
 title: 'DOM XSS: Cos''è e come trovare source e sink nascosti nel JavaScript'
 slug: dom-xss
-description: 'Guida pratica al DOM XSS: source, sink, location.hash, innerHTML, eval, postMessage, DOM Invader, SPA React/Vue/Angular e analisi client-side nel pentest.'
+description: >-
+  Guida pratica al DOM XSS: source, sink, location.hash, innerHTML, eval,
+  postMessage, DOM Invader, SPA React/Vue/Angular e analisi client-side nel
+  pentest.
 image: /dom-xss.webp
-draft: true
+draft: false
 date: 2026-03-28T00:00:00.000Z
 categories:
   - web-hacking

@@ -1,9 +1,12 @@
 ---
 title: 'CSP Bypass: come aggirare Content Security Policy nei test XSS'
 slug: xss-csp-bypass
-description: 'Guida pratica ai CSP bypass: unsafe-inline, nonce deboli, base-uri, object-src, JSONP, AngularJS, dangling markup e tecniche reali per aggirare Content Security Policy.'
+description: >-
+  Guida pratica ai CSP bypass: unsafe-inline, nonce deboli, base-uri,
+  object-src, JSONP, AngularJS, dangling markup e tecniche reali per aggirare
+  Content Security Policy.
 image: /xss-csp-bypass.webp
-draft: true
+draft: false
 date: 2026-03-29T00:00:00.000Z
 categories:
   - web-hacking

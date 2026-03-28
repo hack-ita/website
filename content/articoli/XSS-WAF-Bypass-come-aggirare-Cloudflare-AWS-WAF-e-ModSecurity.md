@@ -1,9 +1,12 @@
 ---
 title: 'XSS WAF Bypass: come aggirare Cloudflare, AWS WAF e ModSecurity'
 slug: xss-waf-bypass
-description: 'Guida pratica ai bypass XSS contro WAF reali: Cloudflare, AWS WAF, ModSecurity CRS, evasione via encoding, payload mutati, origin bypass e tecniche usate nei pentest.'
+description: >-
+  Guida pratica ai bypass XSS contro WAF reali: Cloudflare, AWS WAF, ModSecurity
+  CRS, evasione via encoding, payload mutati, origin bypass e tecniche usate nei
+  pentest.
 image: /xss-waf-bypass.webp
-draft: true
+draft: false
 date: 2026-03-29T00:00:00.000Z
 categories:
   - web-hacking

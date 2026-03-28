@@ -1,9 +1,11 @@
 ---
 title: 'XSS Payload List: cheat sheet completa per context, bypass e blind XSS'
 slug: xss-payload-list
-description: 'Lista completa di payload XSS per HTML, attributi, JavaScript, DOM, Blind XSS e filter bypass: una cheat sheet pratica per pentest e bug bounty.'
+description: >-
+  Lista completa di payload XSS per HTML, attributi, JavaScript, DOM, Blind XSS
+  e filter bypass: una cheat sheet pratica per pentest e bug bounty.
 image: /xss-payload-list.webp
-draft: true
+draft: false
 date: 2026-03-29T00:00:00.000Z
 categories:
   - web-hacking

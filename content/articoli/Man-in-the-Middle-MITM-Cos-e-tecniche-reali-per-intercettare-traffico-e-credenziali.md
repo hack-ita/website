@@ -1,9 +1,14 @@
 ---
-title: 'Man in the Middle (MITM): Cos''è e tecniche reali per intercettare traffico e credenziali'
+title: >-
+  Man in the Middle (MITM): Cos'è e tecniche reali per intercettare traffico e
+  credenziali
 slug: man-in-the-middle
-description: 'Guida completa al Man in the Middle: ARP spoofing, SSL stripping, session hijacking, rogue DHCP, Evil Twin e tecniche MITM reali su reti enterprise e Wi-Fi.'
+description: >-
+  Guida completa al Man in the Middle: ARP spoofing, SSL stripping, session
+  hijacking, rogue DHCP, Evil Twin e tecniche MITM reali su reti enterprise e
+  Wi-Fi.
 image: /man-in-the-middle.webp
-draft: true
+draft: false
 date: 2026-03-30T00:00:00.000Z
 categories:
   - guides-resources

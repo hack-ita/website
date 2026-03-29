@@ -1,9 +1,12 @@
 ---
 title: 'VPN: protocolli, sicurezza e vulnerabilità (WireGuard, OpenVPN, IPSec)'
 slug: vpn
-description: 'Come funzionano e cosa sono le VPN a livello tecnico: IPSec, OpenVPN, WireGuard, L2TP e PPTP. Architettura dei tunnel, attacchi reali, misconfigurazioni e analisi in pentest.'
+description: >-
+  Come funzionano e cosa sono le VPN a livello tecnico: IPSec, OpenVPN,
+  WireGuard, L2TP e PPTP. Architettura dei tunnel, attacchi reali,
+  misconfigurazioni e analisi in pentest.
 image: /VPN.webp
-draft: true
+draft: false
 date: 2026-03-30T00:00:00.000Z
 categories:
   - networking

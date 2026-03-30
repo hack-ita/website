@@ -1,9 +1,12 @@
 ---
 title: 'Sshuttle: pivoting e tunneling trasparente via SSH verso reti interne'
 slug: sshuttle
-description: 'Guida a Sshuttle per creare un tunnel trasparente over SSH, raggiungere subnet interne, instradare DNS e usare un host compromesso come pivot durante lateral movement e post-exploitation in pentest autorizzati.'
+description: >-
+  Guida a Sshuttle per creare un tunnel trasparente over SSH, raggiungere subnet
+  interne, instradare DNS e usare un host compromesso come pivot durante lateral
+  movement e post-exploitation in pentest autorizzati.
 image: /sshuttle.webp
-draft: true
+draft: false
 date: 2026-03-31T00:00:00.000Z
 categories:
   - tools

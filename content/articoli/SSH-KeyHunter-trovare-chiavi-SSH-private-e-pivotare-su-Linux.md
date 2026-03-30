@@ -1,9 +1,12 @@
 ---
 title: 'SSH-KeyHunter: trovare chiavi SSH private e pivotare su Linux'
 slug: ssh-keyhunter
-description: 'SSH-KeyHunter automatizza la ricerca di chiavi SSH private su Linux, individua file non protetti, owner, fingerprint e target da known_hosts: tool ideale per post-exploitation e lateral movement in pentest autorizzati.'
+description: >-
+  SSH-KeyHunter automatizza la ricerca di chiavi SSH private su Linux, individua
+  file non protetti, owner, fingerprint e target da known_hosts: tool ideale per
+  post-exploitation e lateral movement in pentest autorizzati.
 image: /ssh-keyhunter.webp
-draft: true
+draft: false
 date: 2026-03-31T00:00:00.000Z
 categories:
   - tools

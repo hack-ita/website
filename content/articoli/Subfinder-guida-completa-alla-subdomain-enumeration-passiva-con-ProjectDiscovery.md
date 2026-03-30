@@ -1,9 +1,14 @@
 ---
-title: 'Subfinder: guida completa alla subdomain enumeration passiva con ProjectDiscovery'
+title: >-
+  Subfinder: guida completa alla subdomain enumeration passiva con
+  ProjectDiscovery
 slug: subfinder
-description: 'Scopri come usare Subfinder per trovare subdomain validi tramite fonti passive, velocizzare la reconnaissance web e costruire una pipeline di recon più efficace con il tool ProjectDiscovery ottimizzato per velocità e stealth.'
+description: >-
+  Scopri come usare Subfinder per trovare subdomain validi tramite fonti
+  passive, velocizzare la reconnaissance web e costruire una pipeline di recon
+  più efficace con il tool ProjectDiscovery ottimizzato per velocità e stealth.
 image: /sub-finder.webp
-draft: true
+draft: false
 date: 2026-03-31T00:00:00.000Z
 categories:
   - tools

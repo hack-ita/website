@@ -1,9 +1,12 @@
 ---
 title: 'WinPEAS: guida completa all’enumerazione Windows per privilege escalation'
 slug: winpeas
-description: 'Scopri come usare WinPEAS per trovare vettori di privilege escalation su Windows: servizi vulnerabili, credenziali salvate, AlwaysInstallElevated, permessi deboli e misconfiguration utili nel post-exploitation.'
+description: >-
+  Scopri come usare WinPEAS per trovare vettori di privilege escalation su
+  Windows: servizi vulnerabili, credenziali salvate, AlwaysInstallElevated,
+  permessi deboli e misconfiguration utili nel post-exploitation.
 image: /winpeas.webp
-draft: true
+draft: false
 date: 2026-04-01T00:00:00.000Z
 categories:
   - tools

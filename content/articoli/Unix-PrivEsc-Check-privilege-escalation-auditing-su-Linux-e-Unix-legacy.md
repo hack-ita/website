@@ -1,9 +1,12 @@
 ---
 title: 'Unix-PrivEsc-Check: privilege escalation auditing su Linux e Unix legacy'
 slug: unix-privesc-check
-description: 'Scopri come usare Unix-PrivEsc-Check per individuare misconfigurazioni, permessi deboli, sudo abuse e vettori di privilege escalation su sistemi Unix/Linux, inclusi ambienti legacy dove i tool moderni falliscono.'
+description: >-
+  Scopri come usare Unix-PrivEsc-Check per individuare misconfigurazioni,
+  permessi deboli, sudo abuse e vettori di privilege escalation su sistemi
+  Unix/Linux, inclusi ambienti legacy dove i tool moderni falliscono.
 image: /unix-privesc-check.webp
-draft: true
+draft: false
 date: 2026-04-01T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,12 @@
 ---
 title: 'WhatWeb: guida completa al web fingerprinting stealth e aggressivo'
 slug: whatweb
-description: 'Scopri come usare WhatWeb per identificare CMS, framework, web server, librerie JavaScript e tecnologie di un sito web, così da orientare reconnaissance, fingerprinting e vulnerability scanning mirato.'
+description: >-
+  Scopri come usare WhatWeb per identificare CMS, framework, web server,
+  librerie JavaScript e tecnologie di un sito web, così da orientare
+  reconnaissance, fingerprinting e vulnerability scanning mirato.
 image: /whatweb.webp
-draft: true
+draft: false
 date: 2026-04-01T00:00:00.000Z
 categories:
   - tools

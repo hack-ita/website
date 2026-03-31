@@ -1,9 +1,12 @@
 ---
 title: 'WinEnum: enumerazione Windows per privilege escalation e confronto con WinPEAS'
 slug: winenum
-description: 'Guida completa a WinEnum per l’enumerazione post-exploitation su Windows: varianti PowerShell e Batch, check di privilege escalation, OPSEC, differenze con WinPEAS, PowerUp, SharpUp e Seatbelt.'
+description: >-
+  Guida completa a WinEnum per l’enumerazione post-exploitation su Windows:
+  varianti PowerShell e Batch, check di privilege escalation, OPSEC, differenze
+  con WinPEAS, PowerUp, SharpUp e Seatbelt.
 image: /winenum.webp
-draft: true
+draft: false
 date: 2026-04-01T00:00:00.000Z
 categories:
   - tools

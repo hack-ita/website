@@ -1,9 +1,12 @@
 ---
 title: 'Waybackurls: come trovare URL storici, endpoint nascosti e file sensibili'
 slug: waybackurls
-description: 'Scopri come usare Waybackurls per estrarre gli URL storici di un dominio dalla Wayback Machine, trovare path dimenticati, backup esposti e vecchi endpoint utili nella reconnaissance passiva.'
+description: >-
+  Scopri come usare Waybackurls per estrarre gli URL storici di un dominio dalla
+  Wayback Machine, trovare path dimenticati, backup esposti e vecchi endpoint
+  utili nella reconnaissance passiva.
 image: /waybackurls.webp
-draft: true
+draft: false
 date: 2026-04-01T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,12 @@
 ---
 title: 'Wappalyzer: come identificare CMS, framework e tecnologie di un sito web'
 slug: wappalyzer
-description: 'Guida a Wappalyzer per rilevare CMS, framework, CDN, analytics e indizi di versione di un sito web, così da orientare reconnaissance, fingerprinting e scanning mirati nel pentest.'
+description: >-
+  Guida a Wappalyzer per rilevare CMS, framework, CDN, analytics e indizi di
+  versione di un sito web, così da orientare reconnaissance, fingerprinting e
+  scanning mirati nel pentest.
 image: /wappalyzer.webp
-draft: true
+draft: false
 date: 2026-04-01T00:00:00.000Z
 categories:
   - tools

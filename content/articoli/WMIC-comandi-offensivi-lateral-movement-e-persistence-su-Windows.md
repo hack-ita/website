@@ -1,9 +1,12 @@
 ---
 title: 'WMIC: comandi offensivi, lateral movement e persistence su Windows'
 slug: wmic
-description: 'Scopri come usare WMIC per enumeration, remote execution, lateral movement e WMI persistence su Windows. Include stato attuale del tool, comandi pratici, detection, hardening e confronto con PowerShell, CIM e WinRM.'
+description: >-
+  Scopri come usare WMIC per enumeration, remote execution, lateral movement e
+  WMI persistence su Windows. Include stato attuale del tool, comandi pratici,
+  detection, hardening e confronto con PowerShell, CIM e WinRM.
 image: /wmic.webp
-draft: true
+draft: false
 date: 2026-04-01T00:00:00.000Z
 categories:
   - tools

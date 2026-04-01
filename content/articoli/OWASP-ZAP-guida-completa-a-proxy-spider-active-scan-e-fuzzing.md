@@ -1,9 +1,12 @@
 ---
 title: 'OWASP ZAP: guida completa a proxy, spider, active scan e fuzzing'
 slug: owasp-zap
-description: 'Scopri come usare OWASP ZAP per intercettare traffico HTTP/HTTPS, mappare applicazioni web con spider e AJAX Spider, eseguire active scan, fuzzing e test autenticati, anche in CI/CD con Docker e API'
+description: >-
+  Scopri come usare OWASP ZAP per intercettare traffico HTTP/HTTPS, mappare
+  applicazioni web con spider e AJAX Spider, eseguire active scan, fuzzing e
+  test autenticati, anche in CI/CD con Docker e API
 image: /owasp-zap.webp
-draft: true
+draft: false
 date: 2026-04-02T00:00:00.000Z
 categories:
   - tools

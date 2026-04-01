@@ -1,9 +1,12 @@
 ---
 title: 'WMIExec: guida completa al lateral movement stealth con wmiexec.py'
 slug: wmiexec
-description: 'Scopri come usare WMIExec e wmiexec.py di Impacket per lateral movement su Windows con password, Pass-the-Hash e Kerberos, riducendo gli artefatti rispetto a PsExec e migliorando l’OPSEC.'
+description: >-
+  Scopri come usare WMIExec e wmiexec.py di Impacket per lateral movement su
+  Windows con password, Pass-the-Hash e Kerberos, riducendo gli artefatti
+  rispetto a PsExec e migliorando l’OPSEC.
 image: /wmiexec.webp
-draft: true
+draft: false
 date: 2026-04-02T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,12 @@
 ---
 title: 'Porta 162 SNMP Trap: cos’è, come funziona e differenze con la porta 161'
 slug: porta-162-snmptrap
-description: 'Scopri a cosa serve la porta 162 SNMP Trap, come funziona il canale di notifica rispetto alla porta 161, quali rischi introduce con SNMPv1/v2c e come sfruttarla in reconnaissance, sniffing e raccolta di intelligence passiva.'
+description: >-
+  Scopri a cosa serve la porta 162 SNMP Trap, come funziona il canale di
+  notifica rispetto alla porta 161, quali rischi introduce con SNMPv1/v2c e come
+  sfruttarla in reconnaissance, sniffing e raccolta di intelligence passiva.
 image: /porta-162-snmp-trap.webp
-draft: true
+draft: false
 date: 2026-04-03T00:00:00.000Z
 categories:
   - networking

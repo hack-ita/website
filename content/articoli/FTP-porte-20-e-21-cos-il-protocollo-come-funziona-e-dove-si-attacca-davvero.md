@@ -1,9 +1,14 @@
 ---
-title: 'FTP porte 20 e 21: cos’è il protocollo, come funziona e dove si attacca davvero'
+title: >-
+  FTP porte 20 e 21: cos’è il protocollo, come funziona e dove si attacca
+  davvero
 slug: porta-ftp-20
-description: 'Guida pratica alle porte FTP (File Transfer Protocol) 20 e 21: differenza tra control e data channel, active/passive mode, rischi di sniffing, FTP bounce e vulnerabilità comuni nei server legacy e nei lab.'
+description: >-
+  Guida pratica alle porte FTP (File Transfer Protocol) 20 e 21: differenza tra
+  control e data channel, active/passive mode, rischi di sniffing, FTP bounce e
+  vulnerabilità comuni nei server legacy e nei lab.
 image: /ftp.webp
-draft: true
+draft: false
 date: 2026-04-03T00:00:00.000Z
 categories:
   - networking

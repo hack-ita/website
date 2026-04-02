@@ -1,9 +1,13 @@
 ---
 title: 'Porta 3128 Squid Proxy: cos’è, come funziona e rischi di sicurezza'
 slug: porta-3128-squid-proxy
-description: 'Scopri a cosa serve la porta 3128 di Squid, come funziona un proxy HTTP/HTTPS forward, quali rischi introduce un open proxy mal configurato e come sfruttarlo o difenderlo in pivoting, accesso a servizi interni e controllo ACL.'
+description: >-
+  Scopri a cosa serve la porta 3128 di Squid, come funziona un proxy HTTP/HTTPS
+  forward, quali rischi introduce un open proxy mal configurato e come
+  sfruttarlo o difenderlo in pivoting, accesso a servizi interni e controllo
+  ACL.
 image: /porta-3128-squid-proxy.webp
-draft: true
+draft: false
 date: 2026-04-03T00:00:00.000Z
 categories:
   - networking

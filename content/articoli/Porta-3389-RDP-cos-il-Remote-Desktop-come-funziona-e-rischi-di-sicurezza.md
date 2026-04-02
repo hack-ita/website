@@ -1,9 +1,12 @@
 ---
 title: 'Porta 3389 RDP: cos’è il Remote Desktop, come funziona e rischi di sicurezza'
 slug: porta-3389-rdp
-description: 'Scopri a cosa serve la porta 3389 RDP, come funzionano Remote Desktop, NLA e CredSSP, quali rischi introduce l’esposizione del servizio e come si attaccano o difendono brute force, BlueKeep e lateral movement.'
+description: >-
+  Scopri a cosa serve la porta 3389 RDP, come funzionano Remote Desktop, NLA e
+  CredSSP, quali rischi introduce l’esposizione del servizio e come si attaccano
+  o difendono brute force, BlueKeep e lateral movement.
 image: /porta-3389-rdp.webp
-draft: true
+draft: false
 date: 2026-04-03T00:00:00.000Z
 categories:
   - networking

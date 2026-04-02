@@ -1,9 +1,13 @@
 ---
 title: 'Porta 179 BGP: cos’è, come funziona e rischi di sicurezza del routing'
 slug: porta-179-bgp
-description: 'Scopri a cosa serve la porta 179 BGP, come funziona il peering tra Autonomous System, quali rischi introduce una sessione mal configurata e come si analizzano enumerazione, route injection e hijacking in un pentest autorizzato/CTF.'
+description: >-
+  Scopri a cosa serve la porta 179 BGP, come funziona il peering tra Autonomous
+  System, quali rischi introduce una sessione mal configurata e come si
+  analizzano enumerazione, route injection e hijacking in un pentest
+  autorizzato/CTF.
 image: /porta-179-bgp.webp
-draft: true
+draft: false
 date: 2026-04-03T00:00:00.000Z
 categories:
   - networking

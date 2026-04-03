@@ -1,9 +1,12 @@
 ---
 title: 'Porta 199 SMUX: cos’è, come funziona e rischi di sicurezza per SNMP'
 slug: porta-199-smux
-description: 'Scopri a cosa serve la porta 199 SMUX, come collega subagent e master agent SNMP, quali rischi introduce quando è esposta in rete e come analizzare registrazioni, OID e misconfigurazioni nei sistemi legacy.'
+description: >-
+  Scopri a cosa serve la porta 199 SMUX, come collega subagent e master agent
+  SNMP, quali rischi introduce quando è esposta in rete e come analizzare
+  registrazioni, OID e misconfigurazioni nei sistemi legacy.
 image: /porta-199-smux.webp
-draft: true
+draft: false
 date: 2026-04-04T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,12 @@
 ---
 title: 'Porta 194 IRC: cos’è, come funziona e differenze con 6667 e 6697'
 slug: porta-194-irc
-description: 'Scopri a cosa serve la porta 194 IRC, perché molti server usano 6667 o 6697, come funziona il protocollo e quali rischi introduce tra enumerazione utenti, canali, leak di hostname interni e daemon vulnerabili.'
+description: >-
+  Scopri a cosa serve la porta 194 IRC, perché molti server usano 6667 o 6697,
+  come funziona il protocollo e quali rischi introduce tra enumerazione utenti,
+  canali, leak di hostname interni e daemon vulnerabili.
 image: /porta-194-irc.webp
-draft: true
+draft: false
 date: 2026-04-04T00:00:00.000Z
 categories:
   - networking

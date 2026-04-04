@@ -1,9 +1,12 @@
 ---
 title: 'Porta 515 LPD: file read, queue enumeration e rischi del print server legacy'
 slug: porta-515-lpd
-description: 'Scopri cos’è la porta 515 LPD, come funziona il Line Printer Daemon definito in RFC 1179 e perché code di stampa, print server Unix/Linux e servizi legacy possono esporre informazioni sensibili e superfici di attacco trascurate.'
+description: >-
+  Scopri cos’è la porta 515 LPD, come funziona il Line Printer Daemon definito
+  in RFC 1179 e perché code di stampa, print server Unix/Linux e servizi legacy
+  possono esporre informazioni sensibili e superfici di attacco trascurate.
 image: /porta-515-lpd.webp
-draft: true
+draft: false
 date: 2026-04-05T00:00:00.000Z
 categories:
   - networking

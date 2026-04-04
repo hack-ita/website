@@ -1,9 +1,13 @@
 ---
 title: 'Porta 443 HTTPS: cos’è, come funziona e rischi di sicurezza di TLS e web app'
 slug: porta-443-https
-description: 'Scopri a cosa serve la porta 443 HTTPS, come funzionano TLS, certificati e virtual host, e quali rischi introduce tra hostname esposti nei SAN, misconfigurazioni TLS, file sensibili, pannelli admin e superfici d’attacco web.'
+description: >-
+  Scopri a cosa serve la porta 443 HTTPS, come funzionano TLS, certificati e
+  virtual host, e quali rischi introduce tra hostname esposti nei SAN,
+  misconfigurazioni TLS, file sensibili, pannelli admin e superfici d’attacco
+  web.
 image: /porta-443-https.webp
-draft: true
+draft: false
 date: 2026-04-05T00:00:00.000Z
 categories:
   - networking

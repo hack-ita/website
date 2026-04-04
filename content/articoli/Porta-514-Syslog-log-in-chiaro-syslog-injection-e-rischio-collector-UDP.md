@@ -1,9 +1,12 @@
 ---
 title: 'Porta 514 Syslog: log in chiaro, syslog injection e rischio collector UDP'
 slug: porta-514-syslog
-description: 'Scopri cos’è la porta 514/UDP syslog, come identificare collector e flussi di logging, quali dati possono transitare in chiaro e perché syslog over TLS su 6514 riduce intercettazione e spoofing.'
+description: >-
+  Scopri cos’è la porta 514/UDP syslog, come identificare collector e flussi di
+  logging, quali dati possono transitare in chiaro e perché syslog over TLS su
+  6514 riduce intercettazione e spoofing.
 image: /porta-514-syslog.webp
-draft: true
+draft: false
 date: 2026-04-05T00:00:00.000Z
 categories:
   - networking

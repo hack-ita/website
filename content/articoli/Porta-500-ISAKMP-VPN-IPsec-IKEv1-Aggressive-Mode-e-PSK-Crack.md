@@ -1,9 +1,12 @@
 ---
 title: 'Porta 500 ISAKMP: VPN IPsec, IKEv1 Aggressive Mode e PSK Crack'
 slug: porta-500-isakmp
-description: 'Porta 500 ISAKMP nel pentest: enumerazione VPN IPsec, fingerprint IKE, Aggressive Mode, estrazione hash PSK, cracking offline e accesso alla rete interna tramite tunnel.'
+description: >-
+  Porta 500 ISAKMP nel pentest: enumerazione VPN IPsec, fingerprint IKE,
+  Aggressive Mode, estrazione hash PSK, cracking offline e accesso alla rete
+  interna tramite tunnel.
 image: /porta-500-isakmp.webp
-draft: true
+draft: false
 date: 2026-04-05T00:00:00.000Z
 categories:
   - networking

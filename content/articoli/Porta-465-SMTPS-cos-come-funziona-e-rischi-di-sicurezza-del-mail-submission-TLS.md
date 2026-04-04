@@ -1,9 +1,14 @@
 ---
-title: 'Porta 465 SMTPS: cos’è, come funziona e rischi di sicurezza del mail submission TLS.'
+title: >-
+  Porta 465 SMTPS: cos’è, come funziona e rischi di sicurezza del mail
+  submission TLS.
 slug: porta-465-smtps
-description: 'Scopri a cosa serve la porta 465 SMTPS, come funziona SMTP Submission over TLS, quali rischi introduce tra user enumeration, open relay, brute force SMTP AUTH e phishing interno con credenziali valide.'
+description: >-
+  Scopri a cosa serve la porta 465 SMTPS, come funziona SMTP Submission over
+  TLS, quali rischi introduce tra user enumeration, open relay, brute force SMTP
+  AUTH e phishing interno con credenziali valide.
 image: /porta-465-smtps.webp
-draft: true
+draft: false
 date: 2026-04-05T00:00:00.000Z
 categories:
   - networking

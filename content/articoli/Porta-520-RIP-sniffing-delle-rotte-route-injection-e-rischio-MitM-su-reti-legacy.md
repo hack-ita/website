@@ -1,9 +1,14 @@
 ---
-title: 'Porta 520 RIP: sniffing delle rotte, route injection e rischio MitM su reti legacy'
+title: >-
+  Porta 520 RIP: sniffing delle rotte, route injection e rischio MitM su reti
+  legacy
 slug: porta-520-rip
-description: 'Scopri cos’è la porta 520/UDP usata da RIP, come funzionano RIPv1 e RIPv2 e perché gli annunci di routing possono esporre la topologia di rete e aumentare il rischio di route poisoning, traffic redirect e manipolazione del percorso.'
+description: >-
+  Scopri cos’è la porta 520/UDP usata da RIP, come funzionano RIPv1 e RIPv2 e
+  perché gli annunci di routing possono esporre la topologia di rete e aumentare
+  il rischio di route poisoning, traffic redirect e manipolazione del percorso.
 image: /porta-520-rip.webp
-draft: true
+draft: false
 date: 2026-04-05T00:00:00.000Z
 categories:
   - networking

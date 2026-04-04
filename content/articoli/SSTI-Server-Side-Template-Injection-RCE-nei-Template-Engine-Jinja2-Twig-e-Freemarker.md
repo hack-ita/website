@@ -122,7 +122,7 @@ Con [Burp Suite](https://hackita.it/articoli/burp-suite/) intercetti la richiest
 
 ### Mappa di identificazione
 
-Dopo il polyglot `${{<%[%'"}}%\.`, usa questa mappa per identificare l'engine:
+Dopo il polyglot `${{&lt;%[%'"}}%\.`, usa questa mappa per identificare l'engine:
 
 ```
 {{7*'7'}} → 7777777 = Jinja2 | 49 = Twig

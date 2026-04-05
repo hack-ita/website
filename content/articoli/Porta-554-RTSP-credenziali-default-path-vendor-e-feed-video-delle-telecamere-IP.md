@@ -1,9 +1,14 @@
 ---
-title: 'Porta 554 RTSP: credenziali default, path vendor e feed video delle telecamere IP.'
+title: >-
+  Porta 554 RTSP: credenziali default, path vendor e feed video delle telecamere
+  IP.
 slug: porta-554-rtsp
-description: 'Scopri cos’è la porta 554 RTSP, come individuare path Hikvision, Dahua e altri vendor, e perché stream CCTV, DVR e NVR con auth debole o assente rappresentano un rischio reale per la videosorveglianza.'
+description: >-
+  Scopri cos’è la porta 554 RTSP, come individuare path Hikvision, Dahua e altri
+  vendor, e perché stream CCTV, DVR e NVR con auth debole o assente
+  rappresentano un rischio reale per la videosorveglianza.
 image: /porta-554-rtsp.webp
-draft: true
+draft: false
 date: 2026-04-06T00:00:00.000Z
 categories:
   - networking

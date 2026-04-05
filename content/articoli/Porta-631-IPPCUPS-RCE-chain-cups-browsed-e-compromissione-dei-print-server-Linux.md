@@ -1,9 +1,15 @@
 ---
-title: 'Porta 631 IPP/CUPS: RCE chain, cups-browsed e compromissione dei print server Linux.'
+title: >-
+  Porta 631 IPP/CUPS: RCE chain, cups-browsed e compromissione dei print server
+  Linux.
 slug: porta-631-ipp-cups
-description: 'Scopri cos’è la porta 631 IPP/CUPS, come funziona l’Internet Printing Protocol su TCP e UDP 631 e perché la chain di vulnerabilità del 2024 legata a cups-browsed ha riportato al centro RCE, discovery di stampanti e sicurezza dei print server Linux.'
+description: >-
+  Scopri cos’è la porta 631 IPP/CUPS, come funziona l’Internet Printing Protocol
+  su TCP e UDP 631 e perché la chain di vulnerabilità del 2024 legata a
+  cups-browsed ha riportato al centro RCE, discovery di stampanti e sicurezza
+  dei print server Linux.
 image: /porta-631-ipp-cups.webp
-draft: true
+draft: false
 date: 2026-04-06T00:00:00.000Z
 categories:
   - networking

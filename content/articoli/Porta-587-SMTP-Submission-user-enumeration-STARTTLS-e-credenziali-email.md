@@ -1,9 +1,12 @@
 ---
 title: 'Porta 587 SMTP Submission: user enumeration, STARTTLS e credenziali email.'
 slug: porta-587-smtp-submission
-description: 'Scopri cos’è la porta 587 SMTP Submission, come funziona l’invio autenticato delle email secondo RFC 6409 e perché STARTTLS e SMTP AUTH sono centrali per valutare la sicurezza del servizio mail.'
+description: >-
+  Scopri cos’è la porta 587 SMTP Submission, come funziona l’invio autenticato
+  delle email secondo RFC 6409 e perché STARTTLS e SMTP AUTH sono centrali per
+  valutare la sicurezza del servizio mail.
 image: /porta-587-smtp-submission.webp
-draft: true
+draft: false
 date: 2026-04-06T00:00:00.000Z
 categories:
   - networking

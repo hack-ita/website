@@ -1,9 +1,12 @@
 ---
 title: 'Porta 513 Rlogin: trust .rhosts, accesso root e lateral movement Unix legacy'
 slug: porta-513-rlogin
-description: 'Scopri cos’è la porta 513 Rlogin, come funzionano .rhosts e hosts.equiv, perché il trust può aprire accessi senza password e come identificare trust chain e lateral movement su sistemi Unix legacy.'
+description: >-
+  Scopri cos’è la porta 513 Rlogin, come funzionano .rhosts e hosts.equiv,
+  perché il trust può aprire accessi senza password e come identificare trust
+  chain e lateral movement su sistemi Unix legacy.
 image: /porta-513-rlogin.webp
-draft: true
+draft: false
 date: 2026-04-06T00:00:00.000Z
 categories:
   - networking

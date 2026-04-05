@@ -1,9 +1,13 @@
 ---
 title: 'Porta 623 IPMI: RAKP hash disclosure, cipher 0 e rischio BMC out-of-band.'
 slug: porta-623-ipmi
-description: 'Scopri cos’è la porta 623/UDP asf-rmcp, come funziona IPMI 2.0 con RAKP e perché la CVE-2013-4786 consente il recupero di hash dalle risposte del BMC, mentre il supporto a cipher suite 0 può ridurre drasticamente la sicurezza del management remoto.'
+description: >-
+  Scopri cos’è la porta 623/UDP asf-rmcp, come funziona IPMI 2.0 con RAKP e
+  perché la CVE-2013-4786 consente il recupero di hash dalle risposte del BMC,
+  mentre il supporto a cipher suite 0 può ridurre drasticamente la sicurezza del
+  management remoto.
 image: /porta-623-ipmi.webp
-draft: true
+draft: false
 date: 2026-04-06T00:00:00.000Z
 categories:
   - networking

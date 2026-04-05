@@ -1,9 +1,12 @@
 ---
 title: 'Porta 593 RPC over HTTP: IOXIDResolver, endpoint enumeration e DCOM stealth.'
 slug: porta-593-rpc-http
-description: 'Scopri cos’è la porta 593 http-rpc-epmap, come funziona ncacn_http in ambiente Microsoft e perché RPC over HTTP può esporre endpoint, servizi DCOM e informazioni utili sulla superficie RPC enterprise.'
+description: >-
+  Scopri cos’è la porta 593 http-rpc-epmap, come funziona ncacn_http in ambiente
+  Microsoft e perché RPC over HTTP può esporre endpoint, servizi DCOM e
+  informazioni utili sulla superficie RPC enterprise.
 image: /porta-593-rpc-http.webp
-draft: true
+draft: false
 date: 2026-04-06T00:00:00.000Z
 categories:
   - networking

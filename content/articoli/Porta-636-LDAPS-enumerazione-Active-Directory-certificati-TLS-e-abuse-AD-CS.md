@@ -1,9 +1,13 @@
 ---
 title: 'Porta 636 LDAPS: enumerazione Active Directory, certificati TLS e abuse AD CS.'
 slug: porta-636-ldaps
-description: 'Scopri cos’è la porta 636 LDAPS, come il certificato LDAP over SSL può rivelare hostname, dominio e CA aziendale, e perché LDAP signing e channel binding restano cruciali per ridurre relay ed esposizione della directory Active Directory.'
+description: >-
+  Scopri cos’è la porta 636 LDAPS, come il certificato LDAP over SSL può
+  rivelare hostname, dominio e CA aziendale, e perché LDAP signing e channel
+  binding restano cruciali per ridurre relay ed esposizione della directory
+  Active Directory.
 image: /porta-636-ldaps.webp
-draft: true
+draft: false
 date: 2026-04-07T00:00:00.000Z
 categories:
   - networking

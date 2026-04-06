@@ -1,9 +1,11 @@
 ---
 title: 'Fail2Ban Privilege Escalation: Exploit Linux per Ottenere Root'
 slug: fail2ban
-description: 'Scopri come sfruttare una misconfigurazione di Fail2Ban ,cos''è e come ottenere root su Linux: enumerazione, exploit, trigger del ban, detection e hardening.'
+description: >-
+  Scopri come sfruttare una misconfigurazione di Fail2Ban ,cos'è e come ottenere
+  root su Linux: enumerazione, exploit, trigger del ban, detection e hardening.
 image: /fail2ban.webp
-draft: true
+draft: false
 date: 2026-04-07T00:00:00.000Z
 categories:
   - linux

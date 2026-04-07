@@ -1,9 +1,14 @@
 ---
-title: 'Porta 989 FTPS-Data: canale dati cifrato, TLS implicito e sicurezza del file transfer.'
+title: >-
+  Porta 989 FTPS-Data: canale dati cifrato, TLS implicito e sicurezza del file
+  transfer.
 slug: porta-989-ftps-data
-description: 'Scopri cos’è la porta 989 ftps-data, come si collega alla 990 nel FTPS implicito e perché certificati, TLS e permessi di accesso restano centrali per valutare la sicurezza del trasferimento file.'
+description: >-
+  Scopri cos’è la porta 989 ftps-data, come si collega alla 990 nel FTPS
+  implicito e perché certificati, TLS e permessi di accesso restano centrali per
+  valutare la sicurezza del trasferimento file.
 image: /porta-989-ftps-data.webp
-draft: true
+draft: false
 date: 2026-04-08T00:00:00.000Z
 categories:
   - networking

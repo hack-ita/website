@@ -1,9 +1,12 @@
 ---
 title: 'Porta 902 VMware ESXi: vCenter, vmware-authd e rischio hypervisor.'
 slug: porta-902-vmware
-description: 'Scopri cos’è la porta 902 VMware, usata nelle comunicazioni core tra vCenter Server ed ESXi, e perché identificare un host con vmware-authd significa trovare una superficie ad alto impatto per l’intera infrastruttura virtuale.'
+description: >-
+  Scopri cos’è la porta 902 VMware, usata nelle comunicazioni core tra vCenter
+  Server ed ESXi, e perché identificare un host con vmware-authd significa
+  trovare una superficie ad alto impatto per l’intera infrastruttura virtuale.
 image: /porta-902-vmware.webp
-draft: true
+draft: false
 date: 2026-04-08T00:00:00.000Z
 categories:
   - networking

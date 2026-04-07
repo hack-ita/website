@@ -1,9 +1,12 @@
 ---
 title: 'Porta 880 Kerberos Admin: kadmin, kpasswd e password policy del KDC.'
 slug: porta-880-kerberos-admin
-description: 'Scopri cos’è la porta 880 associata ai servizi Kerberos admin legacy o custom, come si collega a kadmin e kpasswd e perché policy password, principal e configurazione del KDC sono preziosi per l’enumerazione Kerberos.'
+description: >-
+  Scopri cos’è la porta 880 associata ai servizi Kerberos admin legacy o custom,
+  come si collega a kadmin e kpasswd e perché policy password, principal e
+  configurazione del KDC sono preziosi per l’enumerazione Kerberos.
 image: /porta-880-kerberos-admin.webp
-draft: true
+draft: false
 date: 2026-04-08T00:00:00.000Z
 categories:
   - networking

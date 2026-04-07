@@ -596,7 +596,7 @@ env.from_string(template).render(name=user_input)
 
 ### Detection
 
-* Inviare il polyglot `${{<%[%'"}}%\.` su ogni parametro
+* Inviare il polyglot `${{`<!-- --><`<!-- -->%[%<!-- -->'"}}%<!-- -->\.` su ogni parametro
 * Testare i payload dalla tabella fingerprint rapido per ogni engine
 * Verificare la risposta: output `49`, errore verbose, o comportamento anomalo
 * Testare anche parametri nascosti, header HTTP, cookie

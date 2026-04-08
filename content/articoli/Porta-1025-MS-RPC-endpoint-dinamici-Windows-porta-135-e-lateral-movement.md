@@ -1,9 +1,13 @@
 ---
 title: 'Porta 1025 MS RPC: endpoint dinamici Windows, porta 135 e lateral movement.'
 slug: porta-1025-ms-rpc
-description: 'Scopri cos’è la porta 1025 in ambito MS RPC, perché va correlata all’endpoint mapper sulla 135 e come le porte RPC dinamiche dipendano dalla versione di Windows: 1025-5000 nei sistemi legacy, 49152-65535 da Windows Vista/Server 2008 in poi.'
+description: >-
+  Scopri cos’è la porta 1025 in ambito MS RPC, perché va correlata all’endpoint
+  mapper sulla 135 e come le porte RPC dinamiche dipendano dalla versione di
+  Windows: 1025-5000 nei sistemi legacy, 49152-65535 da Windows Vista/Server
+  2008 in poi.
 image: /porta-1025-ms-rpc.webp
-draft: true
+draft: false
 date: 2026-04-09T00:00:00.000Z
 categories:
   - networking

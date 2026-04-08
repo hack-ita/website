@@ -1,9 +1,14 @@
 ---
-title: 'Porta 912 Apex Mesh / MeshCentral: server RMM, agent remoti e compromissione centralizzata.'
+title: >-
+  Porta 912 Apex Mesh / MeshCentral: server RMM, agent remoti e compromissione
+  centralizzata.
 slug: porta-912-apex-mesh
-description: 'Scopri cos’è la porta 912 associata a apex-mesh e perché può indicare una piattaforma di remote management come MeshCentral: accesso centralizzato agli endpoint, agent remoti e superficie ad alto impatto per l’intera rete gestita.'
+description: >-
+  Scopri cos’è la porta 912 associata a apex-mesh e perché può indicare una
+  piattaforma di remote management come MeshCentral: accesso centralizzato agli
+  endpoint, agent remoti e superficie ad alto impatto per l’intera rete gestita.
 image: /porta-912-apex-mesh.webp
-draft: true
+draft: false
 date: 2026-04-09T00:00:00.000Z
 categories:
   - networking

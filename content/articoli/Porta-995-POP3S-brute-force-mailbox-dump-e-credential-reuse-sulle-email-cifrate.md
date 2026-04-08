@@ -1,9 +1,14 @@
 ---
-title: 'Porta 995 POP3S: brute force, mailbox dump e credential reuse sulle email cifrate.'
+title: >-
+  Porta 995 POP3S: brute force, mailbox dump e credential reuse sulle email
+  cifrate.
 slug: porta-995-pop3s
-description: 'Scopri cos’è la porta 995 pop3s, perché POP3 over TLS usa cifratura implicita sul canale email e come credenziali deboli, mailbox access e contenuti sensibili rendono POP3S un target ancora rilevante.'
+description: >-
+  Scopri cos’è la porta 995 pop3s, perché POP3 over TLS usa cifratura implicita
+  sul canale email e come credenziali deboli, mailbox access e contenuti
+  sensibili rendono POP3S un target ancora rilevante.
 image: /porta-995-pop3s.webp
-draft: true
+draft: false
 date: 2026-04-09T00:00:00.000Z
 categories:
   - networking

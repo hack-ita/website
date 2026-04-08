@@ -1,9 +1,14 @@
 ---
-title: 'Porta 990 FTPS: anonymous login, brute force e file exfiltration su FTP cifrato.'
+title: >-
+  Porta 990 FTPS: anonymous login, brute force e file exfiltration su FTP
+  cifrato.
 slug: porta-990-ftps
-description: 'Scopri cos’è la porta 990 ftps, come si collega alla 989 ftps-data e perché anonymous login, credenziali deboli e backup esposti restano i rischi principali del file transfer protetto da TLS.'
+description: >-
+  Scopri cos’è la porta 990 ftps, come si collega alla 989 ftps-data e perché
+  anonymous login, credenziali deboli e backup esposti restano i rischi
+  principali del file transfer protetto da TLS.
 image: /porta-990-ftps.webp
-draft: true
+draft: false
 date: 2026-04-09T00:00:00.000Z
 categories:
   - networking

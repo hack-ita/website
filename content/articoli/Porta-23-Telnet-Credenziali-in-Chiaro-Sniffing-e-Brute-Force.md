@@ -1,9 +1,12 @@
 ---
 title: 'Porta 23 Telnet: Credenziali in Chiaro, Sniffing e Brute Force'
 slug: porta-23-telnet
-description: 'La porta 23 Telnet è una critical finding immediata: trasmette credenziali in chiaro, facilita brute force, sniffing e accesso remoto insicuro. Scopri come enumerarla, attaccarla e metterla in sicurezza.'
+description: >-
+  La porta 23 Telnet è una critical finding immediata: trasmette credenziali in
+  chiaro, facilita brute force, sniffing e accesso remoto insicuro. Scopri come
+  enumerarla, attaccarla e metterla in sicurezza.
 image: /porta-23-telnet.webp
-draft: true
+draft: false
 date: 2026-04-10T00:00:00.000Z
 categories:
   - networking

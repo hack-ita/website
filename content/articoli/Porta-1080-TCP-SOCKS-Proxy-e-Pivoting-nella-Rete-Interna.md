@@ -1,9 +1,12 @@
 ---
 title: 'Porta 1080 TCP: SOCKS Proxy e Pivoting nella Rete Interna'
 slug: porta-1080-socks-proxy
-description: 'La porta 1080 può esporre un SOCKS proxy aperto usabile per pivoting, tunneling e accesso alla rete interna. Scopri come identificarlo, testarlo e sfruttarlo in pentest autorizzati.'
+description: >-
+  La porta 1080 può esporre un SOCKS proxy aperto usabile per pivoting,
+  tunneling e accesso alla rete interna. Scopri come identificarlo, testarlo e
+  sfruttarlo in pentest autorizzati.
 image: /porta-1080-socks-proxy.webp
-draft: true
+draft: false
 date: 2026-04-10T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,12 @@
 ---
 title: 'Porta 1026 MS RPC: endpoint dinamici Windows, porta 135 e servizi remoti.'
 slug: porta-1026-rpc
-description: 'Scopri cos’è la porta 1026 in ambito MS RPC, perché va correlata all’endpoint mapper sulla 135 e come le porte RPC dinamiche cambino tra sistemi legacy e Windows moderni, influenzando enumerazione, firewalling e lateral movement.'
+description: >-
+  Scopri cos’è la porta 1026 in ambito MS RPC, perché va correlata all’endpoint
+  mapper sulla 135 e come le porte RPC dinamiche cambino tra sistemi legacy e
+  Windows moderni, influenzando enumerazione, firewalling e lateral movement.
 image: /porta-1026-rpc.webp
-draft: true
+draft: false
 date: 2026-04-10T00:00:00.000Z
 categories:
   - networking

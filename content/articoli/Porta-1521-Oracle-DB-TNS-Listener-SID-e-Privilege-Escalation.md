@@ -1,9 +1,12 @@
 ---
 title: 'Porta 1521 Oracle DB: TNS Listener, SID e Privilege Escalation'
 slug: porta-1521-oracle
-description: 'Pentest Oracle 1521: enumerazione TNS Listener, payload, SID e service name, test credenziali deboli, SQL injection, escalation a DBA e lateral movement in lab.'
+description: >-
+  Pentest Oracle 1521: enumerazione TNS Listener, payload, SID e service name,
+  test credenziali deboli, SQL injection, escalation a DBA e lateral movement in
+  lab.
 image: /porta-1521-oracle.webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

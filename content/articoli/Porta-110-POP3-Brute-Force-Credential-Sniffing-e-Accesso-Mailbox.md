@@ -1,9 +1,12 @@
 ---
 title: 'Porta 110 POP3: Brute Force, Credential Sniffing e Accesso Mailbox'
 slug: porta-110-pop3
-description: 'La porta 110 espone POP3, il protocollo usato per scaricare email dal server al client. Guida pratica a enumeration, brute force, sniffing di credenziali in chiaro, download messaggi e hardening del mail server.'
+description: >-
+  La porta 110 espone POP3, il protocollo usato per scaricare email dal server
+  al client. Guida pratica a enumeration, brute force, sniffing di credenziali
+  in chiaro, download messaggi e hardening del mail server.
 image: /porta-110-pop3.webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

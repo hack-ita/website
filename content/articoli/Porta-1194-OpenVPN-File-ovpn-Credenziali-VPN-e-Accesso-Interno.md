@@ -1,9 +1,11 @@
 ---
 title: 'Porta 1194 OpenVPN: File .ovpn, Credenziali VPN e Accesso Interno'
 slug: porta-1194-openvpn
-description: 'Pentest OpenVPN sulla porta 1194: fingerprint UDP/TCP, analisi file .ovpn, test credenziali, certificati client e accesso alla rete interna in lab.'
+description: >-
+  Pentest OpenVPN sulla porta 1194: fingerprint UDP/TCP, analisi file .ovpn,
+  test credenziali, certificati client e accesso alla rete interna in lab.
 image: /porta-1194-openvpn (1).webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

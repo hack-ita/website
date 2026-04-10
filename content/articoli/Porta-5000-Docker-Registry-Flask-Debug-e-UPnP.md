@@ -1,9 +1,11 @@
 ---
 title: 'Porta 5000: Docker Registry, Flask Debug e UPnP'
 slug: porta-5000-upnp-flask-docker-registry
-description: 'Porta 5000 nel pentest: riconosci Docker Registry, Flask debug, UPnP o Synology DSM. Enumerazione, image pull, RCE Werkzeug e abuse SOAP in lab.'
+description: >-
+  Porta 5000 nel pentest: riconosci Docker Registry, Flask debug, UPnP o
+  Synology DSM. Enumerazione, image pull, RCE Werkzeug e abuse SOAP in lab.
 image: /porta-5000-upnp-flask-docker-registry.webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

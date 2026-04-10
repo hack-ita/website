@@ -1,9 +1,11 @@
 ---
 title: 'Porta 1352 Lotus Notes/Domino: NRPC, names.nsf e WebAdmin'
 slug: porta-1352-lotus-notes
-description: 'Pentest Lotus Notes/Domino sulla porta 1352: enum NRPC, names.nsf, Domino Directory, database NSF, WebAdmin e accessi deboli in ambienti legacy.'
+description: >-
+  Pentest Lotus Notes/Domino sulla porta 1352: enum NRPC, names.nsf, Domino
+  Directory, database NSF, WebAdmin e accessi deboli in ambienti legacy.
 image: /porta-1352-lotus-notes.webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

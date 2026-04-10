@@ -1,9 +1,12 @@
 ---
 title: 'Porta 43 WHOIS: OSINT su Domini, IP e Name Server'
 slug: porta-43-whois
-description: 'La porta 43 WHOIS permette query passive su domini, IP e ASN per raccogliere registrar, name server, contatti e scadenze utili alla reconnaissance e all’OSINT.'
+description: >-
+  La porta 43 WHOIS permette query passive su domini, IP e ASN per raccogliere
+  registrar, name server, contatti e scadenze utili alla reconnaissance e
+  all’OSINT.
 image: /porta-43-whois.webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,12 @@
 ---
 title: 'Porta 25 SMTP: User Enumeration, Open Relay e SMTP AUTH'
 slug: porta-25-smtp
-description: 'La porta 25 SMTP può esporre user enumeration via VRFY e RCPT TO, open relay, spoofing email e brute force su SMTP AUTH. Guida pratica a enumerazione, exploit, detection e hardening del mail server.'
+description: >-
+  La porta 25 SMTP può esporre user enumeration via VRFY e RCPT TO, open relay,
+  spoofing email e brute force su SMTP AUTH. Guida pratica a enumerazione,
+  exploit, detection e hardening del mail server.
 image: /porta-25-smtp.webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

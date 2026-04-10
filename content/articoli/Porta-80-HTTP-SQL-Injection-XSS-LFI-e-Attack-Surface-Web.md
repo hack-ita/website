@@ -1,9 +1,12 @@
 ---
 title: 'Porta 80 HTTP: SQL Injection, XSS, LFI e Attack Surface Web'
 slug: porta-80-http
-description: 'La porta 80 HTTP resta il punto d’ingresso principale per testare applicazioni web, API, pannelli admin e servizi interni. Scopri enumerazione, SQLi, XSS, LFI, SSRF e le tecniche più utili nel web pentest.'
+description: >-
+  La porta 80 HTTP resta il punto d’ingresso principale per testare applicazioni
+  web, API, pannelli admin e servizi interni. Scopri enumerazione, SQLi, XSS,
+  LFI, SSRF e le tecniche più utili nel web pentest.
 image: /porta-80-http.webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,12 @@
 ---
 title: 'Porta 143 IMAP: Accesso Mailbox, Brute Force e Mail Server Enumeration'
 slug: porta-143-imap
-description: 'La porta 143 espone IMAP, il protocollo usato per accedere e sincronizzare email e cartelle direttamente sul server. Guida pratica a enumeration, login testing, mailbox discovery e hardening del mail server.'
+description: >-
+  La porta 143 espone IMAP, il protocollo usato per accedere e sincronizzare
+  email e cartelle direttamente sul server. Guida pratica a enumeration, login
+  testing, mailbox discovery e hardening del mail server.
 image: /porta-143-imap.webp
-draft: true
+draft: false
 date: 2026-04-11T00:00:00.000Z
 categories:
   - networking

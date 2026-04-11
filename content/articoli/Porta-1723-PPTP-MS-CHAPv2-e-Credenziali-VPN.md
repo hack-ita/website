@@ -1,9 +1,11 @@
 ---
 title: 'Porta 1723 PPTP: MS-CHAPv2 e Credenziali VPN'
 slug: porta-1723-pptp
-description: 'Pentest PPTP sulla porta 1723: Cos''è, fingerprint del control channel, analisi MS-CHAPv2, credenziali VPN legacy, GRE e rischio accesso alla rete interna.'
+description: >-
+  Pentest PPTP sulla porta 1723: Cos'è, fingerprint del control channel, analisi
+  MS-CHAPv2, credenziali VPN legacy, GRE e rischio accesso alla rete interna.
 image: /porta-1723-pptp.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

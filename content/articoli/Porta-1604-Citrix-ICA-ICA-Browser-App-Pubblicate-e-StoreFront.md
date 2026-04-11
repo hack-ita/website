@@ -1,9 +1,12 @@
 ---
 title: 'Porta 1604 Citrix ICA: ICA Browser, App Pubblicate e StoreFront'
 slug: porta-1604-citrix-ica
-description: 'Pentest Citrix sulla porta 1604/UDP: enumerazione ICA Browser, app pubblicate, StoreFront, servizi 1494/2598 e accesso agli ambienti Citrix Virtual Apps in lab.'
+description: >-
+  Pentest Citrix sulla porta 1604/UDP: enumerazione ICA Browser, app pubblicate,
+  StoreFront, servizi 1494/2598 e accesso agli ambienti Citrix Virtual Apps in
+  lab.
 image: /porta-1604-citrix-ica.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

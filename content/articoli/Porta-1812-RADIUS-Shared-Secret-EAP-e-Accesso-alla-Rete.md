@@ -1,9 +1,11 @@
 ---
 title: 'Porta 1812 RADIUS: Shared Secret, EAP e Accesso alla Rete'
 slug: porta-1812-radius-auth
-description: 'Pentest RADIUS sulla porta 1812/UDP: test shared secret, autenticazione EAP, backend AD/LDAP, RADIUS Accounting e controllo dell’accesso di rete in lab.'
+description: >-
+  Pentest RADIUS sulla porta 1812/UDP: test shared secret, autenticazione EAP,
+  backend AD/LDAP, RADIUS Accounting e controllo dell’accesso di rete in lab.
 image: /porta-1812-radius-auth.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

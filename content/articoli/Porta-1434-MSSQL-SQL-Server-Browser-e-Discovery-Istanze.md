@@ -1,9 +1,11 @@
 ---
 title: 'Porta 1434 MSSQL: SQL Server Browser e Discovery Istanze'
 slug: porta-1434-mssql-monitor
-description: 'Pentest MSSQL sulla porta 1434/UDP: enumerazione SQL Server Browser, named instance, versione, porte dinamiche e discovery delle istanze SQL in lab.'
+description: >-
+  Pentest MSSQL sulla porta 1434/UDP: enumerazione SQL Server Browser, named
+  instance, versione, porte dinamiche e discovery delle istanze SQL in lab.
 image: /porta-1434-mssql-monitor.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

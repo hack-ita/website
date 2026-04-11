@@ -1,9 +1,12 @@
 ---
 title: 'Porta 1984 Xymon/BigBrother: Recon e Info Disclosure'
 slug: porta-1984-bigbrother
-description: 'Porta 1984 Xymon e BigBrother nel pentest: agent monitoring, host data disclosure, servizi esposti e dashboard infrastrutturale accessibile senza adeguati controlli.'
+description: >-
+  Porta 1984 Xymon e BigBrother nel pentest: agent monitoring, host data
+  disclosure, servizi esposti e dashboard infrastrutturale accessibile senza
+  adeguati controlli.
 image: /porta-1984-bigbrother-xymon.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

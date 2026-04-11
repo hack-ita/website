@@ -1,9 +1,11 @@
 ---
 title: 'Porta 1993 SNMP: Inform, Trap e Monitoring'
 slug: porta-1993-snmp-inform
-description: 'Porta 1993 SNMP nel pentest: SNMP Inform, trap correlation, community string, collector alternativi e information disclosure su server di monitoring.'
+description: >-
+  Porta 1993 SNMP nel pentest: SNMP Inform, trap correlation, community string,
+  collector alternativi e information disclosure su server di monitoring.
 image: /porta-1993-snmp-inform.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

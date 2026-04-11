@@ -1,9 +1,11 @@
 ---
 title: 'Porta 5432 PostgreSQL: Payload, pg_shadow, COPY PROGRAM e RCE'
 slug: porta-5432-postgresql
-description: 'Pentest PostgreSQL sulla porta 5432: enumerazione, brute force, pg_shadow, file read/write, COPY PROGRAM, RCE e privilege escalation in lab.'
+description: >-
+  Pentest PostgreSQL sulla porta 5432: enumerazione, brute force, pg_shadow,
+  file read/write, COPY PROGRAM, RCE e privilege escalation in lab.
 image: /porta-5432-postgresql.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

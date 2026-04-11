@@ -1,9 +1,11 @@
 ---
 title: 'Porta 1990 UPnP: SOAP, Port Mapping e Device Control'
 slug: porta-1990-upnp
-description: 'Porta 1990 UPnP nel pentest: SOAP action, port mapping abuse, device control e analisi dei servizi IGD esposti sul router.'
+description: >-
+  Porta 1990 UPnP nel pentest: SOAP action, port mapping abuse, device control e
+  analisi dei servizi IGD esposti sul router.
 image: /porta-1990-upnp.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

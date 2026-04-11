@@ -1,9 +1,12 @@
 ---
 title: 'Porta 1813 RADIUS Accounting: Sessioni, IP Assegnati e RADIUS 1812'
 slug: porta-1813-radius-accounting
-description: 'Pentest RADIUS Accounting sulla porta 1813/UDP: session tracking, Framed-IP, Accounting-Request, correlazione con 1812 e visibilità sulle sessioni di rete in lab.'
+description: >-
+  Pentest RADIUS Accounting sulla porta 1813/UDP: session tracking, Framed-IP,
+  Accounting-Request, correlazione con 1812 e visibilità sulle sessioni di rete
+  in lab.
 image: /porta-1813-radius-accounting.webp
-draft: true
+draft: false
 date: 2026-04-12T00:00:00.000Z
 categories:
   - networking

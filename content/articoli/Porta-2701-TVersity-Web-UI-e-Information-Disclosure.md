@@ -1,9 +1,11 @@
 ---
 title: 'Porta 2701 TVersity: Web UI e Information Disclosure'
 slug: porta-2701-tversity
-description: 'Porta 2701 TVersity nel pentest: media server con web UI esposta, disclosure dei file condivisi e analisi della superficie di accesso.'
+description: >-
+  Porta 2701 TVersity nel pentest: media server con web UI esposta, disclosure
+  dei file condivisi e analisi della superficie di accesso.
 image: /porta-2701-tversity.webp
-draft: true
+draft: false
 date: 2026-04-13T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,11 @@
 ---
 title: 'Porta 5000 Docker Registry e Flask: Debug, RCE e Secret Leak'
 slug: porta-5000-docker-flask
-description: 'Porta 5000 nel pentest: Docker Registry esposto con immagini e segreti scaricabili, oppure Flask debug con console Werkzeug e RCE dal browser.'
+description: >-
+  Porta 5000 nel pentest: Docker Registry esposto con immagini e segreti
+  scaricabili, oppure Flask debug con console Werkzeug e RCE dal browser.
 image: /porta-5000-docker-flask.webp
-draft: true
+draft: false
 date: 2026-04-14T00:00:00.000Z
 categories:
   - networking

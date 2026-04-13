@@ -1,9 +1,11 @@
 ---
 title: 'Porta 5672 RabbitMQ: AMQP, Code e Management API'
 slug: porta-5672-rabbitmq
-description: 'Porta 5672 RabbitMQ nel pentest: code e messaggi AMQP, credenziali esposte, Management API 15672, injection e rischio Erlang cookie.'
+description: >-
+  Porta 5672 RabbitMQ nel pentest: code e messaggi AMQP, credenziali esposte,
+  Management API 15672, injection e rischio Erlang cookie.
 image: /porta-5672-rabbitmq.webp
-draft: true
+draft: false
 date: 2026-04-14T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,11 @@
 ---
 title: 'Porta 4500 IPsec NAT-T: VPN, IKE e PSK Cracking'
 slug: porta-4500-ipsec-nat-t
-description: 'Porta 4500 IPsec NAT-T nel pentest: IKE, NAT traversal, aggressive mode, PSK cracking e analisi della superficie VPN esposta.'
+description: >-
+  Porta 4500 IPsec NAT-T nel pentest: IKE, NAT traversal, aggressive mode, PSK
+  cracking e analisi della superficie VPN esposta.
 image: /porta-4500-ipsec-nat-t.webp
-draft: true
+draft: false
 date: 2026-04-14T00:00:00.000Z
 categories:
   - networking

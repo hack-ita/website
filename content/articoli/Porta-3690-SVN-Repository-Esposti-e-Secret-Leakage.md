@@ -1,9 +1,11 @@
 ---
 title: 'Porta 3690 SVN: Repository Esposti e Secret Leakage'
 slug: porta-3690-svn
-description: 'Porta 3690 SVN nel pentest: repository esposti, checkout anonimo, history dei commit, source code disclosure e credenziali recuperabili.'
+description: >-
+  Porta 3690 SVN nel pentest: repository esposti, checkout anonimo, history dei
+  commit, source code disclosure e credenziali recuperabili.
 image: /porta-3690-svn.webp
-draft: true
+draft: false
 date: 2026-04-14T00:00:00.000Z
 categories:
   - networking

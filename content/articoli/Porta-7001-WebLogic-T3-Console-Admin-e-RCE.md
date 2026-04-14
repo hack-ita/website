@@ -1,9 +1,11 @@
 ---
 title: 'Porta 7001 WebLogic: T3, Console Admin e RCE'
 slug: porta-7001-weblogic
-description: 'Porta 7001 WebLogic nel pentest: T3 protocol, console admin, CVE RCE pre-auth, SSRF e accesso a Oracle WebLogic Server esposto.'
+description: >-
+  Porta 7001 WebLogic nel pentest: T3 protocol, console admin, CVE RCE pre-auth,
+  SSRF e accesso a Oracle WebLogic Server esposto.
 image: /porta-7001-weblogic .webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

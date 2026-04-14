@@ -1,9 +1,11 @@
 ---
 title: 'Porta 7002 WebLogic SSL: HTTPS, T3S e RCE'
 slug: porta-7002-weblogic-ssl
-description: 'Porta 7002 WebLogic SSL nel pentest: console HTTPS, T3S, certificati TLS, CVE pre-auth e attacchi su Oracle WebLogic Server cifrato.'
+description: >-
+  Porta 7002 WebLogic SSL nel pentest: console HTTPS, T3S, certificati TLS, CVE
+  pre-auth e attacchi su Oracle WebLogic Server cifrato.
 image: /porta-7002-weblogic-ssl.webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,12 @@
 ---
 title: 'Porta 6443 Kubernetes API: Token, Secrets e Cluster Admin'
 slug: porta-6443-kubernetes-api
-description: 'Porta 6443 Kubernetes API nel pentest: token ServiceAccount, secret extraction, accesso ai pod, escalation a cluster-admin e compromissione del cluster.'
+description: >-
+  Porta 6443 Kubernetes API nel pentest: token ServiceAccount, secret
+  extraction, accesso ai pod, escalation a cluster-admin e compromissione del
+  cluster.
 image: /porta-6443-kubernetes-api.webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

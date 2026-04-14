@@ -1,9 +1,11 @@
 ---
 title: 'Porta 5601 Kibana: Dev Tools, Log Leak e Elasticsearch'
 slug: porta-5601-kibana
-description: 'Porta 5601 Kibana nel pentest: Dev Tools Console, query Elasticsearch, exposure dei log, host interni e credenziali sensibili nei dati indicizzati'
+description: >-
+  Porta 5601 Kibana nel pentest: Dev Tools Console, query Elasticsearch,
+  exposure dei log, host interni e credenziali sensibili nei dati indicizzati
 image: /porta-5601-kibana.webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,11 @@
 ---
 title: 'Porta 5900 VNC: No Auth, Brute Force e Desktop Remoto'
 slug: porta-5900-vnc
-description: 'Porta 5900 VNC nel pentest: accesso desktop remoto, istanze senza autenticazione, brute force password, screenshot e session hijacking.'
+description: >-
+  Porta 5900 VNC nel pentest: accesso desktop remoto, istanze senza
+  autenticazione, brute force password, screenshot e session hijacking.
 image: /porta-5900-vnc.webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

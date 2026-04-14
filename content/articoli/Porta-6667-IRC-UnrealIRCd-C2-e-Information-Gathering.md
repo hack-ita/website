@@ -1,9 +1,11 @@
 ---
 title: 'Porta 6667 IRC: UnrealIRCd, C2 e Information Gathering'
 slug: porta-6667-irc
-description: 'Porta 6667 IRC nel pentest: enumerazione server e canali, info leak su utenti e hostname, botnet C2, UnrealIRCd e rischi di hijacking.'
+description: >-
+  Porta 6667 IRC nel pentest: enumerazione server e canali, info leak su utenti
+  e hostname, botnet C2, UnrealIRCd e rischi di hijacking.
 image: /porta-6667-irc.webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

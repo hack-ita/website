@@ -1,9 +1,11 @@
 ---
 title: 'Porta 6379 Redis: No Auth, RCE e Credential Dump'
 slug: porta-6379-redis
-description: 'Porta 6379 Redis nel pentest: accesso senza autenticazione, dump di chiavi e sessioni, SSH key injection, moduli malevoli e RCE.'
+description: >-
+  Porta 6379 Redis nel pentest: accesso senza autenticazione, dump di chiavi e
+  sessioni, SSH key injection, moduli malevoli e RCE.
 image: /porta-6379-redis.webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

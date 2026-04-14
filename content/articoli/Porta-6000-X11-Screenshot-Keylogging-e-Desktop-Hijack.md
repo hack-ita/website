@@ -1,9 +1,11 @@
 ---
 title: 'Porta 6000 X11: Screenshot, Keylogging e Desktop Hijack'
 slug: porta-6000-x11
-description: 'Porta 6000 X11 nel pentest: display remoto esposto, screenshot del desktop, keylogging, input injection e session hijacking su sistemi Linux e Unix.'
+description: >-
+  Porta 6000 X11 nel pentest: display remoto esposto, screenshot del desktop,
+  keylogging, input injection e session hijacking su sistemi Linux e Unix.
 image: /porta-6000-x11.webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

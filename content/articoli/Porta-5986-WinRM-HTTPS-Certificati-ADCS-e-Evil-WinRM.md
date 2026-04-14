@@ -1,9 +1,11 @@
 ---
 title: 'Porta 5986 WinRM HTTPS: Certificati, ADCS e Evil-WinRM'
 slug: porta-5986-winrm-https
-description: 'Porta 5986 WinRM HTTPS nel pentest: certificati client, Evil-WinRM su TLS, abuso ADCS e accesso remoto via certificate-based authentication.'
+description: >-
+  Porta 5986 WinRM HTTPS nel pentest: certificati client, Evil-WinRM su TLS,
+  abuso ADCS e accesso remoto via certificate-based authentication.
 image: /porta-5986-winrm-https.webp
-draft: true
+draft: false
 date: 2026-04-15T00:00:00.000Z
 categories:
   - networking

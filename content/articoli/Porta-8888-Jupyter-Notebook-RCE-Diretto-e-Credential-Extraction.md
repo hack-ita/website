@@ -1,9 +1,12 @@
 ---
 title: 'Porta 8888 Jupyter Notebook: RCE Diretto e Credential Extraction'
 slug: porta-8888-jupyter
-description: 'Porta 8888 Jupyter Notebook senza autenticazione: code execution diretto, token leak, terminal integrato, credenziali hardcoded nei notebook e chain offensiva reale passo dopo passo.'
+description: >-
+  Porta 8888 Jupyter Notebook senza autenticazione: code execution diretto,
+  token leak, terminal integrato, credenziali hardcoded nei notebook e chain
+  offensiva reale passo dopo passo.
 image: /porta-8888-jupyter.webp
-draft: true
+draft: false
 date: 2026-04-17T00:00:00.000Z
 categories:
   - networking

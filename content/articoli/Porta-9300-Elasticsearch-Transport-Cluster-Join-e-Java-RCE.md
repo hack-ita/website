@@ -1,9 +1,12 @@
 ---
 title: 'Porta 9300 Elasticsearch Transport: Cluster Join e Java RCE'
 slug: porta-9300-elasticsearch-cluster
-description: 'Porta 9300 Elasticsearch transport: cluster join non autorizzato, replica dati su nodo malevolo, Java deserialization RCE CVE-2015-5377 e differenze operative dalla porta 9200.'
+description: >-
+  Porta 9300 Elasticsearch transport: cluster join non autorizzato, replica dati
+  su nodo malevolo, Java deserialization RCE CVE-2015-5377 e differenze
+  operative dalla porta 9200.
 image: /porta-9300-elasticsearch-cluster.webp
-draft: true
+draft: false
 date: 2026-04-18T00:00:00.000Z
 categories:
   - networking

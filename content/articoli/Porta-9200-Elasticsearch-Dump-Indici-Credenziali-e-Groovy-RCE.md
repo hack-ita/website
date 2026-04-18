@@ -1,9 +1,12 @@
 ---
 title: 'Porta 9200 Elasticsearch: Dump Indici, Credenziali e Groovy RCE'
 slug: porta-9200-elasticsearch
-description: 'Porta 9200 Elasticsearch senza autenticazione: dump indici con credenziali e PII, ricerca password nei log, Groovy script RCE, CVE-2015-1427, elasticdump e lateral movement da ELK stack.'
+description: >-
+  Porta 9200 Elasticsearch senza autenticazione: dump indici con credenziali e
+  PII, ricerca password nei log, Groovy script RCE, CVE-2015-1427, elasticdump e
+  lateral movement da ELK stack.
 image: /porta-9200-elasticsearch.webp
-draft: true
+draft: false
 date: 2026-04-19T00:00:00.000Z
 categories:
   - networking

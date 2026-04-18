@@ -1,9 +1,12 @@
 ---
 title: 'Porta 10000 Webmin: Backdoor RCE e Root Immediato'
 slug: porta-10000-webmin
-description: 'Porta 10000 Webmin: backdoor CVE-2019-15107 pre-auth RCE root, CVE-2022-0824 file manager, CVE-2024-12828 CVSS 9.9, Metasploit modules e post-exploitation con accesso root completo.'
+description: >-
+  Porta 10000 Webmin: backdoor CVE-2019-15107 pre-auth RCE root, CVE-2022-0824
+  file manager, CVE-2024-12828 CVSS 9.9, Metasploit modules e post-exploitation
+  con accesso root completo.
 image: /porta-10000-webmin.webp
-draft: true
+draft: false
 date: 2026-04-19T00:00:00.000Z
 categories:
   - networking

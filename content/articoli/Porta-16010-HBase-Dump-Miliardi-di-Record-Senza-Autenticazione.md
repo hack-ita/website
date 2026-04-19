@@ -1,9 +1,12 @@
 ---
 title: 'Porta 16010 HBase: Dump Miliardi di Record Senza Autenticazione'
 slug: porta-16010-hbase
-description: 'HBase Master UI sulla 16010 senza auth: enumera tabelle, dumpa dati via REST API e Thrift, leggi token e CDR. Pentest completo con scan, lateral movement Hadoop.'
+description: >-
+  HBase Master UI sulla 16010 senza auth: enumera tabelle, dumpa dati via REST
+  API e Thrift, leggi token e CDR. Pentest completo con scan, lateral movement
+  Hadoop.
 image: /porta-16010-hbase.webp
-draft: true
+draft: false
 date: 2026-04-20T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,12 @@
 ---
 title: 'Porta 27017 MongoDB: Accesso Senza Password, NoSQL Injection e Dump Dati'
 slug: porta-27017-mongodb
-description: 'MongoDB esposto sulla 27017? Accedi senza auth, bypassa il login con $ne, dumpa credenziali e MFA secret, esegui privilege escalation. Pentest completo con payload operativi.'
+description: >-
+  MongoDB esposto sulla 27017? Accedi senza auth, bypassa il login con $ne,
+  dumpa credenziali e MFA secret, esegui privilege escalation. Pentest completo
+  con payload operativi.
 image: /porta-27017-mongodb.webp
-draft: true
+draft: false
 date: 2026-04-20T00:00:00.000Z
 categories:
   - networking

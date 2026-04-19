@@ -1,10 +1,11 @@
 ---
 title: 'Porta 15672 RabbitMQ: da guest:guest a RCE con Erlang Cookie'
 slug: porta-15672-rabbitmq-web
-description: |
-  RabbitMQ management esposto sulla 15672? Con guest:guest leggi ogni messaggio in coda, dumpi hash e ottieni RCE via Erlang cookie. Guida offensiva pratica.
+description: >
+  RabbitMQ management esposto sulla 15672? Con guest:guest leggi ogni messaggio
+  in coda, dumpi hash e ottieni RCE via Erlang cookie. Guida offensiva pratica.
 image: /porta-15672-rabbitmq-web.webp
-draft: true
+draft: false
 date: 2026-04-20T00:00:00.000Z
 categories:
   - networking

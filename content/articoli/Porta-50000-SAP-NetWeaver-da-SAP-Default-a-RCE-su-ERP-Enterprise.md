@@ -1,9 +1,12 @@
 ---
 title: 'Porta 50000 SAP NetWeaver: da SAP* Default a RCE su ERP Enterprise'
 slug: porta-50000-sap
-description: 'SAP Management Console sulla 50000 senza auth: enumera versioni, sfrutta RECON (CVSS 10), abusa RFC con SAP*/06071992 e ottieni OS command execution su tutti i dati ERP.'
+description: >-
+  SAP Management Console sulla 50000 senza auth: enumera versioni, sfrutta RECON
+  (CVSS 10), abusa RFC con SAP*/06071992 e ottieni OS command execution su tutti
+  i dati ERP.
 image: /porta-50000-sap.webp
-draft: true
+draft: false
 date: 2026-04-21T00:00:00.000Z
 categories:
   - networking

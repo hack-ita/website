@@ -1,9 +1,12 @@
 ---
 title: 'Porta 27018 MongoDB Cluster: Accesso ai Nodi Interni e Oplog Dump'
 slug: porta-27018-mongodb-cluster
-description: 'Porta 27018 esposta? Connettiti direttamente ai Secondary del replica set, leggi l''oplog con password in chiaro, bypassa il keyfile e pivota nei nodi del cluster.'
+description: >-
+  Porta 27018 esposta? Connettiti direttamente ai Secondary del replica set,
+  leggi l'oplog con password in chiaro, bypassa il keyfile e pivota nei nodi del
+  cluster.
 image: /porta-27018-mongodb-cluster.webp
-draft: true
+draft: false
 date: 2026-04-21T00:00:00.000Z
 categories:
   - networking

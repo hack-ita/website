@@ -1,9 +1,12 @@
 ---
 title: 'Porta 28017 MongoDB HTTP: Information Disclosure e REST API Senza Auth'
 slug: porta-28017-mongodb-http
-description: 'Porta 28017 aperta? Leggi versione, hostname e log senza credenziali, dumpa dati via REST API e pivota sulla 27017. Solo su MongoDB legacy ≤ 3.4, spesso non patchato.'
+description: >-
+  Porta 28017 aperta? Leggi versione, hostname e log senza credenziali, dumpa
+  dati via REST API e pivota sulla 27017. Solo su MongoDB legacy ≤ 3.4, spesso
+  non patchato.
 image: /porta-28017-mongodb-http.webp
-draft: true
+draft: false
 date: 2026-04-21T00:00:00.000Z
 categories:
   - networking

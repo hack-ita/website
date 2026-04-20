@@ -1,9 +1,12 @@
 ---
 title: 'Porta 33389 RDP: Trovare e Sfruttare RDP su Porte Non Standard'
 slug: porta-33389-rdp-alternate
-description: 'RDP spostato sulla 33389? nmap -sV lo trova in secondi. BlueKeep, Pass-the-Hash e brute force funzionano identici. Cambiare porta non è sicurezza — è un placebo.'
+description: >-
+  RDP spostato sulla 33389? nmap -sV lo trova in secondi. BlueKeep,
+  Pass-the-Hash e brute force funzionano identici. Cambiare porta non è
+  sicurezza — è un placebo.
 image: /porta-33389-rdp-alternate.webp
-draft: true
+draft: false
 date: 2026-04-21T00:00:00.000Z
 categories:
   - networking

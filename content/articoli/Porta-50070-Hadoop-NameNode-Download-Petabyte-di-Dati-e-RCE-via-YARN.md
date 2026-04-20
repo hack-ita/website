@@ -1,9 +1,12 @@
 ---
 title: 'Porta 50070 Hadoop NameNode: Download Petabyte di Dati e RCE via YARN'
 slug: porta-50070-hadoop-namenode
-description: 'HDFS senza Kerberos sulla 50070? Naviga il filesystem, scarica CDR e PII via WebHDFS con user.name=hdfs, poi ottieni shell sul cluster tramite YARN REST API.'
+description: >-
+  HDFS senza Kerberos sulla 50070? Naviga il filesystem, scarica CDR e PII via
+  WebHDFS con user.name=hdfs, poi ottieni shell sul cluster tramite YARN REST
+  API.
 image: /porta-50070-hadoop-namenode.webp
-draft: true
+draft: false
 date: 2026-04-21T00:00:00.000Z
 categories:
   - networking

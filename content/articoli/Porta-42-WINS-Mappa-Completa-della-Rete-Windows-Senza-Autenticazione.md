@@ -1,9 +1,12 @@
 ---
 title: 'Porta 42 WINS: Mappa Completa della Rete Windows Senza Autenticazione'
 slug: porta-42-wins
-description: 'WINS sulla porta 42 senza auth: enumera domain controller, file server e utenti loggati via NetBIOS. Red flag istantaneo per Windows legacy — chain verso AD in 20 minuti.'
+description: >-
+  WINS sulla porta 42 senza auth: enumera domain controller, file server e
+  utenti loggati via NetBIOS. Red flag istantaneo per Windows legacy — chain
+  verso AD in 20 minuti.
 image: /porta-42-wins.webp
-draft: true
+draft: false
 date: 2026-04-22T00:00:00.000Z
 categories:
   - networking

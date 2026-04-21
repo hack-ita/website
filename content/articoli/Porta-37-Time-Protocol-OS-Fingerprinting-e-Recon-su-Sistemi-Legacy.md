@@ -1,9 +1,12 @@
 ---
 title: 'Porta 37 Time Protocol: OS Fingerprinting e Recon su Sistemi Legacy'
 slug: porta-37-time
-description: 'Porta 37 aperta? Time Protocol rivela OS (Windows Server 2003/2008, Cisco IOS), timestamp e uptime. Red flag immediato per tecnologia legacy — chain verso EternalBlue in 15 minuti.'
+description: >-
+  Porta 37 aperta? Time Protocol rivela OS (Windows Server 2003/2008, Cisco
+  IOS), timestamp e uptime. Red flag immediato per tecnologia legacy — chain
+  verso EternalBlue in 15 minuti.
 image: /porta-37-time.webp
-draft: true
+draft: false
 date: 2026-04-22T00:00:00.000Z
 categories:
   - networking

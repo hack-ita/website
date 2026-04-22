@@ -1,9 +1,12 @@
 ---
 title: 'Porta 49 TACACS+: Shared Secret Crack e Network Takeover Cisco'
 slug: porta-49-tacacs
-description: 'TACACS+ sulla 49 con shared secret debole? Bruteforza il key, decifra il traffico con Wireshark e prendi controllo di ogni router, switch e firewall dell''infrastruttura Cisco.'
+description: >-
+  TACACS+ sulla 49 con shared secret debole? Bruteforza il key, decifra il
+  traffico con Wireshark e prendi controllo di ogni router, switch e firewall
+  dell'infrastruttura Cisco.
 image: /porta-49-tacacs (1).webp
-draft: true
+draft: false
 date: 2026-04-23T00:00:00.000Z
 categories:
   - networking

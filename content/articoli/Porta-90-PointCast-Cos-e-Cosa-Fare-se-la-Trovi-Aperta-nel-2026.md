@@ -1,9 +1,12 @@
 ---
 title: 'Porta 90 PointCast: Cos''è e Cosa Fare se la Trovi Aperta nel 2026'
 slug: porta-90-pointcast
-description: 'Porta 90 aperta durante una scansione? PointCast è morto dal 2001. Scopri come identificare il servizio reale, che sia un web server nascosto, proxy o app custom.'
+description: >-
+  Porta 90 aperta durante una scansione? PointCast è morto dal 2001. Scopri come
+  identificare il servizio reale, che sia un web server nascosto, proxy o app
+  custom.
 image: /porta-90-pointcast.webp
-draft: true
+draft: false
 date: 2026-04-23T00:00:00.000Z
 categories:
   - networking

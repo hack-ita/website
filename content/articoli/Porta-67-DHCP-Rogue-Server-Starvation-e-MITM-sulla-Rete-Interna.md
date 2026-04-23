@@ -1,9 +1,12 @@
 ---
 title: 'Porta 67 DHCP: Rogue Server, Starvation e MITM sulla Rete Interna'
 slug: porta-67-dhcp-server
-description: 'Porta 67 senza DHCP snooping? Deploy un rogue server con dnsmasq, avvelena gateway e DNS, cattura hash NTLMv2 con Responder e arriva a Domain Admin in 90 minuti.'
+description: >-
+  Porta 67 senza DHCP snooping? Deploy un rogue server con dnsmasq, avvelena
+  gateway e DNS, cattura hash NTLMv2 con Responder e arriva a Domain Admin in 90
+  minuti.
 image: /porta-67-dhcp-server.webp
-draft: true
+draft: false
 date: 2026-04-24T00:00:00.000Z
 categories:
   - networking

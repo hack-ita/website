@@ -1,9 +1,14 @@
 ---
-title: 'HTB Dante ProLab Walkthrough: Pivoting Multi-Subnet, Active Directory Attack Chain & Full Privilege Escalation'
+title: >-
+  HTB Dante ProLab Walkthrough: Pivoting Multi-Subnet, Active Directory Attack
+  Chain & Full Privilege Escalation
 slug: htb-proloab-dante
-description: 'HTB Dante ProLab walkthrough completo: foothold WordPress, pivoting multi-subnet, Active Directory, DCSync, xp_cmdshell e privilege escalation Windows/Linux.'
+description: >-
+  HTB Dante ProLab walkthrough completo: foothold WordPress, pivoting
+  multi-subnet, Active Directory, DCSync, xp_cmdshell e privilege escalation
+  Windows/Linux.
 image: /dante-walktrough-prolabs.webp
-draft: true
+draft: false
 date: 2026-04-24T00:00:00.000Z
 categories:
   - walkthroughs

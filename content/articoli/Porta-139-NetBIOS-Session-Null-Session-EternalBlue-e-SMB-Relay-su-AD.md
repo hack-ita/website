@@ -1,9 +1,11 @@
 ---
 title: 'Porta 139 NetBIOS Session: Null Session, EternalBlue e SMB Relay su AD'
 slug: porta-139-netbios-session
-description: 'Porta 139 aperta? Enumera utenti con null session, sfrutta MS17-010 su SMBv1 e usa ntlmrelayx se signing è disabilitato. Chain a Domain Admin in 27 minuti.'
+description: >-
+  Porta 139 aperta? Enumera utenti con null session, sfrutta MS17-010 su SMBv1 e
+  usa ntlmrelayx se signing è disabilitato. Chain a Domain Admin in 27 minuti.
 image: /porta-139-netbios-session.webp
-draft: true
+draft: false
 date: 2026-04-24T00:00:00.000Z
 categories:
   - networking

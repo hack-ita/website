@@ -1,9 +1,12 @@
 ---
 title: 'Porta 95 SUPDUP: Remote Terminal Protocol Obsoleto (Rilevanza Storica'
 slug: porta-95-supdup
-description: 'Porta 95 aperta durante una scansione? SUPDUP è defunto dagli anni ''90. Scopri come identificare il servizio reale: web server nascosto, app custom o honeypot.'
+description: >-
+  Porta 95 aperta durante una scansione? SUPDUP è defunto dagli anni '90. Scopri
+  come identificare il servizio reale: web server nascosto, app custom o
+  honeypot.
 image: /porta-95-supdup.webp
-draft: true
+draft: false
 date: 2026-04-24T00:00:00.000Z
 categories:
   - networking

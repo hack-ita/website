@@ -1,9 +1,11 @@
 ---
 title: 'Porta 113 Ident: Cos''è e Cosa Fare se la Trovi Aperta nel 2026'
 slug: porta-113-ident
-description: Porta 113 aperta? Ident è quasi defunto ma rivela username e indica sistemi legacy vulnerabili. Scopri come enumerare e cosa cercare dopo.
+description: >-
+  Porta 113 aperta? Ident è quasi defunto ma rivela username e indica sistemi
+  legacy vulnerabili. Scopri come enumerare e cosa cercare dopo.
 image: /porta-113-ident.webp
-draft: true
+draft: false
 date: 2026-04-25T00:00:00.000Z
 categories:
   - networking

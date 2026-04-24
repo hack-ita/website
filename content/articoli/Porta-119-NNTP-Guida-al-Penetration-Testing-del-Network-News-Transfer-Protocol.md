@@ -1,9 +1,14 @@
 ---
-title: 'Porta 119 NNTP: Guida al Penetration Testing del Network News Transfer Protocol'
+title: >-
+  Porta 119 NNTP: Guida al Penetration Testing del Network News Transfer
+  Protocol
 slug: porta-119-nntp
-description: 'Porta 119 aperta? NNTP è quasi defunto ma può esporre newsgroup con credenziali in chiaro, username e dati confidenziali. Scopri come enumerare e sfruttarlo.'
+description: >-
+  Porta 119 aperta? NNTP è quasi defunto ma può esporre newsgroup con
+  credenziali in chiaro, username e dati confidenziali. Scopri come enumerare e
+  sfruttarlo.
 image: /porta-119-nntp.webp
-draft: true
+draft: false
 date: 2026-04-25T00:00:00.000Z
 categories:
   - networking

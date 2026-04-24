@@ -1,9 +1,12 @@
 ---
 title: 'Porta 135 RPC Windows: Null Session, WMI Exec e Lateral Movement AD'
 slug: porta-135-rpc
-description: 'Porta 135 aperta? Enumera utenti con null session e RID cycling, esegui comandi via WMI/DCOM con Impacket e arriva a Domain Admin in 42 minuti. Guida pentest AD completa.'
+description: >-
+  Porta 135 aperta? Enumera utenti con null session e RID cycling, esegui
+  comandi via WMI/DCOM con Impacket e arriva a Domain Admin in 42 minuti. Guida
+  pentest AD completa.
 image: /porta-135-rpc.webp
-draft: true
+draft: false
 date: 2026-04-25T00:00:00.000Z
 categories:
   - networking

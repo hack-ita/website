@@ -1,9 +1,12 @@
 ---
 title: 'Porta 111 RPCbind: NFS Mount, UID Bypass e Dump Credenziali NIS'
 slug: porta-111-rpcbind
-description: 'RPCbind sulla 111? Enumera NFS e NIS con rpcinfo, monta share anonimi, bypassa root_squash con UID matching e ruba SSH key o hash password. Chain a root in pochi minuti.'
+description: >-
+  RPCbind sulla 111? Enumera NFS e NIS con rpcinfo, monta share anonimi, bypassa
+  root_squash con UID matching e ruba SSH key o hash password. Chain a root in
+  pochi minuti.
 image: /porta-111-rpcbind.webp
-draft: true
+draft: false
 date: 2026-04-25T00:00:00.000Z
 categories:
   - networking

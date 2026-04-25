@@ -1,9 +1,12 @@
 ---
 title: 'Porta 137 NetBIOS: Responder, NTLM Relay e Credential Theft su AD'
 slug: porta-137-netbios
-description: 'NetBIOS sulla port 137 abilitato? Responder cattura hash NTLMv2 in minuti, ntlmrelayx esegue comandi senza crackare. Chain da NBT-NS poisoning a Domain Admin per pentest.'
+description: >-
+  NetBIOS sulla port 137 abilitato? Responder cattura hash NTLMv2 in minuti,
+  ntlmrelayx esegue comandi senza crackare. Chain da NBT-NS poisoning a Domain
+  Admin per pentest.
 image: /porta-137-netbios.webp
-draft: true
+draft: false
 date: 2026-04-26T00:00:00.000Z
 categories:
   - networking

@@ -1,9 +1,14 @@
 ---
-title: 'Porta 138 NetBIOS Datagram: Guida al Penetration Testing del Servizio Broadcast Windows'
+title: >-
+  Porta 138 NetBIOS Datagram: Guida al Penetration Testing del Servizio
+  Broadcast Windows
 slug: porta-138-netbios-datagram
-description: 'Porta 138 aperta? Attack surface minimal nel 2026, ma indica NetBIOS abilitato. Focus su porta 137 con Responder e 445 con SMB — quelli sono i vettori reali.'
+description: >-
+  Porta 138 aperta? Attack surface minimal nel 2026, ma indica NetBIOS
+  abilitato. Focus su porta 137 con Responder e 445 con SMB — quelli sono i
+  vettori reali.
 image: /porta-138-netbios-datagram.webp
-draft: true
+draft: false
 date: 2026-04-26T00:00:00.000Z
 categories:
   - networking

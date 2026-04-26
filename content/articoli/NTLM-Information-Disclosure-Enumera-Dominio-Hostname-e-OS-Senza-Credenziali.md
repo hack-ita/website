@@ -1,9 +1,13 @@
 ---
 title: 'NTLM Information Disclosure: Enumera Dominio, Hostname e OS Senza Credenziali'
 slug: ntlm-information-disclosure
-description: 'L’autenticazione NTLM su HTTP rivela dominio AD, NetBIOS name, hostname e versione OS con una singola GET, senza credenziali. Tecnica di recon essenziale per red team su Exchange e IIS. Scopri comandi curl, Nmap, Burp e difese.'
+description: >-
+  L’autenticazione NTLM su HTTP rivela dominio AD, NetBIOS name, hostname e
+  versione OS con una singola GET, senza credenziali. Tecnica di recon
+  essenziale per red team su Exchange e IIS. Scopri comandi curl, Nmap, Burp e
+  difese.
 image: /ntlm-information-disclosure.webp
-draft: true
+draft: false
 date: 2026-04-27T00:00:00.000Z
 categories:
   - windows

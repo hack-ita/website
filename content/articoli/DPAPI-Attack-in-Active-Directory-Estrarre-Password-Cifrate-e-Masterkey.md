@@ -14,8 +14,6 @@ tags:
   - dpapi
 ---
 
-# DPAPI — Guida Operativa Completa
-
 DPAPI (Data Protection API) è il meccanismo nativo di Windows per cifrare password, token e segreti legati all'identità dell'utente. Browser, Credential Manager, applicazioni di terze parti — tutto passa da qui.
 
 Durante un pentest AD è una delle fonti di credenziali più sottovalutate. Spesso trovi hash crackati, pass-the-hash, Kerberoasting — e intanto le password in chiaro sono lì, cifrate con DPAPI, che nessuno ha guardato.

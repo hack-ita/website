@@ -181,7 +181,7 @@ I primi 16 byte in little-endian sono il GUID della masterkey attiva. Attenzione
 
 ***
 
-## Tecnica 1 — Password utente nota
+## Tecnica 1 — Decriptare DPAPI con Password Utente Nota
 
 ### Step 1 — Trova i Credential files
 

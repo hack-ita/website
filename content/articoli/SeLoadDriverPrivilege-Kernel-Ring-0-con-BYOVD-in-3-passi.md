@@ -1,9 +1,12 @@
 ---
 title: 'SeLoadDriverPrivilege: Kernel Ring-0 con BYOVD in 3 passi'
 slug: seloaddriverprivilege
-description: 'SeLoadDriverPrivilege Enabled? Carica un driver vulnerabile nel kernel, esegui codice ring-0, disabilita EDR e bypassa PPL di LSASS. Guida BYOVD con Capcom.sys e EDRSandBlast.'
+description: >-
+  SeLoadDriverPrivilege Enabled? Carica un driver vulnerabile nel kernel, esegui
+  codice ring-0, disabilita EDR e bypassa PPL di LSASS. Guida BYOVD con
+  Capcom.sys e EDRSandBlast.
 image: /SeLoadDriverPrivilege.webp
-draft: true
+draft: false
 date: 2026-05-06T00:00:00.000Z
 categories:
   - windows

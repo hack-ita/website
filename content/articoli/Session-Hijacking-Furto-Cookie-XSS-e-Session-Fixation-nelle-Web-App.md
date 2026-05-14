@@ -1,9 +1,7 @@
 ---
 title: 'Session Hijacking: Furto Cookie, XSS e Session Fixation nelle Web App'
 slug: session-hijacking
-description: >-
-  Session Hijacking nel pentesting web: furto cookie via XSS, session fixation,
-  sniffing HTTP e takeover account. Analisi flag HttpOnly, Secure e SameSite.
+description: 'Session Hijacking nel pentesting web: furto cookie via XSS, session fixation, sniffing HTTP e takeover account. Analisi flag HttpOnly, Secure e SameSite.'
 image: /session-hijacking.webp
 draft: false
 date: 2026-03-19T00:00:00.000Z
@@ -356,6 +354,8 @@ In 3 giorni: 4 cookie di HR admin catturati. Con un cookie admin: accesso comple
 **Tempo:** 5 minuti per setup XSS, 3 giorni di attesa, accesso persistente per 7 giorni.
 
 ***
+
+Le credenziali rubate tramite session hijacking finiscono spesso nei [dark web marketplaces](https://secureblitz.com/dark-web-marketplaces/), dove vengono vendute insieme ad altri dati sensibili.
 
 ## Errori Comuni
 

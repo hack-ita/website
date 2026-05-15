@@ -1,7 +1,7 @@
 ---
-title: 'Osaka Walkthrough Proving Grounds Practice: Buffer Overflow Windows, ASLR e DEP Bypass, ROP Chain'
+title: 'Osaka Proving Grounds: BOF ,Format String & ROP Chain DEP Bypass'
 slug: osaka
-description: 'Walkthrough Osaka Proving Grounds Practice(OffSec): format string leak, ASLR bypass, buffer overflow, ROP chain per bypassare DEP e SeDebugPrivilege.'
+description: 'Walkthrough Vm Osaka (OffSec PG). Format string leak per bypassare ASLR, ROP chain con VirtualAlloc per DEP, shellcode e SeDebugPrivilege fino a SYSTEM'
 image: /osaka.webp
 draft: false
 date: 2026-03-18T00:00:00.000Z

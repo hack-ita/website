@@ -1,9 +1,11 @@
 ---
 title: 'SeImpersonatePrivilege: Privesc e Potato Attack fino a SYSTEM'
 slug: seimpersonateprivilege
-description: 'SeImpersonatePrivilege spiegato con i Potato attack: da IIS o SQL Server a SYSTEM, privilege escalation windows con i tool moderni usati nei lab.'
+description: >-
+  SeImpersonatePrivilege spiegato con i Potato attack: da IIS o SQL Server a
+  SYSTEM, privilege escalation windows con i tool moderni usati nei lab.
 image: /seimpersonateprivilege.webp
-draft: true
+draft: false
 date: 2026-05-19T00:00:00.000Z
 categories:
   - web-hacking

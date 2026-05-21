@@ -1,9 +1,14 @@
 ---
-title: 'SeAssignPrimaryTokenPrivilege: il bypass ai Potato Attack anche senza SeImpersonatePrivilege'
+title: >-
+  SeAssignPrimaryTokenPrivilege: il bypass ai Potato Attack anche senza
+  SeImpersonatePrivilege
 slug: seassignprimarytokenprivilege
-description: 'Privilege escalation con SeAssignPrimaryTokenPrivilege e al bypass dei Potato Attack su Windows: verifica del privilegio, exploit con GodPotato, JuicyPotato e SweetPotato, scenari reali, errori comuni e mitigazioni.'
+description: >-
+  Privilege escalation con SeAssignPrimaryTokenPrivilege e al bypass dei Potato
+  Attack su Windows: verifica del privilegio, exploit con GodPotato, JuicyPotato
+  e SweetPotato, scenari reali, errori comuni e mitigazioni.
 image: /seassignprimarytokenprivilege.webp
-draft: true
+draft: false
 date: 2026-05-22T00:00:00.000Z
 categories:
   - windows

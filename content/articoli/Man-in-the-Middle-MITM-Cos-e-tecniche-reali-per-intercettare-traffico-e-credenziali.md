@@ -1,12 +1,7 @@
 ---
-title: >-
-  Man in the Middle (MITM): Cos'è e tecniche reali per intercettare traffico e
-  credenziali
+title: 'Man in the Middle (MITM): Cos''è e tecniche reali per intercettare traffico e credenziali'
 slug: man-in-the-middle
-description: >-
-  Guida completa al Man in the Middle: ARP spoofing, SSL stripping, session
-  hijacking, rogue DHCP, Evil Twin e tecniche MITM reali su reti enterprise e
-  Wi-Fi.
+description: 'Guida completa al Man in the Middle: ARP spoofing, SSL stripping, session hijacking, rogue DHCP, Evil Twin e tecniche MITM reali su reti enterprise e Wi-Fi.'
 image: /man-in-the-middle.webp
 draft: false
 date: 2026-03-30T00:00:00.000Z
@@ -58,7 +53,7 @@ Le conseguenze reali di un MITM riuscito:
 
 ### Fase 1: Posizionamento
 
-L'attaccante deve prima posizionarsi nel path del traffico. Questo è il cuore tecnico del MITM: senza questa fase, tutto il resto non è possibile. Le tecniche per farlo sono diverse e verranno approfondite nelle sezioni successive.
+L'attaccante deve prima posizionarsi nel path del traffico o nel suo [WiFi](https://otechworld.com/how-public-wi-fi-became-a-bigger-security-risk-than-ever/). Questo è il cuore tecnico del MITM: senza questa fase, tutto il resto non è possibile. Le tecniche per farlo sono diverse e verranno approfondite nelle sezioni successive.
 
 ### Fase 2: Intercettazione
 

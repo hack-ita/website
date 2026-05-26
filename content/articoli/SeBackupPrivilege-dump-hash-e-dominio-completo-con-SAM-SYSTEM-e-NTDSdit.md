@@ -1,9 +1,12 @@
 ---
 title: 'SeBackupPrivilege: dump hash e dominio completo con SAM, SYSTEM e NTDS.dit'
 slug: sebackupprivilege
-description: 'PrivEsc con SeBackupPrivilege su Windows e Active Directory: estrazione di SAM, SYSTEM e SECURITY, dump offline con secretsdump, accesso a NTDS.dit e impatto reale su domini compromessi.'
+description: >-
+  PrivEsc con SeBackupPrivilege su Windows e Active Directory: estrazione di
+  SAM, SYSTEM e SECURITY, dump offline con secretsdump, accesso a NTDS.dit e
+  impatto reale su domini compromessi.
 image: /sebackupprivilege.webp
-draft: true
+draft: false
 date: 2026-05-26T00:00:00.000Z
 categories:
   - windows

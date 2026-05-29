@@ -1,9 +1,12 @@
 ---
 title: 'SeRestorePrivilege: Da Backup Operator a SYSTEM in 3 passi'
 slug: serestoreprivilege
-description: 'Come abusare SeRestorePrivilege per sovrascrivere binari di sistema e ottenere shell SYSTEM. ImagePath hijack, DLL sideloading, backdoor persistente. Tecnica Red Team.'
+description: >-
+  Come abusare SeRestorePrivilege per sovrascrivere binari di sistema e ottenere
+  shell SYSTEM. ImagePath hijack, DLL sideloading, backdoor persistente. Tecnica
+  Red Team.
 image: /serestoreprivilege.webp
-draft: true
+draft: false
 date: 2026-05-29T00:00:00.000Z
 categories:
   - windows

@@ -12,6 +12,7 @@ subcategories:
 tags:
   - hackthebox
   - applocker
+featured: true
 ---
 
 HTB Hathor è una delle macchine Windows più ostiche di Hack The Box — **rating Insane**, e te ne accorgi subito. Ogni step ha un blocco in più: AppLocker, Windows Defender, firewall outbound, NTLM disabilitato. Non basta saper usare i tool — devi capire come funziona ogni difesa per aggirarla. In questo walkthrough vedi l'intera kill chain: da una web app CMS fino al DCSync finale, passando per DLL hijacking, code signing con certificato rubato dal Recycle Bin e autenticazione Kerberos pura.

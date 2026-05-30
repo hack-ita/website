@@ -3,7 +3,7 @@ title: 'HTB Hathor Walkthrough ITA: AppLocker Bypass, DLL Hijacking e DCSync su 
 slug: htb-hator-walktrough
 description: 'Walkthrough HTB Hathor: AppLocker bypass, DLL hijacking su SMB, code signing con certificato rubato e DCSync senza NTLM. Macchina Windows Insane'
 image: /hator-walktrough-htb.webp
-draft: false
+draft: true
 date: 2026-05-31T00:00:00.000Z
 categories:
   - walkthroughs

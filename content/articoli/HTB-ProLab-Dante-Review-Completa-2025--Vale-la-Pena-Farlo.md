@@ -1,8 +1,8 @@
 ---
-title: 'HTB ProLab Dante: Review Completa 2025 – Vale la Pena Farlo?'
+title: 'HTB ProLab Dante: Review Completa 2026 – Vale la Pena Farlo?'
 slug: htb-proloab-dante
 description: 'Review HTB ProLab Dante: struttura del lab, punti di forza sul pivoting, problemi reali con OS datati e CVE unintended. A chi serve davvero e quando saltarlo.'
-image: /htb-prolab-dante.webp
+image: /HTB-ProLabs-Dante-Recensione.webp
 draft: false
 date: 2026-06-02T00:00:00.000Z
 categories:

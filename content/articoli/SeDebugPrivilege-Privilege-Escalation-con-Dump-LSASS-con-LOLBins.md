@@ -1,9 +1,12 @@
 ---
 title: 'SeDebugPrivilege: Privilege Escalation con Dump LSASS con LOLBins'
 slug: sedebugprivilege
-description: 'SeDebugPrivilege Enabled? Due comandi per dumpare LSASS e ottenere NTLM hash. Tutto con comsvcs.dll built-in di Windows, niente mimikatz su disco. Guida tecnica Red Team.'
+description: >-
+  SeDebugPrivilege Enabled? Due comandi per dumpare LSASS e ottenere NTLM hash.
+  Tutto con comsvcs.dll built-in di Windows, niente mimikatz su disco. Guida
+  tecnica Red Team.
 image: /sedebugprivilege.webp
-draft: true
+draft: false
 date: 2026-06-02T00:00:00.000Z
 categories:
   - web-hacking

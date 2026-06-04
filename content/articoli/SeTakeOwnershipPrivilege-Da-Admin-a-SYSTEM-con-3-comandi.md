@@ -1,9 +1,12 @@
 ---
 title: 'SeTakeOwnershipPrivilege: Da Admin a SYSTEM con 3 comandi'
 slug: setakeownershipprivilege
-description: Come abusare SeTakeOwnershipPrivilege per prendere ownership di binari di sistema e ottenere shell SYSTEM. takeown + icacls + sostituzione binario. Tecnica Red Team.
+description: >-
+  Come abusare SeTakeOwnershipPrivilege per prendere ownership di binari di
+  sistema e ottenere shell SYSTEM. takeown + icacls + sostituzione binario.
+  Tecnica Red Team.
 image: /setakeownershipprivilege.webp
-draft: true
+draft: false
 date: 2026-06-04T00:00:00.000Z
 categories:
   - windows

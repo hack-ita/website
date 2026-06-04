@@ -1,5 +1,5 @@
 ---
-title: 'HTB Sekhmet Walktrough: Node.js Deserialization, WAF Bypass e DPAPI'
+title: 'HTB Sekhmet Walkthrough: Node.js Deserialization, WAF Bypass e DPAPI'
 slug: htb-sekhmet-walktrough
 description: 'HTB Sekhmet Insane,WriteUp Completo: insecure deserialization in node-serialize, bypass ModSecurity con Unicode encoding, ZipCrypto, Kerberos su Linux e DPAPI su Active Directory.'
 image: /Sekhmet-walktrough-hackthebox.webp
@@ -14,8 +14,6 @@ tags:
   - htb-writeup
   - node-serialization
 ---
-
-# HTB Sekhmet: Insecure Deserialization in Node.js, WAF Bypass e Kerberos su Linux
 
 **Difficoltà:** Insane | **OS:** Windows (con VM Linux embedded) | **Release:** Settembre 2022
 

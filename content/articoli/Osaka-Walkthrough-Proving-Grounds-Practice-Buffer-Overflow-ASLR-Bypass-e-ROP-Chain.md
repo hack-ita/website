@@ -1,7 +1,7 @@
 ---
-title: 'Osaka Proving Grounds: BOF ,Format String & ROP Chain DEP Bypass'
+title: 'Osaka Walkthrough – OffSec PG | BOF, ROP Chain & DEP Bypass'
 slug: osaka
-description: 'Walkthrough Vm Osaka (OffSec PG). Format string leak per bypassare ASLR, ROP chain con VirtualAlloc per DEP, shellcode e SeDebugPrivilege fino a SYSTEM'
+description: 'Walkthrough Osaka – OffSec Proving Grounds: format string → ASLR bypass, ROP chain con VirtualAlloc → DEP bypass, shellcode e SeDebugPrivilege → SYSTEM.'
 image: /osaka.webp
 draft: false
 date: 2026-03-18T00:00:00.000Z

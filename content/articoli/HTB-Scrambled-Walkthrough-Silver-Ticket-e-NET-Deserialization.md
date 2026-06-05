@@ -3,7 +3,7 @@ title: 'HTB Scrambled Walkthrough: Silver Ticket e .NET Deserialization'
 slug: htb-scrambled-walkthrough
 description: 'Writeup HTB Scrambled: Kerberoasting, Silver Ticket su MSSQL e RCE via BinaryFormatter insecure deserialization. Analisi statica con dnSpy e ysoserial.net'
 image: /scrambled-walktrough-htb.webp
-draft: true
+draft: false
 date: 2026-06-05T00:00:00.000Z
 categories:
   - walkthroughs
@@ -14,15 +14,15 @@ tags:
   - hack-the-box-scrambled-walktrough
 ---
 
-**Difficoltà:** Medium\
-**OS:** Windows\
-**Temi:** Kerberos-only, Kerberoasting, Silver Ticket, MSSQL, Insecure Deserialization, BinaryFormatter, ysoserial.net
+Scrambled è una Vm/Macchina Windows di HTB (Hack The Box) che disabilita completamente NTLM e forza l'autenticazione Kerberos su tutto. Questo rompe la maggior parte dei tool standard — nxc, smbmap, impacket con flag sbagliati — se non si capisce come funziona Kerberos a basso livello. La parte finale è una deserializzazione insicura via `BinaryFormatter` su un servizio .NET custom, analizzata staticamente con dnSpy.
 
-***
+|                |                                                                                                              |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Difficoltà** | Medium                                                                                                       |
+| **OS**         | Windows                                                                                                      |
+| **Temi**       | Kerberos-only, Kerberoasting, Silver Ticket, MSSQL, Insecure Deserialization, BinaryFormatter, ysoserial.net |
 
-## Premessa
-
-Scrambled è una macchina Windows di HTB(Hack The Box) che disabilita completamente NTLM e forza l'autenticazione Kerberos su tutto. Questo rompe la maggior parte dei tool standard — nxc, smbmap, impacket con flag sbagliati — se non si capisce come funziona Kerberos a basso livello. La parte finale è una deserializzazione insicura via `BinaryFormatter` su un servizio .NET custom, analizzata staticamente con dnSpy.
+\--- Questo rompe la maggior parte dei tool standard — nxc, smbmap, impacket con flag sbagliati — se non si capisce come funziona Kerberos a basso livello. La parte finale è una deserializzazione insicura via `BinaryFormatter` su un servizio .NET custom, analizzata staticamente con dnSpy.
 
 ***
 
@@ -107,6 +107,7 @@ Navigando sul sito aziendale emerge:
 * NTLM è stato disabilitato a causa di un attacco NTLM relay subito in precedenza
 * La policy di reset password prevede che la nuova password sia uguale allo username
 * In uno screenshot della sezione IT Support si vede il percorso `C:\Users\ksimpson>` — username trovato
+* La pagina `/salesorders.html` descrive l'applicazione Sales Order Client e menziona esplicitamente la porta 4411 e un'opzione "Enable debug logging" — primo indizio concreto su cosa gira su quella porta
 
 Si tenta `ksimpson:ksimpson` via Kerberos:
 
@@ -499,15 +500,14 @@ nc -lvnp 80
 
 ### Invio del payload
 
-Si apre `ScrambleClient.exe` sulla VM Windows, si imposta il server su `DC1.scrm.local`, si esegue il login con username `scrmdev` (bypass lato client), si accede all'applicazione.
-
-Poi via `nc` direttamente:
+Il server **non richiede autenticazione** per ricevere ordini — `LOGON` è un controllo implementato solo nel client, non nel server. Si può mandare `UPLOAD_ORDER` direttamente senza fare login:
 
 ```bash
 nc 10.129.8.212 4411
-LOGON;scrmdev
 UPLOAD_ORDER;<payload_base64>
 ```
+
+**Nota sul debug log:** attivando il logging nell'app (`Tools > Enable Debug Logging`) viene creato `ScrambleDebugLog.txt` nella stessa cartella dell'exe. Il file mostra esattamente il formato dei comandi e la riga `Binary formatter init successful` — conferma diretta che il server usa BinaryFormatter per deserializzare.
 
 Output dal server:
 

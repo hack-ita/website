@@ -14,7 +14,7 @@ tags:
   - hack-the-box-scrambled-walktrough
 ---
 
-Scrambled è una Vm/Macchina Windows di HTB (Hack The Box) che disabilita completamente NTLM e forza l'autenticazione Kerberos su tutto. Questo rompe la maggior parte dei tool standard — nxc, smbmap, impacket con flag sbagliati — se non si capisce come funziona Kerberos a basso livello. La parte finale è una deserializzazione insicura via `BinaryFormatter` su un servizio .NET custom, analizzata staticamente con dnSpy.
+Scrambled è una macchina/vm Windows di HTB (Hack The Box) che disabilita completamente NTLM e forza l'autenticazione Kerberos su tutto. Questo rompe la maggior parte dei tool standard — nxc, smbmap, impacket con flag sbagliati — se non si capisce come funziona Kerberos a basso livello. La parte finale è una deserializzazione insicura via `BinaryFormatter` su un servizio .NET custom, analizzata staticamente con dnSpy.
 
 |                |                                                                                                              |
 | -------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -278,39 +278,92 @@ A questo punto è chiaro che la strada non passa da AD ma dall'applicazione cust
 
 Nella share `IT` (accessibile come `miscsvc`) si trovano `ScrambleClient.exe` e `ScrambleLib.dll` in `Apps\Sales Order Client`.
 
-Si analizza la DLL con **dnSpy**, decompilatore per assembly .NET.
+Si analizza la DLL con **dnSpy**, decompilatore per assembly .NET che converte il binario in codice C# leggibile.
 
 ### Come navigare dnSpy
 
 In Assembly Explorer, espandi **ScrambleLib** — le classi custom. Ignora tutto il resto (`ScrambleLib.My`, `Type References`, ecc.) — boilerplate VB.NET autogenerato, non interessante.
 
+### Regola base per leggere codice da hacker
+
+Non serve capire tutto — serve trovare il percorso dall'input esterno alla funzione pericolosa. Cerca:
+
+* **Input dall'esterno** — quello che arriva dalla rete, da parametri, da file
+* **Funzioni pericolose** — `Deserialize`, `Execute`, `Process.Start`, `eval`
+* **Confronti su credenziali** — `string.Compare`, `==` su username/password
+* Il resto è codice di supporto — ignoralo
+
+> Regola per l'ethical hacker: non serve capire tutto il codice — serve trovare il percorso dall'input alla funzione pericolosa.
+
+***
+
 ### ScrambleNetShared – il protocollo
+
+Prima classe da aprire. Contiene solo costanti:
 
 ```csharp
 public const string CODE_LOGON = "LOGON";
-public const string CODE_LIST_ORDERS = "LIST_ORDERS";
 public const string CODE_UPLOAD_ORDER = "UPLOAD_ORDER";
+public const string CODE_LIST_ORDERS = "LIST_ORDERS";
 public const string CODE_QUIT = "QUIT";
 public const char MessagePartSeparator = ';';
+public const char ContentListSeparator = '|';
+public const int ServerPort = 4411;
 ```
 
-Protocollo testuale su porta 4411. Formato: `COMANDO;PARAMETRO`. Ora ha senso il banner che avevamo visto all'inizio.
+`public const` = variabile pubblica con valore fisso che non cambia mai.
+
+Questa classe ci dà il protocollo completo — i comandi, i separatori, la porta. Tutto quello che vedevamo connettendoci con `nc` era definito qui.
+
+***
 
 ### ScrambleNetClient.Logon – developer backdoor
 
 ```csharp
-if (string.Compare(Username, "scrmdev", true) == 0)
+// dentro la classe ScrambleNetClient
+public bool Logon(string Username, string Password)
 {
-    Log.Write("Developer logon bypass used");
-    result = true;
+    if (string.Compare(Username, "scrmdev", true) == 0)
+    {
+        Log.Write("Developer logon bypass used");
+        result = true;  // ← ritorna true senza verificare nulla
+    }
 }
 ```
 
-Se l'username è `scrmdev`, il client restituisce `true` senza mandare nulla al server. Il bypass è **lato client** — aprendo l'exe e inserendo `scrmdev` come username si accede senza credenziali valide.
+`string.Compare(Username, "scrmdev", true)` confronta l'username con la stringa `"scrmdev"` ignorando maiuscole/minuscole.
+
+Se corrisponde → ritorna `true` direttamente, senza mandare nulla al server. La password viene completamente ignorata.
+
+Questo bypass esiste solo nel client — il server non sa niente di `scrmdev`.
+
+***
+
+### SalesOrder – la classe serializzabile
+
+```csharp
+[Serializable]  // ← permesso di serializzazione
+public class SalesOrder
+{
+    public string ReferenceNumber { get; set; }
+    public string QuoteReference { get; set; }
+    public string SalesRep { get; set; }
+    public List<string> OrderItems { get; set; }
+    public DateTime DueDate { get; set; }
+    public double TotalCost { get; set; }
+}
+```
+
+`[Serializable]` è un attributo — dice a .NET "questa classe può essere serializzata/deserializzata". Senza di esso `BinaryFormatter` rifiuta di toccarla.
+
+I campi sono solo dati: testo, lista, data, numero. Niente di eseguibile — non è qui la vulnerabilità.
+
+***
 
 ### SalesOrder.DeserializeFromBase64 – il punto vulnerabile
 
 ```csharp
+// dentro la classe SalesOrder
 public static SalesOrder DeserializeFromBase64(string Base64)
 {
     byte[] buffer = Convert.FromBase64String(Base64);
@@ -322,7 +375,55 @@ public static SalesOrder DeserializeFromBase64(string Base64)
 }
 ```
 
-`BinaryFormatter.Deserialize` ricostruisce oggetti .NET da byte grezzi — inclusi metodi eseguiti durante la deserializzazione. Il cast `(SalesOrder)` avviene **dopo** la deserializzazione. Questo significa che il codice malevolo viene eseguito prima che il cast possa fallire.
+Riga per riga da ethical hacker:
+
+**`Convert.FromBase64String(Base64)`** — converte il payload base64 che abbiamo mandato in bytes. Quei bytes finiscono in `buffer`.
+
+**`new BinaryFormatter()`** — crea il deserializzatore. Da solo non fa niente — è la riga dopo che conta.
+
+**`binaryFormatter.Deserialize(memoryStream)`** — qui parte tutto. Prende i bytes del nostro payload e li esegue senza controllare cosa contengono.
+
+**`(SalesOrder)`** — il cast, avviene **dopo** la deserializzazione. Se l'oggetto non è un `SalesOrder` → errore. Ma il nostro codice è già stato eseguito prima.
+
+***
+
+### Come viene costruito il messaggio
+
+```csharp
+// dentro ScrambleNetClient
+string text = ScrambleNetRequest.GetCodeFromMessageType(Request.Type) + ";" + Request.Parameter + "\n";
+streamWriter.Write(text);
+```
+
+Il client costruisce il messaggio concatenando comando + `;` + parametro. Questo spiega perché mandavamo `UPLOAD_ORDER;base64payload`.
+
+***
+
+### Flusso completo dall'input all'RCE
+
+```
+nc manda → UPLOAD_ORDER;AAEAAAD...base64payload
+
+↓ server splitta sul ;
+
+array[1] = "AAEAAAD...base64payload"  ← nostro input
+
+↓
+
+Convert.FromBase64String → bytes in buffer
+
+↓
+
+binaryFormatter.Deserialize(buffer)  ← codice eseguito qui
+
+↓
+
+(SalesOrder) cast → ERROR_GENERAL  ← ma è già troppo tardi
+
+↓
+
+shell come nt authority\system
+```
 
 ***
 

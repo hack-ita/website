@@ -1,9 +1,12 @@
 ---
 title: 'SeCreateSymbolicLinkPrivilege: Symlink Attack a Windows da Shell'
 slug: secreatesymboliclinkprivilege
-description: 'Da semplice user a SYSTEM sostituendo file di sistema con un symlink: cosa puoi fare con SeCreateSymbolicLinkPrivilege e mklink. Privilege escalation e tecnica Red Team.'
+description: >-
+  Da semplice user a SYSTEM sostituendo file di sistema con un symlink: cosa
+  puoi fare con SeCreateSymbolicLinkPrivilege e mklink. Privilege escalation e
+  tecnica Red Team.
 image: /SeCreateSymbolicLinkPrivilege.webp
-draft: true
+draft: false
 date: 2026-06-09T00:00:00.000Z
 categories:
   - windows

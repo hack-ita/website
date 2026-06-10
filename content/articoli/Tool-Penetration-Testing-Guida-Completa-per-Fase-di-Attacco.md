@@ -3,7 +3,7 @@ title: 'Tool Penetration Testing: Guida Completa per Fase di Attacco"'
 slug: tool-penetration-testing
 description: 'Tutti i tool offensivi per il penetration testing organizzati per fase di attacco: recon, exploitation, post-exploitation, pivoting, AD. Con attack chain reali per CTF, OSCP, OSEP e red team.'
 image: /tool-penetration-testing.webp
-draft: true
+draft: false
 date: 2026-06-10T00:00:00.000Z
 categories:
   - tools

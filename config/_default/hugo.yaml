@@ -1,21 +1,18 @@
-baseURL: 'https://hackita.it'
-languageCode: it
 defaultContentLanguage: it
-title: HackIta
 enableRobotsTXT: true
 enableEmoji: true
-
 enableGitInfo: false
-
 outputFormats:
   articolisitemap:
-    baseName: 'sitemap'
-    mediaType: 'application/xml'
+    baseName: sitemap
+    mediaType: application/xml
     isPlainText: false
     notAlternative: true
-
 outputs:
   section:
     - html
     - articolisitemap
     - rss
+baseURL: 'https://hackita.it'
+languageCode: it
+title: Ethical Hacking | Pentest e Sicurezza Informatica | Hackita

@@ -2,7 +2,7 @@
 title: 'HTB Haze Walkthrough: Splunk RCE e AD Attack Chain'
 slug: htb-haze-walkthrough
 description: 'Writeup HTB Haze: CVE-2024-36991 su Splunk, decryption credenziali con splunksecrets, GMSA abuse, Shadow Credentials su AD e RCE fino a SYSTEM.'
-image: /splunk-walkthrough-htb.webp
+image: /haze-writeup-walktrough-hackthebox.webp
 draft: false
 date: 2026-06-11T00:00:00.000Z
 categories:

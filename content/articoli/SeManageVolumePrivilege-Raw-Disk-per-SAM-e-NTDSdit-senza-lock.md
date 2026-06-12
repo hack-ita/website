@@ -1,9 +1,12 @@
 ---
 title: 'SeManageVolumePrivilege: Raw Disk per SAM e NTDS.dit senza lock'
 slug: semanagevolumeprivilege
-description: 'Come usare SeManageVolumePrivilege e RawCopy per estrarre SAM, SYSTEM e NTDS.dit dal disco fisico, bypassando lock ed ACL. Tecnica Red Team con raw device access.'
+description: >-
+  Come usare SeManageVolumePrivilege e RawCopy per estrarre SAM, SYSTEM e
+  NTDS.dit dal disco fisico, bypassando lock ed ACL. Tecnica Red Team con raw
+  device access.
 image: /SeManageVolumePrivilege.webp
-draft: true
+draft: false
 date: 2026-06-12T00:00:00.000Z
 categories:
   - windows

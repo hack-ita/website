@@ -1,10 +1,7 @@
 ---
 title: 'VPN: protocolli, sicurezza e vulnerabilità (WireGuard, OpenVPN, IPSec)'
 slug: vpn
-description: >-
-  Come funzionano e cosa sono le VPN a livello tecnico: IPSec, OpenVPN,
-  WireGuard, L2TP e PPTP. Architettura dei tunnel, attacchi reali,
-  misconfigurazioni e analisi in pentest.
+description: 'Come funzionano e cosa sono le VPN a livello tecnico: IPSec, OpenVPN, WireGuard, L2TP e PPTP. Architettura dei tunnel, attacchi reali, misconfigurazioni e analisi in pentest.'
 image: /VPN.webp
 draft: false
 date: 2026-03-30T00:00:00.000Z
@@ -488,6 +485,8 @@ Con Nmap sulle porte tipiche: UDP 500/4500 (IPSec), UDP 1194 (OpenVPN), UDP 5182
 
 Le VPN non sono tutte uguali. PPTP è morto crittograficamente dal 2012 ma ancora presente in produzione. IPSec in Aggressive Mode con PSK deboli è la finding più comune in assessment enterprise. OpenVPN sicuro ma spesso mal configurato. WireGuard è il futuro — ma richiede gestione attenta delle chiavi.
 
+Per chi vuole verificare dal punto di vista dell'utente finale se la propria VPN è configurata correttamente, [questa guida](https://otechworld.com/how-to-actually-tell-if-your-vpn-is-keeping-your-data-private/) offre un approccio pratico.
+
 In un engagement, gli endpoint VPN sono tra i target con il più alto rapporto finding/effort. Trovare IKEv1 Aggressive Mode attivo, un server PPTP esposto, o credenziali VPN salvate su un sistema compromesso sono tutti percorsi diretti verso la rete interna.
 
 Approfondisci i protocolli correlati:
@@ -503,12 +502,8 @@ Approfondisci i protocolli correlati:
 * [Sniffing: catturare traffico VPN e handshake](https://hackita.it/articoli/sniffing)
 * [IPv4/IPv6: dual-stack e VPN split tunneling](https://hackita.it/articoli/ipv4-ipv6)
 
-Riferimento ufficiale: [RFC 4301 — Security Architecture for IPsec](https://datatracker.ietf.org/doc/html/rfc4301) | [WireGuard Whitepaper](https://www.wireguard.com/papers/wireguard.pdf)
+Riferimento ufficiale: [RFC 4301 — Security Architecture for IPsec](https://datatracker.ietf.org/doc/html/rfc4301) |
 
 ***
 
-Le VPN aziendali mal configurate sono una delle porte d'ingresso più comuni nei breach reali. Se vuoi sapere come regge la tua:
-[hackita.it/servizi](https://hackita.it/servizi)
-
-Se HackITA ti è utile nel percorso OSCP o nel lavoro quotidiano:
-[hackita.it/supporto](https://hackita.it/supporto)
+Le VPN aziendali mal configurate sono una delle porte d'ingresso più comuni nei breach reali.

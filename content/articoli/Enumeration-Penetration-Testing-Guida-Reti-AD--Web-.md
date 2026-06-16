@@ -1,9 +1,11 @@
 ---
 title: 'Enumeration Penetration Testing: Guida Reti, AD & Web '
 slug: enumeration
-description: 'Enumeration offensiva 2026: host discovery, SMB, LDAP, Kerberos, BloodHound, web fuzzing e post-compromise. Da zero a domain admin.'
+description: >-
+  Enumeration offensiva 2026: host discovery, SMB, LDAP, Kerberos, BloodHound,
+  web fuzzing e post-compromise. Da zero a domain admin.
 image: /enumeration-pentest.webp
-draft: true
+draft: false
 date: 2026-06-16T00:00:00.000Z
 categories:
   - guides-resources

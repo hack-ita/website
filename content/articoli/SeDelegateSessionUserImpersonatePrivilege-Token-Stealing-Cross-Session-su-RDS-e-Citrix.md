@@ -1,9 +1,14 @@
 ---
-title: 'SeDelegateSessionUserImpersonatePrivilege: Token Stealing Cross-Session su RDS e Citrix'
+title: >-
+  SeDelegateSessionUserImpersonatePrivilege: Token Stealing Cross-Session su RDS
+  e Citrix
 slug: sedelegatesessionuserimpersonateprivilege
-description: Come sfruttare SeDelegateSessionUserImpersonatePrivilege per impersonare utenti in sessioni RDS attive. Token stealing cross-session con NtObjectManager. Privesc e Tecniche Red Team.
+description: >-
+  Come sfruttare SeDelegateSessionUserImpersonatePrivilege per impersonare
+  utenti in sessioni RDS attive. Token stealing cross-session con
+  NtObjectManager. Privesc e Tecniche Red Team.
 image: /seldegatesessionuserimpersonateprivilege.webp
-draft: true
+draft: false
 date: 2026-06-16T00:00:00.000Z
 categories:
   - web-hacking

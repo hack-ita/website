@@ -465,7 +465,7 @@ cat conn.log | zeek-cut proto id.resp_p duration | grep "udp" | sort -k2 -n
 ## FAQ sulla VPN
 
 **Cos'è una VPN e a cosa serve in sicurezza informatica?**
-Una VPN (Virtual Private Network) è un tunnel cifrato che collega due o più endpoint attraverso una rete pubblica. In sicurezza, serve per proteggere il traffico in transito, connettere sedi remote, fornire accesso sicuro alla rete aziendale da remoto, e isolare segmenti di rete. La sicurezza effettiva dipende dal protocollo usato e dalla configurazione.
+Una VPN (Virtual Private Network) è un tunnel cifrato che collega due o più endpoint attraverso una rete pubblica. In sicurezza, serve per proteggere il traffico in transito, connettere sedi remote, fornire accesso sicuro alla rete aziendale da remoto, e isolare segmenti di rete.à La sicurezza effettiva dipende dal protocollo usato e dalla configurazione.
 
 **Qual è la differenza tra OpenVPN e WireGuard?**
 OpenVPN è maturo, flessibile, e altamente configurabile — ma questa flessibilità è anche il suo punto debole: una configurazione errata può renderlo vulnerabile. WireGuard ha un codice base molto più piccolo (\~4.000 righe vs \~100.000), algoritmi crittografici fissi e non negoziabili, e performance superiori. WireGuard è la scelta migliore per nuovi deployment; OpenVPN rimane lo standard per ambienti eterogenei legacy.
@@ -501,6 +501,7 @@ Approfondisci i protocolli correlati:
 * [Man in the Middle: VPN come protezione e come target](https://hackita.it/articoli/man-in-the-middle)
 * [Sniffing: catturare traffico VPN e handshake](https://hackita.it/articoli/sniffing)
 * [IPv4/IPv6: dual-stack e VPN split tunneling](https://hackita.it/articoli/ipv4-ipv6)
+* Se gestisci la sicurezza VPN come freelance o libero professionista senza un reparto IT dedicato, può essere utile anche una panoramica meno tecnica e orientata al contesto lavorativo: [Guida alla sicurezza informatica per i freelance](https://cybersafetyzone.com/cybersecurity-for-freelancers/).
 
 Riferimento ufficiale: [RFC 4301 — Security Architecture for IPsec](https://datatracker.ietf.org/doc/html/rfc4301) |
 

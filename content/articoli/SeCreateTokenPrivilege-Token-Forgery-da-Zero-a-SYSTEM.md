@@ -1,9 +1,12 @@
 ---
 title: 'SeCreateTokenPrivilege: Token Forgery da Zero a SYSTEM'
 slug: secreatetokenprivilege
-description: Trovato SeCreateTokenPrivilege su un account non di sistema? Crea token con SID SYSTEM e Domain Admins da zero. NtCreateToken per shell SYSTEM. Tecnica Red Team.
+description: >-
+  Trovato SeCreateTokenPrivilege su un account non di sistema? Crea token con
+  SID SYSTEM e Domain Admins da zero. NtCreateToken per shell SYSTEM. Tecnica
+  Red Team.
 image: /SeCreateTokenPrivilege.webp
-draft: true
+draft: false
 date: 2026-06-17T00:00:00.000Z
 categories:
   - windows

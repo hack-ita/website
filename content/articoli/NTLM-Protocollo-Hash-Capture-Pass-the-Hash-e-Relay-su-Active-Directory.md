@@ -1,9 +1,12 @@
 ---
 title: 'NTLM: Protocollo, Hash Capture, Pass-the-Hash e Relay su Active Directory'
 slug: ntlm
-description: 'NTLM spiegato da cima a fondo: handshake, cattura NetNTLMv2 con Responder, Pass-the-Hash, coercizione e CVE 2026 attivi. Decision point NTLM vs Kerberos nel pentest enterprise.'
+description: >-
+  NTLM spiegato da cima a fondo: handshake, cattura NetNTLMv2 con Responder,
+  Pass-the-Hash, coercizione e CVE 2026 attivi. Decision point NTLM vs Kerberos
+  nel pentest enterprise.
 image: /ntlm-protocollo-attacchi-hash-capture-relay.webp
-draft: true
+draft: false
 date: 2026-06-17T00:00:00.000Z
 categories:
   - windows

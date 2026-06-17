@@ -1,0 +1,173 @@
+# Hackita.it — 301 redirects to fix 404s
+# Format: <from>  <to>  <status>.  Netlify matches <from> with or without trailing slash.
+# Verified each target slug against content/articoli/ frontmatter on 2026-06-17.
+
+# Exploit-DB
+/articoli/exploit-db                                /articoli/exploitdb/                                301
+/articoli/epxloit-db                                /articoli/exploitdb/                                301
+
+# Evil-WinRM
+/articoli/evil-winrm                                /articoli/evilwinrm/                                301
+
+# Brute Force
+/articoli/bruteforce                                /articoli/brute-force/                              301
+
+# TLS / SSL
+/articoli/tls                                       /articoli/tls-ssl/                                  301
+
+# MITM
+/articoli/mitm                                      /articoli/man-in-the-middle/                        301
+
+# Metasploit
+/articoli/metasploit-framework                      /articoli/metasploit/                               301
+
+# Recon-ng
+/articoli/recon-ng                                  /articoli/reconng/                                  301
+
+# Evilginx
+/articoli/evilginx                                  /articoli/evilginx2/                                301
+
+# XSS
+/articoli/xss-reflected                             /articoli/reflected-xss/                            301
+/articoli/stored-xss                                /articoli/xss-stored/                               301
+/articoli/xss-dom                                   /articoli/dom-xss/                                  301
+
+# Burp Suite
+/articoli/burp-suite-guida                          /articoli/burp-suite/                               301
+
+# OWASP ZAP
+/articoli/zap                                       /articoli/owasp-zap/                                301
+
+# OSPF / EIGRP / BGP / RIP
+/articoli/ospf-eigrp-bgp                            /articoli/ospf-eigrp-bgp-rip/                       301
+
+# Porte
+/articoli/porta-20-ftp                              /articoli/porta-ftp-20/                             301
+/articoli/porta-135-msrpc                           /articoli/porta-135-rpc/                            301
+/articoli/porta-1900-ssdp                           /articoli/porta-1900-ssdp-upnp/                     301
+
+# LLDP
+/articoli/lldp-link-layer-discovery-protocol        /articoli/lldp/                                     301
+
+# STP
+/articoli/stp-rstp                                  /articoli/stp/                                      301
+
+# VLAN
+/articoli/vlan-802-1q                               /articoli/vlan/                                     301
+
+# AWS Privilege Escalation
+/articoli/aws-privilege                             /articoli/aws-privilege-escalation/                 301
+
+# Scheduled Task
+/articoli/scheduled                                 /articoli/scheduled-task/                           301
+
+# Social Engineer
+/articoli/socialengineering                         /articoli/socialengineer/                           301
+/articoli/social-engineering                        /articoli/socialengineer/                           301
+
+# MySQL
+/articoli/mysql                                     /articoli/porta-3306-mysql/                         301
+
+# PostgreSQL
+/articoli/postgresql                                /articoli/porta-5432-postgresql/                    301
+
+# HTTP / HTTPS
+/articoli/http                                      /articoli/http-https/                               301
+
+# Osquery
+/articoli/osqueryi                                  /articoli/osquery/                                  301
+
+# GTFOBins
+/articoli/gtfobins-exploitation                     /articoli/gtfobins/                                 301
+
+# FTP
+/articoli/ftp                                       /articoli/porta-ftp-20/                             301
+
+# SMTP
+/articoli/smtp                                      /articoli/porta-25-smtp/                            301
+
+# LDAP
+/articoli/ldap                                      /articoli/porta-389-ldap/                           301
+
+# WiFi
+/articoli/wifi                                      /articoli/wifi-802-11/                              301
+
+# ADCS
+/articoli/esc14-adcs                                /articoli/adesc14-adcs/                             301
+/articoli/esc15-adcs                                /articoli/adesc15-adcs/                             301
+
+# SSTI
+/articoli/ssti                                      /articoli/ssti-server-side-template-injection/      301
+
+# WebSocket
+/articoli/websocket-attack                          /articoli/websocket-hijacking/                      301
+
+# GraphQL
+/articoli/graphql-attack                            /articoli/graphql-exploitation/                     301
+/articoli/graphql-security                          /articoli/graphql-exploitation/                     301
+
+# JWT
+/articoli/jwt-attack                                /articoli/jwt/                                      301
+
+# Kernel
+/articoli/kernel-exploits                           /articoli/kernel/                                   301
+/articoli/kernel-exploits-linux                     /articoli/kernel/                                   301
+
+# Buffer Overflow
+/articoli/buffer-overflow                           /articoli/windows-buffer-overflow-exploit/          301
+/articoli/rop-chain                                 /articoli/windows-buffer-overflow-exploit/          301
+
+# ARP
+/articoli/arp-address                               /articoli/arp/                                      301
+/articoli/arp-address-resolution-protocol           /articoli/arp/                                      301
+
+# SMUX
+/articoli/smux                                      /articoli/porta-199-smux/                           301
+
+# Rexec
+/articoli/rexec                                     /articoli/porta-512-rexec/                          301
+
+# MSFConsole  (source had a literal space; encoded as %20)
+/articoli/msfco%20nsole                             /articoli/msfconsole/                               301
+
+# Kerberos
+/articoli/porta-88-kerberos                         /articoli/kerberos/                                 301
+
+# DNS
+/articoli/porta-53-dns                              /articoli/dns/                                      301
+
+# Hadoop
+/articoli/hadoop-hdfs                               /articoli/porta-50070-hadoop-namenode/              301
+
+# NetBIOS
+/articoli/netbios-name                              /articoli/porta-137-netbios/                        301
+
+# NTLM
+/articoli/kerberoasting                             /articoli/kerberos/                                 301
+
+# WMI
+/articoli/wmi                                       /articoli/wmic/                                     301
+
+# RPC
+/articoli/rpc                                       /articoli/porta-135-rpc/                            301
+
+# API Hacking
+/articoli/api-hacking                               /articoli/api-modern-web-attacks-guida-completa/    301
+
+# Privilege Escalation
+/articoli/privesc                                   /articoli/linux-privesc/                            301
+/articoli/privilege-escalation                      /articoli/linux-privesc/                            301
+
+# MSFVenom
+/articoli/msfvenom                                  /articoli/msfconsole/                               301
+
+# Crontab
+/articoli/crontab-backdoor                          /articoli/crontab/                                  301
+
+# System pages
+/formazione                                         /servizi/                                           301
+/supporta                                           /supporto/                                          301
+/dona                                               /supporto/                                          301
+
+# SQL Injections
+/articoli/sql-injection-guida-completa            /articoli/sql-injection-classica/                   301

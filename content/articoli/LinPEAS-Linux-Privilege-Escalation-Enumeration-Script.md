@@ -1,9 +1,7 @@
 ---
 title: 'LinPEAS: Linux Privilege Escalation Enumeration Script'
 slug: linpeas
-description: >-
-  LinPEAS è uno script di enumerazione automatica per Linux che identifica SUID,
-  capabilities, credenziali esposte e vettori di privilege escalation.
+description: 'LinPEAS è uno script di enumerazione automatica per Linux che identifica SUID, capabilities, credenziali esposte e vettori di privilege escalation.'
 image: /Gemini_Generated_Image_u0bu6ku0bu6ku0bu.webp
 draft: false
 date: 2026-02-16T00:00:00.000Z
@@ -1153,4 +1151,4 @@ Gli autori di questo articolo e HackIta non sono responsabili per usi impropri.
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Se cerchi un percorso più strutturato, Boston Institute of Analytics è un [cybersecurity training institute](https://bostoninstituteofanalytics.org/cyber-security-and-ethical-hacking/) da considerare.

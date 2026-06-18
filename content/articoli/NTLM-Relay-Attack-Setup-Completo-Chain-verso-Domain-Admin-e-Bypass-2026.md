@@ -1,9 +1,12 @@
 ---
 title: 'NTLM Relay Attack: Setup Completo, Chain verso Domain Admin e Bypass 2026'
 slug: ntlm-relay
-description: 'NTLM Relay dalla teoria all''exploitation: Responder, ntlmrelayx, relay verso SMB/LDAP/ADCS, coercizione PetitPotam, IPv6 mitm6 e chain Domain Admin. Workflow reale per pentest enterprise.'
+description: >-
+  NTLM Relay dalla teoria all'exploitation: Responder, ntlmrelayx, relay verso
+  SMB/LDAP/ADCS, coercizione PetitPotam, IPv6 mitm6 e chain Domain Admin.
+  Workflow reale per pentest enterprise.
 image: /ntlm-relay-attack-responder-ntlmrelayx.webp
-draft: true
+draft: false
 date: 2026-06-18T00:00:00.000Z
 categories:
   - networking

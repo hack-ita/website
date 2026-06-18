@@ -3,7 +3,7 @@ title: 'HTB Sizzle Walkthrough: ADCS ESC1, Kerberoasting, DCSync'
 slug: sizzle-walkthrough-hack-the-box
 description: 'Writeup completo di Hack The Box Sizzle (Insane): SCF attack, ADCS ESC1, AppLocker bypass, Kerberos bloccato, BloodHound e DCSync fino ad Administrator.'
 image: /sizzle-walkthrough-hack-the-box.webp
-draft: true
+draft: false
 date: 2026-06-18T00:00:00.000Z
 categories:
   - walkthroughs

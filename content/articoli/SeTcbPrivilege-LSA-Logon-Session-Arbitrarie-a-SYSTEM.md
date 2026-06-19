@@ -1,9 +1,11 @@
 ---
 title: 'SeTcbPrivilege: LSA Logon Session Arbitrarie a SYSTEM'
 slug: setcbprivilege
-description: Trovato SeTcbPrivilege su un account non di sistema? Crei sessioni LSA con SID Domain Admins e ottieni SYSTEM senza condizioni esterne. Tecnica Red Team.
+description: >-
+  Trovato SeTcbPrivilege su un account non di sistema? Crei sessioni LSA con SID
+  Domain Admins e ottieni SYSTEM senza condizioni esterne. Tecnica Red Team.
 image: /setcbprivilege.webp
-draft: true
+draft: false
 date: 2026-06-19T00:00:00.000Z
 categories:
   - windows

@@ -1,9 +1,12 @@
 ---
 title: 'Kerberoasting: Guida Completa — SPN, TGS Cracking e Domain Admin nel 2026'
 slug: kerberoasting
-description: 'Kerberoasting su Active Directory: enumeration SPN con GetUserSPNs e Rubeus, downgrade RC4, hashcat, targeted kerberoasting e OPSEC reale. Da utente di dominio a credenziali privilegiate.'
+description: >-
+  Kerberoasting su Active Directory: enumeration SPN con GetUserSPNs e Rubeus,
+  downgrade RC4, hashcat, targeted kerberoasting e OPSEC reale. Da utente di
+  dominio a credenziali privilegiate.
 image: /kerberoasting-spn-tgs-cracking-hashcat.webp
-draft: true
+draft: false
 date: 2026-06-20T00:00:00.000Z
 categories:
   - windows

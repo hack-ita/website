@@ -1,9 +1,12 @@
 ---
 title: 'SeTrustedCredManAccessPrivilege: Dump RDP e Vault con Mimikatz'
 slug: setrustedcredmanaccessprivilege
-description: 'Estrai password RDP e credenziali dal Credential Manager con SeTrustedCredManAccessPrivilege. Usa cmdkey, mimikatz, SharpDPAPI. Guida Red Team passo passo.'
+description: >-
+  Estrai password RDP e credenziali dal Credential Manager con
+  SeTrustedCredManAccessPrivilege. Usa cmdkey, mimikatz, SharpDPAPI. Guida Red
+  Team passo passo.
 image: /SeTrustedCredManAccessPrivilege.webp
-draft: true
+draft: false
 date: 2026-06-21T00:00:00.000Z
 categories:
   - web-hacking

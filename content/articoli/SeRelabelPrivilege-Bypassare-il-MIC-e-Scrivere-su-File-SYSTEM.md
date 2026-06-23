@@ -1,9 +1,12 @@
 ---
 title: 'SeRelabelPrivilege: Bypassare il MIC e Scrivere su File SYSTEM'
 slug: serelabelprivilege
-description: 'Scopri come usare SeRelabelPrivilege per abbassare il livello di integrità di file e directory, bypassare il Mandatory Integrity Control e ottenere una shell SYSTEM.'
+description: >-
+  Scopri come usare SeRelabelPrivilege per abbassare il livello di integrità di
+  file e directory, bypassare il Mandatory Integrity Control e ottenere una
+  shell SYSTEM.
 image: /SeRelabelPrivilege.webp
-draft: true
+draft: false
 date: 2026-06-24T00:00:00.000Z
 categories:
   - windows

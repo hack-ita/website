@@ -1,9 +1,12 @@
 ---
 title: 'SeSecurityPrivilege: Cancella Log, SACL e SIEM Evasion'
 slug: sesecurityprivilege
-description: 'Come usare SeSecurityPrivilege per leggere e cancellare il Security Log, rimuovere SACL e operare invisibili su Windows. Guida Red Team OpSec con verifica SIEM.'
+description: >-
+  Come usare SeSecurityPrivilege per leggere e cancellare il Security Log,
+  rimuovere SACL e operare invisibili su Windows. Guida Red Team OpSec con
+  verifica SIEM.
 image: /SeSecurityPrivilege.webp
-draft: true
+draft: false
 date: 2026-06-23T00:00:00.000Z
 categories:
   - windows

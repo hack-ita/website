@@ -1,9 +1,12 @@
 ---
 title: 'Certify: Enumerazione e Abuso di AD CS da Windows con C#'
 slug: certify
-description: Certify è il tool C# di GhostPack per enumerare e sfruttare AD CS da Windows senza dipendenze Python. Scopri come usarlo per trovare template vulnerabili e richiedere certificati per l'escalation a Domain Admin.
+description: >-
+  Certify è il tool C# di GhostPack per enumerare e sfruttare AD CS da Windows
+  senza dipendenze Python. Scopri come usarlo per trovare template vulnerabili e
+  richiedere certificati per l'escalation a Domain Admin.
 image: /certify-ad-cs.webp
-draft: true
+draft: false
 date: 2026-06-03T00:00:00.000Z
 categories:
   - tools

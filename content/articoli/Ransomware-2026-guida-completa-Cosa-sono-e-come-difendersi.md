@@ -1,9 +1,12 @@
 ---
 title: 'Ransomware 2026: guida completa .Cosa sono e come difendersi'
 slug: ransomware
-description: 'Guida completa al ransomware 2026: cos''è, come funziona, attacchi storici (WannaCry, LockBit), doppia estorsione, RaaS e best practice per difendersi con backup, MFA e Zero Trust.'
+description: >-
+  Guida completa al ransomware 2026: cos'è, come funziona, attacchi storici
+  (WannaCry, LockBit), doppia estorsione, RaaS e best practice per difendersi
+  con backup, MFA e Zero Trust.
 image: /ransomware-2026-attacchi-difese.webp
-draft: true
+draft: false
 date: 2026-06-02T00:00:00.000Z
 categories:
   - guides-resources

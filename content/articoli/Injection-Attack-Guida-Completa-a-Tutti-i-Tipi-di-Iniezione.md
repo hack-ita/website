@@ -1,9 +1,13 @@
 ---
 title: 'Injection Attack: Guida Completa a Tutti i Tipi di Iniezione'
 slug: injection-attacks-guida-completa
-description: 'Guida completa agli injection attack: SQL injection, command injection, LDAP, XPath, SSTI, XXE, CRLF, log injection, EL, NoSQL e GraphQL. Cos''è l''iniezione, come funziona, come si trova e come si exploita. Hub con link a tutte le guide specifiche.'
+description: >-
+  Guida completa agli injection attack: SQL injection, command injection, LDAP,
+  XPath, SSTI, XXE, CRLF, log injection, EL, NoSQL e GraphQL. Cos'è l'iniezione,
+  come funziona, come si trova e come si exploita. Hub con link a tutte le guide
+  specifiche.
 image: /injection-attacks-guida-completa.webp
-draft: true
+draft: false
 date: 2026-06-05T00:00:00.000Z
 categories:
   - web-hacking

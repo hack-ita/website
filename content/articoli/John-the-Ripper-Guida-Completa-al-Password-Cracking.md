@@ -1,9 +1,12 @@
 ---
 title: 'John the Ripper: Guida Completa al Password Cracking'
 slug: john-the-ripper
-description: 'Guida completa a John the Ripper (Jumbo): estrai hash da ZIP, SSH, KeePass, PDF, Office con *2john; crack con wordlist e regole. Confronto con hashcat e cheat sheet finale.'
+description: >-
+  Guida completa a John the Ripper (Jumbo): estrai hash da ZIP, SSH, KeePass,
+  PDF, Office con *2john; crack con wordlist e regole. Confronto con hashcat e
+  cheat sheet finale.
 image: /john-the-ripper-password-cracking.webp
-draft: true
+draft: false
 date: 2026-06-01T00:00:00.000Z
 categories:
   - tools

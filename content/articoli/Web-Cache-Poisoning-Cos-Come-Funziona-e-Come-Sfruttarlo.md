@@ -1,11 +1,13 @@
 ---
 title: 'Web Cache Poisoning: Cos''è, Come Funziona e Come Sfruttarlo'
 slug: cache-poisoning
-description: |+
-  Guida completa al web cache poisoning: scopri cos'è, come funziona il cache poisoning, tecniche di exploitation (unkeyed inputs, CPDoS) e come trasformarlo in account takeover. Esempi pratici e CDN-specific.
+description: >+
+  Guida completa al web cache poisoning: scopri cos'è, come funziona il cache
+  poisoning, tecniche di exploitation (unkeyed inputs, CPDoS) e come
+  trasformarlo in account takeover. Esempi pratici e CDN-specific.
 
 image: /web-cache-poisoning.webp
-draft: true
+draft: false
 date: 2026-06-04T00:00:00.000Z
 categories:
   - web-hacking

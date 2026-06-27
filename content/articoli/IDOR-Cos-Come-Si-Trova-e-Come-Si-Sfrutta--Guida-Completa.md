@@ -1,9 +1,12 @@
 ---
 title: 'IDOR: Cos''è, Come Si Trova e Come Si Sfrutta — Guida Completa'
 slug: idor
-description: 'IDOR (Insecure Direct Object Reference) spiegato dal punto di vista del pentester: come si identifica, come si enumera, come si scala a account takeover e data breach. Con esempi reali e checklist operativa.'
+description: >-
+  IDOR (Insecure Direct Object Reference) spiegato dal punto di vista del
+  pentester: come si identifica, come si enumera, come si scala a account
+  takeover e data breach. Con esempi reali e checklist operativa.
 image: /idor-attacco.webp
-draft: true
+draft: false
 date: 2026-06-05T00:00:00.000Z
 categories:
   - web-hacking

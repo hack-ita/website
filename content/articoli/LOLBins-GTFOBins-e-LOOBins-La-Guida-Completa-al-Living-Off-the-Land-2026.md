@@ -1,9 +1,12 @@
 ---
 title: 'LOLBins, GTFOBins e LOOBins: La Guida Completa al Living Off the Land (2026)'
 slug: lolbins
-description: 'Guida completa al Living Off the Land (LotL), LOLBins, GTFOBins e LOOBins per Windows Linux e macOS nel 2026. Comandi, tecniche di evasione EDR, privilege escalation, lateral movement e post-exploitation con binari nativi e LOLBAS'
+description: >-
+  Guida completa al Living Off the Land (LotL), LOLBins, GTFOBins e LOOBins per
+  Windows Linux e macOS nel 2026. Comandi, tecniche di evasione EDR, privilege
+  escalation, lateral movement e post-exploitation con binari nativi e LOLBAS
 image: /lolbins-gtfobins-guida-completa-pentesting-2026.webp
-draft: true
+draft: false
 date: 2026-06-29T00:00:00.000Z
 categories:
   - guides-resources

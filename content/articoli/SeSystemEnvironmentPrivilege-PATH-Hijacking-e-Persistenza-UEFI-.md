@@ -1,9 +1,12 @@
 ---
 title: 'SeSystemEnvironmentPrivilege: PATH Hijacking e Persistenza UEFI '
 slug: sesystemenvironmentprivilege
-description: 'Sfrutta SeSystemEnvironmentPrivilege per PATH hijacking e shell SYSTEM. Persistenza UEFI che sopravvive a wipe del disco. Guida Red Team con registry, Process Monitor e Chipsec.'
+description: >-
+  Sfrutta SeSystemEnvironmentPrivilege per PATH hijacking e shell SYSTEM.
+  Persistenza UEFI che sopravvive a wipe del disco. Guida Red Team con registry,
+  Process Monitor e Chipsec.
 image: /SeSystemEnvironmentPrivilege (1).webp
-draft: true
+draft: false
 date: 2026-06-30T00:00:00.000Z
 categories:
   - web-hacking

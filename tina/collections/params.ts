@@ -8,6 +8,14 @@ const ParamSettings: Collection = {
   match: { include: "params" }, // only params.yaml
   ui: { allowedActions: { create: false, delete: false } },
   fields: [
+    {
+      type: "string",
+      name: "description",
+      label: "Site Meta Description",
+      description:
+        "Default meta description used for SEO when a page has no description of its own. Keep it under ~160 characters.",
+      ui: { component: "textarea" },
+    },
     { type: "number", name: "reading_speed", label: "Reading Speed" },
     {
       type: "object",

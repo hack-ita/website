@@ -11,11 +11,12 @@
         </p>
         {{ end }}
         
-        <form 
-            action="POST" 
-            name="query" 
-            data-netlify="true" 
-            netlify-honeypot="bot-field" 
+        <form
+            name="query"
+            method="POST"
+            action="/grazie/"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
             data-captcha-form
             class="lg:p-5 rounded-md lg:border border-primary flex flex-col gap-5">
                 <!-- Netlify hidden inputs -->

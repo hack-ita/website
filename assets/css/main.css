@@ -278,8 +278,30 @@ h1, h2 {
   @apply text-primary;
 }
 
+/* In-content headings use a smaller, hierarchical scale so they stay
+   visually distinct from the article title (the page <h1>). */
+.prose h1 {
+  @apply text-[max(32px,min(44px,3.5vw))] leading-tight mt-12 mb-6;
+}
+
 .prose h2 {
-  @apply mt-15 mb-10;
+  @apply text-[max(26px,min(34px,3vw))] leading-tight mt-10 mb-5;
+}
+
+.prose h3 {
+  @apply text-[max(22px,min(28px,2.5vw))] leading-snug mt-8 mb-4;
+}
+
+.prose h4 {
+  @apply text-[max(19px,min(22px,2vw))] leading-snug mt-6 mb-3;
+}
+
+.prose h5 {
+  @apply text-lg leading-snug mt-5 mb-2;
+}
+
+.prose h6 {
+  @apply text-base leading-snug mt-4 mb-2;
 }
 
 .prose blockquote {

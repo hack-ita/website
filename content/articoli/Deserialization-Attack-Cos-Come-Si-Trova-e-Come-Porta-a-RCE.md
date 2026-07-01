@@ -3,7 +3,7 @@ title: 'Deserialization Attack: Cos''è, Come Si Trova e Come Porta a RCE'
 slug: deserialization-attack
 description: ' Deserialization attack spiegato dall''inizio: cos''è la serializzazione, perché è pericolosa, come si exploita in PHP, Java, Python e .NET con ysoserial e phpggc. Guida passo passo per principianti e pentester.'
 image: /deserialization-attack-java-php-python.webp
-draft: true
+draft: false
 date: 2026-07-01T00:00:00.000Z
 categories:
   - web-hacking

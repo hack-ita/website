@@ -1,9 +1,12 @@
 ---
 title: 'Windows Privilege Escalation 2026: Guida Completa ai Token Privilege (Se*)'
 slug: windowsprivilegeescalation
-description: 'Mappa completa dei token privilege Windows sfruttabili in un pentest. Da whoami /priv a SYSTEM: cheat sheet, tabelle, workflow e link alle guide operative.'
+description: >-
+  Mappa completa dei token privilege Windows sfruttabili in un pentest. Da
+  whoami /priv a SYSTEM: cheat sheet, tabelle, workflow e link alle guide
+  operative.
 image: /windows-privilege-escalation-token-cheat-sheet.webp
-draft: true
+draft: false
 date: 2026-07-01T00:00:00.000Z
 categories:
   - web-hacking

@@ -1,9 +1,12 @@
 ---
 title: 'Certipy: Guida Completa all''Enumerazione e Abuso di AD CS'
 slug: certipy
-description: 'Guida completa a Certipy per AD CS: find, req, auth, relay, forge, shadow. Enumerazione template vulnerabili (ESC1-ESC16), richiesta certificati, autenticazione e Golden Certificate. Comandi e scenari reali.'
+description: >-
+  Guida completa a Certipy per AD CS: find, req, auth, relay, forge, shadow.
+  Enumerazione template vulnerabili (ESC1-ESC16), richiesta certificati,
+  autenticazione e Golden Certificate. Comandi e scenari reali.
 image: /certipy-ad-cs-exploitation.webp
-draft: true
+draft: false
 date: 2026-07-03T00:00:00.000Z
 categories:
   - tools

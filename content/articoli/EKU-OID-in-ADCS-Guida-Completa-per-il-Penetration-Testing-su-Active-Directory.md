@@ -1,9 +1,12 @@
 ---
 title: 'EKU OID in ADCS: Guida Completa per il Penetration Testing su Active Directory'
 slug: adcs-eku-oid-offensive
-description: 'Tutti gli EKU OID dei certificati Active Directory spiegati in ottica offensiva: quali sfruttare in ESC1–ESC16, attack flow PKINIT, detection Event ID, FAQ e tabella completa con rilevanza offensiva.'
+description: >-
+  Tutti gli EKU OID dei certificati Active Directory spiegati in ottica
+  offensiva: quali sfruttare in ESC1–ESC16, attack flow PKINIT, detection Event
+  ID, FAQ e tabella completa con rilevanza offensiva.
 image: /adcs-eku-oid-certificate-template-pentest.webp
-draft: true
+draft: false
 date: 2026-07-02T00:00:00.000Z
 categories:
   - windows

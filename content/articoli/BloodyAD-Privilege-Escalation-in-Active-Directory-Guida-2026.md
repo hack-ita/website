@@ -1,9 +1,12 @@
 ---
 title: 'BloodyAD: Privilege Escalation in Active Directory (Guida 2026)'
 slug: bloodyad
-description: 'BloodyAD:autenticazione PTH/PTT, abuso ACE (GenericAll, WriteDACL, RBCD), Shadow Credentials, Bad Successor 2025 e autobloody.Pentest,payload,detection e bypass'
+description: >-
+  BloodyAD:autenticazione PTH/PTT, abuso ACE (GenericAll, WriteDACL, RBCD),
+  Shadow Credentials, Bad Successor 2025 e autobloody.Pentest,payload,detection
+  e bypass
 image: /bloodyad-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-04T00:00:00.000Z
 categories:
   - tools

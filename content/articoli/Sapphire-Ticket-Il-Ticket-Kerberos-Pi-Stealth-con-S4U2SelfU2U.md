@@ -1,9 +1,12 @@
 ---
 title: 'Sapphire Ticket: Il Ticket Kerberos Più Stealth con S4U2Self+U2U'
 slug: sapphire-ticket
-description: 'Sapphire Ticket: il ticket Kerberos più stealth. Combina S4U2Self+U2U per il PAC autentico del KDC. Guida Impacket -impersonate, differenze con Golden/Diamond, detection e mitigazione.'
+description: >-
+  Sapphire Ticket: il ticket Kerberos più stealth. Combina S4U2Self+U2U per il
+  PAC autentico del KDC. Guida Impacket -impersonate, differenze con
+  Golden/Diamond, detection e mitigazione.
 image: /sapphire-ticket-active-directory-attack-hackita.webp
-draft: true
+draft: false
 date: 2026-07-08T00:00:00.000Z
 categories:
   - windows

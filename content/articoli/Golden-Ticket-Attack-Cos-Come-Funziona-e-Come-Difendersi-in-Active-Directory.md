@@ -1,9 +1,14 @@
 ---
-title: 'Golden Ticket Attack: Cos''è, Come Funziona e Come Difendersi in Active Directory'
+title: >-
+  Golden Ticket Attack: Cos'è, Come Funziona e Come Difendersi in Active
+  Directory
 slug: golden-ticket
-description: 'Il Golden Ticket è l''attacco più pericoloso in Active Directory. Scopri come funziona, come forgiare un TGT con l''hash di krbtgt, come rilevarlo e come difenderti con il doppio reset. Guida completa.'
+description: >-
+  Il Golden Ticket è l'attacco più pericoloso in Active Directory. Scopri come
+  funziona, come forgiare un TGT con l'hash di krbtgt, come rilevarlo e come
+  difenderti con il doppio reset. Guida completa.
 image: /golden-ticket-windows-cos'è-come-sfruttarlo.webp
-draft: true
+draft: false
 date: 2026-07-08T00:00:00.000Z
 categories:
   - windows

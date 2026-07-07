@@ -1,9 +1,13 @@
 ---
 title: 'Silver Ticket Attack: Cos''è, Come Funziona e Come Difendersi in AD'
 slug: silver-ticket
-description: 'Il Silver Ticket forgia un TGS Kerberos usando l''hash di un account di servizio, bypassando il KDC completamente. Guida completa: come ottenerlo, forgiarlo con Mimikatz, Rubeus e Impacket, scenari per CIFS, LDAP, MSSQL, HTTP, e come rilevarlo.'
+description: >-
+  Il Silver Ticket forgia un TGS Kerberos usando l'hash di un account di
+  servizio, bypassando il KDC completamente. Guida completa: come ottenerlo,
+  forgiarlo con Mimikatz, Rubeus e Impacket, scenari per CIFS, LDAP, MSSQL,
+  HTTP, e come rilevarlo.
 image: /silver-ticket-active-directory-AD-attack-hackita.webp
-draft: true
+draft: false
 date: 2026-07-08T00:00:00.000Z
 categories:
   - windows

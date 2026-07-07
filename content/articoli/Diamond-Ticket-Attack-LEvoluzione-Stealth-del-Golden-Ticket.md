@@ -1,9 +1,11 @@
 ---
 title: 'Diamond Ticket Attack: L''Evoluzione Stealth del Golden Ticket'
 slug: diamond-ticket
-description: 'Diamond Ticket: variante stealth del Golden Ticket con TGT reale per bypassare MDI. Guida Rubeus /ldap /opsec, Impacket, detection e reset krbtgt.'
+description: >-
+  Diamond Ticket: variante stealth del Golden Ticket con TGT reale per bypassare
+  MDI. Guida Rubeus /ldap /opsec, Impacket, detection e reset krbtgt.
 image: /diamond-ticket-ad-persistence-attack-kerberos.webp
-draft: true
+draft: false
 date: 2026-07-07T00:00:00.000Z
 categories:
   - windows

@@ -1,10 +1,7 @@
 ---
-title: 'Sapphire Ticket: Il Ticket Kerberos Più Stealth con S4U2Self+U2U'
+title: 'Sapphire Ticket: Ticket Kerberos Stealth S4U2Self+U2U'
 slug: sapphire-ticket
-description: >-
-  Sapphire Ticket: il ticket Kerberos più stealth. Combina S4U2Self+U2U per il
-  PAC autentico del KDC. Guida Impacket -impersonate, differenze con
-  Golden/Diamond, detection e mitigazione.
+description: 'Sapphire Ticket: il ticket Kerberos più stealth. Combina S4U2Self+U2U per il PAC autentico del KDC. Guida Impacket -impersonate, differenze con Golden/Diamond, detection e mitigazione.'
 image: /sapphire-ticket-active-directory-attack-hackita.webp
 draft: false
 date: 2026-07-08T00:00:00.000Z
@@ -21,11 +18,9 @@ tags:
 
 # Sapphire Ticket Attack: Il Ticket Kerberos Più Stealth in Assoluto
 
+Il Sapphire Ticket usa S4U2Self+U2U — due estensioni del protocollo Kerberos — per ottenere il PAC (Privilege Attribute Certificate, cioè la lista dei gruppi) di un utente privilegiato **direttamente dal KDC**, senza mai forgiarlo. Quel PAC autentico viene iniettato nel proprio TGT legittimo e re-firmato con l'hash krbtgt. Il risultato: AS-REQ reale nei log, PAC completamente autentico, attributi identici a quelli del KDC. La variante più difficile da rilevare della serie. Creato da Charlie Bromberg (@ShutdownRepo, 2022)
+
 **Se sei alle prime armi:** In Active Directory, l'autenticazione passa per Kerberos — un sistema di "biglietti" (ticket) che provano la tua identità senza ritrasmettere la password ogni volta. Il KDC (Key Distribution Center), che gira sui Domain Controller, emette questi ticket. Il Sapphire Ticket è una tecnica che finge di essere un utente privilegiato (es. Domain Admin) creando un ticket praticamente identico a uno emesso dal KDC stesso — ma senza averne l'autorizzazione. È la variante più sofisticata di una famiglia di attacchi che comprende [Golden Ticket](https://hackita.it/articoli/golden-ticket/), [Silver Ticket](https://hackita.it/articoli/silver-ticket/) e [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/). Per capirlo a fondo, è utile conoscere prima come funziona [Kerberos](https://hackita.it/articoli/kerberos/).
-
-> **TL;DR:** Il Sapphire Ticket usa S4U2Self+U2U — due estensioni del protocollo Kerberos — per ottenere il PAC (Privilege Attribute Certificate, cioè la lista dei gruppi) di un utente privilegiato **direttamente dal KDC**, senza mai forgiarlo. Quel PAC autentico viene iniettato nel proprio TGT legittimo e re-firmato con l'hash krbtgt. Il risultato: AS-REQ reale nei log, PAC completamente autentico, attributi identici a quelli del KDC. La variante più difficile da rilevare della serie. Creato da Charlie Bromberg (@ShutdownRepo, 2022).
-
-***
 
 ## Glossario rapido
 
@@ -590,8 +585,6 @@ Il pattern di questa serie Kerberos è sempre lo stesso: ogni mitigazione genera
 * [MITRE ATT\&CK – T1558.001: Forge Kerberos Tickets](https://attack.mitre.org/techniques/T1558/001/)
 * [ShutdownRepo – Sapphire Ticket PR #1411 (Impacket)](https://github.com/fortra/impacket/pull/1411)
 * [The Hacker Recipes – Sapphire Tickets](https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/sapphire)
-* [Palo Alto Unit42 – Precious Gemstones: Next-Gen Kerberos Attacks](https://unit42.paloaltonetworks.com/next-gen-kerberos-attacks/)
-* [HackTricks – Diamond Ticket (include Sapphire)](https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/diamond-ticket.html)
 * [Microsoft – New-KrbtgtKeys.ps1](https://github.com/microsoft/New-KrbtgtKeys.ps1)
 
 > Uso esclusivo in ambienti autorizzati.

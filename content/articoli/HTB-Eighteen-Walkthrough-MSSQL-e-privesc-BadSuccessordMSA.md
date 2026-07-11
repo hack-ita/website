@@ -15,7 +15,7 @@ tags:
 
 # Hack The Box (HTB) Eighteen Walkthrough : da MSSQL Impersonation a Domain Admin con BadSuccessor (dMSA)
 
-**Risposta rapida:** Eighteen è una macchina Windows Server 2025 di HackTheBox che parte da un'impersonation MSSQL per arrivare a un hash Werkzeug PBKDF2 da craccare, prosegue con un password spraying che apre l'accesso WinRM, e si chiude sfruttando **BadSuccessor** ([CVE-2025-53779](https://www.ictpower.it/sistemi-operativi/windows-server-2025-delegated-managed-service-accounts-dmsa.htm)): un abuso della migrazione dei **Delegated Managed Service Account (dMSA)**, la nuova tipologia di account di servizio introdotta in Windows Server 2025, che permette a un utente con un semplice permesso di scrittura su una OU di ottenere i privilegi di Domain Admin senza toccare alcun gruppo privilegiato.
+Eighteen è una macchina Windows Server 2025 di HackTheBox che parte da un'impersonation MSSQL per arrivare a un hash Werkzeug PBKDF2 da craccare, prosegue con un password spraying che apre l'accesso WinRM, e si chiude sfruttando **BadSuccessor** ([CVE-2025-53779](https://www.ictpower.it/sistemi-operativi/windows-server-2025-delegated-managed-service-accounts-dmsa.htm)): un abuso della migrazione dei **Delegated Managed Service Account (dMSA)**, la nuova tipologia di account di servizio introdotta in Windows Server 2025, che permette a un utente con un semplice permesso di scrittura su una OU di ottenere i privilegi di Domain Admin senza toccare alcun gruppo privilegiato.
 
 ## 1. Ricognizione iniziale
 
@@ -76,7 +76,7 @@ enum_impersonate
 
 Per approfondire l'enumerazione e l'abuso di MSSQL (impersonation, link server, xp\_cmdshell e tecniche correlate) vedi l'articolo dedicato su hackita: [Porta 1433 - MSSQL](https://hackita.it/articoli/porta-1433-mssql/).
 
-Non conoscendo ancora l'hash reale dell'amministratore (va craccato, come vedremo tra poco), il tentativo più rapido è generare un hash Werkzeug di cui si conosce già la password in chiaro e inserirlo direttamente nella tabella, così da avere subito un accesso admin funzionante senza aspettare il cracking:
+Non conoscendo ancora l'hash reale dell'amministratore (va craccato, come vedremo tra poco), il tentativo più rapido è generare un hash Werkzeug di cui si conosce già la password in chiaro e inserirlo direttamente nella tabella, così da avere subito un accesso admin funzionante senza aspettare il cracking. Cerco online un generatore di hash Werkzeug e creo l'hash che inserirò nel database.
 
 ```sql
 INSERT INTO users (full_name, username, email, password_hash, is_admin, created_at)

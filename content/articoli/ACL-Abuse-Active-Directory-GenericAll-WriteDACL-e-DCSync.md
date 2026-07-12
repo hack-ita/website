@@ -1,9 +1,11 @@
 ---
 title: 'ACL Abuse Active Directory: GenericAll, WriteDACL e DCSync'
 slug: acl-abuse
-description: 'Guida all’ACL abuse in Active Directory: GenericAll, WriteDACL, reset password, RBCD e DCSync con BloodHound, PowerView, bloodyAD e Impacket.'
+description: >-
+  Guida all’ACL abuse in Active Directory: GenericAll, WriteDACL, reset
+  password, RBCD e DCSync con BloodHound, PowerView, bloodyAD e Impacket.
 image: /acl-abuse-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-13T00:00:00.000Z
 categories:
   - windows

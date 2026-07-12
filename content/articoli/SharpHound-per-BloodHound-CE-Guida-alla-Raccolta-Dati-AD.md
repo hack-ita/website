@@ -1,9 +1,11 @@
 ---
 title: 'SharpHound per BloodHound CE: Guida alla Raccolta Dati AD'
 slug: sharphound
-description: 'SharpHound per BloodHound CE: raccolta dati Active Directory, flag principali, opzioni stealth e importazione per mappare i path di escalation.'
+description: >-
+  SharpHound per BloodHound CE: raccolta dati Active Directory, flag principali,
+  opzioni stealth e importazione per mappare i path di escalation.
 image: /sharphound-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-13T00:00:00.000Z
 categories:
   - tools

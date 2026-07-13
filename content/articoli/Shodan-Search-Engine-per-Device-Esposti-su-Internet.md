@@ -1,7 +1,7 @@
 ---
-title: 'Shodan: Cos''è e Come Funziona il Motore di Ricerca IoT'
+title: 'Shodan: Guida a Dork, Query e Filtri Avanzati (2026)'
 slug: shodan
-description: 'Shodan: cos''è e come funziona il motore di ricerca per dispositivi IoT esposti online. Guida a query, filtri e reconnaissance per attack surface mapping (2026)'
+description: 'Shodan: dork pratici per MongoDB, IoT, ICS e CVE, filtri avanzati, CLI, API, InternetDB e cheat sheet completo per reconnaissance passiva e pentest (2026).'
 image: /shodan-search-engine-guide.webp
 draft: false
 date: 2026-02-25T00:00:00.000Z
@@ -17,7 +17,7 @@ tags:
 
 ## Cos'è Shodan
 
-Shodan scansiona continuamente l'intero spazio IPv4 pubblico (4.3 miliardi di indirizzi) raccogliendo banner, certificati, metadata e servizi esposti. Invece di indicizzare pagine web, indicizza porte [TCP](https://hackita.it/articoli/tcp)/[UDP](https://hackita.it/articoli/udp) aperte: webcam, router, server MongoDB, sistemi SCADA industriali, database senza autenticazione, pannelli di amministrazione esposti.
+Shodan è il motore di ricerca che indicizza dispositivi e servizi esposti su Internet, non pagine web. Scansiona continuamente l'intero spazio IPv4 pubblico (4.3 miliardi di indirizzi) raccogliendo banner, certificati, metadata e servizi esposti: porte [TCP](https://hackita.it/articoli/tcp)/[UDP](https://hackita.it/articoli/udp) aperte come webcam, router, server MongoDB, sistemi SCADA industriali, database senza autenticazione, pannelli di amministrazione esposti.
 
 Il database contiene snapshot storici: vedi non solo lo stato attuale di un dispositivo, ma anche quando è apparso online e quali vulnerabilità sono state patchate (o ignorate). Utile per threat intelligence, attack surface monitoring, ricerca honeypot.
 

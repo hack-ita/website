@@ -1,9 +1,11 @@
 ---
 title: 'PowerView: Enumerazione Active Directory con Comandi ed Esempi'
 slug: powerview
-description: 'Guida a PowerView per enumerare Windows Active Directory: utenti, gruppi, computer, ACL, sessioni, GPO e trust con comandi PowerShell ed esempi pratici.'
+description: >-
+  Guida a PowerView per enumerare Windows Active Directory: utenti, gruppi,
+  computer, ACL, sessioni, GPO e trust con comandi PowerShell ed esempi pratici.
 image: /powerview-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-14T00:00:00.000Z
 categories:
   - tools

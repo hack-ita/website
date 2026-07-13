@@ -24,7 +24,7 @@ Il **mass assignment** è una vulnerabilità in cui l'applicazione prende automa
 
 In pratica: mandi un campo che non dovresti poter modificare, e l'applicazione lo accetta lo stesso. Il caso più classico è diventare admin aggiungendo `"role": "admin"` a una richiesta di registrazione.
 
-È semplice da trovare, ha un impatto spesso critico, e si nasconde soprattutto nelle API REST moderne. OWASP la classifica come **API6:2023 — Unrestricted Access to Sensitive Business Flows** e come parte di **A01:2021 — Broken Access Control**.
+È semplice da trovare, ha un impatto spesso critico, e si nasconde soprattutto nelle API REST moderne. OWASP tratta il Mass Assignment nel Web Security Testing Guide e, nell’API Security Top 10 2023, lo include in API3:2023 — Broken Object Property Level Authorization. Nella precedente edizione del 2019 era classificato separatamente come API6:2019 — Mass Assignment.
 
 Vedi anche: [idor](https://hackita.it/articoli/idor), [broken-access-control](https://hackita.it/articoli/broken-access-control), [auth-access-control-guida-completa](https://hackita.it/articoli/auth-access-control-guida-completa), [privilege-escalation-web](https://hackita.it/articoli/privilege-escalation-web).
 

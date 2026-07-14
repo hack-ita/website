@@ -1,9 +1,11 @@
 ---
 title: 'Lateral Movement in Active Directory: Tecniche, Tool e OPSEC'
 slug: lateral-movement
-description: 'Guida al lateral movement in Active Directory: Pass-the-Hash, Kerberos, SMB, WMI, WinRM e RDP con prerequisiti, artefatti, detection e mitigazioni.'
+description: >-
+  Guida al lateral movement in Active Directory: Pass-the-Hash, Kerberos, SMB,
+  WMI, WinRM e RDP con prerequisiti, artefatti, detection e mitigazioni.
 image: /lateral-movement-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-15T00:00:00.000Z
 categories:
   - windows

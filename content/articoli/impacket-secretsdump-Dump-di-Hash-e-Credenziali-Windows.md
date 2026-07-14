@@ -1,9 +1,11 @@
 ---
 title: 'impacket-secretsdump: Dump di Hash e Credenziali Windows'
 slug: secretsdump
-description: 'Guida a impacket-secretsdump: dump remoto e offline di hash NTLM, SAM, LSA secrets, chiavi Kerberos e NTDS.dit in Windows e Active Directory.'
+description: >-
+  Guida a impacket-secretsdump: dump remoto e offline di hash NTLM, SAM, LSA
+  secrets, chiavi Kerberos e NTDS.dit in Windows e Active Directory.
 image: /secretsdump-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-15T00:00:00.000Z
 categories:
   - tools

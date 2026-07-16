@@ -1,9 +1,12 @@
 ---
 title: 'Credential Dumping su Windows: LSASS, SAM, DPAPI e NTDS.dit'
 slug: credential-dumping
-description: 'Credential dumping su Windows: hash NTLM e ticket Kerberos da LSASS, SAM, LSA Secrets, DPAPI e NTDS.dit con Mimikatz, ProcDump e secretsdump su Active Directory'
+description: >-
+  Credential dumping su Windows: hash NTLM e ticket Kerberos da LSASS, SAM, LSA
+  Secrets, DPAPI e NTDS.dit con Mimikatz, ProcDump e secretsdump su Active
+  Directory
 image: /credential-dumping-windows-lsass-sam-dpapi.webp
-draft: true
+draft: false
 date: 2026-07-17T00:00:00.000Z
 categories:
   - guides-resources

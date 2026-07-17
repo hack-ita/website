@@ -19,52 +19,7 @@
         </svg>
       </button>
 
-      <!-- Swiper Wrapper -->
-      <div class="swiper articleSwiper">
-        <div class="swiper-wrapper">
-          {{ range (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 6 }}
-          <div class="swiper-slide">
-            <a href="{{ .RelPermalink }}" class="block">
-              <article class="flex flex-col items-stretch group h-full">
-                <div class="overflow-hidden">
-                  {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "h-60 w-full object-cover group-hover:scale-115 transition-transform duration-500") }}
-                </div>
-                <div class="row-span-2 flex flex-col bg-glass p-3 lg:p-5">
-                  <div class="flex flex-wrap gap-3 mb-3 lg:mb-5">
-                    {{ with .PublishDate }}
-                    <span class="text-dark dark:text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
-                    {{ end }}
-                    {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
-                    {{ $readingTime := div (float .WordCount) $readingSpeed }}
-                    {{ $readingTime = math.Ceil $readingTime }}
-                    <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
-                  </div>
-                  <h3 class="h-25 heading-sm text-dark dark:text-light group-hover:text-primary transition-colors">
-                    {{ .Title }}
-                  </h3>
-                  <div>
-                    {{ partial "components/button.html" (dict "link" "true" "label" "Continua a leggere" "url" .RelPermalink ) }}
-                  </div>
-                </div>
-                <div class="relative">
-                  <div
-                    class="h-1 w-full rounded-b-md bg-dark/20 dark:bg-light/20 overflow-hidden relative
-                          after:absolute after:inset-0 after:bg-primary
-                          after:-translate-x-full
-                          after:animate-underline-slide">
-                  </div>
-                </div>
-              </article>
-            </a>
-          </div>
-          {{ end }}
-        </div>
-      </div>
-    </div>
-
-    <!-- Explore All Button -->
-    <div class="flex justify-center items-stretch">
-      {{ partial "components/button.html" (dict "label" "SCOPRI DI PIÙ" "link" "true" "url" "/articoli/") }}
-    </div>
-  </div>
-</section>
+      {{ $articles := where .Site.RegularPages "Section" "articoli" }}
+      {{ $articles = where $articles "Params.image" "!=" nil }}
+      {{ $articles = $articles | first 6 }}
+      {{ partial "shared/article-carousel.html" (dict "articles" $articles "heading" "News") }}

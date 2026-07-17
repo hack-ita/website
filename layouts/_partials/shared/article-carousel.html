@@ -1,0 +1,156 @@
+{{/* Parameters:
+  - articles: list of pages to render
+  - heading: optional heading text (if empty, no heading wrapper is rendered)
+  - imageHeight: image height class, default "h-60"
+*/}}
+{{ $articles := .articles }}
+{{ $heading := .heading | default "" }}
+{{ $imageHeight := .imageHeight | default "h-60" }}
+
+{{ if $heading }}
+<section class="bg-mask py-10 px-5">
+  <div class="max-w-7xl mx-auto space-y-10">
+    <!-- Heading -->
+    <div class="w-fit mx-auto" >
+      <div class="w-10 sm:w-20 lg:w-30 max-h-30 relative left-0 sm:-left-14 lg:-left-20 -bottom-5" aria-hidden="true">
+        <img src='{{ "images/dev/heading-icon.webp" | relURL }}' alt="" class="size-full">
+      </div>
+      <h2 class="text-dark dark:text-light uppercase text-pretty text-center relative">{{ $heading }}</h2>
+    </div>
+
+    <!-- Swiper Section -->
+    <div class="relative" >
+      <!-- Prev Button -->
+      <button aria-label="Previous article" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
+        <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.9406 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.4657 4.92678 15.2335 5.21967Z"/>
+        </svg>
+      </button>
+
+      <!-- Next Button -->
+      <button aria-label="Next article" class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
+        <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.9406 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.4657 4.92678 15.2335 5.21967Z"/>
+        </svg>
+      </button>
+
+      <!-- Swiper Wrapper -->
+      <div class="swiper articleSwiper">
+        <div class="swiper-wrapper">
+          {{ range $articles }}
+          <div class="swiper-slide">
+            <a href="{{ .RelPermalink }}" class="block">
+              <article class="flex flex-col items-stretch group h-full">
+                <div class="overflow-hidden">
+                  {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" (printf "%s w-full object-cover group-hover:scale-115 transition-transform duration-500" $imageHeight)) }}
+                </div>
+                <div class="row-span-2 flex flex-col bg-glass p-3 lg:p-5">
+                  <div class="flex flex-wrap gap-3 mb-3 lg:mb-5">
+                    {{ with .PublishDate }}
+                    <span class="text-dark dark:text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
+                    {{ end }}
+                    {{ $readingSpeed := $.Site.Params.reading_speed | default 250 }}
+                    {{ $readingTime := div (float .WordCount) $readingSpeed }}
+                    {{ $readingTime = math.Ceil $readingTime }}
+                    <span class="text-primary uppercase">{{ $readingTime }} min di lettura</span>
+                  </div>
+                  <h3 class="h-25 heading-sm text-dark dark:text-light group-hover:text-primary transition-colors">
+                    {{ .Title }}
+                  </h3>
+                  <div>
+                    <span class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-primary bg-light dark:bg-dark transition duration-500 font-medium cursor-default">
+                      <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 text-primary font-bold transition duration-500 group-hover:-translate-y-[150%]">Continua a leggere</span>
+                      <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-dark dark:text-light transition duration-500 group-hover:translate-y-0">
+                        <span class="absolute h-full w-full translate-y-full skew-y-12 scale-y-0 bg-primary transition duration-500 group-hover:translate-y-0 group-hover:scale-200"></span>
+                        <span class="z-10 font-bold">Continua a leggere</span>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="relative">
+                  <div
+                    class="h-1 w-full rounded-b-md bg-dark/20 dark:bg-light/20 overflow-hidden relative
+                          after:absolute after:inset-0 after:bg-primary
+                          after:-translate-x-full
+                          after:animate-underline-slide">
+                  </div>
+                </div>
+              </article>
+            </a>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Explore All Button -->
+    <div class="flex justify-center items-stretch">
+      {{ partial "components/button.html" (dict "label" "SCOPRI DI PIÙ" "link" "true" "url" "/articoli/") }}
+    </div>
+  </div>
+</section>
+{{ else }}
+<div class="relative" >
+  <!-- Prev Button -->
+    <button aria-label="Previous article slide" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
+      <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.9406 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.4657 4.92678 15.2335 5.21967Z"/>
+      </svg>
+    </button>
+
+    <!-- Next Button -->
+    <button aria-label="Next article slide" class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
+      <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.9406 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.4657 4.92678 15.2335 5.21967Z"/>
+      </svg>
+    </button>
+
+  <!-- Swiper Wrapper -->
+  <div class="swiper articleSwiper" role="region" aria-label="Additional articles">
+    <div class="swiper-wrapper">
+      {{ range $articles }}
+      <div class="swiper-slide">
+        <a href="{{ .RelPermalink }}" class="block">
+          <article class="flex flex-col items-stretch group h-full">
+            <div class="overflow-hidden">
+              {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" (printf "%s w-full object-cover object-top group-hover:scale-115 transition-transform duration-500" $imageHeight)) }}
+            </div>
+            <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
+              <div class="flex flex-wrap gap-3 mb-3 lg:mb-5">
+                {{ with .PublishDate }}
+                <span class="text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
+                {{ end }}
+                {{ $readingSpeed := $.Site.Params.reading_speed | default 250 }}
+                {{ $readingTime := div (float .WordCount) $readingSpeed }}
+                {{ $readingTime = math.Ceil $readingTime }}
+                    <span class="text-primary uppercase">{{ $readingTime }} min di lettura</span>
+              </div>
+              <h3 class="min-h-15 heading-sm text-light group-hover:text-primary transition-colors line-clamp-3">
+                {{ .Title }}
+              </h3>
+              <div>
+                <span class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-primary bg-light dark:bg-dark transition duration-500 font-medium cursor-default">
+                  <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 text-primary font-bold transition duration-500 group-hover:-translate-y-[150%]">Continua a leggere</span>
+                  <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-dark dark:text-light transition duration-500 group-hover:translate-y-0">
+                    <span class="absolute h-full w-full translate-y-full skew-y-12 scale-y-0 bg-primary transition duration-500 group-hover:translate-y-0 group-hover:scale-200"></span>
+                    <span class="z-10 font-bold">Continua a leggere</span>
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="relative">
+              <div
+                class="h-1 w-full rounded-b-md bg-dark/20 dark:bg-light/20 overflow-hidden relative
+                      after:absolute after:inset-0 after:bg-primary
+                      after:-translate-x-full
+                      after:animate-underline-slide">
+              </div>
+            </div>
+          </article>
+        </a>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }}

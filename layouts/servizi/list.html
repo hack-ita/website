@@ -30,65 +30,7 @@
 {{/* stats */}}
 {{ with .Params.stats }}
 {{ if .enable }}
-<section class="bg-primary red-mask relative overflow-hidden" aria-label="Learning Overview">
-  
-  <!-- Decorative masked elements -->
-  <div class="bg-light dark:bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -right-5">
-    <div class="mt-9 -ml-9 sm:mt-13 sm:-ml-13 lg:mt-17 lg:-ml-16 xl:mt-16 xl:-ml-15 size-full bg-primary red-mask"></div>
-  </div>
-  <div class="bg-light dark:bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -left-5 rotate-180">
-    <div class="mt-9 -ml-9 sm:mt-13 sm:-ml-13 lg:mt-17 lg:-ml-16 xl:mt-16 xl:-ml-15 size-full bg-primary red-mask"></div>
-  </div>
-
-  <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
-    
-    <!-- Section Heading & Typewriter -->
-    <div class="flex flex-col justify-center gap-y-10"  >
-      <h2 class="text-light text-center">Impara la sicurezza informatica</h2>
-      <p class="text-light text-balance text-center">
-        Dalle basi al livello OSCP: <br />
-        <span id="typewriter" class="text-dark font-semibold" aria-hidden="true"></span>
-        per diventare un vero pentester.
-      </p>
-
-      <!-- Hidden Typewriter Words (Decorative) -->
-      <div id="typewriter-data" class="hidden" aria-hidden="true">
-        <span>guide tecniche</span>
-        <span>comandi</span>
-        <span>errori comuni</span>
-        <span>appunti di laboratorio reali</span>
-      </div>
-    </div>
-
-    <!-- Stats Grid -->
-    <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
-      
-      <!-- Stats Cards -->
-      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary font-black">{{ with where $.Site.RegularPages "Section" "articoli" }}{{ . | len }}{{ end }}+</span>
-        <h3 class="text-bold lg:text-xl text-light">Articoli</h3>
-      </article>
-
-      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
-        <span class="text-primary font-black">8</span>
-        <h3 class="text-bold lg:text-xl text-dark">Categorie Principali</h3>
-      </article>
-
-      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary font-black">Formazione</span>
-        <h3 class="text-bold lg:text-xl text-light">Focalizzata</h3>
-      </article>
-
-      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
-        <span class="text-primary font-black">100%</span>
-        <h3 class="text-bold lg:text-xl text-dark">Hacking etico</h3>
-      </article>
-
-    </div>
-
-  </div>
-
-</section>
+{{ partial "shared/stats-typewriter.html" (dict "ariaLabel" "Learning Overview" "mirrored" true) }}
 {{ end }}
 {{ end }}
 {{/* /stats */}}

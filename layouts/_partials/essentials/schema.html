@@ -7,7 +7,7 @@
   {{ partial "schema/homepage.html" . }}
 
 {{/* Blog single posts */}}
-{{ else if and .IsPage (eq .Section "blog") }}
+{{ else if and .IsPage (eq .Section "articoli") }}
   {{ partial "schema/blogposting.html" . }}
   {{ partial "schema/breadcrumb.html" . }}
 

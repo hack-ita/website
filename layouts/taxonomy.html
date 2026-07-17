@@ -12,7 +12,7 @@
       {{ partial "components/breadcrumb.html" . }}
 
       <span class="py-1 px-3 rounded-full text-center text-sm border border-primary text-dark dark:text-light uppercase relative">
-        Browse Categories
+        Esplora le categorie
       </span>
 
       <h1 class="text-dark dark:text-light hero-heading uppercase">{{ .Params.hero_title }}</h1>
@@ -82,7 +82,13 @@
 
                     <!-- Button -->
                     <div>
-                        {{ partial "components/button.html" (dict "link" "true" "label" "Entra" "url" .RelPermalink) }}
+                        <span class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-primary bg-light dark:bg-dark transition duration-500 font-medium cursor-default">
+                          <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 text-primary font-bold transition duration-500 group-hover:-translate-y-[150%]">Entra</span>
+                          <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-dark dark:text-light transition duration-500 group-hover:translate-y-0">
+                            <span class="absolute h-full w-full translate-y-full skew-y-12 scale-y-0 bg-primary transition duration-500 group-hover:translate-y-0 group-hover:scale-200"></span>
+                            <span class="z-10 font-bold">Entra</span>
+                          </span>
+                        </span>
                     </div>
                 </div>
             </article>

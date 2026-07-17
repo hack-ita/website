@@ -1007,6 +1007,24 @@ const initDeferred = () => {
     1000,
   );
 
+  // REDUCED MOTION: pause autoplay videos for users who prefer reduced motion
+  defer(
+    () =>
+      safe(() => {
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        document.querySelectorAll("video[autoplay]").forEach((video) => {
+          video.pause();
+          video.removeAttribute("autoplay");
+          // Show the poster frame by seeking to first frame
+          video.currentTime = 0;
+        });
+
+        log("Reduced motion: autoplay videos paused");
+      }, "ReducedMotion"),
+    50,
+  );
+
   // SWIPER (only if library loaded)
   defer(
     () =>
@@ -1100,9 +1118,51 @@ const initDeferred = () => {
           breakpoints: { 1024: { slidesPerView: 4, autoplay: false } },
         });
 
+        // Category swipers (e.g. .web-hackingSwiper, .windowsSwiper)
+        // These are generated dynamically in articoli/list.html with unique class names
+        const initCategorySwipers = () => {
+          const swiperEls = document.querySelectorAll(
+            '[class*="Swiper"]:not(.heroImgSwiper):not(.heroTextSwiper):not(.articleSwiper)'
+          );
+          swiperEls.forEach((el) => {
+            // Extract the category key from the class name (e.g. "web-hacking" from "web-hackingSwiper")
+            const classes = el.className.split(/\s+/);
+            const swiperClass = classes.find((c) => c.endsWith("Swiper"));
+            if (!swiperClass) return;
+
+            const categoryKey = swiperClass.replace("Swiper", "");
+            const prevEl = document.querySelector(`.${categoryKey}-button-prev`);
+            const nextEl = document.querySelector(`.${categoryKey}-button-next`);
+
+            new Swiper(el, {
+              slidesPerView: 2,
+              spaceBetween: 20,
+              loop: false,
+              navigation: { prevEl, nextEl },
+              breakpoints: { 1024: { slidesPerView: 5 } },
+            });
+          });
+        };
+
+        // Retry: Swiper may not be loaded yet if the script is deferred
+        const retryInit = (fn, maxRetries = 10, delay = 200) => {
+          let attempts = 0;
+          const tryInit = () => {
+            if (typeof Swiper !== "undefined") {
+              fn();
+            } else if (attempts < maxRetries) {
+              attempts++;
+              setTimeout(tryInit, delay);
+            }
+          };
+          tryInit();
+        };
+
+        retryInit(initCategorySwipers);
+
         log("Swiper initialized");
       }, "Swiper"),
-    1100,
+     1100,
   );
 
   // GLIGHTBOX (only if library loaded)
@@ -1176,6 +1236,60 @@ const initDeferred = () => {
         log("Newsletter initialized");
       }, "Newsletter"),
     1300,
+  );
+
+  // TOAST NOTIFICATIONS
+  defer(
+    () =>
+      safe(() => {
+        const container = $("#toast-container");
+        if (!container) return;
+
+        window.showToast = (message, type = "success") => {
+          const toast = document.createElement("div");
+          toast.className = `toast toast-${type}`;
+          toast.textContent = message;
+          toast.setAttribute("role", "status");
+          container.appendChild(toast);
+
+          requestAnimationFrame(() => {
+            toast.classList.add("show");
+          });
+
+          setTimeout(() => {
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 300);
+          }, 2500);
+        };
+
+        log("Toast initialized");
+      }, "Toast"),
+    50,
+  );
+
+  // COPY BUTTONS (wallet addresses, etc.)
+  defer(
+    () =>
+      safe(() => {
+        const buttons = $$("[data-copy-target]");
+        if (!buttons.length) return;
+
+        buttons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const targetId = btn.getAttribute("data-copy-target");
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            target.select();
+            navigator.clipboard.writeText(target.value).then(() => {
+              window.showToast("Copiato negli appunti!", "success");
+            });
+          });
+        });
+
+        log("Copy buttons initialized");
+      }, "CopyButtons"),
+    100,
   );
 
   // FAQ ACCORDION

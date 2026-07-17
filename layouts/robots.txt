@@ -4,5 +4,4 @@ Allow: /
 # Keep decorative/styling assets (icons, backgrounds, dividers) out of image search
 Disallow: /images/dev/
 
-Sitemap: {{ "sitemap.xml" | absURL }}
 Sitemap: {{ "articoli/sitemap.xml" | absURL }}

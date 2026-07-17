@@ -11,7 +11,7 @@
         </svg>
     </button>
 
-    <!-- Optional Skip Linc viewBox="0 0 25 24" k for Accessibility -->
+    <!-- Skip link for keyboard accessibility -->
     <a href="#main-content" class="sr-only focus:not-sr-only">Skip to main content</a>
 
     <!-- Header -->
@@ -32,5 +32,8 @@
 
     <!-- JS Scripts -->
     {{ partial "essentials/js.html" . }}
-</body>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-3 pointer-events-none" aria-live="polite" aria-atomic="true"></div>
+  </body>
 </html>

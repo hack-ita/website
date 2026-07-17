@@ -34,7 +34,7 @@
                 <p class="text-dark dark:text-light line-clamp-4">
                   {{ .Description }}
                 </p>
-                {{ partial "components/link.html" (dict "label" "Continua a leggere" "url" .RelPermalink) }}
+                {{ partial "components/link.html" (dict "label" "Continua a leggere" "title" .Title "url" .RelPermalink) }}
               </div>
             </article>
           </div>
@@ -43,7 +43,7 @@
       </div>
       <div class="size-full relative">
         <a href="https://shop.hackita.it" target="_blank" class="absolute inset-0"></a>
-        {{ partial "components/image.html" (dict "src" "images/shop_link_wide.jpeg" "alt" .Title "highFetchPrio" "true") }}
+        {{ partial "components/image.html" (dict "src" "images/shop_link_wide.jpeg" "alt" "Banner Hackita Shop: felpa, magliette e zaino della collezione 'Mentalità Offensiva' — scopri lo shop Hackita" "highFetchPrio" "true") }}
       </div>
     </div>
 
@@ -84,7 +84,7 @@
         <!-- Category Info -->
         <div class="flex flex-col gap-y-5 p-5 bg-glass rounded-b-md">
           <div class="flex flex-wrap gap-3">
-            <span class="text-primary uppercase">{{ .Pages.Len }} Article{{ if ne .Pages.Len 1 }}s{{ end }}</span>
+            <span class="text-primary uppercase">{{ if eq .Pages.Len 1 }}Articolo{{ else }}Articoli{{ end }}: {{ .Pages.Len }}</span>
           </div>
           <h3 class="min-h-10 heading-sm text-dark dark:text-light transition-colors group-hover:text-primary">
             {{ .Title }}
@@ -93,6 +93,7 @@
             {{ partial "components/button.html" (dict 
                 "link" "true" 
                 "label" "Esplora" 
+                "title" .Title
                 "url" .RelPermalink) }}
           </div>
         </div>
@@ -115,7 +116,7 @@
 
     <!-- See More Button -->
     <div class="flex justify-center items-stretch" >
-      {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di piú" "url" "/categories/") }}
+      {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di piú" "url" "/categorie/") }}
     </div>
 
   </div>
@@ -131,6 +132,7 @@
     loop
     muted
     playsinline
+    poster="{{ "images/hackita-hero.webp" | relURL }}"
     class="absolute inset-0 size-full object-cover object-top-left"
     aria-hidden="true"
   >
@@ -157,7 +159,7 @@
           {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
           {{ $readingTime := div (float .WordCount) $readingSpeed }}
           {{ $readingTime = math.Ceil $readingTime }}
-          <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
+          <span class="text-primary uppercase">{{ $readingTime }} min di lettura</span>
         </div>
         <h3 class="heading-sm text-light group-hover:text-primary transition-colors">
           {{ .Title }}
@@ -170,77 +172,23 @@
           {{ end }}
         </p>
         <div>
-          {{ partial "components/button.html" (dict "label" "Continua a leggere") }}
+          <span class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-primary bg-light dark:bg-dark transition duration-500 font-medium cursor-default">
+            <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 text-primary font-bold transition duration-500 group-hover:-translate-y-[150%]">Continua a leggere</span>
+            <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-dark dark:text-light transition duration-500 group-hover:translate-y-0">
+              <span class="absolute h-full w-full translate-y-full skew-y-12 scale-y-0 bg-primary transition duration-500 group-hover:translate-y-0 group-hover:scale-200"></span>
+              <span class="z-10 font-bold">Continua a leggere</span>
+            </span>
+          </span>
         </div>
       </article>
     </a>
     {{ end }}
 
-    <!-- Swiper for Other Articles -->
-    <div class="relative" >
-      <!-- Prev / Next Buttons -->
-      <button aria-label="Previous article slide" class="prev-article cursor-pointer absolute -bottom-20 left-0 lg:left-60 xl:left-80 2xl:left-100">
-        <svg class="size-10 text-primary" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
-        </svg>
-      </button>
-      <button aria-label="Next article slide" class="next-article cursor-pointer absolute -bottom-20 right-0 lg:right-60 xl:right-80 2xl:right-100">
-        <svg class="size-10 text-primary rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M15.2335 5.21967C15.5263 5.51256 15.5263 5.98744 15.2335 6.28033L9.51379 12L15.2335 17.7197C15.5263 18.0126 15.5263 18.4874 15.2335 18.7803C14.9406 19.0732 14.4657 19.0732 14.1728 18.7803L7.92279 12.5303C7.6299 12.2374 7.6299 11.7626 7.92279 11.4697L14.1728 5.21967C14.4657 4.92678 14.9406 4.92678 15.2335 5.21967Z" fill="#323544"/>
-        </svg>
-      </button>
-
-      <div class="swiper articleSwiper" role="region" aria-label="Additional articles">
-        <div class="swiper-wrapper">
-          {{ range after 6 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 10 }}
-          <div class="swiper-slide">
-            <a href="{{ .RelPermalink }}" class="block">
-              <article class="flex flex-col items-stretch group h-full">
-                <div class="overflow-hidden">
-                  {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "h-70 w-full object-cover object-top group-hover:scale-115 transition-transform duration-500") }}
-                </div>
-                <div class="row-span-2 flex flex-col gap-y-3 lg:gap-y-5 bg-glass p-3 lg:p-5">
-                  <div class="flex flex-wrap gap-3 mb-3 lg:mb-5">
-                    {{ with .PublishDate }}
-                    <span class="text-light uppercase">{{ . | time.Format "Jan 2, 2006" }}</span>
-                    {{ end }}
-                    {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
-                    {{ $readingTime := div (float .WordCount) $readingSpeed }}
-                    {{ $readingTime = math.Ceil $readingTime }}
-                    <span class="text-primary uppercase">{{ $readingTime }} Min Read</span>
-                  </div>
-                  <h3 class="min-h-15 heading-sm text-light group-hover:text-primary transition-colors line-clamp-3">
-                    {{ .Title }}
-                  </h3>
-                  <div>
-                    {{ partial "components/button.html" (dict "link" "true" "label" "Continua a leggere" "url" .RelPermalink ) }}
-                  </div>
-                </div>
-                <div class="relative">
-                  <div
-                    class="h-1 w-full rounded-b-md bg-dark/20 dark:bg-light/20 overflow-hidden relative
-                          after:absolute after:inset-0 after:bg-primary
-                          after:-translate-x-full
-                          after:animate-underline-slide">
-                  </div>
-                </div>
-              </article>
-            </a>
-          </div>
-          {{ end }}
-        </div>
-      </div>
-    </div>
-
-    
-    <!-- Explore All Button -->
-    <div class="flex justify-center items-stretch">
-      {{ partial "components/button.html" (dict "label" "SCOPRI DI PIÙ" "link" "true" ) }}
-    </div>
+    {{ partial "shared/article-carousel.html" (dict "articles" (after 6 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 10) "imageHeight" "h-70") }}
     
     <div class="relative">
       <a href="https://shop.hackita.it" class="absolute inset-0" target="_blank"></a>
-      {{ partial "components/image.html" (dict "src" "images/shop_link_wider.jpeg" "alt" .Title) }}
+      {{ partial "components/image.html" (dict "src" "images/shop_link_wider.jpeg" "alt" "Banner Hackita Shop: figura incappucciata con felpa, magliette e zaino del merchandising 'Mentalità Offensiva' — scopri lo shop Hackita") }}
     </div>
 
   </div>
@@ -280,65 +228,7 @@
 {{/* /about */}}
 
 {{/* stats */}}
-<section class="bg-primary red-mask relative overflow-hidden" aria-label="Learn Cyber-Security Stats">
-  
-  <!-- Decorative Background Elements -->
-  <div class="bg-light dark:bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -top-5 -left-5" aria-hidden="true">
-    <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
-  </div>
-  <div class="bg-light dark:bg-dark bg-mask h-23 w-17 sm:h-40 sm:w-28.5 lg:h-65 lg:w-40.5 xl:h-76 xl:w-48 absolute -bottom-5 -right-5 rotate-180" aria-hidden="true">
-    <div class="mt-9 ml-9 sm:mt-13 sm:ml-13 lg:mt-17 lg:ml-16 xl:mt-16 xl:ml-15 size-full bg-primary red-mask"></div>
-  </div>
-
-  <div class="max-w-7xl py-10 px-5 mx-auto grid gap-y-10 relative">
-    
-    <!-- Section Heading & Typewriter -->
-    <div class="flex flex-col justify-center gap-y-10"  >
-      <h2 class="text-light text-center">Impara la sicurezza informatica</h2>
-      <p class="text-light text-balance text-center">
-        Dalle basi al livello OSCP: <br />
-        <span id="typewriter" class="text-dark font-semibold" aria-hidden="true"></span>
-        per diventare un vero pentester.
-      </p>
-
-      <!-- Hidden Typewriter Words (Decorative) -->
-      <div id="typewriter-data" class="hidden" aria-hidden="true">
-        <span>guide tecniche</span>
-        <span>comandi</span>
-        <span>errori comuni</span>
-        <span>appunti di laboratorio reali</span>
-      </div>
-    </div>
-
-    <!-- Stats Grid -->
-    <div id="stats-grid" class="relative grid grid-cols-2 lg:grid-cols-4 gap-5">
-      
-      <!-- Stats Cards -->
-      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary font-black">{{ with where .Site.RegularPages "Section" "articoli" }}{{ . | len }}{{ end }}+</span>
-        <h3 class="text-bold lg:text-xl text-light">Articoli</h3>
-      </article>
-
-      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
-        <span class="text-primary font-black">8</span>
-        <h3 class="text-bold lg:text-xl text-dark">Categorie Principali</h3>
-      </article>
-
-      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-dark p-5">
-        <span class="text-primary font-black">Formazione</span>
-        <h3 class="text-bold lg:text-xl text-light">Focalizzata</h3>
-      </article>
-
-      <article class="card-spotlight flex flex-col lg:gap-y-5 text-center bg-light p-5">
-        <span class="text-primary font-black">100%</span>
-        <h3 class="text-bold lg:text-xl text-dark">Hacking etico</h3>
-      </article>
-
-    </div>
-
-  </div>
-
-</section>
+{{ partial "shared/stats-typewriter.html" (dict "ariaLabel" "Learn Cyber-Security Stats" "mirrored" "false") }}
 {{/* /stats */}}
 
 {{/* services */}}
@@ -364,7 +254,7 @@
             {{ .Description | safeHTML }}
           </p>
           <div>
-            {{ partial "components/button.html" (dict "link" "true" "label" "Richiedi informazioni" "url" (printf "/servizi/#%s" (.Title | anchorize))) }}
+            {{ partial "components/button.html" (dict "link" "true" "label" "Richiedi informazioni" "title" .Title "url" (printf "/servizi/#%s" (.Title | anchorize))) }}
           </div>
         </div>
 

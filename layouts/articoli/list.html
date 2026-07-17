@@ -2,7 +2,7 @@
 
 {{/* ================= HERO ================= */}}
 {{/* hero */}}
-<section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading" fetchpriority="high" loading="eager">
+<section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading" fetchpriority="high">
   {{ range first 1 ((where .RegularPages "Params.featured" "eq" true) | default .RegularPages) }}
   {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
   {{ $readingTime := div (float .WordCount) $readingSpeed }}
@@ -10,8 +10,11 @@
   <div class="max-w-7xl mx-auto grid lg:grid-cols-5 gap-10">
 
     <!-- Featured Video / Image -->
-    {{ $image := resources.Get .Params.image }}
-    <article class="rounded-md col-span-3 py-20 px-5 bg-cover bg-no-repeat bg-center relative bg-[url('{{ $image.RelPermalink }}')]" aria-label="Featured session: {{ .Title }}">
+    {{ $image := "" }}
+    {{ with .Params.image }}
+      {{ $image = resources.Get . }}
+    {{ end }}
+    <article class="rounded-md col-span-3 py-20 px-5 bg-cover bg-no-repeat bg-center relative{{ with $image }} bg-[url('{{ .RelPermalink }}')]{{ end }}" aria-label="Featured session: {{ .Title }}">
       <div class="absolute inset-0 bg-dark opacity-30 rounded-md"></div>
       <div class="relative flex flex-col justify-center items-start gap-10">
         <span 
@@ -23,7 +26,7 @@
         <div class="flex flex-wrap gap-5 items-center uppercase">
           <span class="text-light">HackITA TV</span>
           <span class="text-light/80">{{ range first 1 .Params.tags }}{{ . }}{{ end }} / {{ with .Params.categories }}{{ index . 0 }}{{ end }}</span>
-          <time class="text-light/80" datetime='{{ .Date.Format "2006-01-02" }}'>{{ $readingTime }} min read</time>
+          <time class="text-light/80" datetime='{{ .Date.Format "2006-01-02" }}'>{{ $readingTime }} min di lettura</time>
         </div>
       </div>
     </article>
@@ -34,8 +37,8 @@
       <h3 id="featured-session-heading" class="text-dark dark:text-light hero-heading uppercase">{{ .Title }}</h3>
       <p class="text-dark dark:text-light">{{ .Description }}</p>
       <div class="flex items-stretch gap-5">
-        {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Continua a leggere" "url" .RelPermalink) }}
-        {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "All Articles" "url" ((printf "/categorie/%s" .Params.categories) | urlize)) }}
+        {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Continua a leggere" "title" .Title "url" .RelPermalink) }}
+        {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Tutti gli articoli" "url" ((printf "/categorie/%s" (index .Params.categories 0 | default "")) | urlize)) }}
       </div>
     </div>
 
@@ -54,9 +57,9 @@
     <div id="noResults"
          class="hidden py-20 text-center heading-sm text-dark dark:text-light">
          <div class="flex flex-col gap-3">
-           No results found.
+           Nessun risultato trovato.
            <div>
-             {{ partial "components/button.html" (dict "label" "Clear Filters" "class" "clear-filters") }}
+             {{ partial "components/button.html" (dict "label" "Cancella filtri" "class" "clear-filters") }}
            </div>
          </div>
     </div>
@@ -131,7 +134,7 @@
                         {{ range first 1 .Params.tags }}
                         <span class="rounded-full border border-primary px-3 py-1 text-primary text-xs">{{ . }}</span>
                         {{ end }}
-                        <time class="text-dark dark:text-light text-sm">{{ $readingTime }} Min read</time>
+                        <time class="text-dark dark:text-light text-sm">{{ $readingTime }} min di lettura</time>
                       </div>
       
                       <a href="{{ .RelPermalink }}" class="heading-sm text-primary h-20 line-clamp-4">
@@ -150,25 +153,6 @@
   
           </div>
         </div>
-        
-        <script>
-          document.addEventListener('DOMContentLoaded', () => {
-            new Swiper('.{{ .Page.Title | urlize }}Swiper', {
-              slidesPerView: 2,
-              spaceBetween: 20,
-              loop: false,
-              navigation: {
-                nextEl: '.{{ .Page.Title | urlize }}-button-next',
-                prevEl: '.{{ .Page.Title | urlize }}-button-prev',
-              },
-              breakpoints: {
-                1024: {
-                  slidesPerView: 5,
-                },
-              }
-            });
-          });
-        </script>
       </div>
       {{ end }}
     </div>

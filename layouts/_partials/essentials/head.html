@@ -11,9 +11,10 @@
 {{/* Title */}}
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Page.Title }} - {{ site.Title }}{{ end }}</title>
 <meta name="description" content="{{ with .Description }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description | default "HackIta - Offensive security blog" }}{{ end }}">
+<link rel="canonical" href="{{ .Permalink }}">
 
 {{/* Favicon */}}
-<link rel="shortcut icon" href="{{ "favicon_u.jpg" | relURL }}" type="image/x-icon">
+<link rel="shortcut icon" href="{{ "favicon_u.jpg" | relURL }}" type="image/jpeg">
 
 {{/* RSS Integeration */}}
 {{ with .OutputFormats.Get "rss" }}

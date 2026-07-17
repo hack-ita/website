@@ -57,7 +57,41 @@
   background: var(--color-primary);
 } */
 
- /* ===========================
+/* ===========================
+   REDUCED MOTION
+=========================== */
+@media (prefers-reduced-motion: reduce) {
+  video[autoplay] {
+    animation: none !important;
+    transition: none !important;
+  }
+  video[autoplay]::-webkit-media-controls {
+    display: none !important;
+  }
+}
+
+/* ===========================
+   TOAST NOTIFICATIONS
+=========================== */
+.toast {
+  pointer-events: auto;
+  @apply px-5 py-3 rounded-md shadow-xl text-light text-sm font-medium transition-all duration-300 ease-out max-w-[calc(100vw-2.5rem)];
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(10px);
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.toast-success {
+  background-color: var(--color-primary);
+}
+.toast-error {
+  background-color: #dc2626;
+}
+
+/* ===========================
    GLOBAL
 =========================== */
 * {

@@ -52,13 +52,8 @@
 
           <button
             type="button"
-            class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase cursor-pointer"
-            onclick="
-              const btc = document.getElementById('btcAddress');
-              btc.select();
-              navigator.clipboard.writeText(btc.value);
-              alert('Copied to clipboard!')
-            ">
+            data-copy-target="btcAddress"
+            class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase cursor-pointer">
             Copy
           </button>
         </article>
@@ -93,13 +88,8 @@
 
           <button
             type="button"
-            class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase cursor-pointer"
-            onclick="
-              const xmr = document.getElementById('xmrAddress');
-              xmr.select();
-              navigator.clipboard.writeText(xmr.value);
-              alert('Copied to clipboard!')
-            ">
+            data-copy-target="xmrAddress"
+            class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase cursor-pointer">
             Copy
           </button>
         </article>

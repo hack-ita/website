@@ -2,7 +2,8 @@
   <ol class="flex flex-wrap items-center list-none p-0 m-0">
     {{ range .Ancestors.Reverse }}
       <li class="flex items-center">
-        {{ partial "components/link.html" (dict "label" .LinkTitle "url" .RelPermalink "class" "text-xs") }}
+        {{ $label := cond .IsHome "Home" .LinkTitle }}
+        {{ partial "components/link.html" (dict "label" $label "url" .RelPermalink "class" "text-xs") }}
         <span class="mx-3">/</span>
       </li>
     {{ end }}

@@ -17,7 +17,7 @@ tags:
   - unconstrained-delegation
 ---
 
-# SeEnableDelegationPrivilege in Active Directory: Cos'è e guida completa a delega Kerberos, S4U e privesc
+# SeEnableDelegationPrivilege in Active Directory: guida completa a delega Kerberos, S4U e privesc
 
 Se stai facendo un lab di [Active Directory](https://hackita.it/articoli/active-directory/) (Hack The Box, VulnLab, o un ambiente autorizzato) e BloodHound ti mostra che il tuo utente ha il privilegio **SeEnableDelegationPrivilege**, ti starai chiedendo cos'è esattamente e se è sfruttabile. In breve: è un diritto di Windows che decide chi, nel dominio, può far "impersonare" un utente da un altro account verso un servizio — un meccanismo chiamato delega Kerberos, pensato per usi legittimi ma che diventa un bersaglio di privesc molto potente in mani sbagliate.
 
@@ -222,6 +222,16 @@ getST.py 'dominio.local/HACKITA$:Hackita123' -spn cifs/dc.dominio.local -imperso
 
 Ottieni un ticket salvato in un file `.ccache` — agli occhi del servizio CIFS del DC, quel ticket **È** l'Administrator.
 
+**Se impersonare `administrator` fallisce con `KDC_ERR_BADOPTION` anche con tutto configurato bene**: quasi sempre significa che l'account Administrator è protetto — flag `NOT_DELEGATED` ("account is sensitive and cannot be delegated") attivo, o membro del gruppo **Protected Users**. Questo dice esplicitamente al DC "questo utente non deve mai comparire come impersonato in un ticket S4U", indipendentemente da quanto sia ben configurata la delega. Non è un errore tuo — è una protezione voluta su quell'account specifico, e la trovi spesso già attiva di default sulle macchine più recenti.
+
+In quel caso, la strada resta comunque aperta: invece di impersonare `administrator`, impersona **`dc`** — cioè l'account macchina del Domain Controller stesso (`DC$`), che di norma non ha quella protezione:
+
+```bash
+getST.py 'dominio.local/HACKITA$:Hackita123' -spn ldap/dc.dominio.local -impersonate dc
+```
+
+Un account macchina di un Domain Controller ha naturalmente i permessi di replica sul dominio — quindi un ticket LDAP ottenuto impersonandolo è sufficiente per un DCSync completo, esattamente come se avessi impersonato Administrator con successo. Nota che qui serve un `msDS-AllowedToDelegateTo` verso `ldap/`, non `cifs/`, perché il DCSync via LDAP passa dal protocollo di replica di Active Directory. Questo è esattamente lo scenario della macchina HTB Redelegate — trovi il walkthrough completo [qui](https://hackita.it/articoli/htb-redelegate-walkthrough).
+
 ### Step 5 — Usa il ticket per dumpare le credenziali
 
 ```bash
@@ -307,5 +317,3 @@ Sì, ma con una differenza pratica importante: un account computer può auto-ass
 ## Fonti e approfondimenti
 
 * Microsoft Learn — [Protocol Transition with Constrained Delegation Technical Supplement](https://learn.microsoft.com/en-us/previous-versions/msp-n-p/ff650469\(v=pandp.10\))
-* The Hacker Recipes — [Constrained Delegation](https://www.thehacker.recipes/ad/movement/kerberos/delegations/constrained)
-* Elastic Security — [Regola di detection per l'assegnazione di SeEnableDelegationPrivilege](https://www.elastic.co/docs/reference/security/prebuilt-rules/rules/windows/credential_access_seenabledelegationprivilege_assigned_to_user)

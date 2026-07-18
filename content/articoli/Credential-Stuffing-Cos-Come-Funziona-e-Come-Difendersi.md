@@ -1,9 +1,11 @@
 ---
 title: 'Credential Stuffing: Cos’è, Come Funziona e Come Difendersi'
 slug: credential-stuffing
-description: 'Credential stuffing: scopri come funziona l’attacco con credenziali rubate, come rilevarlo e quali difese usare tra MFA, passkey e rate limiting.'
+description: >-
+  Credential stuffing: scopri come funziona l’attacco con credenziali rubate,
+  come rilevarlo e quali difese usare tra MFA, passkey e rate limiting.
 image: /credential-stuffing-attacco-riutilizzo-credenziali.webp
-draft: true
+draft: false
 date: 2026-07-19T00:00:00.000Z
 categories:
   - guides-resources

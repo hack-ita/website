@@ -1,9 +1,11 @@
 ---
 title: 'Password Spraying : Guida Completa su AD, AD FS ed Entra ID'
 slug: password-spraying
-description: 'Scopri il password spraying su Active Directory: tecniche, tool per pentest autorizzati, detection e difese contro accessi con password deboli.'
+description: >-
+  Scopri il password spraying su Active Directory: tecniche, tool per pentest
+  autorizzati, detection e difese contro accessi con password deboli.
 image: /password-spraying-active-directory-password-deboli.webp
-draft: true
+draft: false
 date: 2026-07-20T00:00:00.000Z
 categories:
   - windows

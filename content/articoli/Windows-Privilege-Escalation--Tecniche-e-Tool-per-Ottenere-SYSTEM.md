@@ -1,9 +1,11 @@
 ---
 title: 'Windows Privilege Escalation : Tecniche e Tool per Ottenere SYSTEM'
 slug: privilege-escalation-windows
-description: 'Guida alla privilege escalation su Windows: enumerazione, servizi vulnerabili, token impersonation, DLL hijacking, UAC bypass, detection e mitigazioni.'
+description: >-
+  Guida alla privilege escalation su Windows: enumerazione, servizi vulnerabili,
+  token impersonation, DLL hijacking, UAC bypass, detection e mitigazioni.
 image: /privilege-escalation-windows-da-user-a-system.webp
-draft: true
+draft: false
 date: 2026-07-20T00:00:00.000Z
 categories:
   - windows

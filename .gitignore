@@ -20,3 +20,6 @@ yarn.lock
 .env.*.local
 .netlify
 deno.lock
+
+# Claude Code local config (kept out of version control)
+.claude/

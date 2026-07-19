@@ -48,13 +48,9 @@
                 {{ partial "shared/fake-captcha.html" . }}
 
                 <!-- Submit button -->
-                {{ partial "components/button.html" (dict 
-                    "type" "submit" 
-                    "size" "full" 
-                    "label" "Inviare"
-                    "class" "submit-btn"
-                    "style" "display: none;"
-                ) }}
+                <button type="submit" class="hn-btn hn-btn-red submit-btn" style="display: none; justify-content: center;">
+                    Inviare
+                </button>
         </form>
     </section>
     {{/*  /form  */}}

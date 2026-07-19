@@ -1,25 +1,26 @@
-<div class="relative">
-    {{ $id := .for | urlize }}
-    {{ if eq .type "textarea" }}
-    <textarea 
-        id="{{ $id }}"
-        name="{{ .for }}"
-        placeholder=" "
-        rows="1"
-        class="input-field w-full px-4 py-3 text-dark dark:text-light text-sm tracking-wider rounded-md"
-        aria-label="{{ .for }}"
-    ></textarea>
-    {{ else }}
-    <input 
-        id="{{ $id }}"
-        type="{{ .type }}" 
-        name="{{ .for }}"
-        placeholder=" "
-        class="input-field w-full px-4 py-3 text-dark dark:text-light text-sm tracking-wider rounded-md"
-        aria-label="{{ .for }}"
-    />
-    {{ end }}
-    <label for="{{ $id }}" class="label text-dark dark:text-light text-sm uppercase">
-        <span class="inline-block">&#9656;</span> {{ .for }}
-    </label>
+{{ $id := .for | urlize }}
+<div class="hn-input-orbit hn-input-orbit-red{{ if eq .type "textarea" }} hn-input-orbit-area{{ end }}">
+    <div class="hn-input-orbit-border">
+        <label for="{{ $id }}" class="sr-only">{{ .for }}</label>
+        {{ if eq .type "textarea" }}
+        <textarea
+            id="{{ $id }}"
+            name="{{ .for }}"
+            rows="4"
+            placeholder="{{ .for }}"
+            class="hn-input hn-field hn-input-area"
+            aria-label="{{ .for }}"
+        ></textarea>
+        {{ else }}
+        <input
+            id="{{ $id }}"
+            type="{{ .type }}"
+            name="{{ .for }}"
+            placeholder="{{ .for }}"
+            class="hn-input hn-field"
+            aria-label="{{ .for }}"
+            {{ if eq .required "true" }}required{{ end }}
+        />
+        {{ end }}
+    </div>
 </div>

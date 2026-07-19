@@ -1,0 +1,17 @@
+{{- /*
+  payload — renders a template-injection / SSTI payload literally.
+
+  Use this ONLY for payloads that contain the substrings "{{" + "<" or
+  "{{" + "%", which Hugo would otherwise try to parse as a shortcode and
+  fail to build. Ordinary payloads ({{7*7}}, {{config}}, ${7*7}, …) work
+  fine in a normal fenced code block and don't need this.
+
+  Pass the payload as a backtick-quoted argument so you don't have to
+  escape quotes; add an optional language as the second argument:
+
+    {{< payload `${{<%[%'"}}%\` >}}
+    {{< payload `{{ ''.__class__ }}` "python" >}}
+*/ -}}
+{{- $payload := .Get 0 -}}
+{{- $lang := .Get 1 | default "text" -}}
+{{- transform.Highlight $payload $lang "" -}}

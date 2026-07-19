@@ -570,6 +570,32 @@ pre:has(> code) {
 
 }
 
+/* Multi-field forms (contact / query) reuse the newsletter orbit design.
+   The textarea needs a rounded rectangle instead of the single-line pill. */
+.hn-input-orbit-area {
+  @apply rounded-2xl;
+}
+
+.hn-input-area {
+  @apply resize-y min-h-28 leading-relaxed;
+}
+
+/* Here the placeholder doubles as the field label, so keep it legible
+   (the newsletter keeps its own very-dim placeholder via .hn-input). */
+.hn-field::placeholder {
+  @apply text-light/45;
+}
+
+/* Contact + query forms sit on red panels, so their orbit ring is red to
+   match the component border/bg (the newsletter keeps its golden ring). */
+.hn-input-orbit-red::before {
+  background: conic-gradient(from 0deg, var(--color-red-700), var(--color-red-800), var(--color-primary));
+}
+
+.hn-input-orbit-red:focus-within {
+  box-shadow: 0 0 0 2px rgba(253, 0, 1, 0.4), 0 0 22px rgba(253, 0, 1, 0.7);
+}
+
 /* ===========================
    HN BUTTONS
 =========================== */
@@ -589,6 +615,16 @@ pre:has(> code) {
 
 .hn-btn::before {
   background: linear-gradient(120deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.45) 40%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* Red button variant for the contact + query forms, to match their red
+   orbit ring and panel (the newsletter keeps the golden .hn-btn). */
+.hn-btn-red {
+  @apply text-light
+         shadow-[0_14px_30px_rgba(253,0,1,0.5),0_0_0_1px_rgba(40,0,0,0.95)]
+         hover:shadow-[0_18px_36px_rgba(253,0,1,0.7),0_0_0_1px_rgba(40,0,0,1)]
+         active:shadow-[0_10px_16px_rgba(253,0,1,0.45),0_0_0_1px_rgba(40,0,0,0.9)];
+  background: linear-gradient(135deg, #ff5a5b, var(--color-primary), #a00000);
 }
 
 /* ===========================

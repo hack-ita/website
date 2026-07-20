@@ -1,9 +1,12 @@
 ---
 title: 'TGS Kerberos: Kerberoasting, Silver Ticket e Service Ticket'
 slug: tgs
-description: 'Guida offensiva al Ticket-Granting Service (TGS) Kerberos: SPN, Kerberoasting con Rubeus e Impacket, crack offline, Pass-the-Ticket e Silver Ticket Windows AD'
+description: >-
+  Guida offensiva al Ticket-Granting Service (TGS) Kerberos: SPN, Kerberoasting
+  con Rubeus e Impacket, crack offline, Pass-the-Ticket e Silver Ticket Windows
+  AD
 image: /tgs-kerberos-kerberoasting-silver-ticket.webp
-draft: true
+draft: false
 date: 2026-07-21T00:00:00.000Z
 categories:
   - windows

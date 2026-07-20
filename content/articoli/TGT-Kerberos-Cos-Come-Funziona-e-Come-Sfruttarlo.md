@@ -1,9 +1,12 @@
 ---
 title: 'TGT Kerberos: Cos’è, Come Funziona e Come Sfruttarlo'
 slug: tgt
-description: 'Scopri come funziona il Ticket-Granting Ticket (TGT) Kerberos in Active Directory: dump con Rubeus, Pass-the-Ticket, Overpass-the-Hash e Golden Ticket.'
+description: >-
+  Scopri come funziona il Ticket-Granting Ticket (TGT) Kerberos in Active
+  Directory: dump con Rubeus, Pass-the-Ticket, Overpass-the-Hash e Golden
+  Ticket.
 image: /tgt-kerberos-ticket-granting-ticket-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-21T00:00:00.000Z
 categories:
   - windows

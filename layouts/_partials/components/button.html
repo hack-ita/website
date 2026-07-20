@@ -5,7 +5,8 @@
 {{ $ariaLabel := .label }}
 {{ if and .title (ne .title "") }}{{ $ariaLabel = printf "%s: %s" .label .title }}{{ end }}
 {{ if eq .link  "true" }}
-<a href="{{ .url }}"
+{{ if not .url }}{{ warnf "button.html: link=true but no url passed for label %q — falling back to /" .label }}{{ end }}
+<a href="{{ .url | default "/" }}"
    role="button"
    aria-label="{{ $ariaLabel }}" {{ with .style }}style="{{ . }}"{{ end }}
    class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border {{ if $secondary }}border-secondary{{ else }}border-primary{{ end }} {{ if $light }}bg-dark dark:bg-light{{ else }}bg-light dark:bg-dark{{ end }} transition duration-500 font-medium {{ if $fullBtn }}w-full{{ end }} {{ .class }}">

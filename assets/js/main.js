@@ -12,6 +12,14 @@ const log = (...args) => DEBUG && console.log("LOG:", ...args);
 const warn = (...args) => DEBUG && console.warn("WARN:", ...args);
 const error = (...args) => console.error("ERROR:", ...args);
 
+// User-facing notification. Prefers the non-blocking toast, but falls back to
+// alert() so feedback is never lost if #toast-container is absent (the Toast
+// module only defines window.showToast when that container exists).
+const notify = (message, type = "success") => {
+  if (typeof window.showToast === "function") window.showToast(message, type);
+  else alert(message);
+};
+
 // Global error handling (passive)
 window.addEventListener(
   "error",
@@ -1222,13 +1230,13 @@ const initDeferred = () => {
 
             if (res.ok) {
               form.reset();
-              alert("🎉 Sei iscritto alla newsletter!");
+              notify("🎉 Sei iscritto alla newsletter!", "success");
             } else {
-              alert("❌ Errore durante l'iscrizione.");
+              notify("❌ Errore durante l'iscrizione.", "error");
             }
           } catch (e) {
             error("Newsletter failed:", e);
-            alert("❌ Connessione fallita.");
+            notify("❌ Connessione fallita.", "error");
           } finally {
             button.disabled = false;
           }
@@ -1281,9 +1289,17 @@ const initDeferred = () => {
             if (!target) return;
 
             target.select();
-            navigator.clipboard.writeText(target.value).then(() => {
-              window.showToast("Copiato negli appunti!", "success");
-            });
+            navigator.clipboard
+              .writeText(target.value)
+              .then(() => {
+                notify("Copiato negli appunti!", "success");
+              })
+              .catch((e) => {
+                // Fails on insecure origins or when permission is denied —
+                // the text stays selected so it can be copied manually.
+                error("Clipboard copy failed:", e);
+                notify("Copia non riuscita, copia manualmente.", "error");
+              });
           });
         });
 

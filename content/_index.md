@@ -5,6 +5,9 @@ sitemap:
 title: Hackita — Sicurezza Informatica, Pentest e Guide Pratiche
 description: Guide, analisi e tutorial su sicurezza informatica, penetration testing e strumenti come WPScan, sqlmap e Metasploit.
 image: /images/hackita-hero.webp
+# Hugo's embedded opengraph/twitter_cards templates read `images` (plural).
+images:
+  - /images/hackita-hero.webp
 about:
   enable: true
   image: /images/hackita-hero.webp

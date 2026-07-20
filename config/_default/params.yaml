@@ -1,5 +1,9 @@
 description: 'Cybersecurity offensiva in italiano: exploit, red team, Active Directory, hacking e vulnerability assessment. Blog per ethical hacker e pentesting di web app'
 reading_speed: 315
+# Site-wide og:image / twitter:image fallback for pages without their own.
+# Hugo's embedded opengraph template reads `images` (plural).
+images:
+  - /images/hackita-hero.webp
 header:
   logo: /images/logo-wobg.png
   cta:
@@ -9,8 +13,12 @@ header:
 footer:
   logo: /images/logo.webp
   disclaimer: 'HACKITA promuove esclusivamente la cybersecurity etica e legale. Tutti i contenuti, laboratori e materiali presenti sul sito hanno scopo educativo e formativo. Non incoraggiamo né supportiamo in alcun modo attività illegali o dannose. L’utilizzo improprio delle informazioni fornite è sotto la piena responsabilità dell’utente.'
+# Real Hackita profile URLs pending. Empty values are intentional: the footer
+# wraps each icon in `{{ with site.Params.social.<net> }}`, so a blank value
+# hides that icon instead of linking to the network's homepage. Fill in the
+# real profile URL to bring an icon back.
 social:
-  facebook: 'https://facebook.com'
-  instagram: 'https://instagram.com'
-  twitter: 'https://x.com'
-  linkedin: 'https://linkedin.com'
+  facebook: ''
+  instagram: ''
+  twitter: ''
+  linkedin: ''

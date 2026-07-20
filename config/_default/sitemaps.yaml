@@ -1,2 +1,9 @@
-sitemap:
-  disable: true
+# NOTE: this file is inert. In a Hugo config directory the filename becomes the
+# config key, so "sitemaps.yaml" maps to a "sitemaps" key that Hugo ignores —
+# and the nested "sitemap:" key below made it doubly ineffective. The root
+# sitemap has therefore always been generated (~1200 URLs) and is now correctly
+# advertised in layouts/robots.txt alongside the custom articoli sitemap.
+#
+# To actually change sitemap behaviour, set it in config/_default/hugo.yaml:
+#   sitemap:
+#     disable: true

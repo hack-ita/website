@@ -5,6 +5,10 @@
     <div class="space-y-10">
       {{ partial "components/image.html" (dict "src" site.Params.footer.logo "alt" site.Title "class" "w-40") }}
       
+      {{/* Only render the list if at least one social URL is configured,
+           so we never emit an empty labelled <ul> to screen readers. */}}
+      {{ $s := site.Params.social }}
+      {{ if or $s.facebook $s.instagram $s.twitter $s.linkedin }}
       <ul class="flex flex-wrap gap-7 items-stretch" aria-label="Follow Hackita on social media">
         {{/* facebook */}}
         {{ with site.Params.social.facebook }}
@@ -47,6 +51,7 @@
         </li>
         {{ end }}
       </ul>
+      {{ end }}
     </div>
 
     <!-- Quick Links -->

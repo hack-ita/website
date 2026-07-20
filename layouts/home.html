@@ -90,11 +90,15 @@
             {{ .Title }}
           </h3>
           <div>
-            {{ partial "components/button.html" (dict 
-                "link" "true" 
-                "label" "Esplora" 
-                "title" .Title
-                "url" .RelPermalink) }}
+            {{/* Non-interactive: the whole card is already wrapped in an <a>,
+                 so a nested <a>/<button> here would be invalid HTML. */}}
+            <span class="group uppercase relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-primary bg-light dark:bg-dark transition duration-500 font-medium cursor-default">
+              <span class="inline-flex h-12 translate-y-0 items-center justify-center px-6 text-primary font-bold transition duration-500 group-hover:-translate-y-[150%]">Esplora</span>
+              <span class="absolute inline-flex h-12 w-full translate-y-full items-center justify-center text-dark dark:text-light transition duration-500 group-hover:translate-y-0">
+                <span class="absolute h-full w-full translate-y-full skew-y-12 scale-y-0 bg-primary transition duration-500 group-hover:translate-y-0 group-hover:scale-200"></span>
+                <span class="z-10 font-bold">Esplora</span>
+              </span>
+            </span>
           </div>
         </div>
   
@@ -228,7 +232,7 @@
 {{/* /about */}}
 
 {{/* stats */}}
-{{ partial "shared/stats-typewriter.html" (dict "ariaLabel" "Learn Cyber-Security Stats" "mirrored" "false") }}
+{{ partial "shared/stats-typewriter.html" (dict "ariaLabel" "Learn Cyber-Security Stats" "mirrored" false) }}
 {{/* /stats */}}
 
 {{/* services */}}

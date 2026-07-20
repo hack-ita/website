@@ -2,7 +2,7 @@
 
 {{/* ================= HERO ================= */}}
 {{/* hero */}}
-<section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading" fetchpriority="high">
+<section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading">
   {{ range first 1 ((where .RegularPages "Params.featured" "eq" true) | default .RegularPages) }}
   {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
   {{ $readingTime := div (float .WordCount) $readingSpeed }}
@@ -38,7 +38,9 @@
       <p class="text-dark dark:text-light">{{ .Description }}</p>
       <div class="flex items-stretch gap-5">
         {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Continua a leggere" "title" .Title "url" .RelPermalink) }}
-        {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Tutti gli articoli" "url" ((printf "/categorie/%s" (index .Params.categories 0 | default "")) | urlize)) }}
+        {{ $allUrl := "/articoli/" }}
+        {{ with .Params.categories }}{{ $allUrl = (printf "/categorie/%s" (index . 0)) | urlize }}{{ end }}
+        {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Tutti gli articoli" "url" $allUrl) }}
       </div>
     </div>
 

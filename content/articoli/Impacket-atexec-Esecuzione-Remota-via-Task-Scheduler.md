@@ -1,9 +1,11 @@
 ---
 title: 'Impacket atexec: Esecuzione Remota via Task Scheduler'
 slug: atexec
-description: 'Guida operativa a impacket-atexec: esecuzione remota su Windows via Task Scheduler RPC con password, Pass-the-Hash, Kerberos e lateral movement su SMB.'
+description: >-
+  Guida operativa a impacket-atexec: esecuzione remota su Windows via Task
+  Scheduler RPC con password, Pass-the-Hash, Kerberos e lateral movement su SMB.
 image: /atexec-py-esecuzione-remota-task-scheduler.webp
-draft: true
+draft: false
 date: 2026-07-22T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,11 @@
 ---
 title: dcomexec.py - Lateral Movement via DCOM con Impacket
 slug: dcomexec
-description: 'Guida operativa a impacket-dcomexec: esecuzione remota su Windows via DCOM con ShellWindows, ShellBrowserWindow e MMC20 usando password o hash NTLM.'
+description: >-
+  Guida operativa a impacket-dcomexec: esecuzione remota su Windows via DCOM con
+  ShellWindows, ShellBrowserWindow e MMC20 usando password o hash NTLM.
 image: /dcomexec-py-lateral-movement-dcom.webp
-draft: true
+draft: false
 date: 2026-07-22T00:00:00.000Z
 categories:
   - tools

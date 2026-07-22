@@ -1,9 +1,11 @@
 ---
 title: 'rpcdump.py Impacket: Endpoint RPC, UUID e Named Pipe'
 slug: rpcdump
-description: 'Guida a rpcdump.py di Impacket per enumerare endpoint RPC Windows, UUID, named pipe e porte dinamiche. Comandi pratici e analisi per il pentesting.'
+description: >-
+  Guida a rpcdump.py di Impacket per enumerare endpoint RPC Windows, UUID, named
+  pipe e porte dinamiche. Comandi pratici e analisi per il pentesting.
 image: /rpcdump-enumerazione-endpoint-rpc.webp
-draft: true
+draft: false
 date: 2026-07-23T00:00:00.000Z
 categories:
   - tools

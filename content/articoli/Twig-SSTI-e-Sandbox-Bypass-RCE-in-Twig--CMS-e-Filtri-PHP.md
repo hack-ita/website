@@ -4,7 +4,7 @@ slug: twig-ssti-rce
 description: 'Twig SSTI ,detection, payload e RCE: fingerprint vs Jinja2, payload per Twig 2.x e 3.x, filter/map/reduce bypass, sandbox escape, CMS Drupal/Craft e mitigazioni'
 image: /twig-ssti-server-side-template-injection-rce.webp
 draft: false
-date: 2026-07-22T00:00:00.000Z
+date: 2026-07-24T00:00:00.000Z
 categories:
   - web-hacking
 subcategories:

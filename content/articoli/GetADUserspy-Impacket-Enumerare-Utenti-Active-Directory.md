@@ -1,9 +1,12 @@
 ---
 title: 'GetADUsers.py Impacket: Enumerare Utenti Active Directory'
 slug: getadusers
-description: 'Guida a GetADUsers.py di Impacket per enumerare utenti Active Directory via LDAP con password, hash NTLM, chiave AES o Kerberos e analizzare pwdLastSet e lastLogon.'
+description: >-
+  Guida a GetADUsers.py di Impacket per enumerare utenti Active Directory via
+  LDAP con password, hash NTLM, chiave AES o Kerberos e analizzare pwdLastSet e
+  lastLogon.
 image: /getadusers-enumerazione-utenti-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-24T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,12 @@
 ---
 title: 'getST.py Impacket: S4U, RBCD e Constrained Delegation'
 slug: getst
-description: 'Guida a getST.py di Impacket per ottenere Service Ticket Kerberos con S4U2Self, S4U2Proxy, RBCD e constrained delegation. Payload ed errori per pentest per AD'
+description: >-
+  Guida a getST.py di Impacket per ottenere Service Ticket Kerberos con
+  S4U2Self, S4U2Proxy, RBCD e constrained delegation. Payload ed errori per
+  pentest per AD
 image: /getst-py-service-ticket-s4u-delegation-abuse.webp
-draft: true
+draft: false
 date: 2026-07-24T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,7 @@
 ---
 title: 'rpcdump.py Impacket: Endpoint RPC, UUID e Named Pipe'
 slug: rpcdump
-description: >-
-  Guida a rpcdump.py di Impacket per enumerare endpoint RPC Windows, UUID, named
-  pipe e porte dinamiche. Comandi pratici e analisi per il pentesting.
+description: 'Guida a rpcdump.py di Impacket per enumerare endpoint RPC Windows, UUID, named pipe e porte dinamiche. Comandi pratici e analisi per il pentesting.'
 image: /rpcdump-enumerazione-endpoint-rpc.webp
 draft: false
 date: 2026-07-23T00:00:00.000Z
@@ -33,7 +31,7 @@ L'**Endpoint Mapper** (porta TCP/135) è il servizio Windows che mappa i client 
 
 `rpcdump.py` interroga questo registro e restituisce tutto, poi tenta di abbinare ogni UUID a un servizio noto per renderlo leggibile. Si usa tipicamente in fase di [enumeration](https://hackita.it/articoli/enumeration/), dopo aver identificato la porta 135 aperta con [Nmap](https://hackita.it/articoli/nmap/), per capire quali servizi (Task Scheduler, SAM, Service Control Manager, WMI) sono esposti e quindi potenzialmente attaccabili — con la riserva vista sopra sulla differenza tra presenza e sfruttabilità.
 
-## rpcdump.py richiede credenziali?
+## rpcdump richiede credenziali?
 
 Dipende dalla porta. Guardando il codice sorgente attuale:
 

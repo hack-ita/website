@@ -1,9 +1,12 @@
 ---
 title: 'lookupsid.py: Enumera Utenti e SID via RID Cycling SMB'
 slug: lookupsid
-description: 'Guida a impacket-lookupsid per enumerare utenti, gruppi e SID tramite MS-LSAT su SMB, usando password, hash NTLM, Kerberos o sessioni anonime quando consentite.'
+description: >-
+  Guida a impacket-lookupsid per enumerare utenti, gruppi e SID tramite MS-LSAT
+  su SMB, usando password, hash NTLM, Kerberos o sessioni anonime quando
+  consentite.
 image: /lookupsid-py-rid-cycling-smb.webp
-draft: true
+draft: false
 date: 2026-07-26T00:00:00.000Z
 categories:
   - tools

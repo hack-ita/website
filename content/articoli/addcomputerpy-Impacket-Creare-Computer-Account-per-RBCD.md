@@ -1,9 +1,12 @@
 ---
 title: 'addcomputer.py Impacket: Creare Computer Account per RBCD'
 slug: addcomputer
-description: 'Guida a addcomputer.py di Impacket per creare computer account Active Directory via SAMR o LDAPS, verificare MachineAccountQuota e usarli nelle catene RBCD.'
+description: >-
+  Guida a addcomputer.py di Impacket per creare computer account Active
+  Directory via SAMR o LDAPS, verificare MachineAccountQuota e usarli nelle
+  catene RBCD.
 image: /addcomputer-py-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-26T00:00:00.000Z
 categories:
   - tools

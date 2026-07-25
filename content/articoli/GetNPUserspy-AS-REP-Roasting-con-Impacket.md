@@ -3,7 +3,7 @@ title: 'GetNPUsers.py: AS-REP Roasting con Impacket'
 slug: getnpusers
 description: 'Guida a GetNPUsers.py di Impacket per trovare account senza pre-autenticazione Kerberos, estrarre hash AS-REP e craccarli offline con Hashcat.'
 image: /getnpusers-as-rep-roasting-impacket.webp
-draft: true
+draft: false
 date: 2026-07-25T00:00:00.000Z
 categories:
   - tools

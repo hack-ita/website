@@ -7,11 +7,18 @@
   fine in a normal fenced code block and don't need this.
 
   Pass the payload as a backtick-quoted argument so you don't have to
-  escape quotes; add an optional language as the second argument:
+  escape quotes. The optional second argument is the language for a code
+  block, or the keyword "inline" to render an inline <code> element inside
+  running text:
 
-    {{< payload `${{<%[%'"}}%\` >}}
-    {{< payload `{{ ''.__class__ }}` "python" >}}
+    {{< payload `${{<%[%'"}}%\` >}}            → highlighted code block
+    {{< payload `{{ ''.__class__ }}` "python" >}}  → block, python highlight
+    ...invia il polyglot {{< payload `${{<%...` "inline" >}} su ogni param
 */ -}}
 {{- $payload := .Get 0 -}}
-{{- $lang := .Get 1 | default "text" -}}
-{{- transform.Highlight $payload $lang "" -}}
+{{- $mode := .Get 1 | default "text" -}}
+{{- if eq $mode "inline" -}}
+<code>{{ $payload }}</code>
+{{- else -}}
+{{- transform.Highlight $payload $mode "" -}}
+{{- end -}}

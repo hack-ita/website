@@ -3,7 +3,7 @@ title: 'samrdump.py Impacket: Enumerare Utenti Windows via SAMR'
 slug: samrdump
 description: 'Guida a samrdump.py di Impacket per enumerare utenti Windows via MS-SAMR su SMB, ottenere RID e attributi account con password, hash NTLM o Kerberos.'
 image: /samrdump-enumerazione-utenti-gruppi-share-samr.webp
-draft: true
+draft: false
 date: 2026-07-25T00:00:00.000Z
 categories:
   - tools

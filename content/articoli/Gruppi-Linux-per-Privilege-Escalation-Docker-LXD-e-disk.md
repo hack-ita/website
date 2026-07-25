@@ -3,7 +3,7 @@ title: 'Gruppi Linux per Privilege Escalation: Docker, LXD e disk'
 slug: group-linux-privilege-escalation
 description: 'Linux privilege escalation tramite 40+ gruppi Linux: disk, Docker, LXD, Incus, MicroK8s, libvirt, shadow, video, adm, input, ssl-cert, KVM, sudo/wheel, lpadmin.'
 image: /gruppi-linux-privilege-escalation.webp
-draft: true
+draft: false
 date: 2026-07-25T00:00:00.000Z
 categories:
   - linux

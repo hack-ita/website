@@ -1,9 +1,11 @@
 ---
 title: 'GetLAPSPassword.py: Recuperare Password LAPS con Impacket'
 slug: getlapspassword
-description: 'Guida a GetLAPSPassword.py di Impacket per recuperare password Legacy LAPS e Windows LAPS cifrate da Active Directory con password, hash NTLM o Kerberos.'
+description: >-
+  Guida a GetLAPSPassword.py di Impacket per recuperare password Legacy LAPS e
+  Windows LAPS cifrate da Active Directory con password, hash NTLM o Kerberos.
 image: /getlapspassword-py-dump-password-laps.webp
-draft: true
+draft: false
 date: 2026-07-27T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,11 @@
 ---
 title: GetADComputers.py — Enumerare Computer Active Directory con Impacket
 slug: getadcomputers
-description: 'Guida a impacket-GetADComputers per enumerare computer Active Directory via LDAP, -resolveIP ,auth con password, hash NTLM, Kerberos, ccache o chiavi AES.'
+description: >-
+  Guida a impacket-GetADComputers per enumerare computer Active Directory via
+  LDAP, -resolveIP ,auth con password, hash NTLM, Kerberos, ccache o chiavi AES.
 image: /getadcomputers-py-enumerazione-computer-active-directory.webp
-draft: true
+draft: false
 date: 2026-07-28T00:00:00.000Z
 categories:
   - tools

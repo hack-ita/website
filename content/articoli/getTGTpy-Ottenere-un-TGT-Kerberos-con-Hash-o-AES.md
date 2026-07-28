@@ -1,9 +1,11 @@
 ---
 title: 'getTGT.py: Ottenere un TGT Kerberos con Hash o AES'
 slug: gettgt
-description: 'Guida a impacket-getTGT per richiedere un TGT Kerberos e salvarlo in formato ccache usando password, hash NTLM o chiavi AES in Active Directory.'
+description: >-
+  Guida a impacket-getTGT per richiedere un TGT Kerberos e salvarlo in formato
+  ccache usando password, hash NTLM o chiavi AES in Active Directory.
 image: /gettgt-py-tgt-kerberos-impacket.webp
-draft: true
+draft: false
 date: 2026-07-29T00:00:00.000Z
 categories:
   - tools

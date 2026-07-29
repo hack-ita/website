@@ -1,9 +1,12 @@
 ---
 title: 'GetUserSPNs.py: Kerberoasting e TGS con Impacket '
 slug: getuserspns
-description: 'Guida a impacket-GetUserSPNs per enumerare account con SPN e richiedere TGS Kerberos con password, hash NTLM, ccache o chiavi AES per Windows Active Directory'
+description: >-
+  Guida a impacket-GetUserSPNs per enumerare account con SPN e richiedere TGS
+  Kerberos con password, hash NTLM, ccache o chiavi AES per Windows Active
+  Directory
 image: /getuserspns-py-kerberoasting-impacket.webp
-draft: true
+draft: false
 date: 2026-07-30T00:00:00.000Z
 categories:
   - tools

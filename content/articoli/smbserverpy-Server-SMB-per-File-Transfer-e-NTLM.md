@@ -1,9 +1,11 @@
 ---
 title: 'smbserver.py: Server SMB per File Transfer e NTLM'
 slug: smbserver
-description: 'Guida a impacket-smbserver per creare una share SMB su Kali, trasferire file, registrare autenticazioni NTLM e gestire SMB2, accessi e logging.'
+description: >-
+  Guida a impacket-smbserver per creare una share SMB su Kali, trasferire file,
+  registrare autenticazioni NTLM e gestire SMB2, accessi e logging.
 image: /smbserver-py-server-smb-kali-impacket.webp
-draft: true
+draft: false
 date: 2026-07-31T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,11 @@
 ---
 title: 'renameMachine.py: NoPac e sAMAccountName Spoofing'
 slug: renamemachine
-description: Guida a impacket-renameMachine per modificare il sAMAccountName dei computer account e comprendere la catena NoPac con CVE-2021-42278 e CVE-2021-42287.
+description: >-
+  Guida a impacket-renameMachine per modificare il sAMAccountName dei computer
+  account e comprendere la catena NoPac con CVE-2021-42278 e CVE-2021-42287.
 image: /renamemachine-py-samaccountname-spoofing-nopac.webp
-draft: true
+draft: false
 date: 2026-08-01T00:00:00.000Z
 categories:
   - tools

@@ -1,9 +1,11 @@
 ---
 title: 'ticketer.py: Golden e Silver Ticket Kerberos con Impacket'
 slug: ticketer
-description: 'Guida a impacket-ticketer per forgiare Golden e Silver Ticket Kerberos con hash NTLM o chiavi AES, personalizzare il PAC e salvare ticket ccache.'
+description: >-
+  Guida a impacket-ticketer per forgiare Golden e Silver Ticket Kerberos con
+  hash NTLM o chiavi AES, personalizzare il PAC e salvare ticket ccache.
 image: /ticketer-py-golden-silver-ticket-kerberos.webp
-draft: true
+draft: false
 date: 2026-08-01T00:00:00.000Z
 categories:
   - tools

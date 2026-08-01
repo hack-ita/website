@@ -1,9 +1,11 @@
 ---
 title: 'Broken Access Control: Test, Esempi e Bypass OWASP A01'
 slug: broken-access-control
-description: 'Guida pratica al Broken Access Control OWASP A01:2025: privilege escalation, IDOR e BOLA, force browsing, metodi HTTP, header bypass e test con Burp Suite.'
+description: >-
+  Guida pratica al Broken Access Control OWASP A01:2025: privilege escalation,
+  IDOR e BOLA, force browsing, metodi HTTP, header bypass e test con Burp Suite.
 image: /broken-access-control-owasp-a01.webp
-draft: true
+draft: false
 date: 2026-08-02T00:00:00.000Z
 categories:
   - web-hacking

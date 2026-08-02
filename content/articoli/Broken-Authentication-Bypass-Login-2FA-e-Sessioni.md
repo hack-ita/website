@@ -1,9 +1,12 @@
 ---
 title: 'Broken Authentication: Bypass Login, 2FA e Sessioni'
 slug: broken-authentication
-description: 'Guida al Broken Authentication OWASP A07: username enumeration, brute force, bypass 2FA, session fixation, password reset e credential stuffing per pentest.'
+description: >-
+  Guida al Broken Authentication OWASP A07: username enumeration, brute force,
+  bypass 2FA, session fixation, password reset e credential stuffing per
+  pentest.
 image: /broken-authentication-owasp-a07.webp
-draft: true
+draft: false
 date: 2026-08-03T00:00:00.000Z
 categories:
   - web-hacking

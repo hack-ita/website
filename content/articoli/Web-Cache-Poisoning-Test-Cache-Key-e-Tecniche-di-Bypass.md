@@ -1,9 +1,12 @@
 ---
 title: 'Web Cache Poisoning: Test, Cache Key e Tecniche di Bypass'
 slug: cache-poisoning
-description: 'Guida pratica al Web Cache Poisoning nel pentest : analizza cache key e unkeyed input, testa header e fat GET con Burp e applica detection e mitigazioni utili.'
+description: >-
+  Guida pratica al Web Cache Poisoning nel pentest : analizza cache key e
+  unkeyed input, testa header e fat GET con Burp e applica detection e
+  mitigazioni utili.
 image: /cache-poisoning-hhtp-pentest.webp
-draft: true
+draft: false
 date: 2026-08-03T00:00:00.000Z
 categories:
   - web-hacking

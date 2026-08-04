@@ -1,9 +1,11 @@
 ---
 title: 'Injection Attack: Guida Completa alle Iniezioni Web'
 slug: injection-attacks-guida-completa
-description: 'Guida completa agli injection attack: SQL injection, command injection, SSTI, XXE, LDAP, NoSQL e altre tecniche, con esempi, test e prevenzione.'
+description: >-
+  Guida completa agli injection attack: SQL injection, command injection, SSTI,
+  XXE, LDAP, NoSQL e altre tecniche, con esempi, test e prevenzione.
 image: /injection-attack-guida-completa.webp
-draft: true
+draft: false
 date: 2026-08-04T00:00:00.000Z
 categories:
   - web-hacking

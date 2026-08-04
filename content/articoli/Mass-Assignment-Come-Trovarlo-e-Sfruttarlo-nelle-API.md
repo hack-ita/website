@@ -1,9 +1,11 @@
 ---
 title: 'Mass Assignment: Come Trovarlo e Sfruttarlo nelle API'
 slug: mass-assignment
-description: 'Scopri cos’è il mass assignment, come individuarlo e sfruttarlo nelle API REST, con esempi pratici per Rails, Laravel, Django, Node.js e Burp Suite.'
+description: >-
+  Scopri cos’è il mass assignment, come individuarlo e sfruttarlo nelle API
+  REST, con esempi pratici per Rails, Laravel, Django, Node.js e Burp Suite.
 image: /mass-assignment-attack-privilege-escalation.webp
-draft: true
+draft: false
 date: 2026-08-04T00:00:00.000Z
 categories:
   - web-hacking

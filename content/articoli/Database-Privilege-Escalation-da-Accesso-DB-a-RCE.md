@@ -1,9 +1,11 @@
 ---
 title: 'Database Privilege Escalation: da Accesso DB a RCE'
 slug: database-privilege-escalation
-description: 'Guida alla database privilege escalation. Pentest per MSSQL, MySQL, PostgreSQL e Oracle: enumera i privilegi e passa dall’accesso al database alla RCE.'
+description: >-
+  Guida alla database privilege escalation. Pentest per MSSQL, MySQL, PostgreSQL
+  e Oracle: enumera i privilegi e passa dall’accesso al database alla RCE.
 image: /database-privilege-escalation-rce.webp
-draft: true
+draft: false
 date: 2026-08-06T00:00:00.000Z
 categories:
   - guides-resources

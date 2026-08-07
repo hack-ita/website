@@ -1,9 +1,11 @@
 ---
 title: 'Security Headers HTTP: Guida a CSP, HSTS e Bypass'
 slug: security-headers
-description: 'Scopri come testare e configurare i security headers HTTP: CSP, HSTS, X-Frame-Options, Referrer-Policy e tecniche di bypass nei pentest web.'
+description: >-
+  Scopri come testare e configurare i security headers HTTP: CSP, HSTS,
+  X-Frame-Options, Referrer-Policy e tecniche di bypass nei pentest web.
 image: /security-headers-http-hackita.webp
-draft: true
+draft: false
 date: 2026-08-08T00:00:00.000Z
 categories:
   - web-hacking

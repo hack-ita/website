@@ -1,9 +1,11 @@
 ---
 title: 'XSSer: Scanner XSS, Payload, Fuzzing e WAF Bypass'
 slug: xsser
-description: 'Guida pratica a XSSer per testare vulnerabilità XSS: installazione, scansione GET/POST, payload, fuzzing, encoding, bypass WAF e report dei risultati.'
+description: >-
+  Guida pratica a XSSer per testare vulnerabilità XSS: installazione, scansione
+  GET/POST, payload, fuzzing, encoding, bypass WAF e report dei risultati.
 image: /xsser-xss-exploitation-tool-hackita.webp
-draft: true
+draft: false
 date: 2026-08-10T00:00:00.000Z
 categories:
   - tools

@@ -3,7 +3,7 @@ title: 'TryHackMe Bolt: Walkthrough completo (RCE su Bolt CMS)'
 slug: thm-bolt-walkthrough
 description: 'Write-Up della macchina Bolt di TryHackMe: enumerazione, scoperta credenziali, RCE autenticata su Bolt CMS via session hijacking e privesc a root.'
 image: /bolt-walktrough-tryhackme.webp
-draft: true
+draft: false
 date: 2026-08-10T00:00:00.000Z
 categories:
   - walkthroughs

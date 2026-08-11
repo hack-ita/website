@@ -19,7 +19,7 @@ tags:
 
 # HTB Unattended Walkthrough: da NGINX Alias Bug a Root via LUKS
 
-Unattended è una macchina Linux di HackTheBox che mette in fila quattro tecniche molto diverse tra loro: un bug di configurazione NGINX per esfiltrare codice sorgente, una doppia SQL injection incastrata, un LFI trasformato in RCE tramite session poisoning, e infine un'escalation a root che passa per il reverse engineering di un binario custom legato allo sblocco di un disco cifrato LUKS. È una macchina di livello Medio, ma il ragionamento richiesto per collegare i vari pezzi la rende più impegnativa di quanto suggerisca la difficulty rating. Personalmente la classificherei come Hard/Insane
+Unattended è una macchina Linux di HackTheBox che mette in fila quattro tecniche molto diverse tra loro: un bug di configurazione NGINX per esfiltrare codice sorgente, una doppia SQL injection incastrata, un LFI trasformato in RCE tramite session poisoning, e infine un'escalation a root che passa per il reverse engineering di un binario custom legato allo sblocco di un disco cifrato LUKS. È una macchina di livello Medio, ma il ragionamento richiesto per collegare i vari pezzi la rende più impegnativa di quanto suggerisca la difficulty rating.
 
 In questo walkthrough analizziamo ogni fase passo per passo, spiegando non solo i comandi ma il *perché* dietro ogni scelta.
 
@@ -29,7 +29,7 @@ In questo walkthrough analizziamo ogni fase passo per passo, spiegando non solo 
 sudo mynmap 10.10.10.126
 ```
 
-`mynmap` è il wrapper custom per nmap usato su queste analisi: esegue in automatico discovery TCP veloce, poi service/OS detection con script, così da non dover lanciare comandi separati per ogni fase.
+[`mynmap`](https://github.com/hack-ita/mynmap) è il wrapper custom per nmap usato su queste analisi: esegue in automatico discovery TCP veloce, poi service/OS detection con script, così da non dover lanciare comandi separati per ogni fase.
 
 ```
 PORT    STATE SERVICE  VERSION
@@ -417,11 +417,116 @@ uinitrd: ELF 64-bit LSB executable, x86-64, statically linked, ... stripped
 
 Due dettagli contano molto qui. **Statically linked** significa che il binario include già al suo interno tutte le funzioni delle librerie che usa (come le funzioni di hashing), invece di caricarle da librerie condivise esterne — è più grande, ma anche più "autonomo" da analizzare, perché tutto il codice rilevante è dentro il file stesso. **Stripped** significa che sono state rimosse le informazioni di debug (nomi di funzioni e variabili) che normalmente aiutano a orientarsi: bisogna quindi identificare a mano cosa fa ogni funzione, di solito partendo dalle stringhe di testo presenti nel binario.
 
-Aprendo il file con **Ghidra** (disassembler gratuito, alternativa open source a IDA Pro) e guardando la finestra delle stringhe, saltano subito all'occhio alcuni testi chiave: `supercazzola`, `/etc/hostname`, `/boot/guid`, e il formato `%02x` (tipico della stampa di byte in esadecimale, cioè di un hash). Da questi indizi testuali si può già intuire la forma generale del programma, prima ancora di leggere una sola istruzione assembly: legge qualcosa da questi due file, li combina in qualche modo, e stampa un risultato in esadecimale — oppure stampa "supercazzola" se qualcosa va storto.
+Aprendo il file con **Ghidra** (disassembler gratuito, alternativa open source a IDA Pro) e guardando la finestra **Defined Strings** (Window → Defined Strings), saltano subito all'occhio alcune righe:
 
-Seguendo i riferimenti incrociati (*cross-references*) di Ghidra dalla stringa `/boot/guid`, si arriva alla funzione che tenta di aprire quel file. La logica che emerge è: se l'apertura del file fallisce (perché `/boot/guid` non esiste, come capita eseguendo il binario fuori dall'ambiente dell'initrd, dove quel file è presente solo temporaneamente durante il boot), il programma stampa la stringa fissa "supercazzola" invece di calcolare qualsiasi cosa. Questo spiega perché, testando il binario "a freddo" sulla propria macchina Kali, il risultato non è mai la password vera: manca semplicemente uno degli ingredienti necessari.
+```
+Location    String Value    XREF
+0049e346    /etc/hostname   FUN_0040103e:0040107d
+0049e354    /boot/guid      FUN_0040103e:0040115a
+0049e364    supercazzola    FUN_0040103e:00401289
+```
 
-Proseguendo nell'analisi delle funzioni, la logica completa che emerge è: il programma legge il proprio hostname da `/etc/hostname`, legge un identificativo (GUID) da `/boot/guid`, concatena questi due valori con la stringa fissa `antani`, aggiunge in coda l'argomento passato da riga di comando (nel nostro caso `c0m3s3f0ss34nt4n1`), e passa l'intera stringa risultante a una funzione di hashing — identificabile confrontando la sequenza di chiamate (init → update → final, tipica di molte librerie crittografiche) con quella di una funzione SHA256 nota, presa da un piccolo programma di test scritto apposta per il confronto. Il risultato dell'hash, stampato in esadecimale, è la password che sblocca il disco.
+La colonna XREF (cross-reference, "riferimento incrociato") dice da quale funzione e a quale indirizzo esatto viene usata ciascuna stringa. Tutte e tre compaiono nella stessa funzione, `FUN_0040103e` — è il primo indizio concreto che quella funzione è il cuore del programma: legge quei due file e, in qualche condizione, stampa "supercazzola". Da qui si apre `FUN_0040103e` nel Decompiler per leggere la logica riga per riga.
+
+Proseguendo nell'analisi del codice decompilato, la logica completa che emerge è: il programma legge il proprio hostname da `/etc/hostname`, legge un identificativo (GUID) da `/boot/guid`, concatena questi due valori con la stringa fissa `antani`, aggiunge in coda l'argomento passato da riga di comando (nel nostro caso `c0m3s3f0ss34nt4n1`), e passa l'intera stringa risultante a una funzione di hashing (il formato dell'output finale — una stringa esadecimale di 40 caratteri — è coerente con un digest SHA1, anche se una verifica più approfondita a livello di assembly andrebbe oltre lo scopo di questo articolo). Il risultato, stampato in esadecimale, è la password che sblocca il disco.
+
+### Leggendo il codice decompilato passo per passo
+
+Aprendo la funzione principale nel Decompiler di Ghidra, il codice compare più o meno così (i nomi delle variabili sono generati automaticamente, dato che il binario è stripped):
+
+```c
+local_518 = 0x54534554;
+local_18 = FUN_00417c60("/etc/hostname",&DAT_0049e344);
+if (local_18 != 0) {
+    lVar3 = FUN_00417980(&local_518,1000,local_18);
+    if (lVar3 != 0) {
+        FUN_00400fde(&local_518);
+    }
+    FUN_00417590(local_18);
+}
+```
+
+Andiamo con calma, una riga alla volta.
+
+**`local_518 = 0x54534554;`** — questo numero esadecimale, se leggi i suoi byte come caratteri, corrisponde al testo `"TEST"`. È solo un valore di riempimento iniziale, prima che la variabile venga sovrascritta col dato vero. Un dettaglio interessante qui: leggendo i byte nell'ordine in cui compaiono nel numero (`54 53 45 54`) otterresti "TSET", non "TEST" — perché le CPU x86 salvano i numeri multi-byte in memoria **al contrario** (convenzione chiamata *little-endian*): l'ultimo byte del valore viene scritto per primo. Riordinandoli correttamente (`54 45 53 54`) si ottiene "TEST".
+
+**`local_18 = FUN_00417c60("/etc/hostname",&DAT_0049e344);`** — `DAT_0049e344` è quel singolo byte visto prima nella finestra delle stringhe, valore `72h`, cioè il carattere `"r"`. Questa chiamata, quindi, è nella forma "apri questo file in modalità lettura" — esattamente il comportamento della funzione standard C `fopen()`. Ghidra non conosce il nome originale (rimosso dallo stripping), quindi lo mostra con un nome generico come `FUN_00417c60`, ma il comportamento coincide.
+
+**`if (local_18 != 0) { ... }`** — `fopen()` restituisce 0 (NULL) se l'apertura fallisce. Questo controllo dice: "solo se il file è stato aperto con successo, procedi a leggerlo".
+
+**`lVar3 = FUN_00417980(&local_518,1000,local_18);`** — legge fino a 1000 byte dal file appena aperto (`local_18`) e li scrive dentro `local_518`, sovrascrivendo il "TEST" iniziale col contenuto vero di `/etc/hostname`. Questo è il comportamento di `fread()`. Il valore `1000` è un limite di sicurezza: legge al massimo 1000 byte, non di più — è proprio questo genere di limite esplicito, assente in funzioni come `strcpy()` o `gets()`, a impedire un buffer overflow in questo punto.
+
+**`FUN_00400fde(&local_518);`** — chiamata su ciò che è stato appena letto. Aprendo questa funzione separatamente, il suo codice è:
+
+```c
+void FUN_00400fde(char *param_1)
+{
+    char *local_20;
+    char *local_10;
+
+    local_20 = param_1;
+    local_10 = param_1;
+    while (*local_20 != '\0') {
+        if ((*local_20 == '\t') || (*local_20 == '\n')) {
+            local_20 = local_20 + 1;
+        }
+        else {
+            *local_10 = *local_20;
+            local_20 = local_20 + 1;
+            local_10 = local_10 + 1;
+        }
+    }
+    *local_10 = '\0';
+}
+```
+
+In pratica, questa funzione scorre il testo carattere per carattere e **rimuove tabulazioni (`\t`) e ritorni a capo (`\n`)**, ricompattando il resto — è una pulizia tipica per un contenuto letto da un file, che spesso porta con sé un ritorno a capo finale indesiderato prima di essere usato in un calcolo. Viene usata due volte: una sull'hostname appena letto, una sul contenuto di `/boot/guid` più avanti nella funzione.
+
+**`FUN_00417590(local_18);`** — a questo punto il contenuto del file è già stato letto e ripulito, quindi il file viene chiuso: comportamento di `fclose()`.
+
+La stessa identica sequenza (`fopen` → controllo di successo → `fread` fino a un limite → pulizia caratteri → `fclose`) si ripete subito dopo per `/boot/guid`, ma con una differenza cruciale nel controllo:
+
+```c
+local_18 = FUN_00417c60("/boot/guid",&DAT_0049e344);
+if (local_18 == 0) {
+    FUN_00417200("supercazzola");
+}
+else {
+    lVar3 = FUN_00417980(local_908,1000,local_18);
+    if (lVar3 != 0) {
+        FUN_00400fde(local_908);
+    }
+    FUN_00417590(local_18);
+    /* ... concatenazione con "antani" e calcolo hash ... */
+}
+```
+
+Qui il controllo è invertito rispetto a `/etc/hostname`: se `local_18 == 0` (cioè `fopen()` è fallita perché il file non esiste), il programma stampa direttamente `"supercazzola"` e si ferma — non entra nel ramo `else` dove avviene tutto il resto (concatenazione con `antani` e calcolo dell'hash finale). Questo spiega perché eseguendo il binario su un Kali qualsiasi, dove `/boot/guid` semplicemente non esiste, il risultato è sempre "supercazzola": manca l'ingrediente che fa scattare il calcolo vero.
+
+Per verificarlo concretamente, basta creare il file a mano e osservare il cambio di comportamento:
+
+```bash
+./uinitrd c0m3s3f0ss34nt4n1
+# supercazzola
+
+sudo touch /boot/guid
+./uinitrd c0m3s3f0ss34nt4n1
+# 46b8c9f88086afb0982f52376efe925928e6b8f  (hash calcolato, ma con contenuto vuoto/sbagliato)
+```
+
+Anche solo creando il file vuoto, il comportamento cambia — smette di stampare "supercazzola" e produce un hash, per quanto ancora sbagliato (perché il contenuto non è quello giusto). Questo conferma sperimentalmente, senza dubbi, che è proprio la condizione `local_18 == 0` a decidere quale dei due rami viene eseguito.
+
+### Verifica sperimentale
+
+A questo punto, invece di fidarsi solo della lettura del codice, ha senso verificare il comportamento sperimentalmente: creando a mano gli stessi file su una macchina Kali, con lo stesso contenuto trovato su Unattended, e osservando se il binario produce davvero la stessa password.
+
+```bash
+echo -n 'unattended' > /etc/hostname
+echo -n 'C0B604A4-FE6D-4C14-A791-BEB3769F3FBA' > /boot/guid
+./uinitrd c0m3s3f0ss34nt4n1
+```
+
+Il risultato è, byte per byte, identico alla password root ottenuta sulla macchina reale: `132f93ab100671dcb263acaf5dc95d8260e8b7c6`. Questo conferma sperimentalmente tutta la catena di ragionamento fatta leggendo il codice decompilato: hostname e GUID sono davvero gli unici due "ingredienti" variabili nel calcolo, e conoscendoli si può ricostruire la password offline, senza mai dover eseguire il binario direttamente sul target.
 
 Questo esercizio, oltre a essere un buon allenamento di reverse engineering, mette in luce un principio difensivo concreto: **derivare una password da valori parzialmente prevedibili e hardcodati in un binario distribuito con il sistema è rischioso**. Chiunque ottenga accesso in lettura a quel binario — qui, per via di un permesso di gruppo mal configurato — può, con tempo e pazienza, ricostruire l'intera logica e calcolare la password autonomamente, senza mai doverla "rubare" direttamente.
 

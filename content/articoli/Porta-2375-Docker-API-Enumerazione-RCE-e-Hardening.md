@@ -1,9 +1,11 @@
 ---
 title: 'Porta 2375 Docker API: Enumerazione, RCE e Hardening'
 slug: porta-2375-docker-api
-description: 'Porta 2375 Docker API pentest: verifica l’accesso senza autenticazione, ottieni RCE e root sull’host e applica detection, TLS, firewall e hardening.'
+description: >-
+  Porta 2375 Docker API pentest: verifica l’accesso senza autenticazione,
+  ottieni RCE e root sull’host e applica detection, TLS, firewall e hardening.
 image: /porta-2375-docker-api-esposta.webp
-draft: true
+draft: false
 date: 2026-08-16T00:00:00.000Z
 categories:
   - networking

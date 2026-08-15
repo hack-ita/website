@@ -1,9 +1,11 @@
 ---
 title: 'XXE Injection (XML External Entity): file read, SSRF e RCE'
 slug: xxe
-description: 'XXE (XML External Entity) nel pentest: payload per file read, SSRF, Blind XXE OOB e RCE, test con Burp Suite e Nuclei, prevenzione nei parser XML.'
+description: >-
+  XXE (XML External Entity) nel pentest: payload per file read, SSRF, Blind XXE
+  OOB e RCE, test con Burp Suite e Nuclei, prevenzione nei parser XML.
 image: /xxe-xml-external-entity-hackita.webp
-draft: true
+draft: false
 date: 2026-08-16T00:00:00.000Z
 categories:
   - web-hacking

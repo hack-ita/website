@@ -1,9 +1,11 @@
 ---
 title: 'Wfuzz: web fuzzing di directory, parametri, header e VHost'
 slug: wfuzz
-description: 'Wfuzz per il web fuzzing: comandi per directory e parametri, scoperta di VHost, header, cookie, filtri, SecLists, encoder e tecniche di WAF bypass.'
+description: >-
+  Wfuzz per il web fuzzing: comandi per directory e parametri, scoperta di
+  VHost, header, cookie, filtri, SecLists, encoder e tecniche di WAF bypass.
 image: /wfuzz-web-fuzzing-directory-parameter.webp
-draft: true
+draft: false
 date: 2026-08-16T00:00:00.000Z
 categories:
   - web-hacking

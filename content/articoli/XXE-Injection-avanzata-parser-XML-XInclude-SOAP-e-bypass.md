@@ -1,9 +1,11 @@
 ---
 title: 'XXE Injection avanzata: parser XML, XInclude, SOAP e bypass'
 slug: xxe-injection
-description: 'XXE Injection avanzata: identifica il parser XML, confronta Java, PHP, Python e .NET, testa SOAP, XInclude, content-type switching e bypass mirati.'
+description: >-
+  XXE Injection avanzata: identifica il parser XML, confronta Java, PHP, Python
+  e .NET, testa SOAP, XInclude, content-type switching e bypass mirati.
 image: /xxe-injection-xml-external-entity.webp
-draft: true
+draft: false
 date: 2026-08-16T00:00:00.000Z
 categories:
   - web-hacking

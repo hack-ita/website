@@ -1,9 +1,11 @@
 ---
 title: 'Linux Enumeration: comandi e tool per la Privilege Escalation'
 slug: linux-enumeration
-description: 'Linux enumeration passo passo: usa comandi manuali, SUID, sudo, capabilities, cron, LinPEAS, LinEnum e LSE per individuare vettori di privilege escalation.'
+description: >-
+  Linux enumeration passo passo: usa comandi manuali, SUID, sudo, capabilities,
+  cron, LinPEAS, LinEnum e LSE per individuare vettori di privilege escalation.
 image: /linux-enumeration-crime-scene.webp
-draft: true
+draft: false
 date: 2026-08-17T00:00:00.000Z
 categories:
   - linux

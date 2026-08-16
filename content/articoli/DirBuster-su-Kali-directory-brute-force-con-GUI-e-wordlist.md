@@ -1,9 +1,12 @@
 ---
 title: 'DirBuster su Kali: directory brute force con GUI e wordlist'
 slug: dirbuster
-description: 'Usa DirBuster su Kali per trovare directory e file nascosti: configurazione GUI e headless, wordlist, ricorsione, soft-404 e confronto con ffuf e feroxbuster.'
+description: >-
+  Usa DirBuster su Kali per trovare directory e file nascosti: configurazione
+  GUI e headless, wordlist, ricorsione, soft-404 e confronto con ffuf e
+  feroxbuster.
 image: /dirbuster-directory-brute-force-web-enumeration.webp
-draft: true
+draft: false
 date: 2026-08-17T00:00:00.000Z
 categories:
   - tools

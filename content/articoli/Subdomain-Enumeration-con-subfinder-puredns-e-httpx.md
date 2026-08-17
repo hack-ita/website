@@ -1,9 +1,12 @@
 ---
 title: 'Subdomain Enumeration con subfinder, puredns e httpx'
 slug: subdomain-enumeration
-description: 'Pipeline di subdomain enumeration: recon passiva con subfinder, brute force con puredns, permutazioni Alterx, validazione httpx e subdomain takeover check.'
+description: >-
+  Pipeline di subdomain enumeration: recon passiva con subfinder, brute force
+  con puredns, permutazioni Alterx, validazione httpx e subdomain takeover
+  check.
 image: /subdomain-enumeration-passive-active-recon.webp
-draft: true
+draft: false
 date: 2026-08-18T00:00:00.000Z
 categories:
   - web-hacking

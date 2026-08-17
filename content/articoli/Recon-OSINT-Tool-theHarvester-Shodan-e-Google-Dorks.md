@@ -1,9 +1,12 @@
 ---
 title: 'Recon OSINT: Tool, theHarvester, Shodan e Google Dorks.'
 slug: reconnaissance
-description: 'Reconnaissance OSINT passiva per pentest: raccogli email, sottodomini, dispositivi esposti e metadati con theHarvester, Google Dorks, Shodan e Metagoofil.'
+description: >-
+  Reconnaissance OSINT passiva per pentest: raccogli email, sottodomini,
+  dispositivi esposti e metadati con theHarvester, Google Dorks, Shodan e
+  Metagoofil.
 image: /osint-reconnaissance-pentest-dossier-ezgif.com-png-to-webp-converter.webp
-draft: true
+draft: false
 date: 2026-08-18T00:00:00.000Z
 categories:
   - web-hacking

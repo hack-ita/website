@@ -1,9 +1,11 @@
 ---
 title: 'SSH Hardening su Linux: sshd_config, Ed25519 e Fail2Ban'
 slug: ssh-security-hardening
-description: 'SSH hardening su Linux: configura sshd_config, chiavi Ed25519, Fail2Ban, UFW e 2FA; verifica algoritmi e accessi con ssh-audit e crea un jump host.'
+description: >-
+  SSH hardening su Linux: configura sshd_config, chiavi Ed25519, Fail2Ban, UFW e
+  2FA; verifica algoritmi e accessi con ssh-audit e crea un jump host.
 image: /ssh-hardening-linux-ed25519-fail2ban.webp
-draft: true
+draft: false
 date: 2026-08-19T00:00:00.000Z
 categories:
   - linux

@@ -1,9 +1,11 @@
 ---
 title: 'Scapy Python: Packet Crafting, Sniffing e ARP Spoofing'
 slug: scapy
-description: 'Impara Scapy con Python per creare e analizzare pacchetti TCP, UDP, ICMP e ARP, eseguire SYN scan, sniffing, ARP spoofing e testare firewall e IDS.'
+description: >-
+  Impara Scapy con Python per creare e analizzare pacchetti TCP, UDP, ICMP e
+  ARP, eseguire SYN scan, sniffing, ARP spoofing e testare firewall e IDS.
 image: /scapy-python-packet-crafting-pentest.webp
-draft: true
+draft: false
 date: 2026-08-20T00:00:00.000Z
 categories:
   - networking

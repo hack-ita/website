@@ -1,9 +1,11 @@
 ---
 title: 'CredNinja: validare credenziali SMB con password e hash NTLM'
 slug: credninja
-description: 'Usa CredNinja per validare password e hash NTLM via SMB, trovare local admin, eseguire Pass-the-Hash e user hunting, riducendo i lockout con stripe e delay.'
+description: >-
+  Usa CredNinja per validare password e hash NTLM via SMB, trovare local admin,
+  eseguire Pass-the-Hash e user hunting, riducendo i lockout con stripe e delay.
 image: /credninja-smb-credential-validation-pth.webp
-draft: true
+draft: false
 date: 2026-08-21T00:00:00.000Z
 categories:
   - windows

@@ -1,9 +1,12 @@
 ---
 title: 'Cloud Security Automation: Prowler, Checkov e AWS Config'
 slug: cloud-security-automation
-description: 'Cloud security automation su AWS: usa Prowler, ScoutSuite e AWS Config; integra Checkov e tfsec nella CI/CD e rileva drift e misconfiguration con EventBridge.'
+description: >-
+  Cloud security automation su AWS: usa Prowler, ScoutSuite e AWS Config;
+  integra Checkov e tfsec nella CI/CD e rileva drift e misconfiguration con
+  EventBridge.
 image: /cloud-security-automation-pipeline.webp
-draft: true
+draft: false
 date: 2026-08-22T00:00:00.000Z
 categories:
   - guides-resources

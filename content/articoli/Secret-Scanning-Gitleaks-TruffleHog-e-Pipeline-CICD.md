@@ -1,9 +1,11 @@
 ---
 title: 'Secret Scanning: Gitleaks, TruffleHog e Pipeline CI/CD'
 slug: secret-scanning-automation
-description: 'Automatizza il secret scanning con Gitleaks pre-commit e TruffleHog in CI/CD: blocca API key e token, verifica i leak e rimuovi i secret dalla Git history.'
+description: >-
+  Automatizza il secret scanning con Gitleaks pre-commit e TruffleHog in CI/CD:
+  blocca API key e token, verifica i leak e rimuovi i secret dalla Git history.
 image: /secret-scanning-automation-gitleaks-trufflehog.webp
-draft: true
+draft: false
 date: 2026-08-23T00:00:00.000Z
 categories:
   - guides-resources

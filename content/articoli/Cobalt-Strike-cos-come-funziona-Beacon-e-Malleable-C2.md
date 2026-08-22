@@ -1,9 +1,12 @@
 ---
 title: 'Cobalt Strike: cos’è, come funziona Beacon e Malleable C2'
 slug: cobaltstrike
-description: 'Scopri come funziona Cobalt Strike nel Red Team: architettura Team Server, Beacon, listener, Malleable C2, post-exploitation e principali tecniche di detection.'
+description: >-
+  Scopri come funziona Cobalt Strike nel Red Team: architettura Team Server,
+  Beacon, listener, Malleable C2, post-exploitation e principali tecniche di
+  detection.
 image: /cobalt-strike-horror-c2-beacon.webp
-draft: true
+draft: false
 date: 2026-08-23T00:00:00.000Z
 categories:
   - tools

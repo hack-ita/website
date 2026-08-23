@@ -1,9 +1,11 @@
 ---
 title: 'Sliver C2: guida a listener, beacon, implant e Armory'
 slug: silver
-description: 'Configura Sliver C2 per il Red Team: installazione, listener mTLS/HTTP/DNS, implant, beacon e sessioni, Armory, BOF, pivoting, OPSEC, detection e cleanup.'
+description: >-
+  Configura Sliver C2 per il Red Team: installazione, listener mTLS/HTTP/DNS,
+  implant, beacon e sessioni, Armory, BOF, pivoting, OPSEC, detection e cleanup.
 image: /sliver-c2-horror-red-team.webp
-draft: true
+draft: false
 date: 2026-08-24T00:00:00.000Z
 categories:
   - tools

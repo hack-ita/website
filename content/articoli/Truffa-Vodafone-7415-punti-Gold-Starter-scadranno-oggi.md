@@ -1,7 +1,7 @@
 ---
 title: 'Truffa Vodafone: “7415 punti Gold Starter scadranno oggi”'
 slug: vodafone-7415-punti-truffa
-description: 'Hai ricevuto l''SMS “I tuoi 7415 punti Vodafone Gold Starter scadranno oggi”? È una truffa: ecco come riconoscerla, dove porta il link e cosa fare.'
+description: 'Truffa Vodafone 2026: hai ricevuto l''SMS “I tuoi 7415 punti Gold Starter scadranno oggi”? Ecco come riconoscerla, dove porta il link e cosa fare'
 image: /truffa-vodafone-7415-punti-smishing-settembre-2026.webp
 draft: false
 date: 2026-09-04T00:00:00.000Z
@@ -22,7 +22,7 @@ featured: true
 
 *Aggiornato il 4 settembre 2026: è in circolazione una campagna di smishing che usa il nome Vodafone e promette falsi punti fedeltà in scadenza.*
 
-> "I tuoi 7415 punti Vodafone Gold Starter scadranno oggi. Visita: [https://cutt.ly/voda-info](https://cutt.ly/voda-info) per maggiori informazioni e per riscattare i tuoi punti."
+> "I tuoi 7415 punti Vodafone Gold Starter scadranno oggi. Visita: ***`https://cutt.ly/voda-info`*** per maggiori informazioni e per riscattare i tuoi punti."
 
 Se hai ricevuto questo SMS: **è una truffa**. Non è Vodafone. Te lo spieghiamo passo passo, con parole semplici, così puoi anche farlo leggere a chi in famiglia è meno pratico con queste cose.
 

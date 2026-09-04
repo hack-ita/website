@@ -22,7 +22,7 @@ featured: true
 
 *Aggiornato il 4 settembre 2026: è in circolazione una campagna di smishing che usa il nome Vodafone e promette falsi punti fedeltà in scadenza.*
 
-> "I tuoi 7415 punti Vodafone Gold Starter scadranno oggi. Visita: ***`https://cutt.ly/voda-info`*** per maggiori informazioni e per riscattare i tuoi punti."
+> "I tuoi 7415 punti Vodafone Gold Starter scadranno oggi. Visita: [https://cutt.ly/voda-info](https://cutt.ly/voda-info) per maggiori informazioni e per riscattare i tuoi punti."
 
 Se hai ricevuto questo SMS: **è una truffa**. Non è Vodafone. Te lo spieghiamo passo passo, con parole semplici, così puoi anche farlo leggere a chi in famiglia è meno pratico con queste cose.
 
@@ -82,7 +82,14 @@ Il ragionamento che vogliono farti fare è: "ho dei punti, stanno per scadere, d
 
 Il link porta a un sito chiamato **store-voda.store/it** — nota bene: **non è vodafone.it**. È un dominio diverso, creato apposta per sembrare collegato a Vodafone (contiene "voda"), ma non ha niente a che fare con l'azienda vera.
 
-Su questa pagina trovi un catalogo di prodotti veri e riconoscibili — AirPods, climatizzatori portatili, macchine da caffè, zaini — con un prezzo in punti pensato apposta per sembrare alla tua portata, spingendoti a scegliere subito un premio prima di "sprecare" i punti.
+Su questa pagina trovi un catalogo di prodotti veri e riconoscibili, con un costo in punti diverso per ciascuno:
+
+* AirPods Pro 2 e AirPods 3
+* Climatizzatori portatili (tra cui un modello SereneLife da 9.000 BTU e un Costway da 14.000 BTU)
+* Macchine da caffè Lavazza (Jolie Evo, Deséa White Cream)
+* Zaino da viaggio, ventilatore portatile e altri accessori
+
+Ogni prodotto ha un prezzo in punti pensato apposta per sembrare alla tua portata rispetto al saldo mostrato — abbastanza vicino da spingerti a scegliere subito un premio prima di "sprecare" i punti, invece di fermarti a controllare se il sito sia autentico.
 
 ## Perché usano un link "accorciato"
 
@@ -107,7 +114,14 @@ Questo tipo di truffa si chiama **"truffa dell'anticipo"**: ti fanno credere di 
 
 Alcune persone hanno notato che lo stesso link, aperto in momenti diversi o da telefoni diversi, a volte mostra il sito normalmente e altre volte dà errore o non carica.
 
-Questo **potrebbe** dipendere da una tecnica chiamata **cloaking** — letteralmente "mascheramento": alcuni siti truffa sono programmati per mostrarsi solo a certe persone (per esempio chi arriva cliccando da un SMS) e nascondersi a chi sembra un controllo di sicurezza o un tecnico che sta indagando. Diciamo "potrebbe" perché senza un controllo tecnico approfondito non possiamo affermarlo con certezza al 100% — ma è un comportamento tipico di molti siti di questo tipo.
+Questo **potrebbe** dipendere da una tecnica chiamata **cloaking** — letteralmente "mascheramento": alcuni siti truffa sono programmati per mostrarsi solo a certe persone e nascondersi a chi sembra un controllo di sicurezza o un tecnico che sta indagando. Diciamo "potrebbe" perché senza un controllo tecnico approfondito non possiamo affermarlo con certezza al 100% — ma è un comportamento tipico di molti siti di questo tipo, e ci sono alcuni modi in cui viene fatto tecnicamente:
+
+* **Riconoscimento del dispositivo**: il sito controlla se stai arrivando da un telefono vero (con un browser mobile normale) oppure da uno strumento automatico usato per analisi di sicurezza, e mostra contenuti diversi nei due casi.
+* **Controllo su come sei arrivato al link**: alcuni siti accettano di mostrarsi solo se apri il link cliccandolo direttamente dall'SMS, e non se lo apri "a freddo" copiandolo altrove.
+* **Link legato a un codice unico**: spesso questi link brevi contengono un codice che il sito associa a un singolo destinatario. Se lo apre qualcun altro rispetto a chi ha ricevuto quello specifico SMS, il sito può restituire un errore, come se il "biglietto" fosse già stato usato o non fosse il tuo.
+* **Blocco per zona geografica**: il sito potrebbe accettare visite solo da chi si connette dall'Italia o da certi operatori telefonici, bloccando il resto.
+
+In pratica, tutte queste tecniche servono allo stesso scopo: rendere più difficile a chi indaga (ricercatori di sicurezza, filtri antispam, aziende che bloccano siti truffa) analizzare il sito e farlo chiudere, continuando però a colpire regolarmente chi clicca dal messaggio originale. Il fatto che il sito si apra "solo per te" **non è quindi una prova che sia legittimo** — è anzi coerente con come si comportano molti siti di questo tipo.
 
 ## Come riconoscerla in pochi secondi, la prossima volta
 

@@ -154,6 +154,35 @@ Un consiglio utile in generale: se hai attivato le notifiche push o SMS della tu
 
 **In ogni caso**: se vuoi controllare i tuoi punti Vodafone veri, apri l'app **My Vodafone** direttamente, non seguire mai il link di un SMS. Per assistenza, chiama il **190** (gratis da numero Vodafone) o **800 100 195** (da altri operatori o da telefono fisso).
 
+## Per chi mastica un po' di sicurezza informatica: riepilogo tecnico
+
+Questa sezione riassume la campagna con la terminologia che si usa normalmente in ambito threat intelligence, per chi lavora nel settore o vuole approfondire oltre la spiegazione divulgativa.
+
+**Tipo di attacco**: smishing → phishing → advance-fee fraud / carding. Il programma fedeltà fittizio funziona da esca (lure) per portare la vittima fino alla fase di raccolta dati di pagamento.
+
+**Vettore iniziale**: SMS con sender ID alphanumerico spoofato ("Vodafone"). Il campo non è autenticato lato ricevente, quindi il client raggruppa il messaggio nel thread esistente in base al solo nome dichiarato — non c'è alcuna verifica crittografica o di provenienza equivalente a SPF/DKIM/DMARC come avviene (quando configurati) per l'email.
+
+**Delivery del payload**: URL shortener (cutt.ly) come hop intermedio, con redirect verso un dominio in **combosquatting** (contiene il brand "voda" senza corrispondere al dominio ufficiale vodafone.it). L'uso dello shortener serve sia a offuscare la destinazione finale sia, potenzialmente, a raccogliere metriche di click prima del redirect.
+
+**Landing page**: cataloghi prodotto reali usati come social proof per aumentare il tasso di conversione. Inconsistenza rilevata tra il valore comunicato via SMS e quello mostrato lato client (7415 vs 7350), indice di assenza di un backend persistente reale o di generazione indipendente dei valori tra i due touchpoint.
+
+**Comportamento anomalo osservato**: accesso alla landing page non deterministico tra richieste diverse. Ipotesi compatibili, in ordine di plausibilità nel contesto di campagne smishing simili:
+
+* device/user-agent fingerprinting, con contenuto servito condizionalmente
+* referrer check (accesso concesso solo se il referrer è coerente con un client SMS)
+* token mono-uso incorporato nello short link, associato al singolo destinatario
+* geofencing su IP/ASN o su range di operatori mobili italiani
+
+Nessuna di queste ipotesi è stata confermata con analisi diretta (header HTTP, comportamento DNS, fingerprint TLS) — restano ipotesi plausibili basate su pattern noti, non IOC verificati.
+
+**IOC raccolti**:
+
+* URL iniziale: `cutt[.]ly/voda-info`
+* Dominio di destinazione: `store-voda[.]store`
+* Tema del lure: falso programma fedeltà "Vodafone Gold Starter"
+
+**TTP osservate**: sender ID spoofing, combosquatting, social proof tramite catalogo prodotti reali, urgency-based social engineering, advance-fee fraud nella fase finale.
+
 ## Da ricordare, più di ogni altro dettaglio
 
 Non serve imparare a memoria tutti i trucchi di questa truffa specifica — ne inventeranno altre domani, magari fingendosi la tua banca o un corriere. La cosa davvero utile da portarti a casa è una sola:

@@ -173,7 +173,9 @@ Questa sezione riassume la campagna con la terminologia che si usa normalmente i
 * token mono-uso incorporato nello short link, associato al singolo destinatario
 * geofencing su IP/ASN o su range di operatori mobili italiani
 
-Nessuna di queste ipotesi è stata confermata con analisi diretta (header HTTP, comportamento DNS, fingerprint TLS) — restano ipotesi plausibili basate su pattern noti, non IOC verificati.
+**Verifica passiva effettuata**: risoluzione DNS del dominio confermata coerente su più resolver pubblici (Cloudflare 1.1.1.1, Google 8.8.8.8, Quad9 9.9.9.9), tutti concordi su un singolo A record. Il dominio risulta servito dietro Cloudflare come DNS provider, con backend nginx. Richieste HTTP/HTTPS dirette verso l'IP risolto, con SNI e header Host coerenti con il dominio, hanno restituito costantemente 404 su più path testati, anche replicando header tipici di un browser mobile e forzando la negoziazione TLS/ALPN. Il comportamento osservato non dipende quindi da SNI, Host header o header applicativi di base: la differenza tra l'accesso "che funziona" da smartphone e il 404 osservato da rete/toolchain diversa resta plausibilmente legata a segnali di livello superiore (fingerprint del client, provenienza di rete, o un token legato al singolo link inviato via SMS), ma non è stata isolata con certezza — e, per ovvie ragioni etiche e legali, non abbiamo spinto oltre l'analisi passiva su un'infrastruttura di terzi utilizzata per attività fraudolenta.
+
+Nessuna delle ipotesi sul cloaking è stata quindi confermata in modo definitivo — restano ipotesi plausibili basate su pattern noti, non IOC verificati al 100%.
 
 **IOC raccolti**:
 

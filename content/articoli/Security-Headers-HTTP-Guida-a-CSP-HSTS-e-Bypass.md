@@ -885,7 +885,7 @@ Tutti quelli della checklist a inizio articolo, ma con priorità diverse a secon
 
 ***
 
-## Risorse
+## Risorse Esterne
 
 * [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
 * [OWASP HTTP Security Response Headers Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html)

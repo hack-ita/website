@@ -1,9 +1,11 @@
 ---
 title: 'HTB Schooled: Stored XSS su Moodle a Root su FreeBSD'
 slug: htb-schooled-walkthrough
-description: 'Hack The Box Schooled Write-Up: da Stored XSS su Moodle a webshell, credenziali MySQL e privilege escalation a root su FreeBSD tramite pkg.'
+description: >-
+  Hack The Box Schooled Write-Up: da Stored XSS su Moodle a webshell,
+  credenziali MySQL e privilege escalation a root su FreeBSD tramite pkg.
 image: /hackthebox-schooled-walkthrough.webp
-draft: true
+draft: false
 date: 2026-09-07T00:00:00.000Z
 categories:
   - walkthroughs

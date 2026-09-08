@@ -19,7 +19,7 @@ tags:
 
 # HTB Sink Walkthrough: HTTP Request Smuggling e Privilege Escalation
 
-In questo walkthrough di HTB Sink vediamo come sfruttare una vulnerabilità di **HTTP Request Smuggling** legata a HAProxy e Gunicorn per ottenere la sessione dell'amministratore, accedere a Gitea e proseguire fino a root attraverso AWS LocalStack, Secrets Manager e KMS.
+In questo walkthrough di Hack The Box: Sink vediamo come sfruttare una vulnerabilità di **HTTP Request Smuggling** legata a HAProxy e Gunicorn per ottenere la sessione dell'amministratore, accedere a Gitea e proseguire fino a root attraverso AWS LocalStack, Secrets Manager e KMS.
 
 Sink è una macchina classificata **Insane** su HackTheBox — la difficoltà più alta della piattaforma. Proprio per questo si è rivelata un'ottima occasione per approfondire davvero l'HTTP Request Smuggling: non un CVE da lanciare con un tool automatico, ma un meccanismo da capire pezzo per pezzo, byte per byte, prima di riuscire a farlo funzionare in modo affidabile. Questo walkthrough segue esattamente quel percorso — compresi gli errori e i tentativi falliti lungo la strada, perché sono stati parte integrante di come si è arrivati a capire il bug.
 

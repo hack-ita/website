@@ -19,7 +19,7 @@ tags:
 
 # HTB Sink Walkthrough: HTTP Request Smuggling e Privilege Escalation
 
-In questo walkthrough di Hack The Box: Sink vediamo come sfruttare una vulnerabilità di **HTTP Request Smuggling** legata a HAProxy e Gunicorn per ottenere la sessione dell'amministratore, accedere a Gitea e proseguire fino a root attraverso AWS LocalStack, Secrets Manager e KMS.
+In questo walkthrough di HTB Sink vediamo come sfruttare una vulnerabilità di **HTTP Request Smuggling** legata a HAProxy e Gunicorn per ottenere la sessione dell'amministratore, accedere a Gitea e proseguire fino a root attraverso AWS LocalStack, Secrets Manager e KMS.
 
 Sink è una macchina classificata **Insane** su HackTheBox — la difficoltà più alta della piattaforma. Proprio per questo si è rivelata un'ottima occasione per approfondire davvero l'HTTP Request Smuggling: non un CVE da lanciare con un tool automatico, ma un meccanismo da capire pezzo per pezzo, byte per byte, prima di riuscire a farlo funzionare in modo affidabile. Questo walkthrough segue esattamente quel percorso — compresi gli errori e i tentativi falliti lungo la strada, perché sono stati parte integrante di come si è arrivati a capire il bug.
 
@@ -181,7 +181,13 @@ Cookie: session=<sessione attaccante>
 note=
 ```
 
-**Perché quello `0` è fondamentale.** È il chunk che dice a Gunicorn "la prima richiesta finisce qui". Senza di esso, Gunicorn (che legge in modalità chunked) non ha mai un punto in cui considerare chiusa la prima richiesta — continua a leggere tutto come se fosse un unico blocco confuso, e il `POST /notes` che segue non viene mai riconosciuto come una richiesta a sé. Il risultato pratico, visto durante i test, è un errore di parsing (`Invalid Request Line`). Con lo `0` al posto giusto, invece, Gunicorn chiude correttamente la prima richiesta e passa a leggere quello che segue come l'inizio di una richiesta nuova — esattamente il comportamento che serve per l'attacco.
+**Perché quello `0` è fondamentale.** Riassunto in poche righe, senza giri di parole:
+
+* La prima riga della richiesta (`POST /`) usa il chunked. Lo `0` appartiene **a lei**: è il chunk che dice "il body di questa prima richiesta finisce qui", niente di più.
+* Subito **dopo** quello `0`, Gunicorn ricomincia a leggere da zero — e quello che trova (`POST /notes ...`) lo interpreta come l'inizio di una richiesta **completamente nuova e separata**, non come continuazione della prima.
+* Questa seconda richiesta (`POST /notes`) **non usa più il chunked** — usa un normale `Content-Length`, dichiarato apposta più alto (es. 290) di quanto viene davvero inviato. Gunicorn la considera quindi incompleta, e resta in attesa che arrivino gli altri byte per "riempirla" fino a 290.
+
+Senza quello `0`, Gunicorn non avrebbe mai un punto in cui considerare chiusa la prima richiesta — continuerebbe a leggere tutto come un unico blocco confuso, e `POST /notes` non verrebbe mai riconosciuto come richiesta a sé (il risultato pratico, visto durante i test, è un errore di parsing tipo `Invalid Request Line`). Con lo `0` al posto giusto, invece, tutto fila: prima richiesta chiusa, seconda richiesta aperta e in attesa — esattamente il comportamento che serve per l'attacco.
 
 **Il senso del `Content-Length: 290` nella richiesta nascosta.** Qui si dichiara un numero (290) più alto di quanto viene effettivamente mandato (`note=`, pochi byte). Gunicorn legge quei pochi byte, vede che non bastano a raggiungere 290, e resta **in attesa** — pensa "manca ancora roba per completare questa richiesta". Quella parte mancante è esattamente lo spazio che, un attimo dopo, viene riempito dalla richiesta successiva che arriva sulla stessa connessione condivisa: se è la richiesta di un altro utente reale, i suoi byte (header, cookie compreso) finiscono incollati lì, fino a raggiungere i 290 dichiarati.
 

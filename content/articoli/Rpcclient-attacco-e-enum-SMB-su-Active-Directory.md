@@ -12,6 +12,8 @@ subcategories:
   - recon
 tags:
   - rpcclient
+  - Samba
+  - SMB
 ---
 
 # rpcclient: Enumerazione SMB e Active Directory da Kali Linux

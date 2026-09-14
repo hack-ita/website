@@ -1,12 +1,11 @@
 ---
-title: 'Rpcclient: attacco e enum SMB su Active Directory'
+title: 'rpcclient Kali Linux: Enumerazione SMB, AD e SID/RID'
 slug: rpcclient
-description: >-
-  Rpcclient consente di interrogare AD via SMB per ottenere utenti, SID e
-  informazioni critiche. Tecniche offensive per pentest e Red Team.
+description: 'Guida a rpcclient su Kali Linux per enumerare utenti, gruppi, SID/RID, trust, policy password e share SMB tramite SAMR, LSARPC e SRVSVC, con comandi pratici.'
 image: /Gemini_Generated_Image_qeb7nqeb7nqeb7nq.webp
 draft: false
 date: 2026-01-23T00:00:00.000Z
+lastmod: 2026-09-17T00:00:00.000Z
 categories:
   - tools
 subcategories:
@@ -15,541 +14,260 @@ tags:
   - rpcclient
 ---
 
-# Rpcclient: attacco e enum SMB su Active Directory
+# rpcclient: Enumerazione SMB e Active Directory da Kali Linux
 
-Se hai la 445 aperta ma l’enumerazione “classica” ti dà poco, `rpcclient` ti fa tirare fuori utenti, gruppi, SID e policy in modo chirurgico (sempre in lab/CTF/VM autorizzate).
+`rpcclient` è il client MS-RPC della suite Samba: interroga interfacce Windows/AD come SAMR, LSARPC e SRVSVC — tipicamente attraverso named pipe SMB, anche se il protocollo supporta altri transport DCERPC. In un workflow offensivo trasforma "porta 445 esposta" in intelligence di dominio: utenti, gruppi, SID/RID, policy password, share, trust.
 
-## Intro
+**In 30 secondi:**
 
-`rpcclient` è un client MS-RPC/DCE-RPC della suite Samba che ti permette di interrogare servizi Windows/AD (SAMR, LSA, SRVSVC) passando spesso da SMB (named pipes).
+* **A cosa serve rpcclient?** Interroga interfacce RPC su Windows/AD per ottenere utenti, gruppi, SID/RID, policy password e share, quando i permessi lo consentono.
+* **Serve un account?** Non necessariamente — una null session va sempre testata, ma su sistemi moderni l'anonimo è spesso bloccato.
+* **rpcclient enumera i file dentro le share?** No: enumera solo l'esistenza e i metadati delle share. Per il contenuto serve un client file-centric come [smbclient](https://hackita.it/articoli/smbclient/).
 
-In un workflow offensivo da lab è utile quando vuoi trasformare “porta 445 aperta” in intelligence di dominio: utenti, gruppi, membership, SID/RID, policy password, share enumerate via RPC.
+## Cos'è rpcclient e Come Funziona
 
-Cosa farai (in pratica):
+`rpcclient` è un client MS-RPC della suite Samba. Su Windows/AD usa più spesso named pipe via SMB (`ncacn_np`) per raggiungere interfacce come SAMR, LSARPC e SRVSVC, ma il protocollo DCE/RPC supporta anche altri transport (es. `ncacn_ip_tcp`) — non è quindi corretto pensare a "rpcclient = SMB" in senso stretto, solo il percorso più comune in pratica.
 
-* connetterti in modalità anonima (se possibile) o con credenziali low-priv
-* dumpare utenti/gruppi e correlare RID/SID
-* estrarre policy password e share info via RPC
-* gestire errori comuni (logon failure, access denied, signing)
+### Interfacce RPC Principali
 
-Nota etica: usa tutto solo su sistemi tuoi o esplicitamente autorizzati (HTB/PG/lab AD).
+| Interfaccia | Cosa trovi                                       |
+| ----------- | ------------------------------------------------ |
+| SAMR        | Utenti, gruppi, membership, RID, policy password |
+| LSARPC      | SID, privilegi, trust di dominio                 |
+| SRVSVC      | Info server, share                               |
+| WKSSVC      | Informazioni workstation/dominio                 |
+| SPOOLSS     | Informazioni relative allo spooler di stampa     |
 
-## Cos’è rpcclient e dove si incastra nel workflow
-
-> **In breve:** `rpcclient` interroga servizi interni Windows/AD via MS-RPC (spesso su SMB), quindi è perfetto per enumerazione “di dominio”, non per browsing file.
-
-`rpcclient` non nasce per “sfogliare share” (quello è più da SMB file access), ma per chiamare procedure remote: query su utenti/gruppi, mapping SID, policy e informazioni server.
-
-Dove lo metti nella catena (lab):
-
-* Recon: 445/139 trovate aperte, capisci se c’è AD/SMB sensato.
-* Accesso: provi anonymous/null session solo per disclosure; altrimenti usi credenziali anche basse.
-* Intel: estrai userlist, gruppi, policy, mapping SID/RID.
-* Correlazione: passi i risultati a tool di post-enum e pathing.
-
-Quando NON usarlo: se ti serve solo scaricare file da share o fare triage rapido su più host (meglio strumenti più diretti).
-
-## Installazione, versione e quick sanity check
-
-> **In breve:** su Kali spesso è già presente (Samba client). Prima valida versione e connettività verso 445/139 nel lab.
-
-Perché: ti assicuri di avere `rpcclient` e riduci “bug fantasma” dovuti a tool mancanti/vecchi.
-Cosa aspettarti: una versione stampata e il binario disponibile.
-Comando:
-
+```text
+rpcclient
+  |
+  +-- SAMR: enumdomusers, enumdomgroups, queryuser, queryusergroups, querygroupmem, getdompwinfo
+  |
+  +-- LSARPC: lookupnames, lookupsids, lookupdomain, lsaquery, dsenumdomtrusts
+  |
+  +-- SRVSVC: srvinfo, netshareenumall
 ```
+
+Se il target espone SMB sulla 445, `rpcclient` può diventare una fonte importante di informazioni — ma quanto ottieni dipende da servizi RPC disponibili, autenticazione e permessi, non dalla sola porta aperta.
+
+## Installazione e Verifica
+
+```bash
+sudo apt update && sudo apt install -y samba-common-bin smbclient
 rpcclient --version
 ```
 
-Interpretazione: se il comando risponde, sei a posto; se manca, installa i client Samba.
-Errore comune + fix: `command not found` → installa il pacchetto Samba client.
+## Connessione e Autenticazione
 
-Perché: installare in modo pulito su Kali.
-Cosa aspettarti: `rpcclient` disponibile nel PATH.
-Comando:
+### Null session (anonima)
 
-```
-sudo apt update && sudo apt install -y samba-common-bin smbclient
-```
-
-Interpretazione: su alcune distro il pacchetto può variare, ma l’obiettivo è ottenere i binari Samba client.
-Errore comune + fix: repository/apt rotti → verifica mirror o usa una repo Kali corretta.
-
-## Connessione e autenticazione: le 3 modalità che userai sempre
-
-> **In breve:** `rpcclient` può entrare in shell interattiva oppure eseguire comandi one-shot con `-c`; l’accesso anonimo è raro ma va testato.
-
-### 1) Test “null session” (anonimo) in lab
-
-Perché: se passa, hai information disclosure senza credenziali (finding serio).
-Cosa aspettarti: se consentito, arrivi al prompt `rpcclient $>`; se negato, access denied.
-Comando:
-
-```
+```bash
 rpcclient -U '' -N 10.10.10.10
 ```
 
-Esempio di output (può variare):
+Se entri, hai un finding di information disclosure senza credenziali — prova subito comandi "safe" come `srvinfo`. Su ambienti moderni `NT_STATUS_ACCESS_DENIED` qui è normale, non un problema di sintassi: l'anonimo è spesso disabilitato di default.
 
-```
-rpcclient $>
-```
+### Credenziali (dominio o locali)
 
-Interpretazione: se entri, prova subito comandi “safe” tipo `srvinfo` o `querydominfo`.
-Errore comune + fix: `NT_STATUS_ACCESS_DENIED` → non è un problema: significa che anonimo è bloccato (normale su ambienti moderni).
-
-### 2) Connessione con credenziali (domain o local)
-
-Perché: con credenziali low-priv spesso ottieni comunque tantissima intel di dominio.
-Cosa aspettarti: prompt interattivo `rpcclient $>` oppure errore di logon.
-Comando:
-
-```
+```bash
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10
 ```
 
-Interpretazione: se il dominio è richiesto e non lo metti, potresti autenticarti contro contesti non attesi.
-Errore comune + fix: `NT_STATUS_LOGON_FAILURE` → credenziali errate o dominio sbagliato; prova a specificare `-W LAB` se serve.
+`NT_STATUS_LOGON_FAILURE` è quasi sempre credenziali o dominio sbagliati — prova a specificare esplicitamente il dominio con `-W LAB` se il formato `DOMAIN/user` non basta.
 
-### 3) One-liner non interattiva (perfetta per scripting)
+### Comandi One-Shot con `-c`
 
-Perché: esegui una mini-sequenza e salvi output pulito.
-Cosa aspettarti: output testuale dei comandi richiesti (o errori per i comandi non permessi).
-Comando:
-
-```
+```bash
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'querydominfo; enumdomusers'
 ```
 
-Interpretazione: ottimo per dump iniziale “fast”.
-Errore comune + fix: comandi separati male → usa `;` tra comandi e virgolette singole attorno alla stringa.
+Utile per dump ripetibili e salvabili su file (`> dump.txt`), senza restare in shell interattiva.
 
-## Enumerazione base: dominio, server, utenti e gruppi
+## Enumerazione Iniziale
 
-> **In breve:** parti sempre da `querydominfo` e `srvinfo`, poi passa a `enumdomusers` e `enumdomgroups` per costruire la tua mappa.
-
-### Capire “dove sei finito”: domain + server
-
-Perché: vuoi sapere se stai parlando con un DC, un member server o una macchina standalone.
-Cosa aspettarti: info su dominio e server (dipende dai permessi).
-Comando:
-
-```
+```bash
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'querydominfo; srvinfo'
 ```
 
-Esempio di output (può variare):
+`srvinfo` dà informazioni sul server, `querydominfo` sul dominio, quando l'endpoint espone SAMR con permessi sufficienti — l'output da solo non è una prova assoluta del ruolo della macchina (DC vs member server), solo un forte indizio da confermare con altre fonti.
 
-```
-Domain: LAB
-Server: DC01
-Users: 128
-Groups: 54
-OS: Windows Server (build info may vary)
-```
+## Enumerazione Utenti e Gruppi
 
-Interpretazione: se ottieni nome dominio e conteggi, hai già un buon segnale di visibilità RPC.
-Errore comune + fix: output vuoto/errore → prova in modalità interattiva per vedere messaggi più chiari.
-
-### Dump utenti: la userlist “grezza” che serve sempre
-
-Perché: la lista utenti alimenta qualunque fase successiva (validazione credenziali, pathing, triage).
-Cosa aspettarti: righe con `user:[Nome] rid:[0x...]`.
-Comando:
-
-```
+```bash
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'enumdomusers'
 ```
 
-Esempio di output (può variare):
-
-```
+```text
 user:[Administrator] rid:[0x1f4]
 user:[svc_sql] rid:[0x45a]
-user:[m.rossi] rid:[0x5c1]
 ```
 
-Interpretazione: il RID ti permette query mirate (`queryuser`, `queryusergroups`) senza ambiguità.
-Errore comune + fix: `NT_STATUS_ACCESS_DENIED` → l’utente non ha permessi per enumerare; prova altre fonti (LDAP/SMB) o credenziali diverse in lab.
+`enumdomusers` restituisce username e RID; usa il RID per interrogazioni mirate invece del nome, è più affidabile:
 
-### Enumerare gruppi e membership (dove nasce l’escalation)
-
-Perché: l’escalation in AD è spesso “gruppi → privilegi → path”.
-Cosa aspettarti: lista gruppi e poi membri per RID del gruppo.
-Comando:
-
+```bash
+rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'queryuser 0x45a'
 ```
+
+Gruppi e membership:
+
+```bash
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'enumdomgroups'
-```
-
-Interpretazione: prendi un RID interessante e interroga i membri.
-Errore comune + fix: se non sai quale RID usare, prova prima a listare e poi query.
-
-Perché: capire chi sta dentro un gruppo target.
-Cosa aspettarti: lista di RID membri (poi li risolvi in nomi).
-Comando:
-
-```
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'querygroupmem 0x200'
-```
-
-Interpretazione: se ottieni RID, poi fai `queryuser` o risolvi SID/nomi.
-Errore comune + fix: gruppo RID diverso nel tuo lab → non assumere “0x200 = Domain Admins” come legge: verifica sempre.
-
-Per collegare rapidamente utenti/gruppi a path reali di escalation, passa i dati a [BloodHound: mappa l’Active Directory come un hacker](/articoli/bloodhound/).
-
-## Profilazione mirata: queryuser, gruppi dell’utente e segnali utili
-
-> **In breve:** una volta trovato un account interessante (service account, admin, “strano”), approfondisci con `queryuser` e `queryusergroups`.
-
-Perché: vuoi dettagli operativi (descrizioni, stato account, last logon, flags) e membership.
-Cosa aspettarti: campi testuali con attributi (variano per versione/permessi).
-Comando:
-
-```
-rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'queryuser svc_sql'
-```
-
-Interpretazione: guarda “description” e campi simili: in lab spesso contengono hint o leak (da trattare come finding).
-Errore comune + fix: nome utente non risolto → usa `enumdomusers` e prendi il RID, poi `queryuser 0x...`.
-
-Perché: trovare i gruppi dell’utente in modo diretto.
-Cosa aspettarti: lista di gruppi (come RID) legati all’utente.
-Comando:
-
-```
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'queryusergroups 0x45a'
 ```
 
-Interpretazione: se vedi gruppi “operativi” (backup, server operators, custom), è un candidato escalation in lab.
-Errore comune + fix: confondere RID utente con RID gruppo → annota sempre cosa stai interrogando.
+Non assumere quale RID corrisponda a quale gruppo built-in (es. "0x200 = Domain Admins") senza verificarlo nel tuo lab — varia.
 
-Se ti serve un confronto “file-centric” (share e contenuti), usa invece [Smbclient: accesso e attacco alle condivisioni Windows](/articoli/smbclient/).
+Per correlare rapidamente utenti/gruppi con path di escalation reali, passa i dati a [BloodHound](https://hackita.it/articoli/bloodhound/).
 
-## SID, RID e risoluzione nomi: evitare ambiguità
+## RID Cycling: Enumerare Utenti Senza Permessi su enumdomusers
 
-> **In breve:** `lookupnames` e `lookupsids` ti permettono di passare tra nomi e SID; è fondamentale quando lavori con output di più tool.
+Se `enumdomusers` è negato ma una null session (o un account low-priv) può comunque interrogare singoli RID, puoi forzare l'enumerazione tentando un range di RID tipico degli account utente:
 
-Perché: normalizzare identità (nome ↔ SID) e correlare dataset.
-Cosa aspettarti: un SID e un tipo associato (user/group).
-Comando:
-
+```bash
+for i in $(seq 500 1100); do
+  rpcclient -N -U '' 10.10.10.10 -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid"
+done
 ```
+
+È una tecnica di fallback, non il metodo primario: se `enumdomusers` funziona, è sempre più veloce e completo. Il RID cycling serve quando l'enumerazione diretta è bloccata ma la risoluzione di un singolo RID no — una distinzione di permessi che càpita più spesso di quanto sembri.
+
+## SID e RID
+
+```text
+SID di dominio:  S-1-5-21-1111111111-2222222222-3333333333
+RID:             500
+SID completo:    S-1-5-21-1111111111-2222222222-3333333333-500
+```
+
+Il RID identifica l'account all'interno del dominio (il SID authority); il SID completo è univoco nell'intera foresta.
+
+```bash
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'lookupnames Administrator'
-```
-
-Interpretazione: ottieni il SID e capisci se stai parlando di un account built-in o di dominio.
-Errore comune + fix: `NT_STATUS_NONE_MAPPED` → nome errato o contesto diverso; verifica il dominio/realm.
-
-Perché: risolvere SID in nome “umano”.
-Cosa aspettarti: mapping SID → account.
-Comando:
-
-```
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'lookupsids S-1-5-21-1111111111-2222222222-3333333333-500'
+rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'lookupdomain LAB'
+rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'lsaquery'
 ```
 
-Interpretazione: utile quando trovi SID in log, ACL o output di altri strumenti.
-Errore comune + fix: SID incompleto o locale → assicurati che il SID sia corretto e riferito al dominio del lab.
+`lsaquery` dà nome e SID di dominio in un colpo solo — spesso il primo comando utile quando non conosci ancora nulla del target. `NT_STATUS_NONE_MAPPED` su `lookupnames`/`lookupsids` indica quasi sempre nome/SID sbagliato o dominio/contesto diverso da quello atteso.
 
-## Casi d’uso offensivi “da lab”: disclosure utile senza exploit
+### Trust di Dominio
 
-> **In breve:** con `rpcclient` puoi ottenere policy password e share info via RPC; sono dati “tattici” che impattano direttamente il rischio.
+Se il target fa parte di una foresta con più domini, LSARPC-DS espone anche le relazioni di trust:
 
-### Policy password: getdompwinfo
-
-Perché: ti serve per valutare rischio (min length, lockout/age se esposti) e fare report sensato in lab.
-Cosa aspettarti: parametri della policy (variano per configurazione).
-Comando:
-
+```bash
+rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'dsenumdomtrusts'
 ```
+
+Utile per capire se esistono altri domini raggiungibili prima di restringere l'assessment a uno solo.
+
+## Password Policy
+
+```bash
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'getdompwinfo'
 ```
 
-Esempio di output (può variare):
-
-```
+```text
 min_password_length: 8
 password_history: 24
-password_properties: 0x00000001
 ```
 
-Interpretazione: non “attacchi” nulla: misuri posture e impatti possibili (se la policy è debole, è un finding).
-Errore comune + fix: access denied → non tutte le credenziali possono leggere tutto; valida con un account che nel lab ha permessi adeguati.
+Restituisce le informazioni sulla password policy esposte da SAMR — i campi disponibili variano per sistema e permessi, non aspettarti sempre l'intero set (lockout, age, ecc.).
 
-### Share enumerate via RPC: netshareenumall
+## Enumerazione SMB via RPC
 
-Perché: vedi share e descrizioni anche quando non vuoi ancora fare browsing file.
-Cosa aspettarti: lista share e commenti; i nomi spesso indicano dati sensibili.
-Comando:
-
-```
+```bash
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'netshareenumall'
 ```
 
-Interpretazione: prendi i nomi share e poi decidi se passare a strumenti file-centric.
-Errore comune + fix: share non visibili via RPC → usa alternative (SMB listing) o cambia account nel lab.
+Enumerare una share non significa avere accesso automatico al suo contenuto: RPC ti dice cosa esiste, per leggerne dentro serve un client file-centric come [smbclient](https://hackita.it/articoli/smbclient/).
 
-Validazione in lab: crea un mini dominio con share “IT-Deploy” e un service account; verifica quanto un low-priv vede via RPC e documenta il gap.
-Segnali di detection: picchi di autenticazioni di rete e chiamate RPC ripetute verso DC/member server in finestre brevi.
-Hardening/mitigazione: disabilita anonymous/guest, limita la visibilità di enumeration per utenti non privilegiati e applica auditing coerente su accessi di rete e RPC.
+## Errori e Troubleshooting
 
-Per validare velocemente credenziali e visibilità su più host (sempre in lab), molti usano tool “bulk” come [CrackMapExec: attacchi rapidi su Active Directory](/articoli/crackmapexec/).
+**`NT_STATUS_LOGON_FAILURE`** — credenziali o dominio sbagliati. Prova a specificare `-W LAB` esplicitamente.
 
-## Errori comuni e troubleshooting (quelli che ti fanno perdere tempo)
+**`NT_STATUS_ACCESS_DENIED` su comandi specifici** — la sessione è valida ma quel comando richiede permessi più alti. Non insistere: cambia fonte dati (LDAP, SMB) o account.
 
-> **In breve:** la maggior parte dei problemi è: credenziali/contesto dominio, policy che blocca enumeration, o trasporto/negoziazione SMB.
+**Null session negata** — normale su ambienti moderni, documentalo come finding ("anonimo bloccato") invece di considerarlo un errore del tool.
 
-### `NT_STATUS_LOGON_FAILURE`
+**Timeout / target non raggiungibile** — verifica reachability su 445/139 prima di sospettare altro:
 
-Perché: indica credenziali errate o contesto sbagliato.
-Cosa aspettarti: fallimento immediato in connessione.
-Comando:
-
-```
-rpcclient -U 'LAB/user1%WrongPass' 10.10.10.10 -c 'srvinfo'
+```bash
+nc -vz 10.10.10.10 445
 ```
 
-Interpretazione: non stai “rompendo” nulla: stai autenticando male.
-Errore comune + fix: dominio errato → prova `-U 'LAB/user1%Passw0rd!'` e, se serve, aggiungi `-W LAB`.
+**Comportamento diverso per signing/transport** — se il server richiede SMB signing e il client non lo negozia correttamente, la connessione può fallire prima ancora del bind RPC: verifica con [smbclient](https://hackita.it/articoli/smbclient/) se la sessione SMB di base funziona.
 
-### `NT_STATUS_ACCESS_DENIED` su comandi specifici
+## rpcclient vs smbclient vs ldapsearch vs NetExec vs BloodHound
 
-Perché: hai sessione valida, ma quel comando richiede permessi più alti.
-Cosa aspettarti: alcuni comandi funzionano, altri negati.
-Comando:
+| Tool                                                  | Focus                             |
+| ----------------------------------------------------- | --------------------------------- |
+| rpcclient                                             | RPC diretto: SAMR, LSARPC, SRVSVC |
+| smbclient                                             | Share e file                      |
+| [ldapsearch](https://hackita.it/articoli/ldapsearch/) | Directory LDAP/AD                 |
+| [NetExec](https://hackita.it/articoli/netexec/)       | Automation e bulk check SMB/AD    |
+| [BloodHound](https://hackita.it/articoli/bloodhound/) | Relazioni e attack path           |
 
-```
-rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'querydominfo; enumdomusers'
-```
+`rpcclient` non sostituisce `ldapsearch`: sono fonti dati diverse (RPC vs directory LDAP) che spesso confermano o completano a vicenda le stesse informazioni. Per enumerazione SMB/RPC quando LDAP è limitato, [enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) resta una buona prima fotografia prima di scendere nel dettaglio con `rpcclient`.
 
-Interpretazione: se `querydominfo` funziona ma `enumdomusers` no, è un limite di permessi/policy.
-Errore comune + fix: non “insistere”: cambia fonte dati (LDAP, SMB, DNS) o usa un account autorizzato nel lab.
+## Scenario Pratico: rpcclient su una Macchina HTB/PG
 
-### Timeout / server non raggiungibile
-
-Perché: firewall, routing lab (VPN), o porte chiuse.
-Cosa aspettarti: timeout e nessun output utile.
-Comando:
-
-```
-rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'srvinfo'
-```
-
-Interpretazione: se va in timeout, prima verifica connettività e che 445/139 siano raggiungibili.
-Errore comune + fix: target risolve male → usa IP diretto (non hostname) e controlla la reachability in lab.
-
-## Alternative e tool correlati (quando preferirli)
-
-> **In breve:** `rpcclient` è “manuale e preciso”; se vuoi automation, bulk-check o fonti dati diverse, scegli lo strumento giusto.
-
-* Se vuoi enumerazione “one-shot” e report rapido: [Enum4linux-ng: enumerazione avanzata su reti Windows](/articoli/enum4linux-ng/) spesso ti dà una fotografia iniziale utile.
-* Se devi lavorare su file e share (download/upload, recursion, loot): passa a `smbclient` e mantieni `rpcclient` per la parte “dominio”.
-* Se la tua fonte principale è LDAP (directory-centric) invece di RPC: `ldapsearch` è spesso più coerente e scriptabile.
-* Se devi trasformare enumerazione in path d’escalation realistici: BloodHound è lo standard de-facto in lab AD.
-
-Quando NON usarle: se ti serve una query “chirurgica” su un oggetto specifico (utente/gruppo/SID), `rpcclient` resta una delle scelte più pulite.
-
-## Hardening & detection: cosa guarda un defender quando usi rpcclient
-
-> **In breve:** `rpcclient` genera attività di autenticazione di rete e chiamate RPC; la difesa si basa su auditing, riduzione dell’enumerazione e policy “no anonymous”.
-
-Detection (lab blu team):
-
-* Correlazione di autenticazioni di rete ripetute verso DC/member server in burst brevi.
-* Sequenze di query RPC “enumerative” (pattern: query dominio → enum utenti → enum gruppi) da host non amministrativi.
-* Anomalie temporali: enumerazione massiva fuori dalle finestre di amministrazione.
-
-Hardening:
-
-* Disabilita anonymous/guest e limita “information disclosure” via RPC per utenti standard.
-* Segrega gli asset AD: riduci chi può parlare con DC su SMB/RPC.
-* Applica auditing coerente su logon di rete e accessi remoti amministrativi, e alert su comportamenti enumerativi.
-
-## Scenario pratico: rpcclient su una macchina HTB/PG
-
-Ambiente: attacker Kali su VPN lab, target `10.10.10.10` (Windows/AD lab).
-Obiettivo: ottenere userlist e policy password in modo ripetibile e “reportabile”.
-
-Azione 1 (test anonimo):
-
-```
+```bash
+# 1. Test anonimo
 rpcclient -U '' -N 10.10.10.10 -c 'srvinfo'
-```
 
-Azione 2 (dump iniziale con credenziali low-priv del lab):
-
-```
+# 2. Dump iniziale con credenziali low-priv
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'querydominfo; enumdomusers; enumdomgroups'
-```
 
-Azione 3 (policy password per valutazione rischio):
-
-```
+# 3. Password policy per valutazione rischio
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'getdompwinfo'
 ```
 
-Risultato atteso concreto: ottieni una lista utenti (con RID) e parametri base policy password da riportare come evidenza.
+Risultato atteso: userlist con RID, gruppi disponibili, parametri base della policy password — materiale grezzo da riportare come evidenza e correlare con [BloodHound](https://hackita.it/articoli/bloodhound/) o [smbclient](https://hackita.it/articoli/smbclient/).
 
-Detection + hardening: se la rete è ben configurata, l’accesso anonimo fallisce e i comandi enumerativi sono limitati a ruoli autorizzati. Un defender dovrebbe alertare su burst di chiamate RPC e autenticazioni di rete da host non admin.
+## Playbook Rapido
 
-## Playbook 10 minuti: rpcclient in un lab
+1. Test anonymous.
+2. Identifica domain/server (`querydominfo`, `srvinfo`).
+3. Enumera utenti/gruppi (o RID cycling se `enumdomusers` è negato).
+4. Profila account interessanti (`queryuser`, `queryusergroups`).
+5. Mappa SID/RID (`lookupnames`, `lookupsids`, `lsaquery`).
+6. Enumera share (`netshareenumall`) e policy (`getdompwinfo`).
+7. Correla con LDAP/SMB/BloodHound.
 
-### Step 1 – Verifica contesto e obiettivo
+## Checklist Operativa
 
-Perché: definisci cosa vuoi estrarre (utenti, gruppi, policy) e con quali credenziali lab.
-Cosa aspettarti: un target IP e un set minimo di comandi.
-Comando:
+* 445/139 verificati raggiungibili.
+* Anonymous testato (solo per disclosure, non come metodo principale atteso).
+* Domain/server identificati con `querydominfo`/`srvinfo`.
+* Utenti e gruppi enumerati (o RID cycling se necessario).
+* SID/RID e account interessanti approfonditi.
+* Share e policy password correlate con quanto trovato via SMB/LDAP.
 
-```
-echo "Target: 10.10.10.10 | Goal: users+groups+pwpolicy" > notes_rpcclient.txt
-```
+## Concetti Controintuitivi
 
-### Step 2 – Prova anonymous/null session (solo disclosure)
-
-Perché: se passa, hai un finding immediato di information disclosure.
-Cosa aspettarti: prompt o access denied.
-Comando:
-
-```
-rpcclient -U '' -N 10.10.10.10 -c 'srvinfo'
-```
-
-### Step 3 – Login con credenziali low-priv del lab
-
-Perché: molte enumerazioni funzionano anche con account standard.
-Cosa aspettarti: output dei comandi o access denied su quelli più sensibili.
-Comando:
-
-```
-rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'querydominfo; srvinfo'
-```
-
-### Step 4 – Dump utenti + gruppi (baseline)
-
-Perché: ti serve la mappa base per qualunque analisi successiva.
-Cosa aspettarti: userlist con RID e gruppi disponibili.
-Comando:
-
-```
-rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'enumdomusers; enumdomgroups'
-```
-
-### Step 5 – Profilazione di un account “interessante”
-
-Perché: i dettagli dell’account spesso guidano la prossima mossa in lab.
-Cosa aspettarti: attributi e/o gruppi associati.
-Comando:
-
-```
-rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'queryuser svc_sql'
-```
-
-### Step 6 – Policy password + share info (report-ready)
-
-Perché: sono evidenze “difendibili” nel report (posture, exposure).
-Cosa aspettarti: parametri policy e nomi share.
-Comando:
-
-```
-rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'getdompwinfo; netshareenumall'
-```
-
-### Step 7 – Salva output e annota limiti
-
-Perché: senza evidence salvata, non hai ripetibilità.
-Cosa aspettarti: file di output consultabile.
-Comando:
-
-```
-rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'querydominfo; enumdomusers; enumdomgroups; getdompwinfo' > rpcclient_dump.txt
-```
-
-## Checklist operativa
-
-* Ho confermato che il target è lab/CTF/VM autorizzata.
-* Ho provato `-U '' -N` solo per verificare disclosure anonima.
-* Ho usato `-c` per dump ripetibili e salvabili.
-* Ho eseguito `querydominfo` e `srvinfo` prima delle enum massicce.
-* Ho estratto `enumdomusers` e annotato i RID.
-* Ho eseguito `enumdomgroups` e scelto gruppi da approfondire.
-* Ho profilato almeno 1 account con `queryuser`.
-* Ho controllato `getdompwinfo` per valutazione postura.
-* Ho enumerato share via `netshareenumall` (se permesso).
-* Ho salvato output in file con timestamp e note.
-* Ho annotato comandi che tornano `ACCESS_DENIED` (limiti di permesso).
-* Ho definito detection/hardening nel report (no anonymous, auditing, segmentation).
-
-## Riassunto 80/20
-
-| Obiettivo                      | Azione pratica                | Comando/Strumento                      |         |
-| ------------------------------ | ----------------------------- | -------------------------------------- | ------- |
-| Entrare e capire contesto      | Domenio + server info         | `rpcclient -c 'querydominfo; srvinfo'` |         |
-| Costruire userlist             | Enumerare utenti dominio      | `rpcclient -c 'enumdomusers'`          |         |
-| Capire la superficie “gruppi”  | Enumerare gruppi e membership | `rpcclient -c 'enumdomgroups'`         |         |
-| Profilare un account target    | Query dettagli utente         | \`rpcclient -c 'queryuser \<user       | rid>'\` |
-| Valutare postura password      | Leggere policy                | `rpcclient -c 'getdompwinfo'`          |         |
-| Individuare share interessanti | Enum share via RPC            | `rpcclient -c 'netshareenumall'`       |         |
-
-## Concetti controintuitivi
-
-* **“Se ho 445 aperta allora posso enumerare tutto”**
-  No: molte enum richiedono permessi e policy; `ACCESS_DENIED` non è “errore tool”, è hardening (o permessi insufficienti in lab).
-* **“Il nome utente basta, non mi servono RID/SID”**
-  In ambienti AD reali i RID/SID evitano ambiguità e ti permettono query affidabili anche quando i nomi non risolvono bene.
-* **“Null session è sempre possibile”**
-  Su ambienti moderni spesso è bloccata; va testata, documentata e poi si passa a credenziali autorizzate nel lab.
-* **“rpcclient è un tool da file share”**
-  No: è dominio/RPC-centric. Per file e loot su share usa strumenti SMB file-centric e tieni rpcclient per identity/policy.
+* **"Se ho la 445 aperta posso enumerare tutto"** — no, dipende da servizi RPC esposti, autenticazione e permessi; `ACCESS_DENIED` spesso è hardening che funziona, non un errore del tool.
+* **"Il nome utente basta, non servono RID/SID"** — in AD reale i RID/SID evitano ambiguità quando i nomi non risolvono o sono duplicati tra contesti.
+* **"La null session è sempre possibile"** — su ambienti moderni è spesso bloccata: va testata e documentata, non assunta.
+* **"rpcclient è per file share"** — no, è dominio/RPC-centric: per contenuti di file usa uno strumento SMB file-centric e tieni rpcclient per identity/policy.
 
 ## FAQ
 
-D: `rpcclient -U '' -N` non entra, è normale?
+**Come enumero utenti AD con rpcclient?**
+`enumdomusers` per la lista diretta; se è negato, il RID cycling su un range tipico (500-1100) spesso funziona anche in null session.
 
-R: Sì, su ambienti moderni l’anonymous è spesso disabilitato. In lab documentalo come “null session non consentita” e usa credenziali autorizzate.
+**Come uso rpcclient senza credenziali?**
+`rpcclient -U '' -N <target>` per la null session. Su ambienti moderni fallisce spesso, ma va sempre testata come primo passo.
 
-D: Posso usare `rpcclient` senza shell interattiva?
+**Qual è la differenza tra rpcclient e smbclient?**
+rpcclient interroga interfacce RPC (SAMR, LSARPC, SRVSVC) per identity e policy; smbclient accede a share e file. Non sono intercambiabili: enumerare una share via rpcclient non dà accesso al suo contenuto.
 
-R: Sì: usa `-c 'cmd1; cmd2'` per eseguire comandi one-shot e salvare output in file (`> dump.txt`).
+**Qual è la differenza tra rpcclient e ldapsearch?**
+Fonti dati diverse — RPC contro directory LDAP. Spesso danno risultati sovrapponibili su utenti e gruppi, ma con superficie di permessi e dettaglio diversi: quando uno è bloccato, vale la pena provare l'altro.
 
-D: `enumdomusers` mi dà `ACCESS_DENIED`, che faccio?
+**Cosa significa `NT_STATUS_ACCESS_DENIED` con rpcclient?**
+La sessione è valida ma l'account non ha permessi per quel comando specifico. Non è un errore di sintassi: prova altri comandi meno privilegiati o un'altra fonte.
 
-R: Significa che l’account non ha permessi o che la policy limita l’enumerazione. In lab cambia fonte (LDAP/SMB) o usa un account esplicitamente autorizzato.
+***
 
-D: Quando preferisco strumenti alternativi?
-
-R: Se vuoi automation/report rapido usa strumenti di enum “bulk”; se vuoi file browsing usa tool SMB file-centric; se vuoi pathing di escalation usa un graph tool AD.
-
-D: `rpcclient` è utile anche su host non-DC?
-
-R: Sì: puoi interrogare servizi RPC disponibili sul target, ma l’enumerazione “di dominio” dipende dal ruolo della macchina e dai permessi.
-
-## Link utili su HackIta.it
-
-* [Enum4linux-ng: enumerazione avanzata su reti Windows](/articoli/enum4linux-ng/)
-* [Smbclient: accesso e attacco alle condivisioni Windows](/articoli/smbclient/)
-* [CrackMapExec: attacchi rapidi su Active Directory](/articoli/crackmapexec/)
-* [Responder: attacco LLMNR/NBT-NS/WPAD per hash NTLM](/articoli/responder/)
-* [NBTScan: scansione NetBIOS per info sensibili](/articoli/nbtscan/)
-* [Rpcinfo: enumerazione dei servizi RPC in ambienti Unix](/articoli/rpcinfo/)
-
-Pagine istituzionali:
-
-* /supporto/
-* /contatto/
-* /articoli/
-* /servizi/
-* /about/
-* /categorie/
-
-## Riferimenti autorevoli
-
-* [https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html](https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html)
-
-## CTA finale HackITA
-
-Se questo contenuto ti è utile, supporta il progetto: trovi tutto su /supporto/ per tenere HackIta indipendente e pieno di guide operative.
-
-Se vuoi accelerare davvero su AD/RPC/SMB con lab guidati e correzione degli errori “da esame”, trovi la formazione 1:1 su /servizi/.
-
-Per aziende e team: assessment, hardening e simulazioni di attacco in ambienti autorizzati sono su /servizi/.
+Tutto quanto descritto vale esclusivamente su sistemi di tua proprietà o in ambienti autorizzati (lab, CTF, HTB, PG).

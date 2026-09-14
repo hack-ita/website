@@ -1,18 +1,21 @@
 ---
-title: 'TShark: Analizzare il Traffico di Rete da Terminale'
+title: 'TShark: Tutorial Sniffing e Analisi del Traffico di Rete'
 slug: tshark
-description: >
-  Usa TShark da terminale come Wireshark CLI. Cattura, filtra e analizza
-  traffico di rete in lab di pentesting con comandi reali e filtri avanzati.
+description: 'Cos''è TShark e come si usa? Guida al network sniffing da terminale con packet capture, filtri, analisi PCAP, statistiche e comandi per il pentesting.'
 image: /TSHARK.webp
 draft: false
 date: 2026-01-21T00:00:00.000Z
+lastmod: 2026-09-14T00:00:00.000Z
 categories:
   - tools
 subcategories:
   - recon
 tags:
   - TShark
+  - Network Sniffing
+  - Packet Analysis
+  - PCAP
+  - Packet Capture
 ---
 
 # TShark: Analizzare il Traffico di Rete da Terminale

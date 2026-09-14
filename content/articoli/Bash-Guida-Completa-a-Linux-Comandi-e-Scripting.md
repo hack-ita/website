@@ -1,9 +1,12 @@
 ---
 title: 'Bash: Guida Completa a Linux, Comandi e Scripting'
 slug: bash
-description: 'Cos''è Bash e come funziona? Scopri comandi, variabili, pipe, permessi e scripting Bash con una guida pratica da zero, pensata per Linux e cybersecurity.'
+description: >-
+  Cos'è Bash e come funziona? Scopri comandi, variabili, pipe, permessi e
+  scripting Bash con una guida pratica da zero, pensata per Linux e
+  cybersecurity.
 image: /bash-linux-guida-completa.webp
-draft: true
+draft: false
 date: 2026-09-14T00:00:00.000Z
 categories:
   - linux

@@ -1,7 +1,7 @@
 ---
 title: 'Netcat Linux: Comandi, Port Scanning e Network Testing'
 slug: netcat
-description: 'Netcat (nc) su Linux: scopri i principali comandi per TCP/UDP, port scanning, banner grabbing, listener,exploit e backdoor trasferimento file e network testing.'
+description: 'Netcat (nc) su Linux: scopri i principali comandi per TCP/UDP, port scanning, banner grabbing, listener, trasferimento file, reverse shell e network testing.'
 image: /netcat.webp
 draft: false
 date: 2026-01-22T00:00:00.000Z
@@ -12,11 +12,13 @@ subcategories:
 tags:
   - netcat
   - nc
+  - Reverse Shell
+  - Port Scanning
 ---
 
 # Netcat: Guida Pratica a Comandi, Port Scanning e Trasferimento File
 
-Netcat è lo strumento da riga di comando più usato per leggere e scrivere dati su connessioni TCP e UDP. In questa guida trovi i comandi netcat essenziali: come aprire un listener, scansionare porte, fare banner grabbing, trasferire file e ottenere una reverse shell, con le differenze tra le varianti (Traditional, OpenBSD, Ncat) che cambiano la sintassi da un sistema all'altro.
+Netcat (nc) è lo strumento da riga di comando più usato per leggere e scrivere dati su connessioni TCP e UDP. In questa guida trovi i comandi netcat essenziali: come aprire un listener, scansionare porte, fare banner grabbing, trasferire file e ottenere una reverse shell, con le differenze tra le varianti (Traditional, OpenBSD, Ncat) che cambiano la sintassi da un sistema all'altro.
 
 ## Cos'è Netcat
 

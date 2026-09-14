@@ -1,7 +1,7 @@
 ---
-title: 'Nmap Pentesting: Port Scanning, Network Enumeration e NSE'
+title: 'Nmap per Pentesting: Port Scanning, Network Recon e NSE'
 slug: nmap
-description: 'Nmap per penetration testing e network recon: host discovery, port scanning TCP/UDP, service detection, OS fingerprinting, NSE e workflow di enumeration.'
+description: 'Nmap per penetration testing e network recon: comandi, host discovery, port scanning TCP/UDP, service detection, OS fingerprinting, NSE ed enumeration.'
 image: /Gemini_Generated_Image_8mre5n8mre5n8mre.webp
 draft: false
 date: 2026-02-20T00:00:00.000Z
@@ -18,11 +18,11 @@ tags:
   - Network Reconnaissance
 ---
 
-# Nmap: Scansione Porte, Network Recon e NSE
+# Nmap: Scansione Porte, Enumeration e NSE
 
-Nmap è uno dei principali strumenti open source per **network discovery, port scanning e security auditing**. Viene utilizzato per identificare host raggiungibili, porte esposte, servizi, versioni software, sistemi operativi e informazioni aggiuntive tramite il **Nmap Scripting Engine (NSE)**.
+Nmap è uno dei principali strumenti open source nel pentest per **network discovery, port scanning e security auditing**. Viene utilizzato per identificare host raggiungibili,enumerare porte esposte, servizi, versioni software, sistemi operativi e informazioni aggiuntive tramite il **Nmap Scripting Engine (NSE)**.
 
-Nel penetration testing, però, Nmap non dovrebbe essere considerato semplicemente uno scanner di porte. Il suo valore sta soprattutto nella capacità di trasformare una superficie di rete sconosciuta in una sequenza di informazioni utili per le fasi successive:
+Nel penetration testing, però, Nmap non dovrebbe essere considerato semplicemente uno scanner di porte. Il suo valore sta soprattutto nella capacità di trasformare uno scan superficie di rete sconosciuta in una sequenza di informazioni utili per le fasi successive:
 
 ```text
 Target
@@ -44,9 +44,25 @@ Enumeration mirata
 Validation
 ```
 
-Questa guida copre installazione, host discovery, TCP e UDP scanning, service detection, OS fingerprinting, NSE, enumeration per servizio, output, performance, troubleshooting, tecniche di evasion e automazione con **myNmap**.
+Questa guida è un tutorial pratico a Nmap che copre installazione, host discovery, TCP e UDP scanning, service detection, OS fingerprinting, NSE, enumeration per servizio, output, performance, troubleshooting, tecniche di evasion e automazione con **myNmap**. Un Nmap scan tipico parte proprio dall'host discovery e prosegue con port scanning, service detection, OS fingerprinting e NSE, nell'ordine mostrato sopra.
 
 > Esegui scansioni esclusivamente su sistemi, reti e infrastrutture per cui disponi di autorizzazione.
+
+## Comandi Nmap Essenziali: Quale Usare e Quando
+
+| Comando                | Cosa fa                                 | Quando usarlo                                                       |
+| ---------------------- | --------------------------------------- | ------------------------------------------------------------------- |
+| `nmap target`          | Scan base sulle porte più comuni        | Prima ricognizione veloce                                           |
+| `nmap -p- target`      | Tutte le 65535 porte TCP                | Enumerazione completa, non perdere servizi su porte non standard    |
+| `nmap -sV target`      | Rileva servizio e versione              | Dopo aver trovato porte aperte, prima di scegliere il prossimo tool |
+| `nmap -sC target`      | Script NSE della categoria default      | Enumerazione iniziale automatica                                    |
+| `nmap -sS target`      | SYN scan (richiede privilegi)           | Scansione TCP standard con root/sudo disponibile                    |
+| `nmap -sT target`      | Connect scan                            | Senza privilegi raw-packet                                          |
+| `nmap -sU target`      | UDP scan                                | Servizi UDP (DNS, SNMP, NTP...)                                     |
+| `nmap -Pn target`      | Salta l'host discovery                  | L'host sembra down ma sospetti sia filtrato l'ICMP                  |
+| `nmap -O target`       | OS fingerprinting                       | Serve stimare il sistema operativo remoto                           |
+| `nmap -A target`       | OS + version + NSE default + traceroute | Enumerazione approfondita in un solo comando                        |
+| `nmap -oA scan target` | Salva in tutti i formati principali     | Sempre, quando i risultati vanno riusati o riportati                |
 
 ## Cos'è Nmap e a cosa serve
 
@@ -64,103 +80,45 @@ Nmap può essere utilizzato per diverse fasi della reconnaissance:
 | Timing            | Controllare velocità e carico della scansione               |
 | Scan Evasion      | Modificare caratteristiche delle probe in scenari specifici |
 
-Un risultato Nmap non è necessariamente il finding finale. Spesso è il punto di partenza di un workflow:
+Un risultato Nmap non è necessariamente il finding finale. Spesso è il punto di partenza di un workflow — la sezione [Porte Principali](#porte-principali-cosa-fare-dopo) più sotto è la mappa completa porta→prossimo tool.
 
-```text
-445/tcp open
-    ↓
-SMB identified
-    ↓
-SMB enumeration
-    ↓
-rpcclient / smbclient / enum4linux-ng / NetExec
-```
-
-Oppure:
-
-```text
-443/tcp open
-    ↓
-HTTPS identified
-    ↓
-HTTP enumeration
-    ↓
-Burp Suite / httpx / ffuf
-```
-
-L'obiettivo è passare da una semplice superficie esposta a una **mappa tecnica utilizzabile per la fase successiva dell'engagement**.
-
-## Installazione e Setup
+## Installazione Nmap e Setup
 
 La versione di Nmap installata può essere verificata con `nmap --version`. Per scaricare la release corrente è consigliabile utilizzare la pagina ufficiale di download, evitando di hardcodare una versione specifica nel contenuto della guida.
 
-### Linux — Debian e Ubuntu
-
-Per installare Nmap dai repository della distribuzione:
+### Nmap su Linux — Debian e Ubuntu
 
 ```bash
 sudo apt update
 sudo apt install nmap -y
-```
-
-Verifica l'installazione:
-
-```bash
 nmap --version
 ```
 
 La versione presente nel repository della distribuzione può essere diversa da quella distribuita più recentemente dal progetto Nmap.
 
-### Kali Linux
-
-Nmap è normalmente disponibile in Kali Linux.
-
-Verifica la versione installata:
+### Nmap su Kali Linux
 
 ```bash
 nmap --version
+sudo apt update && sudo apt install --only-upgrade nmap
 ```
 
-Per aggiornare il pacchetto:
-
-```bash
-sudo apt update
-sudo apt install --only-upgrade nmap
-```
-
-### Windows
+### Nmap su Windows
 
 Nmap dispone di un installer ufficiale per Windows e utilizza Npcap per diverse funzionalità di packet capture e packet manipulation.
 
-Dopo l'installazione:
-
 ```powershell
 nmap --version
-```
-
-Esempio:
-
-```powershell
 nmap -sV 192.168.1.100
 ```
 
-### macOS
-
-Nmap è disponibile tramite i pacchetti ufficiali per macOS.
-
-Verifica:
+### Nmap su macOS
 
 ```bash
 nmap --version
 ```
 
 ### Compilazione da sorgente
-
-Per compilare Nmap dal codice sorgente, scarica il tarball della release desiderata dalla pagina ufficiale:
-
-[https://nmap.org/download.html](https://nmap.org/download.html)
-
-Dopo il download:
 
 ```bash
 tar xvf nmap-<version>.tar.bz2
@@ -170,27 +128,18 @@ make
 sudo make install
 ```
 
-[https://nmap.org/download.html](https://nmap.org/download.html)
+Tarball delle release: [nmap.org/download.html](https://nmap.org/download.html)
 
 ### Privilegi necessari
 
-Non tutte le scansioni richiedono privilegi elevati. Le tecniche che inviano e ricevono raw packet, come la SYN scan, richiedono normalmente privilegi appropriati su Linux e Unix. La TCP connect scan può invece essere eseguita senza privilegi raw-packet equivalenti.
-
-Esempio:
+Le tecniche che inviano e ricevono raw packet, come la SYN scan, richiedono normalmente privilegi appropriati su Linux e Unix. La TCP connect scan può invece essere eseguita senza privilegi raw-packet equivalenti.
 
 ```bash
-sudo nmap -sS target
-```
-
-Alternativa senza raw packet:
-
-```bash
-nmap -sT target
+sudo nmap -sS target   # richiede privilegi
+nmap -sT target        # alternativa senza raw packet
 ```
 
 ## Come funziona una scansione Nmap
-
-Un modello mentale semplice è:
 
 ```text
 1. Host Discovery
@@ -203,65 +152,19 @@ Un modello mentale semplice è:
 8. Targeted Enumeration
 ```
 
-La sequenza può essere ridotta o ampliata in base all'obiettivo.
-
-### Host Discovery
-
-Domanda:
-
-> Quali sistemi sono raggiungibili?
-
-### Port Scanning
-
-Domanda:
-
-> Quali porte rispondono e in quale stato?
-
-### Service Detection
-
-Domanda:
-
-> Quale servizio sta utilizzando la porta?
-
-### Version Detection
-
-Domanda:
-
-> Quale implementazione o versione è stata identificata?
-
-### OS Detection
-
-Domanda:
-
-> Quale sistema operativo è compatibile con il fingerprint osservato?
-
-### NSE
-
-Domanda:
-
-> Quali informazioni aggiuntive posso raccogliere automaticamente?
-
-### Enumeration
-
-Domanda:
-
-> Quale attività specifica ha senso eseguire dopo aver identificato il servizio?
+La sequenza può essere ridotta o ampliata in base all'obiettivo — ogni fase risponde a una domanda specifica: quali host sono raggiungibili, quali porte rispondono, quale servizio le usa, quale versione, quale OS, cosa aggiunge NSE, e infine quale tool specifico usare dopo.
 
 ## Sintassi Nmap
-
-La sintassi generale è:
 
 ```bash
 nmap [options] target
 ```
 
-Esempio:
-
 ```bash
 nmap -sV -p 22,80,443 192.168.1.100
 ```
 
-`-sV` abilita la service/version detection, `-p` seleziona le porte e `192.168.1.100` è il target.
+`-sV` abilita la service/version detection, `-p` seleziona le porte, `192.168.1.100` è il target.
 
 ## Parametri Nmap fondamentali
 
@@ -285,15 +188,13 @@ nmap -sV -p 22,80,443 192.168.1.100
 
 ## Uso base di Nmap
 
-### Scansione di un singolo host
-
 ```bash
-nmap 192.168.1.100
+nmap 192.168.1.100          # singolo host
+nmap 192.168.1.1-50         # range
+nmap 192.168.1.0/24         # subnet
+nmap -iL targets.txt        # da file
+nmap -sL 192.168.1.0/24     # elenca senza scansionare
 ```
-
-Il comando base esegue una scansione sulle porte TCP più comuni e restituisce gli stati che Nmap considera interessanti.
-
-Esempio:
 
 ```text
 PORT     STATE  SERVICE
@@ -302,200 +203,83 @@ PORT     STATE  SERVICE
 443/tcp  open   https
 ```
 
-### Scansione di un range
-
-```bash
-nmap 192.168.1.1-50
-```
-
-### Scansione di una subnet
-
-```bash
-nmap 192.168.1.0/24
-```
-
-### Target da file
-
-```bash
-nmap -iL targets.txt
-```
-
-### Elencare i target senza scansionarli
-
-```bash
-nmap -sL 192.168.1.0/24
-```
-
 `-sL` è utile quando vuoi verificare quali indirizzi appartengono a un range e come vengono risolti i nomi, senza eseguire il normale port scan.
 
 ## Host Discovery
 
-Prima di eseguire una scansione completa della rete, è spesso utile identificare gli host che Nmap considera attivi.
-
-### Ping Scan
-
 ```bash
-nmap -sn 192.168.1.0/24
-```
-
-`-sn` esegue l'host discovery senza eseguire il normale port scanning.
-
-A seconda del contesto e dei privilegi disponibili, Nmap può utilizzare più tipi di probe durante la fase di discovery.
-
-### ARP Discovery in LAN
-
-Su una rete Ethernet locale, ARP può essere particolarmente efficace:
-
-```bash
-sudo nmap -sn -PR 192.168.1.0/24
-```
-
-### ICMP e TCP Probe
-
-È possibile combinare probe differenti:
-
-```bash
-sudo nmap -sn -PE -PS443 192.168.1.0/24
+nmap -sn 192.168.1.0/24              # ping scan
+sudo nmap -sn -PR 192.168.1.0/24     # ARP discovery, efficace in LAN
+sudo nmap -sn -PE -PS443 192.168.1.0/24   # probe combinate ICMP+TCP
 ```
 
 ### `-Pn`: Skip Host Discovery
-
-Quando i probe di discovery vengono filtrati, Nmap potrebbe considerare un host inattivo anche se è effettivamente raggiungibile.
-
-Con:
 
 ```bash
 nmap -Pn target
 ```
 
-Nmap salta la fase di host discovery e tratta il target come attivo.
-
-`-Pn` non è un bypass universale dei firewall: significa che Nmap non si basa sulla precedente fase di discovery per decidere se continuare la scansione.
-
-Può essere utile quando ICMP o altri probe di discovery vengono filtrati, ma il target espone comunque servizi raggiungibili.
-
-### Disabilitare il DNS lookup
-
-Per evitare la risoluzione DNS durante una scansione:
+Nmap salta la fase di host discovery e tratta il target come attivo. `-Pn` non è un bypass universale dei firewall: significa che Nmap non si basa sulla precedente fase di discovery per decidere se continuare la scansione. Utile quando ICMP o altri probe di discovery vengono filtrati, ma il target espone comunque servizi raggiungibili.
 
 ```bash
-nmap -n target
+nmap -n target   # disabilita risoluzione DNS, riduce traffico e accelera alcuni workflow
 ```
 
-Può ridurre traffico DNS e accelerare alcuni workflow in cui la risoluzione dei nomi non è necessaria.
-
-## Port Scanning
-
-Nmap supporta più tecniche di port scanning. La scelta dipende dal protocollo, dai privilegi disponibili e dall'obiettivo della scansione.
-
-### TCP SYN Scan
+## Nmap Port Scanning: Scansione delle Porte
 
 ```bash
-sudo nmap -sS target
+sudo nmap -sS target       # SYN scan, richiede privilegi raw-packet
+nmap -sT target            # connect scan, senza privilegi
+sudo nmap -sU target       # UDP, più lento e con semantica di risposta diversa
+nmap -p 22,80,443 target   # porte specifiche
+nmap -p 1-1024 target      # range
+nmap -p- target            # tutte le porte TCP
+nmap --top-ports 100 target
+nmap -F target
 ```
-
-La SYN scan invia una richiesta TCP SYN e interpreta la risposta senza completare normalmente il three-way handshake.
-
-È una delle tecniche più utilizzate quando sono disponibili privilegi sufficienti per la gestione dei raw packet.
-
-### TCP Connect Scan
-
-```bash
-nmap -sT target
-```
-
-La connect scan utilizza la normale `connect()` del sistema operativo e completa la connessione TCP.
-
-È particolarmente utile quando non sono disponibili i privilegi necessari per una SYN scan.
-
-### UDP Scan
-
-```bash
-sudo nmap -sU target
-```
-
-Le scansioni UDP sono generalmente più lente e hanno una semantica di risposta diversa da TCP. Per esempio, `open|filtered` può indicare che Nmap non è riuscito a distinguere in modo definitivo tra una porta aperta e una porta filtrata.
-
-### Scansione di porte specifiche
-
-```bash
-nmap -p 22,80,443 target
-```
-
-Range:
-
-```bash
-nmap -p 1-1024 target
-```
-
-Range e porte miste:
-
-```bash
-nmap -p 22,80,443,8000-9000 target
-```
-
-### Tutte le porte TCP
-
-```bash
-nmap -p- target
-```
-
-`-p-` seleziona l'intero intervallo di porte TCP da 1 a 65535.
 
 Un workflow efficace è separare la scoperta delle porte dalla successiva enumeration:
 
 ```bash
 nmap -p- target
-```
-
-poi:
-
-```bash
 nmap -sC -sV -p 22,80,443,445 target
 ```
 
-### Top ports
+### Altri Tipi di Scan TCP: ACK, FIN, Null, Xmas
+
+Oltre a SYN/Connect/UDP, Nmap supporta scan meno usati ma utili in scenari specifici:
 
 ```bash
-nmap --top-ports 100 target
+sudo nmap -sA target   # ACK scan
+sudo nmap -sF target   # FIN scan
+sudo nmap -sN target   # Null scan (nessun flag)
+sudo nmap -sX target   # Xmas scan (FIN+PSH+URG)
 ```
 
-Oppure:
+`-sA` non distingue open da closed: dice solo se una porta è `unfiltered` o `filtered`, utile per mappare le regole di un firewall stateless senza determinare quali porte sono realmente in ascolto.
 
-```bash
-nmap -F target
-```
-
-Una scansione rapida può essere usata come prima fotografia della superficie, seguita da una scansione completa e da una enumeration mirata.
+`-sF`, `-sN` e `-sX` sfruttano il comportamento previsto da RFC 793 (porta closed risponde RST, porta open non risponde) per passare inosservati ad alcuni filtri stateless. **Non sono affidabili contro Windows** e molti altri stack TCP moderni, che non seguono quel comportamento e mostrano tutte le porte come closed indipendentemente dallo stato reale — utili soprattutto contro target Unix-like con firewall semplici, non come tecnica primaria.
 
 ## Stati delle porte Nmap
 
 Gli stati riconosciuti da Nmap descrivono **come il port scanner vede una porta dal punto di osservazione corrente e con il tipo di scansione utilizzato**, non una proprietà assoluta della porta stessa.
 
-| Stato        | Significato                                                                                           |                                                                               |
-| ------------ | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `open`       | Un'applicazione sta accettando connessioni TCP, datagrammi UDP o associazioni SCTP                    |                                                                               |
-| `closed`     | La porta è raggiungibile ma nessuna applicazione sta ascoltando                                       |                                                                               |
-| `filtered`   | Un filtro impedisce a Nmap di determinare se la porta è open o closed                                 |                                                                               |
-| `unfiltered` | La porta risponde ai probe, ma Nmap non riesce a stabilire se sia open o closed con quel tipo di scan |                                                                               |
-| \`open       | filtered\`                                                                                            | Nmap non riesce a distinguere tra open e filtered                             |
-| \`closed     | filtered\`                                                                                            | Nmap non riesce a distinguere tra closed e filtered in determinate condizioni |
+| Stato              | Significato                                                                                           |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| `open`             | Un'applicazione sta accettando connessioni TCP, datagrammi UDP o associazioni SCTP                    |
+| `closed`           | La porta è raggiungibile ma nessuna applicazione sta ascoltando                                       |
+| `filtered`         | Un filtro impedisce a Nmap di determinare se la porta è open o closed                                 |
+| `unfiltered`       | La porta risponde ai probe, ma Nmap non riesce a stabilire se sia open o closed con quel tipo di scan |
+| `open\|filtered`   | Nmap non riesce a distinguere tra open e filtered                                                     |
+| `closed\|filtered` | Nmap non riesce a distinguere tra closed e filtered in determinate condizioni                         |
 
 Una porta `open` non significa automaticamente "vulnerabile". Significa che Nmap ha osservato un servizio raggiungibile e che esiste una superficie da identificare ed eventualmente enumerare.
 
-La differenza tra `filtered` e `closed` è fondamentale: `closed` indica che la porta è raggiungibile ma non c'è un servizio in ascolto, mentre `filtered` indica che firewall o altri ostacoli impediscono a Nmap di determinarne con certezza lo stato.
-
-## Service e Version Detection
-
-Una porta aperta non identifica necessariamente il software che la gestisce.
-
-Usa:
+## Nmap Service e Version Detection
 
 ```bash
 nmap -sV target
 ```
-
-Esempio:
 
 ```text
 PORT     STATE SERVICE VERSION
@@ -505,64 +289,26 @@ PORT     STATE SERVICE VERSION
 445/tcp  open  microsoft-ds
 ```
 
-Il percorso logico diventa:
-
 ```text
-Port
- ↓
-Protocol
- ↓
-Service
- ↓
-Product
- ↓
-Version
+Port → Protocol → Service → Product → Version
 ```
-
-### Version intensity
-
-Per una detection più approfondita:
 
 ```bash
-nmap -sV --version-intensity 5 target
+nmap -sV --version-intensity 9 target
 ```
 
-Aumentare l'intensità non garantisce automaticamente un risultato migliore in ogni ambiente. La scelta deve tenere conto di latenza, stabilità della rete, numero di target e impatto operativo.
+`--version-intensity` accetta valori da 0 a 9; il default con `-sV` è 7. Valori più alti provano più probe e possono identificare servizi su porte non standard o configurazioni insolite, ma aumentano il tempo della scansione — non è garanzia automatica di un risultato migliore in ogni ambiente.
 
-### `-sV` non implica vulnerabilità
+Un risultato come `Apache httpd 2.4.x` non significa automaticamente che Apache sia vulnerabile: è un elemento di reconnaissance da correlare a documentazione del vendor e advisory, poi validare.
 
-Un risultato come:
-
-```text
-Apache httpd 2.4.x
-```
-
-non significa automaticamente che Apache sia vulnerabile.
-
-La versione identificata da Nmap è un elemento di reconnaissance che può essere correlato a documentazione del vendor, advisory e vulnerability database, ma deve essere successivamente validato.
-
-## OS Detection
+## Nmap OS Detection e OS Fingerprinting
 
 ```bash
 sudo nmap -O target
+sudo nmap -O -sV target   # combinazione comune
 ```
 
-Nmap utilizza fingerprint di rete per stimare il sistema operativo remoto.
-
-Il risultato può contenere una o più ipotesi, ad esempio:
-
-```text
-OS details:
-Linux 5.x
-```
-
-La precisione dipende dalle risposte ricevute, dalla qualità del fingerprint e dalla presenza di firewall, middlebox o sistemi che alterano le probe.
-
-Una combinazione comune è:
-
-```bash
-sudo nmap -O -sV target
-```
+La precisione dipende dalle risposte ricevute, dalla qualità del fingerprint e dalla presenza di firewall o middlebox che alterano le probe.
 
 ## Aggressive Scan
 
@@ -570,30 +316,9 @@ sudo nmap -O -sV target
 sudo nmap -A target
 ```
 
-`-A` abilita un insieme di funzionalità avanzate che comprende:
-
-* OS detection;
-* version detection;
-* default NSE scripts;
-* traceroute.
-
-Non è semplicemente una modalità "più potente": è una combinazione di più tecniche di detection e enumeration.
-
-Quando vuoi controllare con precisione ciò che viene eseguito, è spesso preferibile scegliere esplicitamente le funzionalità:
-
-```bash
-nmap -sC -sV target
-```
-
-oppure:
-
-```bash
-sudo nmap -O -sV target
-```
+`-A` abilita OS detection, version detection, default NSE scripts e traceroute insieme. Non è semplicemente una modalità "più potente": quando vuoi controllare con precisione ciò che viene eseguito, è spesso preferibile scegliere esplicitamente le funzionalità con `nmap -sC -sV target`.
 
 ## Come leggere l'output di Nmap
-
-Consideriamo:
 
 ```text
 PORT     STATE SERVICE VERSION
@@ -602,16 +327,6 @@ PORT     STATE SERVICE VERSION
 443/tcp  open  https   nginx
 445/tcp  open  microsoft-ds
 ```
-
-La lettura corretta è:
-
-* `22/tcp`: SSH accessibile su TCP/22;
-* `80/tcp`: servizio HTTP accessibile;
-* `443/tcp`: servizio HTTPS accessibile;
-* `445/tcp`: SMB esposto;
-* `VERSION`: fingerprint del prodotto identificato da Nmap.
-
-Da qui nasce la decision tree:
 
 ```text
 22 → SSH enumeration
@@ -620,56 +335,39 @@ Da qui nasce la decision tree:
 445 → SMB enumeration
 ```
 
-Il vero valore del risultato Nmap è quindi la trasformazione:
+## Porte Principali: Cosa Fare Dopo
 
-```text
-scan
- ↓
-interpretazione
- ↓
-next step
-```
+Questa è la mappa porta → prossimo strumento che uso io stesso durante un assessment. Non esaustiva, ma copre la maggior parte dei casi reali:
 
-## NSE: Nmap Scripting Engine
+| Porta/e   | Servizio   | Comando Nmap iniziale                                       | Prossimo passo                                                                                                                                                                                                                                                  |
+| --------- | ---------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 21        | FTP        | `nmap -p21 -sV --script ftp-anon target`                    | [Porta 21 FTP](https://hackita.it/articoli/porta-21-ftp/)                                                                                                                                                                                                       |
+| 22        | SSH        | `nmap -p22 -sV --script ssh-auth-methods target`            | [SSH](https://hackita.it/articoli/ssh/)                                                                                                                                                                                                                         |
+| 25        | SMTP       | `nmap -p25 -sV --script smtp-commands target`               | [Porta 25 SMTP](https://hackita.it/articoli/porta-25-smtp/)                                                                                                                                                                                                     |
+| 53        | DNS        | `nmap -p53 --script dns-zone-transfer target`               | [DNS](https://hackita.it/articoli/dns/)                                                                                                                                                                                                                         |
+| 80/443    | HTTP/HTTPS | `nmap -p80,443 -sV --script http-title,http-headers target` | [Burp Suite](https://hackita.it/articoli/burp-suite/), [ffuf](https://hackita.it/articoli/ffuf/), [Gobuster](https://hackita.it/articoli/gobuster/)                                                                                                             |
+| 88        | Kerberos   | `nmap -p88 -sV target`                                      | [Kerberos](https://hackita.it/articoli/kerberos/), [Kerberoasting](https://hackita.it/articoli/kerberoasting/), [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/)                                                                                 |
+| 135/445   | RPC/SMB    | `nmap -p135,445 --script smb-enum-shares target`            | [SMB](https://hackita.it/articoli/smb/), [smbclient](https://hackita.it/articoli/smbclient/), [rpcclient](https://hackita.it/articoli/rpcclient/), [enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/), [NetExec](https://hackita.it/articoli/netexec/) |
+| 389/636   | LDAP/LDAPS | `nmap -p389,636 --script ldap-rootdse target`               | [Porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap/), [ldapsearch](https://hackita.it/articoli/ldapsearch/)                                                                                                                                            |
+| 1433      | MSSQL      | `nmap -p1433 --script ms-sql-info target`                   | [Porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/)                                                                                                                                                                                               |
+| 3306      | MySQL      | `nmap -p3306 --script mysql-info target`                    | [Porta 3306 MySQL](https://hackita.it/articoli/porta-3306-mysql/)                                                                                                                                                                                               |
+| 3389      | RDP        | `nmap -p3389 -sV target`                                    | [Porta 3389 RDP](https://hackita.it/articoli/porta-3389-rdp/)                                                                                                                                                                                                   |
+| 5985/5986 | WinRM      | `nmap -p5985 -sV target`                                    | [Porta 5985 WinRM](https://hackita.it/articoli/porta-5985-winrm/), [Evil-WinRM](https://hackita.it/articoli/evilwinrm/)                                                                                                                                         |
+
+## Nmap NSE: lo Scripting Engine
 
 Il **Nmap Scripting Engine (NSE)** estende Nmap tramite script Lua per automatizzare attività di discovery, enumeration, service/version detection, vulnerability detection e, in alcuni casi, exploitation.
 
-Per verificare gli script installati localmente:
-
 ```bash
-ls /usr/share/nmap/scripts/
-```
-
-Per aggiornare il database locale:
-
-```bash
-sudo nmap --script-updatedb
-```
-
-Per cercare script relativi a SMB:
-
-```bash
+ls /usr/share/nmap/scripts/            # script installati localmente
+sudo nmap --script-updatedb            # aggiorna il database locale
 ls /usr/share/nmap/scripts/ | grep -i smb
-```
-
-Per visualizzare la documentazione di uno script:
-
-```bash
 nmap --script-help smb-enum-shares
 ```
 
-### Default NSE
-
 ```bash
-nmap -sC target
-```
-
-`-sC` esegue gli script della categoria `default`.
-
-Una combinazione molto comune è:
-
-```bash
-nmap -sC -sV target
+nmap -sC target          # script della categoria default
+nmap -sC -sV target      # combinazione comune
 ```
 
 ### Categorie NSE
@@ -692,23 +390,7 @@ nmap -sC -sV target
 | `version`   | Version detection                            |
 | `vuln`      | Vulnerability detection                      |
 
-Gli script NSE non sono sandboxati. Prima di eseguire una categoria ampia o uno script sconosciuto è quindi importante comprenderne il comportamento e il possibile impatto.
-
-### Servizio → script → obiettivo
-
-La scelta dello script NSE è più utile quando parte dal servizio che hai già identificato:
-
-| Servizio | Porte comuni        | Script iniziali                                           | Cosa cercare                                |
-| -------: | ------------------- | --------------------------------------------------------- | ------------------------------------------- |
-|      SMB | 139, 445            | `smb-enum-*`, `smb-vuln-*`                                | share, utenti, sessioni, vulnerabilità note |
-|     HTTP | 80, 443, 8080, 8443 | `http-title`, `http-headers`, `http-methods`, `http-enum` | server, header, metodi, contenuti           |
-|      SSH | 22                  | `ssh-auth-methods`                                        | metodi di autenticazione                    |
-|     LDAP | 389, 636            | `ldap-rootdse`, `ldap-search`                             | naming context, directory information       |
-|      DNS | 53                  | `dns-*`                                                   | discovery e verifiche DNS supportate        |
-|    MySQL | 3306                | `mysql-info`                                              | fingerprint e informazioni sul servizio     |
-|    MSSQL | 1433                | `ms-sql-*`                                                | informazioni e configurazione del servizio  |
-
-Non tutti gli script funzionano allo stesso modo su ogni target: autenticazione, configurazione, versione del servizio e argomenti NSE possono cambiare il risultato.
+Gli script NSE non sono sandboxati. Prima di eseguire una categoria ampia o uno script sconosciuto è importante comprenderne il comportamento e il possibile impatto.
 
 ### Vulnerability checks con NSE
 
@@ -716,326 +398,110 @@ Non tutti gli script funzionano allo stesso modo su ogni target: autenticazione,
 nmap --script vuln target
 ```
 
-La categoria `vuln` comprende script classificati per il rilevamento di specifiche vulnerabilità o condizioni insicure.
-
-Non equivale a una piattaforma completa di vulnerability management: Nmap può eseguire security checks mirati tramite NSE, ma strumenti dedicati possono fornire inventario, correlazione, reporting e gestione delle vulnerabilità su scala più ampia.
+Non equivale a una piattaforma completa di vulnerability management: Nmap può eseguire security checks mirati tramite NSE, ma strumenti dedicati forniscono inventario, correlazione e gestione su scala più ampia.
 
 ## SMB Enumeration
 
-Quando Nmap identifica:
-
-```text
-445/tcp open microsoft-ds
-```
-
-puoi passare a una enumeration specifica del servizio.
-
-### Share enumeration
-
 ```bash
 nmap -p 445 --script smb-enum-shares target
-```
-
-Lo script tenta di raccogliere informazioni sulle condivisioni SMB quando target, autenticazione e configurazione del servizio lo consentono.
-
-### User enumeration
-
-```bash
 nmap -p 445 --script smb-enum-users target
-```
-
-Anche qui il risultato dipende dai permessi e dal comportamento del target.
-
-### Session enumeration
-
-```bash
 nmap -p 445 --script smb-enum-sessions target
-```
-
-### Vulnerability checks
-
-```bash
 nmap -p 445 --script "smb-vuln*" target
 ```
 
-Un workflow SMB tipico può diventare:
-
 ```text
-445/tcp
- ↓
-SMB detection
- ↓
-NSE enumeration
- ↓
-rpcclient / smbclient / enum4linux-ng / NetExec
+445/tcp → SMB detection → NSE enumeration → strumenti dedicati
 ```
 
-Nmap fornisce discovery e prima enumeration; gli strumenti specializzati possono approfondire il servizio.
+Nmap fornisce discovery e prima enumeration; per approfondire passa a [rpcclient](https://hackita.it/articoli/rpcclient/), [smbclient](https://hackita.it/articoli/smbclient/), [enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) o [NetExec](https://hackita.it/articoli/netexec/) — vedi la tabella [Porte Principali](#porte-principali-cosa-fare-dopo) sopra per il quadro completo.
 
 ## LDAP e Active Directory Enumeration
 
-Le porte LDAP più comuni sono:
-
-```text
-389/tcp
-636/tcp
-```
-
-### RootDSE
-
 ```bash
 nmap -p 389,636 --script ldap-rootdse target
-```
-
-### LDAP search
-
-```bash
 nmap -p 389 --script ldap-search target
 ```
 
-Le query LDAP più avanzate possono richiedere credenziali, argomenti specifici o una configurazione del servizio che permetta determinate operazioni.
-
-Un workflow iniziale può essere:
-
 ```text
-389/636
- ↓
-LDAP / LDAPS detection
- ↓
-RootDSE
- ↓
-Naming Context
- ↓
-LDAP enumeration
+389/636 → LDAP/LDAPS detection → RootDSE → Naming Context → enumerazione
 ```
 
-Nmap può contribuire alla discovery iniziale di Active Directory, ma attività specifiche come Kerberoasting e AS-REP Roasting richiedono strumenti e workflow dedicati.
+Nmap contribuisce alla discovery iniziale; per l'enumerazione approfondita passa a [ldapsearch](https://hackita.it/articoli/ldapsearch/). Attività come [Kerberoasting](https://hackita.it/articoli/kerberoasting/) e [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/) richiedono poi strumenti dedicati, non Nmap direttamente.
 
 ## Web Server Enumeration
 
-Identifica le porte web più comuni:
-
 ```bash
 nmap -p 80,443,8080,8443 --open -sV target
-```
-
-### HTTP fingerprinting
-
-```bash
 nmap -p 80,443 --script http-title,http-headers,http-methods target
-```
-
-### HTTP enumeration
-
-```bash
 nmap -p 80,443 --script http-enum target
-```
-
-### WAF detection
-
-```bash
 nmap -p 80,443 --script http-waf-detect,http-waf-fingerprint target
 ```
 
-Workflow:
-
 ```text
-80/443/8080/8443
- ↓
-Service detection
- ↓
-HTTP NSE
- ↓
-Technology identification
- ↓
-Burp Suite / httpx / ffuf
+80/443/8080/8443 → service detection → HTTP NSE → technology identification → enumerazione mirata
 ```
+
+Dopo il fingerprinting iniziale, passa a [Burp Suite](https://hackita.it/articoli/burp-suite/), [ffuf](https://hackita.it/articoli/ffuf/) o [Gobuster](https://hackita.it/articoli/gobuster/) per l'enumerazione web vera e propria.
 
 ## SSH Enumeration
 
-Service detection:
-
 ```bash
 nmap -p 22 -sV target
-```
-
-Metodi di autenticazione:
-
-```bash
 nmap -p 22 --script ssh-auth-methods target
 ```
 
-Workflow:
-
-```text
-22/tcp
- ↓
-SSH
- ↓
-Version
- ↓
-Authentication methods
- ↓
-SSH-specific enumeration
-```
+Per l'enumerazione e l'hardening SSH nel dettaglio vedi l'articolo dedicato su [SSH](https://hackita.it/articoli/ssh/).
 
 ## DNS Enumeration
 
-Discovery del servizio DNS:
-
 ```bash
 nmap -p 53 --script dns-service-discovery target
+nmap -p 53 --script dns-zone-transfer --script-args dns-zone-transfer.domain=example.com ns.example.com
 ```
 
-Per un test autorizzato di zone transfer:
-
-```bash
-nmap -p 53 --script dns-zone-transfer \
-  --script-args dns-zone-transfer.domain=example.com \
-  ns.example.com
-```
-
-Nmap può contribuire alla reconnaissance DNS, ma per enumeration DNS completa è spesso opportuno affiancare strumenti dedicati.
+Per la reconnaissance DNS completa vedi l'articolo su [DNS](https://hackita.it/articoli/dns/).
 
 ## Database Discovery
 
-### MySQL
-
 ```bash
-nmap -p 3306 --script mysql-info target
+nmap -p 3306 --script mysql-info target        # MySQL
+nmap -p 1433 --script ms-sql-info target       # MSSQL
+nmap -p 5432 -sV target                        # PostgreSQL, poi script dedicati
 ```
-
-### Microsoft SQL Server
-
-```bash
-nmap -p 1433 --script ms-sql-info target
-```
-
-### PostgreSQL
-
-Per iniziare dalla detection del servizio:
-
-```bash
-nmap -p 5432 -sV target
-```
-
-Gli script NSE disponibili dipendono dalla versione installata. Per verificare quelli presenti localmente:
 
 ```bash
 ls /usr/share/nmap/scripts/ | grep -Ei 'postgres|pgsql'
-```
-
-e:
-
-```bash
 nmap --script-help <script>
 ```
 
-Separare discovery, enumeration e authentication testing evita di confondere attività con obiettivi differenti:
-
-```text
-database discovery
- ↓
-service identification
- ↓
-configuration enumeration
- ↓
-authentication testing
-```
+Per l'attacco mirato ai singoli DBMS vedi [Porta 3306 MySQL](https://hackita.it/articoli/porta-3306-mysql/) e [Porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/).
 
 ## IoT e OT Discovery
 
-Nmap dispone anche di script per protocolli specializzati.
-
-### Modbus
-
 ```bash
-nmap -p 502 --script modbus-discover target
+nmap -p 502 --script modbus-discover target    # Modbus
+nmap -p 102 --script s7-info target            # Siemens S7
+nmap -p 1883,8883 --open target                # MQTT
 ```
 
-### Siemens S7
-
-```bash
-nmap -p 102 --script s7-info target
-```
-
-### MQTT
-
-```bash
-nmap -p 1883,8883 --open target
-```
-
-In ambienti OT/ICS è importante considerare il possibile impatto operativo della scansione. Tecniche appropriate in una rete IT possono avere conseguenze diverse su sistemi industriali e dispositivi embedded.
+In ambienti OT/ICS considera sempre il possibile impatto operativo: tecniche appropriate in una rete IT possono avere conseguenze diverse su sistemi industriali e dispositivi embedded.
 
 ## Firewall, IDS e Scan Evasion
 
-Le opzioni di evasion di Nmap modificano il traffico, la struttura dei pacchetti o il comportamento temporale delle probe.
-
-**Non costituiscono bypass universali di firewall, IDS o IPS e non garantiscono invisibilità.**
-
-### Fragmentation
+Le opzioni di evasion modificano traffico, struttura dei pacchetti o timing delle probe. **Non costituiscono bypass universali di firewall/IDS/IPS e non garantiscono invisibilità.**
 
 ```bash
-sudo nmap -f target
+sudo nmap -f target                    # fragmentation
+sudo nmap -f -f target                 # doppia frammentazione
+sudo nmap --mtu 24 target              # MTU custom
+sudo nmap -D RND:5 target              # decoy random
+sudo nmap -D 192.168.1.50,ME,192.168.1.52 target   # decoy specifici
+sudo nmap --source-port 53 target      # source port spoofing
+nmap --badsum target                   # checksum errato (studio comportamento firewall)
+nmap --data-length 25 target           # dati random aggiuntivi
 ```
-
-Più livelli di frammentazione:
-
-```bash
-sudo nmap -f -f target
-```
-
-### MTU custom
-
-```bash
-sudo nmap --mtu 24 target
-```
-
-### Decoy
-
-```bash
-sudo nmap -D RND:5 target
-```
-
-Con indirizzi specifici:
-
-```bash
-sudo nmap -D 192.168.1.50,192.168.1.51,ME,192.168.1.52 target
-```
-
-### Source Port
-
-```bash
-sudo nmap --source-port 53 target
-```
-
-oppure:
-
-```bash
-sudo nmap --source-port 80 target
-```
-
-Questa tecnica può modificare il comportamento di alcuni filtri configurati in modo errato, ma non deve essere considerata un firewall bypass generico.
-
-### Bad Checksum
-
-```bash
-nmap --badsum target
-```
-
-Può essere utile per studiare il comportamento di firewall e dispositivi rispetto a pacchetti con checksum errato.
-
-### Data Length
-
-```bash
-nmap --data-length 25 target
-```
-
-Aggiunge una quantità di dati casuali alle probe.
 
 ## Timing e Throttling
-
-Nmap dispone dei timing template:
 
 | Template | Profilo          |
 | -------- | ---------------- |
@@ -1046,653 +512,198 @@ Nmap dispone dei timing template:
 | `T4`     | Più aggressivo   |
 | `T5`     | Molto aggressivo |
 
-Esempio:
-
 ```bash
 nmap -T4 target
-```
-
-Timing più aggressivo non significa automaticamente migliore qualità. Un aumento eccessivo della velocità può causare packet loss, timeout, risultati meno affidabili e maggiore visibilità nei sistemi di monitoraggio.
-
-### Scan delay
-
-```bash
 nmap --scan-delay 5s target
-```
-
-### Rate limiting
-
-```bash
 nmap --max-rate 100 target
-```
-
-oppure:
-
-```bash
 nmap --min-rate 50 target
 ```
 
-I valori devono essere adattati alla rete e al tipo di engagement, non applicati come impostazioni universali.
+Timing più aggressivo non significa automaticamente migliore qualità: un aumento eccessivo della velocità può causare packet loss, timeout e maggiore visibilità nei sistemi di monitoraggio. I valori vanno adattati alla rete e al tipo di engagement, non applicati come default universali.
 
 ## Idle Scan
 
-L'Idle Scan utilizza un host intermedio compatibile come **zombie** per effettuare una scansione basata sul comportamento del traffico IP.
-
-Esempio:
-
 ```bash
+nmap --script ipidseq 192.168.1.0/24   # cerca host zombie candidati
 nmap -sI zombie_ip:80 target_ip
 ```
 
-Un possibile metodo per studiare host con caratteristiche adatte è:
+L'Idle Scan non è una "scansione completamente anonima": può separare in determinati scenari l'origine apparente delle probe dal target, ma non garantisce anonimato assoluto.
+
+## Nmap e Rilevamento
+
+Una scansione può essere rilevata da firewall, IDS/IPS, NDR, EDR con visibilità di rete, log dei servizi e telemetria di rete. Timing, decoy e fragmentation possono modificare il profilo del traffico, ma non esiste un'opzione Nmap che garantisca "rilevamento zero".
+
+## Nmap Output e Reporting
 
 ```bash
-nmap --script ipidseq 192.168.1.0/24
+nmap -sV target -oN scan.nmap    # normal output
+nmap -sV target -oX scan.xml     # XML, ideale per automazione/parsing
+nmap -sV target -oG scan.gnmap   # grepable, comodo per grep/awk veloci
+nmap -sV target -oA scan         # tutti e tre insieme
 ```
 
-L'Idle Scan non è una "scansione completamente anonima". Può separare in determinati scenari l'origine apparente delle probe dal target, ma non garantisce anonimato assoluto o assenza di tracce.
+## Dove Salva Nmap i Risultati?
 
-## Nmap e rilevamento
-
-Una scansione Nmap può essere rilevata da:
-
-* firewall;
-* IDS/IPS;
-* NDR;
-* EDR con visibilità di rete;
-* log dei servizi;
-* sistemi di monitoring;
-* telemetria di rete.
-
-Timing, decoy, fragmentation e tecniche simili possono modificare il profilo del traffico, ma non esiste un'opzione Nmap che garantisca "rilevamento zero".
-
-## Output e Reporting
-
-Nmap supporta diversi formati di output.
-
-### Normal output
-
-```bash
-nmap -sV target -oN scan.nmap
-```
-
-### XML
-
-```bash
-nmap -sV target -oX scan.xml
-```
-
-L'XML è particolarmente adatto per automazione e parsing da parte di altri programmi.
-
-### Grepable output
-
-```bash
-nmap -sV target -oG scan.gnmap
-```
-
-Il formato grepable può essere comodo per operazioni veloci con `grep`, `awk`, `cut` e strumenti shell, ma per nuove pipeline strutturate l'XML è generalmente preferibile.
-
-### Tutti i principali formati
-
-```bash
-nmap -sV target -oA scan
-```
-
-Genera:
-
-```text
-scan.nmap
-scan.xml
-scan.gnmap
-```
-
-## Dove salva Nmap i risultati?
-
-Nmap non salva automaticamente ogni scansione su file.
-
-Per salvare i risultati devi specificare una delle opzioni di output:
-
-```text
--oN  Normal output
--oX  XML
--oG  Grepable output
--oA  Tutti i principali formati
-```
-
-Esempio:
+Nmap non salva automaticamente ogni scansione su file. Serve specificare esplicitamente `-oN`, `-oX`, `-oG` o `-oA`:
 
 ```bash
 nmap -sV target -oA ./results/web_scan
 ```
 
-## Parsing XML
-
-Per creare un output strutturato:
-
-```bash
-nmap -sV target -oX results.xml
-```
-
-Una pipeline tipica è:
-
-```text
-Nmap
- ↓
-XML
- ↓
-Parser
- ↓
-Database / Dashboard / Automation
-```
-
-Questo è preferibile al parsing del testo terminale quando i risultati devono essere consumati da software.
-
-## Riprendere una scansione interrotta
-
-Per riprendere una scansione salvata in normal output:
+## Riprendere una Scansione Interrotta
 
 ```bash
 nmap --resume scan.nmap
 ```
-
-Nmap recupera dal file le informazioni necessarie per riprendere la scansione.
 
 ## Workflow Nmap per un Penetration Test
 
 ### External Reconnaissance
 
-```text
-Target
- ↓
-Host / DNS discovery
- ↓
-Top ports
- ↓
-Full TCP scan
- ↓
-Service / version detection
- ↓
-NSE mirato
- ↓
-Manual validation
-```
-
-Esempio:
-
 ```bash
 nmap -F target
-```
-
-poi:
-
-```bash
 nmap -p- target
-```
-
-poi:
-
-```bash
 nmap -sC -sV -p <porte> target
 ```
 
 ### Internal Network Recon
 
-```text
-Subnet
- ↓
-Live hosts
- ↓
-Full port scan
- ↓
-Service detection
- ↓
-SMB / LDAP / DNS / HTTP
- ↓
-Enumeration specifica
-```
-
-Discovery:
-
 ```bash
 sudo nmap -sn 10.0.0.0/24 -oG hosts.gnmap
-```
-
-Full scan:
-
-```bash
 nmap -p- -iL targets.txt -oA tcp_scan
 ```
 
 ### Active Directory Recon
 
-Una combinazione di servizi può suggerire la presenza di un Domain Controller:
-
-```text
-53
-88
-135
-139
-389
-445
-464
-636
-3268
-3269
-```
-
-Scansione:
-
 ```bash
 nmap -p 53,88,135,139,389,445,464,636,3268,3269 --open 10.0.0.0/24
-```
-
-LDAP:
-
-```bash
 nmap -p 389 --script ldap-rootdse 10.0.0.0/24
 ```
 
-Il risultato orienta le fasi successive di Active Directory enumeration.
+Una combinazione di queste porte suggerisce la presenza di un Domain Controller — usa la tabella [Porte Principali](#porte-principali-cosa-fare-dopo) per il tool giusto su ciascuna.
 
 ### Web Reconnaissance
 
 ```text
-Network discovery
- ↓
-80/443/8080/8443
- ↓
-Service detection
- ↓
-HTTP NSE
- ↓
-Technology identification
- ↓
-Web enumeration
+Network discovery → 80/443/8080/8443 → service detection → HTTP NSE → enumerazione web
 ```
 
 ## Performance e Scansioni Massive
 
-Su reti ampie è spesso più efficace separare discovery e enumeration piuttosto che utilizzare sempre la scansione più aggressiva possibile.
-
-### Discovery first
-
 ```bash
 nmap -sn 10.0.0.0/16 -oG hosts.gnmap
-```
-
-Dopo aver isolato gli host attivi:
-
-```bash
 grep "Up" hosts.gnmap | awk '{print $2}' > targets.txt
-```
-
-Poi:
-
-```bash
 nmap --top-ports 1000 -iL targets.txt -oA service_scan
-```
-
-Infine, sui target prioritari:
-
-```bash
 nmap -sC -sV -p <porte> -iL priority_targets.txt -oA detailed_scan
 ```
 
-Questo modello riduce il lavoro ripetitivo e consente di destinare le scansioni più costose agli host realmente interessanti.
+Separare discovery ed enumeration riduce il lavoro ripetitivo e destina le scansioni più costose solo agli host realmente interessanti.
 
 ## Nmap e myNmap
 
-Durante CTF, lab e penetration test autorizzati, molte operazioni della reconnaissance possono diventare ripetitive:
+Durante CTF, lab e penetration test autorizzati, la sequenza full scan → service detection → OS detection → NSE → UDP → vulnerability check diventa ripetitiva. **myNmap** è il wrapper open source di Hackita che automatizza questo workflow mantenendo Nmap come motore:
 
-```text
-Full TCP scan
- ↓
-Service detection
- ↓
-OS detection
- ↓
-NSE
- ↓
-UDP
- ↓
-Vulnerability checks
+```bash
+git clone https://github.com/hack-ita/mynmap.git
+cd mynmap
+chmod +x mynmap
+sudo cp mynmap /usr/local/bin/mynmap
 ```
 
-**myNmap** è un wrapper open source sviluppato da HACKITA per automatizzare diverse di queste operazioni e ridurre il lavoro manuale necessario per passare dal target ai primi risultati di enumeration.
-
-Repository:
-
-[https://github.com/hack-ita/mynmap](https://github.com/hack-ita/mynmap)
-
-Il progetto combina in un workflow automatizzato diverse operazioni normalmente eseguite separatamente con Nmap, mantenendo Nmap come motore della scansione.
-
-### Nmap manuale vs myNmap
-
-|     Approccio | Controllo | Automazione | Utilizzo                               |
-| ------------: | --------: | ----------- | -------------------------------------- |
-|  Nmap manuale |   Massimo | Bassa       | Scansioni completamente personalizzate |
-| Script + Nmap |      Alto | Media       | Workflow ripetibili                    |
-|        myNmap |      Alto | Alta        | Enumeration automatizzata              |
-
-Nmap rimane preferibile quando vuoi controllare direttamente ogni porta, probe, script e parametro di timing.
-
-myNmap è invece orientato ai workflow in cui vuoi automatizzare attività ripetitive e arrivare rapidamente a una prima panoramica di:
-
-```text
-target
- ↓
-porte
- ↓
-servizi
- ↓
-versioni
- ↓
-NSE
- ↓
-potenziali vulnerabilità
+```bash
+sudo mynmap 10.10.10.10   # con privilegi: usa SYN scan (-sS)
+mynmap 10.10.10.10        # senza sudo: usa connect scan (-sT)
 ```
 
-Repository ufficiale:
+In un'unica esecuzione copre discovery TCP completa, service/version detection con script NSE default, OS detection, controlli di vulnerabilità sulle porte critiche più comuni e una scansione UDP mirata sulle porte più rilevanti prima di quelle generiche — pensato per il compromesso velocità/copertura di CTF, HTB e Proving Grounds.
 
-[https://github.com/hack-ita/mynmap](https://github.com/hack-ita/mynmap)
+| Approccio     | Controllo | Automazione | Quando                                           |
+| ------------- | --------- | ----------- | ------------------------------------------------ |
+| Nmap manuale  | Massimo   | Bassa       | Scansione completamente personalizzata           |
+| Script + Nmap | Alto      | Media       | Workflow ripetibili fatti in casa                |
+| myNmap        | Alto      | Alta        | Prima panoramica rapida target→porte→servizi→NSE |
+
+Repository: [github.com/hack-ita/mynmap](https://github.com/hack-ita/mynmap)
 
 ## Troubleshooting
 
-### Host risulta down ma è attivo
-
 ```bash
-nmap -Pn target
+nmap -Pn target                        # host down ma attivo -> ICMP filtrato
+nmap -PS22,80,443 target               # probe su porte note
+nmap -sT target                        # SYN scan non disponibile senza privilegi
+sudo nmap -sU -p 53,67,68,123,161 target   # UDP lento: parti dalle porte rilevanti
+sudo nmap -O -sV target                # OS detection poco precisa
 ```
 
-Oppure prova probe specifiche:
+**Porte `filtered`** — non significa che il servizio sia chiuso, significa che Nmap non ha ricevuto informazioni sufficienti per determinarne con certezza lo stato.
 
-```bash
-nmap -PS22,80,443 target
-```
-
-### SYN scan non disponibile
-
-```bash
-nmap -sT target
-```
-
-### UDP molto lento
-
-Inizia dalle porte UDP più rilevanti invece di scansionare immediatamente tutto l'intervallo:
-
-```bash
-sudo nmap -sU -p 53,67,68,123,161 target
-```
-
-### OS Detection poco precisa
-
-```bash
-sudo nmap -O -sV target
-```
-
-La precisione dipende dal fingerprint osservato e dalle condizioni di rete.
-
-### Porte `filtered`
-
-Un risultato:
-
-```text
-443/tcp filtered https
-```
-
-non significa che HTTPS sia chiuso.
-
-Significa che Nmap non ha ricevuto informazioni sufficienti per determinare con certezza lo stato della porta.
-
-### `Operation not permitted`
-
-Se una tecnica richiede privilegi raw-packet:
-
-```bash
-nmap -sS target
-```
-
-può fallire senza privilegi appropriati.
-
-Su Linux puoi usare:
-
-```bash
-sudo nmap -sS target
-```
-
-Oppure una connect scan:
-
-```bash
-nmap -sT target
-```
+**`Operation not permitted`** — la tecnica richiede privilegi raw-packet: usa `sudo` o passa a `-sT`.
 
 ## FAQ
 
-### Cos'è Nmap?
+**Cos'è Nmap?**
+Uno strumento open source per network discovery e security auditing: identifica host, porte, servizi, versioni software, sistemi operativi e informazioni aggiuntive tramite NSE.
 
-Nmap è uno strumento open source per network discovery e security auditing. Può identificare host, porte, servizi, versioni software, sistemi operativi e informazioni aggiuntive tramite NSE.
+**A cosa serve Nmap?**
+Host discovery, port scanning, service/version detection, OS fingerprinting, enumeration e vulnerability detection tramite NSE.
 
-### A cosa serve Nmap?
+**Come scansionare tutte le porte con Nmap?**
+`nmap -p- target`, poi `nmap -sC -sV -p <porte> target` sulle porte trovate.
 
-Nmap viene utilizzato principalmente per host discovery, port scanning, service e version detection, OS fingerprinting, enumeration e vulnerability detection tramite NSE.
+**Qual è la differenza tra `-sS` e `-sT`?**
+`-sS` invia SYN e normalmente non completa il three-way handshake; `-sT` usa la `connect()` di sistema e completa la connessione. La differenza non si riduce a "stealth vs non-stealth": il traffico resta osservabile da log e monitoring.
 
-### Come scansionare tutte le porte con Nmap?
+**Posso usare Nmap senza essere rilevato?**
+No. Timing, decoy e fragmentation modificano il traffico generato, ma non garantiscono invisibilità.
 
-Usa:
+**Nmap può fare vulnerability scanning?**
+Sì con `nmap --script vuln target`, ma non equivale a una piattaforma completa di vulnerability management.
 
-```bash
-nmap -p- target
-```
+**Nmap funziona su Windows?**
+Sì, con installer ufficiale e Npcap per le funzionalità di rete.
 
-Dopo aver individuato le porte interessanti puoi eseguire una scansione più approfondita:
+**Dove salva Nmap i risultati?**
+Non li salva automaticamente: serve specificare `-oN`, `-oX`, `-oG` o `-oA`.
 
-```bash
-nmap -sC -sV -p <porte> target
-```
+**Quale formato è migliore per l'automazione?**
+XML (`-oX`), per pipeline e parser dedicati.
 
-### Qual è la differenza tra `-sS` e `-sT`?
-
-`-sS` utilizza una TCP SYN scan e normalmente non completa il normale three-way handshake.
-
-`-sT` utilizza la normale `connect()` del sistema operativo e completa la connessione TCP.
-
-La differenza non dovrebbe essere ridotta semplicemente a "stealth" e "non stealth": il traffico può essere osservato dai sistemi di logging e monitoraggio presenti nell'infrastruttura.
-
-### Posso usare Nmap senza essere rilevato?
-
-No. Una scansione può essere individuata da firewall, IDS/IPS, NDR e dai log dei servizi.
-
-Timing, decoy, fragmentation e altre tecniche possono modificare il traffico generato, ma non garantiscono invisibilità.
-
-### Nmap può fare vulnerability scanning?
-
-Sì. NSE dispone di script per il vulnerability detection:
-
-```bash
-nmap --script vuln target
-```
-
-Questi controlli possono identificare specifiche condizioni vulnerabili, ma non equivalgono necessariamente a una piattaforma completa di vulnerability management.
-
-### Nmap funziona su Windows?
-
-Sì. Nmap dispone di un installer ufficiale per Windows e utilizza Npcap per diverse funzionalità di rete.
-
-### Dove salva Nmap i risultati?
-
-Nmap non salva automaticamente ogni scansione su file.
-
-Puoi usare:
-
-```bash
--oN
-```
-
-per normal output,
-
-```bash
--oX
-```
-
-per XML,
-
-```bash
--oG
-```
-
-per grepable output,
-
-oppure:
-
-```bash
--oA
-```
-
-per generare contemporaneamente i principali formati.
-
-### Quale formato Nmap è migliore per l'automazione?
-
-Per pipeline e programmi che devono processare i risultati, l'XML è generalmente il formato più adatto:
-
-```bash
-nmap -sV target -oX scan.xml
-```
-
-### Quante porte può scansionare Nmap?
-
-Con:
-
-```bash
-nmap -p- target
-```
-
-puoi selezionare tutte le porte TCP da 1 a 65535. Le porte UDP vengono analizzate separatamente con `-sU`.
+**In che linguaggio è scritto Nmap?**
+Il motore principale è in C/C++; il Nmap Scripting Engine (NSE) usa Lua per gli script; Zenmap, la GUI storica, era scritta in Python.
 
 ## Cheat Sheet Nmap
 
-### Discovery
-
 ```bash
-nmap -sn 192.168.1.0/24
-```
-
-### Skip host discovery
-
-```bash
-nmap -Pn target
-```
-
-### Lista target
-
-```bash
-nmap -sL 192.168.1.0/24
-```
-
-### SYN scan
-
-```bash
-sudo nmap -sS target
-```
-
-### TCP connect scan
-
-```bash
-nmap -sT target
-```
-
-### UDP
-
-```bash
-sudo nmap -sU target
-```
-
-### Tutte le porte TCP
-
-```bash
-nmap -p- target
-```
-
-### Porte specifiche
-
-```bash
-nmap -p 22,80,443 target
-```
-
-### Top ports
-
-```bash
+nmap -sn 192.168.1.0/24        # discovery
+nmap -Pn target                 # skip host discovery
+nmap -sL 192.168.1.0/24         # lista target
+sudo nmap -sS target            # SYN scan
+nmap -sT target                 # connect scan
+sudo nmap -sU target            # UDP
+sudo nmap -sA target            # ACK scan (mappa regole firewall)
+sudo nmap -sF -sN -sX target    # FIN / Null / Xmas (evasion su target Unix-like)
+nmap -p- target                 # tutte le porte TCP
+nmap -p 22,80,443 target        # porte specifiche
 nmap --top-ports 100 target
-```
-
-### Service detection
-
-```bash
-nmap -sV target
-```
-
-### OS detection
-
-```bash
-sudo nmap -O target
-```
-
-### Default NSE
-
-```bash
-nmap -sC target
-```
-
-### Service + NSE
-
-```bash
+nmap -sV target                 # service detection
+sudo nmap -O target             # OS detection
+nmap -sC target                 # default NSE
 nmap -sC -sV target
-```
-
-### Aggressive scan
-
-```bash
-sudo nmap -A target
-```
-
-### Vulnerability checks
-
-```bash
+sudo nmap -A target             # aggressive
 nmap --script vuln target
-```
-
-### Salvare tutti i principali formati
-
-```bash
-nmap -sV target -oA scan
-```
-
-### XML
-
-```bash
+nmap -sV target -oA scan        # tutti i formati
 nmap -sV target -oX scan.xml
-```
-
-### Riprendere una scansione
-
-```bash
 nmap --resume scan.nmap
-```
-
-### Timing
-
-```bash
 nmap -T4 target
 ```
 
 ## Risorse
 
-* Nmap Official: [https://nmap.org/](https://nmap.org/)
-* Nmap Download: [https://nmap.org/download.html](https://nmap.org/download.html)
-* Nmap Reference Guide: [https://nmap.org/book/man.html](https://nmap.org/book/man.html)
-* Nmap Network Scanning: [https://nmap.org/book/](https://nmap.org/book/)
-* NSE Documentation: [https://nmap.org/nsedoc/](https://nmap.org/nsedoc/)
-* Nmap GitHub: [https://github.com/nmap/nmap](https://github.com/nmap/nmap)
-* HackTricks — Nmap Summary: [https://hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/nmap-summary-esp.html](https://hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/nmap-summary-esp.html)
-* myNmap — HACKITA: [https://github.com/hack-ita/mynmap](https://github.com/hack-ita/mynmap)
+* Nmap Official: [nmap.org](https://nmap.org/)
+* Nmap Download: [nmap.org/download.html](https://nmap.org/download.html)
+* Nmap Reference Guide: [nmap.org/book/man.html](https://nmap.org/book/man.html)
+* NSE Documentation: [nmap.org/nsedoc](https://nmap.org/nsedoc/)
+* myNmap — Hackita: [github.com/hack-ita/mynmap](https://github.com/hack-ita/mynmap)
 
 > Utilizza Nmap esclusivamente su sistemi e reti per i quali disponi di autorizzazione. Le tecniche di scanning, enumeration ed evasion possono generare traffico, alert o impatti sui sistemi analizzati.

@@ -2,7 +2,7 @@
 title: 'Maltego OSINT: Reconnaissance, Transform e Graph Analysis'
 slug: maltego
 description: 'Scopri cos''è Maltego per OSINT e reconnaissance: usa Entity, Transform, pivot e graph analysis per correlare domini, IP, email, persone e infrastruttura.'
-image: /Gemini_Generated_Image_ded8faded8faded8.webp
+image: /maltego-osint-visual-analysis.webp
 draft: false
 date: 2026-02-08T00:00:00.000Z
 lastmod: 2026-09-14T00:00:00.000Z

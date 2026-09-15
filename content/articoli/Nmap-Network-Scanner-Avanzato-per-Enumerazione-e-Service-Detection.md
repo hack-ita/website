@@ -501,6 +501,8 @@ nmap --badsum target                   # checksum errato (studio comportamento f
 nmap --data-length 25 target           # dati random aggiuntivi
 ```
 
+> Per una prospettiva difensiva su come configurare un firewall per resistere a queste tecniche, vedi la guida di corelab.tech su [OPNsense e security through obscurity](https://corelab.tech/security-through-obscurity-opnsense-guide/).
+
 ## Timing e Throttling
 
 | Template | Profilo          |

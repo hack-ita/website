@@ -1,9 +1,11 @@
 ---
 title: 'FTP Bounce Attack: cos’è, come funziona e come prevenirlo'
 slug: ftp-bounce
-description: 'FTP Bounce Attack: cos’è, come funziona il comando PORT, perché può permettere il port scanning indiretto e come rilevarlo e prevenirlo.'
+description: >-
+  FTP Bounce Attack: cos’è, come funziona il comando PORT, perché può permettere
+  il port scanning indiretto e come rilevarlo e prevenirlo.
 image: /ftp-bounce-attack.webp
-draft: true
+draft: false
 date: 2026-09-15T00:00:00.000Z
 categories:
   - networking

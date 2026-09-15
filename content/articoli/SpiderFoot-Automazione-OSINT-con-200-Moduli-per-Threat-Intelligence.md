@@ -2,7 +2,7 @@
 title: 'SpiderFoot: OSINT Automation, Reconnaissance e Attack Surface'
 slug: spiderfoot
 description: 'Scopri SpiderFoot per automatizzare OSINT e reconnaissance: moduli, correlazione, subdomain, IP, email, threat intelligence e attack surface mapping.'
-image: /Gemini_Generated_Image_saexy2saexy2saex.webp
+image: /spiderfoot-osint-reconnaissance.webp
 draft: false
 date: 2026-02-08T00:00:00.000Z
 categories:
@@ -20,7 +20,13 @@ featured: false
 
 # SpiderFoot: OSINT, Reconnaissance e Attack Surface Mapping
 
-SpiderFoot automatizza la raccolta OSINT interrogando decine di moduli — ciascuno collegato a una fonte pubblica o API — e correla automaticamente quello che trovano in un'unica base dati. Sviluppato da Steve Micallef e ancora attivamente mantenuto, offre sia GUI web che CLI. A differenza di Maltego, dove il pivot visuale è al centro dell'esperienza, il cuore di SpiderFoot è l'automazione: lanci uno scan, i moduli si alimentano a vicenda da soli, tu guardi il risultato correlato.
+SpiderFoot è uno strumento open source per automatizzare **OSINT e reconnaissance**. Invece di raccogliere manualmente informazioni da decine di fonti, permette di avviare una scansione su un target e lasciare che i suoi moduli estraggano e correlino automaticamente gli elementi scoperti.
+
+Il tool supporta diversi tipi di target, tra cui **domini e sottodomini, indirizzi IP, hostname, subnet, ASN, email, username, numeri di telefono, nomi di persona e indirizzi Bitcoin**. I risultati prodotti dai moduli possono alimentarsi a vicenda, permettendo di espandere progressivamente la superficie informativa del target.
+
+SpiderFoot può essere utilizzato dalla **web UI** oppure tramite **CLI** e dispone di oltre 200 moduli per attività come enumerazione di host e sottodomini, DNS, threat intelligence, blacklist, account social, bucket cloud, metadata, port scanning, banner grabbing e data-breach search.
+
+Il suo punto di forza, quindi, non è semplicemente raccogliere informazioni, ma **automatizzare il processo di discovery e correlazione**: una singola scansione può generare nuovi elementi che vengono utilizzati da altri moduli per ampliare la ricognizione.
 
 ## SpiderFoot in 30 Secondi
 

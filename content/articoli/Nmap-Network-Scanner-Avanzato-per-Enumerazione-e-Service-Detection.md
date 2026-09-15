@@ -2,7 +2,7 @@
 title: 'Nmap per Pentesting: Port Scanning, Network Recon e NSE'
 slug: nmap
 description: 'Nmap per penetration testing e network recon: comandi, host discovery, port scanning TCP/UDP, service detection, OS fingerprinting, NSE ed enumeration.'
-image: /Gemini_Generated_Image_8mre5n8mre5n8mre.webp
+image: /nmap-pentesting-port-scanning-network-recon-nse.webp
 draft: false
 date: 2026-02-20T00:00:00.000Z
 lastmod: 2026-09-15T00:00:00.000Z

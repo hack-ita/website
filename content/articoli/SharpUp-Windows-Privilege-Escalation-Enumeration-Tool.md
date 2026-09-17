@@ -1,11 +1,11 @@
 ---
-title: 'SharpUp Windows: Privilege Escalation e Local Enumeration'
+title: 'SharpUp: Comandi e Check per Privilege Escalation Windows'
 slug: sharpup
-description: 'Guida a SharpUp su Windows per individuare vettori di privilege escalation: servizi modificabili, DLL hijacking, registry, GPP, token privileges e altri check.'
-image: /Gemini_Generated_Image_ml40maml40maml40.webp
+description: 'Guida a SharpUp (GhostPack): comandi, check reali (ModifiableServices, AlwaysInstallElevated, DLL hijack) e come sfruttarli per privilege escalation su Windows.'
+image: /sharpup-privilege-escalation-windows.webp
 draft: false
 date: 2026-02-25T00:00:00.000Z
-lastmod: 2026-09-15T00:00:00.000Z
+lastmod: 2026-09-17T00:00:00.000Z
 categories:
   - windows
 subcategories:

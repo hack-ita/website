@@ -74,6 +74,10 @@ Il percorso più comune parte dalle fondamenta (reti, sistemi operativi, un ling
 
 La guida passo-passo completa, con la tabella delle certificazioni, i tempi realistici e gli errori più comuni da evitare: [Come Diventare Ethical Hacker: la Guida Pratica](https://hackita.it/articoli/come-diventare-ethical-hacker/).
 
+Se preferisci un percorso guidato invece di muoverti da solo tra corsi e certificazioni, Hackita offre anche materiale di studio, supporto e formazione 1:1 — anche in videochiamata — per chi vuole avvicinarsi seriamente all'hacking etico: scrivi a **[info@hackita.it](mailto:info@hackita.it)** o usa il modulo di contatto in fondo a questa pagina.
+
+Se invece vuoi prima farti un'idea pratica di cosa significhi davvero "hackerare" un sistema, dai un'occhiata ai [walkthrough](https://hackita.it/categorie/walkthroughs/) di Hackita: sono simulazioni guidate, passo dopo passo, di come si compromette una macchina in ambienti legali come HackTheBox.
+
 C'è però un prerequisito che viene prima di qualsiasi competenza tecnica, ed è quello su cui si gioca davvero la differenza tra una carriera e una denuncia.
 
 ## Hacker Etico: è un Lavoro Legale?
@@ -84,15 +88,27 @@ Un caso concreto in cui questo confine viene superato più spesso di quanto si p
 
 ## Hacker Wifi: Perché Craccare una Password Altrui è Reato
 
-Una delle ricerche più comuni legate al termine è "hacker wifi" — nella maggior parte dei casi dietro c'è la curiosità di sapere quanto sia sicura la propria rete, non l'intenzione di violarne una altrui. Vale la pena essere diretti su questo: accedere alla rete WiFi di un vicino o di un'attività senza permesso rientra nello stesso reato di accesso abusivo a sistema informatico visto sopra, indipendentemente dalla tecnica usata o dal fatto che la password sia debole.
+Una delle ricerche più comuni legate al termine è "hacker wifi" — nella maggior parte dei casi dietro c'è la curiosità di sapere quanto sia sicura la propria rete, non l'intenzione di violarne una altrui. Vale la pena essere diretti su questo: accedere alla rete WiFi di un vicino o di un'attività senza permesso rientra nello stesso reato di accesso abusivo a sistema informatico visto sopra, indipendentemente dalla tecnica usata o dal fatto che la password sia debole. Capire come funzionano davvero queste tecniche resta comunque utile — è l'unico modo per riconoscerle e difendersi, non solo a parole.
 
-Il punto debole storico è stato il **WPS** (Wi-Fi Protected Setup): il suo PIN a 8 cifre, per un difetto di design, può essere ridotto a due metà attaccabili separatamente via brute-force, rendendolo violabile in poche ore anche con hardware modesto. Il protocollo **WPA2**, se usa una passphrase debole o riutilizzata, resta esposto ad attacchi a dizionario sull'handshake catturato al volo. **WPA3**, lo standard attuale, chiude gran parte di questi vettori grazie al protocollo SAE, che rende inutile catturare l'handshake per un attacco offline.
+### Evil Twin: la Rete Wifi Clonata
+
+Detta in modo semplice: crei una rete WiFi finta con lo stesso identico nome di quella vera — il WiFi di un bar, di un hotel — con un piccolo dispositivo che funziona da access point. Poi fai cadere quella vera, "disconnettendo" tutti a forza con un attacco chiamato deautenticazione, che si può ripetere in continuazione. Il telefono o il PC della vittima, non vedendo più la rete originale ma vedendo la copia con lo stesso nome, ci si riconnette da solo, magari chiedendo di reinserire la password pensando sia un problema temporaneo. A quel punto chi ha creato la trappola vede quella password, oppure — se la rete finta è aperta senza password — vede tutto il traffico non cifrato di chi ci si è collegato. Tool come **Wifiphisher** automatizzano l'intero pacchetto: creano la rete finta, fanno cadere quella vera e mostrano anche una pagina di login falsa identica a quella del gestore reale. Proprio per questo una VPN attiva su reti pubbliche non è una precauzione da paranoici: rende illeggibile il traffico anche se, senza saperlo, ci si è connessi a una rete clonata.
+
+### Craccare una Password WPA2: il Meccanismo
+
+L'altro approccio punta direttamente alla password, sfruttando un momento preciso: quando un dispositivo si connette al router, i due si scambiano un pacchetto di dati chiamato **handshake**, che contiene la prova cifrata della password condivisa. Chi vuole craccare la rete cattura quello scambio con un adattatore WiFi in modalità monitor e un tool come **aircrack-ng** — a volte forzando una riconnessione con un attacco di deautenticazione, che scollega per un istante un dispositivo già connesso obbligandolo a rifare l'handshake da capo. Il file catturato non contiene però la password in chiaro: va messo alla prova offline, tentando milioni di combinazioni con un dizionario di password comuni o a forza bruta, spesso con **hashcat** e la potenza di calcolo di una scheda video. Il tempo necessario varia da pochi minuti, se la password è debole o comune, a praticamente mai con una passphrase lunga e casuale: a fare la differenza è quasi sempre la password scelta, non la bravura di chi attacca. Suite come **Wifite** incapsulano l'intero processo — deautenticazione, cattura, attacco a dizionario — in un solo comando, ma nulla di tutto questo aggira il reato di cui sopra se il bersaglio non è una rete propria o di laboratorio.
+
+Il punto debole storico è stato il **WPS** (Wi-Fi Protected Setup): il suo PIN a 8 cifre, per un difetto di design, può essere ridotto a due metà attaccabili separatamente via brute-force, rendendolo violabile in poche ore anche con hardware modesto. **WPA3**, lo standard attuale, chiude gran parte di questi vettori grazie al protocollo SAE, che rende inutile catturare l'handshake per un attacco offline.
 
 Per chi vuole solo proteggere la propria rete, le contromisure concrete sono poche e note: disattivare il WPS dal pannello del router, usare WPA3 se il dispositivo lo supporta (WPA2 con passphrase lunga e casuale altrimenti), e cambiare le credenziali di amministrazione del router dai valori di default — il vettore più sfruttato in assoluto non è mai la cifratura del WiFi, ma un pannello di gestione ancora protetto da "admin/admin".
 
 ## FAQ
 
-**Cosa vuol dire hacker?** È chi possiede competenze tecniche avanzate per comprendere e manipolare sistemi informatici oltre il loro uso previsto. Il termine è neutro: diventa "buono" o "cattivo" solo in base a intento e autorizzazione.
+**Chi è un hacker?** Non è (solo) il tizio incappucciato davanti a righe di codice verde che vedi nei film: è chiunque abbia competenze tecniche avanzate su sistemi, reti e software, a prescindere da come le usa. Il "cattivo" è solo una delle possibilità.
+
+**Cos'è un hacker?** Il termine indica una competenza tecnica, non un ruolo fisso: descrive chi sa comprendere e manipolare un sistema informatico oltre il suo uso previsto. Diventa "buono" o "cattivo" solo in base a intento e autorizzazione.
+
+**Cosa fa un hacker?** Dipende dal "cappello" che indossa. Un white hat enumera sistemi, cerca vulnerabilità e le segnala per farle correggere; un black hat le stesse identiche vulnerabilità le sfrutta per rubare dati o soldi. La tecnica è spesso identica — cambia solo il permesso.
 
 **Che differenza c'è tra hacker e hacking?** Hacker è la persona; hacking è la pratica, l'insieme di tecniche che quella persona usa. Esattamente come "hacker", anche "hacking" è neutro finché non si specifica il contesto: può indicare un penetration test autorizzato o un attacco criminale.
 
@@ -108,6 +124,6 @@ Per chi vuole solo proteggere la propria rete, le contromisure concrete sono poc
 
 **Cosa può fare un hacker con il mio numero di telefono o il mio indirizzo IP?** Da solo, un numero di telefono permette soprattutto attacchi di ingegneria sociale (SIM swap, phishing mirato via SMS); un indirizzo IP dà un'indicazione approssimativa di zona geografica e, se il dispositivo espone servizi vulnerabili verso l'esterno, un punto di partenza per la scansione — ma nessuno dei due dati da solo consente un accesso diretto a un dispositivo aggiornato e configurato correttamente.
 
-**Quanto guadagna un hacker etico?** Varia molto in base a esperienza, ruolo, settore e paese — i dati salariali vanno letti considerando sempre mercato e seniority, più che una cifra unica valida ovunque.
+**Quanto guadagna un hacker etico?** In Italia, per dare numeri reali e non una risposta vaga: un junior parte in media da 25.000-35.000 € lordi annui, con qualche anno di esperienza si sale a 40.000-55.000 €, mentre un senior con certificazioni pratiche (OSCP, CRTO, CPTS) supera spesso i 60.000-70.000 €, con punte più alte da consulente o freelance. Chi affianca programmi di bug bounty può aggiungere altre migliaia di euro l'anno, anche se non è un reddito continuativo. All'estero (USA, UK, Germania) le cifre sono generalmente più alte a parità di esperienza.
 
 **Un white hat può finire nei guai legali?** Sì, se esce dallo scope autorizzato o non rispetta le condizioni concordate — l'autorizzazione copre solo quello che è stato messo per iscritto, non ogni azione compiuta durante l'incarico.

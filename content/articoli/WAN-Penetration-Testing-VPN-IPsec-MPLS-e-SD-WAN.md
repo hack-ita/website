@@ -1,9 +1,12 @@
 ---
 title: 'WAN Penetration Testing: VPN, IPsec, MPLS e SD-WAN'
 slug: wan
-description: 'Guida al WAN penetration testing: analizza VPN, IPsec, MPLS e SD-WAN, individua vulnerabilità nei tunnel e verifica la sicurezza dell''infrastruttura WAN.'
+description: >-
+  Guida al WAN penetration testing: analizza VPN, IPsec, MPLS e SD-WAN,
+  individua vulnerabilità nei tunnel e verifica la sicurezza dell'infrastruttura
+  WAN.
 image: /wan-pentesting-vpn-ipsec-mpls-sd-wan-tunnel-hijacking.webp
-draft: true
+draft: false
 date: 2026-09-20T00:00:00.000Z
 categories:
   - networking

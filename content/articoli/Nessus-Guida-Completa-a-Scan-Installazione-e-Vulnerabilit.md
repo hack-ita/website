@@ -1,9 +1,12 @@
 ---
 title: 'Nessus: Guida Completa a Scan, Installazione e Vulnerabilità'
 slug: nessus
-description: 'Guida a Nessus: installazione, Nessus Essentials, vulnerability scan, credentialed scan, policy, tuning e report. Tutto il workflow di vulnerability assessment.'
+description: >-
+  Guida a Nessus: installazione, Nessus Essentials, vulnerability scan,
+  credentialed scan, policy, tuning e report. Tutto il workflow di vulnerability
+  assessment.
 image: /nessus-vulnerability-scanning-tenable.webp
-draft: true
+draft: false
 date: 2026-09-22T00:00:00.000Z
 categories:
   - tools

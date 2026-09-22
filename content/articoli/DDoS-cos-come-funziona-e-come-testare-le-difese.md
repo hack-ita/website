@@ -1,9 +1,11 @@
 ---
 title: 'DDoS: cos’è, come funziona e come testare le difese'
 slug: ddos
-description: 'Cos''è un attacco DDoS e come funziona? Scopri tipi di DDoS, tecniche di attacco, test autorizzati e come verificare l''efficacia delle difese.'
+description: >-
+  Cos'è un attacco DDoS e come funziona? Scopri tipi di DDoS, tecniche di
+  attacco, test autorizzati e come verificare l'efficacia delle difese.
 image: /ddos-penetration-testing.webp
-draft: true
+draft: false
 date: 2026-09-22T00:00:00.000Z
 categories:
   - networking

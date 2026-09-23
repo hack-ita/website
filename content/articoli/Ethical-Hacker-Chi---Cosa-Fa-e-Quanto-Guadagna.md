@@ -1,9 +1,11 @@
 ---
 title: 'Ethical Hacker: Chi è , Cosa Fa e Quanto Guadagna'
 slug: ethical-hacker
-description: 'Chi è un ethical hacker, cosa fa ogni giorno, quali competenze e strumenti usa, quanto guadagna in Italia e come diventarlo passo dopo passo.'
+description: >-
+  Chi è un ethical hacker, cosa fa ogni giorno, quali competenze e strumenti
+  usa, quanto guadagna in Italia e come diventarlo passo dopo passo.
 image: /ethical-hacker-cose-cosa-fa.webp
-draft: true
+draft: false
 date: 2026-09-23T00:00:00.000Z
 categories:
   - guides-resources

@@ -1,9 +1,11 @@
 ---
 title: 'White Hat, Black Hat, Grey Hat: Chi Sono e Cosa Rischiano'
 slug: white-hat-black-hat-grey-hat
-description: 'Cosa distingue white hat, black hat e grey hat, l''origine del termine hacker/cracker, i rischi legali di ciascuno e cos''è la responsible disclosure.'
+description: >-
+  Cosa distingue white hat, black hat e grey hat, l'origine del termine
+  hacker/cracker, i rischi legali di ciascuno e cos'è la responsible disclosure.
 image: /white-hat-black-hat-grey-hat-differenze.webp
-draft: true
+draft: false
 date: 2026-09-25T00:00:00.000Z
 categories:
   - guides-resources

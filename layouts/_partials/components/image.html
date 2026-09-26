@@ -1,14 +1,13 @@
-{{/* 
+{{/*
 Partial: image.html
-Usage: 
-{{ partial "image.html" (dict "src" "images/hero.jpg" "alt" "Hero Image" "class" "rounded-lg w-full" "width" 1200 "height" 800 "lazy" true) }}
-Parameters:
-- src: path to image in /static folder
-- alt: alt text
-- class: optional tailwind classes
-- width: desired width
-- height: desired height
-- lazy: boolean, whether to use loading="lazy"
+Usage:
+{{ partial "image.html" (dict "src" "images/hero.jpg" "alt" "Hero" "class" "..." "width" 1200 "height" 800) }}
+
+Performance note: images that are ALREADY .webp and need no resizing are served
+as-is (published directly, no re-encode). Previously every image was decoded and
+re-encoded to WebP twice on every build — the main cause of slow Netlify builds,
+since ~540 of ~560 article images are already WebP. Only non-webp sources, or
+sources that need resizing, are processed now.
 */}}
 
 {{ $params := . }}
@@ -17,32 +16,25 @@ Parameters:
 {{ $class := $params.class | default "" }}
 {{ $width := $params.width | default 0 }}
 {{ $height := $params.height | default 0 }}
-{{ $lazy := $params.lazy | default false }}
 {{ $highFetchPrio := $params.highFetchPrio | default false }}
 
-{{/* Extract file extension to auto-detect format */}}
-{{ $ext := strings.TrimPrefix (path.Ext $src) "." }}
-{{ $ext := lower $ext }}
-
-{{/* Get the image resource */}}
+{{ $ext := lower (strings.TrimPrefix (path.Ext $src) ".") }}
 {{ $img := resources.Get $src }}
 
 {{ if $img }}
-    {{/* Resize if width or height is specified */}}
-    {{ if or (gt $width 0) (gt $height 0) }}
-        {{ $img = $img.Fit (printf "%dx%d" $width $height) }}
+    {{ $needsResize := or (gt $width 0) (gt $height 0) }}
+    {{ if $needsResize }}
+        {{/* Resize + ensure WebP output in a single encode */}}
+        {{ $img = ($img.Fit (printf "%dx%d" $width $height)).Process "webp" }}
+    {{ else if ne $ext "webp" }}
+        {{/* Convert non-webp sources to WebP once */}}
+        {{ $img = $img.Process "webp" }}
+    {{/* else: already WebP + no resize -> serve original, no re-encode */}}
     {{ end }}
 
-    {{/* Convert to original format if Hugo requires it for processing */}}
-    {{ if in (slice "jpg" "jpeg" "png" "webp") $ext }}
-        {{ $img = $img | images.Convert $ext }}
-    {{ end }}
-
-    {{ $img = $img.Process "webp" }}
-
-    <img 
-        src="{{ $img.RelPermalink }}" 
-        alt="{{ $alt }}" 
+    <img
+        src="{{ $img.RelPermalink }}"
+        alt="{{ $alt }}"
         {{ if $width }}width="{{ $width }}"{{ end }}
         {{ if $height }}height="{{ $height }}"{{ end }}
         class="{{ $class }}"

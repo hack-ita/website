@@ -253,7 +253,7 @@ PORT    STATE SERVICE
 OS: Windows XP SP2
 ```
 
-**Windows XP identified** → target for [MS08-067](https://hackita.it/articoli/ms08-067).
+**Windows XP identified** → target for [MS08-067](https://hackita.it/articoli/ms08-067/).
 
 ### Scenario 3 — Understanding why port 138 is open
 
@@ -388,7 +388,7 @@ No. Disabling NetBIOS disabilita 137, 138, 139 simultaneously (bundle).
 
 **Porta 138 ha valore in pentest moderno?**
 
-Minimal. Passive reconnaissance only. Focus su [porte 137](https://hackita.it/articoli/netbios-name) (Responder) e [445](https://hackita.it/articoli/smb) (SMB).
+Minimal. Passive reconnaissance only. Focus su [porte 137](https://hackita.it/articoli/porta-137-netbios/) (Responder) e [445](https://hackita.it/articoli/smb/) (SMB).
 
 **Browser Service funziona ancora nel 2026?**
 
@@ -417,7 +417,7 @@ NetBIOS Datagram (porta 138) ha **attack surface minimal** nel 2026 ma è docume
 3. **Network reconnaissance** — Passive monitoring browser elections/announcements
 4. **Security audit** — Verify NetBIOS disabled su modern Windows
 
-**Pentest strategy:** Se porta 138 open → assume NetBIOS abilitato → focus su [porta 137 (Responder)](https://hackita.it/articoli/responder) e [porta 139/445 (SMB)](https://hackita.it/articoli/smb).
+**Pentest strategy:** Se porta 138 open → assume NetBIOS abilitato → focus su [porta 137 (Responder)](https://hackita.it/articoli/responder/) e [porta 139/445 (SMB)](https://hackita.it/articoli/smb/).
 
 ## Differenza porta 138 vs altri NetBIOS ports
 

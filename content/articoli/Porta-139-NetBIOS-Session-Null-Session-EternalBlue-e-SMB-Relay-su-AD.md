@@ -451,7 +451,7 @@ smb: \> get database_backup.sql
 
 * **Null session denied:** Use RID cycling with `lookupsid` tool
 * **Password spray lockout:** Wait 30min, reduce rate to 1 attempt/5min/user
-* **No shares accessible:** Focus on [WMI](https://hackita.it/articoli/wmi) or [RPC](https://hackita.it/articoli/rpc) lateral movement
+* **No shares accessible:** Focus on [WMI](https://hackita.it/articoli/wmic/) or [RPC](https://hackita.it/articoli/porta-135-rpc/) lateral movement
 
 ### Scenario 2 — EternalBlue (MS17-010) → SYSTEM shell
 
@@ -562,16 +562,16 @@ ENUMERATION
 
 EXPLOITATION
 │
-├─ A) Null session → user list → [password spray](https://hackita.it/articoli/password-spraying)
+├─ A) Null session → user list → [password spray](https://hackita.it/articoli/password-spraying/)
 ├─ B) Valid creds → share access → data theft
 ├─ C) SMBv1 → EternalBlue (MS17-010) → SYSTEM
-├─ D) No signing → [SMB relay](https://hackita.it/articoli/smb-relay) → code execution
-└─ E) Credentials → [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) → lateral movement
+├─ D) No signing → [SMB relay](https://hackita.it/articoli/smb-relay/) → code execution
+└─ E) Credentials → [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) → lateral movement
 
 POST-EXPLOITATION
 │
 ├─ Mimikatz credential dump
-├─ [Kerberoasting](https://hackita.it/articoli/kerberos) → service accounts
+├─ [Kerberoasting](https://hackita.it/articoli/kerberos/) → service accounts
 └─ Persistence → scheduled tasks, registry run keys
 ```
 
@@ -793,7 +793,7 @@ Sì. Mandatory SMB signing (server + client) prevent NTLM relay. Best practice: 
 
 **Quale tool è migliore per SMB pentest?**
 
-**[CrackMapExec](https://hackita.it/articoli/crackmapexec)** (mass testing), **Impacket suite** (exploitation), **enum4linux** (reconnaissance).
+**[CrackMapExec](https://hackita.it/articoli/crackmapexec/)** (mass testing), **Impacket suite** (exploitation), **enum4linux** (reconnaissance).
 
 ***
 

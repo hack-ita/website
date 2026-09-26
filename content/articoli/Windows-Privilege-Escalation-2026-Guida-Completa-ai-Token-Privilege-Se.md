@@ -90,10 +90,10 @@ I più comuni nei pentest reali. Se ne hai uno di questi, sei vicino a SYSTEM.
 
 | Privilegio                        | Impatto                      | Vettore principale               | Guida                                                                         |
 | --------------------------------- | ---------------------------- | -------------------------------- | ----------------------------------------------------------------------------- |
-| **SeImpersonatePrivilege**        | SYSTEM shell                 | Potato attack (GodPotato)        | [→ Guida completa](https://hackita.it/articoli/seimpersonateprivilege)        |
-| **SeAssignPrimaryTokenPrivilege** | SYSTEM shell                 | Potato attack (GodPotato `-t 2`) | [→ Guida completa](https://hackita.it/articoli/seassignprimarytokenprivilege) |
-| **SeDebugPrivilege**              | LSASS dump → hash AD         | comsvcs.dll / nanodump           | [→ Guida completa](https://hackita.it/articoli/sedebugprivilege)              |
-| **SeLoadDriverPrivilege**         | Ring-0, kill EDR, bypass PPL | BYOVD (Capcom.sys, RTCore64)     | [→ Guida completa](https://hackita.it/articoli/seloaddriverprivilege)         |
+| **SeImpersonatePrivilege**        | SYSTEM shell                 | Potato attack (GodPotato)        | [→ Guida completa](https://hackita.it/articoli/seimpersonateprivilege/)        |
+| **SeAssignPrimaryTokenPrivilege** | SYSTEM shell                 | Potato attack (GodPotato `-t 2`) | [→ Guida completa](https://hackita.it/articoli/seassignprimarytokenprivilege/) |
+| **SeDebugPrivilege**              | LSASS dump → hash AD         | comsvcs.dll / nanodump           | [→ Guida completa](https://hackita.it/articoli/sedebugprivilege/)              |
+| **SeLoadDriverPrivilege**         | Ring-0, kill EDR, bypass PPL | BYOVD (Capcom.sys, RTCore64)     | [→ Guida completa](https://hackita.it/articoli/seloaddriverprivilege/)         |
 
 ### Tier 2 — SYSTEM con un Servizio Target
 
@@ -101,11 +101,11 @@ Richiedono un servizio SYSTEM sfruttabile nell'ambiente — quasi sempre present
 
 | Privilegio                   | Impatto                             | Vettore principale                | Guida                                                                    |
 | ---------------------------- | ----------------------------------- | --------------------------------- | ------------------------------------------------------------------------ |
-| **SeBackupPrivilege**        | SAM + NTDS.dit → tutti gli hash AD  | reg save + secretsdump            | [→ Guida completa](https://hackita.it/articoli/sebackupprivilege)        |
-| **SeRestorePrivilege**       | Binary replacement → SYSTEM         | reg add ImagePath + robocopy /B   | [→ Guida completa](https://hackita.it/articoli/serestoreprivilege)       |
-| **SeTakeOwnershipPrivilege** | File/registry arbitrari → SYSTEM    | takeown + icacls + binary replace | [→ Guida completa](https://hackita.it/articoli/setakeownershipprivilege) |
-| **SeRelabelPrivilege**       | Bypass MIC → scrittura su file High | icacls /setintegritylevel         | [→ Guida completa](https://hackita.it/articoli/serelabelprivilege)       |
-| **SeManageVolumePrivilege**  | Raw disk → SAM/NTDS.dit             | RawCopy + secretsdump             | [→ Guida completa](https://hackita.it/articoli/semanagevolumeprivilege)  |
+| **SeBackupPrivilege**        | SAM + NTDS.dit → tutti gli hash AD  | reg save + secretsdump            | [→ Guida completa](https://hackita.it/articoli/sebackupprivilege/)        |
+| **SeRestorePrivilege**       | Binary replacement → SYSTEM         | reg add ImagePath + robocopy /B   | [→ Guida completa](https://hackita.it/articoli/serestoreprivilege/)       |
+| **SeTakeOwnershipPrivilege** | File/registry arbitrari → SYSTEM    | takeown + icacls + binary replace | [→ Guida completa](https://hackita.it/articoli/setakeownershipprivilege/) |
+| **SeRelabelPrivilege**       | Bypass MIC → scrittura su file High | icacls /setintegritylevel         | [→ Guida completa](https://hackita.it/articoli/serelabelprivilege/)       |
+| **SeManageVolumePrivilege**  | Raw disk → SAM/NTDS.dit             | RawCopy + secretsdump             | [→ Guida completa](https://hackita.it/articoli/semanagevolumeprivilege/)  |
 
 ### Tier 3 — Domain Compromise
 
@@ -113,7 +113,7 @@ Vettori che partono da account di dominio anche senza privilegi locali.
 
 | Privilegio                    | Impatto      | Vettore principale            | Guida                                                                     |
 | ----------------------------- | ------------ | ----------------------------- | ------------------------------------------------------------------------- |
-| **SeMachineAccountPrivilege** | Domain Admin | RBCD + getST.py + secretsdump | [→ Guida completa](https://hackita.it/articoli/semachineaccountprivilege) |
+| **SeMachineAccountPrivilege** | Domain Admin | RBCD + getST.py + secretsdump | [→ Guida completa](https://hackita.it/articoli/semachineaccountprivilege/) |
 
 ### Tier 4 — Condizionali / Specifici
 
@@ -121,11 +121,11 @@ Richiedono condizioni particolari nell'ambiente o sono rari su account non di si
 
 | Privilegio                                    | Impatto                                | Vettore principale             | Guida                                                                                     |
 | --------------------------------------------- | -------------------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
-| **SeCreateSymbolicLinkPrivilege**             | Scrittura arbitraria via TOCTOU        | mklink + race condition        | [→ Guida completa](https://hackita.it/articoli/secreatesymboliclinkprivilege)             |
-| **SeDelegateSessionUserImpersonatePrivilege** | Token steal cross-session (RDS/Citrix) | NtObjectManager                | [→ Guida completa](https://hackita.it/articoli/sedelegatesessionuserimpersonateprivilege) |
-| **SeSecurityPrivilege**                       | OpSec: cancella log, rimuovi SACL      | wevtutil + SetACL              | [→ Guida completa](https://hackita.it/articoli/sesecurityprivilege)                       |
-| **SeTrustedCredManAccessPrivilege**           | Dump Credential Manager                | cmdkey + mimikatz + SharpDPAPI | [→ Guida completa](https://hackita.it/articoli/setrustedcredmanaccessprivilege)           |
-| **SeSystemEnvironmentPrivilege**              | PATH hijacking / UEFI persistence      | reg add PATH + Process Monitor | [→ Guida completa](https://hackita.it/articoli/sesystemenvironmentprivilege)              |
+| **SeCreateSymbolicLinkPrivilege**             | Scrittura arbitraria via TOCTOU        | mklink + race condition        | [→ Guida completa](https://hackita.it/articoli/secreatesymboliclinkprivilege/)             |
+| **SeDelegateSessionUserImpersonatePrivilege** | Token steal cross-session (RDS/Citrix) | NtObjectManager                | [→ Guida completa](https://hackita.it/articoli/sedelegatesessionuserimpersonateprivilege/) |
+| **SeSecurityPrivilege**                       | OpSec: cancella log, rimuovi SACL      | wevtutil + SetACL              | [→ Guida completa](https://hackita.it/articoli/sesecurityprivilege/)                       |
+| **SeTrustedCredManAccessPrivilege**           | Dump Credential Manager                | cmdkey + mimikatz + SharpDPAPI | [→ Guida completa](https://hackita.it/articoli/setrustedcredmanaccessprivilege/)           |
+| **SeSystemEnvironmentPrivilege**              | PATH hijacking / UEFI persistence      | reg add PATH + Process Monitor | [→ Guida completa](https://hackita.it/articoli/sesystemenvironmentprivilege/)              |
 
 ### Tier 5 — Critici: Documenta Immediatamente
 
@@ -133,8 +133,8 @@ Quasi esclusivi di processi SYSTEM. Trovarli su account non di sistema è un fin
 
 | Privilegio                 | Impatto                                         | Nota                   | Guida                                                                  |
 | -------------------------- | ----------------------------------------------- | ---------------------- | ---------------------------------------------------------------------- |
-| **SeCreateTokenPrivilege** | Token forgery da zero con NtCreateToken         | **Finding critico P0** | [→ Guida completa](https://hackita.it/articoli/secreatetokenprivilege) |
-| **SeTcbPrivilege**         | Logon session arbitrarie via LSA con SID custom | **Finding critico P0** | [→ Guida completa](https://hackita.it/articoli/setcbprivilege)         |
+| **SeCreateTokenPrivilege** | Token forgery da zero con NtCreateToken         | **Finding critico P0** | [→ Guida completa](https://hackita.it/articoli/secreatetokenprivilege/) |
+| **SeTcbPrivilege**         | Logon session arbitrarie via LSA con SID custom | **Finding critico P0** | [→ Guida completa](https://hackita.it/articoli/setcbprivilege/)         |
 
 ***
 
@@ -310,7 +310,7 @@ Se sei in un ambiente monitorato, questi sono gli Event ID che generano alert pi
 | Computer account creato da non-admin | 4741         | RBCD attack                   |
 |        SAM / NTDS.dit accessed       | 4663         | SeBackupPrivilege             |
 
-Per la gestione dell'OpSec e come ridurre il rumore: [→ SeSecurityPrivilege — Cancellare Log e Operare Invisibili](https://hackita.it/articoli/sesecurityprivilege)
+Per la gestione dell'OpSec e come ridurre il rumore: [→ SeSecurityPrivilege — Cancellare Log e Operare Invisibili](https://hackita.it/articoli/sesecurityprivilege/)
 
 ***
 
@@ -327,23 +327,23 @@ Per la gestione dell'OpSec e come ridurre il rumore: [→ SeSecurityPrivilege �
 
 Guida operativa completa per ogni privilegio Windows sfruttabile in un pentest:
 
-1. [SeImpersonatePrivilege — Potato Attack da Webshell a SYSTEM](https://hackita.it/articoli/seimpersonateprivilege)
-2. [SeAssignPrimaryTokenPrivilege — Potato Attack anche Senza SeImpersonate](https://hackita.it/articoli/seassignprimarytokenprivilege)
-3. [SeBackupPrivilege — Dump SAM e NTDS.dit senza Shell sul DC](https://hackita.it/articoli/sebackupprivilege)
-4. [SeRestorePrivilege — Binary Replacement e Backdoor Persistente](https://hackita.it/articoli/serestoreprivilege)
-5. [SeDebugPrivilege — LSASS Dump e Credential Access](https://hackita.it/articoli/sedebugprivilege)
-6. [SeTakeOwnershipPrivilege — Ownership Arbitraria su File e Servizi SYSTEM](https://hackita.it/articoli/setakeownershipprivilege)
-7. [SeLoadDriverPrivilege — BYOVD, Kernel Code Execution e Kill EDR](https://hackita.it/articoli/seloaddriverprivilege)
-8. [SeCreateSymbolicLinkPrivilege — Symlink Attack e Scrittura Arbitraria](https://hackita.it/articoli/secreatesymboliclinkprivilege)
-9. [SeManageVolumePrivilege — Raw Disk Access per Estrarre SAM e NTDS.dit](https://hackita.it/articoli/semanagevolumeprivilege)
-10. [SeDelegateSessionUserImpersonatePrivilege — Token Stealing Cross-Session su RDS](https://hackita.it/articoli/sedelegatesessionuserimpersonateprivilege)
-11. [SeCreateTokenPrivilege — Token Forgery da Zero con NtCreateToken](https://hackita.it/articoli/secreatetokenprivilege)
-12. [SeTcbPrivilege — Logon Session Arbitrarie via LSA](https://hackita.it/articoli/setcbprivilege)
-13. [SeSecurityPrivilege — Cancellare Log e Operare Invisibili](https://hackita.it/articoli/sesecurityprivilege)
-14. [SeTrustedCredManAccessPrivilege — Dump Credenziali RDP e Password Salvate](https://hackita.it/articoli/setrustedcredmanaccessprivilege)
-15. [SeRelabelPrivilege — Bypass Mandatory Integrity Control](https://hackita.it/articoli/serelabelprivilege)
-16. [SeMachineAccountPrivilege — RBCD da Utente di Dominio a Domain Admin](https://hackita.it/articoli/semachineaccountprivilege)
-17. [SeSystemEnvironmentPrivilege — PATH Hijacking e Persistenza UEFI](https://hackita.it/articoli/sesystemenvironmentprivilege)
+1. [SeImpersonatePrivilege — Potato Attack da Webshell a SYSTEM](https://hackita.it/articoli/seimpersonateprivilege/)
+2. [SeAssignPrimaryTokenPrivilege — Potato Attack anche Senza SeImpersonate](https://hackita.it/articoli/seassignprimarytokenprivilege/)
+3. [SeBackupPrivilege — Dump SAM e NTDS.dit senza Shell sul DC](https://hackita.it/articoli/sebackupprivilege/)
+4. [SeRestorePrivilege — Binary Replacement e Backdoor Persistente](https://hackita.it/articoli/serestoreprivilege/)
+5. [SeDebugPrivilege — LSASS Dump e Credential Access](https://hackita.it/articoli/sedebugprivilege/)
+6. [SeTakeOwnershipPrivilege — Ownership Arbitraria su File e Servizi SYSTEM](https://hackita.it/articoli/setakeownershipprivilege/)
+7. [SeLoadDriverPrivilege — BYOVD, Kernel Code Execution e Kill EDR](https://hackita.it/articoli/seloaddriverprivilege/)
+8. [SeCreateSymbolicLinkPrivilege — Symlink Attack e Scrittura Arbitraria](https://hackita.it/articoli/secreatesymboliclinkprivilege/)
+9. [SeManageVolumePrivilege — Raw Disk Access per Estrarre SAM e NTDS.dit](https://hackita.it/articoli/semanagevolumeprivilege/)
+10. [SeDelegateSessionUserImpersonatePrivilege — Token Stealing Cross-Session su RDS](https://hackita.it/articoli/sedelegatesessionuserimpersonateprivilege/)
+11. [SeCreateTokenPrivilege — Token Forgery da Zero con NtCreateToken](https://hackita.it/articoli/secreatetokenprivilege/)
+12. [SeTcbPrivilege — Logon Session Arbitrarie via LSA](https://hackita.it/articoli/setcbprivilege/)
+13. [SeSecurityPrivilege — Cancellare Log e Operare Invisibili](https://hackita.it/articoli/sesecurityprivilege/)
+14. [SeTrustedCredManAccessPrivilege — Dump Credenziali RDP e Password Salvate](https://hackita.it/articoli/setrustedcredmanaccessprivilege/)
+15. [SeRelabelPrivilege — Bypass Mandatory Integrity Control](https://hackita.it/articoli/serelabelprivilege/)
+16. [SeMachineAccountPrivilege — RBCD da Utente di Dominio a Domain Admin](https://hackita.it/articoli/semachineaccountprivilege/)
+17. [SeSystemEnvironmentPrivilege — PATH Hijacking e Persistenza UEFI](https://hackita.it/articoli/sesystemenvironmentprivilege/)
 
 ***
 

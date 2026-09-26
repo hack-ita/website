@@ -291,7 +291,7 @@ mitmproxy -s addon.py
 # Automatic JWT tampering su ogni request
 ```
 
-Per approfondire JWT security e exploitation techniques, consulta [vulnerabilità comuni in JSON Web Token implementation](https://hackita.it/articoli/jwt).
+Per approfondire JWT security e exploitation techniques, consulta [vulnerabilità comuni in JSON Web Token implementation](https://hackita.it/articoli/jwt/).
 
 ***
 
@@ -330,7 +330,7 @@ frida -U -f com.example.app -l ssl-pinning-bypass.js --no-pause
 
 ### Scripting automatico - Response injection
 
-**Use case:** Inject JavaScript in ogni HTML response per [XSS](https://hackita.it/articoli/xss) testing.
+**Use case:** Inject JavaScript in ogni HTML response per [XSS](https://hackita.it/articoli/xss/) testing.
 
 ```python
 # inject_xss.py
@@ -411,7 +411,7 @@ WebSocket connection to wss://realtime.example.com/chat
 
 ## 5️⃣ Scenari Pratici di Pentest
 
-### Scenario A: [API](https://hackita.it/articoli/api) rate limiting bypass
+### Scenario A: [API](https://hackita.it/articoli/api/) rate limiting bypass
 
 **Contesto:** API ha rate limit 100 req/min per IP. Need testare con più requests.
 
@@ -587,7 +587,7 @@ curl -H "Authorization: Bearer eyJhbG..." https://api.app.com/user/me
 
 ## 6️⃣ Toolchain Integration
 
-### Mitmproxy → [Burp Suite](https://hackita.it/articoli/burp-suite) collaboration
+### Mitmproxy → [Burp Suite](https://hackita.it/articoli/burp-suite/) collaboration
 
 **Workflow:**
 
@@ -631,7 +631,7 @@ driver.find_element_by_id('login-btn').click()
 
 ***
 
-### Mitmproxy vs Burp Suite vs [OWASP ZAP](https://hackita.it/articoli/zap)
+### Mitmproxy vs Burp Suite vs [OWASP ZAP](https://hackita.it/articoli/owasp-zap/)
 
 | **Feature**     | **Mitmproxy**   | **Burp Suite**  | **OWASP ZAP**  |
 | --------------- | --------------- | --------------- | -------------- |

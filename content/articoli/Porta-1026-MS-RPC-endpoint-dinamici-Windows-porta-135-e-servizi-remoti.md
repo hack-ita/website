@@ -17,7 +17,7 @@ tags:
   - rpc-dynamic-port
 ---
 
-> **Executive Summary** — La porta 1026 è la seconda porta dinamica RPC assegnata da Windows, immediatamente dopo la 1025. Come per la 1025, il servizio che la occupa varia per sistema — tipicamente Service Control Manager, Event Log, DCOM o certificati. La guida alla [porta 1025 MS RPC](https://hackita.it/articoli/porta-1025-ms-rpc) copre il meccanismo completo delle porte RPC dinamiche; qui ci concentriamo sulle specificità della 1026 e sui servizi che la occupano più frequentemente.
+> **Executive Summary** — La porta 1026 è la seconda porta dinamica RPC assegnata da Windows, immediatamente dopo la 1025. Come per la 1025, il servizio che la occupa varia per sistema — tipicamente Service Control Manager, Event Log, DCOM o certificati. La guida alla [porta 1025 MS RPC](https://hackita.it/articoli/porta-1025-ms-rpc/) copre il meccanismo completo delle porte RPC dinamiche; qui ci concentriamo sulle specificità della 1026 e sui servizi che la occupano più frequentemente.
 
 ```id="s4n8ld"
 TL;DR
@@ -67,7 +67,7 @@ Bindings: ncacn_ip_tcp:10.10.10.10[1026]
 **Cosa fai dopo:** dipende dal servizio trovato.
 
 * **SCM (services.exe)**: è il target di PsExec — `psexec.py domain/admin:pass@10.10.10.10`
-* **Certificate Services (certsrv.exe)**: indica AD CS — potenziale per [certificate abuse ESC1-ESC8](https://hackita.it/articoli/active-directory)
+* **Certificate Services (certsrv.exe)**: indica AD CS — potenziale per [certificate abuse ESC1-ESC8](https://hackita.it/articoli/active-directory/)
 * **Event Log**: meno interessante offensivamente, ma conferma host Windows attivo
 
 ## 2. Tecniche Offensive per Servizio
@@ -91,7 +91,7 @@ nt authority\system
 certipy find -u user@corp.local -p pass -dc-ip 10.10.10.10
 ```
 
-Leggi la nostra guida completa su [certipy](https://hackita.it/articoli/certipy) e su come sfruttare tutte le [esc da 1 a 16 in fase di privilege escalation](https://hackita.it/articoli/adcs-esc1-esc16/)
+Leggi la nostra guida completa su [certipy](https://hackita.it/articoli/certipy/) e su come sfruttare tutte le [esc da 1 a 16 in fase di privilege escalation](https://hackita.it/articoli/adcs-esc1-esc16/)
 
 **Se WMI sulla 1026:**
 
@@ -107,7 +107,7 @@ nmap -sV -p 135,1025-1035,49152-49170 10.10.10.10 --open
 rpcdump.py 10.10.10.10
 ```
 
-Questo rivela l'intera mappa dei servizi RPC — ogni porta con il suo servizio specifico. Per il [lateral movement via DCOM](https://hackita.it/articoli/porta-593-rpc-http), identifica le porte che ospitano DCOM e usale con `dcomexec.py`.
+Questo rivela l'intera mappa dei servizi RPC — ogni porta con il suo servizio specifico. Per il [lateral movement via DCOM](https://hackita.it/articoli/porta-593-rpc-http/), identifica le porte che ospitano DCOM e usale con `dcomexec.py`.
 
 ## 4. Cheat Sheet Finale
 

@@ -113,7 +113,7 @@ Se funziona → puoi leggere qualsiasi file dal filesystem Windows. Cerca:
 * `C:\inetpub\wwwroot\web.config` — credenziali web app
 * File di configurazione con credenziali
 
-Verifica la versione e cerca CVE specifici su [Exploit-DB](https://hackita.it/articoli/exploit-db):
+Verifica la versione e cerca CVE specifici su [Exploit-DB](https://hackita.it/articoli/exploitdb/):
 
 ```bash
 searchsploit tversity
@@ -121,7 +121,7 @@ searchsploit tversity
 
 ### UPnP/DLNA Exposure
 
-TVersity annuncia la sua presenza via [UPnP/SSDP sulla porta 1900](https://hackita.it/articoli/porta-1900-ssdp). Se la rete non è segmentata, qualsiasi dispositivo sulla LAN vede il server:
+TVersity annuncia la sua presenza via [UPnP/SSDP sulla porta 1900](https://hackita.it/articoli/porta-1900-ssdp-upnp/). Se la rete non è segmentata, qualsiasi dispositivo sulla LAN vede il server:
 
 ```bash
 # Discovery UPnP
@@ -132,8 +132,8 @@ nmap -sU -p 1900 --script=upnp-info 10.10.10.0/24
 
 TVersity stesso non è un vettore di escalation, ma le informazioni che espone sono utili:
 
-* **Username Windows** dai path delle directory → target per [credential attack](https://hackita.it/articoli/vulnerability-exploitation)
-* **Share di rete** → target per [enumerazione SMB](https://hackita.it/articoli/smb)
+* **Username Windows** dai path delle directory → target per [credential attack](https://hackita.it/articoli/vulnerability-exploitation/)
+* **Share di rete** → target per [enumerazione SMB](https://hackita.it/articoli/smb/)
 * **File con credenziali** se accessibili via directory traversal
 
 ## 3. Detection & Hardening
@@ -157,6 +157,6 @@ TVersity stesso non è un vettore di escalation, ma le informazioni che espone s
 
 ***
 
-Riferimento: TVersity documentation, [Exploit-DB](https://hackita.it/articoli/exploit-db), [UPnP/SSDP](https://hackita.it/articoli/porta-1900-ssdp). Uso esclusivo in ambienti autorizzati.
+Riferimento: TVersity documentation, [Exploit-DB](https://hackita.it/articoli/exploitdb/), [UPnP/SSDP](https://hackita.it/articoli/porta-1900-ssdp-upnp/). Uso esclusivo in ambienti autorizzati.
 
 > [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).

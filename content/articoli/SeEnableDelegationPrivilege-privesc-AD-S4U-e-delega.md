@@ -230,7 +230,7 @@ In quel caso, la strada resta comunque aperta: invece di impersonare `administra
 getST.py 'dominio.local/HACKITA$:Hackita123' -spn ldap/dc.dominio.local -impersonate dc
 ```
 
-Un account macchina di un Domain Controller ha naturalmente i permessi di replica sul dominio — quindi un ticket LDAP ottenuto impersonandolo è sufficiente per un DCSync completo, esattamente come se avessi impersonato Administrator con successo. Nota che qui serve un `msDS-AllowedToDelegateTo` verso `ldap/`, non `cifs/`, perché il DCSync via LDAP passa dal protocollo di replica di Active Directory. Questo è esattamente lo scenario della macchina HTB Redelegate — trovi il walkthrough completo [qui](https://hackita.it/articoli/htb-redelegate-walkthrough).
+Un account macchina di un Domain Controller ha naturalmente i permessi di replica sul dominio — quindi un ticket LDAP ottenuto impersonandolo è sufficiente per un DCSync completo, esattamente come se avessi impersonato Administrator con successo. Nota che qui serve un `msDS-AllowedToDelegateTo` verso `ldap/`, non `cifs/`, perché il DCSync via LDAP passa dal protocollo di replica di Active Directory. Questo è esattamente lo scenario della macchina HTB Redelegate — trovi il [walkthrough completo di HTB Redelegate](https://hackita.it/articoli/htb-redelegate-walkthrough/).
 
 ### Step 5 — Usa il ticket per dumpare le credenziali
 

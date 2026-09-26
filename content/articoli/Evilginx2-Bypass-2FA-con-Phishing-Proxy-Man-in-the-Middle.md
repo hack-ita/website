@@ -23,7 +23,7 @@ Evilginx2 opera nella fase di Initial Access e Credential Access, specializzando
 
 | Fase              | Tool Precedente                                                 | Evilginx2               | Tool Successivo     |
 | ----------------- | --------------------------------------------------------------- | ----------------------- | ------------------- |
-| Recon             | [TheHarvester](https://hackita.it/articoli/theharvester) emails | → Target identification | → Phishlet config   |
+| Recon             | [TheHarvester](https://hackita.it/articoli/theharvester/) emails | → Target identification | → Phishlet config   |
 | Initial Access    | Domain setup                                                    | → Proxy phishing        | → Session capture   |
 | Credential Access | Victim login                                                    | → 2FA bypass            | → Account takeover  |
 | Persistence       | Session token                                                   | → Cookie injection      | → Persistent access |
@@ -319,10 +319,10 @@ Blocca scanner e ricercatori da altri paesi.
 
 | Evilginx2 +                                                    | Risultato               | Workflow                                  |
 | -------------------------------------------------------------- | ----------------------- | ----------------------------------------- |
-| [Gophish](https://hackita.it/articoli/gophish)                 | Mass phishing campaigns | Gophish email delivery → Evilginx landing |
-| [BeEF](https://hackita.it/articoli/beef)                       | Post-login hooking      | Evilginx capture → BeEF hook inject       |
-| [Maltego](https://hackita.it/articoli/maltego)                 | Target reconnaissance   | Maltego OSINT → Evilginx targeting        |
-| [Metasploit](https://hackita.it/articoli/metasploit-framework) | Post-compromise         | Session token → MSF browser exploitation  |
+| [Gophish](https://hackita.it/articoli/gophish/)                 | Mass phishing campaigns | Gophish email delivery → Evilginx landing |
+| [BeEF](https://hackita.it/articoli/beef/)                       | Post-login hooking      | Evilginx capture → BeEF hook inject       |
+| [Maltego](https://hackita.it/articoli/maltego/)                 | Target reconnaissance   | Maltego OSINT → Evilginx targeting        |
+| [Metasploit](https://hackita.it/articoli/metasploit/) | Post-compromise         | Session token → MSF browser exploitation  |
 
 ## Confronto: Evilginx2 vs Alternative
 

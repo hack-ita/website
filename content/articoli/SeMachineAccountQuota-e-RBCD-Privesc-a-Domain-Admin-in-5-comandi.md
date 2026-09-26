@@ -323,10 +323,10 @@ MachineAccountQuota = 10 + RBCD = Domain Admin con le credenziali di qualsiasi u
 
 **Articoli correlati:**
 
-* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege) — altro path DA senza privilegi kernel
-* [SeLoadDriverPrivilege](https://hackita.it/articoli/seloaddriverprivilege) — accesso kernel su DC via Print Operators
+* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege/) — altro path DA senza privilegi kernel
+* [SeLoadDriverPrivilege](https://hackita.it/articoli/seloaddriverprivilege/) — accesso kernel su DC via Print Operators
 * [Active Directory Privilege Escalation](https://hackita.it/articoli/active-directory/) 
-* [BloodHound](https://hackita.it/articoli/bloodhound) — guida completa
+* [BloodHound](https://hackita.it/articoli/bloodhound/) — guida completa
 
 **Riferimenti:** [Impacket](https://github.com/fortra/impacket) · [PowerMad](https://github.com/Kevin-Robertson/Powermad) · [Rubeus](https://github.com/GhostPack/Rubeus) · [BloodHound](https://github.com/BloodHoundAD/BloodHound) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/win32/adschema/a-ms-ds-machineaccountquota)
 

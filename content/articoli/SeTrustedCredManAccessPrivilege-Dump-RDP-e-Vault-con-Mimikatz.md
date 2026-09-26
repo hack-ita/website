@@ -303,8 +303,8 @@ Per il vault dell'utente corrente: no. Per vault di altri utenti sulla stessa ma
 
 **Articoli correlati:**
 
-* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege) — `sekurlsa::credman` via LSASS dump
-* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege) — credential dump alternativo da SAM/NTDS
+* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/) — `sekurlsa::credman` via LSASS dump
+* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege/) — credential dump alternativo da SAM/NTDS
 * [DPAPI](https://hackita.it/articoli/dpapi/) - \[DPAPI su Windows per pentester]\(DA CREARE)
 
 **Riferimenti:** [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI) · [Mimikatz](https://github.com/gentilkiwi/mimikatz) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/access-credential-manager-as-a-trusted-caller)

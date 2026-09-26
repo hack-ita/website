@@ -40,7 +40,7 @@ Nel red team, il social engineering è spesso il path of least resistance: perch
 
 ### Social Engineering vs Phishing
 
-Il [phishing](https://hackita.it/articoli/phishing) è una sotto-categoria del social engineering — specificamente, è social engineering via email (o SMS nel caso di smishing). Il social engineering è più ampio: include canali telefonici, fisici, di persona e qualsiasi interazione umana. Il phishing usa l'infrastruttura tecnica (GoPhish, Evilginx, landing page). Il social engineering puro usa la voce, la presenza fisica e la psicologia.
+Il [phishing](https://hackita.it/articoli/phishing/) è una sotto-categoria del social engineering — specificamente, è social engineering via email (o SMS nel caso di smishing). Il social engineering è più ampio: include canali telefonici, fisici, di persona e qualsiasi interazione umana. Il phishing usa l'infrastruttura tecnica (GoPhish, Evilginx, landing page). Il social engineering puro usa la voce, la presenza fisica e la psicologia.
 
 ```
 Social Engineering (macro-categoria)
@@ -165,7 +165,7 @@ site:corp.local filetype:xlsx "password"
 "@corp.local" filetype:pdf  # Trova email in documenti pubblici
 ```
 
-Per i Google dork avanzati, usa la [Google Hacking Database su Exploit-DB](https://hackita.it/articoli/exploit-db) — centinaia di dork per trovare documenti interni, credenziali esposte e informazioni sensibili.
+Per i Google dork avanzati, usa la [Google Hacking Database su Exploit-DB](https://hackita.it/articoli/exploitdb/) — centinaia di dork per trovare documenti interni, credenziali esposte e informazioni sensibili.
 
 ```bash
 # Metadata dai documenti pubblici (nomi utente, software, path interni)
@@ -380,7 +380,7 @@ Posizionamento ideale:
 - Nel server room (accesso diretto alla rete)
 ```
 
-Il rogue device ti dà accesso persistente alla rete interna. Da qui: [enumerazione servizi](https://hackita.it/articoli/porta-1433-mssql), [lateral movement AD](https://hackita.it/articoli/dcsync), [accesso a share NFS](https://hackita.it/articoli/porta-2049-nfs) o [Docker API esposto](https://hackita.it/articoli/porta-2375-docker-api).
+Il rogue device ti dà accesso persistente alla rete interna. Da qui: [enumerazione servizi](https://hackita.it/articoli/porta-1433-mssql/), [lateral movement AD](https://hackita.it/articoli/dcsync/), [accesso a share NFS](https://hackita.it/articoli/porta-2049-nfs/) o [Docker API esposto](https://hackita.it/articoli/porta-2375-docker-api/).
 
 ### Dumpster Diving
 
@@ -536,7 +536,7 @@ Settimana 4: Physical — tentativo di tailgating
              Metrica: successo/fallimento accesso
 ```
 
-Per la parte phishing email, usa il workflow completo descritto nella [guida al phishing](https://hackita.it/articoli/phishing) con [GoPhish](https://hackita.it/articoli/gophish) ed [Evilginx](https://hackita.it/articoli/evilginx).
+Per la parte phishing email, usa il workflow completo descritto nella [guida al phishing](https://hackita.it/articoli/phishing/) con [GoPhish](https://hackita.it/articoli/gophish/) ed [Evilginx](https://hackita.it/articoli/evilginx2/).
 
 ## 8. Aspetti Legali e Etici
 
@@ -578,7 +578,7 @@ OBBLIGATORIO prima di qualsiasi engagement:
 
 | Tool                                 | Funzione                                                                              |
 | ------------------------------------ | ------------------------------------------------------------------------------------- |
-| **GoPhish**                          | Campagne phishing email — vedi [guida phishing](https://hackita.it/articoli/phishing) |
+| **GoPhish**                          | Campagne phishing email — vedi [guida phishing](https://hackita.it/articoli/phishing/) |
 | **Evilginx**                         | MFA bypass via reverse proxy                                                          |
 | **SET (Social Engineering Toolkit)** | Quick attacks: clone site, HTA, QR                                                    |
 | **theHarvester**                     | OSINT email e sottodomini                                                             |
@@ -632,7 +632,7 @@ OBBLIGATORIO prima di qualsiasi engagement:
 | Tipo             | Fonte                                                                        |
 | ---------------- | ---------------------------------------------------------------------------- |
 | Persone + ruoli  | LinkedIn, sito aziendale, annual report                                      |
-| Email            | hunter.io, phonebook.cz, [GHDB dork](https://hackita.it/articoli/exploit-db) |
+| Email            | hunter.io, phonebook.cz, [GHDB dork](https://hackita.it/articoli/exploitdb/) |
 | Telefoni         | Sito web, LinkedIn, Truecaller, paginegialle                                 |
 | Tecnologie       | Job posting, BuiltWith, Wappalyzer                                           |
 | Documenti        | Google dork (`site:target filetype:pdf`)                                     |

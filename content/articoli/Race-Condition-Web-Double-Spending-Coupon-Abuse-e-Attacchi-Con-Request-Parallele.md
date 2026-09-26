@@ -25,7 +25,7 @@ Una **Race Condition** nel web si verifica quando due o più request concorrenti
 
 Non è un bug di codice classico — la logica è corretta per una request alla volta. Il problema è che il server non protegge l'accesso concorrente allo stato condiviso (database row, variabile, saldo). Nel web, dove le request arrivano in parallelo, questo ha impatto finanziario diretto: doppi pagamenti, doppi prelievi, doppi bonus, bypass di qualsiasi limite "una volta sola".
 
-Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa). Vedi anche: [Business Logic Flaw](https://hackita.it/articoli/business-logic-flaw), [API Rate Limit Bypass](https://hackita.it/articoli/api-rate-limit-bypass).
+Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa/). Vedi anche: [Business Logic Flaw](https://hackita.it/articoli/business-logic-flaw/), [API Rate Limit Bypass](https://hackita.it/articoli/api-rate-limit-bypass/).
 
 Riferimenti: [PortSwigger Race Conditions](https://portswigger.net/web-security/race-conditions), [James Kettle — Smashing the State Machine](https://portswigger.net/research/smashing-the-state-machine), [HackTricks Race Condition](https://book.hacktricks.wiki/en/pentesting-web/race-condition.html).
 

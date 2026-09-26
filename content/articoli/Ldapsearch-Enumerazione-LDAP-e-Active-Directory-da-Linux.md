@@ -15,7 +15,7 @@ tags:
   - ad
 ---
 
-Ldapsearch è il client LDAP da linea di comando che interroga direttamente il database Active Directory. Ogni oggetto AD — utenti, computer, gruppi, GPO, OU — è accessibile via LDAP sulla porta 389 (o 636 per LDAPS). Con ldapsearch estrai attributi che [Rpcclient](https://hackita.it/articoli/rpcclient) non raggiunge: `description` (spesso contiene password), `servicePrincipalName` (target per Kerberoasting), `userAccountControl` (account disabilitati, no pre-auth), `memberOf` e molto altro.
+Ldapsearch è il client LDAP da linea di comando che interroga direttamente il database Active Directory. Ogni oggetto AD — utenti, computer, gruppi, GPO, OU — è accessibile via LDAP sulla porta 389 (o 636 per LDAPS). Con ldapsearch estrai attributi che [Rpcclient](https://hackita.it/articoli/rpcclient/) non raggiunge: `description` (spesso contiene password), `servicePrincipalName` (target per Kerberoasting), `userAccountControl` (account disabilitati, no pre-auth), `memberOf` e molto altro.
 
 Kill chain: **Enumeration / Credential Access** (MITRE ATT\&CK T1087.002).
 
@@ -153,7 +153,7 @@ ldapsearch -x -H ldap://10.10.10.10 -D "user@corp.local" -w 'Pass' -b "DC=corp,D
 
 ## 6️⃣ Toolchain Integration
 
-**Flusso:** Nmap (389/636) → **Ldapsearch (AD enum)** → [Adfind](https://hackita.it/articoli/adfind) (enum avanzata) → Impacket (Kerberoast/AS-REP)
+**Flusso:** Nmap (389/636) → **Ldapsearch (AD enum)** → [Adfind](https://hackita.it/articoli/adfind/) (enum avanzata) → Impacket (Kerberoast/AS-REP)
 
 | Tool       | User enum | SPN enum | GPO | Filtri custom    |
 | ---------- | --------- | -------- | --- | ---------------- |

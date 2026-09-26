@@ -87,7 +87,7 @@ tcp 0.0.0.0:3306  LISTEN
 tcp 127.0.0.1:6379 LISTEN
 ```
 
-**Lettura dell'output:** configurazione completa dell'host — OS, disco (90% su /data — quasi pieno), processi (Apache, SSH, MySQL, PHP-FPM), porte in ascolto (SSH, HTTP, HTTPS, MySQL pubblico, Redis solo localhost). Questa è la recon più dettagliata possibile su un host. Per la [compromissione dei servizi esposti](https://hackita.it/articoli/porta-1433-mssql), MySQL sulla 3306 e Apache sulla 80 sono i target.
+**Lettura dell'output:** configurazione completa dell'host — OS, disco (90% su /data — quasi pieno), processi (Apache, SSH, MySQL, PHP-FPM), porte in ascolto (SSH, HTTP, HTTPS, MySQL pubblico, Redis solo localhost). Questa è la recon più dettagliata possibile su un host. Per la [compromissione dei servizi esposti](https://hackita.it/articoli/porta-1433-mssql/), MySQL sulla 3306 e Apache sulla 80 sono i target.
 
 ### Web interface Xymon server
 

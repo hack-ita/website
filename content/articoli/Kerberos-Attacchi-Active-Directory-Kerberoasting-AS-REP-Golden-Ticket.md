@@ -18,7 +18,7 @@ featured: true
 
 # Porta 88 — Kerberos: Il Cuore dell'Autenticazione Active Directory
 
-Se [Active Directory](https://hackita.it/articoli/active-directory) è il sistema nervoso di ogni rete aziendale Windows, Kerberos è il suo cuore pulsante. È il protocollo di autenticazione che gestisce ogni login, ogni accesso a una share di rete, ogni connessione a un servizio. Ascolta sulla porta 88 TCP/UDP del Domain Controller e, per un pentester, è un tesoro: permette di **enumerare utenti validi senza credenziali**, estrarre hash craccabili di service account (**Kerberoasting**) e utenti senza pre-autenticazione (**AS-REP Roasting**), forgiare ticket che danno accesso illimitato al dominio (**Golden Ticket**) e persistere indefinitamente nell'ambiente.
+Se [Active Directory](https://hackita.it/articoli/active-directory/) è il sistema nervoso di ogni rete aziendale Windows, Kerberos è il suo cuore pulsante. È il protocollo di autenticazione che gestisce ogni login, ogni accesso a una share di rete, ogni connessione a un servizio. Ascolta sulla porta 88 TCP/UDP del Domain Controller e, per un pentester, è un tesoro: permette di **enumerare utenti validi senza credenziali**, estrarre hash craccabili di service account (**Kerberoasting**) e utenti senza pre-autenticazione (**AS-REP Roasting**), forgiare ticket che danno accesso illimitato al dominio (**Golden Ticket**) e persistere indefinitamente nell'ambiente.
 
 Non esagero dicendo che il 70% dei penetration test su Active Directory che ho fatto negli ultimi anni è passato per Kerberos. È il protocollo che gli admin non toccano mai — "funziona, non ci penso" — e che i pentester conoscono meglio di loro.
 
@@ -28,10 +28,10 @@ Ricordo un engagement per una banca regionale: 3000 utenti AD, policy di passwor
 
 Kerberos funziona con un sistema di ticket:
 
-* **[TGT](https://hackita.it/articoli/tgt) (Ticket Granting Ticket)**\
+* **[TGT](https://hackita.it/articoli/tgt/) (Ticket Granting Ticket)**\
   Lo ottieni dopo il login al Domain Controller.\
   Serve per dimostrare che sei autenticato.
-* **[TGS](https://hackita.it/articoli/tgs) (Service Ticket)**\
+* **[TGS](https://hackita.it/articoli/tgs/) (Service Ticket)**\
   Lo richiedi usando il TGT per accedere a un servizio (es. SMB, SQL).\
   È il ticket che usi per entrare nel servizio specifico.
 
@@ -59,9 +59,9 @@ Client                          KDC (DC :88)                Service
 | Porta                                             | Servizio     | Funzione                              |
 | ------------------------------------------------- | ------------ | ------------------------------------- |
 | **88**                                            | Kerberos KDC | Autenticazione e distribuzione ticket |
-| [389](https://hackita.it/articoli/porta-389-ldap) | LDAP         | Directory Active Directory            |
-| [445](https://hackita.it/articoli/smb)            | SMB          | File sharing, RPC                     |
-| [53](https://hackita.it/articoli/porta-53-dns)    | DNS          | Risoluzione nomi AD                   |
+| [389](https://hackita.it/articoli/porta-389-ldap/) | LDAP         | Directory Active Directory            |
+| [445](https://hackita.it/articoli/smb/)            | SMB          | File sharing, RPC                     |
+| [53](https://hackita.it/articoli/dns/)    | DNS          | Risoluzione nomi AD                   |
 
 ## 1. Enumerazione
 
@@ -104,7 +104,7 @@ nmap -p 88 --script krb5-enum-users --script-args krb5-enum-users.realm=corp.loc
 
 ## 2. AS-REP Roasting — Hash Senza Credenziali
 
-Se un utente ha **"Do not require Kerberos preauthentication"** abilitato (flag `DONT_REQUIRE_PREAUTH`), puoi richiedere il suo AS-REP senza conoscere la password. L'AS-REP contiene un blob cifrato con l'hash della password dell'utente → craccabile offline con [Hashcat](https://hackita.it/articoli/hashcat).
+Se un utente ha **"Do not require Kerberos preauthentication"** abilitato (flag `DONT_REQUIRE_PREAUTH`), puoi richiedere il suo AS-REP senza conoscere la password. L'AS-REP contiene un blob cifrato con l'hash della password dell'utente → craccabile offline con [Hashcat](https://hackita.it/articoli/hashcat/).
 
 ```bash
 # Impacket — trova utenti senza preauth e estrai gli hash
@@ -131,7 +131,7 @@ $krb5asrep$23$svc_backup@CORP.LOCAL:Backup2023!
 impacket-GetNPUsers corp.local/j.rossi:Password1 -dc-ip 10.10.10.10 -request
 ```
 
-Questo usa [LDAP](https://hackita.it/articoli/porta-389-ldap) per trovare automaticamente tutti gli utenti con `DONT_REQUIRE_PREAUTH` → estrae tutti gli hash in un colpo.
+Questo usa [LDAP](https://hackita.it/articoli/porta-389-ldap/) per trovare automaticamente tutti gli utenti con `DONT_REQUIRE_PREAUTH` → estrae tutti gli hash in un colpo.
 
 ## 2b. Kerberoasting senza credenziali (via AS-REP)
 
@@ -192,7 +192,7 @@ $krb5tgs$23$*svc_sql$CORP.LOCAL$...*:SqlProd2019!
 
 ## 4. Golden Ticket — Persistenza Totale
 
-Se ottieni l'hash NTLM dell'account `krbtgt` (tramite [DCSync](https://hackita.it/articoli/pass-the-hash) o dump NTDS.dit), puoi forgiare TGT validi per **qualsiasi utente**, inclusi utenti inesistenti con qualsiasi gruppo. È il livello di persistenza più alto in Active Directory — sopravvive a reset di password e reinstallazioni.
+Se ottieni l'hash NTLM dell'account `krbtgt` (tramite [DCSync](https://hackita.it/articoli/pass-the-hash/) o dump NTDS.dit), puoi forgiare TGT validi per **qualsiasi utente**, inclusi utenti inesistenti con qualsiasi gruppo. È il livello di persistenza più alto in Active Directory — sopravvive a reset di password e reinstallazioni.
 
 ```bash
 # Ottieni l'hash di krbtgt (richiede Domain Admin)
@@ -278,7 +278,7 @@ SVC_SQL        User         Constrained                 MSSQLSvc/db01:1433
 .\Rubeus.exe s4u /user:svc_sql /rc4:HASH /impersonateuser:administrator /msdsspn:MSSQLSvc/db01:1433 /ptt
 ```
 
-Ora sei `administrator` per il servizio SQL — [accesso completo al database](https://hackita.it/articoli/porta-3306-mysql).
+Ora sei `administrator` per il servizio SQL — [accesso completo al database](https://hackita.it/articoli/porta-3306-mysql/).
 
 ## 8. Micro Playbook Reale
 
@@ -409,7 +409,7 @@ impacket-psexec -k -no-pass corp.local/fakeadmin@dc01.corp.local
 Non di default: è una richiesta TGS legittima. Però genera Event ID 4769 con encryption type RC4 (0x17), che è anomalo se il dominio supporta AES. Pochi ambienti monitorano questo evento — ma i SOC evoluti lo fanno.
 
 **Posso fare Kerberoasting senza credenziali?**
-No — serve almeno un account autenticato nel dominio per richiedere i TGS. Ma puoi ottenere le credenziali con AS-REP Roasting (che invece non richiede auth) o con [Responder](https://hackita.it/articoli/responder).
+No — serve almeno un account autenticato nel dominio per richiedere i TGS. Ma puoi ottenere le credenziali con AS-REP Roasting (che invece non richiede auth) o con [Responder](https://hackita.it/articoli/responder/).
 
 **Cos'è il Golden Ticket e come lo invalido?**
 Un TGT forgiato con l'hash di `krbtgt`, valido per qualsiasi utente e gruppo. L'unico modo per invalidarlo: reset della password di `krbtgt` due volte consecutivamente. La prima invalidazione richiede fino a 10 ore per propagarsi.

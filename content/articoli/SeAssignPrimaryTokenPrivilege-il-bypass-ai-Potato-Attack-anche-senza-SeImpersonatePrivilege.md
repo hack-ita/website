@@ -244,14 +244,14 @@ No — con GodPotato è identico. La distinzione tecnica è gestita dal tool.
 
 ***
 
-Rimuovere SeImpersonatePrivilege senza togliere SeAssignPrimaryTokenPrivilege non mitiga niente — i Potato attack funzionano comunque. Se sei post-SYSTEM, il passo successivo è il dump credenziali con [SeDebugPrivilege](http://hackita.it/articoli/sedebugprivilege).
+Rimuovere SeImpersonatePrivilege senza togliere SeAssignPrimaryTokenPrivilege non mitiga niente — i Potato attack funzionano comunque. Se sei post-SYSTEM, il passo successivo è il dump credenziali con [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/).
 
 ***
 
 **Articoli correlati:**
 
-* [SeImpersonatePrivilege](http://hackita.it/articoli/seimpersonateprivilege) — guida completa ai Potato attack
-* [SeDebugPrivilege](http://hackita.it/articoli/sedebugprivilegesedebugprivilege) — dump LSASS dopo SYSTEM
-* [SeCreateTokenPrivilege](http://hackita.it/articoli/secreatetokenprivilege) — token forgery senza dipendenze esterne
+* [SeImpersonatePrivilege](https://hackita.it/articoli/seimpersonateprivilege/) — guida completa ai Potato attack
+* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/) — dump LSASS dopo SYSTEM
+* [SeCreateTokenPrivilege](https://hackita.it/articoli/secreatetokenprivilege/) — token forgery senza dipendenze esterne
 
 **Riferimenti:** [GodPotato](https://github.com/BeichenDream/GodPotato) · [JuicyPotato CLSID list](https://github.com/ohpe/juicy-potato/tree/master/CLSID) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/replace-a-process-level-token)

@@ -21,7 +21,7 @@ La **CRLF Injection** sembra una vulnerabilità minore — "aggiungi un header, 
 
 La trovo nel **10% dei pentest web**, quasi sempre nei redirect: l'applicazione prende un URL dall'utente e lo mette nell'header `Location:` senza rimuovere i caratteri CRLF.
 
-Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa).
+Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/).
 
 ## Cos'è la CRLF Injection?
 
@@ -219,6 +219,6 @@ CRLF Injection (SSO redirect) → Session Fixation → Phishing Link → Admin S
 
 ***
 
-Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [HTTP Header Injection](https://hackita.it/articoli/http-header-injection), [Log Injection](https://hackita.it/articoli/log-injection).
+Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [HTTP Header Injection](https://hackita.it/articoli/http-header-injection/), [Log Injection](https://hackita.it/articoli/log-injection/).
 
 > I tuoi redirect sanitizzano i caratteri CRLF? [Penetration test HackIta](https://hackita.it/servizi). Per padroneggiare le injection HTTP: [formazione 1:1](https://hackita.it/formazione).

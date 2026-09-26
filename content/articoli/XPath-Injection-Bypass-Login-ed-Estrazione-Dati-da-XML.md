@@ -14,7 +14,7 @@ tags:
   - injection-attacks
 ---
 
-La XPath Injection è la[ SQL Injection ](https://hackita.it/articoli/sql-injection)dei documenti XML.
+La XPath Injection è la[ SQL Injection ](https://hackita.it/articoli/sql-injection/)dei documenti XML.
 Stesso principio: l'applicazione concatena l'input utente in una query senza sanitizzarlo, e l'attaccante manipola quella query per bypassare la logica o estrarre dati sensibili.
 
 La differenza è il target: invece di un database relazionale, attacchi un **documento XML** interrogato con **XPath** (XML Path Language).
@@ -371,10 +371,10 @@ XPath Injection è **read-only**: nessuna scrittura, nessuna RCE diretta.
 Il suo valore è nell'**information disclosure** — credenziali e configurazioni
 estratte dal file XML, usabili per lateral movement o accesso a sistemi correlati.
 
-Per approfondire le injection attacks in generale: [SQL Injection](https://hackita.it/articoli/sql-injection).
-Se il target usa XML anche per altri scopi, valuta anche [XXE Injection](https://hackita.it/articoli/xxe-injection)
+Per approfondire le injection attacks in generale: [SQL Injection](https://hackita.it/articoli/sql-injection/).
+Se il target usa XML anche per altri scopi, valuta anche [XXE Injection](https://hackita.it/articoli/xxe-injection/)
 che può portare a lettura di file arbitrari sul server. Entrambe le tecniche
-si testano con [Burp Suite](https://hackita.it/articoli/burp-suite-guida).
+si testano con [Burp Suite](https://hackita.it/articoli/burp-suite/).
 
 ***
 
@@ -438,7 +438,7 @@ sostituisci `'` con `&apos;` e `"` con `&quot;` prima dell'inserimento.
 * WAF rule su payload XPath comuni — molti WAF enterprise hanno signature preconfigurate
 * Log completo dei parametri GET/POST per correlazione incidenti post-breach
 
-Vedi anche [Broken Authentication](https://hackita.it/articoli/broken-authentication) per il contesto
+Vedi anche [Broken Authentication](https://hackita.it/articoli/broken-authentication/) per il contesto
 più ampio di come la XPath Injection si inserisce nelle catene di attacco reali.
 
 ***
@@ -482,10 +482,10 @@ con blacklist è sempre bypassabile — non è una soluzione.
 
 ***
 
-*Vedi anche: [SQL Injection](https://hackita.it/articoli/sql-injection) —
-[XXE Injection](https://hackita.it/articoli/xxe-injection) —
-[Burp Suite: guida pratica](https://hackita.it/articoli/burp-suite-guida) —
-[Broken Authentication](https://hackita.it/articoli/broken-authentication) —
-[Web Hacking: tutte le tecniche](https://hackita.it/categorie/web-hacking)*
+*Vedi anche: [SQL Injection](https://hackita.it/articoli/sql-injection/) —
+[XXE Injection](https://hackita.it/articoli/xxe-injection/) —
+[Burp Suite: guida pratica](https://hackita.it/articoli/burp-suite/) —
+[Broken Authentication](https://hackita.it/articoli/broken-authentication/) —
+[Web Hacking: tutte le tecniche](https://hackita.it/categorie/web-hacking/)*
 
 Vedi anche: [https://portswigger.net/kb/issues/00100600\_xpath-injection](https://portswigger.net/kb/issues/00100600_xpath-injection) e: [https://hacktricks.wiki/en/pentesting-web/xpath-injection.html](https://hacktricks.wiki/en/pentesting-web/xpath-injection.html)

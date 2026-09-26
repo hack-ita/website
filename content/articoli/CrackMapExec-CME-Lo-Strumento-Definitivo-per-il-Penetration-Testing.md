@@ -16,9 +16,9 @@ tags:
 
 # CrackMapExec (CME): Guida ai Comandi Legacy e alla Migrazione verso NetExec
 
-CrackMapExec ha reso popolare un modo estremamente efficace di lavorare nelle reti Windows: un solo comando per mappare SMB, validare credenziali, individuare amministratori locali, enumerare Active Directory, eseguire comandi e raccogliere credenziali. Il progetto originale è però archiviato e non più mantenuto. Oggi il successore operativo è [NetExec](https://hackita.it/articoli/netexec), che conserva la stessa filosofia ma usa il binario `nxc`, riceve aggiornamenti e supporta protocolli e moduli moderni.
+CrackMapExec ha reso popolare un modo estremamente efficace di lavorare nelle reti Windows: un solo comando per mappare SMB, validare credenziali, individuare amministratori locali, enumerare Active Directory, eseguire comandi e raccogliere credenziali. Il progetto originale è però archiviato e non più mantenuto. Oggi il successore operativo è [NetExec](https://hackita.it/articoli/netexec/), che conserva la stessa filosofia ma usa il binario `nxc`, riceve aggiornamenti e supporta protocolli e moduli moderni.
 
-CrackMapExec, abbreviato **CME**, è stato per anni lo “Swiss Army knife” del penetration testing interno su Windows e [Active Directory](https://hackita.it/articoli/active-directory). La sua forza non era una singola tecnica, ma la capacità di concatenare rapidamente più fasi della kill chain:
+CrackMapExec, abbreviato **CME**, è stato per anni lo “Swiss Army knife” del penetration testing interno su Windows e [Active Directory](https://hackita.it/articoli/active-directory/). La sua forza non era una singola tecnica, ma la capacità di concatenare rapidamente più fasi della kill chain:
 
 ```text
 RICOGNIZIONE
@@ -40,7 +40,7 @@ ESCALATION FINO AL DOMINIO
 
 Il repository originale di CrackMapExec è stato archiviato il **6 dicembre 2023** ed è in sola lettura. Per nuovi laboratori, assessment e workflow professionali devi usare **NetExec**, il fork mantenuto dalla community. Questa guida conserva la keyword e il contesto storico di CrackMapExec, ma usa principalmente la sintassi moderna `nxc` per evitare di pubblicare comandi obsoleti o dipendenti da build legacy.
 
-Per la guida esclusivamente dedicata al successore moderno consulta [NetExec (NXC): guida completa](https://hackita.it/articoli/netexec). Qui l'obiettivo è diverso: capire **cosa faceva CME, come si traducono oggi i suoi comandi e quali differenze evitare durante la migrazione**.
+Per la guida esclusivamente dedicata al successore moderno consulta [NetExec (NXC): guida completa](https://hackita.it/articoli/netexec/). Qui l'obiettivo è diverso: capire **cosa faceva CME, come si traducono oggi i suoi comandi e quali differenze evitare durante la migrazione**.
 
 ***
 
@@ -202,14 +202,14 @@ I protocolli più importanti in un engagement interno sono:
 
 | Protocollo | Uso principale                                                            | Collegamento Hackita                                                           |
 | ---------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `smb`      | Host discovery, share, sessioni, PTH, remote execution, dump SAM/LSA/NTDS | [SMB porta 445](https://hackita.it/articoli/smb)                               |
-| `ldap`     | Utenti, gruppi, deleghe, Kerberoasting, AS-REP, gMSA, BloodHound          | [LDAP porta 389](https://hackita.it/articoli/porta-389-ldap)                   |
-| `winrm`    | Validazione accesso PowerShell Remoting ed esecuzione comandi             | [Evil-WinRM](https://hackita.it/articoli/evilwinrm)                            |
-| `mssql`    | Login SQL/Windows, query, `xp_cmdshell`, linked server                    | [MSSQL porta 1433](https://hackita.it/articoli/porta-1433-mssql)               |
-| `rdp`      | Validazione credenziali, screenshot e accesso interattivo                 | [Porte TCP/UDP nel pentest](https://hackita.it/articoli/porte-tcp-udp-pentest) |
-| `wmi`      | Remote execution tramite WMI/DCOM                                         | [WMIC e lateral movement](https://hackita.it/articoli/wmic)                    |
-| `ssh`      | Validazione credenziali ed esecuzione su sistemi SSH                      | [SSH porta 22](https://hackita.it/articoli/ssh)                                |
-| `ftp`      | Login anonimo, listing e trasferimento file                               | [FTP porta 21](https://hackita.it/articoli/porta-21-ftp)                       |
+| `smb`      | Host discovery, share, sessioni, PTH, remote execution, dump SAM/LSA/NTDS | [SMB porta 445](https://hackita.it/articoli/smb/)                               |
+| `ldap`     | Utenti, gruppi, deleghe, Kerberoasting, AS-REP, gMSA, BloodHound          | [LDAP porta 389](https://hackita.it/articoli/porta-389-ldap/)                   |
+| `winrm`    | Validazione accesso PowerShell Remoting ed esecuzione comandi             | [Evil-WinRM](https://hackita.it/articoli/evilwinrm/)                            |
+| `mssql`    | Login SQL/Windows, query, `xp_cmdshell`, linked server                    | [MSSQL porta 1433](https://hackita.it/articoli/porta-1433-mssql/)               |
+| `rdp`      | Validazione credenziali, screenshot e accesso interattivo                 | [Porte TCP/UDP nel pentest](https://hackita.it/articoli/porte-tcp-udp-pentest/) |
+| `wmi`      | Remote execution tramite WMI/DCOM                                         | [WMIC e lateral movement](https://hackita.it/articoli/wmic/)                    |
+| `ssh`      | Validazione credenziali ed esecuzione su sistemi SSH                      | [SSH porta 22](https://hackita.it/articoli/ssh/)                                |
+| `ftp`      | Login anonimo, listing e trasferimento file                               | [FTP porta 21](https://hackita.it/articoli/porta-21-ftp/)                       |
 
 ***
 
@@ -270,7 +270,7 @@ L'output può mostrare:
 * presenza di SMBv1;
 * nome NetBIOS.
 
-Questi dati permettono di separare workstation, server, Domain Controller e sistemi legacy. Se SMB signing non è richiesto, l'host può diventare un target per [NTLM Relay](https://hackita.it/articoli/ntlm-relay), ma la sfruttabilità reale dipende dal protocollo di destinazione, dalle protezioni NTLM e dalla possibilità di ottenere un'autenticazione coercibile.
+Questi dati permettono di separare workstation, server, Domain Controller e sistemi legacy. Se SMB signing non è richiesto, l'host può diventare un target per [NTLM Relay](https://hackita.it/articoli/ntlm-relay/), ma la sfruttabilità reale dipende dal protocollo di destinazione, dalle protezioni NTLM e dalla possibilità di ottenere un'autenticazione coercibile.
 
 ## Generare la Lista dei Target Relayable
 
@@ -284,7 +284,7 @@ Controlla il file:
 cat relay-targets.txt
 ```
 
-Non avviare automaticamente il relay. Prima verifica scope, SMB signing, EPA, LDAP signing/channel binding e le regole d'ingaggio. Per la catena completa usa la guida [ntlmrelayx e NTLM Relay](https://hackita.it/articoli/ntlm-relay).
+Non avviare automaticamente il relay. Prima verifica scope, SMB signing, EPA, LDAP signing/channel binding e le regole d'ingaggio. Per la catena completa usa la guida [ntlmrelayx e NTLM Relay](https://hackita.it/articoli/ntlm-relay/).
 
 ## Null Session
 
@@ -324,7 +324,7 @@ Quando SAMR è accessibile tramite sessione anonima o guest:
 nxc smb 10.10.10.10 -u '' -p '' --rid-brute
 ```
 
-Il RID brute ricostruisce utenti e gruppi risolvendo SID incrementali. È utile per ottenere una lista di username da usare in [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting) o in uno spray autorizzato.
+Il RID brute ricostruisce utenti e gruppi risolvendo SID incrementali. È utile per ottenere una lista di username da usare in [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/) o in uno spray autorizzato.
 
 ***
 
@@ -359,7 +359,7 @@ nxc smb 10.10.10.10 --local-auth \
   -u 'Administrator' -p 'LocalPassword123!'
 ```
 
-Su un'intera subnet, la stessa password locale riutilizzata può trasformarsi rapidamente in lateral movement. È uno dei motivi per cui Windows LAPS è fondamentale. Per approfondire consulta [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) e la sezione LAPS più avanti.
+Su un'intera subnet, la stessa password locale riutilizzata può trasformarsi rapidamente in lateral movement. È uno dei motivi per cui Windows LAPS è fondamentale. Per approfondire consulta [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) e la sezione LAPS più avanti.
 
 ## Pass-the-Hash
 
@@ -387,7 +387,7 @@ nxc smb 10.10.10.10 --local-auth \
   -H '8846f7eaee8fb117ad06bdd830b7586c'
 ```
 
-Il [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) non “cracca” la password: usa direttamente il segreto NTLM nei protocolli che accettano autenticazione NTLM.
+Il [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) non “cracca” la password: usa direttamente il segreto NTLM nei protocolli che accettano autenticazione NTLM.
 
 ## Kerberos con Password o Hash
 
@@ -429,7 +429,7 @@ Esecuzione con ticket:
 nxc smb WS01.corp.local --use-kcache -x 'whoami'
 ```
 
-Per i concetti di TGT, TGS, SPN e Pass-the-Ticket consulta [Kerberos in Active Directory](https://hackita.it/articoli/kerberos) e [Rubeus](https://hackita.it/articoli/rubeus).
+Per i concetti di TGT, TGS, SPN e Pass-the-Ticket consulta [Kerberos in Active Directory](https://hackita.it/articoli/kerberos/) e [Rubeus](https://hackita.it/articoli/rubeus/).
 
 ## Autenticazione con Certificato
 
@@ -451,7 +451,7 @@ nxc smb WS01.corp.local \
   -u 'user'
 ```
 
-Questo workflow è utile dopo un abuso di AD CS con [Certipy](https://hackita.it/articoli/certipy) o una delle tecniche [ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
+Questo workflow è utile dopo un abuso di AD CS con [Certipy](https://hackita.it/articoli/certipy/) o una delle tecniche [ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
 
 ***
 
@@ -459,7 +459,7 @@ Questo workflow è utile dopo un abuso di AD CS con [Certipy](https://hackita.it
 
 Il password spraying prova **una password contro molti account**, invece di molte password contro un singolo account. È diverso dal brute force classico e riduce il rischio di superare la soglia di lockout per utente, ma non è “sicuro per definizione”: una policy fine-grained, tentativi precedenti o controlli adattivi possono comunque bloccare account.
 
-Prima di qualsiasi spray leggi [Password Spraying](https://hackita.it/articoli/password-spraying) e verifica sempre le regole d'ingaggio.
+Prima di qualsiasi spray leggi [Password Spraying](https://hackita.it/articoli/password-spraying/) e verifica sempre le regole d'ingaggio.
 
 ## Leggere la Password Policy
 
@@ -586,7 +586,7 @@ L'output distingue normalmente permessi come `READ`, `WRITE` o accesso negato. U
 * credenziali in chiaro;
 * documenti con dati sensibili.
 
-Per navigazione manuale usa anche [smbclient](https://hackita.it/articoli/smbclient).
+Per navigazione manuale usa anche [smbclient](https://hackita.it/articoli/smbclient/).
 
 ## Spider Mirato
 
@@ -762,13 +762,13 @@ nxc smb 10.10.10.10 -d corp.local \
   --disks
 ```
 
-Le interfacce possono rivelare reti di management o segmenti non raggiungibili direttamente, alimentando un successivo workflow di [pivoting](https://hackita.it/articoli/pivoting).
+Le interfacce possono rivelare reti di management o segmenti non raggiungibili direttamente, alimentando un successivo workflow di [pivoting](https://hackita.it/articoli/pivoting/).
 
 ***
 
 # Fase 4 — Enumerazione LDAP e Active Directory
 
-LDAP espone la struttura logica del dominio. Un account a basso privilegio può normalmente leggere utenti, gruppi, computer, SPN, deleghe, trust e molte ACL. Per query manuali approfondite consulta [ldapsearch](https://hackita.it/articoli/ldapsearch).
+LDAP espone la struttura logica del dominio. Un account a basso privilegio può normalmente leggere utenti, gruppi, computer, SPN, deleghe, trust e molte ACL. Per query manuali approfondite consulta [ldapsearch](https://hackita.it/articoli/ldapsearch/).
 
 ## Utenti Attivi
 
@@ -850,7 +850,7 @@ nxc ldap 10.10.10.10 -d corp.local \
   --trusted-for-delegation
 ```
 
-Per capire RBCD, constrained delegation e S4U consulta [RBCD](https://hackita.it/articoli/rbcd) e [Kerberos](https://hackita.it/articoli/kerberos).
+Per capire RBCD, constrained delegation e S4U consulta [RBCD](https://hackita.it/articoli/rbcd/) e [Kerberos](https://hackita.it/articoli/kerberos/).
 
 ## Query LDAP Personalizzata
 
@@ -895,7 +895,7 @@ Cracking offline:
 hashcat -m 18200 asrep.txt /usr/share/wordlists/rockyou.txt
 ```
 
-L'AS-REP Roasting colpisce account con pre-autenticazione Kerberos disabilitata. Leggi la guida dedicata [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting).
+L'AS-REP Roasting colpisce account con pre-autenticazione Kerberos disabilitata. Leggi la guida dedicata [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/).
 
 ## Kerberoasting
 
@@ -911,7 +911,7 @@ Cracking RC4 TGS:
 hashcat -m 13100 kerberoast.txt /usr/share/wordlists/rockyou.txt
 ```
 
-Il Kerberoasting richiede normalmente un account di dominio valido e prende di mira service account con SPN. Approfondisci in [Kerberoasting](https://hackita.it/articoli/kerberoasting).
+Il Kerberoasting richiede normalmente un account di dominio valido e prende di mira service account con SPN. Approfondisci in [Kerberoasting](https://hackita.it/articoli/kerberos/).
 
 ## Kerberoasting tramite Account AS-REP Roastable
 
@@ -933,7 +933,7 @@ nxc ldap 10.10.10.10 -d corp.local \
   --dns-server 10.10.10.10
 ```
 
-La raccolta alimenta [BloodHound](https://hackita.it/articoli/bloodhound), che permette di collegare sessioni, gruppi, ACL, deleghe e privilegi in attack path verso account di alto valore.
+La raccolta alimenta [BloodHound](https://hackita.it/articoli/bloodhound/), che permette di collegare sessioni, gruppi, ACL, deleghe e privilegi in attack path verso account di alto valore.
 
 ## gMSA
 
@@ -963,7 +963,7 @@ nxc ldap 10.10.10.10 -d corp.local \
   -M maq
 ```
 
-Un valore superiore a zero può essere prerequisito per catene con machine account e [RBCD](https://hackita.it/articoli/rbcd), ma non costituisce da solo una compromissione.
+Un valore superiore a zero può essere prerequisito per catene con machine account e [RBCD](https://hackita.it/articoli/rbcd/), ma non costituisce da solo una compromissione.
 
 ## LDAP Signing e Channel Binding
 
@@ -1007,7 +1007,7 @@ Questo significa che l'account dispone di capacità amministrative utili sul pri
 * se EDR e application control bloccano il metodo scelto;
 * se il target rientra esattamente nello scope autorizzato.
 
-Per capire il contesto completo consulta anche [pivoting e lateral movement](https://hackita.it/articoli/pivoting), [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) e [NTLM](https://hackita.it/articoli/ntlm).
+Per capire il contesto completo consulta anche [pivoting e lateral movement](https://hackita.it/articoli/pivoting/), [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) e [NTLM](https://hackita.it/articoli/ntlm/).
 
 ## Verifica Esplicita degli Admin Locali
 
@@ -1041,7 +1041,7 @@ L'esecuzione di comandi via SMB richiede normalmente privilegi amministrativi lo
 | `smbexec` | Service Control Manager | Servizio temporaneo, eventi SCM            | Terzo tentativo; più evidente lato servizi                                |
 | `mmcexec` | DCOM tramite MMC        | Attivazione DCOM e process creation        | Ultimo fallback; nelle release correnti presenta limitazioni con Kerberos |
 
-Per una spiegazione dedicata del service-based execution consulta [smbexec](https://hackita.it/articoli/smbexec).
+Per una spiegazione dedicata del service-based execution consulta [smbexec](https://hackita.it/articoli/smbexec/).
 
 ## Esecuzione CMD
 
@@ -1153,7 +1153,7 @@ nxc winrm 10.10.10.20 -d corp.local \
   -X 'whoami'
 ```
 
-Se l'accesso è valido e ti serve una shell interattiva, passa a [Evil-WinRM](https://hackita.it/articoli/evilwinrm):
+Se l'accesso è valido e ti serve una shell interattiva, passa a [Evil-WinRM](https://hackita.it/articoli/evilwinrm/):
 
 ```bash
 evil-winrm -i 10.10.10.20 \
@@ -1202,7 +1202,7 @@ Uno screenshot può contenere nomi, banner legali, sessioni o dati personali. Tr
 
 ## MSSQL
 
-Per una guida completa al servizio consulta [porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql).
+Per una guida completa al servizio consulta [porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/).
 
 ```bash
 nxc mssql 10.10.10.15 \
@@ -1280,7 +1280,7 @@ nxc smb 10.10.10.20 -d corp.local \
 
 Non utilizzare download indiscriminati su share aziendali. Prima restringi la ricerca per estensione, directory, dimensione e pertinenza; evita di raccogliere documenti personali o interi repository quando basta dimostrare l'accesso.
 
-Per operazioni manuali e verifica puntuale consulta [smbclient](https://hackita.it/articoli/smbclient).
+Per operazioni manuali e verifica puntuale consulta [smbclient](https://hackita.it/articoli/smbclient/).
 
 ***
 
@@ -1316,7 +1316,7 @@ Questa fase richiede privilegi elevati e genera evidenze sensibili. Prima di ese
 * quanto tempo mantenerli;
 * se sono esclusi Domain Controller, sistemi HR, backup o asset critici.
 
-Per il contesto metodologico consulta [credential dumping](https://hackita.it/articoli/credential-dumping) e [Impacket](https://hackita.it/articoli/impacket).
+Per il contesto metodologico consulta [credential dumping](https://hackita.it/articoli/credential-dumping/) e [Impacket](https://hackita.it/articoli/impacket/).
 
 ## Dump SAM
 
@@ -1468,7 +1468,7 @@ nxc smb 10.10.10.10 -d corp.local \
   -o TARGET=NTDS
 ```
 
-La replica tramite DRSUAPI è collegata alla tecnica [DCSync](https://hackita.it/articoli/dcsync). Non serve necessariamente “copiare fisicamente” `NTDS.dit`: il metodo predefinito può usare le API di replica.
+La replica tramite DRSUAPI è collegata alla tecnica [DCSync](https://hackita.it/articoli/dcsync/). Non serve necessariamente “copiare fisicamente” `NTDS.dit`: il metodo predefinito può usare le API di replica.
 
 ## Altri Secret Applicativi
 
@@ -1688,7 +1688,7 @@ CrackMapExec install
 CrackMapExec vs NetExec
 ```
 
-La guida [NetExec](https://hackita.it/articoli/netexec) deve invece posizionarsi sulle funzionalità correnti e sulle release moderne. Collegare le due pagine chiaramente riduce la confusione e trasforma il traffico legacy in un percorso di aggiornamento.
+La guida [NetExec](https://hackita.it/articoli/netexec/) deve invece posizionarsi sulle funzionalità correnti e sulle release moderne. Collegare le due pagine chiaramente riduce la confusione e trasforma il traffico legacy in un percorso di aggiornamento.
 
 ***
 
@@ -1891,7 +1891,7 @@ ccache leggibile
 servizio compatibile con Kerberos
 ```
 
-Per approfondire ticket, SPN e autenticazione consulta [Kerberos](https://hackita.it/articoli/kerberos), [Rubeus](https://hackita.it/articoli/rubeus) e [Impacket](https://hackita.it/articoli/impacket).
+Per approfondire ticket, SPN e autenticazione consulta [Kerberos](https://hackita.it/articoli/kerberos/), [Rubeus](https://hackita.it/articoli/rubeus/) e [Impacket](https://hackita.it/articoli/impacket/).
 
 ***
 
@@ -2056,7 +2056,7 @@ query LDAP concentrate verso un DC
 accessi /certsrv o endpoint amministrativi da workstation insolite
 ```
 
-Per la catena completa consulta [NTLM relay](https://hackita.it/articoli/ntlm-relay).
+Per la catena completa consulta [NTLM relay](https://hackita.it/articoli/ntlm-relay/).
 
 ***
 
@@ -2114,7 +2114,7 @@ Genera password amministrative locali uniche per host e limita rigorosamente chi
 * disabilita `DONT_REQ_PREAUTH` salvo casi documentati;
 * limita i diritti di replica;
 * monitora modifiche ad ACL, deleghe e gruppi privilegiati;
-* verifica periodicamente percorsi con [BloodHound](https://hackita.it/articoli/bloodhound).
+* verifica periodicamente percorsi con [BloodHound](https://hackita.it/articoli/bloodhound/).
 
 ***
 
@@ -2221,7 +2221,7 @@ Verifica porte, DNS e TLS:
 nmap -sV -p 389,636,3268,3269 10.10.10.10
 ```
 
-Poi consulta [porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap) e [ldapsearch](https://hackita.it/articoli/ldapsearch).
+Poi consulta [porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap/) e [ldapsearch](https://hackita.it/articoli/ldapsearch/).
 
 ## Modulo Non Trovato
 
@@ -2313,7 +2313,7 @@ Le vecchie build possono ancora funzionare in alcuni laboratori, ma il repositor
 
 ## Qual è il sostituto di CrackMapExec?
 
-Il sostituto operativo è [NetExec](https://hackita.it/articoli/netexec), che usa il binario `nxc` e mantiene la stessa filosofia con protocolli, moduli e dipendenze aggiornati.
+Il sostituto operativo è [NetExec](https://hackita.it/articoli/netexec/), che usa il binario `nxc` e mantiene la stessa filosofia con protocolli, moduli e dipendenze aggiornati.
 
 ## Come si installa CrackMapExec nel 2026?
 
@@ -2341,7 +2341,7 @@ Sì. Usa `-k` con credenziali o `--use-kcache` per usare la ccache indicata da `
 
 ## Posso autenticarmi con un certificato?
 
-Le versioni moderne di NetExec supportano certificati PFX e PEM su protocolli compatibili. Per scenari AD CS consulta [Certipy](https://hackita.it/articoli/certipy) e la guida [AD CS ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
+Le versioni moderne di NetExec supportano certificati PFX e PEM su protocolli compatibili. Per scenari AD CS consulta [Certipy](https://hackita.it/articoli/certipy/) e la guida [AD CS ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
 
 ## CrackMapExec è rumoroso?
 
@@ -2385,7 +2385,7 @@ Non fare affidamento su `--output` copiato da guide CME datate.
 
 ## NetExec può fare DCSync?
 
-Il comando `--ntds` può usare DRSUAPI per ottenere gli hash quando l'identità possiede i diritti necessari. La tecnica sottostante è collegata a [DCSync](https://hackita.it/articoli/dcsync).
+Il comando `--ntds` può usare DRSUAPI per ottenere gli hash quando l'identità possiede i diritti necessari. La tecnica sottostante è collegata a [DCSync](https://hackita.it/articoli/dcsync/).
 
 ## È sicuro usare NetExec in produzione?
 
@@ -2448,21 +2448,21 @@ REPORT
 
 Per approfondire le tecniche richiamate durante il workflow:
 
-* [NetExec](https://hackita.it/articoli/netexec) — successore moderno e guida operativa completa;
-* [Active Directory](https://hackita.it/articoli/active-directory) — architettura, oggetti e attacchi principali;
-* [SMB](https://hackita.it/articoli/smb) — protocollo, share, signing e superficie di attacco;
-* [NTLM relay](https://hackita.it/articoli/ntlm-relay) — relay, prerequisiti e mitigazioni;
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) — autenticazione con hash NT;
-* [Kerberoasting](https://hackita.it/articoli/kerberoasting) — service ticket e account SPN;
-* [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting) — account senza pre-autenticazione;
-* [BloodHound](https://hackita.it/articoli/bloodhound) — attack path e relazioni AD;
-* [DCSync](https://hackita.it/articoli/dcsync) — diritti di replica e impatto;
-* [Impacket](https://hackita.it/articoli/impacket) — strumenti Python per protocolli Windows;
-* [Evil-WinRM](https://hackita.it/articoli/evilwinrm) — shell interattiva WinRM;
-* [porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap) — enumerazione LDAP;
-* [porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql) — attacco e hardening SQL Server;
-* [RBCD](https://hackita.it/articoli/rbcd) — Resource-Based Constrained Delegation;
-* [Certipy](https://hackita.it/articoli/certipy) — enumerazione e abuso AD CS.
+* [NetExec](https://hackita.it/articoli/netexec/) — successore moderno e guida operativa completa;
+* [Active Directory](https://hackita.it/articoli/active-directory/) — architettura, oggetti e attacchi principali;
+* [SMB](https://hackita.it/articoli/smb/) — protocollo, share, signing e superficie di attacco;
+* [NTLM relay](https://hackita.it/articoli/ntlm-relay/) — relay, prerequisiti e mitigazioni;
+* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) — autenticazione con hash NT;
+* [Kerberoasting](https://hackita.it/articoli/kerberos/) — service ticket e account SPN;
+* [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/) — account senza pre-autenticazione;
+* [BloodHound](https://hackita.it/articoli/bloodhound/) — attack path e relazioni AD;
+* [DCSync](https://hackita.it/articoli/dcsync/) — diritti di replica e impatto;
+* [Impacket](https://hackita.it/articoli/impacket/) — strumenti Python per protocolli Windows;
+* [Evil-WinRM](https://hackita.it/articoli/evilwinrm/) — shell interattiva WinRM;
+* [porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap/) — enumerazione LDAP;
+* [porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/) — attacco e hardening SQL Server;
+* [RBCD](https://hackita.it/articoli/rbcd/) — Resource-Based Constrained Delegation;
+* [Certipy](https://hackita.it/articoli/certipy/) — enumerazione e abuso AD CS.
 
 Fonti primarie esterne da consultare per la sintassi installata:
 
@@ -2478,7 +2478,7 @@ Fonti primarie esterne da consultare per la sintassi installata:
 
 CrackMapExec ha definito il modo moderno di eseguire reconnaissance e post-exploitation su reti Windows: una sintassi coerente per passare dalla scoperta di SMB alla validazione delle credenziali, dall'enumerazione LDAP al lateral movement e, quando autorizzato, alla raccolta di credenziali.
 
-Oggi però il nome **CrackMapExec** va trattato come riferimento storico e keyword legacy. Per i comandi reali usa [NetExec](https://hackita.it/articoli/netexec), verifica ogni flag contro la release installata e non confondere l'automazione con la certezza tecnica: `(Pwn3d!)`, un modulo positivo o un login riuscito sono punti di partenza da contestualizzare, non conclusioni automatiche.
+Oggi però il nome **CrackMapExec** va trattato come riferimento storico e keyword legacy. Per i comandi reali usa [NetExec](https://hackita.it/articoli/netexec/), verifica ogni flag contro la release installata e non confondere l'automazione con la certezza tecnica: `(Pwn3d!)`, un modulo positivo o un login riuscito sono punti di partenza da contestualizzare, non conclusioni automatiche.
 
 La sequenza professionale resta:
 

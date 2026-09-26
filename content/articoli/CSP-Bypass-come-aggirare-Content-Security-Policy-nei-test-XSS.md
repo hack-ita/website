@@ -21,7 +21,7 @@ tags:
 
 Questa guida copre l'analisi di CSP e le tecniche di bypass più efficaci usate nei pentest professionali.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss)
+→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)
 
 ***
 

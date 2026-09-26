@@ -22,11 +22,11 @@ La **HTTP Header Injection** si verifica quando l'applicazione usa il valore di 
 
 La trovo nel **12% dei pentest web** — Host Header Poisoning nell'8%, X-Forwarded-For bypass nel 4%.
 
-Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa).
+Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/).
 
 ## Cos'è la HTTP Header Injection?
 
-La HTTP Header Injection è una classe di vulnerabilità in cui il valore di un **header HTTP della request** (controllato dall'attaccante) viene usato dall'applicazione in modo non sicuro: per generare URL (Host, X-Forwarded-Host), per decisioni di autorizzazione (X-Forwarded-For), per routing (X-Real-IP), o per contenuto della risposta. Include il **Host Header Poisoning**, il **bypass IP whitelist via X-Forwarded-For**, e la [CRLF Injection](https://hackita.it/articoli/crlf-injection) come sottotipo.
+La HTTP Header Injection è una classe di vulnerabilità in cui il valore di un **header HTTP della request** (controllato dall'attaccante) viene usato dall'applicazione in modo non sicuro: per generare URL (Host, X-Forwarded-Host), per decisioni di autorizzazione (X-Forwarded-For), per routing (X-Real-IP), o per contenuto della risposta. Include il **Host Header Poisoning**, il **bypass IP whitelist via X-Forwarded-For**, e la [CRLF Injection](https://hackita.it/articoli/crlf-injection/) come sottotipo.
 
 > **È pericolosa?**
 > Sì — il Host Header Poisoning porta a **password reset token theft** (account takeover), **cache poisoning** (contenuto malevolo servito a tutti via CDN), **SSRF** (il server si connette all'host dell'attaccante). L'X-Forwarded-For bypass porta a **accesso non autorizzato** a pannelli admin. Trovata nel **12% dei pentest web**.
@@ -164,6 +164,6 @@ L'endpoint `/forgot-password` generava il link di reset usando `request.host`. H
 
 ***
 
-Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [CRLF Injection](https://hackita.it/articoli/crlf-injection), [SSRF](https://hackita.it/articoli/ssrf).
+Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [CRLF Injection](https://hackita.it/articoli/crlf-injection/), [SSRF](https://hackita.it/articoli/ssrf/).
 
 > I tuoi reset password usano l'header Host? [Penetration test HackIta](https://hackita.it/servizi). Per padroneggiare le Header Injection: [formazione 1:1](https://hackita.it/formazione).

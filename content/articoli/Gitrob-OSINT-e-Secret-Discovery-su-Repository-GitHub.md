@@ -17,7 +17,7 @@ tags:
 
 Gitrob è un tool specializzato nel **scanning di repository Git** (GitHub, GitLab, Bitbucket) per identificare file potenzialmente sensibili, credenziali hardcoded, API keys, e altri segreti. Developers spesso committano accidentalmente password, chiavi private SSH, AWS credentials, e database dumps nei repository - Gitrob automatizza il processo di discovery di questi leaks.
 
-Il tool funziona clonando/analizzando tutti i repository di una GitHub organization o user, applicando pattern matching e signature detection per identificare file interessanti. A differenza di manual `git clone` + `grep`, Gitrob ha database di signatures per common secrets ([AWS](https://hackita.it/articoli/aws-privilege) keys, private keys, config files) e genera report web interattivi con findings categorizzati per severity.
+Il tool funziona clonando/analizzando tutti i repository di una GitHub organization o user, applicando pattern matching e signature detection per identificare file interessanti. A differenza di manual `git clone` + `grep`, Gitrob ha database di signatures per common secrets ([AWS](https://hackita.it/articoli/aws-privilege-escalation/) keys, private keys, config files) e genera report web interattivi con findings categorizzati per severity.
 
 Gitrob è critico in security assessments dove target ha presenza GitHub pubblica. Organizations con hundreds di repository, multiple team, e migliaia di commits possono involontariamente esporre secrets. Un singolo leaked AWS key può compromise entire cloud infrastructure. Bug bounty hunters usano Gitrob per quick wins: trovare exposed credentials è spesso reportable vulnerability.
 
@@ -284,7 +284,7 @@ done
 
 **Timeline:** 15 minuti scan + 30 minuti SSH testing against known infrastructure
 
-Per approfondire SSH key exploitation, consulta [lateral movement via compromised SSH keys](https://hackita.it/articoli/ssh).
+Per approfondire SSH key exploitation, consulta [lateral movement via compromised SSH keys](https://hackita.it/articoli/ssh/).
 
 ***
 
@@ -626,7 +626,7 @@ while read key; do
 done < aws_keys.txt
 ```
 
-Per automation di secret scanning in CI/CD, leggi [automated secret detection in development pipelines](https://hackita.it/articoli/secret-scanning-automation).
+Per automation di secret scanning in CI/CD, leggi [automated secret detection in development pipelines](https://hackita.it/articoli/secret-scanning-automation/).
 
 ### Comparazione tool
 

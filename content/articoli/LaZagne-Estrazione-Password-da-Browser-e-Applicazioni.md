@@ -15,7 +15,7 @@ tags:
   - credential dumping
 ---
 
-LaZagne è un tool open source Python che recupera **password salvate** da centinaia di applicazioni su Windows, Linux e macOS. A differenza di tool specifici per singole applicazioni, LaZagne supporta browser (Chrome, Firefox, Edge), client email (Outlook, Thunderbird), database ([MySQL](https://hackita.it/articoli/mysql), [PostgreSQL](https://hackita.it/articoli/postgresql)), WiFi, SSH, FTP clients, e molti altri.
+LaZagne è un tool open source Python che recupera **password salvate** da centinaia di applicazioni su Windows, Linux e macOS. A differenza di tool specifici per singole applicazioni, LaZagne supporta browser (Chrome, Firefox, Edge), client email (Outlook, Thunderbird), database ([MySQL](https://hackita.it/articoli/porta-3306-mysql/), [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql/)), WiFi, SSH, FTP clients, e molti altri.
 
 Il problema nel post-exploitation è che le credenziali sono ovunque: browser salvano password, client FTP memorizzano server credentials, applicazioni custom usano config files con password in chiaro. Cercare manualmente richiede ore e conoscenza specifica di ogni applicazione. LaZagne automatizza questo processo: esegui una volta, ottieni tutte le password recuperabili.
 
@@ -23,7 +23,7 @@ LaZagne è particolarmente potente per **lateral movement**: dopo aver compromes
 
 Il tool è scritto in Python ma ha build standalone (.exe per Windows) che non richiedono Python installato sul target. Supporta output in JSON, facilmente parsabile per automation. È mantenuto attivamente con update frequenti per supportare nuove applicazioni.
 
-In questo articolo imparerai come usare LaZagne su diverse piattaforme, interpretare l'output, integrazione con framework post-exploitation ([Metasploit](https://hackita.it/articoli/metasploit), [Cobalt Strike](https://hackita.it/articoli/cobalt-strike)), e come difendersi dal credential harvesting. Vedrai esempi pratici di lateral movement usando credenziali recuperate, e techniques per maximize recovery success.
+In questo articolo imparerai come usare LaZagne su diverse piattaforme, interpretare l'output, integrazione con framework post-exploitation ([Metasploit](https://hackita.it/articoli/metasploit/), [Cobalt Strike](https://hackita.it/articoli/cobalt-strike/)), e come difendersi dal credential harvesting. Vedrai esempi pratici di lateral movement usando credenziali recuperate, e techniques per maximize recovery success.
 
 ***
 
@@ -183,7 +183,7 @@ LaZagne.exe all -oJ
 cat LaZagne_output.json | jq '.[] | select(.Category == "browsers") | .Passwords'
 ```
 
-Per automation in pentest, consulta [automation di post-exploitation con Python e JSON parsing](https://hackita.it/articoli/pentest-automation-python).
+Per automation in pentest, consulta [automation di post-exploitation con Python e JSON parsing](https://hackita.it/articoli/pentest-automation-python/).
 
 ***
 
@@ -415,7 +415,7 @@ python -c "exec(open('laZagne.py').read())"
 # Modifica source code, ricompila con PyInstaller
 ```
 
-Se vuoi approfondire evasion techniques per post-exploitation tools, leggi [bypassing EDR in post-exploitation phase](https://hackita.it/articoli/edr-bypass-post-exploitation).
+Se vuoi approfondire evasion techniques per post-exploitation tools, leggi [bypassing EDR in post-exploitation phase](https://hackita.it/articoli/edr-bypass-post-exploitation/).
 
 ***
 

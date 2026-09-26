@@ -221,9 +221,9 @@ snmpwalk -v3 -u snmp-user -l authPriv -a SHA -A AuthPass123 -x AES -X PrivPass12
 
 Approfondisci le tecniche di enumerazione correlate in:
 
-* [https://hackita.it/articoli/snmp](https://hackita.it/articoli/snmp)
-* [https://hackita.it/articoli/nmap](https://hackita.it/articoli/nmap)
-* [https://hackita.it/articoli/pivoting](https://hackita.it/articoli/pivoting)
+* [https://hackita.it/articoli/snmp](https://hackita.it/articoli/snmp/)
+* [https://hackita.it/articoli/nmap](https://hackita.it/articoli/nmap/)
+* [https://hackita.it/articoli/pivoting](https://hackita.it/articoli/pivoting/)
 
 Riferimenti tecnici ufficiali e documentazione:
 

@@ -135,7 +135,7 @@ LIST
 :irc.corp.local 323 recon_test :End of /LIST
 ```
 
-**Lettura dell'output:** i topic dei canali espongono URL interni (`jenkins.corp.local:8080`, `tickets.corp.local`), IP di server (`10.10.20.50`) e struttura organizzativa. Il canale `#devops` rivela un Jenkins interno — target prioritario. Questa intelligence alimenta la fase successiva di [enumerazione dei servizi web](https://hackita.it/articoli/enumeration).
+**Lettura dell'output:** i topic dei canali espongono URL interni (`jenkins.corp.local:8080`, `tickets.corp.local`), IP di server (`10.10.20.50`) e struttura organizzativa. Il canale `#devops` rivela un Jenkins interno — target prioritario. Questa intelligence alimenta la fase successiva di [enumerazione dei servizi web](https://hackita.it/articoli/enumeration/).
 
 ### Enumerazione utenti per canale
 
@@ -153,7 +153,7 @@ WHO #devops
 :irc.corp.local 315 recon_test #devops :End of /WHO list.
 ```
 
-**Lettura dell'output:** hai nomi reali (`Juan Martin`, `Alice Smith`), hostname delle workstation (`ws-linux-42.corp.local`), IP (`10.10.10.45`, `10.10.10.99`) e un bot di deployment (`deploy_bot`). L'asterisco dopo `H` di deploy\_bot indica che è operatore IRC. I nomi utente (`jmartin`, `asmith`) sono probabilmente gli stessi usati per login Active Directory. Usa queste informazioni per costruire una wordlist mirata — approfondisci le tecniche di [username enumeration](https://hackita.it/articoli/bruteforce).
+**Lettura dell'output:** hai nomi reali (`Juan Martin`, `Alice Smith`), hostname delle workstation (`ws-linux-42.corp.local`), IP (`10.10.10.45`, `10.10.10.99`) e un bot di deployment (`deploy_bot`). L'asterisco dopo `H` di deploy\_bot indica che è operatore IRC. I nomi utente (`jmartin`, `asmith`) sono probabilmente gli stessi usati per login Active Directory. Usa queste informazioni per costruire una wordlist mirata — approfondisci le tecniche di [username enumeration](https://hackita.it/articoli/brute-force/).
 
 ### Script NSE specifici per IRC
 
@@ -196,7 +196,7 @@ WHOIS deploy_bot
 :irc.corp.local 318 recon_test deploy_bot :End of /WHOIS list.
 ```
 
-**Lettura dell'output:** il bot è IRC Operator (accesso privilegiato al server), connesso da IP 10.10.10.99, presente nei canali `#devops` e `#deploy-logs` (dove è operatore). Un bot di deployment con privilegi IRC operator che gira su un server dedicato è un target ad alta priorità per il [lateral movement](https://hackita.it/articoli/pivoting).
+**Lettura dell'output:** il bot è IRC Operator (accesso privilegiato al server), connesso da IP 10.10.10.99, presente nei canali `#devops` e `#deploy-logs` (dove è operatore). Un bot di deployment con privilegi IRC operator che gira su un server dedicato è un target ad alta priorità per il [lateral movement](https://hackita.it/articoli/pivoting/).
 
 ## 4. Tecniche Offensive sulla Porta 194 IRC
 
@@ -261,7 +261,7 @@ EOF
 :irc.corp.local 433 * sysadmin :Nickname is already in use
 ```
 
-**Cosa fai dopo:** se il nick è disponibile, sei dentro come "sysadmin". Le richieste di credenziali appaiono legittime nel contesto del canale. Questa è pura social engineering — documenta tutto per il report. Per tecniche avanzate di social engineering, consulta la [guida dedicata](https://hackita.it/articoli/socialengineering).
+**Cosa fai dopo:** se il nick è disponibile, sei dentro come "sysadmin". Le richieste di credenziali appaiono legittime nel contesto del canale. Questa è pura social engineering — documenta tutto per il report. Per tecniche avanzate di social engineering, consulta la [guida dedicata](https://hackita.it/articoli/socialengineer/).
 
 **Exploit UnrealIRCd Backdoor (CVE-2010-2075)**
 

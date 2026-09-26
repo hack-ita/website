@@ -16,11 +16,11 @@ tags:
 featured: true
 ---
 
-noPac è una delle catene di privilege escalation più pericolose mai viste in [Active Directory](https://hackita.it/articoli/active-directory). Combina **CVE-2021-42278** e **CVE-2021-42287** per far sì che il KDC tratti un machine account controllato dall'attaccante come se fosse il Domain Controller reale.
+noPac è una delle catene di privilege escalation più pericolose mai viste in [Active Directory](https://hackita.it/articoli/active-directory/). Combina **CVE-2021-42278** e **CVE-2021-42287** per far sì che il KDC tratti un machine account controllato dall'attaccante come se fosse il Domain Controller reale.
 
-Il risultato operativo è diretto: **impersonation del DC → [DCSync](https://hackita.it/articoli/dcsync) → compromissione del dominio**.
+Il risultato operativo è diretto: **impersonation del DC → [DCSync](https://hackita.it/articoli/dcsync/) → compromissione del dominio**.
 
-In un contesto offensivo reale, noPac è uno dei controlli più redditizi da provare appena ottieni credenziali valide. Se il dominio è vulnerabile, la catena **[password spraying](https://hackita.it/articoli/password-spraying) → noPac → DCSync** può trasformare un accesso basso in privilegio massimo in pochissimo tempo.
+In un contesto offensivo reale, noPac è uno dei controlli più redditizi da provare appena ottieni credenziali valide. Se il dominio è vulnerabile, la catena **[password spraying](https://hackita.it/articoli/password-spraying/) → noPac → DCSync** può trasformare un accesso basso in privilegio massimo in pochissimo tempo.
 
 ***
 
@@ -30,7 +30,7 @@ In un contesto offensivo reale, noPac è uno dei controlli più redditizi da pro
 | -------------------------------- | ---------------------------------------------------- |
 | **Auth richiesta**               | Solo un utente di dominio autenticato                |
 | **Vettore d'attacco**            | Errore logico nel flusso Kerberos/KDC                |
-| **Obiettivo finale**             | [DCSync](https://hackita.it/articoli/dcsync) diretto |
+| **Obiettivo finale**             | [DCSync](https://hackita.it/articoli/dcsync/) diretto |
 | **Rapporto impatto/complessità** | Altissimo                                            |
 
 A differenza di altre escalation più lunghe, qui non ti serve una catena complessa di ACL, delegation abuse o movimento laterale preliminare: se i prerequisiti sono presenti, l'exploit è rapido e molto efficace.
@@ -44,7 +44,7 @@ A differenza di altre escalation più lunghe, qui non ti serve una catena comple
 | **CVE**            | [CVE-2021-42278](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42278) + [CVE-2021-42287](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287) |
 | **Auth richiesta** | Qualsiasi utente di dominio                                                                                                                                                     |
 | **Prerequisito**   | `MachineAccountQuota > 0` oppure un machine account già controllato                                                                                                             |
-| **Impatto**        | Impersonation del DC → [DCSync](https://hackita.it/articoli/dcsync)                                                                                                             |
+| **Impatto**        | Impersonation del DC → [DCSync](https://hackita.it/articoli/dcsync/)                                                                                                             |
 | **Difficoltà**     | Bassa con exploit automatico                                                                                                                                                    |
 | **Patch**          | Novembre 2021                                                                                                                                                                   |
 
@@ -152,13 +152,13 @@ Oltre ai tool usati nell'exploit, ecco altri strumenti di **[Impacket](https://g
 
 | Tool                                                               | Descrizione                                                                 |
 | ------------------------------------------------------------------ | --------------------------------------------------------------------------- |
-| **[GetADUsers](https://hackita.it/articoli/getadusers)**           | Enumera utenti dal dominio                                                  |
-| **[GetADComputers](https://hackita.it/articoli/getadcomputers)**   | Recupera informazioni sui computer                                          |
-| **[GetNPUsers](https://hackita.it/articoli/getnpusers)**           | Cerca utenti con Kerberos pre-autenticazione disabilitata (AS-REP Roasting) |
-| **[GetLAPSPassword](https://hackita.it/articoli/getlapspassword)** | Estrae password LAPS da LDAP                                                |
-| **[samrdump](https://hackita.it/articoli/samrdump)**               | Dump degli account SAM                                                      |
-| **[rpcdump](https://hackita.it/articoli/rpcdump)**                 | Enumera endpoint RPC                                                        |
-| **[ntlmrelayx](https://hackita.it/articoli/ntlmrelayx)**           | Strumento avanzato per NTLM relay                                           |
+| **[GetADUsers](https://hackita.it/articoli/getadusers/)**           | Enumera utenti dal dominio                                                  |
+| **[GetADComputers](https://hackita.it/articoli/getadcomputers/)**   | Recupera informazioni sui computer                                          |
+| **[GetNPUsers](https://hackita.it/articoli/getnpusers/)**           | Cerca utenti con Kerberos pre-autenticazione disabilitata (AS-REP Roasting) |
+| **[GetLAPSPassword](https://hackita.it/articoli/getlapspassword/)** | Estrae password LAPS da LDAP                                                |
+| **[samrdump](https://hackita.it/articoli/samrdump/)**               | Dump degli account SAM                                                      |
+| **[rpcdump](https://hackita.it/articoli/rpcdump/)**                 | Enumera endpoint RPC                                                        |
+| **[ntlmrelayx](https://hackita.it/articoli/ntlmrelayx/)**           | Strumento avanzato per NTLM relay                                           |
 
 ***
 
@@ -216,7 +216,7 @@ La combinazione davvero efficace è: **patching + MAQ a zero + logging serio**.
 ## ❓ FAQ
 
 **Cos'è noPac?**\
-È una catena di privilege escalation che combina CVE-2021-42278 e CVE-2021-42287 per permettere a un utente di dominio di impersonare un Domain Controller e arrivare fino a [DCSync](https://hackita.it/articoli/dcsync).
+È una catena di privilege escalation che combina CVE-2021-42278 e CVE-2021-42287 per permettere a un utente di dominio di impersonare un Domain Controller e arrivare fino a [DCSync](https://hackita.it/articoli/dcsync/).
 
 **noPac funziona ancora nel 2026?**\
 Sì, ma solo su Domain Controller non correttamente patchati. In ambienti maturi è raro; in ambienti legacy è ancora molto pericoloso.

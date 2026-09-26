@@ -17,7 +17,7 @@ tags:
   - Desktop Hijacking
 ---
 
-X11 (X Window System) è il protocollo grafico che gestisce la visualizzazione del desktop su sistemi Linux e Unix. Ascolta sulla port 6000 TCP (display `:0`; display `:1` = porta 6001, e così via). Quando X11 è esposto sulla rete — cosa che non dovrebbe mai accadere ma che succede con sorprendente frequenza — un attaccante può **vedere in tempo reale tutto ciò che appare sullo schermo**, **registrare ogni tasto premuto** (keylogging) e **iniettare input** (tastiera e mouse) come se fosse seduto davanti al computer. A differenza di [VNC](https://hackita.it/articoli/porta-5900-vnc) che è un protocollo di condivisione desktop, X11 è il display server stesso — il livello più basso. Compromettere X11 significa avere il controllo totale dell'interfaccia grafica.
+X11 (X Window System) è il protocollo grafico che gestisce la visualizzazione del desktop su sistemi Linux e Unix. Ascolta sulla port 6000 TCP (display `:0`; display `:1` = porta 6001, e così via). Quando X11 è esposto sulla rete — cosa che non dovrebbe mai accadere ma che succede con sorprendente frequenza — un attaccante può **vedere in tempo reale tutto ciò che appare sullo schermo**, **registrare ogni tasto premuto** (keylogging) e **iniettare input** (tastiera e mouse) come se fosse seduto davanti al computer. A differenza di [VNC](https://hackita.it/articoli/porta-5900-vnc/) che è un protocollo di condivisione desktop, X11 è il display server stesso — il livello più basso. Compromettere X11 significa avere il controllo totale dell'interfaccia grafica.
 
 Il problema storico di X11 è il meccanismo di accesso: il comando `xhost +` disabilita completamente l'autenticazione, permettendo a qualsiasi host di connettersi. Questa configurazione è stata usata per decenni come "soluzione rapida" per far funzionare applicazioni grafiche remote e viene ancora trovata in ambienti legacy, server di sviluppo e sistemi accademici.
 
@@ -221,7 +221,7 @@ xdotool key --display 10.10.10.40:0 super+h
 
 ## 5. Leggere il Cookie Xauthority
 
-Se X11 non è completamente aperto (`xhost +`) ma usa MIT-MAGIC-COOKIE, il cookie `.Xauthority` è necessario per connettersi. Se lo ottieni (via [NFS](https://hackita.it/articoli/porta-2049-nfs), [SMB](https://hackita.it/articoli/smb), LFI o shell limitata):
+Se X11 non è completamente aperto (`xhost +`) ma usa MIT-MAGIC-COOKIE, il cookie `.Xauthority` è necessario per connettersi. Se lo ottieni (via [NFS](https://hackita.it/articoli/porta-2049-nfs/), [SMB](https://hackita.it/articoli/smb/), LFI o shell limitata):
 
 ```bash
 # Trova il file .Xauthority
@@ -267,7 +267,7 @@ Il keylogging via X11 cattura:
 
 ### Lateral movement
 
-Hostname e IP catturati dal keylogging o visibili nei terminali → nuovi target per la scansione. Credenziali → test su [SSH](https://hackita.it/articoli/ssh), [RDP](https://hackita.it/articoli/porta-3389-rdp), [MySQL](https://hackita.it/articoli/porta-3306-mysql).
+Hostname e IP catturati dal keylogging o visibili nei terminali → nuovi target per la scansione. Credenziali → test su [SSH](https://hackita.it/articoli/ssh/), [RDP](https://hackita.it/articoli/porta-3389-rdp/), [MySQL](https://hackita.it/articoli/porta-3306-mysql/).
 
 ## 7. Detection & Hardening
 

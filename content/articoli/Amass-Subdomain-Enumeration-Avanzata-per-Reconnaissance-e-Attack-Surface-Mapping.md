@@ -157,7 +157,7 @@ subfinder -d target.com -silent -o subfinder_results.txt
 cat amass_results.txt subfinder_results.txt | sort -u > all_subs.txt
 ```
 
-Amass e [Subfinder](https://hackita.it/articoli/subfinder) usano fonti parzialmente diverse. La combinazione massimizza la coverage.
+Amass e [Subfinder](https://hackita.it/articoli/subfinder/) usano fonti parzialmente diverse. La combinazione massimizza la coverage.
 
 ### Alterations per trovare varianti
 
@@ -221,7 +221,7 @@ amass track -d target.com
 
 **Flusso:**
 
-**Amass (subdomain enum)** → [Httpx](https://hackita.it/articoli/httpx) (probe) → [Aquatone](https://hackita.it/articoli/aquatone) (visual recon) → [Nuclei](https://hackita.it/articoli/nuclei) (vuln scan)
+**Amass (subdomain enum)** → [Httpx](https://hackita.it/articoli/httpx/) (probe) → [Aquatone](https://hackita.it/articoli/aquatone/) (visual recon) → [Nuclei](https://hackita.it/articoli/nuclei/) (vuln scan)
 
 | Tool        | Fonti | Bruteforce | Alterations | API support | Velocità |
 | ----------- | ----- | ---------- | ----------- | ----------- | -------- |

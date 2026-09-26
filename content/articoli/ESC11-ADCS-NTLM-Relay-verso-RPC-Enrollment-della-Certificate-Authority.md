@@ -19,7 +19,7 @@ tags:
   - esc
 ---
 
-ESC11 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che sfrutta **NTLM Relay verso l’interfaccia RPC della Certificate Authority**. A differenza di [ESC8](https://hackita.it/articoli/esc8-adcs), che colpisce gli endpoint web `/certsrv/`, ESC11 prende di mira direttamente l’interfaccia **RPC usata dai client per richiedere certificati**.
+ESC11 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che sfrutta **NTLM Relay verso l’interfaccia RPC della Certificate Authority**. A differenza di [ESC8](https://hackita.it/articoli/esc8-adcs/), che colpisce gli endpoint web `/certsrv/`, ESC11 prende di mira direttamente l’interfaccia **RPC usata dai client per richiedere certificati**.
 
 Questa interfaccia utilizza RPC per operazioni di enrollment tramite API come:
 
@@ -219,7 +219,7 @@ Un attacco di **NTLM relay verso l’interfaccia RPC della Certificate Authority
 
 ### ESC11 è simile a ESC8?
 
-Sì, ma [ESC8](https://hackita.it/articoli/esc8-adcs) colpisce gli endpoint web `/certsrv/`.
+Sì, ma [ESC8](https://hackita.it/articoli/esc8-adcs/) colpisce gli endpoint web `/certsrv/`.
 
 ESC11 colpisce **RPC enrollment interface**.
 
@@ -239,8 +239,8 @@ No. Basta coercion NTLM verso il relay.
 
 > ESC11 è uno dei certificate attacks più potenti contro AD CS.
 > Per vedere tutte le tecniche consulta la guida completa:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Continua con le escalation successive:
-> [https://hackita.it/articoli/esc12-adcs](https://hackita.it/articoli/esc12-adcs) · [https://hackita.it/articoli/esc13-adcs](https://hackita.it/articoli/esc13-adcs)Supporta HackIta:
+> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)Continua con le escalation successive:
+> [https://hackita.it/articoli/esc12-adcs](https://hackita.it/articoli/esc12-adcs/) · [https://hackita.it/articoli/esc13-adcs](https://hackita.it/articoli/esc13-adcs/)Supporta HackIta:
 > [https://hackita.it/supporto](https://hackita.it/supporto)Vuoi imparare pentesting Active Directory o testare la sicurezza della tua infrastruttura?
 > [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
 > [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)

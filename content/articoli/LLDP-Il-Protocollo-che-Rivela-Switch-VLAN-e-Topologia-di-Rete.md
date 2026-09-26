@@ -112,7 +112,7 @@ Un pentester che sa leggere il traffico LLDP ottiene immediatamente:
 
 Tutto questo senza inviare un solo pacchetto attivo. Pura reconnaissance passiva.
 
-Per capire il livello su cui operano i frame LLDP, leggi l'articolo su [Ethernet IEEE 802.3](https://hackita.it/articoli/ethernet-ieee-802-3). Per approfondire le VLAN rivelate da LLDP-MED, vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan).
+Per capire il livello su cui operano i frame LLDP, leggi l'articolo su [Ethernet IEEE 802.3](https://hackita.it/articoli/ethernet-ieee-802-3/). Per approfondire le VLAN rivelate da LLDP-MED, vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan/).
 
 ***
 
@@ -172,13 +172,13 @@ Le informazioni raccolte da LLDP alimentano direttamente la fase di exploitation
 * **VLAN IDs** rivelati: base per pianificare VLAN hopping verso segmenti più sensibili
 * **PortID** identifica la porta fisica: in ambienti con port security, conoscere la porta aiuta a capire i controlli in atto
 
-Integra questa reconnaissance con [Nmap](https://hackita.it/articoli/nmap) sugli IP di management identificati e con tecniche di [sniffing](https://hackita.it/articoli/sniffing) per catturare ulteriore traffico di gestione.
+Integra questa reconnaissance con [Nmap](https://hackita.it/articoli/nmap/) sugli IP di management identificati e con tecniche di [sniffing](https://hackita.it/articoli/sniffing/) per catturare ulteriore traffico di gestione.
 
 ### Pivoting verso la rete di management
 
-Gli indirizzi IP di management degli switch sono spesso in una VLAN dedicata. Conoscere quella VLAN (rivelata da LLDP) è il primo passo per tentare un accesso diretto al pannello di amministrazione o per pianificare un attacco di [VLAN hopping](https://hackita.it/articoli/vlan).
+Gli indirizzi IP di management degli switch sono spesso in una VLAN dedicata. Conoscere quella VLAN (rivelata da LLDP) è il primo passo per tentare un accesso diretto al pannello di amministrazione o per pianificare un attacco di [VLAN hopping](https://hackita.it/articoli/vlan/).
 
-Se il pannello usa Telnet o HTTP (ancora comune in ambienti legacy), le credenziali viaggiano in chiaro e possono essere catturate con tecniche di [man-in-the-middle](https://hackita.it/articoli/man-in-the-middle).
+Se il pannello usa Telnet o HTTP (ancora comune in ambienti legacy), le credenziali viaggiano in chiaro e possono essere catturate con tecniche di [man-in-the-middle](https://hackita.it/articoli/man-in-the-middle/).
 
 ***
 
@@ -287,7 +287,7 @@ Sulle porte di accesso verso gli end-user, LLDP non dovrebbe mai essere attivo i
 
 ### Separare la rete di management
 
-Gli IP di management rivelati da LLDP non dovrebbero essere raggiungibili dalla rete dati. Isola la rete di management in una VLAN dedicata con ACL restrittive. Vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan).
+Gli IP di management rivelati da LLDP non dovrebbero essere raggiungibili dalla rete dati. Isola la rete di management in una VLAN dedicata con ACL restrittive. Vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan/).
 
 ### Monitorare le neighbor table
 
@@ -295,7 +295,7 @@ Configura alerting sulle variazioni della neighbor table LLDP degli switch. Un n
 
 ### 802.1X per autenticare i dispositivi
 
-Prima che un host possa connettersi alla rete e ricevere frame LLDP, autenticalo tramite 802.1X. Riduce drasticamente la superficie esposta. Vedi [Ethernet e sicurezza L2](https://hackita.it/articoli/ethernet-ieee-802-3).
+Prima che un host possa connettersi alla rete e ricevere frame LLDP, autenticalo tramite 802.1X. Riduce drasticamente la superficie esposta. Vedi [Ethernet e sicurezza L2](https://hackita.it/articoli/ethernet-ieee-802-3/).
 
 ***
 
@@ -344,13 +344,13 @@ Usalo. E poi vai a chiudere quella superficie di attacco nel tuo report.
 
 Approfondisci i protocolli e le tecniche correlate:
 
-* [ARP: discovery e spoofing](https://hackita.it/articoli/arp)
-* [Ethernet IEEE 802.3: il livello sottostante](https://hackita.it/articoli/ethernet-ieee-802-3)
-* [VLAN e 802.1Q: segmentazione e hopping](https://hackita.it/articoli/vlan)
-* [Sniffing su reti locali](https://hackita.it/articoli/sniffing)
-* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle)
-* [Nmap: reconnaissance e port scanning](https://hackita.it/articoli/nmap)
-* [STP e RSTP: sicurezza dello spanning tree](https://hackita.it/articoli/stp)
+* [ARP: discovery e spoofing](https://hackita.it/articoli/arp/)
+* [Ethernet IEEE 802.3: il livello sottostante](https://hackita.it/articoli/ethernet-ieee-802-3/)
+* [VLAN e 802.1Q: segmentazione e hopping](https://hackita.it/articoli/vlan/)
+* [Sniffing su reti locali](https://hackita.it/articoli/sniffing/)
+* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle/)
+* [Nmap: reconnaissance e port scanning](https://hackita.it/articoli/nmap/)
+* [STP e RSTP: sicurezza dello spanning tree](https://hackita.it/articoli/stp/)
 
 Riferimento ufficiale: [IEEE 802.1AB — Station and Media Access Control Connectivity Discovery](https://standards.ieee.org/ieee/802.1AB/6047/)
 

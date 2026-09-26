@@ -100,7 +100,7 @@ Last Changed Date: 2026-01-14 17:30:00 +0100
 Last Changed Rev: 1523
 ```
 
-**Intelligence:** 1523 revisioni (molta history da analizzare), ultimo commit di `j.smith` → username valido per [brute force SSH](https://hackita.it/articoli/ssh) o [RDP](https://hackita.it/articoli/porta-3389-rdp).
+**Intelligence:** 1523 revisioni (molta history da analizzare), ultimo commit di `j.smith` → username valido per [brute force SSH](https://hackita.it/articoli/ssh/) o [RDP](https://hackita.it/articoli/porta-3389-rdp/).
 
 ## 2. Checkout — Scaricare il Repository
 
@@ -153,7 +153,7 @@ AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 JWT_SECRET=super_secret_jwt_key_2025
 ```
 
-Credenziali per [MySQL](https://hackita.it/articoli/porta-3306-mysql), [Redis](https://hackita.it/articoli/porta-6379-redis), [AWS](https://hackita.it/articoli/aws-privilege-escalation) e JWT secret.
+Credenziali per [MySQL](https://hackita.it/articoli/porta-3306-mysql/), [Redis](https://hackita.it/articoli/porta-6379-redis/), [AWS](https://hackita.it/articoli/aws-privilege-escalation/) e JWT secret.
 
 ```bash
 # Configurazioni applicative
@@ -282,7 +282,7 @@ m.rossi
 svc_build
 ```
 
-Cinque username → target per [brute force](https://hackita.it/articoli/vulnerability-exploitation) su SSH, RDP, VPN, web login.
+Cinque username → target per [brute force](https://hackita.it/articoli/vulnerability-exploitation/) su SSH, RDP, VPN, web login.
 
 ## 5. SVN via HTTP (Apache mod\_dav\_svn)
 

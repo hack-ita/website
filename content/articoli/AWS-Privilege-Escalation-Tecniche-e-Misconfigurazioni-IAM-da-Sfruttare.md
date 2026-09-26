@@ -495,7 +495,7 @@ aws s3 cp s3://corp-backup-prod/db_dump.sql /tmp/
 
 ## 4. IMDS e Metadata — Credenziali dalle Istanze
 
-Se hai accesso a un'istanza EC2 (via [SSRF](https://hackita.it/articoli/ssrf), [SSH](https://hackita.it/articoli/ssh), webshell):
+Se hai accesso a un'istanza EC2 (via [SSRF](https://hackita.it/articoli/ssrf/), [SSH](https://hackita.it/articoli/ssh/), webshell):
 
 ```bash
 # IMDSv1 (deprecato ma ancora comune)

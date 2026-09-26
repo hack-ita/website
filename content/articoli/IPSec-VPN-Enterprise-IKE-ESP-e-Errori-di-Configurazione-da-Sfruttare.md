@@ -123,7 +123,7 @@ IPSec è complesso da configurare correttamente. Ogni fase — scelta degli algo
 * **Configurazioni split-tunnel:** possono essere sfruttate per raggiungere reti interne
 * **Certificati self-signed o scaduti:** VPN client che accettano qualsiasi certificato
 
-Per il tunneling GRE spesso usato insieme a IPSec, vedi [GRE](https://hackita.it/articoli/gre-generic-routing-encapsulation). Per il livello IP su cui opera, vedi [IP Internet Protocol](https://hackita.it/articoli/ip-internet-protocol).
+Per il tunneling GRE spesso usato insieme a IPSec, vedi [GRE](https://hackita.it/articoli/gre-generic-routing-encapsulation/). Per il livello IP su cui opera, vedi [IP Internet Protocol](https://hackita.it/articoli/ip-internet-protocol/).
 
 ***
 
@@ -380,13 +380,13 @@ In un engagement, enumerare endpoint IPSec con ike-scan spesso rivela configuraz
 
 Approfondisci i protocolli correlati:
 
-* [IP Internet Protocol: il livello di rete](https://hackita.it/articoli/ip-internet-protocol)
-* [GRE: tunneling e GRE over IPSec](https://hackita.it/articoli/gre-generic-routing-encapsulation)
-* [IPv4 e IPv6: IPSec su entrambi](https://hackita.it/articoli/ipv4-ipv6)
-* [VPN: tecnologie e sicurezza](https://hackita.it/articoli/vpn)
-* [Nmap: service detection su UDP](https://hackita.it/articoli/nmap)
-* [PPP e L2TP: VPN a livello 2](https://hackita.it/articoli/ppp-point-to-point-protocol)
-* [Sniffing e analisi del traffico cifrato](https://hackita.it/articoli/sniffing)
+* [IP Internet Protocol: il livello di rete](https://hackita.it/articoli/ip-internet-protocol/)
+* [GRE: tunneling e GRE over IPSec](https://hackita.it/articoli/gre-generic-routing-encapsulation/)
+* [IPv4 e IPv6: IPSec su entrambi](https://hackita.it/articoli/ipv4-ipv6/)
+* [VPN: tecnologie e sicurezza](https://hackita.it/articoli/vpn/)
+* [Nmap: service detection su UDP](https://hackita.it/articoli/nmap/)
+* [PPP e L2TP: VPN a livello 2](https://hackita.it/articoli/ppp-point-to-point-protocol/)
+* [Sniffing e analisi del traffico cifrato](https://hackita.it/articoli/sniffing/)
 
 Riferimento ufficiale: [RFC 4301 — Security Architecture for the Internet Protocol](https://datatracker.ietf.org/doc/html/rfc4301)
 

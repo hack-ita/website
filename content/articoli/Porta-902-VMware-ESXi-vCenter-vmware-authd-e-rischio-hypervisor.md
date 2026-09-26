@@ -149,7 +149,7 @@ govc ls /ha-datacenter/vm/
 /ha-datacenter/vm/FileServer
 ```
 
-**Lettura dell'output:** quattro VM ospitate — incluso un DC (`DC01`), un SQL server e un file server. Compromettere l'ESXi significa compromettere tutte queste macchine. Per la [compromissione AD via hypervisor](https://hackita.it/articoli/active-directory), il dump della memoria del DC estrae le credenziali in chiaro.
+**Lettura dell'output:** quattro VM ospitate — incluso un DC (`DC01`), un SQL server e un file server. Compromettere l'ESXi significa compromettere tutte queste macchine. Per la [compromissione AD via hypervisor](https://hackita.it/articoli/active-directory/), il dump della memoria del DC estrae le credenziali in chiaro.
 
 ### Lista snapshot e datastore
 
@@ -219,7 +219,7 @@ Administrator:500:aad3b435...:a1b2c3d4e5f6a7b8...
 krbtgt:502:aad3b435...:f1e2d3c4b5a69788...
 ```
 
-**Cosa fai dopo:** hash NTLM di Administrator e krbtgt estratti dalla memoria. Con l'hash di krbtgt puoi creare un [Golden Ticket](https://hackita.it/articoli/kerberos). Questo è il path più devastante: hypervisor → DC memory → Domain Admin.
+**Cosa fai dopo:** hash NTLM di Administrator e krbtgt estratti dalla memoria. Con l'hash di krbtgt puoi creare un [Golden Ticket](https://hackita.it/articoli/kerberos/). Questo è il path più devastante: hypervisor → DC memory → Domain Admin.
 
 **Mount VMDK offline**
 

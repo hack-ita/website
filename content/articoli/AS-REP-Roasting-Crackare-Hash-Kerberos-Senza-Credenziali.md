@@ -275,7 +275,7 @@ Sei nella rete interna ma non hai ancora credenziali di dominio. Hai però una l
 3. Crachi l'hash in pochi minuti: password `Summer2023!`
 4. Con quelle credenziali entri nel dominio e inizi l'enumerazione AD
 
-Da lì puoi passare a [Kerberoasting](https://hackita.it/articoli/kerberoasting/) per espandere l'accesso verso i service account.
+Da lì puoi passare a [Kerberoasting](https://hackita.it/articoli/kerberos/) per espandere l'accesso verso i service account.
 
 ***
 

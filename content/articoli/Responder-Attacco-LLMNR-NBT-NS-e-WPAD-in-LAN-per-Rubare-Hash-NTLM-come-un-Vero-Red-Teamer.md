@@ -374,7 +374,7 @@ sudo python3 Responder.py -I eth0 -wFb
 [HTTP] NTLMv2 Hash     : john.doe::CORP:1122334455667788:E8D3F1A9...
 ```
 
-Per approfondimenti su protocolli di rete, vedi la [guida Netcat](https://hackita.it/articoli/netcat).
+Per approfondimenti su protocolli di rete, vedi la [guida Netcat](https://hackita.it/articoli/netcat/).
 
 ## Cracking Hash: Tecniche Rapide
 
@@ -543,7 +543,7 @@ admin                    guest                    DefaultAccount
 
 **Hai shell su macchina remota senza sapere password!**
 
-Per tecniche SMB avanzate, consulta la [guida smbclient](https://hackita.it/articoli/smbclient).
+Per tecniche SMB avanzate, consulta la [guida smbclient](https://hackita.it/articoli/smbclient/).
 
 ## Privilege Escalation: Da User a Domain Admin
 
@@ -1000,7 +1000,7 @@ Di solito primi hash arrivano in 15-30 minuti in rete attiva.
 
 * [Responder GitHub Ufficiale](https://github.com/lgandx/Responder)
 * [Impacket per Pass-the-Hash](https://github.com/SecureAuthCorp/impacket)
-* [Guida Netcat Network Tools](https://hackita.it/articoli/netcat)
-* [SMBClient Enumeration Guide](https://hackita.it/articoli/smbclient)
+* [Guida Netcat Network Tools](https://hackita.it/articoli/netcat/)
+* [SMBClient Enumeration Guide](https://hackita.it/articoli/smbclient/)
 
 **Disclaimer Legale:** Tutte le tecniche descritte sono esclusivamente per scopi educativi e penetration testing autorizzato. L'utilizzo di Responder su reti non di proprietà senza esplicito consenso scritto costituisce reato penale in tutte le giurisdizioni. Ottieni sempre autorizzazione formale documentata prima di qualsiasi test di sicurezza.

@@ -18,7 +18,7 @@ tags:
   - Cluster Admin
 ---
 
-Il Kubernetes API Server è il cervello di ogni cluster Kubernetes: ogni operazione — dal deploy di un container alla lettura di un secret — passa attraverso la sua REST API sulla porta 6443 TCP (HTTPS). Nel penetration testing, un API server esposto o un ServiceAccount token rubato è il finding più critico in ambienti cloud-native: dà accesso a **tutti i secret** (credenziali database, API key, certificati TLS), a **tutti i container** (con possibilità di eseguire comandi dentro ciascuno), e alla capacità di **deployare container privilegiati** che danno accesso root ai nodi sottostanti — il classico [container escape](https://hackita.it/articoli/container-escape).
+Il Kubernetes API Server è il cervello di ogni cluster Kubernetes: ogni operazione — dal deploy di un container alla lettura di un secret — passa attraverso la sua REST API sulla porta 6443 TCP (HTTPS). Nel penetration testing, un API server esposto o un ServiceAccount token rubato è il finding più critico in ambienti cloud-native: dà accesso a **tutti i secret** (credenziali database, API key, certificati TLS), a **tutti i container** (con possibilità di eseguire comandi dentro ciascuno), e alla capacità di **deployare container privilegiati** che danno accesso root ai nodi sottostanti — il classico [container escape](https://hackita.it/articoli/container-escape/).
 
 Nel 2026, Kubernetes è l'orchestratore dominante: AWS EKS, Azure AKS, Google GKE e cluster on-premise. Ogni cloud provider lo usa. Compromettere il Kubernetes API significa compromettere l'intera infrastruttura applicativa.
 
@@ -240,7 +240,7 @@ echo "VzNiQXBwX0RCXzIwMjUh" | base64 -d
 # W3bApp_DB_2025!
 ```
 
-Credenziali [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql)/[MySQL](https://hackita.it/articoli/porta-3306-mysql) in chiaro.
+Credenziali [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql/)/[MySQL](https://hackita.it/articoli/porta-3306-mysql/) in chiaro.
 
 ```bash
 # Dump TUTTI i secret in un colpo
@@ -265,7 +265,7 @@ Script che decodifica ed espone ogni credenziale del cluster.
 kubectl get secret aws-credentials -n production -o jsonpath='{.data.AWS_SECRET_ACCESS_KEY}' | base64 -d
 ```
 
-→ [AWS privilege escalation](https://hackita.it/articoli/aws-privilege-escalation).
+→ [AWS privilege escalation](https://hackita.it/articoli/aws-privilege-escalation/).
 
 ## 5. RCE — Eseguire Comandi nei Pod
 
@@ -358,7 +358,7 @@ root@node-01:/# cat /etc/shadow
 
 **Root sul nodo** — sei uscito dal container. Ora: dump credenziali di tutti i pod sul nodo, accesso alla rete dell'host, pivoting verso altri nodi e servizi.
 
-Per la guida completa: [Container Escape](https://hackita.it/articoli/container-escape).
+Per la guida completa: [Container Escape](https://hackita.it/articoli/container-escape/).
 
 ## 7. etcd — Il Database dei Secret (porta 2379)
 

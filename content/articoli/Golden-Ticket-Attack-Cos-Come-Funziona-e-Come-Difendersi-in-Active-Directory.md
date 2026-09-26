@@ -114,7 +114,7 @@ Phishing, VPN vulnerabile, server esposto. Ora sei su una macchina interna.
 
 **2. Privilege Escalation**
 
-* **[Kerberoasting](https://hackita.it/articoli/kerberoasting/)** (T1558.003): Richiedi TGS di account con SPN, li cracki offline con hashcat.
+* **[Kerberoasting](https://hackita.it/articoli/kerberos/)** (T1558.003): Richiedi TGS di account con SPN, li cracki offline con hashcat.
 * **[AS-REP Roasting](https://hackita.it/articoli/asrep-roasting/)** (T1558.004): Utenti senza pre-autenticazione → crack offline AS-REP.
 * **ACL Abuse ([BloodHound](https://hackita.it/articoli/bloodhound/))**: Trovi path verso Domain Admin via GenericAll, WriteDACL, e simili. BloodHound è un tool che mappa graficamente le relazioni di fiducia e le ACL in AD — con "Shortest Path to Domain Admin" trovi il percorso più breve verso il tuo obiettivo.
 * **Zerologon / PetitPotam / PrintNightmare**: Vulnerabilità critiche che danno accesso diretto al DC.
@@ -477,7 +477,7 @@ Il doppio reset va eseguito sul PDC Emulator. La replica verso tutti i DC può r
 
 Il Golden Ticket raramente opera in isolamento. In un engagement reale lo trovi concatenato con:
 
-* **[Kerberoasting](https://hackita.it/articoli/kerberoasting/) (T1558.003)**: Per l'escalation iniziale. TGS di servizi → crack offline.
+* **[Kerberoasting](https://hackita.it/articoli/kerberos/) (T1558.003)**: Per l'escalation iniziale. TGS di servizi → crack offline.
 * **[AS-REP Roasting](https://hackita.it/articoli/asrep-roasting/) (T1558.004)**: Utenti senza pre-autenticazione → crack offline.
 * **[Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/) (T1550.003)**: Movimento laterale con ticket estratti da LSASS.
 * **[Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) (T1550.002)**: Per host che non supportano Kerberos.
@@ -734,7 +734,7 @@ La difesa corretta inizia prima: mappare i path verso krbtgt con [BloodHound](ht
 * [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/)
 * [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/)
 * [DCSync](https://hackita.it/articoli/dcsync/)
-* [Kerberoasting](https://hackita.it/articoli/kerberoasting/)
+* [Kerberoasting](https://hackita.it/articoli/kerberos/)
 * [AS-REP Roasting](https://hackita.it/articoli/asrep-roasting/)
 * [Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/)
 * [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)

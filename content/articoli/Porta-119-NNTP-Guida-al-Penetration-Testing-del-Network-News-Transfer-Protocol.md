@@ -373,7 +373,7 @@ Subject: Homework 1 submission
 Date: 5 Feb 2026
 ```
 
-**Email harvested:** `[email protected]` → target per [phishing](https://hackita.it/articoli/phishing).
+**Email harvested:** `[email protected]` → target per [phishing](https://hackita.it/articoli/phishing/).
 
 ```bash
 # Iterate articles, extract all From: headers

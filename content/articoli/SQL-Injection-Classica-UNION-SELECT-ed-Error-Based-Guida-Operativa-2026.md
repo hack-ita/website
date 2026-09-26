@@ -22,7 +22,7 @@ La SQL Injection classica (In-Band) è il tipo più diretto: inietti SQL, i dati
 
 La trovo nel **18% dei pentest web** — percentuale che sale al 25% se includo le API. Quando è In-Band, il dump del database completo richiede **minuti, non ore**. È la differenza tra un finding documentato e un data breach dimostrato nel report.
 
-Satellite operativo della [guida pillar SQL Injection](https://hackita.it/articoli/sql-injection). Vedi anche: [Blind SQL Injection](https://hackita.it/articoli/blind-sql-injection), [Time-Based SQL Injection](https://hackita.it/articoli/time-based-sql-injection).
+Satellite operativo della [guida pillar SQL Injection](https://hackita.it/articoli/sql-injection/). Vedi anche: [Blind SQL Injection](https://hackita.it/articoli/blind-sql-injection/), [Time-Based SQL Injection](https://hackita.it/articoli/time-based-sql-injection/).
 
 ***
 
@@ -141,7 +141,7 @@ Il database restituisce errori che contengono i dati che chiedi. Ogni DBMS ha le
 
 Il UNION SELECT è la tecnica più potente: i dati estratti appaiono direttamente dove normalmente appaiono i risultati della query.
 
-Per automatizzare completamente l’exploitation e velocizzare il dump del database, puoi usare **[sqlmap](https://hackita.it/articoli/sqlmap)**, che identifica automaticamente il tipo di SQL Injection, estrae database, tabelle e credenziali e permette anche escalation a RCE.
+Per automatizzare completamente l’exploitation e velocizzare il dump del database, puoi usare **[sqlmap](https://hackita.it/articoli/sqlmap/)**, che identifica automaticamente il tipo di SQL Injection, estrae database, tabelle e credenziali e permette anche escalation a RCE.
 
 ### Step 1 → Trova il numero di colonne (ORDER BY)
 
@@ -465,7 +465,7 @@ EXPLOITATION
 
 ***
 
-Satellite della [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection). Vedi anche: [Blind SQL Injection](https://hackita.it/articoli/blind-sql-injection), [Time-Based SQL Injection](https://hackita.it/articoli/time-based-sql-injection), [SQLi su API REST](https://hackita.it/articoli/sql-injection-api-rest).
+Satellite della [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection/). Vedi anche: [Blind SQL Injection](https://hackita.it/articoli/blind-sql-injection/), [Time-Based SQL Injection](https://hackita.it/articoli/time-based-sql-injection/), [SQLi su API REST](https://hackita.it/articoli/sql-injection-api-rest/).
 
 > I tuoi parametri resistono a una quote? `UNION SELECT` è bloccato dal WAF? [Penetration test applicativo HackIta](https://hackita.it/servizi) per testare ogni punto di injection. Dalla quote al dump: [formazione 1:1](https://hackita.it/formazione).
 

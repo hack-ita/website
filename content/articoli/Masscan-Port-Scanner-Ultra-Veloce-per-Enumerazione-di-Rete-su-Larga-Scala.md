@@ -17,7 +17,7 @@ tags:
 
 A differenza degli scanner tradizionali, utilizza uno stack TCP/IP asincrono proprietario, indipendente dal kernel del sistema operativo. Questo elimina i limiti di gestione delle connessioni e permette performance irraggiungibili con approcci convenzionali.
 
-In un engagement di penetration testing o Red Team, Masscan copre la fase di **Reconnaissance (MITRE ATT\&CK T1046)** ed è il tool ideale per la mappatura iniziale di grandi infrastrutture, prima di passare a strumenti di enumerazione più approfondita come [Nmap](https://hackita.it/articoli/nmap).
+In un engagement di penetration testing o Red Team, Masscan copre la fase di **Reconnaissance (MITRE ATT\&CK T1046)** ed è il tool ideale per la mappatura iniziale di grandi infrastrutture, prima di passare a strumenti di enumerazione più approfondita come [Nmap](https://hackita.it/articoli/nmap/).
 
 In questa guida analizziamo calibrazione del rate, gestione del rumore, formati di output, integrazione con Nmap per service detection e scenari operativi reali su reti enterprise.
 
@@ -305,7 +305,7 @@ Masscan è il primo anello della catena di recon. Trova velocemente cosa è aper
 
 **Flusso operativo:**
 
-**Masscan (port discovery)** → Nmap (service detection) → [Gobuster](https://hackita.it/articoli/gobuster)/[Dirsearch](https://hackita.it/articoli/dirsearch) (web enum su porte HTTP trovate) → Exploit
+**Masscan (port discovery)** → Nmap (service detection) → [Gobuster](https://hackita.it/articoli/gobuster/)/[Dirsearch](https://hackita.it/articoli/dirsearch/) (web enum su porte HTTP trovate) → Exploit
 
 **Passaggio dati concreto:**
 
@@ -355,7 +355,7 @@ Identifichi un MSSQL Server su 10.5.20.15 con autenticazione SQL abilitata.
 
 **Fase 3 — Initial Access (15 min)**
 
-Bruteforce credenziali SQL con [CredNinja](https://hackita.it/articoli/credninja) o Hydra. Trovi `sa:Password1`.
+Bruteforce credenziali SQL con [CredNinja](https://hackita.it/articoli/credninja/) o Hydra. Trovi `sa:Password1`.
 
 **Fase 4 — Privilege Escalation (10 min)**
 
@@ -370,7 +370,7 @@ Command execution via xp\_cmdshell.
 
 **Fase 5 — Persistence (2 min)**
 
-Scheduled task per callback ricorrente (cfr. articolo [Scheduled Task](https://hackita.it/articoli/scheduled-task)).
+Scheduled task per callback ricorrente (cfr. articolo [Scheduled Task](https://hackita.it/articoli/scheduled-task/)).
 
 **Timeline totale:** \~62 minuti dal primo pacchetto alla persistenza.
 

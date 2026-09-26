@@ -17,7 +17,7 @@ tags:
   - ntlm-relay
 ---
 
-La porta 137 espone **NetBIOS Name Service** (NBT-NS) — il protocollo legacy Microsoft per risoluzione nomi NetBIOS su reti Windows pre-DNS, operante come broadcast name resolution che permette ai client di trovare host tramite nomi NetBIOS flat (WORKSTATION01, FILE-SERVER) invece di FQDN. NetBIOS-NS usa UDP porta 137 per query/response broadcast sulla LAN, consentendo a ogni host di rispondere "io sono FILE-SERVER, il mio IP è 10.10.10.50". In penetration testing Active Directory, la porta 137 è **vettore primario per MITM attacks**: NBT-NS poisoning tramite [Responder](https://hackita.it/articoli/responder), credential relay attacks, name resolution hijacking per SMB authentication capture, e network reconnaissance passivo via broadcast monitoring. Ogni rete Windows legacy con NetBIOS abilitato (default Windows 7/8/Server 2008-2012) è vulnerable a **Responder credential theft** — da NBT-NS response spoofing a NTLM hash capture in secondi.
+La porta 137 espone **NetBIOS Name Service** (NBT-NS) — il protocollo legacy Microsoft per risoluzione nomi NetBIOS su reti Windows pre-DNS, operante come broadcast name resolution che permette ai client di trovare host tramite nomi NetBIOS flat (WORKSTATION01, FILE-SERVER) invece di FQDN. NetBIOS-NS usa UDP porta 137 per query/response broadcast sulla LAN, consentendo a ogni host di rispondere "io sono FILE-SERVER, il mio IP è 10.10.10.50". In penetration testing Active Directory, la porta 137 è **vettore primario per MITM attacks**: NBT-NS poisoning tramite [Responder](https://hackita.it/articoli/responder/), credential relay attacks, name resolution hijacking per SMB authentication capture, e network reconnaissance passivo via broadcast monitoring. Ogni rete Windows legacy con NetBIOS abilitato (default Windows 7/8/Server 2008-2012) è vulnerable a **Responder credential theft** — da NBT-NS response spoofing a NTLM hash capture in secondi.
 
 NetBIOS porta 137 sopravvive nel 2026 nonostante deprecazione Microsoft perché: Windows backward compatibility (abilitato di default fino Windows 10 1607), legacy applications hardcoded con NetBIOS names, e corporate environments con Windows 7/Server 2008 ancora operativi (40%+ enterprise secondo Gartner 2025). Modern Windows 10/11 disabilita NetBIOS by default su nuove installazioni ma upgrade da Windows 7/8 preserva configurazione legacy. Alternative (DNS, LLMNR multicast) esistono ma NetBIOS resta fallback universale quando DNS fails. In CTF/AD labs, porta 137 monitoring è **instant win** — Responder capture credentials in minuti su reti non-hardened.
 
@@ -403,13 +403,13 @@ RECONNAISSANCE
 
 CREDENTIAL HARVESTING
 │
-├─ [Responder](https://hackita.it/articoli/responder) → NBT-NS/LLMNR poisoning
+├─ [Responder](https://hackita.it/articoli/responder/) → NBT-NS/LLMNR poisoning
 ├─ NTLM hash capture → hashcat cracking
 └─ Relay attack → direct code execution
 
 EXPLOITATION
 │
-├─ A) Cracked credentials → [SMB](https://hackita.it/articoli/smb) access
+├─ A) Cracked credentials → [SMB](https://hackita.it/articoli/smb/) access
 ├─ B) NTLM relay → RCE without cracking
 ├─ C) Name conflict → MITM file sharing
 └─ D) Passive intel → targeted attacks
@@ -417,7 +417,7 @@ EXPLOITATION
 LATERAL MOVEMENT
 │
 ├─ WMI/DCOM via harvested creds
-├─ [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) attacks
+├─ [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) attacks
 └─ Credential spray across network
 ```
 
@@ -647,7 +647,7 @@ Responder target entrambi simultaneously.
 
 **Quale tool è migliore per NBT-NS pentest?**
 
-**[Responder](https://hackita.it/articoli/responder)** (credential harvest), **impacket-ntlmrelayx** (relay attacks), **nbtscan** (reconnaissance).
+**[Responder](https://hackita.it/articoli/responder/)** (credential harvest), **impacket-ntlmrelayx** (relay attacks), **nbtscan** (reconnaissance).
 
 ***
 

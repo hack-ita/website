@@ -21,7 +21,7 @@ tags:
 
 È il tipo di XSS più difficile da trovare automaticamente e più facile da non patchare — perché richiede di leggere e capire il JavaScript dell'applicazione, non solo l'HTML della response.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss)
+→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)
 
 ***
 

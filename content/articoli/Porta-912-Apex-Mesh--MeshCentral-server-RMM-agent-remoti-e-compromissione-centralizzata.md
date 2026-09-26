@@ -184,7 +184,7 @@ curl -sk https://10.10.10.60:912/api/meshes \
 }
 ```
 
-**Lettura dell'output:** 57 endpoint gestiti — 45 workstation e 12 server. Tutti raggiungibili via terminal remoto dalla console mesh. Per l'attacco a [servizi Windows gestiti](https://hackita.it/articoli/active-directory), hai accesso diretto a ogni macchina.
+**Lettura dell'output:** 57 endpoint gestiti — 45 workstation e 12 server. Tutti raggiungibili via terminal remoto dalla console mesh. Per l'attacco a [servizi Windows gestiti](https://hackita.it/articoli/active-directory/), hai accesso diretto a ogni macchina.
 
 ## 4. Tecniche Offensive
 
@@ -207,7 +207,7 @@ curl -sk -X POST https://10.10.10.60:912/api/device/terminal \
 nt authority\system
 ```
 
-**Cosa fai dopo:** hai shell SYSTEM sull'endpoint. Puoi eseguire qualsiasi comando, scaricare file, installare persistenza. Ripeti per ogni endpoint nel mesh — hai accesso a tutti. Per il [post-exploitation su Windows](https://hackita.it/articoli/post-exploitation), estrai credenziali con mimikatz/secretsdump.
+**Cosa fai dopo:** hai shell SYSTEM sull'endpoint. Puoi eseguire qualsiasi comando, scaricare file, installare persistenza. Ripeti per ogni endpoint nel mesh — hai accesso a tutti. Per il [post-exploitation su Windows](https://hackita.it/articoli/post-exploitation/), estrai credenziali con mimikatz/secretsdump.
 
 **File download da endpoint**
 
@@ -227,7 +227,7 @@ curl -sk https://10.10.10.60:912/api/device/files \
 {"files": ["passwords.xlsx", "vpn_config.ovpn", "budget_2026.docx"]}
 ```
 
-**Cosa fai dopo:** scarica i file sensibili. `passwords.xlsx` è un finding critico. Le configurazioni VPN permettono [accesso alla rete interna](https://hackita.it/articoli/vpn).
+**Cosa fai dopo:** scarica i file sensibili. `passwords.xlsx` è un finding critico. Le configurazioni VPN permettono [accesso alla rete interna](https://hackita.it/articoli/vpn/).
 
 **Push command a tutti gli endpoint**
 
@@ -256,7 +256,7 @@ npm install meshcentral
 # Gli agent si connetteranno al tuo server se puoi fare DNS poisoning/MitM
 ```
 
-**Cosa fai dopo:** gli agent che si connettono al tuo server sono sotto il tuo controllo. Questo richiede un MitM a livello DNS — consulta la [guida al DNS poisoning](https://hackita.it/articoli/dns).
+**Cosa fai dopo:** gli agent che si connettono al tuo server sono sotto il tuo controllo. Questo richiede un MitM a livello DNS — consulta la [guida al DNS poisoning](https://hackita.it/articoli/dns/).
 
 ## 5. Scenari Pratici di Pentest
 

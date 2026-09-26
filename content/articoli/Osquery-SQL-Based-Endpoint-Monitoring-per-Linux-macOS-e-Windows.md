@@ -76,13 +76,13 @@ WHERE pos.remote_address NOT LIKE '10.%' AND pos.remote_address NOT LIKE '172.16
 AND pos.remote_address NOT LIKE '192.168.%' AND pos.remote_address != '127.0.0.1';
 ```
 
-### Chiavi [SSH](https://hackita.it/articoli/ssh) autorizzate
+### Chiavi [SSH](https://hackita.it/articoli/ssh/) autorizzate
 
 ```sql
 SELECT * FROM authorized_keys;
 ```
 
-### Binari [SUID](https://hackita.it/articoli/suid)
+### Binari [SUID](https://hackita.it/articoli/suid/)
 
 ```sql
 SELECT path, permissions FROM suid_bin;
@@ -108,7 +108,7 @@ SELECT * FROM systemd_units WHERE active_state = 'active';
 osqueryi --json "SELECT pid, name, remote_address, remote_port FROM process_open_sockets WHERE state='ESTABLISHED'" | jq .
 ```
 
-### Enumerazione per [privilege escalation](https://hackita.it/articoli/linux-privesc)
+### Enumerazione per [privilege escalation](https://hackita.it/articoli/linux-privesc/)
 
 ```sql
 SELECT path, permissions FROM suid_bin WHERE path NOT LIKE '/usr/bin%' AND path NOT LIKE '/usr/sbin%';
@@ -147,7 +147,7 @@ SELECT * FROM hash WHERE path LIKE '/tmp/%';
 
 ## 6️⃣ Toolchain Integration
 
-**Flusso:** Shell → **Osqueryi (system enum)** → [Lynis](https://hackita.it/articoli/lynis) (hardening) → Exploit privesc
+**Flusso:** Shell → **Osqueryi (system enum)** → [Lynis](https://hackita.it/articoli/lynis/) (hardening) → Exploit privesc
 
 ***
 

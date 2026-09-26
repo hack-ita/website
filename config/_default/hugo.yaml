@@ -8,7 +8,16 @@ outputFormats:
     mediaType: application/xml
     isPlainText: false
     notAlternative: true
+  llms:
+    baseName: llms
+    mediaType: text/plain
+    isPlainText: true
+    notAlternative: true
 outputs:
+  home:
+    - html
+    - rss
+    - llms
   section:
     - html
     - articolisitemap
@@ -16,3 +25,10 @@ outputs:
 baseURL: 'https://hackita.it'
 languageCode: it
 title: Ethical Hacking | Pentest e Sicurezza Informatica | Hackita
+
+# Google Analytics 4. Paste the client's Measurement ID (G-XXXXXXXXXX) below to
+# activate. While empty, Hugo's internal GA template emits nothing, so the site
+# ships without a tracker until the ID is provided.
+services:
+  googleAnalytics:
+    ID: 'G-8WZE2PK022'

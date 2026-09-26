@@ -96,7 +96,7 @@ ACCOUNT FOUND: [ssh] Host: 192.168.1.100 User: admin Password: admin123 [SUCCESS
 
 ## Attacchi su Multipli Host
 
-La vera forza di Medusa emerge negli attacchi distribuiti su molti target. Invece di scriptare cicli [bash](https://hackita.it/articoli/bash), puoi passare direttamente un file con la lista:
+La vera forza di Medusa emerge negli attacchi distribuiti su molti target. Invece di scriptare cicli [bash](https://hackita.it/articoli/bash/), puoi passare direttamente un file con la lista:
 
 ```bash
 medusa -H targets.txt -u administrator -P passwords.txt -M ssh -T 32
@@ -138,7 +138,7 @@ Per specificare un dominio Windows:
 medusa -h 192.168.1.100 -u admin -P passwords.txt -M smbnt -m DOMAIN:CORP
 ```
 
-Dopo aver trovato credenziali valide, puoi procedere con lateral movement usando [CrackMapExec](https://hackita.it/articoli/crackmapexec) o PsExec.
+Dopo aver trovato credenziali valide, puoi procedere con lateral movement usando [CrackMapExec](https://hackita.it/articoli/crackmapexec/) o PsExec.
 
 ## Attacchi HTTP
 
@@ -152,7 +152,7 @@ medusa -h 192.168.1.100 -u admin -P passwords.txt -M http -m DIR:/admin
 
 Il parametro `-m DIR:/admin` specifica il path protetto da autenticazione.
 
-Per form HTTP POST la configurazione è più complessa e in questi casi spesso conviene usare [Hydra](https://hackita.it/articoli/hydra) o [Patator](https://hackita.it/articoli/patator) che hanno sintassi più intuitive per i form web.
+Per form HTTP POST la configurazione è più complessa e in questi casi spesso conviene usare [Hydra](https://hackita.it/articoli/hydra/) o [Patator](https://hackita.it/articoli/patator/) che hanno sintassi più intuitive per i form web.
 
 ## Attacchi Database
 
@@ -210,7 +210,7 @@ medusa -h 192.168.1.100 -u admin -P passwords.txt -M ssh -v 4
 
 Immagina di dover testare credenziali default su un'intera subnet durante un penetration test. Ecco un workflow completo:
 
-Prima identifica tutti gli host con SSH attivo usando [nmap](https://hackita.it/articoli/nmap):
+Prima identifica tutti gli host con SSH attivo usando [nmap](https://hackita.it/articoli/nmap/):
 
 ```bash
 nmap -p 22 --open 192.168.1.0/24 -oG - | grep "22/open" | cut -d " " -f 2 > ssh_hosts.txt
@@ -235,7 +235,7 @@ Il file `common_users.txt` dovrebbe contenere utenti tipici come root, admin, ad
 | Facilità HTTP form        | Bassa  | Media | Alta     |
 | Gestione CSRF             | No     | No    | Sì       |
 
-Usa Medusa quando: hai molti host, attacchi lunghi, necessiti stabilità. Usa [Hydra](https://hackita.it/articoli/hydra) per attacchi singoli e veloci. Usa [Patator](https://hackita.it/articoli/patator) per form complessi con token dinamici.
+Usa Medusa quando: hai molti host, attacchi lunghi, necessiti stabilità. Usa [Hydra](https://hackita.it/articoli/hydra/) per attacchi singoli e veloci. Usa [Patator](https://hackita.it/articoli/patator/) per form complessi con token dinamici.
 
 ## Troubleshooting
 

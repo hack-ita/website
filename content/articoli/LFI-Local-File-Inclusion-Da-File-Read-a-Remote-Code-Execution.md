@@ -16,13 +16,13 @@ tags:
   - lfi
 ---
 
-Il [Path Traversal](https://hackita.it/articoli/path-traversal) legge i file. La **LFI** li legge E li **esegue**. È la differenza tra spiare dalla finestra e avere le chiavi di casa. In PHP, `include()` e `require()` non si limitano a leggere un file — lo **interpretano come codice PHP**. Se l'attaccante controlla quale file viene incluso, e quel file contiene codice (iniettato dall'attaccante o già presente), il risultato è **Remote Code Execution**.
+Il [Path Traversal](https://hackita.it/articoli/path-traversal/) legge i file. La **LFI** li legge E li **esegue**. È la differenza tra spiare dalla finestra e avere le chiavi di casa. In PHP, `include()` e `require()` non si limitano a leggere un file — lo **interpretano come codice PHP**. Se l'attaccante controlla quale file viene incluso, e quel file contiene codice (iniettato dall'attaccante o già presente), il risultato è **Remote Code Execution**.
 
-La LFI è la vulnerabilità che preferisco nei pentest perché ha **molteplici percorsi verso la RCE**: PHP wrappers nativi (`filter`, `input`, `data`, `expect`), la tecnica **PHP filter chain** del 2024 che dà RCE pura senza prerequisiti, il [log poisoning](https://hackita.it/articoli/log-injection) tramite User-Agent, il session poisoning, `/proc/self/environ`. Anche quando la LFI sembra "solo" un file read, quasi sempre trovo un modo per escalare a esecuzione di codice.
+La LFI è la vulnerabilità che preferisco nei pentest perché ha **molteplici percorsi verso la RCE**: PHP wrappers nativi (`filter`, `input`, `data`, `expect`), la tecnica **PHP filter chain** del 2024 che dà RCE pura senza prerequisiti, il [log poisoning](https://hackita.it/articoli/log-injection/) tramite User-Agent, il session poisoning, `/proc/self/environ`. Anche quando la LFI sembra "solo" un file read, quasi sempre trovo un modo per escalare a esecuzione di codice.
 
 La trovo nel **12% dei pentest web**, principalmente su applicazioni PHP. Delle LFI che trovo, riesco a escalare a RCE nel **70% dei casi** — una percentuale che è salita drasticamente dal 2023 grazie alla tecnica PHP filter chain.
 
-Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa).
+Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/).
 
 ## Cos'è la LFI?
 
@@ -775,6 +775,6 @@ if (isset($allowed[$lang])) {
 
 ***
 
-Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa). Vedi anche: [Path Traversal](https://hackita.it/articoli/path-traversal), [RFI](https://hackita.it/articoli/rfi), [Log Injection](https://hackita.it/articoli/log-injection), [Arbitrary File Read](https://hackita.it/articoli/arbitrary-file-read).
+Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/). Vedi anche: [Path Traversal](https://hackita.it/articoli/path-traversal/), [RFI](https://hackita.it/articoli/rfi/), [Log Injection](https://hackita.it/articoli/log-injection/), [Arbitrary File Read](https://hackita.it/articoli/arbitrary-file-read/).
 
 > I tuoi `include()` accettano input utente? [Penetration test applicativo HackIta](https://hackita.it/servizi) per trovare ogni LFI — dalla lettura source code alla RCE via filter chain. Per padroneggiare l'exploitation dalla LFI al Domain Admin: [formazione 1:1](https://hackita.it/formazione).

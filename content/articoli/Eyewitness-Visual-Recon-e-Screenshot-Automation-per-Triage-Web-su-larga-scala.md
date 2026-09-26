@@ -19,7 +19,7 @@ Quando in un engagement ti ritrovi con 150, 300 o 800 host web attivi, il proble
 
 EyeWitness nasce proprio per questo: prende una lista di target e li trasforma in una panoramica visiva completa. Ogni servizio web viene renderizzato, fotografato e inserito in un report strutturato. In pochi minuti puoi vedere login panel, console amministrative, pagine di errore, ambienti di staging dimenticati o applicazioni legacy ancora esposte.
 
-Il valore reale non è lo screenshot in sé, ma il contesto. EyeWitness associa informazioni tecniche, classifica i risultati e crea un output pronto per essere integrato nel report finale. Dopo una fase di enumerazione con [https://hackita.it/articoli/nmap](https://hackita.it/articoli/nmap), diventa lo strumento che ti permette di passare dal “c’è una porta 8080 aperta” al “questa è una console Jenkins accessibile”.
+Il valore reale non è lo screenshot in sé, ma il contesto. EyeWitness associa informazioni tecniche, classifica i risultati e crea un output pronto per essere integrato nel report finale. Dopo una fase di enumerazione con [https://hackita.it/articoli/nmap](https://hackita.it/articoli/nmap/), diventa lo strumento che ti permette di passare dal “c’è una porta 8080 aperta” al “questa è una console Jenkins accessibile”.
 
 Si inserisce nella fase di Reconnaissance come strumento di triage e documentazione: accelera l’analisi, migliora la qualità delle evidenze e riduce drasticamente il tempo necessario per organizzare i risultati di un assessment web su larga scala.
 
@@ -227,14 +227,14 @@ grep "open" results.txt | awk '{print $4":"$3}' > web_targets.txt
 python3 EyeWitness.py -f web_targets.txt -d eyewitness_out
 ```
 
-### EyeWitness → [Nikto](https://hackita.it/articoli/nikto)
+### EyeWitness → [Nikto](https://hackita.it/articoli/nikto/)
 
 ```bash
 cat eyewitness_output/report.json | jq -r '.[] | select(.status == 200) | .url' > live.txt
 nikto -h live.txt -o nikto_results.txt
 ```
 
-### vs [Aquatone](https://hackita.it/articoli/aquatone)
+### vs [Aquatone](https://hackita.it/articoli/aquatone/)
 
 ```bash
 # Run both

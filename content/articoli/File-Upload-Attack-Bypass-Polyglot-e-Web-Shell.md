@@ -15,17 +15,17 @@ tags:
   - web shell
 ---
 
-Ogni applicazione web moderna ha un upload: immagine profilo, allegato email, CV in PDF, documento di identità, fattura. Lo sviluppatore implementa un filtro — controlla l'estensione, il Content-Type, i magic bytes. L'attaccante bypassa il filtro. Carica un file che **sembra** un'immagine ma **è** codice PHP. Il web server lo esegue. Da quel momento l'attaccante ha una [web shell](https://hackita.it/articoli/web-shell) — una shell permanente accessibile da qualsiasi browser, senza VPN, senza reverse connection, senza lasciare tracce di connessione.
+Ogni applicazione web moderna ha un upload: immagine profilo, allegato email, CV in PDF, documento di identità, fattura. Lo sviluppatore implementa un filtro — controlla l'estensione, il Content-Type, i magic bytes. L'attaccante bypassa il filtro. Carica un file che **sembra** un'immagine ma **è** codice PHP. Il web server lo esegue. Da quel momento l'attaccante ha una [web shell](https://hackita.it/articoli/web-shell/) — una shell permanente accessibile da qualsiasi browser, senza VPN, senza reverse connection, senza lasciare tracce di connessione.
 
 Il File Upload Attack è tra le vulnerabilità più gratificanti nel penetration testing perché il risultato è **RCE immediata e persistente**. Non è un'injection che devi rifare ogni volta — la shell resta lì, disponibile, finché qualcuno non la trova e la cancella. E con le tecniche giuste (polyglot con exiftool, .htaccess overwrite, Nginx path confusion), anche i filtri più sofisticati si bypassano.
 
 La trovo nel **15% dei pentest web**. Il dato che fa riflettere: nel **60% dei casi** il filtro è solo client-side (JavaScript nel browser) e basta Burp Suite per bypassarlo completamente. Nel restante 40% con filtri server-side, il bypass richiede più tecnica ma riesce nel **70% dei casi** usando le tecniche combinate di questa guida.
 
-Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa).
+Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/).
 
 ## Cos'è il File Upload Attack?
 
-Un File Upload Attack sfrutta la funzionalità di upload dell'applicazione per caricare **file eseguibili** (PHP, JSP, ASP, ASPX) che il web server interpreterà come codice. L'obiettivo è ottenere RCE caricando una [web shell](https://hackita.it/articoli/web-shell) raggiungibile via browser nella document root. L'attaccante bypassa i controlli sull'estensione, il Content-Type e i magic bytes del file per far accettare un file malevolo che l'applicazione tratta come legittimo.
+Un File Upload Attack sfrutta la funzionalità di upload dell'applicazione per caricare **file eseguibili** (PHP, JSP, ASP, ASPX) che il web server interpreterà come codice. L'obiettivo è ottenere RCE caricando una [web shell](https://hackita.it/articoli/web-shell/) raggiungibile via browser nella document root. L'attaccante bypassa i controlli sull'estensione, il Content-Type e i magic bytes del file per far accettare un file malevolo che l'applicazione tratta come legittimo.
 
 > **Il File Upload Attack è pericoloso?**
 > Sì — porta a **RCE diretta e persistente** tramite web shell. Una volta caricata e raggiungibile, l'attaccante ha accesso permanente al server da qualsiasi browser nel mondo. Trovato nel **15% dei pentest web**. Il 60% dei filtri è solo client-side — bypass in 10 secondi con Burp.
@@ -854,6 +854,6 @@ move_uploaded_file($_FILES['file']['tmp_name'], $dest);
 
 ***
 
-Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa). Vedi anche: [Web Shell](https://hackita.it/articoli/web-shell), [LFI](https://hackita.it/articoli/lfi), [Path Traversal](https://hackita.it/articoli/path-traversal).
+Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/). Vedi anche: [Web Shell](https://hackita.it/articoli/web-shell/), [LFI](https://hackita.it/articoli/lfi/), [Path Traversal](https://hackita.it/articoli/path-traversal/).
 
 > I tuoi upload validano lato server? La directory di upload è eseguibile? `cgi.fix_pathinfo` è a 1? [Penetration test applicativo HackIta](https://hackita.it/servizi) per trovare ogni vettore di upload prima degli attaccanti. Per padroneggiare il bypass dal polyglot alla shell: [formazione 1:1](https://hackita.it/formazione).

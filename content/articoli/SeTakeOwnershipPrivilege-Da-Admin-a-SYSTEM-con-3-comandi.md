@@ -346,9 +346,9 @@ SeTakeOwnershipPrivilege è il master key per qualsiasi oggetto Windows protetto
 
 **Articoli correlati:**
 
-* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege) — scrittura bypass ACL diretta, un passo solo
-* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege) — lettura bypass ACL senza toccare ownership
-* [SeRelabelPrivilege](https://hackita.it/articoli/serelabelprivilege) — bypass del layer MIC, complementare
+* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege/) — scrittura bypass ACL diretta, un passo solo
+* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege/) — lettura bypass ACL senza toccare ownership
+* [SeRelabelPrivilege](https://hackita.it/articoli/serelabelprivilege/) — bypass del layer MIC, complementare
 
 **Riferimenti:** [SetACL](https://helgeklein.com/setacl/) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/take-ownership-of-files-or-other-objects)
 

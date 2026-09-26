@@ -17,7 +17,7 @@ tags:
 
 ## Cos'è Shodan
 
-Shodan è il motore di ricerca che indicizza dispositivi e servizi esposti su Internet, non pagine web. Scansiona continuamente l'intero spazio IPv4 pubblico (4.3 miliardi di indirizzi) raccogliendo banner, certificati, metadata e servizi esposti: porte [TCP](https://hackita.it/articoli/tcp)/[UDP](https://hackita.it/articoli/udp) aperte come webcam, router, server MongoDB, sistemi SCADA industriali, database senza autenticazione, pannelli di amministrazione esposti.
+Shodan è il motore di ricerca che indicizza dispositivi e servizi esposti su Internet, non pagine web. Scansiona continuamente l'intero spazio IPv4 pubblico (4.3 miliardi di indirizzi) raccogliendo banner, certificati, metadata e servizi esposti: porte [TCP](https://hackita.it/articoli/tcp/)/[UDP](https://hackita.it/articoli/udp/) aperte come webcam, router, server MongoDB, sistemi SCADA industriali, database senza autenticazione, pannelli di amministrazione esposti.
 
 Il database contiene snapshot storici: vedi non solo lo stato attuale di un dispositivo, ma anche quando è apparso online e quali vulnerabilità sono state patchate (o ignorate). Utile per threat intelligence, attack surface monitoring, ricerca honeypot.
 
@@ -287,7 +287,7 @@ IP: 198.51.100.10
   Severity: CRITICAL (CVSS 10.0)
 ```
 
-Per la verifica automatica delle CVE trovate, vedi [Nuclei](https://hackita.it/articoli/nuclei).
+Per la verifica automatica delle CVE trovate, vedi [Nuclei](https://hackita.it/articoli/nuclei/).
 
 ### Scenario 3 — Industrial Control Systems (ICS/SCADA)
 
@@ -402,7 +402,7 @@ IP: 52.44.199.87 (AWS us-west-2)
 2. Troppi risultati → aggiungi specificità: `org:"Amazon" city:"Virginia" product:nginx`
 3. Dati non aggiornati → Shodan aggiorna ogni \~30 giorni, valuta uno scan on-demand: `shodan scan submit <ip>`
 
-Per la parte di sfruttamento successiva alla discovery (es. metadata cloud raggiungibili), vedi [SSRF e cloud metadata](https://hackita.it/articoli/ssrf).
+Per la parte di sfruttamento successiva alla discovery (es. metadata cloud raggiungibili), vedi [SSRF e cloud metadata](https://hackita.it/articoli/ssrf/).
 
 ***
 
@@ -468,7 +468,7 @@ production_db   2.345GB
 
 **Totale:** \~5 minuti da query Shodan a conferma della vulnerabilità. Senza Shodan, individuare questo host tra milioni di IP avrebbe richiesto giorni di scanning manuale.
 
-Se vuoi approfondire come si sfrutta un MongoDB esposto una volta trovato, leggi [porta 27017 MongoDB](https://hackita.it/articoli/porta-27017-mongodb).
+Se vuoi approfondire come si sfrutta un MongoDB esposto una volta trovato, leggi [porta 27017 MongoDB](https://hackita.it/articoli/porta-27017-mongodb/).
 
 ***
 
@@ -736,10 +736,10 @@ Non esiste una procedura di rimozione ufficiale. Puoi solo bloccare i range IP d
 
 | **Scenario**             | **Query Shodan**                                                                                                               |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| MongoDB senza auth       | `mongodb port:27017 -authentication` — approfondisci su [porta 27017 MongoDB](https://hackita.it/articoli/porta-27017-mongodb) |
-| Elasticsearch aperto     | `port:9200 "cluster_name"` — approfondisci su [porta 9200 Elasticsearch](https://hackita.it/articoli/porta-9200-elasticsearch) |
+| MongoDB senza auth       | `mongodb port:27017 -authentication` — approfondisci su [porta 27017 MongoDB](https://hackita.it/articoli/porta-27017-mongodb/) |
+| Elasticsearch aperto     | `port:9200 "cluster_name"` — approfondisci su [porta 9200 Elasticsearch](https://hackita.it/articoli/porta-9200-elasticsearch/) |
 | Webcam esposte           | `"Server: SQ-WEBCAM"`                                                                                                          |
-| RDP esposto              | `port:3389 country:US` — approfondisci su [porta 3389 RDP](https://hackita.it/articoli/porta-3389-rdp)                         |
+| RDP esposto              | `port:3389 country:US` — approfondisci su [porta 3389 RDP](https://hackita.it/articoli/porta-3389-rdp/)                         |
 | Log4Shell                | `vuln:CVE-2021-44228`                                                                                                          |
 | ICS/SCADA                | `port:502` (Modbus) / `port:102` (Siemens)                                                                                     |
 | SSH versione specifica   | `product:"OpenSSH" version:"7.4"`                                                                                              |

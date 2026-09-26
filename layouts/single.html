@@ -105,7 +105,7 @@
           {{ .TableOfContents }}
         </div>
         <div class="relative h-[20vh] shrink-0 mt-5">
-          <a href="https://shop.hackita.it" target="_blank" class="absolute inset-0 z-10"></a>
+          <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="absolute inset-0 z-10"></a>
           <img src='{{ "images/shop_link_wide.jpeg" | relURL }}' alt="Banner Hackita Shop: felpa, magliette e zaino della collezione 'Mentalità Offensiva' — scopri lo shop Hackita" class="size-full absolute inset-0 object-cover">
         </div>
       </div>
@@ -118,7 +118,7 @@
 {{ if eq .Section "articoli" }}
 <div class="bg-mask pt-10 hidden lg:block">
   <div class="relative h-80 max-w-7xl mx-auto">
-    <a href="https://shop.hackita.it" target="_blank" class="size-full absolute inset-0 z-10"></a>
+    <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="size-full absolute inset-0 z-10"></a>
     <img src='{{ "images/shop_link_wider.jpeg" | relURL }}' alt="Banner Hackita Shop: figura incappucciata con felpa, magliette e zaino del merchandising 'Mentalità Offensiva' — scopri lo shop Hackita" class="size-full absolute inset-0 object-cover">
   </div>
 </div>

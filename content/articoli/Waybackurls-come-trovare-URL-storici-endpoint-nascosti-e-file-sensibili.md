@@ -128,7 +128,7 @@ Endpoint API storici che potrebbero essere ancora attivi o parzialmente funziona
 echo "target.com" | waybackurls | grep "?" | sort -u > params.txt
 ```
 
-URL con parametri GET. Passali a strumenti come [Arjun](https://hackita.it/articoli/arjun) o sqlmap per testing di injection.
+URL con parametri GET. Passali a strumenti come [Arjun](https://hackita.it/articoli/arjun/) o sqlmap per testing di injection.
 
 ### Filtrare URL unici per path
 
@@ -247,7 +247,7 @@ Waybackurls alimenta la fase di discovery senza generare traffico verso il targe
 
 **Flusso operativo:**
 
-**Waybackurls (URL storico)** → [Httpx](https://hackita.it/articoli/httpx) (verifica live) → [Nuclei](https://hackita.it/articoli/nuclei) (vuln scan su endpoint trovati)
+**Waybackurls (URL storico)** → [Httpx](https://hackita.it/articoli/httpx/) (verifica live) → [Nuclei](https://hackita.it/articoli/nuclei/) (vuln scan su endpoint trovati)
 
 **Passaggio dati:**
 

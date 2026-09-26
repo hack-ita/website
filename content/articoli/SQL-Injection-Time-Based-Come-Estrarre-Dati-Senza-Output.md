@@ -19,17 +19,17 @@ tags:
 
 ## Cos'è la Time-Based SQL Injection (In Breve)
 
-La Time-Based SQL Injection è una tecnica di [Blind SQL Injection](https://hackita.it/articoli/blind-sql-injection) che sfrutta funzioni di delay come `SLEEP()`, `WAITFOR DELAY` o `pg_sleep()` per estrarre dati quando l’applicazione non mostra errori né differenze visibili nella risposta.
+La Time-Based SQL Injection è una tecnica di [Blind SQL Injection](https://hackita.it/articoli/blind-sql-injection/) che sfrutta funzioni di delay come `SLEEP()`, `WAITFOR DELAY` o `pg_sleep()` per estrarre dati quando l’applicazione non mostra errori né differenze visibili nella risposta.
 
-Fa parte delle tecniche descritte nella [Guida Completa alla SQL Injection](https://hackita.it/articoli/sql-injection), insieme alla SQL Injection classica e alla Blind SQL Injection.
+Fa parte delle tecniche descritte nella [Guida Completa alla SQL Injection](https://hackita.it/articoli/sql-injection/), insieme alla SQL Injection classica e alla Blind SQL Injection.
 
 La Time-Based SQL Injection è la forma più stealth e più frustrante di SQLi: l'applicazione non mostra errori, non cambia contenuto, non cambia status code — la risposta è **identica** sia che la condizione sia vera o falsa. L'unica differenza è il **tempo**: se la condizione è vera, il database attende N secondi prima di rispondere. Se è falsa, risponde immediatamente.
 
-È l'ultimo resort quando la [SQL Injection classica](https://hackita.it/articoli/sql-injection-classica) e le altre forme di SQL Injection non producono output visibile — ma funziona su quasi ogni database SQL.
+È l'ultimo resort quando la [SQL Injection classica](https://hackita.it/articoli/sql-injection-classica/) e le altre forme di SQL Injection non producono output visibile — ma funziona su quasi ogni database SQL.
 
 La trovo nel **15% dei pentest web** come forma pura (unica tecnica possibile), ma la uso anche come **tecnica di conferma** nel 40%+ dei casi: quando non sei sicuro che una SQLi sia reale, un `SLEEP(5)` che aggiunge esattamente 5 secondi di delay è la prova definitiva.
 
-È la tecnica che ha rotto la banca online del mio caso studio nella [Guida Completa alla SQL Injection](https://hackita.it/articoli/sql-injection): il parametro `ORDER BY` non produceva nessuna differenza visibile nella risposta, ma `BENCHMARK(5000000,SHA1('test'))` aggiungeva 5 secondi. Da lì, extraction character-by-character — lenta ma inesorabile.
+È la tecnica che ha rotto la banca online del mio caso studio nella [Guida Completa alla SQL Injection](https://hackita.it/articoli/sql-injection/): il parametro `ORDER BY` non produceva nessuna differenza visibile nella risposta, ma `BENCHMARK(5000000,SHA1('test'))` aggiungeva 5 secondi. Da lì, extraction character-by-character — lenta ma inesorabile.
 
 Un engagement memorabile: SaaS enterprise su Node.js/PostgreSQL, API REST con JSON, WAF Cloudflare. Ogni parametro testato con blind SQL injection → nessuna differenza. Ma il parametro `search` nel body JSON accettava `'; SELECT pg_sleep(5)--` → 5 secondi di delay. Cloudflare non bloccava `pg_sleep()` perché non era nelle regole standard. Da quel delay → estrazione completa della tabella `api_keys` (chiavi di accesso di 200 clienti enterprise). **Shell in 3 ore.**
 
@@ -416,7 +416,7 @@ No — anzi, la rovina. Con più thread, i delay si sovrappongono e non riesci a
 
 ***
 
-Satellite della [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection). Vedi anche: [SQLi Classica](https://hackita.it/articoli/sql-injection-classica), [Blind SQLi](https://hackita.it/articoli/blind-sql-injection), [SQLi su API REST](https://hackita.it/articoli/sql-injection-api-rest), [SQLi su ORM](https://hackita.it/articoli/sql-injection-orm).
+Satellite della [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection/). Vedi anche: [SQLi Classica](https://hackita.it/articoli/sql-injection-classica/), [Blind SQLi](https://hackita.it/articoli/blind-sql-injection/), [SQLi su API REST](https://hackita.it/articoli/sql-injection-api-rest/), [SQLi su ORM](https://hackita.it/articoli/sql-injection-orm/).
 
 > Il tuo WAF blocca UNION SELECT ma non pg\_sleep? [Penetration test HackIta](https://hackita.it/servizi) testa tutte le varianti, inclusa la Time-Based. Per padroneggiare l'exploitation avanzata: [formazione 1:1](https://hackita.it/servizi).
 

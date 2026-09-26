@@ -124,7 +124,7 @@ PORT    STATE SERVICE
 
 ### Fingerprint del router via BGP OPEN
 
-Usando **Scapy** puoi inviare un OPEN message crafted e analizzare la risposta per identificare vendor e versione. Per approfondire le tecniche di fingerprinting, consulta la [guida completa all'enumerazione](https://hackita.it/articoli/enumeration).
+Usando **Scapy** puoi inviare un OPEN message crafted e analizzare la risposta per identificare vendor e versione. Per approfondire le tecniche di fingerprinting, consulta la [guida completa all'enumerazione](https://hackita.it/articoli/enumeration/).
 
 ```bash
 python3 -c "
@@ -188,7 +188,7 @@ len=44 ip=10.10.10.1 ttl=255 DF id=0 sport=179 flags=SA seq=1 win=16384 rtt=1.1 
 len=44 ip=10.10.10.1 ttl=255 DF id=0 sport=179 flags=SA seq=2 win=16384 rtt=1.3 ms
 ```
 
-**Lettura dell'output:** RTT stabile \~1.2ms indica connessione diretta (stessa LAN o un hop). `DF` set e `id=0` confermano Cisco IOS. Puoi usare il [tool ping per analisi avanzata](https://hackita.it/articoli/ping) del comportamento del target.
+**Lettura dell'output:** RTT stabile \~1.2ms indica connessione diretta (stessa LAN o un hop). `DF` set e `id=0` confermano Cisco IOS. Puoi usare il [tool ping per analisi avanzata](https://hackita.it/articoli/ping/) del comportamento del target.
 
 ## 4. Tecniche Offensive sulla Porta 179 BGP
 
@@ -251,7 +251,7 @@ HPING 10.10.10.1 (eth0 10.10.10.1): R set, 40 headers + 0 data bytes
 10 packets transmitted, 10 packets received, 0% packet loss
 ```
 
-**Cosa fai dopo:** se la sessione BGP viene abbattuta (verificabile con un looking glass o accesso al router), i prefissi annunciati via quella sessione scompaiono dalla tabella di routing. Questo causa un blackhole temporaneo del traffico verso quei prefissi — utile come diversione. Approfondisci i concetti di [lateral movement nella rete](https://hackita.it/articoli/pivoting).
+**Cosa fai dopo:** se la sessione BGP viene abbattuta (verificabile con un looking glass o accesso al router), i prefissi annunciati via quella sessione scompaiono dalla tabella di routing. Questo causa un blackhole temporaneo del traffico verso quei prefissi — utile come diversione. Approfondisci i concetti di [lateral movement nella rete](https://hackita.it/articoli/pivoting/).
 
 **Route Injection via sessione stabilita**
 
@@ -288,7 +288,7 @@ print('[+] BGP UPDATE crafted for 192.168.100.0/24')
 BGPHeader: malformed packet - check AS_PATH attribute
 ```
 
-**Cosa fai dopo:** se il router accetta l'UPDATE, il prefisso 192.168.100.0/24 viene inserito nella tabella di routing con next-hop il tuo IP. Tutto il traffico verso quella subnet ora transita da te — sei in posizione MitM. In ambito [kill chain](https://hackita.it/articoli/killchain), questo abilita intercettazione e manipolazione del traffico.
+**Cosa fai dopo:** se il router accetta l'UPDATE, il prefisso 192.168.100.0/24 viene inserito nella tabella di routing con next-hop il tuo IP. Tutto il traffico verso quella subnet ora transita da te — sei in posizione MitM. In ambito [kill chain](https://hackita.it/articoli/killchain/), questo abilita intercettazione e manipolazione del traffico.
 
 ## 5. Scenari Pratici di Pentest
 

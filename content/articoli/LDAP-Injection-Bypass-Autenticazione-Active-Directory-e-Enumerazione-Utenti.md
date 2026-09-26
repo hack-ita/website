@@ -23,7 +23,7 @@ La differenza fondamentale è il target: nella SQLi attacchi un database, nella 
 
 La trovo nel **8% dei pentest su portali con autenticazione AD/LDAP** — una percentuale che sembra bassa ma il target è sempre di alto valore. Ogni LDAP Injection trovata ha portato a un impatto significativo.
 
-Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche la guida [Porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap) per l'exploitation diretta del servizio.
+Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche la guida [Porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap/) per l'exploitation diretta del servizio.
 
 ## Cos'è la LDAP Injection?
 
@@ -130,7 +130,7 @@ Username: admin     → "password errata" = 'admin' esiste!
 Username: b*        → "utente non trovato" = nessun utente inizia per 'b'
 ```
 
-Character by character, esattamente come nella [Blind SQLi](https://hackita.it/articoli/blind-sql-injection).
+Character by character, esattamente come nella [Blind SQLi](https://hackita.it/articoli/blind-sql-injection/).
 
 ## Blind LDAP Injection
 
@@ -253,6 +253,6 @@ LDAP Injection (*) → Auth Bypass → User Enumeration → Description Extracti
 
 ***
 
-Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [Porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap), [XPath Injection](https://hackita.it/articoli/xpath-injection).
+Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [Porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap/), [XPath Injection](https://hackita.it/articoli/xpath-injection/).
 
 > I tuoi portali aziendali autenticano via LDAP? [Penetration test HackIta](https://hackita.it/servizi). Per padroneggiare la LDAP Injection: [formazione 1:1](https://hackita.it/formazione).

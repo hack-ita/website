@@ -21,9 +21,9 @@ tags:
 
 I **WebSocket** sono connessioni persistenti e bidirezionali tra browser e server. A differenza delle normali request HTTP (il client chiede, il server risponde, la connessione si chiude), un WebSocket resta aperto: il server può inviare dati al client in qualsiasi momento — chat in tempo reale, notifiche, aggiornamenti di dashboard, trading live, giochi online.
 
-Il **WebSocket Hijacking** (o CSWSH — Cross-Site WebSocket Hijacking) si verifica quando un attaccante riesce a stabilire una connessione WebSocket verso l'applicazione target usando i cookie della vittima. Il meccanismo è simile al [CSRF](https://hackita.it/articoli/csrf): la vittima visita `evil.com`, JavaScript apre un WebSocket verso `target.com`, il browser include i cookie automaticamente, e il server accetta la connessione perché la sessione è valida. Da quel momento, l'attaccante riceve tutto il flusso dati in tempo reale — messaggi di chat, transazioni, notifiche — e può inviare messaggi come se fosse la vittima.
+Il **WebSocket Hijacking** (o CSWSH — Cross-Site WebSocket Hijacking) si verifica quando un attaccante riesce a stabilire una connessione WebSocket verso l'applicazione target usando i cookie della vittima. Il meccanismo è simile al [CSRF](https://hackita.it/articoli/csrf/): la vittima visita `evil.com`, JavaScript apre un WebSocket verso `target.com`, il browser include i cookie automaticamente, e il server accetta la connessione perché la sessione è valida. Da quel momento, l'attaccante riceve tutto il flusso dati in tempo reale — messaggi di chat, transazioni, notifiche — e può inviare messaggi come se fosse la vittima.
 
-Satellite della [guida pillar API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa). Vedi anche: [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration), [CSRF](https://hackita.it/articoli/csrf).
+Satellite della [guida pillar API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/). Vedi anche: [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration/), [CSRF](https://hackita.it/articoli/csrf/).
 
 Riferimenti: [PortSwigger WebSocket](https://portswigger.net/web-security/websockets), [OWASP WebSocket Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/10-Testing_WebSockets), [HackTricks WebSocket](https://book.hacktricks.wiki/en/pentesting-web/cross-site-websocket-hijacking-cswsh.html).
 
@@ -322,6 +322,6 @@ IMPATTO
 
 Riferimenti: [PortSwigger WebSocket vulnerabilities](https://portswigger.net/web-security/websockets), [OWASP WebSocket Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/10-Testing_WebSockets), [HackTricks WebSocket Hijacking](https://book.hacktricks.wiki/en/pentesting-web/cross-site-websocket-hijacking-cswsh.html).
 
-Satellite della [Guida API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa). Vedi anche: [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration), [CSRF](https://hackita.it/articoli/csrf), [XSS](https://hackita.it/articoli/xss).
+Satellite della [Guida API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/). Vedi anche: [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration/), [CSRF](https://hackita.it/articoli/csrf/), [XSS](https://hackita.it/articoli/xss/).
 
 > I tuoi WebSocket verificano l'Origin? La chat è sanitizzata? Le notifiche sono leggibili cross-site? [Penetration test HackIta](https://hackita.it/servizi) per ogni falla WebSocket. Dal hijacking al data theft real-time: [formazione 1:1](https://hackita.it/formazione).

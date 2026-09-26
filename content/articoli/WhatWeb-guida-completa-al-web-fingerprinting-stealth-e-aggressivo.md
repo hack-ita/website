@@ -249,7 +249,7 @@ WhatWeb è il bridge tra network scanning e vulnerability scanning.
 
 **Flusso operativo:**
 
-[Nmap](https://hackita.it/articoli/nmap) (port scan) → **WhatWeb (tech fingerprint)** → [Nuclei](https://hackita.it/articoli/nuclei) (vuln scan mirato) → Exploitation
+[Nmap](https://hackita.it/articoli/nmap/) (port scan) → **WhatWeb (tech fingerprint)** → [Nuclei](https://hackita.it/articoli/nuclei/) (vuln scan mirato) → Exploitation
 
 **Passaggio dati:**
 
@@ -268,7 +268,7 @@ cat tech.json | jq -r '.[] | select(.plugins.WordPress) | .target' > wp_targets.
 nuclei -l wp_targets.txt -tags wordpress
 ```
 
-| Feature         | WhatWeb      | [Wappalyzer](https://hackita.it/articoli/wappalyzer) | BuiltWith | Netcraft  |
+| Feature         | WhatWeb      | [Wappalyzer](https://hackita.it/articoli/wappalyzer/) | BuiltWith | Netcraft  |
 | --------------- | ------------ | ---------------------------------------------------- | --------- | --------- |
 | CLI tool        | Sì           | Extension browser                                    | Web only  | Web only  |
 | Plugin count    | 1.800+       | 1.500+                                               | Vasto     | Limitato  |
@@ -311,7 +311,7 @@ Upload di web shell via plugin vulnerabile. Shell come `www-data`.
 
 **Fase 5 — Lateral Movement (25 min)**
 
-Credenziali database nel `wp-config.php`. Password riusata per SSH su altro server. Approfondisci le tecniche di enumerazione della rete con strumenti come [Nmap](https://hackita.it/articoli/nmap) per identificare ulteriori vettori d'attacco.
+Credenziali database nel `wp-config.php`. Password riusata per SSH su altro server. Approfondisci le tecniche di enumerazione della rete con strumenti come [Nmap](https://hackita.it/articoli/nmap/) per identificare ulteriori vettori d'attacco.
 
 **Timeline totale:** \~48 minuti.
 

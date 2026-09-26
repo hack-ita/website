@@ -22,7 +22,7 @@ SpiderFoot automatizza la raccolta di intelligence da oltre 200 sorgenti pubblic
 
 ### Cosa imparerai
 
-Questo articolo copre installazione standalone e Docker, configurazione moduli per passive/active reconnaissance, setup API key per servizi premium (Shodan, VirusTotal, HaveIBeenPwned), creazione scan profile custom, interpretazione risultati tramite dashboard e graph view, export formati multipli (CSV/JSON/GEXF), integrazione CLI in pipeline automation, best practices detection evasion, e confronto operativo con [https://hackita.it/articoli/recon-ng](https://hackita.it/articoli/recon-ng), [https://hackita.it/articoli/maltego](https://hackita.it/articoli/maltego) e tool OSINT alternativi per selezionare approccio ottimale per scenario specifico.
+Questo articolo copre installazione standalone e Docker, configurazione moduli per passive/active reconnaissance, setup API key per servizi premium (Shodan, VirusTotal, HaveIBeenPwned), creazione scan profile custom, interpretazione risultati tramite dashboard e graph view, export formati multipli (CSV/JSON/GEXF), integrazione CLI in pipeline automation, best practices detection evasion, e confronto operativo con [https://hackita.it/articoli/recon-ng](https://hackita.it/articoli/reconng/), [https://hackita.it/articoli/maltego](https://hackita.it/articoli/maltego/) e tool OSINT alternativi per selezionare approccio ottimale per scenario specifico.
 
 ## Setup e Installazione
 

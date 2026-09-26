@@ -1146,7 +1146,7 @@ Con l'AD Recycle Bin attivo, un oggetto cancellato diventa "recycled" e mantiene
 * [BloodHound](https://hackita.it/articoli/bloodhound/) — trova i path che BloodyAD esegue
 * [Impacket](https://hackita.it/articoli/impacket/) — getST, secretsdump, addcomputer
 * [Mimikatz](https://hackita.it/articoli/mimikatz/) — dump credenziali post-escalation
-* [Kerberoasting](https://hackita.it/articoli/kerberoasting/) — exploitation SPN trovati con get search
+* [Kerberoasting](https://hackita.it/articoli/kerberos/) — exploitation SPN trovati con get search
 * [DCSync](https://hackita.it/articoli/dcsync/) — dopo aver ottenuto i diritti di replica
 * [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/) — approfondimento PKINIT abuse
 * [Rubeus](https://hackita.it/articoli/rubeus/) — operazioni Kerberos post-escalation

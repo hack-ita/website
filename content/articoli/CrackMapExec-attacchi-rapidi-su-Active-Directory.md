@@ -19,7 +19,7 @@ featured: false
 
 NetExec (nxc) è il successore diretto di CrackMapExec — nato nel 2023 dopo l'abbandono del progetto originale. Stessa filosofia, codebase migliorata, moduli estesi, manutenzione attiva. Se usi ancora `crackmapexec` stai usando uno strumento fermo al 2021.
 
-Per il confronto con il vecchio CME: [CrackMapExec su HackIta](https://hackita.it/articoli/crackmapexec)
+Per il confronto con il vecchio CME: [CrackMapExec su HackIta](https://hackita.it/articoli/crackmapexec/)
 
 ***
 

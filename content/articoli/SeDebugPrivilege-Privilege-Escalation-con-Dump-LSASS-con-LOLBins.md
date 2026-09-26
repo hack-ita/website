@@ -331,8 +331,8 @@ SeDebugPrivilege in un token elevato equivale ad accesso completo alla memoria d
 
 **Articoli correlati:**
 
-* [SeLoadDriverPrivilege](https://hackita.it/articoli/seloaddriverprivilege) — bypass RunAsPPL con BYOVD quando PPL blocca il dump
-* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege) — credential dump alternativo via filesystem, non tocca lsass
-* [SeImpersonatePrivilege](https://hackita.it/articoli/seimpersonateprivilege) — escalation a SYSTEM prima del dump
+* [SeLoadDriverPrivilege](https://hackita.it/articoli/seloaddriverprivilege/) — bypass RunAsPPL con BYOVD quando PPL blocca il dump
+* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege/) — credential dump alternativo via filesystem, non tocca lsass
+* [SeImpersonatePrivilege](https://hackita.it/articoli/seimpersonateprivilege/) — escalation a SYSTEM prima del dump
 
 **Riferimenti:** [Nanodump](https://github.com/helpsystems/nanodump) · [Mimikatz](https://github.com/gentilkiwi/mimikatz) · [Credential Guard](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/debug-programs)

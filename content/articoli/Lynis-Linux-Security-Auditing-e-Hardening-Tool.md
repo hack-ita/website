@@ -20,7 +20,7 @@ tags:
 
 Lynis è un tool di security auditing per sistemi Unix/Linux che analizza la configurazione del sistema operativo, identifica misconfiguration, suggerisce hardening e verifica compliance. Nel penetration testing lo usi in due contesti: post-exploitation per mappare le debolezze di un host compromesso e trovare path di privilege escalation, oppure in assessment di tipo white-box dove hai accesso legittimo al sistema.
 
-Lynis controlla centinaia di test: permessi file, configurazione [SSH](https://hackita.it/articoli/ssh), firewall, kernel parameters, servizi in esecuzione, account policy, crittografia e molto altro. L'output è un hardening index (0-100) e una lista di finding categorizzati per severità.
+Lynis controlla centinaia di test: permessi file, configurazione [SSH](https://hackita.it/articoli/ssh/), firewall, kernel parameters, servizi in esecuzione, account policy, crittografia e molto altro. L'output è un hardening index (0-100) e una lista di finding categorizzati per severità.
 
 Kill chain: **Discovery / Privilege Escalation** (MITRE ATT\&CK T1082).
 
@@ -165,8 +165,8 @@ sudo lynis audit system --profile /etc/lynis/default.prf
 | Tool                                                 | System audit  | Privesc hints | Compliance | Agentless |
 | ---------------------------------------------------- | ------------- | ------------- | ---------- | --------- |
 | Lynis                                                | Sì (completo) | Sì            | Sì         | Sì        |
-| [linPEAS](https://hackita.it/articoli/linpeas)       | Limitato      | Sì (focus)    | No         | Sì        |
-| [Chkrootkit](https://hackita.it/articoli/chkrootkit) | Rootkit only  | No            | No         | Sì        |
+| [linPEAS](https://hackita.it/articoli/linpeas/)       | Limitato      | Sì (focus)    | No         | Sì        |
+| [Chkrootkit](https://hackita.it/articoli/chkrootkit/) | Rootkit only  | No            | No         | Sì        |
 | OpenSCAP                                             | Sì            | Limitato      | Sì (SCAP)  | No        |
 
 ***

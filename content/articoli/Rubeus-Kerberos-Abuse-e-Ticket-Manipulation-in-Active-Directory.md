@@ -1019,7 +1019,7 @@ Sempre più account di servizio usano gMSA (Group Managed Service Account) — l
 ## Guide correlate su hackita.it
 
 * [Kerberos: protocollo e attacchi](https://hackita.it/articoli/kerberos/)
-* [Kerberoasting](https://hackita.it/articoli/kerberoasting/)
+* [Kerberoasting](https://hackita.it/articoli/kerberos/)
 * [Mimikatz](https://hackita.it/articoli/mimikatz/)
 * [Golden Ticket](https://hackita.it/articoli/golden-ticket/)
 * [Silver Ticket](https://hackita.it/articoli/silver-ticket/)

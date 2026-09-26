@@ -118,7 +118,7 @@ HSRP e VRRP sono progettati per essere veloci e semplici: inviano messaggi in ch
 
 Un attaccante che invia un messaggio HSRP con Priority 255 diventa immediatamente il router Active del gruppo. Tutti gli host del segmento iniziano a inviare il loro traffico verso il MAC dell'attaccante. È un attacco man-in-the-middle a livello di rete, senza bisogno di ARP spoofing — e spesso completamente non rilevato dai sistemi di detection tradizionali.
 
-Per il livello su cui operano questi protocolli, vedi [IP Internet Protocol](https://hackita.it/articoli/ip-internet-protocol). Per le implicazioni sulle VLAN, vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan). Per tecniche MITM complementari, vedi [ARP](https://hackita.it/articoli/arp) e [Man in the Middle](https://hackita.it/articoli/man-in-the-middle).
+Per il livello su cui operano questi protocolli, vedi [IP Internet Protocol](https://hackita.it/articoli/ip-internet-protocol/). Per le implicazioni sulle VLAN, vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan/). Per tecniche MITM complementari, vedi [ARP](https://hackita.it/articoli/arp/) e [Man in the Middle](https://hackita.it/articoli/man-in-the-middle/).
 
 ***
 
@@ -208,7 +208,7 @@ sendp(vrrp_advert, iface="eth0", loop=1, inter=1)
 
 ### Intercettazione del traffico post-takeover
 
-Dopo il takeover del gateway, tutto il traffico uscente dal segmento passa per l'attaccante. Con [sniffing](https://hackita.it/articoli/sniffing) passivo:
+Dopo il takeover del gateway, tutto il traffico uscente dal segmento passa per l'attaccante. Con [sniffing](https://hackita.it/articoli/sniffing/) passivo:
 
 ```bash
 tcpdump -i eth0 -w traffic_capture.pcap
@@ -424,13 +424,13 @@ Un attacco HSRP richiede un singolo pacchetto. In 3 secondi l'attaccante è il d
 
 Approfondisci i protocolli correlati:
 
-* [IP Internet Protocol: il livello di rete](https://hackita.it/articoli/ip-internet-protocol)
-* [ARP: l'alternativa al gateway spoofing](https://hackita.it/articoli/arp)
-* [OSPF, EIGRP, BGP, RIP: protocolli di routing e sicurezza](https://hackita.it/articoli/ospf-eigrp-bgp-rip)
-* [VLAN e 802.1Q: segmentazione e implicazioni](https://hackita.it/articoli/vlan)
-* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle)
-* [Sniffing e analisi del traffico post-takeover](https://hackita.it/articoli/sniffing)
-* [IPSec: protezione per VRRP](https://hackita.it/articoli/ipsec)
+* [IP Internet Protocol: il livello di rete](https://hackita.it/articoli/ip-internet-protocol/)
+* [ARP: l'alternativa al gateway spoofing](https://hackita.it/articoli/arp/)
+* [OSPF, EIGRP, BGP, RIP: protocolli di routing e sicurezza](https://hackita.it/articoli/ospf-eigrp-bgp-rip/)
+* [VLAN e 802.1Q: segmentazione e implicazioni](https://hackita.it/articoli/vlan/)
+* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle/)
+* [Sniffing e analisi del traffico post-takeover](https://hackita.it/articoli/sniffing/)
+* [IPSec: protezione per VRRP](https://hackita.it/articoli/ipsec/)
 
 Riferimento ufficiale: [RFC 5798 — Virtual Router Redundancy Protocol (VRRP) Version 3](https://datatracker.ietf.org/doc/html/rfc5798)
 

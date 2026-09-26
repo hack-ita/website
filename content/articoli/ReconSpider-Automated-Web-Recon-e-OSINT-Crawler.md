@@ -326,7 +326,7 @@ Phase 3: Credential Harvesting
 
 **Timeline:** 15 minuti ReconSpider scan + 30 minuti social engineering prep
 
-Per approfondire social engineering techniques, consulta [advanced social engineering tactics e pretexting](https://hackita.it/articoli/social-engineering).
+Per approfondire social engineering techniques, consulta [advanced social engineering tactics e pretexting](https://hackita.it/articoli/socialengineer/).
 
 ***
 
@@ -783,7 +783,7 @@ python3 reconspider.py -t target.com --output-format csv
 # Map fields: email, domain, person, company
 ```
 
-Per OSINT workflow automation completa, leggi [building comprehensive OSINT pipelines](https://hackita.it/articoli/osint-pipeline-building).
+Per OSINT workflow automation completa, leggi [building comprehensive OSINT pipelines](https://hackita.it/articoli/osint-pipeline-building/).
 
 ### Comparazione tool
 

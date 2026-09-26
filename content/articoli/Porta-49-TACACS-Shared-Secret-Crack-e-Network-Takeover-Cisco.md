@@ -301,7 +301,7 @@ Router# show running-config
 **Contesto:** TACACS+ server è Linux con tac\_plus, weak SSH password.
 
 ```bash
-# Fase 1: [SSH brute force](https://hackita.it/articoli/ssh) su TACACS+ server
+# Fase 1: [SSH brute force](https://hackita.it/articoli/ssh/) su TACACS+ server
 hydra -l root -P rockyou.txt ssh://10.10.10.49
 # [22][ssh] host: 10.10.10.49   login: root   password: toor
 ```
@@ -397,7 +397,7 @@ ENUMERATION
 │
 ├─ Shared secret guessing                   → cisco/testing/key
 ├─ Username enum                            → admin/netadmin/cisco
-└─ Brute force                              → [Metasploit](https://hackita.it/articoli/metasploit)/Hydra
+└─ Brute force                              → [Metasploit](https://hackita.it/articoli/metasploit/)/Hydra
 
 EXPLOITATION
 │
@@ -409,7 +409,7 @@ EXPLOITATION
 POST-EXPLOITATION
 │
 ├─ Router config dump → VPN keys, BGP passwords
-├─ SNMP community strings → [SNMP](https://hackita.it/articoli/snmp) exploitation
+├─ SNMP community strings → [SNMP](https://hackita.it/articoli/snmp/) exploitation
 ├─ Routing table → internal network map
 └─ Backdoor user creation → persistence
 ```
@@ -618,7 +618,7 @@ Teoricamente sì (protocollo aperto), ma raramente implementato. Juniper, Arista
 
 **Posso usare TACACS+ credentials su altri servizi?**
 
-Dipende. Se password reuse esiste (admin usa stessa password per TACACS+, SSH personale, web portals), sì. Testare con [credential stuffing](https://hackita.it/articoli/credential-stuffing).
+Dipende. Se password reuse esiste (admin usa stessa password per TACACS+, SSH personale, web portals), sì. Testare con [credential stuffing](https://hackita.it/articoli/credential-stuffing/).
 
 ***
 

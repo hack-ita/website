@@ -25,10 +25,10 @@ WinPEAS opera nella fase di privilege escalation post-exploitation:
 
 | Fase              | Tool Precedente                                            | WinPEAS           | Tool Successivo                                    |
 | ----------------- | ---------------------------------------------------------- | ----------------- | -------------------------------------------------- |
-| Initial Access    | [Metasploit](https://hackita.it/articoli/metasploit) shell | → Upload WinPEAS  | → Enumeration                                      |
+| Initial Access    | [Metasploit](https://hackita.it/articoli/metasploit/) shell | → Upload WinPEAS  | → Enumeration                                      |
 | Enumeration       | Shell stabilizzata                                         | → Scan completo   | → Identify vectors                                 |
 | PrivEsc           | Vector identified                                          | → Exploit path    | → SYSTEM access                                    |
-| Credential Access | SYSTEM achieved                                            | → Credential dump | → [Mimikatz](https://hackita.it/articoli/mimikatz) |
+| Credential Access | SYSTEM achieved                                            | → Credential dump | → [Mimikatz](https://hackita.it/articoli/mimikatz/) |
 
 ## Installazione e Setup
 
@@ -316,8 +316,8 @@ winPEASx64.exe windowscreds
 1. **Initial Access (15min)**: Phishing → shell utente standard
 2. **Enumeration (10min)**: WinPEAS → identifica vettore
 3. **PrivEsc (15min)**: Exploit weak service → SYSTEM
-4. **Credential Dump (10min)**: [Mimikatz](https://hackita.it/articoli/mimikatz) → hash/password
-5. **Lateral Movement (10min)**: [PsExec](https://hackita.it/articoli/psexec) → altri host
+4. **Credential Dump (10min)**: [Mimikatz](https://hackita.it/articoli/mimikatz/) → hash/password
+5. **Lateral Movement (10min)**: [PsExec](https://hackita.it/articoli/psexec/) → altri host
 
 ## Defense Evasion
 
@@ -347,10 +347,10 @@ svchost_update.exe
 
 | WinPEAS +                                                      | Risultato             | Workflow                                    |
 | -------------------------------------------------------------- | --------------------- | ------------------------------------------- |
-| [Metasploit](https://hackita.it/articoli/metasploit-framework) | Auto-exploit          | WinPEAS trova → MSF local exploit suggester |
-| [Mimikatz](https://hackita.it/articoli/mimikatz)               | Cred dump post-SYSTEM | WinPEAS → PrivEsc → Mimikatz                |
-| [BloodHound](https://hackita.it/articoli/bloodhound)           | AD path               | WinPEAS creds → BloodHound analysis         |
-| [Seatbelt](https://hackita.it/articoli/seatbelt)               | Cross-validation      | WinPEAS + Seatbelt per coverage completa    |
+| [Metasploit](https://hackita.it/articoli/metasploit/) | Auto-exploit          | WinPEAS trova → MSF local exploit suggester |
+| [Mimikatz](https://hackita.it/articoli/mimikatz/)               | Cred dump post-SYSTEM | WinPEAS → PrivEsc → Mimikatz                |
+| [BloodHound](https://hackita.it/articoli/bloodhound/)           | AD path               | WinPEAS creds → BloodHound analysis         |
+| [Seatbelt](https://hackita.it/articoli/seatbelt/)               | Cross-validation      | WinPEAS + Seatbelt per coverage completa    |
 
 ## Confronto: WinPEAS vs Alternative
 
@@ -445,7 +445,7 @@ winPEAS.bat
 
 **WinPEAS vs LinPEAS?**
 
-WinPEAS per Windows, [LinPEAS](https://hackita.it/articoli/linpeas) per Linux. Stessa famiglia PEASS-ng.
+WinPEAS per Windows, [LinPEAS](https://hackita.it/articoli/linpeas/) per Linux. Stessa famiglia PEASS-ng.
 
 **È necessario essere admin per eseguire WinPEAS?**
 

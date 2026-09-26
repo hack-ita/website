@@ -524,7 +524,7 @@ I file che ci servono:
 * `C:\Users\Bob.Wood\AppData\Local\Microsoft\Edge\User Data\Local State` — JSON con la chiave di cifratura specifica di Edge, a sua volta cifrata con DPAPI
 * `C:\Users\Bob.Wood\AppData\Roaming\Microsoft\Protect\{SID}\` — masterkey DPAPI
 
-Per l'approfondimento completo sul funzionamento interno di DPAPI, la struttura delle masterkey e come estrarle: [DPAPI: estrarre credenziali cifrate su Windows](https://hackita.it/articoli/dpapi).
+Per l'approfondimento completo sul funzionamento interno di DPAPI, la struttura delle masterkey e come estrarle: [DPAPI: estrarre credenziali cifrate su Windows](https://hackita.it/articoli/dpapi/).
 
 ### AppLocker: trovare dove eseguire
 

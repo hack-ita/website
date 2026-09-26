@@ -21,7 +21,7 @@ Un **Open Redirect** è una vulnerabilità in cui l'applicazione accetta un URL 
 
 Da solo sembra basso impatto. In chain diventa devastante: **OAuth token theft** (il `redirect_uri` passa attraverso l'open redirect → il token arriva all'attaccante), **SSRF bypass** (il filtro valida `target.com` → l'open redirect porta la request al metadata cloud), e **phishing perfetto** (il link inizia col dominio aziendale, l'utente si fida).
 
-Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa). Vedi anche: [SSRF](https://hackita.it/articoli/ssrf), [OAuth Attack](https://hackita.it/articoli/oauth-attack).
+Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa/). Vedi anche: [SSRF](https://hackita.it/articoli/ssrf/), [OAuth Attack](https://hackita.it/articoli/oauth-attack/).
 
 Riferimenti: [PortSwigger Open Redirect](https://portswigger.net/kb/issues/00500100_open-redirection-reflected), [OWASP Unvalidated Redirects](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html), [HackTricks Open Redirect](https://book.hacktricks.wiki/en/pentesting-web/open-redirect.html).
 

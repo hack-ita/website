@@ -20,7 +20,7 @@ tags:
 
 Un'applicazione web è un programma che gira su un server, e quel server ha un filesystem. Ogni volta che l'applicazione legge un file, lo include, lo serve in download, ne estrae un archivio, o permette a un utente di caricarne uno, c'è una superficie di attacco. I **File & Path Attacks** sfruttano questa superficie per fare tre cose: **leggere file che non dovresti leggere** (credenziali, chiavi SSH, token cloud), **caricare file che non dovresti caricare** (web shell → RCE), e **eseguire file che non dovresti eseguire** (LFI + poisoning → RCE).
 
-Questa classe di vulnerabilità la trovo nel **45% dei pentest web** se considero tutte le varianti: [Path Traversal](https://hackita.it/articoli/path-traversal) nel 20%, [File Upload non sicuro](https://hackita.it/articoli/file-upload-attack) nel 15%, [LFI](https://hackita.it/articoli/lfi) nel 12%, [backup esposti](https://hackita.it/articoli/backup-exposure) nel 10%, [source code disclosure](https://hackita.it/articoli/source-code-disclosure) nell'8%. Sono numeri alti — e il motivo è che i file sono il cuore di ogni applicazione: template, configurazioni, upload utente, log, sessioni. Ogni punto di contatto è un potenziale vettore.
+Questa classe di vulnerabilità la trovo nel **45% dei pentest web** se considero tutte le varianti: [Path Traversal](https://hackita.it/articoli/path-traversal/) nel 20%, [File Upload non sicuro](https://hackita.it/articoli/file-upload-attack/) nel 15%, [LFI](https://hackita.it/articoli/lfi/) nel 12%, [backup esposti](https://hackita.it/articoli/backup-exposure/) nel 10%, [source code disclosure](https://hackita.it/articoli/source-code-disclosure/) nell'8%. Sono numeri alti — e il motivo è che i file sono il cuore di ogni applicazione: template, configurazioni, upload utente, log, sessioni. Ogni punto di contatto è un potenziale vettore.
 
 Un caso che racconta bene il tema: fintech SaaS, API di download documenti. Il parametro `?file=terms.pdf` era vulnerabile a Path Traversal. `?file=../../../proc/self/environ` → la risposta conteneva `AWS_ACCESS_KEY_ID=AKIA...` e `AWS_SECRET_ACCESS_KEY=...` in chiaro. Con quelle credenziali: `aws s3 ls` → 47 bucket → 200.000 transazioni finanziarie. **Da un parametro URL a un data breach in 5 minuti.** Nessun exploit sofisticato, nessun zero-day — solo un `../` in un parametro che nessuno aveva validato.
 
@@ -91,7 +91,7 @@ nuclei -u https://target.com -t misconfiguration/git-config.yaml
 
 ## Path Traversal — Bypass Encoding e WAF Evasion
 
-Il [Path Traversal](https://hackita.it/articoli/path-traversal) è il fondamento: la sequenza `../` permette di uscire dalla directory dell'applicazione e leggere qualsiasi file. Ma ogni WAF e filtro decente blocca `../`. Il vero skill del pentester sta nel **bypass**.
+Il [Path Traversal](https://hackita.it/articoli/path-traversal/) è il fondamento: la sequenza `../` permette di uscire dalla directory dell'applicazione e leggere qualsiasi file. Ma ogni WAF e filtro decente blocca `../`. Il vero skill del pentester sta nel **bypass**.
 
 ### Payload Base
 
@@ -230,7 +230,7 @@ Se vedi questo output → Path Traversal confermato. Nota il `www-data` (utente 
 
 ## LFI — Da File Read a RCE Con PHP Wrappers e Poisoning
 
-La [LFI (Local File Inclusion)](https://hackita.it/articoli/lfi) è Path Traversal + **esecuzione**. In PHP, `include()` e `require()` non solo leggono — interpretano il contenuto come codice. La domanda non è "posso leggere file?" ma "posso far eseguire codice al server?". Nel **70% dei casi** la risposta è sì.
+La [LFI (Local File Inclusion)](https://hackita.it/articoli/lfi/) è Path Traversal + **esecuzione**. In PHP, `include()` e `require()` non solo leggono — interpretano il contenuto come codice. La domanda non è "posso leggere file?" ma "posso far eseguire codice al server?". Nel **70% dei casi** la risposta è sì.
 
 ### PHP Wrappers — Il Coltellino Svizzero
 
@@ -412,7 +412,7 @@ curl "http://target.com/page.php?page=/proc/self/environ" \
 
 ## File Upload — Bypass Content-Type, Magic Bytes e Polyglot
 
-Il [File Upload Attack](https://hackita.it/articoli/file-upload-attack) sfrutta le funzionalità di upload per caricare una [web shell](https://hackita.it/articoli/web-shell). Ogni bypass ha il suo contesto — lo sviluppatore può aver implementato uno, due, o tutti i controlli. Il pentester deve testarli tutti.
+Il [File Upload Attack](https://hackita.it/articoli/file-upload-attack/) sfrutta le funzionalità di upload per caricare una [web shell](https://hackita.it/articoli/web-shell/). Ogni bypass ha il suo contesto — lo sviluppatore può aver implementato uno, due, o tutti i controlli. Il pentester deve testarli tutti.
 
 ### Bypass Estensione — La Lista Completa
 
@@ -554,7 +554,7 @@ Configurazione Nginx/PHP-FPM con `cgi.fix_pathinfo=1` (default!):
 
 ## Zip Slip — Scrivere File Ovunque Via Archivi
 
-Il [Zip Slip](https://hackita.it/articoli/zip-slip) sfrutta le sequenze `../` nei nomi dei file all'interno di archivi ZIP/TAR/JAR. Quando l'applicazione estrae l'archivio senza validare i path, i file vengono scritti al di fuori della directory di destinazione.
+Il [Zip Slip](https://hackita.it/articoli/zip-slip/) sfrutta le sequenze `../` nei nomi dei file all'interno di archivi ZIP/TAR/JAR. Quando l'applicazione estrae l'archivio senza validare i path, i file vengono scritti al di fuori della directory di destinazione.
 
 ```python
 # === Crea payload Zip Slip ===
@@ -975,17 +975,17 @@ DISCOVERY
 | Articolo               | Tipo               | Impatto              | Link                                                    |
 | ---------------------- | ------------------ | -------------------- | ------------------------------------------------------- |
 | **Questa guida**       | PILLAR             | —                    | —                                                       |
-| Path Traversal         | Directory escape   | File read → creds    | [→](https://hackita.it/articoli/path-traversal)         |
-| LFI                    | File inclusion     | File read → RCE      | [→](https://hackita.it/articoli/lfi)                    |
-| RFI                    | Remote inclusion   | RCE diretta          | [→](https://hackita.it/articoli/rfi)                    |
-| File Upload Attack     | Malicious upload   | RCE via web shell    | [→](https://hackita.it/articoli/file-upload-attack)     |
-| Web Shell              | Persistent access  | RCE + persistence    | [→](https://hackita.it/articoli/web-shell)              |
-| Arbitrary File Read    | Filesystem read    | Credential theft     | [→](https://hackita.it/articoli/arbitrary-file-read)    |
-| Zip Slip               | Archive extraction | File write → RCE     | [→](https://hackita.it/articoli/zip-slip)               |
-| Backup Exposure        | Exposed files      | Data breach diretto  | [→](https://hackita.it/articoli/backup-exposure)        |
-| Source Code Disclosure | Code exposure      | Creds + supply chain | [→](https://hackita.it/articoli/source-code-disclosure) |
+| Path Traversal         | Directory escape   | File read → creds    | [→](https://hackita.it/articoli/path-traversal/)         |
+| LFI                    | File inclusion     | File read → RCE      | [→](https://hackita.it/articoli/lfi/)                    |
+| RFI                    | Remote inclusion   | RCE diretta          | [→](https://hackita.it/articoli/rfi/)                    |
+| File Upload Attack     | Malicious upload   | RCE via web shell    | [→](https://hackita.it/articoli/file-upload-attack/)     |
+| Web Shell              | Persistent access  | RCE + persistence    | [→](https://hackita.it/articoli/web-shell/)              |
+| Arbitrary File Read    | Filesystem read    | Credential theft     | [→](https://hackita.it/articoli/arbitrary-file-read/)    |
+| Zip Slip               | Archive extraction | File write → RCE     | [→](https://hackita.it/articoli/zip-slip/)               |
+| Backup Exposure        | Exposed files      | Data breach diretto  | [→](https://hackita.it/articoli/backup-exposure/)        |
+| Source Code Disclosure | Code exposure      | Creds + supply chain | [→](https://hackita.it/articoli/source-code-disclosure/) |
 
-Vedi anche: [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa), [SQL Injection](https://hackita.it/articoli/sql-injection-guida-completa), [Command Injection](https://hackita.it/articoli/command-injection).
+Vedi anche: [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/), [SQL Injection](https://hackita.it/articoli/sql-injection-classica/), [Command Injection](https://hackita.it/articoli/command-injection/).
 
 ***
 

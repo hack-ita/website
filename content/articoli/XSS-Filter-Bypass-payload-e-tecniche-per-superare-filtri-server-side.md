@@ -23,8 +23,8 @@ I filtri XSS sono l'ostacolo che separa un tester mediocre da uno efficace. Ogni
 
 Questa guida cataloga le tecniche di bypass più efficaci per i filtri server-side più comuni. Non basta conoscere un payload: devi capire **perché** il filtro non lo blocca.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss)\
-→ Per bypass specifici dei WAF commerciali: [XSS WAF Bypass](https://hackita.it/articoli/xss-waf-bypass)
+→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)\
+→ Per bypass specifici dei WAF commerciali: [XSS WAF Bypass](https://hackita.it/articoli/xss-waf-bypass/)
 
 ***
 
@@ -361,7 +361,7 @@ XSStrike analizza la response e genera payload specifici per il filtro rilevato.
 1. Intercetta la richiesta
 2. Invia a Intruder
 3. Segna il parametro vulnerabile come posizione
-4. Usa payload list da [XSS Payload List](https://hackita.it/articoli/xss-payload-list)
+4. Usa payload list da [XSS Payload List](https://hackita.it/articoli/xss-payload-list/)
 5. Analizza le response per lunghezza anomala (filtro che rimuove) o contenuto (reflection)
 
 ***

@@ -22,14 +22,14 @@ La **Log Injection** si verifica quando l'input dell'utente finisce nei file di 
 
 La trovo nel **18% dei pentest** come log injection base (capacità di iniettare contenuto nei log). La combinazione log poisoning + LFI → RCE è più rara (5%) ma devastante. Log4Shell ancora presente nel 3% dei sistemi Java non patchati nel 2026.
 
-Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [Porta 514 Syslog](https://hackita.it/articoli/porta-514-syslog).
+Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [Porta 514 Syslog](https://hackita.it/articoli/porta-514-syslog/).
 
 ## Cos'è la Log Injection?
 
 La Log Injection è una vulnerabilità in cui l'input dell'utente viene scritto nei file di log dell'applicazione **senza sanitizzazione dei caratteri speciali** (newline, codice eseguibile, espressioni JNDI). L'attaccante può iniettare righe di log false (log forging), codice eseguibile che viene interpretato quando il log viene letto o incluso (log poisoning), o espressioni che il framework di logging valuta come codice (Log4Shell).
 
 > **La Log Injection è pericolosa?**
-> Sì — a tre livelli. **Livello 1 (log forging):** confonde la forensic e il SOC, copre le tracce dell'attacco. **Livello 2 (log poisoning + LFI):** inietta codice PHP/Python nel log, poi lo include via [LFI](https://hackita.it/articoli/lfi) → **RCE**. **Livello 3 (Log4Shell):** RCE pre-auth su qualsiasi server Java con Log4j ≤ 2.16.0. Trovata nel **18% dei pentest** come forma base.
+> Sì — a tre livelli. **Livello 1 (log forging):** confonde la forensic e il SOC, copre le tracce dell'attacco. **Livello 2 (log poisoning + LFI):** inietta codice PHP/Python nel log, poi lo include via [LFI](https://hackita.it/articoli/lfi/) → **RCE**. **Livello 3 (Log4Shell):** RCE pre-auth su qualsiasi server Java con Log4j ≤ 2.16.0. Trovata nel **18% dei pentest** come forma base.
 
 ## Come Verificare se Sei Vulnerabile
 
@@ -84,7 +84,7 @@ admin\n2026-02-19 10:05:00 INFO [SYSTEM] - Server started successfully. All serv
 
 ## 2. Log Poisoning → LFI → RCE
 
-Questa è la combinazione letale: inietti **codice eseguibile** nel log, poi usi una vulnerabilità di [Local File Inclusion](https://hackita.it/articoli/lfi) per includere il file di log — e il codice viene eseguito.
+Questa è la combinazione letale: inietti **codice eseguibile** nel log, poi usi una vulnerabilità di [Local File Inclusion](https://hackita.it/articoli/lfi/) per includere il file di log — e il codice viene eseguito.
 
 ### Step 1 — Inietta PHP nel log tramite User-Agent
 
@@ -264,6 +264,6 @@ Log Poisoning (search field) → PHP in search.log → LFI include search.log �
 
 ***
 
-Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [Porta 514 Syslog](https://hackita.it/articoli/porta-514-syslog), [CRLF Injection](https://hackita.it/articoli/crlf-injection), [LFI](https://hackita.it/articoli/lfi).
+Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [Porta 514 Syslog](https://hackita.it/articoli/porta-514-syslog/), [CRLF Injection](https://hackita.it/articoli/crlf-injection/), [LFI](https://hackita.it/articoli/lfi/).
 
 > I tuoi log scrivono input utente non sanitizzato? Log4j è aggiornato? [Penetration test HackIta](https://hackita.it/servizi). Per padroneggiare la Log Injection: [formazione 1:1](https://hackita.it/formazione).

@@ -20,7 +20,7 @@ tags:
 
 Cloud\_enum è uno script Python per enumerare asset cloud pubblicamente esposti su AWS, Azure e GCP durante la fase di **recon esterna**. Automatizza la ricerca di bucket, storage account e risorse associate a un’organizzazione sfruttando naming convention prevedibili e misconfigurazioni comuni.
 
-Genera e testa combinazioni come `company-dev`, `company-backup`, `company-prod`, verificando via DNS e richieste HTTP l’esistenza delle risorse e il loro livello di esposizione. Non richiede credenziali cloud: è pura surface mapping, simile a quanto fai con [Amass](https://hackita.it/articoli/amass) o [Assetfinder](https://hackita.it/articoli/assetfinder), ma focalizzato sul cloud.
+Genera e testa combinazioni come `company-dev`, `company-backup`, `company-prod`, verificando via DNS e richieste HTTP l’esistenza delle risorse e il loro livello di esposizione. Non richiede credenziali cloud: è pura surface mapping, simile a quanto fai con [Amass](https://hackita.it/articoli/amass/) o [Assetfinder](https://hackita.it/articoli/assetfinder/), ma focalizzato sul cloud.
 
 Si posiziona nella kill chain in **Reconnaissance → Cloud Asset Discovery**, prima di eventuale exploitation o abuse di bucket mal configurati.
 
@@ -154,7 +154,7 @@ grep -i "password\|token\|secret\|key" exfil/*.txt
 
 **Timeline:** 5 minuti da discovery a data download
 
-Per approfondire AWS security e S3 exploitation, consulta [AWS penetration testing e cloud security best practices](https://hackita.it/articoli/aws-security).
+Per approfondire AWS security e S3 exploitation, consulta [AWS penetration testing e cloud security best practices](https://hackita.it/articoli/aws-security/).
 
 ***
 
@@ -422,7 +422,7 @@ aws ec2 describe-instances
 
 **TOTALE:** 10 minuti da cloud\_enum a full AWS account access.
 
-Se vuoi approfondire cloud exploitation post-access, leggi [AWS privilege escalation paths e persistence techniques](https://hackita.it/articoli/aws-privilege-escalation).
+Se vuoi approfondire cloud exploitation post-access, leggi [AWS privilege escalation paths e persistence techniques](https://hackita.it/articoli/aws-privilege-escalation/).
 
 ***
 

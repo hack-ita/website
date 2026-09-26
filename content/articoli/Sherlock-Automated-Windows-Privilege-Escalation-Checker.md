@@ -174,7 +174,7 @@ run
 
 ## 4️⃣ Tecniche Avanzate
 
-### Integrazione con [Metasploit](https://hackita.it/articoli/metasploit)
+### Integrazione con [Metasploit](https://hackita.it/articoli/metasploit/)
 
 ```bash
 # Dopo Sherlock identifica vuln
@@ -359,7 +359,7 @@ mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords"
 
 **Quando usare Sherlock**: Quick check kernel su sistemi legacy (Win7/2008/2012).
 
-**Quando usare [Watson](https://hackita.it/articoli/watson)**: Sistemi Windows 10+ per CVE recenti.
+**Quando usare [Watson](https://hackita.it/articoli/watson/)**: Sistemi Windows 10+ per CVE recenti.
 
 ## 7️⃣ Attack Chain Completa
 

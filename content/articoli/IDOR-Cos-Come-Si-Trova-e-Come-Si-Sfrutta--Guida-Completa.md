@@ -26,7 +26,7 @@ Risultato: cambi un numero nell'URL o in un parametro JSON, e leggi i dati di qu
 
 IDOR rientra nella categoria **Broken Access Control** (OWASP A01:2021) — la vulnerabilità più diffusa nelle applicazioni web moderne. Nelle API REST viene chiamata anche **BOLA** (Broken Object Level Authorization). Il nome cambia, il problema è lo stesso: nessun controllo sull'autorizzazione a livello di singolo oggetto.
 
-Vedi anche: [auth-access-control-guida-completa](https://hackita.it/articoli/auth-access-control-guida-completa), [broken-access-control](https://hackita.it/articoli/broken-access-control), [account-takeover](https://hackita.it/articoli/account-takeover).
+Vedi anche: [auth-access-control-guida-completa](https://hackita.it/articoli/auth-access-control-guida-completa/), [broken-access-control](https://hackita.it/articoli/broken-access-control/), [account-takeover](https://hackita.it/articoli/account-takeover/).
 
 ***
 
@@ -381,7 +381,7 @@ Oppure via token theft:
 3. Usa quel token per autenticarti come target → Account Takeover immediato
 ```
 
-Vedi: [account-takeover](https://hackita.it/articoli/account-takeover), [password-reset-attack](https://hackita.it/articoli/password-reset-attack).
+Vedi: [account-takeover](https://hackita.it/articoli/account-takeover/), [password-reset-attack](https://hackita.it/articoli/password-reset-attack/).
 
 ***
 

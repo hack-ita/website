@@ -375,14 +375,14 @@ ssh -i /tmp/stolen_key appuser@10.10.11.50
 **Cosa fare se fallisce:**
 
 * **Chiave SSH protetta da passphrase:** Usa `ssh2john` e cracka con john/hashcat
-* **[MySQL](https://hackita.it/articoli/mysql) nega accesso:** Verifica host allowed con `SELECT host FROM mysql.user WHERE User='backup';`
+* **[MySQL](https://hackita.it/articoli/porta-3306-mysql/) nega accesso:** Verifica host allowed con `SELECT host FROM mysql.user WHERE User='backup';`
 * **Nessuna connessione SSH attiva:** Enumera `/etc/hosts` o cerca config files per hostname altri server
 
 ***
 
 ### Scenario 3: SUID binary discovery e exploitation
 
-**Contesto:** Hai shell standard user su sistema Ubuntu. Cerchi [SUID](https://hackita.it/articoli/suid) misconfiguration.
+**Contesto:** Hai shell standard user su sistema Ubuntu. Cerchi [SUID](https://hackita.it/articoli/suid/) misconfiguration.
 
 ```bash
 ./LinEnum.sh | grep -A50 "SUID files"
@@ -496,7 +496,7 @@ done
 
 ### Stealth enumeration: minimizzare detection footprint
 
-LinEnum genera meno eventi di [LinPEAS](https://hackita.it/articoli/linpeas), ma è comunque tracciabile.
+LinEnum genera meno eventi di [LinPEAS](https://hackita.it/articoli/linpeas/), ma è comunque tracciabile.
 
 **Detection vectors:**
 
@@ -839,7 +839,7 @@ curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas
 
 ## 7️⃣ Attack Chain Completa
 
-### From [Phishing](https://hackita.it/articoli/phishing) to Domain Admin via LinEnum
+### From [Phishing](https://hackita.it/articoli/phishing/) to Domain Admin via LinEnum
 
 **FASE 1: Social Engineering (Initial Access)**
 
@@ -971,9 +971,9 @@ python ticketer.py -nthash b3c2b7f0f93e5c7d9f3c8e1d2a4b5c6d -domain-sid S-1-5-21
 3. SSH client (lateral movement)
 4. **LinEnum** (enumeration - KEY ROLE)
 5. sudo/nmap (local privilege escalation)
-6. [CrackMapExec](https://hackita.it/articoli/crackmapexec) (credential validation)
-7. secretsdump/[Impacket](https://hackita.it/articoli/impacket) (credential dumping)
-8. [ticketer.py](https://hackita.it/articoli/ticketer) (golden ticket generation)
+6. [CrackMapExec](https://hackita.it/articoli/crackmapexec/) (credential validation)
+7. secretsdump/[Impacket](https://hackita.it/articoli/impacket/) (credential dumping)
+8. [ticketer.py](https://hackita.it/articoli/ticketer/) (golden ticket generation)
 
 LinEnum è stato il punto di svolta: senza trovare la password in `.bash_history`, l'attacco avrebbe richiesto bruteforce o phishing aggiuntivo (giorni/settimane extra).
 
@@ -1457,7 +1457,7 @@ which bash
 /usr/bin/bash ./LinEnum.sh
 ```
 
-**Se nemmeno bash esiste (embedded system):** LinEnum non funzionerà completamente. Usa [manual enumeration techniques](https://hackita.it/articoli/manual-linux-enumeration) invece.
+**Se nemmeno bash esiste (embedded system):** LinEnum non funzionerà completamente. Usa [manual enumeration techniques](https://hackita.it/articoli/manual-linux-enumeration/) invece.
 
 ***
 
@@ -1471,7 +1471,7 @@ A: Dipende dal contesto. LinEnum è migliore per: (1) Sistemi low-resource dove 
 
 **Q: LinEnum funziona su container Docker?**
 
-A: Sì, ma con limitazioni. LinEnum può rilevare che sei in un container (presenza di `.dockerenv`, cgroup info) e enumerare capabilities/mount points. Tuttavia, alcuni check falliranno se il container ha filesystem read-only o capabilities ristrette. Per container-specific enumeration, considera anche tool come [deepce](https://hackita.it/articoli/docker-enumeration-tools) specializzati in container escape.
+A: Sì, ma con limitazioni. LinEnum può rilevare che sei in un container (presenza di `.dockerenv`, cgroup info) e enumerare capabilities/mount points. Tuttavia, alcuni check falliranno se il container ha filesystem read-only o capabilities ristrette. Per container-specific enumeration, considera anche tool come [deepce](https://hackita.it/articoli/docker-enumeration-tools/) specializzati in container escape.
 
 ***
 

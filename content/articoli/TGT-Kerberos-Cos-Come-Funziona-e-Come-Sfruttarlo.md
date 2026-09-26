@@ -231,7 +231,7 @@ Se un account ha **"Do not require Kerberos preauthentication"** abilitato, chiu
 1. Crackare la password offline (dal materiale cifrato dell'AS-REP)
 2. Usare quella password per ottenere un TGT normale con pre-auth
 
-L'attacco è trattato in dettaglio in [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting).
+L'attacco è trattato in dettaglio in [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/).
 
 ```bash
 # Identifica account vulnerabili e richiedi materiale crackabile
@@ -406,7 +406,7 @@ SPN non trovato:        usa FQDN, non IP
 
 **Altri articoli correlati:**
 
-* [Kerberoasting](https://hackita.it/articoli/kerberoasting/)
+* [Kerberoasting](https://hackita.it/articoli/kerberos/)
 * [DPAPI](https://hackita.it/articoli/dpapi/)
 * [NTLM Relay](https://hackita.it/articoli/ntlm-relay/)
 

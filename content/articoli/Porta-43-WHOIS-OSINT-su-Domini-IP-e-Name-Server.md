@@ -17,7 +17,7 @@ tags:
   - rdap
 ---
 
-La porta 43 espone il **WHOIS protocol** — il servizio standard per interrogare database di registrazione domini, indirizzi IP e AS numbers. WHOIS (RFC 3912) opera come directory pubblica Internet, rispondendo con owner info, date registrazione/scadenza, name servers e contatti tecnici/amministrativi per qualsiasi dominio o blocco IP. In penetration testing e [OSINT](https://hackita.it/articoli/osint), la porta 43 è il **primo step reconnaissance passivo**: email addresses per [phishing](https://hackita.it/articoli/phishing), name servers per [DNS](https://hackita.it/articoli/dns) takeover, scadenze domini per domain hijacking, e organizational info per [social engineering](https://hackita.it/articoli/social-engineering). Ogni pentester inizia con WHOIS query prima di toccare il target — è intelligence gathering legale, passivo, non-invasivo.
+La porta 43 espone il **WHOIS protocol** — il servizio standard per interrogare database di registrazione domini, indirizzi IP e AS numbers. WHOIS (RFC 3912) opera come directory pubblica Internet, rispondendo con owner info, date registrazione/scadenza, name servers e contatti tecnici/amministrativi per qualsiasi dominio o blocco IP. In penetration testing e [OSINT](https://hackita.it/articoli/osint/), la porta 43 è il **primo step reconnaissance passivo**: email addresses per [phishing](https://hackita.it/articoli/phishing/), name servers per [DNS](https://hackita.it/articoli/dns/) takeover, scadenze domini per domain hijacking, e organizational info per [social engineering](https://hackita.it/articoli/socialengineer/). Ogni pentester inizia con WHOIS query prima di toccare il target — è intelligence gathering legale, passivo, non-invasivo.
 
 WHOIS sopravvive identico dal 1982 perché è **infrastructure critica Internet**: ICANN impone registrar di operare WHOIS server, ARIN/RIPE/APNIC mantengono WHOIS per allocazioni IP/ASN, e nessun replacement esiste (RDAP è supplement, non sostituzione). Nel 2026, WHOIS è utilizzato daily da: security researchers, domain investors, legal teams, e brand protection services.
 
@@ -146,7 +146,7 @@ Admin Email: [email protected]
 Tech Email: [email protected]
 ```
 
-Emails per [phishing](https://hackita.it/articoli/phishing) campaigns, [password spraying](https://hackita.it/articoli/password-spraying), o breach correlation (HaveIBeenPwned).
+Emails per [phishing](https://hackita.it/articoli/phishing/) campaigns, [password spraying](https://hackita.it/articoli/password-spraying/), o breach correlation (HaveIBeenPwned).
 
 ### Name server enumeration
 
@@ -162,7 +162,7 @@ Name Server: NS3.CLOUDFLARE.COM
 
 **Implicazioni:**
 
-* `NS1.VICTIM.COM` self-hosted → target per [DNS](https://hackita.it/articoli/dns) exploits
+* `NS1.VICTIM.COM` self-hosted → target per [DNS](https://hackita.it/articoli/dns/) exploits
 * `NS3.CLOUDFLARE.COM` third-party → DNS zone transfer unlikely, but check
 
 **DNS zone transfer attempt:**
@@ -185,7 +185,7 @@ Registrar URL: https://www.godaddy.com
 
 **Targeting registrar account takeover:**
 
-* Check [password reset](https://hackita.it/articoli/account-takeover) flows
+* Check [password reset](https://hackita.it/articoli/account-takeover/) flows
 * Test for account enumeration
 * Credential stuffing with leaked databases
 
@@ -212,7 +212,7 @@ done | sort -u > emails.txt
 ```
 
 ```bash
-# Test su [HaveIBeenPwned](https://hackita.it/articoli/hibp)
+# Test su [HaveIBeenPwned](https://hackita.it/articoli/hibp/)
 for email in $(cat emails.txt); do
   curl -s "https://haveibeenpwned.com/api/v3/breachedaccount/$email" -H "hibp-api-key: KEY" | jq .
 done
@@ -308,7 +308,7 @@ http://evil.attacker.com/renew
 EOF
 ```
 
-Vittima clicca → [credential harvest](https://hackita.it/articoli/credential-harvesting) → domain takeover.
+Vittima clicca → [credential harvest](https://hackita.it/articoli/credential-harvesting/) → domain takeover.
 
 ### Scenario 2 — Expired domain hijacking
 
@@ -358,7 +358,7 @@ dig +short NS1.TARGET.CORP
 # 198.51.100.10
 
 # Check if self-hosted NS is vulnerable
-[nmap](https://hackita.it/articoli/nmap) -sV -p 53 198.51.100.10
+[nmap](https://hackita.it/articoli/nmap/) -sV -p 53 198.51.100.10
 ```
 
 ```
@@ -383,21 +383,21 @@ RECONNAISSANCE
 
 INTELLIGENCE GATHERING
 │
-├─ Email harvest → [HaveIBeenPwned](https://hackita.it/articoli/hibp) → breach check
-├─ Name servers → [DNS](https://hackita.it/articoli/dns) enum → zone transfer
+├─ Email harvest → [HaveIBeenPwned](https://hackita.it/articoli/hibp/) → breach check
+├─ Name servers → [DNS](https://hackita.it/articoli/dns/) enum → zone transfer
 ├─ Registrar ID → account takeover research
 └─ Expiry dates → domain hijacking monitor
 
 EXPLOITATION
 │
 ├─ A) Expired domains → register → phishing infrastructure
-├─ B) Leaked admin emails → [credential stuffing](https://hackita.it/articoli/credential-stuffing)
-├─ C) Vulnerable NS → [DNS exploits](https://hackita.it/articoli/dns) → service disruption
-└─ D) Organization info → [social engineering](https://hackita.it/articoli/social-engineering)
+├─ B) Leaked admin emails → [credential stuffing](https://hackita.it/articoli/credential-stuffing/)
+├─ C) Vulnerable NS → [DNS exploits](https://hackita.it/articoli/dns/) → service disruption
+└─ D) Organization info → [social engineering](https://hackita.it/articoli/socialengineer/)
 
 NEXT STEPS
 │
-└─ WHOIS data feeds [subdomain enumeration](https://hackita.it/articoli/subdomain-enum), [Google dorking](https://hackita.it/articoli/google-dorking), employee LinkedIn scraping
+└─ WHOIS data feeds [subdomain enumeration](https://hackita.it/articoli/subdomain-enum/), [Google dorking](https://hackita.it/articoli/google-dorking/), employee LinkedIn scraping
 ```
 
 **Tabella comparativa domain info sources:**
@@ -443,7 +443,7 @@ openvpn --config target-vpn.ovpn --auth-user-pass creds.txt
 # [+] VPN connected
 
 [00:40] INTERNAL NETWORK
-# Lateral movement via [crackmapexec](https://hackita.it/articoli/crackmapexec)
+# Lateral movement via [crackmapexec](https://hackita.it/articoli/crackmapexec/)
 ```
 
 **Timeline:** 40 minuti da WHOIS a internal network access.
@@ -586,7 +586,7 @@ Il comando `whois` auto-route correttamente. Manualmente: IANA maintains list su
 
 **WHOIS rivela subdomain?**
 
-No. WHOIS mostra solo domain registrato (example.com), non subdomains (mail.example.com). Per subdomains, usa [DNS enum](https://hackita.it/articoli/subdomain-enum) o certificate transparency logs.
+No. WHOIS mostra solo domain registrato (example.com), non subdomains (mail.example.com). Per subdomains, usa [DNS enum](https://hackita.it/articoli/subdomain-enum/) o certificate transparency logs.
 
 ***
 
@@ -609,7 +609,7 @@ No. WHOIS mostra solo domain registrato (example.com), non subdomains (mail.exam
 
 ## Perché WHOIS resta fondamentale nel 2026
 
-WHOIS è **infrastruttura critica Internet** — ICANN policy requires public accessibility. Alternative (RDAP) exist ma WHOIS port 43 rimane universally supported. Nel pentest, WHOIS è step 0 di ogni engagement: domain expiry per timing attacks, email harvesting per phishing, name server mapping per [DNS attacks](https://hackita.it/articoli/dns), organization info per [social engineering](https://hackita.it/articoli/social-engineering). Tool automation (Recon-ng, Maltego, SpiderFoot) integrate WHOIS come primary data source.
+WHOIS è **infrastruttura critica Internet** — ICANN policy requires public accessibility. Alternative (RDAP) exist ma WHOIS port 43 rimane universally supported. Nel pentest, WHOIS è step 0 di ogni engagement: domain expiry per timing attacks, email harvesting per phishing, name server mapping per [DNS attacks](https://hackita.it/articoli/dns/), organization info per [social engineering](https://hackita.it/articoli/socialengineer/). Tool automation (Recon-ng, Maltego, SpiderFoot) integrate WHOIS come primary data source.
 
 ## WHOIS vs RDAP
 

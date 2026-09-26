@@ -21,7 +21,7 @@ Twig SSTI ti mette dentro il server PHP di Symfony, Laravel o Drupal — non nel
 
 Twig gira dietro metà del PHP moderno: Symfony lo usa di default, Laravel lo importa via TwigBridge, Drupal 8+ lo usa in ogni tema, Craft CMS lo espone spesso nei pannelli admin. Quando una di queste applicazioni concatena input utente dentro il **sorgente** del template invece di passarlo come variabile, il motore lo interpreta come codice — questo è il momento in cui nasce una **Server-Side Template Injection**. A differenza della XSS il codice gira lato server: filesystem, credenziali, database, tutto raggiungibile.
 
-Fa parte del cluster [SSTI](https://hackita.it/articoli/ssti-server-side-template-injection) e della guida [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa).
+Fa parte del cluster [SSTI](https://hackita.it/articoli/ssti-server-side-template-injection/) e della guida [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/).
 
 ***
 
@@ -125,7 +125,7 @@ Usa [Burp Suite](https://hackita.it/articoli/burp-suite/) per intercettare le re
 
 ## Differenze chiave tra Twig e Jinja2
 
-Twig e [Jinja2](https://hackita.it/articoli/jinja2-ssti-rce) usano gli stessi delimitatori `{{}}` e `{%%}`, ma la logica di exploitation è completamente diversa. I payload non sono intercambiabili.
+Twig e [Jinja2](https://hackita.it/articoli/jinja2-ssti-rce/) usano gli stessi delimitatori `{{}}` e `{%%}`, ma la logica di exploitation è completamente diversa. I payload non sono intercambiabili.
 
 | Caratteristica     | Twig                                                          | Jinja2                        |
 | ------------------ | ------------------------------------------------------------- | ----------------------------- |
@@ -519,7 +519,7 @@ grep -r "registerUndefinedFilterCallback" --include="*.php"
 ## FAQ
 
 **Twig SSTI e Jinja2 SSTI sono la stessa cosa?**
-No — usano gli stessi delimitatori ma payload completamente diversi. La logica di exploitation di Jinja2 (traversal MRO Python) non si applica a Twig (PHP). Vedi il confronto nella [guida SSTI](https://hackita.it/articoli/ssti-server-side-template-injection) e la [guida Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce).
+No — usano gli stessi delimitatori ma payload completamente diversi. La logica di exploitation di Jinja2 (traversal MRO Python) non si applica a Twig (PHP). Vedi il confronto nella [guida SSTI](https://hackita.it/articoli/ssti-server-side-template-injection/) e la [guida Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce/).
 
 **La sandbox Twig rende sicura l'applicazione?**
 Non completamente. La sandbox riduce la superficie ma non elimina il rischio — dipende dalla policy configurata, dagli oggetti esposti nel contesto e dalla versione. Non assumere mai che "usa la sandbox" significhi "è sicuro".
@@ -532,6 +532,6 @@ Analizza gli errori verbose (il namespace cambia tra 1.x/2.x e 3.x), usa [WhatWe
 
 ***
 
-Satellite della [guida SSTI](https://hackita.it/articoli/ssti-server-side-template-injection) e della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce), [FreeMarker SSTI](https://hackita.it/articoli/freemarker-ssti-rce), [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce), [Burp Suite](https://hackita.it/articoli/burp-suite/), [OWASP ZAP](https://hackita.it/articoli/owasp-zap/).
+Satellite della [guida SSTI](https://hackita.it/articoli/ssti-server-side-template-injection/) e della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce/), [FreeMarker SSTI](https://hackita.it/articoli/freemarker-ssti-rce/), [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce/), [Burp Suite](https://hackita.it/articoli/burp-suite/), [OWASP ZAP](https://hackita.it/articoli/owasp-zap/).
 
 **Riferimenti esterni**: [PortSwigger — SSTI](https://portswigger.net/web-security/server-side-template-injection) · [Twig Security Documentation](https://twig.symfony.com/doc/3.x/api.html#sandbox-extension) · [OWASP WSTG — SSTI](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/18-Testing_for_Server-side_Template_Injection)

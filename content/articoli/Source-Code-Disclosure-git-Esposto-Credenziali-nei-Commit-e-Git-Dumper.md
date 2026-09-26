@@ -23,7 +23,7 @@ La Source Code Disclosure non è solo "leggere il codice" — è avere accesso a
 
 La trovo nell'**8% dei pentest web**. Il vettore più comune è `.git/` esposto (6%), seguito da `.svn/` (1%) e misconfiguration del web server che serve il source code PHP (1%). Quando la trovo, l'escalation a credenziali valide avviene nel **85% dei casi** — quasi sempre c'è qualcosa di prezioso nella history.
 
-Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa).
+Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/).
 
 ## Cos'è la Source Code Disclosure?
 
@@ -548,6 +548,6 @@ location ~ /\.git {
 
 ***
 
-Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa). Vedi anche: [Backup Exposure](https://hackita.it/articoli/backup-exposure), [Arbitrary File Read](https://hackita.it/articoli/arbitrary-file-read).
+Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/). Vedi anche: [Backup Exposure](https://hackita.it/articoli/backup-exposure/), [Arbitrary File Read](https://hackita.it/articoli/arbitrary-file-read/).
 
 > Il tuo `.git/` è esposto? Le credenziali rimosse dal codice sono ancora nella history? [Penetration test applicativo HackIta](https://hackita.it/servizi) per trovare ogni disclosure prima degli attaccanti. Dalla git history al cloud takeover: [formazione 1:1](https://hackita.it/formazione).

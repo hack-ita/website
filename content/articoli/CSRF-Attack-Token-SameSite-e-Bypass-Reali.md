@@ -19,7 +19,7 @@ Il *CSRF* è un attacco invisibile: la vittima visita una pagina dell'attaccante
 
 È un attacco che molti considerano "risolto" grazie a `SameSite=Lax` (default nei browser moderni dal 2020). Ma `SameSite=Lax` protegge solo le request POST cross-site — non protegge dalle GET con side effect, non protegge se `SameSite=None` è impostato esplicitamente, e non protegge se l'applicazione usa un redirect chain che rende la request "same-site". Nei pentest lo trovo ancora regolarmente — specialmente nelle intranet aziendali, nelle applicazioni legacy, e nelle API che accettano `Content-Type: text/plain`.
 
-Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [Session Hijacking](https://hackita.it/articoli/session-hijacking), [Clickjacking](https://hackita.it/articoli/clickjacking).
+Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [Session Hijacking](https://hackita.it/articoli/session-hijacking/), [Clickjacking](https://hackita.it/articoli/clickjacking/).
 
 Riferimenti: [PortSwigger CSRF](https://portswigger.net/web-security/csrf), [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html).
 
@@ -435,6 +435,6 @@ POC
 
 Riferimenti: [PortSwigger CSRF labs](https://portswigger.net/web-security/csrf), [OWASP CSRF Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/05-Testing_for_Cross_Site_Request_Forgery), [HackTricks CSRF](https://book.hacktricks.wiki/en/pentesting-web/csrf-cross-site-request-forgery.html).
 
-Satellite della [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [Session Hijacking](https://hackita.it/articoli/session-hijacking), [Clickjacking](https://hackita.it/articoli/clickjacking), [XSS](https://hackita.it/articoli/xss).
+Satellite della [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [Session Hijacking](https://hackita.it/articoli/session-hijacking/), [Clickjacking](https://hackita.it/articoli/clickjacking/), [XSS](https://hackita.it/articoli/xss/).
 
 > Il tuo CSRF token è validato? Le API accettano `text/plain`? Il cookie ha `SameSite=None`? [Penetration test HackIta](https://hackita.it/servizi) per ogni falla CSRF. Dal PoC all'account takeover: [formazione 1:1](https://hackita.it/formazione).

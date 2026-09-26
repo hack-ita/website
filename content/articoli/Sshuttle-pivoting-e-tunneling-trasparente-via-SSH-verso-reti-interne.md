@@ -21,7 +21,7 @@ Sshuttle trasforma qualsiasi accesso SSH in una VPN completa senza richiedere co
 
 ## Posizione nella Kill Chain
 
-Sshuttle opera nella fase di pivoting/lateral movement. Dopo aver ottenuto accesso SSH a un host con [Hydra](https://hackita.it/articoli/hydra) o chiavi rubate, Sshuttle ti permette di usare quell'host come gateway per raggiungere reti interne dove puoi continuare l'assessment con altri tool.
+Sshuttle opera nella fase di pivoting/lateral movement. Dopo aver ottenuto accesso SSH a un host con [Hydra](https://hackita.it/articoli/hydra/) o chiavi rubate, Sshuttle ti permette di usare quell'host come gateway per raggiungere reti interne dove puoi continuare l'assessment con altri tool.
 
 | Fase             | Tool Precedente            | Sshuttle                | Tool Successivo      |
 | ---------------- | -------------------------- | ----------------------- | -------------------- |
@@ -130,7 +130,7 @@ sudo sshuttle -r user@pivot-host 10.0.0.0/8 -x 10.10.20.0/24
 
 ### DNS Through Tunnel
 
-Forza anche le query [DNS](https://hackita.it/articoli/dns) attraverso il tunnel:
+Forza anche le query [DNS](https://hackita.it/articoli/dns/) attraverso il tunnel:
 
 ```bash
 sudo sshuttle --dns -r user@pivot-host 10.10.10.0/24
@@ -247,10 +247,10 @@ python3 /opt/impacket/examples/GetADUsers.py -all -dc-ip 192.168.100.10 corp.loc
 
 | Sshuttle +                                                     | Risultato                       | Uso                                 |
 | -------------------------------------------------------------- | ------------------------------- | ----------------------------------- |
-| [Nmap](https://hackita.it/articoli/nmap)                       | Scan rete interna trasparente   | `nmap -sV 10.10.10.0/24`            |
-| [CrackMapExec](https://hackita.it/articoli/crackmapexec)       | AD enumeration attraverso pivot | `cme smb 10.10.10.0/24`             |
-| [Metasploit](https://hackita.it/articoli/metasploit-framework) | Exploit su target interni       | Configura route in msf              |
-| [BloodHound](https://hackita.it/articoli/bloodhound)           | Collection AD remota            | bloodhound-python attraverso tunnel |
+| [Nmap](https://hackita.it/articoli/nmap/)                       | Scan rete interna trasparente   | `nmap -sV 10.10.10.0/24`            |
+| [CrackMapExec](https://hackita.it/articoli/crackmapexec/)       | AD enumeration attraverso pivot | `cme smb 10.10.10.0/24`             |
+| [Metasploit](https://hackita.it/articoli/metasploit/) | Exploit su target interni       | Configura route in msf              |
+| [BloodHound](https://hackita.it/articoli/bloodhound/)           | Collection AD remota            | bloodhound-python attraverso tunnel |
 
 ## Confronto con Alternative di Pivoting
 
@@ -265,7 +265,7 @@ python3 /opt/impacket/examples/GetADUsers.py -all -dc-ip 192.168.100.10 corp.loc
 
 **Quando usare Sshuttle**: accesso SSH disponibile, vuoi trasparenza totale senza configurare proxy per ogni tool.
 
-**Quando usare alternative**: non hai root locale, serve [UDP](https://hackita.it/articoli/udp), o preferisci approccio SOCKS.
+**Quando usare alternative**: non hai root locale, serve [UDP](https://hackita.it/articoli/udp/), o preferisci approccio SOCKS.
 
 ## Defense Evasion
 
@@ -349,7 +349,7 @@ sudo sshuttle -r user@pivot-host -e "ssh -c aes128-gcm@openssh.com" 10.10.10.0/2
 
 **Sshuttle funziona con Windows come pivot?**
 
-No, richiede Python. Per pivot Windows usa [Chisel](https://hackita.it/articoli/chisel).
+No, richiede Python. Per pivot Windows usa [Chisel](https://hackita.it/articoli/chisel/).
 
 **Posso usare UDP attraverso Sshuttle?**
 

@@ -17,7 +17,7 @@ tags:
   - T3 Protocol
 ---
 
-Oracle WebLogic Server è un application server Java EE utilizzato da grandi enterprise per ospitare applicazioni web critiche: banking, ERP, portali governativi, sistemi di pagamento. Ascolta sulla porta 7001 TCP (HTTP/T3) e sulla [porta 7002](https://hackita.it/articoli/porta-7002-weblogic-ssl) (HTTPS/T3S). Nel penetration testing, WebLogic è probabilmente il software con il maggior numero di **Remote Code Execution pre-auth** della storia recente: deserializzazione Java non sicura, XXE, SSRF e path traversal si sono susseguiti anno dopo anno, con CVE critiche che vengono ancora sfruttate attivamente nel 2026 perché le aziende non patchano. Se trovi una porta 7001 aperta, hai un'alta probabilità di ottenere una shell — spesso come utente con privilegi elevati, perché WebLogic gira frequentemente come root o Administrator.
+Oracle WebLogic Server è un application server Java EE utilizzato da grandi enterprise per ospitare applicazioni web critiche: banking, ERP, portali governativi, sistemi di pagamento. Ascolta sulla porta 7001 TCP (HTTP/T3) e sulla [porta 7002](https://hackita.it/articoli/porta-7002-weblogic-ssl/) (HTTPS/T3S). Nel penetration testing, WebLogic è probabilmente il software con il maggior numero di **Remote Code Execution pre-auth** della storia recente: deserializzazione Java non sicura, XXE, SSRF e path traversal si sono susseguiti anno dopo anno, con CVE critiche che vengono ancora sfruttate attivamente nel 2026 perché le aziende non patchano. Se trovi una porta 7001 aperta, hai un'alta probabilità di ottenere una shell — spesso come utente con privilegi elevati, perché WebLogic gira frequentemente come root o Administrator.
 
 La porta 7001 è un multiplex: serve contemporaneamente traffico HTTP (la console di amministrazione e le applicazioni), il protocollo proprietario T3 (usato per la comunicazione tra nodi WebLogic) e IIOP (CORBA). I vettori di attacco principali passano per T3 e per la console web.
 
@@ -331,7 +331,7 @@ done
 curl -s "http://10.10.10.40:7001/uddiexplorer/SearchPublicRegistries.jsp?operator=http://169.254.169.254/latest/meta-data/iam/security-credentials/&rdoSearch=name&txtSearchname=a&btnSubmit=Search"
 ```
 
-SSRF verso il metadata service cloud → [AWS credential theft](https://hackita.it/articoli/aws-privilege-escalation).
+SSRF verso il metadata service cloud → [AWS credential theft](https://hackita.it/articoli/aws-privilege-escalation/).
 
 ## 5. Post-Exploitation
 
@@ -357,7 +357,7 @@ python3 weblogic_decrypt.py /u01/oracle/.../SerializedSystemIni.dat "{AES}abc123
 find / -name "boot.properties" -o -name "config.xml" -o -name "jps-config.xml" 2>/dev/null
 ```
 
-Il file `config.xml` contiene credenziali per datasource JDBC ([database](https://hackita.it/articoli/porta-3306-mysql)), LDAP, JMS e altri servizi — tutte criptate con lo stesso meccanismo, tutte decriptabili con `SerializedSystemIni.dat`.
+Il file `config.xml` contiene credenziali per datasource JDBC ([database](https://hackita.it/articoli/porta-3306-mysql/)), LDAP, JMS e altri servizi — tutte criptate con lo stesso meccanismo, tutte decriptabili con `SerializedSystemIni.dat`.
 
 ### Datasource credentials
 
@@ -374,7 +374,7 @@ grep -A5 "jdbc-driver-params" /u01/oracle/.../config/config.xml
 </jdbc-driver-params>
 ```
 
-Credenziali per [Oracle DB](https://hackita.it/articoli/porta-2483-oracle-db) di produzione.
+Credenziali per [Oracle DB](https://hackita.it/articoli/porta-2483-oracle-db/) di produzione.
 
 ## 6. Detection & Hardening
 

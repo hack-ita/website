@@ -134,12 +134,12 @@ Il trade-off è chiaro: WinPEAS è **estremamente rumoroso** e quasi sempre rile
 | Tool                                                 | Linguaggio          | Scope                 | Stealth    | Detection AV | Manutenzione  | Caso d'uso ottimale             |
 | ---------------------------------------------------- | ------------------- | --------------------- | ---------- | ------------ | ------------- | ------------------------------- |
 | **WinEnum** (varie)                                  | PS/Batch/Python     | Limitato              | Alto       | Bassa        | ❌ Abbandonato | Quick check in ambienti con EDR |
-| **[WinPEAS](https://hackita.it/articoli/winpeas)**   | C#/.bat/.ps1        | Massimo               | Basso      | Alta         | ✅ Attiva      | CTF, lab, assessment senza EDR  |
-| **[PowerUp](https://hackita.it/articoli/powerup)**   | PowerShell          | Misconfig + exploit   | Medio      | Media-Alta   | ❌ Archiviato  | Service abuse diretto           |
-| **[SharpUp](https://hackita.it/articoli/sharpup)**   | C# (.NET 3.5)       | Misconfig             | Medio-Alto | Media        | ⚠️ Bassa      | Red team, ambienti no-PS        |
-| **[Seatbelt](https://hackita.it/articoli/seatbelt)** | C# (.NET 3.5/4.0)   | Situational awareness | Massimo    | Bassa-Media  | ⚠️ Moderata   | Stealth recon, check mirati     |
-| **[JAWS](https://hackita.it/articoli/jaws)**         | PowerShell 2.0      | Generale              | Medio      | Bassa-Media  | ❌ Abbandonato | Sistemi legacy (Win7/2008)      |
-| **[WES-NG](https://hackita.it/articoli/wes-ng)**     | Python (off-target) | Patch gap             | Massimo    | Nessuna      | ✅ Attiva      | Analisi patch zero-footprint    |
+| **[WinPEAS](https://hackita.it/articoli/winpeas/)**   | C#/.bat/.ps1        | Massimo               | Basso      | Alta         | ✅ Attiva      | CTF, lab, assessment senza EDR  |
+| **[PowerUp](https://hackita.it/articoli/powerup/)**   | PowerShell          | Misconfig + exploit   | Medio      | Media-Alta   | ❌ Archiviato  | Service abuse diretto           |
+| **[SharpUp](https://hackita.it/articoli/sharpup/)**   | C# (.NET 3.5)       | Misconfig             | Medio-Alto | Media        | ⚠️ Bassa      | Red team, ambienti no-PS        |
+| **[Seatbelt](https://hackita.it/articoli/seatbelt/)** | C# (.NET 3.5/4.0)   | Situational awareness | Massimo    | Bassa-Media  | ⚠️ Moderata   | Stealth recon, check mirati     |
+| **[JAWS](https://hackita.it/articoli/jaws/)**         | PowerShell 2.0      | Generale              | Medio      | Bassa-Media  | ❌ Abbandonato | Sistemi legacy (Win7/2008)      |
+| **[WES-NG](https://hackita.it/articoli/wes-ng/)**     | Python (off-target) | Patch gap             | Massimo    | Nessuna      | ✅ Attiva      | Analisi patch zero-footprint    |
 
 ***
 

@@ -257,7 +257,7 @@ SeCreateSymbolicLinkPrivilege è un vettore condizionale: inutile da solo, poten
 
 **Articoli correlati:**
 
-* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege) — scrittura bypass ACL diretta, senza condizioni esterne
-* [SeImpersonatePrivilege](https://hackita.it/articoli/seimpersonateprivilege) — token interception via named pipe
+* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege/) — scrittura bypass ACL diretta, senza condizioni esterne
+* [SeImpersonatePrivilege](https://hackita.it/articoli/seimpersonateprivilege/) — token interception via named pipe
 
 **Riferimenti:** [NtObjectManager](https://github.com/googleprojectzero/sandbox-attacksurface-analysis-tools) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/create-symbolic-links)

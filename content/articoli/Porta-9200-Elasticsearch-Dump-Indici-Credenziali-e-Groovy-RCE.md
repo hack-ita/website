@@ -18,7 +18,7 @@ tags:
   - elasticsearch-no-auth
 ---
 
-Elasticsearch è il motore di ricerca e analytics distribuito più utilizzato al mondo: alimenta ricerche full-text, log analytics (stack ELK), metriche applicative, SIEM e qualsiasi sistema che ha bisogno di cercare velocemente in grandi quantità di dati. Ascolta sulla porta 9200 TCP (REST API) e 9300 TCP (trasporto inter-nodo). Nel penetration testing, Elasticsearch è uno dei servizi con il rapporto impegno/risultato più alto: storicamente distribuito **senza autenticazione di default**, espone la sua intera REST API a chiunque possa raggiungere la porta 9200. E quella API permette di fare tutto: leggere ogni documento indicizzato, cercare credenziali nei log, modificare o cancellare dati, e in alcune versioni eseguire codice arbitrario tramite scripting. Se hai trovato [Kibana sulla porta 5601](https://hackita.it/articoli/porta-5601-kibana), sai già che Elasticsearch è il database dietro — ma accedere direttamente alla 9200 è spesso ancora più potente, perché non hai le limitazioni dell'interfaccia Kibana.
+Elasticsearch è il motore di ricerca e analytics distribuito più utilizzato al mondo: alimenta ricerche full-text, log analytics (stack ELK), metriche applicative, SIEM e qualsiasi sistema che ha bisogno di cercare velocemente in grandi quantità di dati. Ascolta sulla porta 9200 TCP (REST API) e 9300 TCP (trasporto inter-nodo). Nel penetration testing, Elasticsearch è uno dei servizi con il rapporto impegno/risultato più alto: storicamente distribuito **senza autenticazione di default**, espone la sua intera REST API a chiunque possa raggiungere la porta 9200. E quella API permette di fare tutto: leggere ogni documento indicizzato, cercare credenziali nei log, modificare o cancellare dati, e in alcune versioni eseguire codice arbitrario tramite scripting. Se hai trovato [Kibana sulla porta 5601](https://hackita.it/articoli/porta-5601-kibana/), sai già che Elasticsearch è il database dietro — ma accedere direttamente alla 9200 è spesso ancora più potente, perché non hai le limitazioni dell'interfaccia Kibana.
 
 Un Elasticsearch tipico in produzione contiene: log di tutte le applicazioni (con password nei parametri URL, token JWT, header Authorization), metriche di business, dati utente indicizzati per la ricerca, audit trail — è la memoria storica completa dell'infrastruttura.
 
@@ -132,7 +132,7 @@ curl -s -u elastic:changeme http://10.10.10.40:9200/
 
 ### Credenziali da Kibana
 
-Se hai già compromesso [Kibana](https://hackita.it/articoli/porta-5601-kibana):
+Se hai già compromesso [Kibana](https://hackita.it/articoli/porta-5601-kibana/):
 
 ```bash
 cat /etc/kibana/kibana.yml | grep elasticsearch.password
@@ -218,7 +218,7 @@ curl -s http://10.10.10.40:9200/users/_search?size=100 | python3 -m json.tool
 }
 ```
 
-150.000 utenti con hash e API key. Hash bcrypt → [Hashcat](https://hackita.it/articoli/hashcat) mode 3200.
+150.000 utenti con hash e API key. Hash bcrypt → [Hashcat](https://hackita.it/articoli/hashcat/) mode 3200.
 
 ### Ricerca credenziali nei log
 
@@ -412,7 +412,7 @@ Contiene gli utenti con hash password e ruoli di Elasticsearch/Kibana.
 # 10.10.10.0/24 range completo mappato
 ```
 
-Le credenziali trovate → [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql), [MySQL](https://hackita.it/articoli/porta-3306-mysql), [Redis](https://hackita.it/articoli/porta-6379-redis), [SSH](https://hackita.it/articoli/ssh), [WinRM](https://hackita.it/articoli/porta-5985-winrm), [AWS](https://hackita.it/articoli/aws-privilege-escalation).
+Le credenziali trovate → [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql/), [MySQL](https://hackita.it/articoli/porta-3306-mysql/), [Redis](https://hackita.it/articoli/porta-6379-redis/), [SSH](https://hackita.it/articoli/ssh/), [WinRM](https://hackita.it/articoli/porta-5985-winrm/), [AWS](https://hackita.it/articoli/aws-privilege-escalation/).
 
 ## 9. Detection & Hardening
 

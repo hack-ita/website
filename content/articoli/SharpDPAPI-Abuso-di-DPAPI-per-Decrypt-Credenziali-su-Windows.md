@@ -19,7 +19,7 @@ SharpDPAPI è il tool definitivo in C# per decryption di credential protetti da 
 
 Sviluppato da @harmj0y, @leechristensen e @djhohnstein del team GhostPack/SpecterOps, SharpDPAPI implementa la logica DPAPI completa in C# puro, abilitando decryption con domain backup key (persiste per tutta la vita del dominio), user password, NTLM hash, o masterkey GUID mappings. Il vantaggio critico: il domain backup key non cambia mai dopo domain creation - estratto una volta, decripta credential di qualsiasi utente indefinitamente.
 
-In questa guida impari a usare SharpDPAPI in scenari reali: da extraction domain backup key a mass triage di workstation, da browser credential decryption a RDP password harvesting. SharpDPAPI si posiziona nella kill chain post-domain compromise, alimentando [lateral movement](https://hackita.it/articoli/impacket) e cloud account access con cleartext password invece di hash.
+In questa guida impari a usare SharpDPAPI in scenari reali: da extraction domain backup key a mass triage di workstation, da browser credential decryption a RDP password harvesting. SharpDPAPI si posiziona nella kill chain post-domain compromise, alimentando [lateral movement](https://hackita.it/articoli/impacket/) e cloud account access con cleartext password invece di hash.
 
 ## Setup e Installazione
 
@@ -55,7 +55,7 @@ cd SharpDPAPI
 wget https://github.com/GhostPack/SharpDPAPI/releases/download/v1.20.0/SharpDPAPI.exe
 ```
 
-**Detection:** \~15/70 su VirusTotal (molto meno di [LaZagne](https://hackita.it/articoli/lazagne))
+**Detection:** \~15/70 su VirusTotal (molto meno di [LaZagne](https://hackita.it/articoli/lazagne/))
 
 ### Verifica Funzionamento
 
@@ -154,7 +154,7 @@ Folder: C:\Users\john\AppData\Local\Microsoft\Credentials\
 
 ### Browser Passwords (vedi SharpChrome)
 
-**Nota:** Per Chrome/Edge, usa il tool companion [SharpChrome](https://hackita.it/articoli/sharpchrome):
+**Nota:** Per Chrome/Edge, usa il tool companion [SharpChrome](https://hackita.it/articoli/sharpchrome/):
 
 ```cmd
 SharpChrome.exe logins /pvk:backup.pvk
@@ -238,7 +238,7 @@ SharpDPAPI.exe rdg /pvk:backup.pvk
     Password: R00tServerPa$$
 ```
 
-**Integration:** Password → [Evil-WinRM](https://hackita.it/articoli/evil-winrm) o RDP diretto
+**Integration:** Password → [Evil-WinRM](https://hackita.it/articoli/evilwinrm/) o RDP diretto
 
 ```bash
 # RDP verso DC
@@ -395,7 +395,7 @@ SharpDPAPI.exe triage /pvk:backup.pvk /target:C:\Users\john /server:WKSTN05.corp
 **Fase 1: Initial DA Access (T+0)**
 
 ```bash
-# Da [SafetyKatz](https://hackita.it/articoli/safetykatz) su workstation compromessa
+# Da [SafetyKatz](https://hackita.it/articoli/safetykatz/) su workstation compromessa
 # NTLM hash: 32693b11e6aa90eb43d32c72a07ceea6
 
 # Pass-the-hash to DC
@@ -538,9 +538,9 @@ SharpDPAPI.exe backupkey
     ↓ (backup.pvk - persiste indefinitamente)
 SharpDPAPI.exe triage / SharpChrome.exe
     ↓ (cleartext passwords)
-[Evil-WinRM](https://hackita.it/articoli/evil-winrm) / RDP / SSH
+[Evil-WinRM](https://hackita.it/articoli/evilwinrm/) / RDP / SSH
     ↓ (interactive access)
-[Mimikatz](https://hackita.it/articoli/mimikatz) / [SafetyKatz](https://hackita.it/articoli/safetykatz)
+[Mimikatz](https://hackita.it/articoli/mimikatz/) / [SafetyKatz](https://hackita.it/articoli/safetykatz/)
     ↓ (extract more credentials)
 Repeat on new systems
 ```
@@ -576,8 +576,8 @@ SELECT * FROM customers INTO OUTFILE '/tmp/customers.csv';
 | Tool                                                   | Language | DPAPI Method           | Chrome Support    | Domain Backup Key | Manutenzione  |
 | ------------------------------------------------------ | -------- | ---------------------- | ----------------- | ----------------- | ------------- |
 | SharpDPAPI                                             | C#       | Native                 | Via SharpChrome   | Yes               | Attivo (2025) |
-| [SharpChrome](https://hackita.it/articoli/sharpchrome) | C#       | Native                 | Native            | Yes               | Attivo        |
-| [LaZagne](https://hackita.it/articoli/lazagne)         | Python   | CryptUnprotectData API | Yes               | No                | Attivo        |
+| [SharpChrome](https://hackita.it/articoli/sharpchrome/) | C#       | Native                 | Native            | Yes               | Attivo        |
+| [LaZagne](https://hackita.it/articoli/lazagne/)         | Python   | CryptUnprotectData API | Yes               | No                | Attivo        |
 | Mimikatz                                               | C/C++    | Native                 | Via dpapi::chrome | Yes               | Attivo        |
 | DonPAPI                                                | Python   | Impacket-based         | Yes               | Yes               | Attivo        |
 | dploot                                                 | Python   | Impacket-based         | Yes               | Yes               | Attivo (2024) |
@@ -1032,7 +1032,7 @@ psexec \\target -u CORP\admin SharpDPAPI.exe triage /pvk:backup.pvk
 SharpChrome.exe logins /pvk:backup.pvk
 ```
 
-Vedi [SharpChrome](https://hackita.it/articoli/sharpchrome) per dettagli.
+Vedi [SharpChrome](https://hackita.it/articoli/sharpchrome/) per dettagli.
 
 ## FAQ
 

@@ -280,7 +280,7 @@ Password: Vpn_P@ssw0rd_2024
 Regards
 ```
 
-**Intelligence estratta:** VPN credentials per [lateral movement](https://hackita.it/articoli/pivoting).
+**Intelligence estratta:** VPN credentials per [lateral movement](https://hackita.it/articoli/pivoting/).
 
 ### 4. Email exfiltration massiva
 
@@ -403,7 +403,7 @@ Cc: [email protected], [email protected]
 
 ```bash
 # Fase 4: Phishing campaign
-# Use harvested addresses per [spear phishing](https://hackita.it/articoli/phishing)
+# Use harvested addresses per [spear phishing](https://hackita.it/articoli/phishing/)
 ```
 
 **COSA FARE SE FALLISCE:**
@@ -472,7 +472,7 @@ RECONNAISSANCE
 INITIAL ACCESS
 │
 ├─ Username enumeration                     → Valid accounts
-├─ Brute force ([Hydra](https://hackita.it/articoli/hydra)) → Credentials
+├─ Brute force ([Hydra](https://hackita.it/articoli/hydra/)) → Credentials
 └─ Packet sniffing (MITM)                   → Plaintext credentials
 
 CREDENTIAL HARVEST
@@ -484,8 +484,8 @@ CREDENTIAL HARVEST
 LATERAL MOVEMENT
 │
 ├─ VPN access (if creds in email)
-├─ [AD authentication](https://hackita.it/articoli/active-directory) (domain passwords)
-└─ [SSH](https://hackita.it/articoli/ssh) / RDP access (server credentials)
+├─ [AD authentication](https://hackita.it/articoli/active-directory/) (domain passwords)
+└─ [SSH](https://hackita.it/articoli/ssh/) / RDP access (server credentials)
 ```
 
 ***
@@ -680,7 +680,7 @@ Raramente. Policy lockout tipica è su web login, non POP3. Test con attenzione.
 
 **Quale tool è migliore per POP3 testing?**
 
-[Hydra](https://hackita.it/articoli/hydra) per brute force, netcat per manual testing, Python `poplib` per automation.
+[Hydra](https://hackita.it/articoli/hydra/) per brute force, netcat per manual testing, Python `poplib` per automation.
 
 **Come esfiltro mailbox completa velocemente?**
 

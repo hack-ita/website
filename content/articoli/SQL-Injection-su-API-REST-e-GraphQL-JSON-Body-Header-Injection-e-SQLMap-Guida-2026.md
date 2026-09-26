@@ -27,7 +27,7 @@ Nel 2026 la maggior parte delle SQLi che trovo non è nel classico `?id=1` di un
 
 La trovo nel **20% dei pentest API** — percentuale più alta del web tradizionale perché le API hanno meno protezioni legacy (CSP, CSRF token, cookie flags) e più superficie d'attacco (filtri, sorting, pagination, aggregazione, tutti parametri che finiscono in query SQL).
 
-Satellite della [guida pillar SQL Injection](https://hackita.it/articoli/sql-injection)
+Satellite della [guida pillar SQL Injection](https://hackita.it/articoli/sql-injection/)
 
 ***
 
@@ -331,6 +331,6 @@ EXPLOITATION
 
 ***
 
-Leggi la [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection). Vedi anche: [SQL Injection Classica](https://hackita.it/articoli/sql-injection-classica)
+Leggi la [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection/). Vedi anche: [SQL Injection Classica](https://hackita.it/articoli/sql-injection-classica/)
 
 ###### *Le tue API REST parsano JSON direttamente in query SQL? Il WAF controlla davvero il body JSON o solo i parametri GET/POST?* *Se vuoi testare in modo professionale la sicurezza delle API della tua azienda o del tuo sito web puoi richiedere un [penetration test API HackIta](https://hackita.it/servizi).* *Se invece vuoi imparare davvero a sfruttare vulnerabilità come SQL Injection su API REST, GraphQL e microservizi puoi farlo con la [formazione 1:1 HackIta](https://hackita.it/servizi).*  *Se vuoi supportare il progetto HackIta: [https://hackita.it/supporto](https://hackita.it/supporto) Approfondimenti tecnici:* [https://owasp.org/www-community/attacks/SQL\_Injection](https://owasp.org/www-community/attacks/SQL_Injection) [https://portswigger.net/web-security/sql-injection](https://portswigger.net/web-security/sql-injection) [https://cheatsheetseries.owasp.org/cheatsheets/SQL\_Injection\_Prevention\_Cheat\_Sheet.html](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)

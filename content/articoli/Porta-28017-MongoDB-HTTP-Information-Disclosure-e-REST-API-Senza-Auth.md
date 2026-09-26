@@ -20,7 +20,7 @@ tags:
 
 La porta 28017 ospita l'interfaccia HTTP diagnostica di MongoDB — una web UI leggera che mostra lo stato del server, le connessioni attive, i log e, nelle configurazioni con REST API abilitata, permette di eseguire query via browser. È stata **deprecata in MongoDB 3.2** (2015) e **rimossa in MongoDB 3.6** (2017), ma nel pentest si trova ancora su server con versioni datate, su installazioni legacy mai aggiornate o su fork MongoDB-compatibili che l'hanno mantenuta.
 
-Trovarla aperta è un finding doppiamente critico: primo, espone informazioni sensibili sull'infrastruttura MongoDB (versione, hostname, connessioni, log); secondo, la sua presenza conferma che il server usa una versione MongoDB vecchia e probabilmente non patchata — ampliando la superficie di attacco sulla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb) principale.
+Trovarla aperta è un finding doppiamente critico: primo, espone informazioni sensibili sull'infrastruttura MongoDB (versione, hostname, connessioni, log); secondo, la sua presenza conferma che il server usa una versione MongoDB vecchia e probabilmente non patchata — ampliando la superficie di attacco sulla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb/) principale.
 
 ## Come Funzionava
 
@@ -77,7 +77,7 @@ curl -s http://10.10.10.40:28017/
 
 **Intelligence immediata dalla homepage:**
 
-* **Versione esatta**: MongoDB 3.4.24 — vecchia, cerca CVE su [Exploit-DB](https://hackita.it/articoli/exploit-db)
+* **Versione esatta**: MongoDB 3.4.24 — vecchia, cerca CVE su [Exploit-DB](https://hackita.it/articoli/exploitdb/)
 * **Hostname**: `mongo-prod-01` — hostname interno del server
 * **Uptime**: 145 giorni — probabilmente non patchato da quasi 5 mesi
 * **Porta**: conferma che la 27017 è attiva
@@ -140,7 +140,7 @@ I log MongoDB possono contenere query con parametri, errori di autenticazione co
 curl -s http://10.10.10.40:28017/replSetGetStatus
 ```
 
-Se il server fa parte di un [replica set](https://hackita.it/articoli/porta-27018-mongodb-cluster), mostra tutti i membri con hostname e stato — mappa del cluster.
+Se il server fa parte di un [replica set](https://hackita.it/articoli/porta-27018-mongodb-cluster/), mostra tutti i membri con hostname e stato — mappa del cluster.
 
 ## 2. REST API — Query via HTTP
 
@@ -206,17 +206,17 @@ for db in admin production staging; do
 done
 ```
 
-Per l'exfiltration completa dei dati, `mongodump` sulla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb) è più efficiente e strutturato, ma la REST API sulla 28017 funziona quando la 27017 è protetta da firewall e la 28017 no — scenario che accade quando l'admin dimentica che la HTTP interface esiste.
+Per l'exfiltration completa dei dati, `mongodump` sulla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb/) è più efficiente e strutturato, ma la REST API sulla 28017 funziona quando la 27017 è protetta da firewall e la 28017 no — scenario che accade quando l'admin dimentica che la HTTP interface esiste.
 
 ## 3. Information Disclosure → Attacco alla 27017
 
-La 28017 è principalmente un canale di intelligence. Le informazioni ottenute guidano l'attacco alla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb):
+La 28017 è principalmente un canale di intelligence. Le informazioni ottenute guidano l'attacco alla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb/):
 
 | Info dalla 28017        | Utilizzo                                                                                       |
 | ----------------------- | ---------------------------------------------------------------------------------------------- |
 | Versione MongoDB        | Cerca CVE specifiche per la versione                                                           |
 | Hostname interno        | DNS interno, risolvi per trovare altri servizi                                                 |
-| Nodi replica set        | Target aggiuntivi sulle [porte 27018](https://hackita.it/articoli/porta-27018-mongodb-cluster) |
+| Nodi replica set        | Target aggiuntivi sulle [porte 27018](https://hackita.it/articoli/porta-27018-mongodb-cluster/) |
 | Connessioni attive (IP) | Client che si connettono → server applicativi da attaccare                                     |
 | Uptime lungo            | Server non patchato → più vulnerabilità                                                        |
 | Log con username        | Username validi per brute force sulla 27017                                                    |

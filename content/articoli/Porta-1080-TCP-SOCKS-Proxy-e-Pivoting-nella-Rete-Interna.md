@@ -17,11 +17,11 @@ tags:
   - proxychains
 ---
 
-Un SOCKS proxy sulla porta 1080 TCP è un intermediario di rete che inoltra il traffico TCP (e con SOCKS5 anche UDP) dal client alla destinazione — qualsiasi destinazione. A differenza di un proxy HTTP che gestisce solo traffico web, SOCKS è protocol-agnostic: [SSH](https://hackita.it/articoli/ssh), [RDP](https://hackita.it/articoli/porta-3389-rdp), [SMB](https://hackita.it/articoli/smb), [LDAP](https://hackita.it/articoli/porta-389-ldap), database — tutto passa. Nel penetration testing, un proxy SOCKS aperto è un **punto di pivot gratuito**: ti connetti dalla tua macchina e raggiungi la rete interna come se fossi dentro. Non serve compromettere un host, non serve una VPN — il proxy fa tutto il lavoro.
+Un SOCKS proxy sulla porta 1080 TCP è un intermediario di rete che inoltra il traffico TCP (e con SOCKS5 anche UDP) dal client alla destinazione — qualsiasi destinazione. A differenza di un proxy HTTP che gestisce solo traffico web, SOCKS è protocol-agnostic: [SSH](https://hackita.it/articoli/ssh/), [RDP](https://hackita.it/articoli/porta-3389-rdp/), [SMB](https://hackita.it/articoli/smb/), [LDAP](https://hackita.it/articoli/porta-389-ldap/), database — tutto passa. Nel penetration testing, un proxy SOCKS aperto è un **punto di pivot gratuito**: ti connetti dalla tua macchina e raggiungi la rete interna come se fossi dentro. Non serve compromettere un host, non serve una VPN — il proxy fa tutto il lavoro.
 
 La porta 1080 è il default per SOCKS, ma proxy SOCKS girano anche su porte custom (1081, 8080, 9050 per Tor). Li trovo in aziende che li usano per il filtraggio del traffico, per il bypass di restrizioni geografiche, o come residui di configurazioni Dante/Shadowsocks dimenticate.
 
-Un pentest che mi ha fatto sorridere: azienda di consulenza, 100 dipendenti. Scansione esterna → porta 1080 aperta su Internet, SOCKS5 proxy senza autenticazione. Ho configurato `proxychains` e ho scansionato la rete interna `10.0.0.0/24` attraverso il proxy. 47 host attivi, [SMB](https://hackita.it/articoli/smb) aperto su 12 di essi. Il proxy era un vecchio server Dante che "serviva per i test" e nessuno ricordava di aver messo online. Dall'esterno alla rete interna senza exploit, senza credenziali, senza niente.
+Un pentest che mi ha fatto sorridere: azienda di consulenza, 100 dipendenti. Scansione esterna → porta 1080 aperta su Internet, SOCKS5 proxy senza autenticazione. Ho configurato `proxychains` e ho scansionato la rete interna `10.0.0.0/24` attraverso il proxy. 47 host attivi, [SMB](https://hackita.it/articoli/smb/) aperto su 12 di essi. Il proxy era un vecchio server Dante che "serviva per i test" e nessuno ricordava di aver messo online. Dall'esterno alla rete interna senza exploit, senza credenziali, senza niente.
 
 ## Cos'è la Porta 1080?
 
@@ -149,7 +149,7 @@ ssh -D 1080 -N user@10.10.10.40
 # Traffico su localhost:1080 → tunnelato attraverso il target
 ```
 
-Scopri le migliori teniche e comandi segreti per [chisel](https://hackita.it/articoli/chisel).
+Scopri le migliori teniche e comandi segreti per [chisel](https://hackita.it/articoli/chisel/).
 
 ## 3. DNS Resolution Attraverso il Proxy
 
@@ -162,7 +162,7 @@ curl -x socks5h://10.10.10.40:1080 http://gitlab.corp.local
 curl -x socks5h://10.10.10.40:1080 http://jenkins.corp.local:8080
 ```
 
-Se conosci gli hostname (da [DNS enumeration](https://hackita.it/articoli/dns) o [LDAP](https://hackita.it/articoli/porta-389-ldap)) → raggiungi tutto senza conoscere gli IP.
+Se conosci gli hostname (da [DNS enumeration](https://hackita.it/articoli/dns/) o [LDAP](https://hackita.it/articoli/porta-389-ldap/)) → raggiungi tutto senza conoscere gli IP.
 
 ## 4. Intercettazione Traffico
 
@@ -213,9 +213,9 @@ proxychains xfreerdp /v:10.0.0.50:3389 /u:admin /p:pass
 
 Scansione IP pubblico → porta 1080 aperta, SOCKS5 senza auth. Un vecchio server Dante che nessuno ricordava di aver configurato.
 
-Ho configurato `proxychains` e scansionato `10.0.0.0/24` attraverso il proxy: 47 host attivi. 12 con [SMB](https://hackita.it/articoli/smb) aperto, 3 con [RDP](https://hackita.it/articoli/porta-3389-rdp), un [Jenkins](https://hackita.it/articoli/porta-8080-tomcat) sulla 8080 senza auth. Attraverso Jenkins ho ottenuto credenziali [SSH](https://hackita.it/articoli/ssh) nei build log → accesso a un server di staging → pivot nella rete interna vera.
+Ho configurato `proxychains` e scansionato `10.0.0.0/24` attraverso il proxy: 47 host attivi. 12 con [SMB](https://hackita.it/articoli/smb/) aperto, 3 con [RDP](https://hackita.it/articoli/porta-3389-rdp/), un [Jenkins](https://hackita.it/articoli/porta-8080-tomcat/) sulla 8080 senza auth. Attraverso Jenkins ho ottenuto credenziali [SSH](https://hackita.it/articoli/ssh/) nei build log → accesso a un server di staging → pivot nella rete interna vera.
 
-Dall'altra parte, ho trovato il [Domain Controller](https://hackita.it/articoli/active-directory) su `10.0.0.10` — [LDAP](https://hackita.it/articoli/porta-389-ldap) enumeration attraverso il proxy → password nel description field di un service account → Domain Admin.
+Dall'altra parte, ho trovato il [Domain Controller](https://hackita.it/articoli/active-directory/) su `10.0.0.10` — [LDAP](https://hackita.it/articoli/porta-389-ldap/) enumeration attraverso il proxy → password nel description field di un service account → Domain Admin.
 
 **Tempo dal proxy SOCKS alla rete interna:** 0 secondi (il proxy ERA l'accesso). **Tempo a Domain Admin:** 2 ore. **Root cause:** Proxy SOCKS esposto su Internet senza auth, server dimenticato, nessun monitoraggio.
 

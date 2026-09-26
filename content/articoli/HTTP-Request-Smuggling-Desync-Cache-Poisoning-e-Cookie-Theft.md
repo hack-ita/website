@@ -19,7 +19,7 @@ L'**HTTP Request Smuggling** sfrutta il disaccordo tra un reverse proxy (CDN, WA
 
 L'attaccante inietta una request che il backend interpreta come proveniente dal prossimo utente legittimo. Questo permette di **avvelenare la cache**, **bypassare WAF e autenticazione**, e **catturare cookie e credenziali di altri utenti**. È una delle vulnerabilità più difficili da trovare e da correggere — e una delle più devastanti.
 
-Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa). Vedi anche: [Cache Poisoning](https://hackita.it/articoli/cache-poisoning), [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration).
+Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa/). Vedi anche: [Cache Poisoning](https://hackita.it/articoli/cache-poisoning/), [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration/).
 
 Riferimenti: [PortSwigger Request Smuggling](https://portswigger.net/web-security/request-smuggling), [James Kettle — HTTP Desync Attacks](https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn), [HackTricks Request Smuggling](https://book.hacktricks.wiki/en/pentesting-web/http-request-smuggling/index.html).
 

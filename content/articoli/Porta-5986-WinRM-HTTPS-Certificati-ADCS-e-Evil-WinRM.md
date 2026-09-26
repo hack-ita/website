@@ -17,9 +17,9 @@ tags:
   - Evil-WinRM
 ---
 
-La port 5986 TCP è la versione TLS/HTTPS di [WinRM sulla porta 5985](https://hackita.it/articoli/porta-5985-winrm). Tutto ciò che funziona sulla 5985 — Evil-WinRM, CrackMapExec, Pass-the-Hash, PowerShell Remoting — funziona identicamente sulla 5986, con il traffico cifrato da TLS. La differenza operativa nel penetration testing riguarda l'**autenticazione basata su certificato**: WinRM HTTPS supporta client certificate authentication, e quando è configurata, non servono password o hash — basta un certificato valido. Questo apre un vettore di attacco specifico: l'abuso di Active Directory Certificate Services (ADCS) per ottenere un certificato che garantisce accesso WinRM come qualsiasi utente del dominio.
+La port 5986 TCP è la versione TLS/HTTPS di [WinRM sulla porta 5985](https://hackita.it/articoli/porta-5985-winrm/). Tutto ciò che funziona sulla 5985 — Evil-WinRM, CrackMapExec, Pass-the-Hash, PowerShell Remoting — funziona identicamente sulla 5986, con il traffico cifrato da TLS. La differenza operativa nel penetration testing riguarda l'**autenticazione basata su certificato**: WinRM HTTPS supporta client certificate authentication, e quando è configurata, non servono password o hash — basta un certificato valido. Questo apre un vettore di attacco specifico: l'abuso di Active Directory Certificate Services (ADCS) per ottenere un certificato che garantisce accesso WinRM come qualsiasi utente del dominio.
 
-Per tutte le tecniche di exploitation, post-exploitation, lateral movement e privilege escalation, la guida di riferimento è la [porta 5985 WinRM](https://hackita.it/articoli/porta-5985-winrm). Questo articolo copre ciò che è specifico della 5986: TLS, certificati e ADCS abuse.
+Per tutte le tecniche di exploitation, post-exploitation, lateral movement e privilege escalation, la guida di riferimento è la [porta 5985 WinRM](https://hackita.it/articoli/porta-5985-winrm/). Questo articolo copre ciò che è specifico della 5986: TLS, certificati e ADCS abuse.
 
 ## Quando Trovi la 5986 Invece della 5985
 
@@ -167,7 +167,7 @@ certipy auth -pfx administrator.pfx -dc-ip 10.10.10.40
 [*] Got hash for 'administrator@corp.local': aad3b435b51404ee:32ed87bdb5fdc5e9cba88547376818d4
 ```
 
-L'hash NTLM dell'administrator → usalo con tutti gli altri tool ([SMB](https://hackita.it/articoli/smb), [RDP](https://hackita.it/articoli/porta-3389-rdp), [DCSync](https://hackita.it/articoli/dcsync)).
+L'hash NTLM dell'administrator → usalo con tutti gli altri tool ([SMB](https://hackita.it/articoli/smb/), [RDP](https://hackita.it/articoli/porta-3389-rdp/), [DCSync](https://hackita.it/articoli/dcsync/)).
 
 ### Altre vulnerabilità ADCS (ESC1-ESC8)
 
@@ -190,7 +190,7 @@ Leggi tutte le esc da 1 a 16 e come sfruttarla per privesc. [https://hackita.it/
 
 ## 4. Certificati Rubati dal Filesystem
 
-Se hai accesso a una macchina (via [VNC](https://hackita.it/articoli/porta-5900-vnc), RDP, shell), cerca certificati salvati:
+Se hai accesso a una macchina (via [VNC](https://hackita.it/articoli/porta-5900-vnc/), RDP, shell), cerca certificati salvati:
 
 ```powershell
 # Certificati nel cert store di Windows

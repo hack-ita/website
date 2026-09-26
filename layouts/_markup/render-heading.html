@@ -1,5 +1,15 @@
-<h{{ .Level }}
-    id="{{ .Anchor }}" class="group/anchor-heading">
+{{- /*
+  Heading render hook.
+
+  SEO: the page template already renders the single <h1> (the page title), so
+  any level-1 heading coming from Markdown content is demoted to <h2>. This
+  prevents duplicate-H1 pages (SEMrush "multiple H1" warning) while keeping the
+  content outline and anchor links intact. Code-fence comments (e.g. "# note"
+  inside ```bash```) are never headings and are unaffected.
+*/ -}}
+{{- $level := .Level -}}
+{{- if eq $level 1 -}}{{- $level = 2 -}}{{- end -}}
+<h{{ $level }} id="{{ .Anchor }}" class="group/anchor-heading">
   {{ .Text }}
   <a href="#{{ .Anchor }}" class="text-inherit opacity-0 group-hover/anchor-heading:opacity-100 decoration-transparent">#</a>
-</h{{ .Level }}>
+</h{{ $level }}>

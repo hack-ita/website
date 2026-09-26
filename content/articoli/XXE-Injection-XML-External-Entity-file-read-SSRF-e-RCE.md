@@ -27,7 +27,7 @@ Se l'attaccante controlla anche solo in parte l'XML che il server processa, può
 
 XXE colpisce perché il punto di ingresso spesso non è ovvio. Non pensi subito a "dove c'è XML in questa app" — e infatti i posti più comuni sono nascosti: un upload di SVG, un endpoint SOAP dimenticato, un import di file Office. Un payload di 5 righe, in quei punti, può far uscire il contenuto di un file di sistema.
 
-Fa parte del cluster [injection-attacks-guida-completa](https://hackita.it/articoli/injection-attacks-guida-completa). La variante specifica sull'injection XML è su [xxe-injection](https://hackita.it/articoli/xxe-injection). Le altre categorie di injection (SQL, comandi, LDAP, template engine) seguono la stessa logica di fondo: input non fidato che finisce dentro un interprete che si fida troppo.
+Fa parte del cluster [injection-attacks-guida-completa](https://hackita.it/articoli/injection-attacks-guida-completa/). La variante specifica sull'injection XML è su [xxe-injection](https://hackita.it/articoli/xxe-injection/). Le altre categorie di injection (SQL, comandi, LDAP, template engine) seguono la stessa logica di fondo: input non fidato che finisce dentro un interprete che si fida troppo.
 
 ***
 
@@ -107,7 +107,7 @@ Un SVG è, tecnicamente, un documento XML con la sintassi giusta per disegnare f
      il contenuto di /etc/passwd appare nel testo renderizzato -->
 ```
 
-Se invece l'app serve l'SVG "com'è", senza passarlo per un parser server-side, questo vettore non c'è — vedi anche [file-upload-attack](https://hackita.it/articoli/file-upload-attack) per gli altri modi in cui un upload malevolo può colpire il backend.
+Se invece l'app serve l'SVG "com'è", senza passarlo per un parser server-side, questo vettore non c'è — vedi anche [file-upload-attack](https://hackita.it/articoli/file-upload-attack/) per gli altri modi in cui un upload malevolo può colpire il backend.
 
 ### XML Import/Export (Docx, Excel, ODT)
 
@@ -235,7 +235,7 @@ A volte `file://` fa leggere il file, ma la risposta torna vuota o tronca: succe
 
 ## XXE → SSRF: Accesso alla Rete Interna
 
-Fin qui l'entità puntava sempre a un file locale. Se invece la punti a un URL, è il **server** a fare la richiesta HTTP per conto tuo — che è esattamente la definizione di [SSRF](https://hackita.it/articoli/ssrf). La differenza pratica: il server vittima ha accesso a indirizzi interni che tu, da fuori, non potresti mai raggiungere direttamente. Questo apre la strada a esplorare la rete dietro il firewall.
+Fin qui l'entità puntava sempre a un file locale. Se invece la punti a un URL, è il **server** a fare la richiesta HTTP per conto tuo — che è esattamente la definizione di [SSRF](https://hackita.it/articoli/ssrf/). La differenza pratica: il server vittima ha accesso a indirizzi interni che tu, da fuori, non potresti mai raggiungere direttamente. Questo apre la strada a esplorare la rete dietro il firewall.
 
 ```xml
 <!-- Accesso a servizi interni non esposti su internet -->
@@ -376,7 +376,7 @@ Il wrapper `expect://` — quando l'estensione PHP `expect` è installata (raro 
 
 ### XXE → PHP Filter Chain → RCE (CVE-2024-2961 / CosmicString)
 
-Come descritto in [deserialization-attack](https://hackita.it/articoli/deserialization-attack), combinare XXE con una filter chain PHP porta a RCE su PHP. Il meccanismo: XXE legge un file tramite `php://filter`, e la catena di filtri costruisce un payload che finisce per essere eseguito sfruttando una vulnerabilità nella libreria `iconv`. Questa tecnica è stata usata concretamente contro Magento (CVE-2024-34102).
+Come descritto in [deserialization-attack](https://hackita.it/articoli/deserialization-attack/), combinare XXE con una filter chain PHP porta a RCE su PHP. Il meccanismo: XXE legge un file tramite `php://filter`, e la catena di filtri costruisce un payload che finisce per essere eseguito sfruttando una vulnerabilità nella libreria `iconv`. Questa tecnica è stata usata concretamente contro Magento (CVE-2024-34102).
 
 ### XXE via SSRF → Redis → RCE
 

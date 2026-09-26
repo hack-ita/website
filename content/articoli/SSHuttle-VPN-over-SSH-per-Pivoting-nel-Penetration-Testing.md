@@ -24,7 +24,7 @@ Quando comprometti una macchina in una rete interna e devi raggiungere subnet no
 
 A differenza di un classico port forwarding SSH, SSHuttle instrada interi range di IP attraverso il tunnel. Il tuo traffico verso la rete interna passa attraverso la macchina compromessa come se fossi collegato direttamente. Nella kill chain, operiamo nella fase di **Lateral Movement / Pivoting** (MITRE ATT\&CK T1572).
 
-Questo articolo copre installazione, configurazione operativa, scenari di pivoting multi-hop e integrazione con strumenti come [Nmap](https://hackita.it/articoli/nmap) e [ProxyChains](https://hackita.it/articoli/proxychains).
+Questo articolo copre installazione, configurazione operativa, scenari di pivoting multi-hop e integrazione con strumenti come [Nmap](https://hackita.it/articoli/nmap/) e [ProxyChains](https://hackita.it/articoli/proxychains/).
 
 ***
 
@@ -225,7 +225,7 @@ sshuttle -r admin@10.10.10.50 172.16.0.0/16 --dns
 **Cosa fare se fallisce:**
 
 * `Connection refused` → SSH non attivo o porta diversa. Scansiona con nmap: `nmap -p 22,2222,443 10.10.10.50`.
-* `Python not found on remote` → Python mancante sul target. Installa Python o usa un tunnel SSH classico (`ssh -D 1080`) con [ProxyChains](https://hackita.it/articoli/proxychains).
+* `Python not found on remote` → Python mancante sul target. Installa Python o usa un tunnel SSH classico (`ssh -D 1080`) con [ProxyChains](https://hackita.it/articoli/proxychains/).
 
 **Timeline:** Connessione in 5 secondi. Scansione della subnet interna con nmap in 5-15 minuti a seconda dell'ampiezza.
 
@@ -254,7 +254,7 @@ sshuttle -r root@10.10.10.50 172.17.0.0/16
 
 **Cosa fare se fallisce:**
 
-* Container non ha SSH → Non puoi usare SSHuttle. Alternativa: [chisel](https://hackita.it/articoli/chisel) per creare un tunnel TCP.
+* Container non ha SSH → Non puoi usare SSHuttle. Alternativa: [chisel](https://hackita.it/articoli/chisel/) per creare un tunnel TCP.
 * Routing non funziona → Verifica che il target abbia effettivamente un'interfaccia su 172.17.0.0/16: `ip addr show`.
 
 **Timeline:** 3 secondi per connessione. Accesso ai container interni immediato.
@@ -267,7 +267,7 @@ SSHuttle si posiziona come bridge tra l'accesso iniziale e l'enumerazione/exploi
 
 **Flusso operativo:**
 
-Initial Access → [Crontab Backdoor](https://hackita.it/articoli/crontab-backdoor) (persistence) → **SSHuttle (pivoting)** → Nmap/CrackMapExec (enum interna)
+Initial Access → [Crontab Backdoor](https://hackita.it/articoli/crontab/) (persistence) → **SSHuttle (pivoting)** → Nmap/CrackMapExec (enum interna)
 
 L'output di linpeas o altri tool di enumerazione ti dà le subnet interne raggiungibili. Quelle subnet diventano il target di SSHuttle.
 
@@ -451,7 +451,7 @@ Sì, con `sshuttle -r user@host 0/0 --dns`. Utile per forzare tutto il traffico 
 Non c'è un limite tecnico. Puoi specificare quante subnet vuoi nella riga di comando.
 
 **SSHuttle funziona su Windows?**
-Solo come client su WSL. Non esiste un client nativo Windows. Per Windows, usa [Plink](https://hackita.it/articoli/plink) o Chisel.
+Solo come client su WSL. Non esiste un client nativo Windows. Per Windows, usa [Plink](https://hackita.it/articoli/plink/) o Chisel.
 
 ***
 

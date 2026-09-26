@@ -20,7 +20,7 @@ Invoke-TokenManipulation è uno script PowerShell sviluppato da Joe Bialek (@cly
 
 Il token manipulation è una tecnica post-exploitation fondamentale in ambienti Windows enterprise. Quando hai ottenuto accesso amministrativo locale su un sistema, Invoke-TokenManipulation ti permette di assumere l'identità di altri utenti (inclusi Domain Admin) logged in sul sistema senza conoscerne la password, bypassando autenticazione e enabling lateral movement stealth.
 
-In questa guida impari a usare Invoke-TokenManipulation per privilege escalation da local admin a SYSTEM, impersonation di Domain Admin token per network authentication, integrazione con [PsExec](https://hackita.it/articoli/psexec) per lateral movement, e capire le differenze critiche tra LogonType che determinano quali token sono utilizzabili per autenticazione remota.
+In questa guida impari a usare Invoke-TokenManipulation per privilege escalation da local admin a SYSTEM, impersonation di Domain Admin token per network authentication, integrazione con [PsExec](https://hackita.it/articoli/psexec/) per lateral movement, e capire le differenze critiche tra LogonType che determinano quali token sono utilizzabili per autenticazione remota.
 
 ## Setup e Installazione
 
@@ -383,7 +383,7 @@ procdump.exe -accepteula -ma lsass.exe lsass.dmp
 **Errore:** "Access Denied - could not open process"
 
 * **Causa:** Antivirus blocca process access
-* **Fix:** Disabilita AV temporaneamente oppure usa [SafetyKatz](https://hackita.it/articoli/safetykatz) invece di Mimikatz
+* **Fix:** Disabilita AV temporaneamente oppure usa [SafetyKatz](https://hackita.it/articoli/safetykatz/) invece di Mimikatz
 
 **Errore:** "No SYSTEM tokens found"
 
@@ -477,12 +477,12 @@ Invoke-TokenManipulation -Enumerate | Where-Object {
 **Nessun Domain Admin token trovato:**
 
 * **Causa:** DA non attualmente logged in
-* **Fix:** Attendi DA logon, oppure usa [Responder](https://hackita.it/articoli/responder) per catturare hash e pass-the-hash
+* **Fix:** Attendi DA logon, oppure usa [Responder](https://hackita.it/articoli/responder/) per catturare hash e pass-the-hash
 
 **Lateral movement fallisce con "Access Denied":**
 
 * **Causa:** DA ha MFA o smart card requirement
-* **Fix:** Token non trasporta smart card credential, usa invece credential theft via [Mimikatz](https://hackita.it/articoli/mimikatz)
+* **Fix:** Token non trasporta smart card credential, usa invece credential theft via [Mimikatz](https://hackita.it/articoli/mimikatz/)
 
 ### Scenario 3: Scheduled Task Token Abuse
 
@@ -646,9 +646,9 @@ psexec.exe \\DC01 -u CORP\Administrator -p Password123! cmd.exe
 
 **Vantaggio:** Token theft evita necessità password, silent lateral movement.
 
-Vedi [PsExec guide](https://hackita.it/articoli/psexec) per lateral movement completo.
+Vedi [PsExec guide](https://hackita.it/articoli/psexec/) per lateral movement completo.
 
-### Integration con [Mimikatz](https://hackita.it/articoli/mimikatz)
+### Integration con [Mimikatz](https://hackita.it/articoli/mimikatz/)
 
 ```powershell
 # Escalate to SYSTEM first

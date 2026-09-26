@@ -206,7 +206,7 @@ grep "Status: 301" first_pass.txt | awk '{print $1}' | while read dir; do
 done
 ```
 
-Per ricorsione nativa, usa [Dirsearch](https://hackita.it/articoli/dirsearch) che la supporta out of the box.
+Per ricorsione nativa, usa [Dirsearch](https://hackita.it/articoli/dirsearch/) che la supporta out of the box.
 
 ### Pattern-based bruteforce
 
@@ -316,7 +316,7 @@ Gobuster è il collegamento tra la scoperta di porte web (Masscan/Nmap) e l'expl
 
 **Flusso operativo:**
 
-[Masscan](https://hackita.it/articoli/masscan) (port scan) → [Nmap](https://hackita.it/articoli/nmap) (service ID) → **Gobuster (content discovery)** → [Burp Suite ](https://hackita.it/articoli/burp-suite)/ [sqlmap](https://hackita.it/articoli/sqlmap) / exploit manuale
+[Masscan](https://hackita.it/articoli/masscan/) (port scan) → [Nmap](https://hackita.it/articoli/nmap/) (service ID) → **Gobuster (content discovery)** → [Burp Suite ](https://hackita.it/articoli/burp-suite/)/ [sqlmap](https://hackita.it/articoli/sqlmap/) / exploit manuale
 
 **Passaggio dati:**
 
@@ -372,7 +372,7 @@ Le credenziali nel backup danno accesso al database. Trovi una SQL injection nel
 
 **Fase 5 — Post-exploitation (20 min)**
 
-Installi una web shell [Weevely3](https://hackita.it/articoli/weevely3) per persistenza e inizi l'enumerazione interna.
+Installi una web shell [Weevely3](https://hackita.it/articoli/weevely3/) per persistenza e inizi l'enumerazione interna.
 
 **Timeline totale:** \~56 minuti.
 
@@ -481,7 +481,7 @@ Dipende. Gobuster è più semplice e include modalità DNS/vhost native. ffuf è
 `common.txt` di SecLists. Se non trovi nulla, scala a `directory-list-2.3-medium.txt`.
 
 **Gobuster supporta la ricorsione?**
-No nativamente. Usa [Dirsearch](https://hackita.it/articoli/dirsearch) se hai bisogno di ricorsione automatica, oppure scripta la ricorsione con un wrapper bash.
+No nativamente. Usa [Dirsearch](https://hackita.it/articoli/dirsearch/) se hai bisogno di ricorsione automatica, oppure scripta la ricorsione con un wrapper bash.
 
 **Posso usare Gobuster attraverso un proxy?**
 Sì: `gobuster dir -u URL -w wordlist --proxy socks5://127.0.0.1:1080`. Funziona con proxy HTTP e SOCKS5.

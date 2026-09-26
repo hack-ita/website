@@ -26,7 +26,7 @@ SafetyKatz è un wrapper di Mimikatz progettato per dump LSASS in memoria senza 
 
 Sviluppato da @harmj0y (Will Schroeder) del team SpecterOps/GhostPack, SafetyKatz adotta un approccio a due stadi: crea minidump del processo LSASS, poi carica reflectively una versione stripped di Mimikatz per parsing offline delle credenziali. Questo elimina l'esecuzione diretta di mimikatz.exe su disco, riducendo detection rate di alcuni EDR legacy.
 
-In questa guida impari a usare SafetyKatz in scenari reali di post-exploitation: da installazione a integrazione con [Impacket](https://hackita.it/articoli/impacket) per lateral movement, da bypass Credential Guard a cleanup delle tracce forensi. SafetyKatz si posiziona nella kill chain immediatamente dopo privilege escalation, alimentando le fasi successive di credential access e lateral movement verso Domain Admin.
+In questa guida impari a usare SafetyKatz in scenari reali di post-exploitation: da installazione a integrazione con [Impacket](https://hackita.it/articoli/impacket/) per lateral movement, da bypass Credential Guard a cleanup delle tracce forensi. SafetyKatz si posiziona nella kill chain immediatamente dopo privilege escalation, alimentando le fasi successive di credential access e lateral movement verso Domain Admin.
 
 ## Setup e Installazione
 
@@ -160,7 +160,7 @@ SafetyKatz **non accetta parametri** - è design intenzionale per semplicità. I
 * `sekurlsa::logonpasswords` (estrae credential cache)
 * `sekurlsa::ekeys` (estrae kerberos encryption keys)
 
-Per funzionalità Mimikatz avanzate (DCSync, Golden Ticket, etc.) usa Mimikatz diretto o [Rubeus](https://hackita.it/articoli/rubeus).
+Per funzionalità Mimikatz avanzate (DCSync, Golden Ticket, etc.) usa Mimikatz diretto o [Rubeus](https://hackita.it/articoli/rubeus/).
 
 ### Integrazione Cobalt Strike
 
@@ -306,7 +306,7 @@ smbclient.py CORP/admin:Password123!@192.168.1.50
 # smb> get lsass_dump.txt
 ```
 
-Integrazione perfetta con [PsExec](https://hackita.it/articoli/psexec) per remote credential harvesting massivo.
+Integrazione perfetta con [PsExec](https://hackita.it/articoli/psexec/) per remote credential harvesting massivo.
 
 ### Credential Guard Bypass
 
@@ -337,7 +337,7 @@ SharpDPAPI.exe triage
 LaZagne.exe all
 ```
 
-Vedi [SharpDPAPI](https://hackita.it/articoli/sharpdpapi) e [LaZagne](https://hackita.it/articoli/lazagne) per credential harvesting alternativo.
+Vedi [SharpDPAPI](https://hackita.it/articoli/sharpdpapi/) e [LaZagne](https://hackita.it/articoli/lazagne/) per credential harvesting alternativo.
 
 ## Scenari Pratici di Pentest
 
@@ -499,9 +499,9 @@ SafetyKatz.exe
     ↓ (NTLM hash)
 Impacket psexec.py / wmiexec.py
     ↓ (lateral movement)
-[Evil-WinRM](https://hackita.it/articoli/evil-winrm)
+[Evil-WinRM](https://hackita.it/articoli/evilwinrm/)
     ↓ (interactive PowerShell)
-[Rubeus](https://hackita.it/articoli/rubeus)
+[Rubeus](https://hackita.it/articoli/rubeus/)
     ↓ (Kerberos ticket manipulation)
 DCSync / Golden Ticket
 ```

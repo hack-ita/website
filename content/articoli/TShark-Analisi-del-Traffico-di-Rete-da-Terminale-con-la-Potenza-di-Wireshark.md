@@ -260,9 +260,9 @@ In un ambiente enterprise reale, lo sniffing deve bilanciare raccolta dati e ste
 
 Approfondisci tecniche correlate di network discovery ed enumeration in:
 
-* 👉 [https://hackita.it/articoli/netdiscover](https://hackita.it/articoli/netdiscover)
-* 👉 [https://hackita.it/articoli/tcpdump](https://hackita.it/articoli/tcpdump)
-* 👉 [https://hackita.it/articoli/snmp](https://hackita.it/articoli/snmp)
+* 👉 [https://hackita.it/articoli/netdiscover](https://hackita.it/articoli/netdiscover/)
+* 👉 [https://hackita.it/articoli/tcpdump](https://hackita.it/articoli/tcpdump/)
+* 👉 [https://hackita.it/articoli/snmp](https://hackita.it/articoli/snmp/)
 
 Per assessment interni, simulazioni Red Team e test di sicurezza su infrastrutture reali:
 👉 [https://hackita.it/servizi](https://hackita.it/servizi)

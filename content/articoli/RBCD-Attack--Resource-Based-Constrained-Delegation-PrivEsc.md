@@ -26,7 +26,7 @@ La Resource-Based Constrained Delegation (RBCD) è stata introdotta in Windows S
 
 In un engagement, questo si traduce in: hai write access su `FILESERVER$` tramite un'ACL mal configurata → crei (o usi) un computer account → scrivi il suo SID nell'attributo del target → usi S4U per ottenere un ticket come Administrator su `FILESERVER`. Il Domain Controller esegue la delega come se fosse legittima, perché la policy è scritta direttamente sull'oggetto di destinazione.
 
-> **Key Takeaway:** RBCD trasforma write access su un oggetto computer in esecuzione di codice come Administrator su quella macchina. È uno degli abusi ACL più comuni e produttivi in [Active Directory](https://hackita.it/articoli/active-directory).
+> **Key Takeaway:** RBCD trasforma write access su un oggetto computer in esecuzione di codice come Administrator su quella macchina. È uno degli abusi ACL più comuni e produttivi in [Active Directory](https://hackita.it/articoli/active-directory/).
 
 Classificato da MITRE ATT\&CK come [T1134.001](https://attack.mitre.org/techniques/T1134/001/).
 
@@ -36,7 +36,7 @@ Classificato da MITRE ATT\&CK come [T1134.001](https://attack.mitre.org/techniqu
 
 ## Come Funziona
 
-Il meccanismo S4U (Service for User) di [Kerberos](https://hackita.it/articoli/kerberos) ha due estensioni:
+Il meccanismo S4U (Service for User) di [Kerberos](https://hackita.it/articoli/kerberos/) ha due estensioni:
 
 * **S4U2Self:** un account con SPN può richiedere un TGS per se stesso impersonando qualsiasi utente — anche senza conoscerne la password. Il DC lo permette perché l'account fa la richiesta "per sé stesso", non sta chiedendo di autenticarsi come qualcun altro. Il ticket che ottieni ha come client Administrator, ma è marcato "forwardable" solo se il DC considera l'account chiamante idoneo alla delega
 * **S4U2Proxy:** quel ticket forwardable può essere scambiato con il KDC per un secondo TGS, questa volta verso un servizio terzo (es. `cifs/TARGET`). Qui entra in gioco la delega: il KDC controlla se l'account chiamante è autorizzato a delegare verso quel servizio. Nella constrained delegation classica questo controllo guarda `msDS-AllowedToDelegateTo` sull'account sorgente; con RBCD guarda `msDS-AllowedToActOnBehalfOfOtherIdentity` sul target
@@ -65,7 +65,7 @@ Accesso al target come Administrator
 
 ## Prerequisiti
 
-* Write access su `msDS-AllowedToActOnBehalfOfOtherIdentity` del computer target — verificabile via [BloodHound](https://hackita.it/articoli/bloodhound) cercando l'edge `AllowedToAct` (oltre ai classici `GenericWrite`, `GenericAll`, `WriteProperty` verso oggetti computer)
+* Write access su `msDS-AllowedToActOnBehalfOfOtherIdentity` del computer target — verificabile via [BloodHound](https://hackita.it/articoli/bloodhound/) cercando l'edge `AllowedToAct` (oltre ai classici `GenericWrite`, `GenericAll`, `WriteProperty` verso oggetti computer)
 * Un account con SPN sotto il tuo controllo. Il modo più semplice: creare un machine account — di default ogni utente di dominio può crearne fino a 10, controllato da `MachineAccountQuota` (MAQ)
 * DC Windows Server 2012 R2 o superiore
 * L'utente da impersonare deve esistere e non essere nel gruppo **Protected Users** o marcato "Account is sensitive and cannot be delegated"
@@ -177,7 +177,7 @@ dir \\TARGET.hackita.local\ADMIN$
 .\PsExec.exe \\TARGET.hackita.local cmd.exe
 ```
 
-Da lì puoi proseguire con [credential dumping](https://hackita.it/articoli/credential-dumping) sulla macchina target e continuare il movimento laterale.
+Da lì puoi proseguire con [credential dumping](https://hackita.it/articoli/credential-dumping/) sulla macchina target e continuare il movimento laterale.
 
 ***
 
@@ -241,7 +241,7 @@ impacket-rbcd -delegate-from 'FAKE01$' -delegate-to 'DC01$' \
   -dc-ip <DC_IP> -action write 'hackita.local/utente:Password123!'
 ```
 
-Poi [DCSync](https://hackita.it/articoli/dcsync) come sopra.
+Poi [DCSync](https://hackita.it/articoli/dcsync/) come sopra.
 
 ***
 
@@ -364,7 +364,7 @@ Tutto il flow richiede solo credenziali di un normale utente di dominio — ness
 * Abilitare auditing **Directory Service Changes** per rilevare modifiche a `msDS-AllowedToActOnBehalfOfOtherIdentity`
 * Aggiungere gli account privilegiati al **Protected Users Security Group** — non delegabili via S4U
 * Flaggare gli account sensibili con "**Account is sensitive and cannot be delegated**" in ADUC
-* Revisionare con [BloodHound](https://hackita.it/articoli/bloodhound) tutti gli edge `GenericWrite`/`GenericAll` verso oggetti computer ed eliminarli dove non necessari
+* Revisionare con [BloodHound](https://hackita.it/articoli/bloodhound/) tutti gli edge `GenericWrite`/`GenericAll` verso oggetti computer ed eliminarli dove non necessari
 
 ***
 
@@ -385,17 +385,17 @@ Sì, a differenza del Silver Ticket. S4U2Self richiede che l'account da imperson
 
 RBCD è uno degli abusi ACL più efficaci in Active Directory perché trasforma un permesso apparentemente innocuo — `GenericWrite` su un oggetto computer — in esecuzione di codice come Administrator su quella macchina. In ambienti enterprise con deleghe legacy mai revisionate, questo path è estremamente comune.
 
-La difesa richiede tre cose in parallelo: MachineAccountQuota a 0, auditing su `msDS-AllowedToActOnBehalfOfOtherIdentity`, e una revisione sistematica degli edge ACL tramite [BloodHound](https://hackita.it/articoli/bloodhound) per eliminare i `GenericWrite` non giustificati su oggetti computer.
+La difesa richiede tre cose in parallelo: MachineAccountQuota a 0, auditing su `msDS-AllowedToActOnBehalfOfOtherIdentity`, e una revisione sistematica degli edge ACL tramite [BloodHound](https://hackita.it/articoli/bloodhound/) per eliminare i `GenericWrite` non giustificati su oggetti computer.
 
 ***
 
 ## Collegati a
 
-* [Active Directory](https://hackita.it/articoli/active-directory)
-* [Kerberos](https://hackita.it/articoli/kerberos)
-* [BloodHound](https://hackita.it/articoli/bloodhound)
-* [DCSync](https://hackita.it/articoli/dcsync)
-* [Credential Dumping](https://hackita.it/articoli/credential-dumping)
+* [Active Directory](https://hackita.it/articoli/active-directory/)
+* [Kerberos](https://hackita.it/articoli/kerberos/)
+* [BloodHound](https://hackita.it/articoli/bloodhound/)
+* [DCSync](https://hackita.it/articoli/dcsync/)
+* [Credential Dumping](https://hackita.it/articoli/credential-dumping/)
 
 **Risorse esterne:**
 

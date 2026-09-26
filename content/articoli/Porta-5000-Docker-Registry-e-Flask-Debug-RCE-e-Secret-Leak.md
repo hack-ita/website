@@ -21,7 +21,7 @@ La port 5000 TCP è condivisa da due servizi completamente diversi ma entrambi d
 
 Il Docker Registry è il target che preferisco trovare: ogni immagine Docker è un filesystem completo dell'applicazione — l'equivalente di avere accesso al server prima ancora che venga acceso. File di configurazione, variabili d'ambiente, certificati TLS, chiavi private, password hardcoded. Tutto impacchettato in layer scaricabili.
 
-In un assessment per una startup SaaS, ho trovato il Docker Registry sulla 5000 senza auth. Ho pullato l'immagine `backend-api:latest` — nel file `.env` c'erano le API key di Stripe (pagamenti), le credenziali [MongoDB](https://hackita.it/articoli/porta-27017-mongodb) di produzione e la chiave JWT segreta. Con la chiave JWT ho forgiato un token admin e ho avuto accesso completo all'applicazione — senza mai interagire con il sito web.
+In un assessment per una startup SaaS, ho trovato il Docker Registry sulla 5000 senza auth. Ho pullato l'immagine `backend-api:latest` — nel file `.env` c'erano le API key di Stripe (pagamenti), le credenziali [MongoDB](https://hackita.it/articoli/porta-27017-mongodb/) di produzione e la chiave JWT segreta. Con la chiave JWT ho forgiato un token admin e ho avuto accesso completo all'applicazione — senza mai interagire con il sito web.
 
 ## Cos'è la Porta 5000?
 
@@ -262,9 +262,9 @@ curl -s http://TARGET:5000/console               # Console Python
 
 Scansione Nmap dell'IP pubblico → porta 5000 aperta. Header `Docker-Distribution-Api-Version` → Registry. `_catalog` → 8 immagini: `api-gateway`, `user-service`, `payment-service`, `worker`, `frontend`, `nginx`, `redis-custom`, `db-migration`.
 
-Ho pullato `payment-service:latest`: nel file `.env` c'erano le credenziali Stripe (live key `sk_live_...`), la connection string [MongoDB](https://hackita.it/articoli/porta-27017-mongodb) (`mongodb://payment_user:P@yM3nt2025!@mongo01:27017/payments`) e il JWT secret. Con il JWT secret ho forgiato un token admin → accesso completo all'API → dati di 15.000 clienti paganti.
+Ho pullato `payment-service:latest`: nel file `.env` c'erano le credenziali Stripe (live key `sk_live_...`), la connection string [MongoDB](https://hackita.it/articoli/porta-27017-mongodb/) (`mongodb://payment_user:P@yM3nt2025!@mongo01:27017/payments`) e il JWT secret. Con il JWT secret ho forgiato un token admin → accesso completo all'API → dati di 15.000 clienti paganti.
 
-Nell'immagine `db-migration` c'era l'intero schema SQL con dati seed — inclusi 3 utenti admin con password in bcrypt (craccate in 10 minuti con [Hashcat](https://hackita.it/articoli/hashcat)).
+Nell'immagine `db-migration` c'era l'intero schema SQL con dati seed — inclusi 3 utenti admin con password in bcrypt (craccate in 10 minuti con [Hashcat](https://hackita.it/articoli/hashcat/)).
 
 **Tempo dal primo curl ai dati dei 15K clienti:** 25 minuti. **Root cause:** Docker Registry esposto su Internet senza auth, credenziali hardcoded nelle immagini.
 

@@ -150,7 +150,7 @@ nmap -sC -sV -p 22,80,443,445,3389 192.168.1.100
 
 ### SMB Enumeration
 
-Target prioritario in ogni pentest interno. Integra con [crackmapexec](https://hackita.it/articoli/crackmapexec) per exploitation:
+Target prioritario in ogni pentest interno. Integra con [crackmapexec](https://hackita.it/articoli/crackmapexec/) per exploitation:
 
 ```bash
 # Enumera shares e utenti
@@ -180,7 +180,7 @@ Output vulnerabilità EternalBlue:
 
 ### LDAP e Active Directory Enumeration
 
-Fondamentale per attacchi [Kerberoasting](https://hackita.it/articoli/kerberoasting) e AS-REP Roasting:
+Fondamentale per attacchi [Kerberoasting](https://hackita.it/articoli/kerberos/) e AS-REP Roasting:
 
 ```bash
 # LDAP enumeration base
@@ -314,7 +314,7 @@ nmap -sC -sV -p- -T4 -iL priority_targets.txt -oA full_scan
 
 ### Scenario 2: Identificazione Domain Controller
 
-I DC sono target primari per [privilege escalation](https://hackita.it/articoli/privilege-escalation-windows):
+I DC sono target primari per [privilege escalation](https://hackita.it/articoli/privilege-escalation-windows/):
 
 ```bash
 # Cerca porte tipiche DC
@@ -336,7 +336,7 @@ Output Domain Controller:
 
 ### Scenario 3: Web Application Recon
 
-Prima di lanciare [Burp Suite](https://hackita.it/articoli/burp-suite), identifica tutti i web server:
+Prima di lanciare [Burp Suite](https://hackita.it/articoli/burp-suite/), identifica tutti i web server:
 
 ```bash
 # Discovery web servers
@@ -561,11 +561,11 @@ Rilevamento zero è impossibile. Puoi ridurre le probabilità con: timing lento 
 
 **Come esporto i risultati per il report finale?**
 
-Usa `-oA basename` per generare tutti i formati. L'XML può essere convertito in HTML con `xsltproc` o importato in [Dradis](https://hackita.it/articoli/dradis-reporting).
+Usa `-oA basename` per generare tutti i formati. L'XML può essere convertito in HTML con `xsltproc` o importato in [Dradis](https://hackita.it/articoli/dradis-reporting/).
 
 **Nmap può fare vulnerability scanning?**
 
-Sì, con NSE scripts. `--script vuln` esegue tutti i check vulnerabilità. Per assessment completi, integra con OpenVAS o [Nessus](https://hackita.it/articoli/nessus).
+Sì, con NSE scripts. `--script vuln` esegue tutti i check vulnerabilità. Per assessment completi, integra con OpenVAS o [Nessus](https://hackita.it/articoli/nessus/).
 
 **Quante porte posso scansionare per secondo?**
 

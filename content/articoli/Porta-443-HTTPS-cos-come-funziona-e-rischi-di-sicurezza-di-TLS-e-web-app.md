@@ -116,7 +116,7 @@ openssl s_client -connect 10.10.10.20:443 -servername portal.corp.local 2>/dev/n
 
 ### Virtual host discovery
 
-Il web server sulla porta 443 può servire contenuti diversi in base all'header `Host`. Scopri tutti i virtual host con fuzzing. Per una panoramica completa delle tecniche di discovery, consulta la [guida all'enumerazione web](https://hackita.it/articoli/enumeration).
+Il web server sulla porta 443 può servire contenuti diversi in base all'header `Host`. Scopri tutti i virtual host con fuzzing. Per una panoramica completa delle tecniche di discovery, consulta la [guida all'enumerazione web](https://hackita.it/articoli/enumeration/).
 
 ```bash
 gobuster vhost -u https://10.10.10.20 -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -k --append-domain -d corp.local
@@ -152,7 +152,7 @@ feroxbuster -u https://portal.corp.local -w /usr/share/seclists/Discovery/Web-Co
 200    GET    100l     250w   https://portal.corp.local/config.php.bak
 ```
 
-**Lettura dell'output:** `.env` esposto — contiene variabili d'ambiente (spesso credenziali DB, API key, secret key). `config.php.bak` è un backup della configurazione PHP con potenziali credenziali. `/backup/` è una directory accessibile. Ognuno di questi è un finding critico. Approfondisci le tecniche di directory bruteforce per web application con [fuff](https://hackita.it/articoli/ffuf) o [feroxbuster](https://hackita.it/articoli/feroxbuster) 
+**Lettura dell'output:** `.env` esposto — contiene variabili d'ambiente (spesso credenziali DB, API key, secret key). `config.php.bak` è un backup della configurazione PHP con potenziali credenziali. `/backup/` è una directory accessibile. Ognuno di questi è un finding critico. Approfondisci le tecniche di directory bruteforce per web application con [fuff](https://hackita.it/articoli/ffuf/) o [feroxbuster](https://hackita.it/articoli/feroxbuster/) 
 
 ### TLS vulnerability scanning con testssl.sh
 
@@ -184,7 +184,7 @@ testssl.sh --fast --quiet https://10.10.10.20:443
  HSTS                             not offered  <<<--- FINDING
 ```
 
-**Lettura dell'output:** protocolli TLS configurati correttamente (solo 1.2 e 1.3). Nessuna vulnerabilità TLS critica. Però HSTS non è configurato — questo permette attacchi SSL stripping. BREACH potenzialmente sfruttabile con compressione HTTP attiva. Questi sono finding di compliance ma anche vettori per [attacchi man-in-the-middle](https://hackita.it/articoli/man-in-the-middle).
+**Lettura dell'output:** protocolli TLS configurati correttamente (solo 1.2 e 1.3). Nessuna vulnerabilità TLS critica. Però HSTS non è configurato — questo permette attacchi SSL stripping. BREACH potenzialmente sfruttabile con compressione HTTP attiva. Questi sono finding di compliance ma anche vettori per [attacchi man-in-the-middle](https://hackita.it/articoli/man-in-the-middle/).
 
 ### Analisi degli header di sicurezza
 
@@ -227,7 +227,7 @@ hydra -l admin -P /usr/share/seclists/Passwords/Common-Credentials/top-1000.txt 
 1 of 1 target completed, 0 valid passwords found
 ```
 
-**Cosa fai dopo:** accedi al portale come admin. Mappa le funzionalità: upload file, gestione utenti, configurazione sistema. Cerca vettori per RCE (file upload, template injection, command injection). Consulta la guida su [tecniche di brute force per applicazioni web](https://hackita.it/articoli/hydra).
+**Cosa fai dopo:** accedi al portale come admin. Mappa le funzionalità: upload file, gestione utenti, configurazione sistema. Cerca vettori per RCE (file upload, template injection, command injection). Consulta la guida su [tecniche di brute force per applicazioni web](https://hackita.it/articoli/hydra/).
 
 **SSL Stripping (MitM senza HSTS)**
 
@@ -294,7 +294,7 @@ AWS_SECRET_ACCESS_KEY=wJal...
 <html><head><title>403 Forbidden</title></head>
 ```
 
-**Cosa fai dopo:** hai credenziali database (`portal_db`/`Pr0d_DB!2026`), SMTP (`noreply@corp.local`/`MailP4ss!`), Redis host e chiavi AWS. Testa ogni credenziale: connettiti al DB con `mysql -h 10.10.10.50 -u portal_db -p`, verifica l'accesso AWS con `aws sts get-caller-identity`. Approfondisci il [pivoting verso servizi interni](https://hackita.it/articoli/pivoting).
+**Cosa fai dopo:** hai credenziali database (`portal_db`/`Pr0d_DB!2026`), SMTP (`noreply@corp.local`/`MailP4ss!`), Redis host e chiavi AWS. Testa ogni credenziale: connettiti al DB con `mysql -h 10.10.10.50 -u portal_db -p`, verifica l'accesso AWS con `aws sts get-caller-identity`. Approfondisci il [pivoting verso servizi interni](https://hackita.it/articoli/pivoting/).
 
 **Virtual host routing abuse per accesso a pannelli admin**
 

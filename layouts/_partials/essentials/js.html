@@ -10,7 +10,7 @@
 
 {{ with resources.Get "js/main.js" }}
 {{ with . | minify | fingerprint "sha256" }}
-<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous"></script>
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous" defer></script>
 {{ end }}
 {{ end }}
 

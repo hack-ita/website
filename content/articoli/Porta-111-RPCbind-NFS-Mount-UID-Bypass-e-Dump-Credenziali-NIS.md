@@ -478,15 +478,15 @@ SERVICE ENUMERATION
 
 EXPLOITATION
 │
-├─ A) NFS anonymous mount → file access → [SSH key theft](https://hackita.it/articoli/ssh)
+├─ A) NFS anonymous mount → file access → [SSH key theft](https://hackita.it/articoli/ssh/)
 ├─ B) NFS no_root_squash → root file write → backdoor
-├─ C) NIS database dump → password crack → [lateral movement](https://hackita.it/articoli/pivoting)
+├─ C) NIS database dump → password crack → [lateral movement](https://hackita.it/articoli/pivoting/)
 └─ D) RPC service exploit → RCE (CVE-specific)
 
 POST-EXPLOITATION
 │
 ├─ NFS persistent backdoor (cron, .bashrc)
-├─ [Privilege escalation](https://hackita.it/articoli/privesc-linux) via sudo/SUID
+├─ [Privilege escalation](https://hackita.it/articoli/privesc-linux/) via sudo/SUID
 └─ Network map via NIS host database
 ```
 

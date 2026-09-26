@@ -17,7 +17,7 @@ tags:
   - bluekeep
 ---
 
-RDP è il protocollo di accesso remoto desktop sviluppato da Microsoft, attivo di default sulla porta 3389 TCP/UDP. È il metodo standard per amministrare server Windows e per lo smart working aziendale. Nel penetration testing, RDP è un target primario per diverse ragioni: fornisce una sessione grafica completa (equivalente a sedersi davanti al computer), è esposto su Internet molto più spesso di quanto dovrebbe (oltre 4 milioni di istanze RDP esposte pubblicamente nel 2025), ha avuto vulnerabilità critiche di pre-authentication RCE (BlueKeep) ed è il vettore preferito per il brute force delle credenziali Windows. Una volta dentro via RDP, hai accesso completo al desktop: puoi lanciare [Mimikatz](https://hackita.it/articoli/mimikatz) per estrarre credenziali, accedere a share di rete, e muoverti lateralmente verso il [Domain Controller](https://hackita.it/articoli/dcsync).
+RDP è il protocollo di accesso remoto desktop sviluppato da Microsoft, attivo di default sulla porta 3389 TCP/UDP. È il metodo standard per amministrare server Windows e per lo smart working aziendale. Nel penetration testing, RDP è un target primario per diverse ragioni: fornisce una sessione grafica completa (equivalente a sedersi davanti al computer), è esposto su Internet molto più spesso di quanto dovrebbe (oltre 4 milioni di istanze RDP esposte pubblicamente nel 2025), ha avuto vulnerabilità critiche di pre-authentication RCE (BlueKeep) ed è il vettore preferito per il brute force delle credenziali Windows. Una volta dentro via RDP, hai accesso completo al desktop: puoi lanciare [Mimikatz](https://hackita.it/articoli/mimikatz/) per estrarre credenziali, accedere a share di rete, e muoverti lateralmente verso il [Domain Controller](https://hackita.it/articoli/dcsync/).
 
 RDP è anche il protocollo più usato dai ransomware gang per l'accesso iniziale: credenziali RDP deboli comprate sui marketplace del dark web sono il vettore #1 per gli attacchi ransomware dal 2019 a oggi.
 
@@ -126,9 +126,9 @@ RDP    10.10.10.40  3389  WS-01   [+] CORP\j.smith:Corp2026! (Pwn3d!)
 
 Le credenziali per RDP sono credenziali Windows — se le trovi altrove, funzionano:
 
-* [Mimikatz](https://hackita.it/articoli/mimikatz) da un'altra macchina → hash NTLM o password in chiaro
-* [DCSync](https://hackita.it/articoli/dcsync) → hash di qualsiasi utente
-* [Kerberoasting](https://hackita.it/articoli/active-directory) → password di service account
+* [Mimikatz](https://hackita.it/articoli/mimikatz/) da un'altra macchina → hash NTLM o password in chiaro
+* [DCSync](https://hackita.it/articoli/dcsync/) → hash di qualsiasi utente
+* [Kerberoasting](https://hackita.it/articoli/active-directory/) → password di service account
 * Database dump → credential reuse
 
 ## 3. Connessione RDP
@@ -187,7 +187,7 @@ mimikatz # privilege::debug
 mimikatz # sekurlsa::logonpasswords
 ```
 
-Estrae password in chiaro e hash NTLM di tutti gli utenti che hanno fatto login sulla macchina. Per la [guida Mimikatz completa](https://hackita.it/articoli/mimikatz).
+Estrae password in chiaro e hash NTLM di tutti gli utenti che hanno fatto login sulla macchina. Per la [guida Mimikatz completa](https://hackita.it/articoli/mimikatz/).
 
 ### Trasferire tool
 
@@ -228,7 +228,7 @@ query user
  admin       rdp-tcp#1      2  Disc          5    1/15/2026 09:00
 ```
 
-`admin` ha una sessione disconnessa — i suoi token e credenziali sono ancora in memoria. [Mimikatz](https://hackita.it/articoli/mimikatz) li può estrarre.
+`admin` ha una sessione disconnessa — i suoi token e credenziali sono ancora in memoria. [Mimikatz](https://hackita.it/articoli/mimikatz/) li può estrarre.
 
 ### Session Hijacking
 
@@ -308,7 +308,7 @@ RDP  10.10.10.41  3389  WS-02   [+] CORP\administrator:hash (Pwn3d!)
 RDP  10.10.10.50  3389  SRV-01  [+] CORP\administrator:hash (Pwn3d!)
 ```
 
-Hash dell'administrator funziona su 3 macchine — local admin password identica (immagine clonata, niente [LAPS](https://hackita.it/articoli/active-directory)).
+Hash dell'administrator funziona su 3 macchine — local admin password identica (immagine clonata, niente [LAPS](https://hackita.it/articoli/active-directory/)).
 
 ### RDP → Mimikatz → Hash DA → DCSync
 
@@ -319,7 +319,7 @@ Hash dell'administrator funziona su 3 macchine — local admin password identica
 4. Dominio compromesso
 ```
 
-Questo è il percorso classico di escalation in Active Directory tramite RDP. Per il [DCSync completo](https://hackita.it/articoli/dcsync).
+Questo è il percorso classico di escalation in Active Directory tramite RDP. Per il [DCSync completo](https://hackita.it/articoli/dcsync/).
 
 ### RDP + Port Forwarding
 
@@ -389,7 +389,7 @@ Target: TERMSRV/10.10.10.40
 User: CORP\admin
 ```
 
-Le credenziali RDP salvate sono decriptabili con [Mimikatz DPAPI](https://hackita.it/articoli/mimikatz):
+Le credenziali RDP salvate sono decriptabili con [Mimikatz DPAPI](https://hackita.it/articoli/mimikatz/):
 
 ```
 mimikatz # vault::cred

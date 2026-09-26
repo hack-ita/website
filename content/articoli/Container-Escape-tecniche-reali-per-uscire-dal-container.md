@@ -21,7 +21,7 @@ tags:
 
 ## Perché il Container Escape è Fondamentale
 
-Nel pentest 2026, la maggior parte delle applicazioni gira in container. Quando ottieni[ RCE ](https://hackita.it/articoli/rce)su un'applicazione web, quasi sempre atterri in un container Docker o un pod Kubernetes — non direttamente sull'host. Il container è isolato: filesystem separato, namespace diversi, risorse limitate. Ma l'isolamento è imperfetto — è basato su funzionalità del kernel Linux (namespaces, cgroups, capabilities), non su virtualizzazione hardware. Ogni misconfiguration è un potenziale escape.
+Nel pentest 2026, la maggior parte delle applicazioni gira in container. Quando ottieni[ RCE ](https://hackita.it/articoli/rce/)su un'applicazione web, quasi sempre atterri in un container Docker o un pod Kubernetes — non direttamente sull'host. Il container è isolato: filesystem separato, namespace diversi, risorse limitate. Ma l'isolamento è imperfetto — è basato su funzionalità del kernel Linux (namespaces, cgroups, capabilities), non su virtualizzazione hardware. Ogni misconfiguration è un potenziale escape.
 
 La catena tipica in un engagement cloud:
 
@@ -140,7 +140,7 @@ cat /mnt/host/etc/shadow
 cat /mnt/host/root/.ssh/id_rsa
 ```
 
-**Cosa fai dopo:** hai il filesystem completo dell'host. Per la [credential extraction](https://hackita.it/articoli/dcsync), leggi `/etc/shadow` e chiavi SSH. Per la persistenza: inietta chiave SSH in `/mnt/host/root/.ssh/authorized_keys` o aggiungi un cronjob in `/mnt/host/etc/crontab`.
+**Cosa fai dopo:** hai il filesystem completo dell'host. Per la [credential extraction](https://hackita.it/articoli/dcsync/), leggi `/etc/shadow` e chiavi SSH. Per la persistenza: inietta chiave SSH in `/mnt/host/root/.ssh/authorized_keys` o aggiungi un cronjob in `/mnt/host/etc/crontab`.
 
 ### Escape via cgroup release\_agent (classico)
 
@@ -217,7 +217,7 @@ Se docker CLI non è disponibile, usa curl:
 curl -s --unix-socket /var/run/docker.sock http://localhost/containers/json | python3 -m json.tool
 ```
 
-Per il dettaglio completo sull'exploitation del Docker API, vedi la [guida alla porta 2375 Docker](https://hackita.it/articoli/porta-2375-docker-api) — le tecniche sono identiche, cambia solo il trasporto (socket Unix vs TCP).
+Per il dettaglio completo sull'exploitation del Docker API, vedi la [guida alla porta 2375 Docker](https://hackita.it/articoli/porta-2375-docker-api/) — le tecniche sono identiche, cambia solo il trasporto (socket Unix vs TCP).
 
 ## 4. Escape via Capabilities Linux
 
@@ -386,7 +386,7 @@ kubectl get secrets -A  # Tutti i namespace (se hai permessi)
 kubectl get secret db-credentials -o jsonpath='{.data.password}' | base64 -d
 ```
 
-**Cosa trovi nei secret:** credenziali database, API key, certificati TLS, token di servizi esterni, [credenziali cloud per AWS/Azure/GCP](https://hackita.it/articoli/aws-privilege-escalation).
+**Cosa trovi nei secret:** credenziali database, API key, certificati TLS, token di servizi esterni, [credenziali cloud per AWS/Azure/GCP](https://hackita.it/articoli/aws-privilege-escalation/).
 
 ### Kubelet API (porta 10250)
 
@@ -410,7 +410,7 @@ etcdctl --endpoints=http://[etcd_ip]:2379 get / --prefix --keys-only | grep secr
 etcdctl --endpoints=http://[etcd_ip]:2379 get /registry/secrets/default/db-credentials
 ```
 
-Per il dettaglio su Zookeeper/etcd come servizi di coordinamento, vedi la [guida alla porta 2181 Zookeeper](https://hackita.it/articoli/porta-2181-zookeeper) — il pattern di attacco è analogo.
+Per il dettaglio su Zookeeper/etcd come servizi di coordinamento, vedi la [guida alla porta 2181 Zookeeper](https://hackita.it/articoli/porta-2181-zookeeper/) — il pattern di attacco è analogo.
 
 ## 6. Escape via Cloud Metadata (IMDS)
 
@@ -432,7 +432,7 @@ curl -s -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/i
 curl -s -H "Metadata: true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
 ```
 
-**Cosa fai dopo:** le credenziali cloud permettono [privilege escalation nel cloud provider](https://hackita.it/articoli/aws-privilege-escalation). Da un singolo container compromesso puoi arrivare ad Admin dell'intero account cloud.
+**Cosa fai dopo:** le credenziali cloud permettono [privilege escalation nel cloud provider](https://hackita.it/articoli/aws-privilege-escalation/). Da un singolo container compromesso puoi arrivare ad Admin dell'intero account cloud.
 
 ## 7. Escape via Kernel Exploit
 

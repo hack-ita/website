@@ -24,7 +24,7 @@ Il brute force è l'attacco più vecchio e meno sofisticato del web: prova usern
 
 Nel 2026 il brute force "puro" (provare `aaaa`, `aaab`, `aaac`...) è morto. Quello che funziona è il **credential stuffing** (email e password da breach precedenti) e il **password spraying** (una password comune contro migliaia di utenti). Con i database di breach pubblici che superano i 10 miliardi di credenziali, la probabilità che almeno un utente del tuo target abbia una password già leakata è vicina alla certezza.
 
-Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [2FA Bypass](https://hackita.it/articoli/2fa-bypass), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack).
+Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [2FA Bypass](https://hackita.it/articoli/2fa-bypass/), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/).
 
 Riferimenti: [OWASP Credential Stuffing Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html), [HackTricks Brute Force](https://book.hacktricks.wiki/en/generic-methodologies-and-resources/brute-force.html).
 
@@ -199,7 +199,7 @@ ffuf -u "https://target.com/api/auth/login" \
   -rate 10  # Lento per evitare lockout
 ```
 
-Leggi la guida del tool [qui](https://hackita.it/articoli/ffuf).
+Leggi la [guida completa a ffuf](https://hackita.it/articoli/ffuf/).
 
 ### Hydra
 
@@ -217,7 +217,7 @@ hydra -l admin -P passwords.txt target.com http-get /admin/ -t 16
 hydra -l root -P passwords.txt target.com ssh -t 4
 ```
 
-Anche qui c'è l'abbiamo,non ti facciamo mancare nulla. Vedi [qui](https://hackita.it/articoli/hydra) comandi segreti.
+Anche qui c'è l'abbiamo,non ti facciamo mancare nulla. Vedi i [comandi segreti di Hydra](https://hackita.it/articoli/hydra/).
 
 ### Burp Intruder
 
@@ -239,7 +239,7 @@ Per password spraying (Sniper):
 
 ***
 
-Dai ,vi vogliamo bene.Vi facciamo anche questo regalo [qui](https://hackita.it/articoli/burp-suite/).
+Dai ,vi vogliamo bene.Vi facciamo anche questo regalo: la [guida a Burp Suite](https://hackita.it/articoli/burp-suite/).
 
 ## Rate Limit Bypass — Quando C'è Ma Non Basta
 
@@ -522,6 +522,6 @@ POST-EXPLOITATION
 
 Riferimenti: [OWASP Credential Stuffing Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html), [OWASP Brute Force Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/04-Testing_for_Brute_Force), [HackTricks Brute Force](https://book.hacktricks.wiki/en/generic-methodologies-and-resources/brute-force.html), [SecLists Password Lists](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
 
-Leggi la [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [2FA Bypass](https://hackita.it/articoli/2fa-bypass), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack), [Privilege Escalation Web](https://hackita.it/articoli/privilege-escalation-web).
+Leggi la [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [2FA Bypass](https://hackita.it/articoli/2fa-bypass/), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/), [Privilege Escalation Web](https://hackita.it/articoli/privilege-escalation-web/).
 
-> Il rate limit blocca `X-Forwarded-For` rotation? Il CAPTCHA protegge anche l'API? Il password spray con `Company2026!` trova account? Approfondisci anche [2FA Bypass](https://hackita.it/articoli/2fa-bypass) e [Password Reset Attack](https://hackita.it/articoli/password-reset-attack). Per testare la sicurezza del login della tua applicazione o azienda puoi richiedere un [penetration test HackIta](https://hackita.it/servizi). Per imparare tecniche reali di password spraying, credential stuffing e brute force testing è disponibile anche la formazione 1:1. Riferimenti: [https://owasp.org/www-project-web-security-testing-guide/latest/4-Web\_Application\_Security\_Testing/04-Authentication\_Testing/04-Testing\_for\_Brute\_Force](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/04-Testing_for_Brute_Force) — [https://cheatsheetseries.owasp.org/cheatsheets/Credential\_Stuffing\_Prevention\_Cheat\_Sheet.html](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html)
+> Il rate limit blocca `X-Forwarded-For` rotation? Il CAPTCHA protegge anche l'API? Il password spray con `Company2026!` trova account? Approfondisci anche [2FA Bypass](https://hackita.it/articoli/2fa-bypass/) e [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/). Per testare la sicurezza del login della tua applicazione o azienda puoi richiedere un [penetration test HackIta](https://hackita.it/servizi). Per imparare tecniche reali di password spraying, credential stuffing e brute force testing è disponibile anche la formazione 1:1. Riferimenti: [https://owasp.org/www-project-web-security-testing-guide/latest/4-Web\_Application\_Security\_Testing/04-Authentication\_Testing/04-Testing\_for\_Brute\_Force](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/04-Testing_for_Brute_Force) — [https://cheatsheetseries.owasp.org/cheatsheets/Credential\_Stuffing\_Prevention\_Cheat\_Sheet.html](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html)

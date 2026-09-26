@@ -18,7 +18,7 @@ tags:
 featured: true
 ---
 
-WinRM (Windows Remote Management) è l'implementazione Microsoft del protocollo WS-Management per l'amministrazione remota. Ascolta sulla porta 5985 TCP (HTTP) e sulla [porta 5986](https://hackita.it/articoli/porta-5986-winrm-https) (HTTPS). Nel penetration testing di ambienti Active Directory, WinRM è spesso **la porta più importante dopo SMB**: permette l'esecuzione remota di comandi PowerShell, supporta Pass-the-Hash per autenticazione senza password in chiaro e, a differenza di [RDP](https://hackita.it/articoli/porta-3389-rdp), è una shell non interattiva che non disturba l'utente connesso al desktop — perfetta per operazioni stealth. Evil-WinRM, lo strumento più usato per accedere a WinRM, è diventato uno standard de facto nella metodologia OSCP e nei red team engagement.
+WinRM (Windows Remote Management) è l'implementazione Microsoft del protocollo WS-Management per l'amministrazione remota. Ascolta sulla porta 5985 TCP (HTTP) e sulla [porta 5986](https://hackita.it/articoli/porta-5986-winrm-https/) (HTTPS). Nel penetration testing di ambienti Active Directory, WinRM è spesso **la porta più importante dopo SMB**: permette l'esecuzione remota di comandi PowerShell, supporta Pass-the-Hash per autenticazione senza password in chiaro e, a differenza di [RDP](https://hackita.it/articoli/porta-3389-rdp/), è una shell non interattiva che non disturba l'utente connesso al desktop — perfetta per operazioni stealth. Evil-WinRM, lo strumento più usato per accedere a WinRM, è diventato uno standard de facto nella metodologia OSCP e nei red team engagement.
 
 WinRM è abilitato di default su Windows Server 2012+ e viene spesso attivato sui client tramite Group Policy. In un dominio Active Directory tipico, quasi tutte le macchine rispondono sulla 5985.
 
@@ -35,7 +35,7 @@ Attacker                           Target Windows (:5985)
 └──────────────┘                   └──────────────────────────┘
 ```
 
-WinRM usa il protocollo SOAP su HTTP (porta 5985) o HTTPS (porta 5986). L'autenticazione supporta: Negotiate (NTLM/[Kerberos](https://hackita.it/articoli/kerberos)), Basic, Certificate e CredSSP. In un dominio AD, l'autenticazione è tipicamente [NTLM](https://hackita.it/articoli/ntlm) o Kerberos — e NTLM significa che **[Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) funziona**.
+WinRM usa il protocollo SOAP su HTTP (porta 5985) o HTTPS (porta 5986). L'autenticazione supporta: Negotiate (NTLM/[Kerberos](https://hackita.it/articoli/kerberos/)), Basic, Certificate e CredSSP. In un dominio AD, l'autenticazione è tipicamente [NTLM](https://hackita.it/articoli/ntlm/) o Kerberos — e NTLM significa che **[Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) funziona**.
 
 ### Chi può connettersi via WinRM?
 
@@ -86,7 +86,7 @@ Conferma WinRM attivo e rivela l'hostname (`DC-01`).
 
 ## 2. Credential Attack
 
-### Password spray con [CrackMapExec](https://hackita.it/articoli/crackmapexec/) o [NetExec](https://hackita.it/articoli/netexec)
+### Password spray con [CrackMapExec](https://hackita.it/articoli/crackmapexec/) o [NetExec](https://hackita.it/articoli/netexec/)
 
 ```bash
 # Singolo utente
@@ -112,7 +112,7 @@ crackmapexec winrm 10.10.10.40 -u users.txt -p passwords.txt --no-bruteforce
 
 ### Pass-the-Hash (senza password in chiaro)
 
-Se hai un hash NTLM (da [Mimikatz](https://hackita.it/articoli/mimikatz), [DCSync](https://hackita.it/articoli/dcsync), dump SAM o [responder](https://hackita.it/articoli/responder)):
+Se hai un hash NTLM (da [Mimikatz](https://hackita.it/articoli/mimikatz/), [DCSync](https://hackita.it/articoli/dcsync/), dump SAM o [responder](https://hackita.it/articoli/responder/)):
 
 ```bash
 crackmapexec winrm 10.10.10.40 -u administrator -H 'aad3b435b51404eeaad3b435b51404ee:32ed87bdb5fdc5e9cba88547376818d4'
@@ -141,7 +141,7 @@ Tre macchine compromesse con un singolo hash.
 
 ## 3. Evil-WinRM — Shell Interattiva
 
-[Evil-WinRM ](https://hackita.it/articoli/evil-winrm)è lo strumento standard per ottenere una shell PowerShell via WinRM.
+[Evil-WinRM ](https://hackita.it/articoli/evilwinrm/)è lo strumento standard per ottenere una shell PowerShell via WinRM.
 
 ### Connessione con password
 
@@ -239,7 +239,7 @@ NTLM              : 8846f7eaee8fb117ad06bdd830b7586c
 
 Hash NTLM di `svc_backup` → testa su tutte le macchine via WinRM.
 
-Per la guida completa: [Mimikatz](https://hackita.it/articoli/mimikatz) e [DCSync](https://hackita.it/articoli/dcsync).
+Per la guida completa: [Mimikatz](https://hackita.it/articoli/mimikatz/) e [DCSync](https://hackita.it/articoli/dcsync/).
 
 ### SAM dump (credenziali locali)
 
@@ -271,7 +271,7 @@ svc_backup:1001:aad3b435b51404ee:8846f7eaee8fb117ad06bdd830b7586c:::
 C:\Windows\Temp\m.exe "lsadump::dcsync /domain:corp.local /user:krbtgt" "exit"
 ```
 
-Con l'hash di `krbtgt` → [Golden Ticket](https://hackita.it/articoli/active-directory) → accesso permanente al dominio.
+Con l'hash di `krbtgt` → [Golden Ticket](https://hackita.it/articoli/active-directory/) → accesso permanente al dominio.
 
 ### BloodHound collection
 

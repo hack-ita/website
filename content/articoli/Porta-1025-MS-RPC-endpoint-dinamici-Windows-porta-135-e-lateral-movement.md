@@ -87,9 +87,9 @@ Questo output mostra che una specifica **interfaccia RPC** è stata pubblicata s
 
 Se vuoi approfondire RPC e servizi Windows correlati, vedi anche:
 
-* [https://hackita.it/articoli/porta-135-msrpc](https://hackita.it/articoli/porta-135-msrpc)
-* [https://hackita.it/articoli/wmi](https://hackita.it/articoli/wmi)
-* [https://hackita.it/articoli/post-exploitation](https://hackita.it/articoli/post-exploitation)
+* [https://hackita.it/articoli/porta-135-msrpc](https://hackita.it/articoli/porta-135-rpc/)
+* [https://hackita.it/articoli/wmi](https://hackita.it/articoli/wmic/)
+* [https://hackita.it/articoli/post-exploitation](https://hackita.it/articoli/post-exploitation/)
 
 ## 4. Errori comuni nell’analisi RPC
 

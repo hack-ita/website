@@ -17,7 +17,7 @@ tags:
   - time protocol
 ---
 
-La porta 37 espone il **Time Protocol** (RFC 868) — un servizio legacy di sincronizzazione oraria che trasmette timestamp Unix in chiaro su TCP/UDP. Attivo dal 1983, Time Protocol è obsoleto e sostituito da [NTP](https://hackita.it/articoli/ntp) (porta 123), ma persiste in dispositivi embedded, router industriali e sistemi legacy impossibili da aggiornare. In penetration testing, la porta 37 interessa per tre ragioni: **information disclosure** (timezone, uptime system tramite timestamp drift), **time-based attack amplification** (manipolare timestamp per bypass autenticazione time-based), e **fingerprinting OS** via formato risposta timestamp. In CTF, Time Protocol compare raramente ma quando presente indica spesso macchine Windows Server pre-2012 o dispositivi Cisco IOS legacy.
+La porta 37 espone il **Time Protocol** (RFC 868) — un servizio legacy di sincronizzazione oraria che trasmette timestamp Unix in chiaro su TCP/UDP. Attivo dal 1983, Time Protocol è obsoleto e sostituito da [NTP](https://hackita.it/articoli/ntp/) (porta 123), ma persiste in dispositivi embedded, router industriali e sistemi legacy impossibili da aggiornare. In penetration testing, la porta 37 interessa per tre ragioni: **information disclosure** (timezone, uptime system tramite timestamp drift), **time-based attack amplification** (manipolare timestamp per bypass autenticazione time-based), e **fingerprinting OS** via formato risposta timestamp. In CTF, Time Protocol compare raramente ma quando presente indica spesso macchine Windows Server pre-2012 o dispositivi Cisco IOS legacy.
 
 Time Protocol sopravvive solo in ambienti OT/ICS (SCADA, PLC con firmware anni 2000) e laboratori legacy. Ogni security audit considera l'esposizione porta 37 una **low-priority finding** ma utile per reconnaissance passivo e OS fingerprinting senza triggering IDS.
 
@@ -239,7 +239,7 @@ nmap -O 10.10.10.100
 ```
 
 ```bash
-# Conferma con [nmap](https://hackita.it/articoli/nmap) SMB scan
+# Conferma con [nmap](https://hackita.it/articoli/nmap/) SMB scan
 nmap -p 445 --script=smb-os-discovery 10.10.10.100
 # OS: Windows Server 2008 R2 Standard 7601 Service Pack 1
 ```
@@ -264,7 +264,7 @@ nc -vn 192.168.1.1 37
 ```
 
 ```bash
-# Conferma con [telnet](https://hackita.it/articoli/telnet) default creds
+# Conferma con [telnet](https://hackita.it/articoli/telnet/) default creds
 telnet 192.168.1.1
 # Username: cisco
 # Password: cisco
@@ -273,7 +273,7 @@ Router>
 
 **COSA FARE SE FALLISCE:**
 
-* Se nessuna risposta UDP → firewall blocca porta 37, provare [SNMP](https://hackita.it/articoli/snmp) porta 161
+* Se nessuna risposta UDP → firewall blocca porta 37, provare [SNMP](https://hackita.it/articoli/snmp/) porta 161
 * Se timestamp overflow (anno >2036) → device con clock misconfigured, non usare per sync
 
 ### Scenario 3 — Time drift detection per service disruption
@@ -406,7 +406,7 @@ Time Protocol è così raro che il semplice uso triggera alert. Evasion:
 
 1. **Single query:** Una sola connessione per timestamp, no loop
 2. **Passive listening:** Se Time Protocol broadcast (raro), sniff invece di query
-3. **Alternate recon:** Usare [NTP](https://hackita.it/articoli/ntp) porta 123 invece (meno sospetto, più comune)
+3. **Alternate recon:** Usare [NTP](https://hackita.it/articoli/ntp/) porta 123 invece (meno sospetto, più comune)
 
 ***
 
@@ -551,7 +551,7 @@ systemctl restart xinetd
 Time Protocol è **estremamente raro** — qualsiasi query triggera alert in ambienti monitored. Preferire:
 
 1. **NTP queries** (porta 123) — indistinguibile da traffico legittimo
-2. **Passive OS fingerprinting** — [nmap](https://hackita.it/articoli/nmap) senza connettersi direttamente porta 37
+2. **Passive OS fingerprinting** — [nmap](https://hackita.it/articoli/nmap/) senza connettersi direttamente porta 37
 3. **Alternate timing sources** — HTTP Date headers, SMTP timestamps
 
 ***

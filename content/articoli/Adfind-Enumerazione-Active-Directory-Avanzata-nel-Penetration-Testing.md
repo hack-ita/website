@@ -16,7 +16,7 @@ tags:
   - enum
 ---
 
-AdFind è un tool Windows da linea di comando scritto da Joe Richards per query LDAP avanzate su Active Directory. Nel penetration testing è l'alternativa potente a [Ldapsearch](https://hackita.it/articoli/ldapsearch) per chi opera già su un host Windows compromesso: un singolo eseguibile portatile, nessuna installazione, query predefinite per gli scenari AD più comuni.
+AdFind è un tool Windows da linea di comando scritto da Joe Richards per query LDAP avanzate su Active Directory. Nel penetration testing è l'alternativa potente a [Ldapsearch](https://hackita.it/articoli/ldapsearch/) per chi opera già su un host Windows compromesso: un singolo eseguibile portatile, nessuna installazione, query predefinite per gli scenari AD più comuni.
 
 AdFind eccelle nel mappare trust relationship tra domini, enumerare GPO, trovare account con delegation configurata e identificare path di privilege escalation. È lo strumento che usi quando hai shell su un domain-joined machine e devi estrarre il massimo di informazioni dall'AD.
 
@@ -147,7 +147,7 @@ adfind.exe -f "(objectcategory=person)" sAMAccountName memberOf adminCount userA
 
 ## 6️⃣ Toolchain Integration
 
-**Flusso:** Shell su host → **AdFind (AD enum)** → Impacket (Kerberoast/DCSync) → [Smbmap](https://hackita.it/articoli/smbmap) (lateral movement)
+**Flusso:** Shell su host → **AdFind (AD enum)** → Impacket (Kerberoast/DCSync) → [Smbmap](https://hackita.it/articoli/smbmap/) (lateral movement)
 
 | Tool       | Piattaforma | Auth integrata | Trust enum | Delegation |
 | ---------- | ----------- | -------------- | ---------- | ---------- |

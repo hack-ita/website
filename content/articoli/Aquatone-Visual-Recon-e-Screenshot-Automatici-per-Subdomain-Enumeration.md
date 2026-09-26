@@ -123,7 +123,7 @@ Salta la fase di port scanning e fa solo screenshot degli URL forniti.
 seq 1 254 | sed 's/^/http:\/\/172.16.0./' | aquatone -ports 80,443,8080 -out internal_recon/
 ```
 
-Screenshot di tutta una subnet /24 su porte web. Perfetto dopo un [pivoting](https://hackita.it/articoli/sshuttle) con SSHuttle.
+Screenshot di tutta una subnet /24 su porte web. Perfetto dopo un [pivoting](https://hackita.it/articoli/sshuttle/) con SSHuttle.
 
 ***
 
@@ -198,7 +198,7 @@ cat external_assets.txt | aquatone -out scan_$(date +%Y%m%d)/
 
 **Flusso:**
 
-[Subfinder](https://hackita.it/articoli/subfinder) → [Httpx](https://hackita.it/articoli/httpx) → **Aquatone (visual triage)** → [Nuclei](https://hackita.it/articoli/nuclei) (vuln scan su target selezionati)
+[Subfinder](https://hackita.it/articoli/subfinder/) → [Httpx](https://hackita.it/articoli/httpx/) → **Aquatone (visual triage)** → [Nuclei](https://hackita.it/articoli/nuclei/) (vuln scan su target selezionati)
 
 | Tool              | Screenshot | Report HTML      | Port scan | Speed |
 | ----------------- | ---------- | ---------------- | --------- | ----- |

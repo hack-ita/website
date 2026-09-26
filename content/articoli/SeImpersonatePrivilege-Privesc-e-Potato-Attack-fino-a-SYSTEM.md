@@ -328,9 +328,9 @@ SeImpersonatePrivilege trasforma qualsiasi RCE su un servizio Windows in una she
 
 **Articoli correlati:**
 
-* [SeAssignPrimaryTokenPrivilege](https://hackita.it/articoli/seassignprimarytokenprivilege) — l'altro privilegio dei Potato attack, spesso dimenticato nell'hardening
-* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege) — dump LSASS e credential access post-SYSTEM
-* [SeCreateTokenPrivilege](https://hackita.it/articoli/secreatetokenprivilege) — token forgery senza dipendenze esterne
+* [SeAssignPrimaryTokenPrivilege](https://hackita.it/articoli/seassignprimarytokenprivilege/) — l'altro privilegio dei Potato attack, spesso dimenticato nell'hardening
+* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/) — dump LSASS e credential access post-SYSTEM
+* [SeCreateTokenPrivilege](https://hackita.it/articoli/secreatetokenprivilege/) — token forgery senza dipendenze esterne
 * [winPEAS](https://hackita.it/articoli/winpeas/) — guida completa all'uso
 
 **Riferimenti:** [GodPotato](https://github.com/BeichenDream/GodPotato) · [PrintSpoofer](https://github.com/itm4n/PrintSpoofer) · [SweetPotato](https://github.com/CCob/SweetPotato) · [JuicyPotato CLSID](https://github.com/ohpe/juicy-potato/tree/master/CLSID) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/impersonate-a-client-after-authentication)

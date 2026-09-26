@@ -112,7 +112,7 @@ IF-MIB::ifDescr.3 = STRING: GigabitEthernet0/3
 IF-MIB::ifType.3 = INTEGER: ethernetCsmacd(6)
 ```
 
-**Cosa ci dice questo output:** il device 10.10.10.5 sta inviando trap linkDown per l'interfaccia GigabitEthernet0/3. Hai l'IP sorgente, l'uptime del device, il tipo di interfaccia e il suo indice. Con queste informazioni puoi interrogare direttamente il device sulla porta 161 per estrarre la configurazione completa. Vedi anche la guida all'[enumerazione SNMP sulla porta 161](https://hackita.it/articoli/snmp).
+**Cosa ci dice questo output:** il device 10.10.10.5 sta inviando trap linkDown per l'interfaccia GigabitEthernet0/3. Hai l'IP sorgente, l'uptime del device, il tipo di interfaccia e il suo indice. Con queste informazioni puoi interrogare direttamente il device sulla porta 161 per estrarre la configurazione completa. Vedi anche la guida all'[enumerazione SNMP sulla porta 161](https://hackita.it/articoli/snmp/).
 
 ## 3. Enumerazione Avanzata
 
@@ -151,7 +151,7 @@ monitoring_2024
 netw0rk_RO
 ```
 
-**Lettura dell'output:** hai tre community string distinte. `public` è il default, le altre due sono custom. Ognuna va testata sulla porta 161 di ciascun host scoperto per verificare se consente lettura o scrittura. Approfondisci le tecniche di [enumerazione SNMP sulla porta 161](https://hackita.it/articoli/snmp) per sfruttare queste community string.
+**Lettura dell'output:** hai tre community string distinte. `public` è il default, le altre due sono custom. Ognuna va testata sulla porta 161 di ciascun host scoperto per verificare se consente lettura o scrittura. Approfondisci le tecniche di [enumerazione SNMP sulla porta 161](https://hackita.it/articoli/snmp/) per sfruttare queste community string.
 
 ### Script NSE per SNMP trap analysis
 
@@ -172,7 +172,7 @@ PORT    STATE SERVICE
 |_  snmpEngineTime: 3d 04:12:33
 ```
 
-**Lettura dell'output:** l'engineID basato su MAC rivela il vendor (VMware in questo caso: `00:0c:29`). Il numero di boot (12) suggerisce instabilità o manutenzione frequente. L'engineTime conferma che il device è attivo da 3 giorni dall'ultimo reboot. Per approfondire gli script NSE utili nel recon vedi la [guida a nmap](https://hackita.it/articoli/nmap).
+**Lettura dell'output:** l'engineID basato su MAC rivela il vendor (VMware in questo caso: `00:0c:29`). Il numero di boot (12) suggerisce instabilità o manutenzione frequente. L'engineTime conferma che il device è attivo da 3 giorni dall'ultimo reboot. Per approfondire gli script NSE utili nel recon vedi la [guida a nmap](https://hackita.it/articoli/nmap/).
 
 ### Trap spoofing per test di validazione
 
@@ -215,7 +215,7 @@ Capturing on 'eth0'
 0 packets captured
 ```
 
-**Cosa fai dopo:** la community `n3twork_RW` contiene "RW" nel nome, probabile read-write. Testi immediatamente con `snmpset` sulla porta 161 del target 10.10.10.5 per verificare se puoi modificare la configurazione del device. Scopri come sfruttare community RW nella [guida al bruteforce SNMP](https://hackita.it/articoli/bruteforce).
+**Cosa fai dopo:** la community `n3twork_RW` contiene "RW" nel nome, probabile read-write. Testi immediatamente con `snmpset` sulla porta 161 del target 10.10.10.5 per verificare se puoi modificare la configurazione del device. Scopri come sfruttare community RW nella [guida al bruteforce SNMP](https://hackita.it/articoli/brute-force/).
 
 ### Trap Injection per falsi allarmi
 
@@ -237,7 +237,7 @@ snmptrap -v 2c -c public 10.10.10.100:162 '' IF-MIB::linkDown IF-MIB::ifIndex i 
 snmptrap: Timeout
 ```
 
-**Cosa fai dopo:** il trap iniettato simula un link down sulla interfaccia principale. Se il SOC reagisce, hai creato una diversione. Se hai accesso RW, puoi combinare questa tecnica con modifiche reali alla configurazione del device. Vedi [tecniche di red team e diversione](https://hackita.it/articoli/red-team).
+**Cosa fai dopo:** il trap iniettato simula un link down sulla interfaccia principale. Se il SOC reagisce, hai creato una diversione. Se hai accesso RW, puoi combinare questa tecnica con modifiche reali alla configurazione del device. Vedi [tecniche di red team e diversione](https://hackita.it/articoli/red-team/).
 
 ### SNMP Credential Spray via community da trap
 
@@ -265,7 +265,7 @@ SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.9.1.1208
 Timeout: No Response from 10.10.10.1
 ```
 
-**Cosa fai dopo:** community RW confermata su un Cisco C2960. Puoi scaricare la running-config tramite SNMP e cercare credenziali Telnet/SSH embedded. Segui la [kill chain completa](https://hackita.it/articoli/killchain) per passare da config dump a accesso diretto.
+**Cosa fai dopo:** community RW confermata su un Cisco C2960. Puoi scaricare la running-config tramite SNMP e cercare credenziali Telnet/SSH embedded. Segui la [kill chain completa](https://hackita.it/articoli/killchain/) per passare da config dump a accesso diretto.
 
 ### ARP spoofing per redirect dei trap
 
@@ -287,7 +287,7 @@ sudo arpspoof -i eth0 -t 10.10.10.5 10.10.10.100
 arpspoof: couldn't arp for host 10.10.10.100
 ```
 
-**Cosa fai dopo:** i trap destinati al manager (10.10.10.100) ora arrivano a te. Combini con il listener snmptrapd per catturare community string e dati operativi in tempo reale. Approfondisci le tecniche di [man-in-the-middle sulla rete](https://hackita.it/articoli/mitm).
+**Cosa fai dopo:** i trap destinati al manager (10.10.10.100) ora arrivano a te. Combini con il listener snmptrapd per catturare community string e dati operativi in tempo reale. Approfondisci le tecniche di [man-in-the-middle sulla rete](https://hackita.it/articoli/man-in-the-middle/).
 
 ## 5. Scenari Pratici di Pentest
 
@@ -326,7 +326,7 @@ tshark -r trap_capture.pcap -Y "snmp" -T fields -e ip.src -e snmp.community | so
 **Se fallisce:**
 
 * Causa probabile: sei su una VLAN diversa da quella di management, i trap non transitano dal tuo segmento
-* Fix: verifica con `tcpdump -i eth0 udp port 162 -c 1 -v` se vedi traffico. Se zero, devi prima fare lateral movement verso la VLAN di management. Vedi [lateral movement su reti segmentate](https://hackita.it/articoli/lateral-movement).
+* Fix: verifica con `tcpdump -i eth0 udp port 162 -c 1 -v` se vedi traffico. Se zero, devi prima fare lateral movement verso la VLAN di management. Vedi [lateral movement su reti segmentate](https://hackita.it/articoli/lateral-movement/).
 
 **Tempo stimato:** 10-30 minuti per la cattura, dipende dalla frequenza dei trap.
 
@@ -409,7 +409,7 @@ SNMPv2-MIB::sysLocation.0 = STRING: Plant Floor - Rack 3
 * Causa probabile: SNMPv1 su device OT spesso ha timeout molto bassi
 * Fix: aumenta timeout e retry: `snmpwalk -v 1 -c public -t 5 -r 3 192.168.1.10 system`
 
-**Tempo stimato:** 5-15 minuti, dipende dalla reattività dei device OT. Per il contesto OT/ICS vedi [pentest su reti industriali](https://hackita.it/articoli/ics-ot).
+**Tempo stimato:** 5-15 minuti, dipende dalla reattività dei device OT. Per il contesto OT/ICS vedi [pentest su reti industriali](https://hackita.it/articoli/ics-ot/).
 
 ## 6. Attack Chain Completa
 
@@ -452,7 +452,7 @@ Inserisci sleep 3-5 secondi tra ogni tentativo snmpwalk, usa `-t 1 -r 1` per rid
 
 **Spoofing IP sorgente del trap**
 
-Usa scapy per inviare trap con IP sorgente del legittimo manager, rendendo il traffico indistinguibile. Il trap appare provenire da una sorgente autorizzata, nessun alert su sorgente sconosciuta. Vedi [tecniche di spoofing con Scapy](https://hackita.it/articoli/scapy).
+Usa scapy per inviare trap con IP sorgente del legittimo manager, rendendo il traffico indistinguibile. Il trap appare provenire da una sorgente autorizzata, nessun alert su sorgente sconosciuta. Vedi [tecniche di spoofing con Scapy](https://hackita.it/articoli/scapy/).
 
 ### Cleanup Post-Exploitation
 
@@ -508,7 +508,7 @@ R: Con tshark: `tshark -i eth0 -f "udp port 162" -T fields -e snmp.community`. F
 
 **D: Differenza tra porta 161 e porta 162 SNMP nel pentest?**
 
-R: La porta 161 riceve query dal manager (polling attivo, genera traffico). La porta 162 riceve notifiche dai device (push passivo). Per il pentester, la 162 è ideale per intelligence passiva senza generare rumore, mentre la 161 serve per enumerazione attiva e config dump. Vedi la [guida completa a SNMP 161](https://hackita.it/articoli/snmp) per il confronto operativo.
+R: La porta 161 riceve query dal manager (polling attivo, genera traffico). La porta 162 riceve notifiche dai device (push passivo). Per il pentester, la 162 è ideale per intelligence passiva senza generare rumore, mentre la 161 serve per enumerazione attiva e config dump. Vedi la [guida completa a SNMP 161](https://hackita.it/articoli/snmp/) per il confronto operativo.
 
 **D: Quali tool servono per testare la porta 162 SNMP Trap?**
 
@@ -546,7 +546,7 @@ SNMP resta il protocollo di monitoring dominante nelle infrastrutture enterprise
 
 ### OPSEC per il Red Team
 
-Lo sniffing passivo sulla porta 162 genera zero rumore: non invii pacchetti, non compari in nessun log. Il livello di rischio sale quando inizi a usare le community raccolte sulla 161 (query attive, log sul device). Per ridurre visibilità: usa `-t 1 -r 1` su snmpwalk (timeout minimo, un solo retry), distanzia le query di almeno 5 secondi, e non fare mai `snmpwalk .1` completo su device di produzione (genera migliaia di pacchetti). Approfondisci l'[OPSEC per red team](https://hackita.it/articoli/opsec).
+Lo sniffing passivo sulla porta 162 genera zero rumore: non invii pacchetti, non compari in nessun log. Il livello di rischio sale quando inizi a usare le community raccolte sulla 161 (query attive, log sul device). Per ridurre visibilità: usa `-t 1 -r 1` su snmpwalk (timeout minimo, un solo retry), distanzia le query di almeno 5 secondi, e non fare mai `snmpwalk .1` completo su device di produzione (genera migliaia di pacchetti). Approfondisci l'[OPSEC per red team](https://hackita.it/articoli/opsec/).
 
 ***
 

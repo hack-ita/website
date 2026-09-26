@@ -19,7 +19,7 @@ Recon-ng automatizza la raccolta di intelligence open source attraverso un frame
 
 ### Cosa imparerai
 
-Questo articolo copre l'installazione e configurazione del marketplace di moduli, gestione workspace e database SQLite integrato, tecniche di pivoting tra entità (domini→host→contatti→credenziali), creazione di resource script per automazione, integrazione con altri tool OSINT come [maltego](https://hackita.it/articoli/maltego) e [spiderfoot](https://hackita.it/articoli/spiderfoot), best practices OPSEC per evitare detection durante raccolta passiva, e strategie di export per alimentare fasi successive dell'attack chain.
+Questo articolo copre l'installazione e configurazione del marketplace di moduli, gestione workspace e database SQLite integrato, tecniche di pivoting tra entità (domini→host→contatti→credenziali), creazione di resource script per automazione, integrazione con altri tool OSINT come [maltego](https://hackita.it/articoli/maltego/) e [spiderfoot](https://hackita.it/articoli/spiderfoot/), best practices OPSEC per evitare detection durante raccolta passiva, e strategie di export per alimentare fasi successive dell'attack chain.
 
 ## Setup e Installazione
 
@@ -512,7 +512,7 @@ wget -r http://dev.targetcorp.com/.git
 git-dumper http://dev.targetcorp.com/.git targetcorp_source
 ```
 
-Source code contiene credenziali database hardcoded in `config.php`. Accesso database → credential stuffing su `mail.targetcorp.com` (Microsoft 365) usando [https://hackita.it/articoli/crackmapexec](https://hackita.it/articoli/crackmapexec).
+Source code contiene credenziali database hardcoded in `config.php`. Accesso database → credential stuffing su `mail.targetcorp.com` (Microsoft 365) usando [https://hackita.it/articoli/crackmapexec](https://hackita.it/articoli/crackmapexec/).
 
 ### Fase 4: Privilege Escalation (BloodHound + Mimikatz)
 

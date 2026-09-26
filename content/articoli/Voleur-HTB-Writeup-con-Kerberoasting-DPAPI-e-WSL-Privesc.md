@@ -84,7 +84,7 @@ sudo cp krb5.conf /etc/krb5.conf
 
 ## Enumerazione SMB e il file Excel
 
-L'elenco delle share mostra, oltre a quelle di default, `Finance`, `HR`, `IT` (uso NetExec per l'enumerazione, se non lo conosci c'è [una guida completa qui](https://hackita.it/articoli/netexec)):
+L'elenco delle share mostra, oltre a quelle di default, `Finance`, `HR`, `IT` (uso NetExec per l'enumerazione, se non lo conosci c'è [una guida completa qui](https://hackita.it/articoli/netexec/)):
 
 ```
 netexec smb 10.10.11.76 -u ryan.naylor -p HollowOct31Nyt -k --shares
@@ -98,7 +98,7 @@ smb: \> ls 'First-Line Support\'
 smb: \First-Line Support\> get Access_Review.xlsx
 ```
 
-Il file è cifrato (CDFV2 Encrypted). Estraggo l'hash della protezione con office2john (parte della suite [John the Ripper](https://hackita.it/articoli/john-the-ripper), utile se non hai mai lavorato con questi tool) e lo craccko:
+Il file è cifrato (CDFV2 Encrypted). Estraggo l'hash della protezione con office2john (parte della suite [John the Ripper](https://hackita.it/articoli/john-the-ripper/), utile se non hai mai lavorato con questi tool) e lo craccko:
 
 ```
 python /opt/john/run/office2john.py Access_Review.xlsx | tee Access_Review.xlsx.hash
@@ -123,7 +123,7 @@ Caricando i dati in BloodHound CE, `svc_ldap` ha privilegi di controllo su `svc_
 
 ## Targeted Kerberoasting su svc\_winrm
 
-Con il privilegio `WriteSPN` che svc\_ldap possiede su svc\_winrm, aggiungo uno SPN arbitrario con BloodyAD ([guida qui](https://hackita.it/articoli/bloodyad) se non lo conosci):
+Con il privilegio `WriteSPN` che svc\_ldap possiede su svc\_winrm, aggiungo uno SPN arbitrario con BloodyAD ([guida qui](https://hackita.it/articoli/bloodyad/) se non lo conosci):
 
 ```
 bloodyAD -d voleur.htb -k --host dc.voleur.htb -u svc_ldap -p M1XyC9pW7qT5Vn set object svc_winrm servicePrincipalName -v 'http/whatever'
@@ -238,7 +238,7 @@ netexec ldap dc.voleur.htb -u svc_ldap -p M1XyC9pW7qT5Vn -k -M tombstone -o ACTI
 
 ## Da todd.wolfe a jeremy.combs: la catena DPAPI
 
-todd.wolfe risulta membro del gruppo Second-Line Technicians, con accesso a `IT\Second-Line Support\Archived Users\todd.wolfe` — la sua vecchia home directory, conservata dopo la cancellazione dell'account. Dentro, in `AppData\Roaming\Microsoft\Credentials`, c'è un blob di credenziali cifrato con DPAPI; la relativa masterkey è in `AppData\Roaming\Microsoft\Protect\<SID>`. Per chi non ha chiaro il funzionamento di masterkey/blob, vale la pena leggere prima [DPAPI: teoria e recupero credenziali](https://hackita.it/articoli/dpapi).
+todd.wolfe risulta membro del gruppo Second-Line Technicians, con accesso a `IT\Second-Line Support\Archived Users\todd.wolfe` — la sua vecchia home directory, conservata dopo la cancellazione dell'account. Dentro, in `AppData\Roaming\Microsoft\Credentials`, c'è un blob di credenziali cifrato con DPAPI; la relativa masterkey è in `AppData\Roaming\Microsoft\Protect\<SID>`. Per chi non ha chiaro il funzionamento di masterkey/blob, vale la pena leggere prima [DPAPI: teoria e recupero credenziali](https://hackita.it/articoli/dpapi/).
 
 Recupero entrambi i file via SMB:
 

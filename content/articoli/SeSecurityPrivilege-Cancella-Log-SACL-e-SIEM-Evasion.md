@@ -343,8 +343,8 @@ SeSecurityPrivilege è il privilegio per l'OpSec del red teamer — ma prima di 
 
 **Articoli correlati:**
 
-* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege) — dump credenziali da eseguire con copertura SACL
-* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege) — LSASS dump da fare dopo aver rimosso SACL da lsass
+* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege/) — dump credenziali da eseguire con copertura SACL
+* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/) — LSASS dump da fare dopo aver rimosso SACL da lsass
 
 **Riferimenti:** [SetACL](https://helgeklein.com/setacl/) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/manage-auditing-and-security-log)
 

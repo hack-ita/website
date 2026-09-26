@@ -17,11 +17,11 @@ tags:
   - broken-access-control
 ---
 
-La Privilege Escalation è il **salto di permessi**: da utente normale ad admin (verticale), da utente A ad utente B dello stesso livello (orizzontale), da guest a utente registrato. Nel web la distinzione con [Broken Access Control](https://hackita.it/articoli/broken-access-control) è sottile: il BAC è "accedo a un endpoint che non dovrei", la Privilege Escalation è "cambio il mio ruolo/permessi". In pratica si sovrappongono — e le testo insieme.
+La Privilege Escalation è il **salto di permessi**: da utente normale ad admin (verticale), da utente A ad utente B dello stesso livello (orizzontale), da guest a utente registrato. Nel web la distinzione con [Broken Access Control](https://hackita.it/articoli/broken-access-control/) è sottile: il BAC è "accedo a un endpoint che non dovrei", la Privilege Escalation è "cambio il mio ruolo/permessi". In pratica si sovrappongono — e le testo insieme.
 
 La trovo nel **15% dei pentest web**. Il pattern più frequente: l'API accetta un campo `role` nel body della request di update profilo → `PUT /api/users/me {"role":"admin"}` → l'ORM applica il campo senza whitelist → sei admin. Zero exploit, zero payload tecnico — solo un campo JSON aggiuntivo.
 
-Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [Broken Access Control](https://hackita.it/articoli/broken-access-control), [IDOR](https://hackita.it/articoli/idor).
+Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [Broken Access Control](https://hackita.it/articoli/broken-access-control/), [IDOR](https://hackita.it/articoli/idor/).
 
 ***
 
@@ -46,7 +46,7 @@ azienda X → azienda Y (stesso livello, dati diversi)
 dipendente reparto A → dipendente reparto B
 ```
 
-L'attaccante **si sposta lateralmente**: accede ai dati di altri utenti con lo stesso ruolo. Si sovrappone all'[IDOR](https://hackita.it/articoli/idor) ma il focus è sul contesto multi-tenant (azienda X vede dati di azienda Y).
+L'attaccante **si sposta lateralmente**: accede ai dati di altri utenti con lo stesso ruolo. Si sovrappone all'[IDOR](https://hackita.it/articoli/idor/) ma il focus è sul contesto multi-tenant (azienda X vede dati di azienda Y).
 
 ***
 
@@ -184,7 +184,7 @@ python3 jwt_tool.py TOKEN -T -pc role -pv admin
 # Testa se il token modificato è accettato
 ```
 
-Per approfondire: [JWT Attack](https://hackita.it/articoli/jwt-attack)
+Per approfondire: [JWT Attack](https://hackita.it/articoli/jwt/)
 
 ### 5. Response Manipulation
 
@@ -484,6 +484,6 @@ MULTI-TENANT
 
 ***
 
-Satellite della [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [Broken Access Control](https://hackita.it/articoli/broken-access-control), [IDOR](https://hackita.it/articoli/idor), [JWT Attack](https://hackita.it/articoli/jwt-attack).
+Satellite della [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [Broken Access Control](https://hackita.it/articoli/broken-access-control/), [IDOR](https://hackita.it/articoli/idor/), [JWT Attack](https://hackita.it/articoli/jwt/).
 
 > Il tuo endpoint PUT accetta il campo "role"? La registrazione permette di specificare il ruolo? Il tenant\_id è modificabile? [Penetration test HackIta](https://hackita.it/servizi) per trovare ogni escalation path. Da user ad admin in una request: [formazione 1:1](https://hackita.it/formazione).

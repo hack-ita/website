@@ -21,7 +21,7 @@ Ogni pentester ha avuto questa conversazione:
 
 *"Non preoccupatevi, abbiamo spostato RDP dalla 3389 alla 33389. Gli attaccanti non la troveranno."*
 
-Questa è **security through obscurity** — e non funziona. La porta 33389 TCP (e le sue varianti: 13389, 3390, 3391, 43389, 53389) è una delle porte alternative più comuni per il Remote Desktop Protocol di Windows. Le aziende la spostano per evitare gli scan automatici dei botnet sulla [porta 3389](https://hackita.it/articoli/porta-3389-rdp), convinte che cambiare numero di porta equivalga a proteggere il servizio. In realtà, basta un `nmap -sV` per identificare RDP su qualsiasi porta — il protocollo ha un handshake riconoscibile che non puoi nascondere cambiando il numero.
+Questa è **security through obscurity** — e non funziona. La porta 33389 TCP (e le sue varianti: 13389, 3390, 3391, 43389, 53389) è una delle porte alternative più comuni per il Remote Desktop Protocol di Windows. Le aziende la spostano per evitare gli scan automatici dei botnet sulla [porta 3389](https://hackita.it/articoli/porta-3389-rdp/), convinte che cambiare numero di porta equivalga a proteggere il servizio. In realtà, basta un `nmap -sV` per identificare RDP su qualsiasi porta — il protocollo ha un handshake riconoscibile che non puoi nascondere cambiando il numero.
 
 Il paradosso è che i server con RDP su porte non standard sono spesso **meno protetti** di quelli sulla 3389: gli admin che spostano la porta pensano di aver "risolto il problema" e non implementano le vere contromisure (NLA, MFA, VPN, rate limiting). Il risultato è un server RDP esposto su Internet senza protezioni reali, nascosto dietro un numero di porta diverso che qualsiasi tool di scan trova in secondi.
 
@@ -84,7 +84,7 @@ PORT      STATE SERVICE
 
 **Intelligence ricchissima** — senza autenticazione, solo dall'handshake:
 
-* **Target\_Name: CORP** → nome del dominio [Active Directory](https://hackita.it/articoli/active-directory)
+* **Target\_Name: CORP** → nome del dominio [Active Directory](https://hackita.it/articoli/active-directory/)
 * **DNS\_Domain\_Name: corp.local** → dominio DNS interno
 * **DNS\_Computer\_Name: WEB-01.corp.local** → hostname esatto del server
 * **Product\_Version: 10.0.20348** → Windows Server 2022
@@ -99,7 +99,7 @@ masscan 10.10.0.0/16 -p 33389 --rate 10000 -oL results.txt
 
 ## 2. Attacchi su RDP (Porta 33389 = Porta 3389)
 
-Una volta identificato RDP sulla 33389, **tutti gli attacchi sono identici alla [porta 3389](https://hackita.it/articoli/porta-3389-rdp)**. La porta è diversa, il protocollo è lo stesso. Devi solo aggiungere `:33389` o `-port 33389` ai tool.
+Una volta identificato RDP sulla 33389, **tutti gli attacchi sono identici alla [porta 3389](https://hackita.it/articoli/porta-3389-rdp/)**. La porta è diversa, il protocollo è lo stesso. Devi solo aggiungere `:33389` o `-port 33389` ai tool.
 
 ### Brute Force
 
@@ -128,14 +128,14 @@ Le password più comuni che trovo su RDP esposti:
 
 ### Pass-the-Hash su RDP
 
-Se hai un hash NTLM (da [SAM dump](https://hackita.it/articoli/pass-the-hash), [Mimikatz](https://hackita.it/articoli/mimikatz), [secretsdump](https://hackita.it/articoli/pass-the-hash)):
+Se hai un hash NTLM (da [SAM dump](https://hackita.it/articoli/pass-the-hash/), [Mimikatz](https://hackita.it/articoli/mimikatz/), [secretsdump](https://hackita.it/articoli/pass-the-hash/)):
 
 ```bash
 # PtH richiede Restricted Admin Mode abilitato
 xfreerdp /v:10.10.10.40:33389 /u:administrator /pth:32ed87bdb5fdc5e9cba88547376818d4 /d:CORP
 ```
 
-Se Restricted Admin non è abilitato, abilitalo da remoto (se hai accesso via [SMB](https://hackita.it/articoli/smb)/[WinRM](https://hackita.it/articoli/porta-5985-winrm)):
+Se Restricted Admin non è abilitato, abilitalo da remoto (se hai accesso via [SMB](https://hackita.it/articoli/smb/)/[WinRM](https://hackita.it/articoli/porta-5985-winrm/)):
 
 ```bash
 crackmapexec smb 10.10.10.40 -u administrator -H 'HASH' -x 'reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0 /f'
@@ -219,7 +219,7 @@ nmap -p 33389 --script rdp-ntlm-info 10.10.10.40
 openssl s_client -connect 10.10.10.40:33389 2>/dev/null | openssl x509 -text -noout
 ```
 
-Il certificato può contenere: **hostname interno** nel CN, **dominio** nel SAN, **organizzazione**. Stessa tecnica della [porta 8443](https://hackita.it/articoli/porta-8443-https-alt).
+Il certificato può contenere: **hostname interno** nel CN, **dominio** nel SAN, **organizzazione**. Stessa tecnica della [porta 8443](https://hackita.it/articoli/porta-8443-https-alt/).
 
 ## 4. Scenari Reali: Port Forwarding e Multi-Server
 
@@ -279,8 +279,8 @@ Cambiare la porta RDP **non è una contromisura di sicurezza** — è una riduzi
 * **Account Lockout Policy** — blocco dopo N tentativi falliti
 * **Firewall IP whitelist** — se devi esporre RDP, solo da IP noti
 * **Certificato TLS valido** — non self-signed, per prevenire MITM
-* **Credential Guard** — protegge le credenziali in memoria da [Mimikatz](https://hackita.it/articoli/mimikatz)
-* **Restricted Admin Mode** — disabilitalo se non necessario (previene [PtH](https://hackita.it/articoli/pass-the-hash) ma ha trade-off)
+* **Credential Guard** — protegge le credenziali in memoria da [Mimikatz](https://hackita.it/articoli/mimikatz/)
+* **Restricted Admin Mode** — disabilitalo se non necessario (previene [PtH](https://hackita.it/articoli/pass-the-hash/) ma ha trade-off)
 * **Patch** — BlueKeep e DejaBlue sono fixati da anni, ma i server non patchati esistono ancora
 
 ## 6. Detection
@@ -306,7 +306,7 @@ Get-WinEvent -FilterHashtable @{LogName='Security';Id=4624} |
 Marginalmente: riduce i tentativi di brute force automatico dei botnet che scansionano solo la 3389. Ma un attaccante motivato trova RDP su qualsiasi porta in secondi con `nmap -sV`. Non è una contromisura — è un placebo. Le vere soluzioni sono VPN, NLA e MFA.
 
 **Come faccio a scansionare un'intera rete per RDP su porte non standard?**
-`masscan RANGE -p 0-65535 --rate 100000` poi filtra per banner `ms-wbt-server`. Oppure `nmap -sV -p 3300-3400,13389,23389,33389,43389,53389 RANGE` per le porte alternative più comuni. Per un pentest interno, [CrackMapExec](https://hackita.it/articoli/pass-the-hash) con `crackmapexec rdp SUBNET` testa la 3389 di default.
+`masscan RANGE -p 0-65535 --rate 100000` poi filtra per banner `ms-wbt-server`. Oppure `nmap -sV -p 3300-3400,13389,23389,33389,43389,53389 RANGE` per le porte alternative più comuni. Per un pentest interno, [CrackMapExec](https://hackita.it/articoli/pass-the-hash/) con `crackmapexec rdp SUBNET` testa la 3389 di default.
 
 **BlueKeep funziona anche sulla porta 33389?**
 Sì — BlueKeep è una vulnerabilità nel protocollo RDP, non nella porta. Qualsiasi porta che serve RDP è vulnerabile se il sistema non è patchato. Il modulo Metasploit accetta `RPORT` customizzato.

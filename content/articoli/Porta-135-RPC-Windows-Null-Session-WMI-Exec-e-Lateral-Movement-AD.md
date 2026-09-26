@@ -147,7 +147,7 @@ user:[alice] rid:[0x44f]
 user:[bob] rid:[0x450]
 ```
 
-**User enumeration achieved** → target per [password spraying](https://hackita.it/articoli/password-spraying).
+**User enumeration achieved** → target per [password spraying](https://hackita.it/articoli/password-spraying/).
 
 **Domain info:**
 
@@ -482,15 +482,15 @@ ENUMERATION
 
 EXPLOITATION
 │
-├─ A) Null session → user enum → [password spray](https://hackita.it/articoli/password-spraying)
-├─ B) Valid creds → WMI execution → [lateral movement](https://hackita.it/articoli/pivoting)
+├─ A) Null session → user enum → [password spray](https://hackita.it/articoli/password-spraying/)
+├─ B) Valid creds → WMI execution → [lateral movement](https://hackita.it/articoli/pivoting/)
 ├─ C) DCOM exploit → remote code execution
 └─ D) Registry access → credential theft
 
 POST-EXPLOITATION
 │
 ├─ Mimikatz via WMI → credential dump
-├─ [Kerberoasting](https://hackita.it/articoli/kerberos) → service account passwords
+├─ [Kerberoasting](https://hackita.it/articoli/kerberos/) → service account passwords
 └─ Persistence via scheduled tasks (WMI)
 ```
 

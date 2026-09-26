@@ -20,7 +20,7 @@ GraphQL è una di quelle tecnologie che fanno sorridere un pentester. A differen
 
 Ma GraphQL non è solo introspection. Il **batching** — inviare centinaia di query in una singola request HTTP — rende il rate limit praticamente inutile: 1.000 tentativi di login in una request, zero alert. Le **mutation non protette** permettono escalation di privilegi. Le **relazioni tra tipi** permettono di attraversare il grafo dei dati e raggiungere informazioni di altri utenti, altre aziende, altri tenant.
 
-Satellite della [guida pillar API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa). Vedi anche: [SSRF](https://hackita.it/articoli/ssrf), [IDOR](https://hackita.it/articoli/idor), [Brute Force](https://hackita.it/articoli/brute-force).
+Satellite della [guida pillar API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/). Vedi anche: [SSRF](https://hackita.it/articoli/ssrf/), [IDOR](https://hackita.it/articoli/idor/), [Brute Force](https://hackita.it/articoli/brute-force/).
 
 Riferimenti: [PortSwigger GraphQL](https://portswigger.net/web-security/graphql), [HackTricks GraphQL](https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-web/graphql.html), [The Guild Security](https://the-guild.dev/graphql/security).
 
@@ -435,6 +435,6 @@ INJECTION
 
 Riferimenti: [PortSwigger GraphQL](https://portswigger.net/web-security/graphql), [HackTricks GraphQL](https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-web/graphql.html), [The Guild Security](https://the-guild.dev/graphql/security), [InQL](https://github.com/doyensec/inql), [Clairvoyance](https://github.com/nikitastupin/clairvoyance).
 
-Satellite della [Guida API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa). Vedi anche: [SSRF](https://hackita.it/articoli/ssrf), [IDOR](https://hackita.it/articoli/idor), [Brute Force](https://hackita.it/articoli/brute-force).
+Satellite della [Guida API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/). Vedi anche: [SSRF](https://hackita.it/articoli/ssrf/), [IDOR](https://hackita.it/articoli/idor/), [Brute Force](https://hackita.it/articoli/brute-force/).
 
 > L'introspection è abilitata in produzione? Il batching è limitato? Le mutation admin sono protette? I resolver filtrano per tenant? [Penetration test API HackIta](https://hackita.it/servizi) per testare ogni angolo del tuo GraphQL. Dall'introspection al data breach: [formazione 1:1](https://hackita.it/formazione).

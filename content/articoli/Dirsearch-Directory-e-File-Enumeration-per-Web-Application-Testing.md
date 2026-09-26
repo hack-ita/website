@@ -21,7 +21,7 @@ Dirsearch è un directory bruteforcer scritto in Python che si distingue per una
 
 Il tool include wordlist integrate ottimizzate, gestione intelligente degli status code, supporto per estensioni multiple e output in formati diversi. È particolarmente efficace su CMS (WordPress, Joomla, Drupal) dove la struttura delle directory segue pattern prevedibili ma profondi.
 
-Nella kill chain, ci troviamo nella fase di **Reconnaissance** (MITRE ATT\&CK T1595.003), specificamente nella content discovery su applicazioni web. L'articolo copre dalla configurazione iniziale fino a scenari reali su applicazioni enterprise, con confronto diretto con [Gobuster](https://hackita.it/articoli/gobuster) e integrazione nella pipeline offensiva.
+Nella kill chain, ci troviamo nella fase di **Reconnaissance** (MITRE ATT\&CK T1595.003), specificamente nella content discovery su applicazioni web. L'articolo copre dalla configurazione iniziale fino a scenari reali su applicazioni enterprise, con confronto diretto con [Gobuster](https://hackita.it/articoli/gobuster/) e integrazione nella pipeline offensiva.
 
 ***
 
@@ -183,7 +183,7 @@ Filtra le risposte con dimensione esatta di 1523 bytes (la pagina 404 custom).
 dirsearch -u http://target.com --proxy=socks5://127.0.0.1:1080
 ```
 
-Integrazione diretta con tunnel SOCKS5 creati via SSH o [ProxyChains](https://hackita.it/articoli/proxychains).
+Integrazione diretta con tunnel SOCKS5 creati via SSH o [ProxyChains](https://hackita.it/articoli/proxychains/).
 
 ***
 
@@ -321,7 +321,7 @@ Dirsearch opera dopo il port scanning e prima dell'exploitation web.
 
 **Flusso tipico:**
 
-[Masscan](https://hackita.it/articoli/masscan) (porte) → [Nmap](https://hackita.it/articoli/nmap) (service ID) → **Dirsearch (content discovery ricorsiva)** → [Burp Suite ](https://hackita.it/articoli/burp-suite)(analisi manuale) → Exploit
+[Masscan](https://hackita.it/articoli/masscan/) (porte) → [Nmap](https://hackita.it/articoli/nmap/) (service ID) → **Dirsearch (content discovery ricorsiva)** → [Burp Suite ](https://hackita.it/articoli/burp-suite/)(analisi manuale) → Exploit
 
 Dirsearch eccelle dove Gobuster si ferma: applicazioni con strutture profonde dove la ricorsione fa la differenza.
 
@@ -382,7 +382,7 @@ Le credenziali del database funzionano anche per il pannello admin Joomla. Login
 
 **Fase 5 — Web Shell via template editing (3 min)**
 
-Dal pannello admin, editi un template PHP e inserisci una [Weevely3](https://hackita.it/articoli/weevely3) shell. Shell come `www-data`.
+Dal pannello admin, editi un template PHP e inserisci una [Weevely3](https://hackita.it/articoli/weevely3/) shell. Shell come `www-data`.
 
 **Fase 6 — Post-exploitation (30 min)**
 

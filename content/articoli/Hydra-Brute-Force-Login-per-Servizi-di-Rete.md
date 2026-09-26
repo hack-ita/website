@@ -154,10 +154,10 @@ hydra -l "DOMAIN\\admin" -P passwords.txt rdp://192.168.1.100
 # SMB/CIFS
 hydra -l administrator -P passwords.txt smb://192.168.1.100
 
-# Integra con [CrackMapExec](https://hackita.it/articoli/crackmapexec) per post-exploitation
+# Integra con [CrackMapExec](https://hackita.it/articoli/crackmapexec/) per post-exploitation
 ```
 
-### [MySQL](https://hackita.it/articoli/mysql) Bruteforce
+### [MySQL](https://hackita.it/articoli/porta-3306-mysql/) Bruteforce
 
 ```bash
 # MySQL
@@ -230,7 +230,7 @@ hydra -l admin -P passwords.txt 192.168.1.100 https-post-form \
 ```bash
 # Hydra non gestisce CSRF nativamente
 # Usa Burp Intruder o script custom per CSRF tokens
-# Oppure [Patator](https://hackita.it/articoli/patator) che supporta token dinamici
+# Oppure [Patator](https://hackita.it/articoli/patator/) che supporta token dinamici
 ```
 
 ## Tecniche Avanzate
@@ -491,7 +491,7 @@ hydra ... "...:S=Welcome admin"
 
 **Hydra vs Medusa vs Patator?**
 
-Hydra è il più veloce e supporta più protocolli. Medusa è più stabile per attacchi lunghi. [Patator](https://hackita.it/articoli/patator) è più flessibile per casi complessi. Usa Hydra come default.
+Hydra è il più veloce e supporta più protocolli. Medusa è più stabile per attacchi lunghi. [Patator](https://hackita.it/articoli/patator/) è più flessibile per casi complessi. Usa Hydra come default.
 
 **Come evito account lockout?**
 
@@ -503,7 +503,7 @@ No direttamente. 2FA richiede interazione dinamica. Cerca bypass 2FA o usa tool 
 
 **Posso usare GPU con Hydra?**
 
-No, Hydra è per attacchi online (rete). Per cracking offline con GPU usa [Hashcat](https://hackita.it/articoli/hashcat).
+No, Hydra è per attacchi online (rete). Per cracking offline con GPU usa [Hashcat](https://hackita.it/articoli/hashcat/).
 
 **È legale usare Hydra?**
 

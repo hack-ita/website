@@ -127,7 +127,7 @@ L’attacco ha tre fasi principali:
 
 Il certificato può provenire da:
 
-* template AD CS vulnerabile (es. [ESC1](https://hackita.it/articoli/esc1-adcs))
+* template AD CS vulnerabile (es. [ESC1](https://hackita.it/articoli/esc1-adcs/))
 * CA compromessa
 * PKI esterna
 * certificato autofirmato accettato dal sistema
@@ -255,8 +255,8 @@ Sì, perché usa **explicit mapping**, non implicit mapping.
 
 > ESC14 è spesso trascurato ma può portare a compromissione completa del dominio.
 > Guida completa agli attacchi AD CS:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Continua con le tecniche successive:
-> [https://hackita.it/articoli/esc15-adcs](https://hackita.it/articoli/esc15-adcs) · [https://hackita.it/articoli/esc16-adcs](https://hackita.it/articoli/esc16-adcs)Supporta HackIta:
+> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)Continua con le tecniche successive:
+> [https://hackita.it/articoli/esc15-adcs](https://hackita.it/articoli/adesc15-adcs/) · [https://hackita.it/articoli/esc16-adcs](https://hackita.it/articoli/esc16-adcs/)Supporta HackIta:
 > [https://hackita.it/supporto](https://hackita.it/supporto)Pentest Active Directory o formazione offensiva:
 > [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
 > [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)

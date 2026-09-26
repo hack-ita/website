@@ -43,7 +43,7 @@ La porta 995 è registrata IANA come `pop3s`. POP3 (Post Office Protocol v3) è 
 | 143     | IMAP       | No / STARTTLS    | Accesso email (sync)       |
 | 993     | IMAPS      | Implicit TLS     | Accesso email cifrato      |
 
-Differenza [POP3](https://hackita.it/articoli/porta-110-pop3) vs [IMAP](https://hackita.it/articoli/porta-143-imap):
+Differenza [POP3](https://hackita.it/articoli/porta-110-pop3/) vs [IMAP](https://hackita.it/articoli/porta-143-imap/):
 
 * **POP3**: scarica email e le rimuove dal server (default). Semplice, stateless
 * **IMAP**: sincronizza email con il server. Cartelle, flag, ricerca server-side
@@ -169,7 +169,7 @@ EOF
 -ERR [AUTH] Invalid user.
 ```
 
-**Lettura dell'output:** se i messaggi di errore sono diversi, puoi enumerare utenti validi prima del brute force. Non tutti i server differenziano — Dovecot di default non lo fa, ma Exchange e altri possono. Per correlare gli utenti, usa l'[enumerazione SMTP sulla porta 587](https://hackita.it/articoli/porta-587-smtp-submission).
+**Lettura dell'output:** se i messaggi di errore sono diversi, puoi enumerare utenti validi prima del brute force. Non tutti i server differenziano — Dovecot di default non lo fa, ma Exchange e altri possono. Per correlare gli utenti, usa l'[enumerazione SMTP sulla porta 587](https://hackita.it/articoli/porta-587-smtp-submission/).
 
 ### TLS audit
 
@@ -207,7 +207,7 @@ hydra -L users.txt -P /usr/share/wordlists/common.txt pop3s://10.10.10.25:995 -t
 [995][pop3s] host: 10.10.10.25   login: hr@corp.local   password: Spring2026!
 ```
 
-**Cosa fai dopo:** accesso alla mailbox di HR. Le email HR contengono: onboarding con credenziali temporanee, documenti riservati (salari, performance review), comunicazioni con fornitori. Testa `Spring2026!` su OWA, VPN, AD — il [credential reuse](https://hackita.it/articoli/bruteforce) è quasi garantito.
+**Cosa fai dopo:** accesso alla mailbox di HR. Le email HR contengono: onboarding con credenziali temporanee, documenti riservati (salari, performance review), comunicazioni con fornitori. Testa `Spring2026!` su OWA, VPN, AD — il [credential reuse](https://hackita.it/articoli/brute-force/) è quasi garantito.
 
 **Mailbox dump completo**
 
@@ -273,7 +273,7 @@ crackmapexec smb 10.10.10.10 -u hr -p 'Spring2026!' -d corp
 ssh hr@10.10.10.25
 ```
 
-**Cosa fai dopo:** se la password funziona su AD/SMB, hai accesso al dominio. Per il [lateral movement AD](https://hackita.it/articoli/active-directory), usa le credenziali per enumerare e muoverti.
+**Cosa fai dopo:** se la password funziona su AD/SMB, hai accesso al dominio. Per il [lateral movement AD](https://hackita.it/articoli/active-directory/), usa le credenziali per enumerare e muoverti.
 
 **Analisi allegati email**
 
@@ -474,7 +474,7 @@ R: Disabilita POP3 plain (110). Rate limiting e lockout su autenticazione. 2FA s
 
 ### Perché Porta 995 è rilevante nel 2026
 
-L'email resta il repository non intenzionale di credenziali, documenti riservati e intelligence organizzativa. POP3S è ancora attivo su molti mail server enterprise (Exchange, Dovecot, Zimbra). Le credenziali email sono quasi sempre le stesse di AD — un singolo account compromesso via POP3 può aprire l'intera infrastruttura. Il canale [TLS](https://hackita.it/articoli/tls) rende il download invisibile a IDS/DLP.
+L'email resta il repository non intenzionale di credenziali, documenti riservati e intelligence organizzativa. POP3S è ancora attivo su molti mail server enterprise (Exchange, Dovecot, Zimbra). Le credenziali email sono quasi sempre le stesse di AD — un singolo account compromesso via POP3 può aprire l'intera infrastruttura. Il canale [TLS](https://hackita.it/articoli/tls-ssl/) rende il download invisibile a IDS/DLP.
 
 ### Hardening
 

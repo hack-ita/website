@@ -137,7 +137,7 @@ CEO Name | ceo | ceo@corp.local
 HR Admin | hr.admin | hr.admin@corp.local
 ```
 
-**Lettura dell'output:** lista completa utenti — nomi, username e email. Alimenta il [password spray su AD](https://hackita.it/articoli/bruteforce) e il [phishing mirato](https://hackita.it/articoli/phishing).
+**Lettura dell'output:** lista completa utenti — nomi, username e email. Alimenta il [password spray su AD](https://hackita.it/articoli/brute-force/) e il [phishing mirato](https://hackita.it/articoli/phishing/).
 
 ### Hash extraction
 
@@ -174,7 +174,7 @@ Subject: Acquisition Target List
 Subject: VPN Credentials Updated
 ```
 
-**Cosa fai dopo:** accesso diretto alla mailbox del CEO senza autenticazione (se l'ACL del database è aperta). Scarica email con allegati — stessa logica della [compromissione POP3](https://hackita.it/articoli/porta-995-pop3s).
+**Cosa fai dopo:** accesso diretto alla mailbox del CEO senza autenticazione (se l'ACL del database è aperta). Scarica email con allegati — stessa logica della [compromissione POP3](https://hackita.it/articoli/porta-995-pop3s/).
 
 **Console admin Domino**
 

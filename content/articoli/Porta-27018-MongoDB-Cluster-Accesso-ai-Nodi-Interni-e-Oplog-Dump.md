@@ -18,7 +18,7 @@ tags:
   - lateral-movement
 ---
 
-La porta 27018 è la porta interna di comunicazione tra i nodi di un cluster MongoDB. Quando MongoDB opera in modalità **replica set** (alta disponibilità) o **sharded cluster** (distribuzione orizzontale), i nodi si parlano sulla 27018 per sincronizzare i dati, eleggere il primary e instradare le query. Non è pensata per essere raggiunta dai client applicativi — ma quando un pentester la trova esposta, apre un vettore che bypassa completamente le restrizioni configurate sulla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb).
+La porta 27018 è la porta interna di comunicazione tra i nodi di un cluster MongoDB. Quando MongoDB opera in modalità **replica set** (alta disponibilità) o **sharded cluster** (distribuzione orizzontale), i nodi si parlano sulla 27018 per sincronizzare i dati, eleggere il primary e instradare le query. Non è pensata per essere raggiunta dai client applicativi — ma quando un pentester la trova esposta, apre un vettore che bypassa completamente le restrizioni configurate sulla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb/).
 
 Il motivo è semplice: la comunicazione interna al cluster MongoDB spesso non ha autenticazione separata. Se il sysadmin ha protetto la 27017 con auth e firewall ma ha lasciato la 27018 raggiungibile, puoi connetterti direttamente al membro del replica set e accedere ai dati come se l'auth non esistesse.
 
@@ -195,7 +195,7 @@ Mappa completa: quali database su quali shard, con le shard key (utile per capir
 
 ## 2. Exploitation — Accesso ai Dati
 
-Se la 27018 è raggiungibile senza autenticazione, le tecniche sono identiche alla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb):
+Se la 27018 è raggiungibile senza autenticazione, le tecniche sono identiche alla [porta 27017](https://hackita.it/articoli/porta-27017-mongodb/):
 
 ```javascript
 rs.secondaryOk()
@@ -225,7 +225,7 @@ db.users.find({role: "administrator"}).forEach(printjson)
 mongodump --host 10.10.10.41 --port 27018 --out /tmp/cluster_dump/
 ```
 
-Per tutte le tecniche di ricerca credenziali, manipolazione dati e exfiltration: vedi la [guida completa porta 27017](https://hackita.it/articoli/porta-27017-mongodb).
+Per tutte le tecniche di ricerca credenziali, manipolazione dati e exfiltration: vedi la [guida completa porta 27017](https://hackita.it/articoli/porta-27017-mongodb/).
 
 ### Oplog — La Cronologia di Ogni Modifica
 
@@ -344,7 +344,7 @@ echo "10.10.10.41 mongo-02.corp.internal" >> /etc/hosts
 nmap -sV -p- mongo-02.corp.internal
 ```
 
-**Credenziali in MongoDB** → testa su tutti i servizi scoperti dalla scansione dei nodi del cluster. La [guida porta 27017](https://hackita.it/articoli/porta-27017-mongodb) copre la ricerca di credenziali nelle collection.
+**Credenziali in MongoDB** → testa su tutti i servizi scoperti dalla scansione dei nodi del cluster. La [guida porta 27017](https://hackita.it/articoli/porta-27017-mongodb/) copre la ricerca di credenziali nelle collection.
 
 **Keyfile** → se il keyfile è debole o riusato, potrebbe essere una password usata anche altrove.
 

@@ -142,7 +142,7 @@ certbot certonly --standalone -d phish.corp-security.com
 
 ## 2. Tool — GoPhish, Evilginx e Oltre
 
-### [GoPhish](https://hackita.it/articoli/gophish) — Gestione campagna
+### [GoPhish](https://hackita.it/articoli/gophish/) — Gestione campagna
 
 GoPhish è il framework standard per campagne di phishing. Gestisce: creazione template email, landing page, invio, tracking (chi apre, chi clicca, chi inserisce credenziali), metriche e report.
 
@@ -203,7 +203,7 @@ Corp Security Team</p>
 {{.Tracker}}
 ```
 
-### [Evilginx](https://hackita.it/articoli/evilginx) — Bypass MFA con Reverse Proxy
+### [Evilginx](https://hackita.it/articoli/evilginx2/) — Bypass MFA con Reverse Proxy
 
 Evilginx è un reverse proxy che si posiziona tra la vittima e il sito legittimo. Cattura non solo le credenziali ma anche il **session cookie** — bypassando MFA (2FA, OTP, FIDO in certi scenari).
 
@@ -251,7 +251,7 @@ sessions 1
 # Token: eyJ...  (JWT se presente)
 ```
 
-**Cosa fai dopo:** importa il session cookie nel browser (con Cookie Editor o via DevTools) e sei autenticato come la vittima — senza bisogno di password o MFA. Per la [post-exploitation con le credenziali AD](https://hackita.it/articoli/dcsync), testa le stesse credenziali su VPN, SMB e altri servizi interni.
+**Cosa fai dopo:** importa il session cookie nel browser (con Cookie Editor o via DevTools) e sei autenticato come la vittima — senza bisogno di password o MFA. Per la [post-exploitation con le credenziali AD](https://hackita.it/articoli/dcsync/), testa le stesse credenziali su VPN, SMB e altri servizi interni.
 
 ### Confronto tool
 
@@ -354,7 +354,7 @@ Il pretext è la narrativa dell'email — la ragione per cui l'utente dovrebbe c
 # Documenti pubblici: cerca con Google dork il formato email nelle mail interne
 ```
 
-Per le tecniche OSINT complete, la [Google Hacking Database su Exploit-DB](https://hackita.it/articoli/exploit-db) ha centinaia di dork utili per il pre-phishing recon.
+Per le tecniche OSINT complete, la [Google Hacking Database su Exploit-DB](https://hackita.it/articoli/exploitdb/) ha centinaia di dork utili per il pre-phishing recon.
 
 ## 5. Metriche e Reporting
 

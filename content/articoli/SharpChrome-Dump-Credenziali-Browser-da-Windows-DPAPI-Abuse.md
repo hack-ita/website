@@ -20,7 +20,7 @@ SharpChrome è un tool C# sviluppato dal team GhostPack che estrae password salv
 
 Durante engagement di penetration testing, SharpChrome permette di raccogliere credenziali per servizi cloud, applicazioni web enterprise e piattaforme SaaS salvate nei browser degli utenti compromessi. Il tool si posiziona nella fase **Credential Access** (MITRE ATT\&CK T1555.003) della kill chain, tipicamente dopo aver ottenuto accesso iniziale e prima di lateral movement verso target di valore.
 
-In questa guida impari a usare SharpChrome per harvesting massivo di credenziali browser, session hijacking tramite cookie theft, exploitation della domain DPAPI backup key per triage multi-workstation, e integrazione con [SharpDPAPI](https://hackita.it/articoli/sharpdpapi) per operazioni su scala enterprise.
+In questa guida impari a usare SharpChrome per harvesting massivo di credenziali browser, session hijacking tramite cookie theft, exploitation della domain DPAPI backup key per triage multi-workstation, e integrazione con [SharpDPAPI](https://hackita.it/articoli/sharpdpapi/) per operazioni su scala enterprise.
 
 ## Setup e Installazione
 
@@ -640,7 +640,7 @@ start chrome.exe
 
 **SharpChrome funziona con Firefox?**
 
-No. Solo Chromium-based. Per Firefox usa [LaZagne](https://hackita.it/articoli/lazagne) o `firefox_decrypt.py`.
+No. Solo Chromium-based. Per Firefox usa [LaZagne](https://hackita.it/articoli/lazagne/) o `firefox_decrypt.py`.
 
 **La backup key DPAPI scade?**
 

@@ -1,0 +1,42 @@
+{{- /*
+  GTranslate language switcher.
+
+  Renders only when params.gtranslate.enable is true.
+
+  FREE tier (pro: false) — active now:
+    - Client-side widget loaded from GTranslate's public CDN. No account, key or
+      subscription required. Translations happen on the fly in the visitor's
+      browser via GTranslate's free engine.
+    - Source language = default_language (Italian); targets = languages list.
+    - Limitation: translations are NOT separate indexable URLs, so Google does
+      not index the English/other-language versions. That is a PRO-only feature.
+
+  PRO tier (pro: true) — later, after purchasing GTranslate Pro:
+    - Set params.gtranslate.pro: true. Nothing else in the codebase changes.
+    - Adds url_structure (sub_directory: /en/, /fr/ ...) + browser-language
+      detection. GTranslate's network then serves indexable translated URLs and
+      injects hreflang automatically, so Google can index each language. This
+      also requires the site to be connected in the GTranslate dashboard.
+*/ -}}
+{{- with site.Params.gtranslate }}
+{{- if .enable }}
+{{- $widget := .widget | default "float" -}}
+<div class="gtranslate_wrapper"></div>
+<script>
+  window.gtranslateSettings = {
+    "default_language": {{ .default_language | default "it" }},
+    "languages": {{ .languages | default (slice "it" "en") }},
+    "wrapper_selector": ".gtranslate_wrapper",
+    "flag_style": "3d",
+    "switcher_horizontal_position": {{ .switcher_horizontal_position | default "right" }},
+    "switcher_vertical_position": {{ .switcher_vertical_position | default "bottom" }}
+    {{- if .pro -}},
+    "detect_browser_language": true,
+    "native_language_names": true,
+    "url_structure": {{ .url_structure | default "sub_directory" }}
+    {{- end }}
+  };
+</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/{{ $widget }}.js" defer></script>
+{{- end }}
+{{- end }}

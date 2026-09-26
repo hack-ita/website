@@ -22,7 +22,7 @@ Non serve alcun exploit, nessun bypass, nessuna tecnica avanzata. Basta **indovi
 
 La Backup Exposure è la vulnerabilità con il rapporto **sforzo/impatto più alto** nel penetration testing: 5 minuti di enumeration con feroxbuster → data breach completo. La trovo nel **10% dei pentest web** e l'impatto è quasi sempre **critico** perché i backup contengono l'intera storia dell'applicazione e dei suoi segreti.
 
-Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa).
+Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/).
 
 ## Cos'è la Backup Exposure?
 
@@ -470,7 +470,7 @@ Le credenziali MySQL nell'`.env.old` erano diverse da quelle attuali (password c
 
 **3. `tar czf /var/www/html/site.tar.gz /var/www/html/`** — Il sysadmin comprime il sito per il backup. L'archivio finisce nella document root.
 
-**4. Deploy con `git pull`** — La directory `.git/` resta accessibile (vedi [Source Code Disclosure](https://hackita.it/articoli/source-code-disclosure)).
+**4. Deploy con `git pull`** — La directory `.git/` resta accessibile (vedi [Source Code Disclosure](https://hackita.it/articoli/source-code-disclosure/)).
 
 **5. Editor crash** — Vim crea `.config.php.swp` se crasha. Il file contiene il contenuto originale ed è accessibile via web.
 
@@ -543,6 +543,6 @@ location ~* \.(bak|old|sql|sql\.gz|tar\.gz|zip|env|swp|orig|save|~)$ {
 
 ***
 
-Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa). Vedi anche: [Source Code Disclosure](https://hackita.it/articoli/source-code-disclosure), [Arbitrary File Read](https://hackita.it/articoli/arbitrary-file-read), [Path Traversal](https://hackita.it/articoli/path-traversal).
+Satellite della [Guida Completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/). Vedi anche: [Source Code Disclosure](https://hackita.it/articoli/source-code-disclosure/), [Arbitrary File Read](https://hackita.it/articoli/arbitrary-file-read/), [Path Traversal](https://hackita.it/articoli/path-traversal/).
 
 > Hai file backup nella tua document root? Un `feroxbuster` di 3 minuti lo scopre. [Penetration test applicativo HackIta](https://hackita.it/servizi) per trovare ogni file esposto. Dalla discovery al cleanup: [formazione 1:1](https://hackita.it/formazione).

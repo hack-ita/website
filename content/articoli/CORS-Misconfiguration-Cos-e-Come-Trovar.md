@@ -17,7 +17,7 @@ tags:
 
 Una **CORS Misconfiguration** si verifica quando il server configura questi header in modo troppo permissivo — accettando qualsiasi Origin, riflettendo l'Origin dell'attaccante, o fidandosi di domini che non dovrebbe. Il risultato: JavaScript su `evil.com` può leggere dati autenticati da `target.com` — profili, email, dati finanziari, token API — usando il cookie della vittima. È un data theft silenzioso: la vittima visita una pagina, il suo browser fa il lavoro sporco in background.
 
-Satellite della [guida pillar API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa). Vedi anche: [CSRF](https://hackita.it/articoli/csrf), [XSS](https://hackita.it/articoli/xss).
+Satellite della [guida pillar API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/). Vedi anche: [CSRF](https://hackita.it/articoli/csrf/), [XSS](https://hackita.it/articoli/xss/).
 
 Riferimenti: [PortSwigger CORS](https://portswigger.net/web-security/cors), [OWASP CORS Misconfiguration](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing), [HackTricks CORS](https://book.hacktricks.wiki/en/pentesting-web/cors-bypass.html).
 
@@ -305,6 +305,6 @@ IMPATTO
 
 Riferimenti: [PortSwigger CORS](https://portswigger.net/web-security/cors), [OWASP CORS Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing), [HackTricks CORS](https://book.hacktricks.wiki/en/pentesting-web/cors-bypass.html).
 
-Satellite della [Guida API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa). Vedi anche: [CSRF](https://hackita.it/articoli/csrf), [XSS](https://hackita.it/articoli/xss), [Session Hijacking](https://hackita.it/articoli/session-hijacking).
+Satellite della [Guida API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/). Vedi anche: [CSRF](https://hackita.it/articoli/csrf/), [XSS](https://hackita.it/articoli/xss/), [Session Hijacking](https://hackita.it/articoli/session-hijacking/).
 
 > Vuoi migliorare davvero nel **web pentesting**? Per approfondire metodologie, detection ed exploitation in ambienti autorizzati, trovi la [formazione 1:1 HackIta](https://hackita.it/formazione). Se vuoi testare il tuo **sito web**, la tua **applicazione** o la tua **azienda**, puoi vedere i [servizi HackIta](https://hackita.it/servizi). Se vuoi supportare il progetto e aiutare la crescita di HackIta, puoi farlo su [Supporta HackIta](https://hackita.it/supporta). Per approfondire il tema: [PortSwigger Web Security Academy](https://portswigger.net/web-security),

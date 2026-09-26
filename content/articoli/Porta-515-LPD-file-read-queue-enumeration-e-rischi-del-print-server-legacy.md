@@ -99,7 +99,7 @@ active jsmith  42   Q4-financial-report.pdf       2345678 bytes
 1st    admin   43   network-diagram-v3.vsdx       567890 bytes
 ```
 
-**Cosa ci dice questo output:** la coda `hp-laser-4f` è attiva. Due job in coda: `jsmith` sta stampando un report finanziario Q4, `admin` un diagramma di rete. Hai nomi utente, nomi file sensibili e dimensioni. Questi nomi utente sono candidati per [credential spray su Active Directory](https://hackita.it/articoli/bruteforce).
+**Cosa ci dice questo output:** la coda `hp-laser-4f` è attiva. Due job in coda: `jsmith` sta stampando un report finanziario Q4, `admin` un diagramma di rete. Hai nomi utente, nomi file sensibili e dimensioni. Questi nomi utente sono candidati per [credential spray su Active Directory](https://hackita.it/articoli/brute-force/).
 
 ## 3. Enumerazione Avanzata
 
@@ -145,7 +145,7 @@ admin: 1st                              [job 043 target]
         submitted from dc01.corp.local
 ```
 
-**Lettura dell'output:** il job di `admin` è stato sottomesso da `dc01.corp.local` — il Domain Controller sta stampando. L'hostname della workstation di jsmith conferma il naming convention. Per mappare gli hostname, consulta la [guida all'enumerazione di rete](https://hackita.it/articoli/enumeration).
+**Lettura dell'output:** il job di `admin` è stato sottomesso da `dc01.corp.local` — il Domain Controller sta stampando. L'hostname della workstation di jsmith conferma il naming convention. Per mappare gli hostname, consulta la [guida all'enumerazione di rete](https://hackita.it/articoli/enumeration/).
 
 ### File read tramite LPD abuse
 
@@ -173,7 +173,7 @@ oracle:x:1003:1003:Oracle DB:/opt/oracle:/bin/bash
 
 ### Enumerazione stampanti di rete via SNMP correlato
 
-Le stampanti con LPD hanno spesso [SNMP attivo con community default](https://hackita.it/articoli/snmp):
+Le stampanti con LPD hanno spesso [SNMP attivo con community default](https://hackita.it/articoli/snmp/):
 
 ```bash
 snmpwalk -v 2c -c public 10.10.10.60 .1.3.6.1.2.1.43
@@ -213,7 +213,7 @@ jsmith:$6$rounds=5000$salt2$hash2...:19350:0:99999:7:::
 Permission denied: /etc/shadow
 ```
 
-**Cosa fai dopo:** se leggi `/etc/shadow`, hai hash da crackare con `john` o `hashcat`. Se negato, il daemon non gira come root — prova file leggibili: `/etc/passwd`, `/etc/hosts`, file di configurazione in `/etc/cups/`, `/var/spool/lpd/`. Usa le [tecniche di hash cracking](https://hackita.it/articoli/bruteforce) per ottenere password in chiaro.
+**Cosa fai dopo:** se leggi `/etc/shadow`, hai hash da crackare con `john` o `hashcat`. Se negato, il daemon non gira come root — prova file leggibili: `/etc/passwd`, `/etc/hosts`, file di configurazione in `/etc/cups/`, `/var/spool/lpd/`. Usa le [tecniche di hash cracking](https://hackita.it/articoli/brute-force/) per ottenere password in chiaro.
 
 **Job interception — leggere documenti in coda**
 
@@ -273,7 +273,7 @@ curl -s -u admin: http://10.10.10.60/hp/device/InternalPages/Index
 <div>LDAP Bind DN: cn=printer,ou=services,dc=corp,dc=local</div>
 ```
 
-**Cosa fai dopo:** l'interfaccia web rivela la configurazione di rete completa e le credenziali LDAP del bind DN della stampante. Queste credenziali LDAP funzionano per [enumerare Active Directory](https://hackita.it/articoli/ldap). Il DNS e il gateway confermano la topologia.
+**Cosa fai dopo:** l'interfaccia web rivela la configurazione di rete completa e le credenziali LDAP del bind DN della stampante. Queste credenziali LDAP funzionano per [enumerare Active Directory](https://hackita.it/articoli/porta-389-ldap/). Il DNS e il gateway confermano la topologia.
 
 ## 5. Scenari Pratici di Pentest
 

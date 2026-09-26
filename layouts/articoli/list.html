@@ -2,6 +2,7 @@
 
 {{/* ================= HERO ================= */}}
 {{/* hero */}}
+<h1 class="sr-only">Articoli di Ethical Hacking: guide, walkthrough e tecniche di penetration testing</h1>
 <section class="pt-30 pb-10 px-5" aria-labelledby="featured-session-heading">
   {{ range first 1 ((where .RegularPages "Params.featured" "eq" true) | default .RegularPages) }}
   {{ $readingSpeed := .Site.Params.reading_speed | default 250 }}
@@ -124,10 +125,10 @@
                   >
                   <article
                     class="rounded-md flex flex-col border border-primary group">
-                  <a href="{{ .RelPermalink }}" class="absolute inset-0 z-10"></a>
+                  <a href="{{ .RelPermalink }}" aria-label="{{ .Title }}" class="absolute inset-0 z-10"></a>
       
                   <figure class="flex flex-col h-full">
-                    <div class="h-50 overflow-hidden rounded-t-md">
+                    <div class="aspect-video overflow-hidden rounded-t-md">
                       {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "size-full object-cover object-top group-hover:scale-125 transition-transform") }}
                     </div>
       

@@ -28,11 +28,11 @@ Prima di DCSync, per ottenere tutti gli hash del dominio dovevi:
 
 1. Compromettere il Domain Controller (RDP, PsExec, WMI)
 2. Eseguire `ntdsutil` o copiare `NTDS.dit` + `SYSTEM` hive
-3. Estrarre gli hash offline con [`secretsdump.py`](https://hackita.it/articoli/secretsdump)
+3. Estrarre gli hash offline con [`secretsdump.py`](https://hackita.it/articoli/secretsdump/)
 
 Questo era rumoroso: accesso al DC, copia di file, processi sospetti. DCSync cambia tutto: non serve accesso al DC. Basta un utente con i permessi di replica e una workstation qualsiasi sulla rete. Il DC ti invia gli hash pensando che tu sia un altro DC che sta sincronizzando.
 
-La tecnica è stata implementata da Benjamin Delpy ([Mimikatz](https://hackita.it/articoli/mimikatz)) e Vincent Le Toux nel 2015. Da allora è lo standard de facto per il credential dumping in Active Directory.
+La tecnica è stata implementata da Benjamin Delpy ([Mimikatz](https://hackita.it/articoli/mimikatz/)) e Vincent Le Toux nel 2015. Da allora è lo standard de facto per il credential dumping in Active Directory.
 
 ## 1. Anatomia Tecnica — Come Funziona la Replica
 
@@ -188,7 +188,7 @@ Supplemental Credentials:
 * **AES256 key**: `b7268f45...` — puoi creare Kerberos ticket (Silver/Golden) con questa chiave, più stealth del Pass-the-Hash
 * **Password last change**: ti dice quanto è "fresca" la password — se cambiata di recente, qualcuno potrebbe averla ruotata dopo una detection
 
-### Metodo 2: secretsdump.py (da Linux — [Impacket](https://hackita.it/articoli/impacket))
+### Metodo 2: secretsdump.py (da Linux — [Impacket](https://hackita.it/articoli/impacket/))
 
 ```bash
 # Con password
@@ -261,7 +261,7 @@ evil-winrm -i 10.10.10.10 -u Administrator -H 32ed87bdb5fdc5e9cba88547376818d4
 
 ### Golden Ticket — Persistenza Totale
 
-L'hash `krbtgt` è il segreto usato per firmare tutti i [Kerberos](https://hackita.it/articoli/kerberos) ticket del dominio. Con questo hash puoi creare un TGT (Ticket Granting Ticket) per qualsiasi utente — incluso un utente inesistente con permessi di Domain Admin. Il Golden Ticket è valido fino a quando l'hash di `krbtgt` non viene cambiato **due volte** (perché AD mantiene la password corrente e quella precedente).
+L'hash `krbtgt` è il segreto usato per firmare tutti i [Kerberos](https://hackita.it/articoli/kerberos/) ticket del dominio. Con questo hash puoi creare un TGT (Ticket Granting Ticket) per qualsiasi utente — incluso un utente inesistente con permessi di Domain Admin. Il Golden Ticket è valido fino a quando l'hash di `krbtgt` non viene cambiato **due volte** (perché AD mantiene la password corrente e quella precedente).
 
 **Con Mimikatz:**
 

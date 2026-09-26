@@ -21,11 +21,11 @@ tags:
   - race-condition
 ---
 
-Le vulnerabilità che fanno notizia sono le [SQL Injection](https://hackita.it/articoli/sql-injection), gli [Auth Bypass](https://hackita.it/articoli/auth-access-control-guida-completa), le [SSRF](https://hackita.it/articoli/ssrf). Quelle che restano aperte per anni sono **queste**: un subdomain dimenticato che punta a un servizio AWS cancellato → [Subdomain Takeover](https://hackita.it/articoli/subdomain-takeover) → phishing perfetto dal dominio aziendale. Un conflitto tra reverse proxy e backend nell'interpretazione delle request HTTP → [HTTP Request Smuggling](https://hackita.it/articoli/http-request-smuggling) → avvelena la cache per migliaia di utenti. Una race condition in un endpoint di pagamento → doppia transazione → perdita finanziaria diretta. Un oggetto serializzato non validato → [Deserialization](https://hackita.it/articoli/deserialization-attack) → RCE senza alcun upload di file.
+Le vulnerabilità che fanno notizia sono le [SQL Injection](https://hackita.it/articoli/sql-injection/), gli [Auth Bypass](https://hackita.it/articoli/auth-access-control-guida-completa/), le [SSRF](https://hackita.it/articoli/ssrf/). Quelle che restano aperte per anni sono **queste**: un subdomain dimenticato che punta a un servizio AWS cancellato → [Subdomain Takeover](https://hackita.it/articoli/subdomain-takeover/) → phishing perfetto dal dominio aziendale. Un conflitto tra reverse proxy e backend nell'interpretazione delle request HTTP → [HTTP Request Smuggling](https://hackita.it/articoli/http-request-smuggling/) → avvelena la cache per migliaia di utenti. Una race condition in un endpoint di pagamento → doppia transazione → perdita finanziaria diretta. Un oggetto serializzato non validato → [Deserialization](https://hackita.it/articoli/deserialization-attack/) → RCE senza alcun upload di file.
 
 Queste vulnerabilità hanno tre cose in comune: sono **sottovalutate**, sono **difficili da rilevare con scanner automatici**, e quando vengono sfruttate l'impatto è **devastante**. Il pentest che trova "solo" IDOR e XSS è incompleto. Il pentest che trova Request Smuggling, Race Condition sulle transazioni, e Subdomain Takeover è il pentest che salva l'azienda.
 
-Pillar conclusivo del progetto HackIta. Vedi anche: [SQL Injection](https://hackita.it/articoli/sql-injection-guida-completa), [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa), [File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa), [Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa), [API & Modern Web](https://hackita.it/articoli/api-modern-web-attacks-guida-completa).
+Pillar conclusivo del progetto HackIta. Vedi anche: [SQL Injection](https://hackita.it/articoli/sql-injection-classica/), [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/), [File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/), [Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/), [API & Modern Web](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/).
 
 ***
 
@@ -45,22 +45,22 @@ Pillar conclusivo del progetto HackIta. Vedi anche: [SQL Injection](https://hack
 
 | Vulnerabilità                 | Frequenza nei pentest | Impatto                              | Link                                                    |
 | ----------------------------- | --------------------- | ------------------------------------ | ------------------------------------------------------- |
-| **Subdomain Takeover**        | 8%                    | Phishing perfetto, cookie theft      | [→](https://hackita.it/articoli/subdomain-takeover)     |
-| **HTTP Request Smuggling**    | 5%                    | Cache poisoning, auth bypass         | [→](https://hackita.it/articoli/http-request-smuggling) |
-| **Clickjacking**              | 12%                   | Azioni non autorizzate               | [→](https://hackita.it/articoli/clickjacking)           |
-| **Open Redirect**             | 10%                   | Phishing, token theft, SSRF chain    | [→](https://hackita.it/articoli/open-redirect)          |
-| **Race Condition**            | 7%                    | Doppia transazione, bypass limiti    | [→](https://hackita.it/articoli/race-condition)         |
-| **Deserialization**           | 5%                    | RCE diretta                          | [→](https://hackita.it/articoli/deserialization-attack) |
-| **Web Cache Poisoning**       | 4%                    | XSS persistente su tutta l'app       | [→](https://hackita.it/articoli/cache-poisoning)        |
-| **Business Logic Flaw**       | 15%                   | Financial fraud, bypass workflow     | [→](https://hackita.it/articoli/business-logic-flaw)    |
-| **Clickjacking**              | 12%                   | Account takeover tramite click       | [→](https://hackita.it/articoli/clickjacking)           |
-| **Security Headers Mancanti** | 30%                   | Esposizione a XSS, sniffing, framing | [→](https://hackita.it/articoli/security-headers)       |
+| **Subdomain Takeover**        | 8%                    | Phishing perfetto, cookie theft      | [→](https://hackita.it/articoli/subdomain-takeover/)     |
+| **HTTP Request Smuggling**    | 5%                    | Cache poisoning, auth bypass         | [→](https://hackita.it/articoli/http-request-smuggling/) |
+| **Clickjacking**              | 12%                   | Azioni non autorizzate               | [→](https://hackita.it/articoli/clickjacking/)           |
+| **Open Redirect**             | 10%                   | Phishing, token theft, SSRF chain    | [→](https://hackita.it/articoli/open-redirect/)          |
+| **Race Condition**            | 7%                    | Doppia transazione, bypass limiti    | [→](https://hackita.it/articoli/race-condition/)         |
+| **Deserialization**           | 5%                    | RCE diretta                          | [→](https://hackita.it/articoli/deserialization-attack/) |
+| **Web Cache Poisoning**       | 4%                    | XSS persistente su tutta l'app       | [→](https://hackita.it/articoli/cache-poisoning/)        |
+| **Business Logic Flaw**       | 15%                   | Financial fraud, bypass workflow     | [→](https://hackita.it/articoli/business-logic-flaw/)    |
+| **Clickjacking**              | 12%                   | Account takeover tramite click       | [→](https://hackita.it/articoli/clickjacking/)           |
+| **Security Headers Mancanti** | 30%                   | Esposizione a XSS, sniffing, framing | [→](https://hackita.it/articoli/security-headers/)       |
 
 ***
 
 ## Subdomain Takeover — Il Dominio Aziendale Nelle Mani Dell'Attaccante
 
-Il [Subdomain Takeover](https://hackita.it/articoli/subdomain-takeover) avviene quando un record DNS (CNAME) punta a un servizio esterno (AWS S3, Heroku, GitHub Pages, Azure) che **non esiste più**. L'attaccante crea quel servizio sul cloud provider → ora controlla il contenuto di `subdomain.target.com`. Phishing perfetto dal dominio dell'azienda. Cookie del dominio principale accessibili. Bypass di email security (SPF/DKIM passano).
+Il [Subdomain Takeover](https://hackita.it/articoli/subdomain-takeover/) avviene quando un record DNS (CNAME) punta a un servizio esterno (AWS S3, Heroku, GitHub Pages, Azure) che **non esiste più**. L'attaccante crea quel servizio sul cloud provider → ora controlla il contenuto di `subdomain.target.com`. Phishing perfetto dal dominio dell'azienda. Cookie del dominio principale accessibili. Bypass di email security (SPF/DKIM passano).
 
 ### Discovery
 
@@ -130,13 +130,13 @@ aws s3 website s3://assets-target --index-document index.html
 # → Ruba cookie di .target.com (se non hanno il flag Domain corretto)
 ```
 
-Per approfondire: [Subdomain Takeover — guida completa](https://hackita.it/articoli/subdomain-takeover)
+Per approfondire: [Subdomain Takeover — guida completa](https://hackita.it/articoli/subdomain-takeover/)
 
 ***
 
 ## HTTP Request Smuggling — Avvelenare Il Traffico
 
-L'[HTTP Request Smuggling](https://hackita.it/articoli/http-request-smuggling) sfrutta la **differenza di parsing** tra il reverse proxy (Nginx, HAProxy, Cloudflare) e il backend (Apache, Node.js, Gunicorn). Se il proxy usa `Content-Length` e il backend usa `Transfer-Encoding` (o viceversa), l'attaccante può "smugglare" una seconda request nascosta dentro la prima.
+L'[HTTP Request Smuggling](https://hackita.it/articoli/http-request-smuggling/) sfrutta la **differenza di parsing** tra il reverse proxy (Nginx, HAProxy, Cloudflare) e il backend (Apache, Node.js, Gunicorn). Se il proxy usa `Content-Length` e il backend usa `Transfer-Encoding` (o viceversa), l'attaccante può "smugglare" una seconda request nascosta dentro la prima.
 
 ### CL.TE (Content-Length vs Transfer-Encoding)
 
@@ -196,13 +196,13 @@ x=1
 # 4. Request routing — forza il backend a processare la request su un host diverso
 ```
 
-Per approfondire: [HTTP Request Smuggling — guida completa](https://hackita.it/articoli/http-request-smuggling)
+Per approfondire: [HTTP Request Smuggling — guida completa](https://hackita.it/articoli/http-request-smuggling/)
 
 ***
 
 ## Race Condition — Vincere La Corsa Per Raddoppiare
 
-La [Race Condition](https://hackita.it/articoli/race-condition) si verifica quando due (o più) request parallele accedono alla stessa risorsa **prima che una delle due completi l'operazione**. Risultato: azioni duplicate, limiti bypassati, saldi alterati.
+La [Race Condition](https://hackita.it/articoli/race-condition/) si verifica quando due (o più) request parallele accedono alla stessa risorsa **prima che una delle due completi l'operazione**. Risultato: azioni duplicate, limiti bypassati, saldi alterati.
 
 ### Scenario Classico: Doppio Riscatto Coupon
 
@@ -289,13 +289,13 @@ def handleResponse(req, interesting):
 # - Join a un evento con posti limitati
 ```
 
-Per approfondire: [Race Condition — guida completa](https://hackita.it/articoli/race-condition)
+Per approfondire: [Race Condition — guida completa](https://hackita.it/articoli/race-condition/)
 
 ***
 
 ## Deserialization — RCE Da Un Cookie
 
-La [Deserialization insicura](https://hackita.it/articoli/deserialization-attack) avviene quando l'applicazione **deserializza dati non fidati** — un cookie, un parametro, un oggetto in sessione — senza validazione. L'attaccante crea un oggetto serializzato malevolo che, quando deserializzato, esegue codice arbitrario.
+La [Deserialization insicura](https://hackita.it/articoli/deserialization-attack/) avviene quando l'applicazione **deserializza dati non fidati** — un cookie, un parametro, un oggetto in sessione — senza validazione. L'attaccante crea un oggetto serializzato malevolo che, quando deserializzato, esegue codice arbitrario.
 
 ### Java Deserialization (il più impattante)
 
@@ -353,13 +353,13 @@ echo "COOKIE_VALUE" | base64 -d | xxd | head -1
 # Python: cerca \x80\x04\x95 (pickle protocol 4)
 ```
 
-Per approfondire: [Deserialization Attack — guida completa](https://hackita.it/articoli/deserialization-attack)
+Per approfondire: [Deserialization Attack — guida completa](https://hackita.it/articoli/deserialization-attack/)
 
 ***
 
 ## Web Cache Poisoning — XSS Persistente Senza Database
 
-Il [Cache Poisoning](https://hackita.it/articoli/cache-poisoning) avvelena la cache del web server/CDN facendogli memorizzare una response malevola. Ogni utente successivo che richiede la stessa pagina riceve la versione avvelenata. XSS persistente che colpisce **migliaia di utenti** senza toccare il database.
+Il [Cache Poisoning](https://hackita.it/articoli/cache-poisoning/) avvelena la cache del web server/CDN facendogli memorizzare una response malevola. Ogni utente successivo che richiede la stessa pagina riceve la versione avvelenata. XSS persistente che colpisce **migliaia di utenti** senza toccare il database.
 
 ```bash
 # Test: il server riflette header non in cache key?
@@ -386,13 +386,13 @@ X-Original-URL: /admin
 3. Se trova un header riflesso non in cache key → Cache Poisoning possibile
 ```
 
-Per approfondire: [Web Cache Poisoning — guida completa](https://hackita.it/articoli/cache-poisoning)
+Per approfondire: [Web Cache Poisoning — guida completa](https://hackita.it/articoli/cache-poisoning/)
 
 ***
 
 ## Business Logic Flaw — Bug Senza Payload
 
-I [Business Logic Flaw](https://hackita.it/articoli/business-logic-flaw) sono vulnerabilità nella **logica dell'applicazione**, non nel codice tecnico. Non c'è un payload, non c'è un'injection — c'è un flusso che lo sviluppatore non ha previsto. Sono **invisibili agli scanner automatici**.
+I [Business Logic Flaw](https://hackita.it/articoli/business-logic-flaw/) sono vulnerabilità nella **logica dell'applicazione**, non nel codice tecnico. Non c'è un payload, non c'è un'injection — c'è un flusso che lo sviluppatore non ha previsto. Sono **invisibili agli scanner automatici**.
 
 ```bash
 # Esempio 1: Prezzo negativo
@@ -426,13 +426,13 @@ POST /api/v2/cart/add
 # Skip di step, inversione dell'ordine, valori negativi, valori zero
 ```
 
-Per approfondire: [Business Logic Flaw — guida completa](https://hackita.it/articoli/business-logic-flaw)
+Per approfondire: [Business Logic Flaw — guida completa](https://hackita.it/articoli/business-logic-flaw/)
 
 ***
 
 ## Open Redirect — Il Ponte Per Attacchi Più Grandi
 
-L'[Open Redirect](https://hackita.it/articoli/open-redirect) sembra una vulnerabilità minore: `https://target.com/redirect?url=https://evil.com` porta l'utente su `evil.com`. Ma il valore reale è nella **chain**: phishing dal dominio legittimo, furto di token OAuth (redirect\_uri), bypass di filtri SSRF.
+L'[Open Redirect](https://hackita.it/articoli/open-redirect/) sembra una vulnerabilità minore: `https://target.com/redirect?url=https://evil.com` porta l'utente su `evil.com`. Ma il valore reale è nella **chain**: phishing dal dominio legittimo, furto di token OAuth (redirect\_uri), bypass di filtri SSRF.
 
 ```bash
 # Test:
@@ -453,13 +453,13 @@ https://target.com/redirect?url=////evil.com
 # Il token OAuth viene inviato a target.com → che redirect a evil.com → token rubato!
 ```
 
-Per approfondire: [Open Redirect — guida completa](https://hackita.it/articoli/open-redirect)
+Per approfondire: [Open Redirect — guida completa](https://hackita.it/articoli/open-redirect/)
 
 ***
 
 ## Clickjacking — Il Click Invisibile
 
-Il [Clickjacking](https://hackita.it/articoli/clickjacking) sovrappone un iframe trasparente dell'applicazione target sopra una pagina dell'attaccante. L'utente crede di cliccare sulla pagina dell'attaccante ma in realtà sta cliccando su un bottone dell'applicazione target — "Cambia email", "Trasferisci fondi", "Elimina account".
+Il [Clickjacking](https://hackita.it/articoli/clickjacking/) sovrappone un iframe trasparente dell'applicazione target sopra una pagina dell'attaccante. L'utente crede di cliccare sulla pagina dell'attaccante ma in realtà sta cliccando su un bottone dell'applicazione target — "Cambia email", "Trasferisci fondi", "Elimina account".
 
 ```html
 <!-- evil.com -->
@@ -494,13 +494,13 @@ curl -s -I "https://target.com" | grep -i "x-frame-options\|content-security-pol
 # Content-Security-Policy: frame-ancestors 'none' → protetto
 ```
 
-Per approfondire: [Clickjacking — guida completa](https://hackita.it/articoli/clickjacking)
+Per approfondire: [Clickjacking — guida completa](https://hackita.it/articoli/clickjacking/)
 
 ***
 
 ## Security Headers Mancanti — La Difesa Che Costa Zero
 
-I [Security Headers](https://hackita.it/articoli/security-headers) sono header HTTP che attivano protezioni nel browser. La loro assenza non è una vulnerabilità diretta ma **amplifica ogni altra vulnerabilità**. Li trovo mancanti nel **30% dei pentest**.
+I [Security Headers](https://hackita.it/articoli/security-headers/) sono header HTTP che attivano protezioni nel browser. La loro assenza non è una vulnerabilità diretta ma **amplifica ogni altra vulnerabilità**. Li trovo mancanti nel **30% dei pentest**.
 
 ```bash
 # Scan completo:
@@ -519,7 +519,7 @@ shcheck.py https://target.com
 # Permissions-Policy → limita API browser (camera, geolocation)
 ```
 
-Per approfondire: [Security Headers — guida completa](https://hackita.it/articoli/security-headers)
+Per approfondire: [Security Headers — guida completa](https://hackita.it/articoli/security-headers/)
 
 ***
 
@@ -747,17 +747,17 @@ SECURITY HEADERS
 | Articolo               | Tipo             | Impatto                      | Link                                                    |
 | ---------------------- | ---------------- | ---------------------------- | ------------------------------------------------------- |
 | **Questa guida**       | PILLAR           | —                            | —                                                       |
-| Subdomain Takeover     | DNS exploitation | Phishing, cookie theft       | [→](https://hackita.it/articoli/subdomain-takeover)     |
-| HTTP Request Smuggling | HTTP desync      | Cache poisoning, auth bypass | [→](https://hackita.it/articoli/http-request-smuggling) |
-| Race Condition         | Timing attack    | Financial fraud              | [→](https://hackita.it/articoli/race-condition)         |
-| Deserialization Attack | Object injection | RCE                          | [→](https://hackita.it/articoli/deserialization-attack) |
-| Web Cache Poisoning    | Cache abuse      | Persistent XSS               | [→](https://hackita.it/articoli/cache-poisoning)        |
-| Business Logic Flaw    | Logic abuse      | Financial fraud              | [→](https://hackita.it/articoli/business-logic-flaw)    |
-| Open Redirect          | Redirect abuse   | Token theft                  | [→](https://hackita.it/articoli/open-redirect)          |
-| Clickjacking           | UI redressing    | Unauthorized actions         | [→](https://hackita.it/articoli/clickjacking)           |
-| Security Headers       | Misconfiguration | Amplifica altre vuln         | [→](https://hackita.it/articoli/security-headers)       |
+| Subdomain Takeover     | DNS exploitation | Phishing, cookie theft       | [→](https://hackita.it/articoli/subdomain-takeover/)     |
+| HTTP Request Smuggling | HTTP desync      | Cache poisoning, auth bypass | [→](https://hackita.it/articoli/http-request-smuggling/) |
+| Race Condition         | Timing attack    | Financial fraud              | [→](https://hackita.it/articoli/race-condition/)         |
+| Deserialization Attack | Object injection | RCE                          | [→](https://hackita.it/articoli/deserialization-attack/) |
+| Web Cache Poisoning    | Cache abuse      | Persistent XSS               | [→](https://hackita.it/articoli/cache-poisoning/)        |
+| Business Logic Flaw    | Logic abuse      | Financial fraud              | [→](https://hackita.it/articoli/business-logic-flaw/)    |
+| Open Redirect          | Redirect abuse   | Token theft                  | [→](https://hackita.it/articoli/open-redirect/)          |
+| Clickjacking           | UI redressing    | Unauthorized actions         | [→](https://hackita.it/articoli/clickjacking/)           |
+| Security Headers       | Misconfiguration | Amplifica altre vuln         | [→](https://hackita.it/articoli/security-headers/)       |
 
-Vedi anche: [SQL Injection](https://hackita.it/articoli/sql-injection-guida-completa), [Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa), [API & Modern Web](https://hackita.it/articoli/api-modern-web-attacks-guida-completa).
+Vedi anche: [SQL Injection](https://hackita.it/articoli/sql-injection-classica/), [Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/), [API & Modern Web](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/).
 
 ***
 

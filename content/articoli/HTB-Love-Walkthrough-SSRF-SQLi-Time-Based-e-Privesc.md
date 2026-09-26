@@ -71,7 +71,7 @@ sqlmap -u "http://love.htb/login.php" --data="id=1&password=x" -p id --technique
 
 sqlmap conferma la stessa cosa vista a mano: injection **time-based blind** valida, nessuna tecnica boolean/UNION disponibile su quel parametro. Con `--dbs` provo a enumerare i database, ma i tempi di risposta per ogni singola richiesta rendono l'intera enumerazione lentissima — per capire la logica dietro le tecniche che sqlmap prova automaticamente vale la pena leggere il [repository ufficiale su GitHub](https://github.com/sqlmapproject/sqlmap).
 
-A conti fatti, il tempo necessario per tirare fuori qualcosa di utile (utenti, hash) è totalmente sproporzionato rispetto a quello che serve per completare una macchina Easy. È un pattern che vale la pena riconoscere presto: se una tecnica valida richiede minuti per ogni singolo carattere estratto, quasi sempre esiste una via più diretta altrove. La segno come conferma di vulnerabilità presente, ma non ci investo altro tempo. Per un ripasso più a fondo sulle tecniche di SQL injection, ho scritto qualcosa di più esteso nell'[articolo su SQL injection su Hackita](https://hackita.it/articoli/sql-injection-mssql) (lì il focus è MSSQL, ma i principi di blind/time-based sono gli stessi).
+A conti fatti, il tempo necessario per tirare fuori qualcosa di utile (utenti, hash) è totalmente sproporzionato rispetto a quello che serve per completare una macchina Easy. È un pattern che vale la pena riconoscere presto: se una tecnica valida richiede minuti per ogni singolo carattere estratto, quasi sempre esiste una via più diretta altrove. La segno come conferma di vulnerabilità presente, ma non ci investo altro tempo. Per un ripasso più a fondo sulle tecniche di SQL injection, ho scritto qualcosa di più esteso nell'[articolo su SQL injection su Hackita](https://hackita.it/articoli/sql-injection-mssql/) (lì il focus è MSSQL, ma i principi di blind/time-based sono gli stessi).
 
 ## Vicolo cieco numero due: provare a rubare l'hash NTLM via 5000
 
@@ -104,7 +104,7 @@ username: admin
 password: @LoveIsInTheAir!!!!
 ```
 
-Stesso principio, contesto diverso, dell'attacco che ho documentato nell'[hub post-exploitation su Hackita](https://hackita.it/articoli/post-exploitation): un controllo di accesso basato solo sull'origine della richiesta non è mai sufficiente da solo.
+Stesso principio, contesto diverso, dell'attacco che ho documentato nell'[hub post-exploitation su Hackita](https://hackita.it/articoli/post-exploitation/): un controllo di accesso basato solo sull'origine della richiesta non è mai sufficiente da solo.
 
 ## RCE diretta: niente searchsploit, niente PoC pubblici
 
@@ -139,7 +139,7 @@ C:\Users\Phoebe\Desktop> type user.txt
 
 ## Privesc: il tentativo con adduser che non ha funzionato
 
-Enumerazione post-exploitation rapida: registro, permessi cartelle, servizi con path non quotati — la stessa checklist che seguo sempre e che ho messo giù per esteso nell'[articolo su Windows Privilege Escalation di Hackita](https://hackita.it/articoli/windows-privilege-escalation). Il finding decisivo è lo stesso di sempre su questa macchina:
+Enumerazione post-exploitation rapida: registro, permessi cartelle, servizi con path non quotati — la stessa checklist che seguo sempre e che ho messo giù per esteso nell'[articolo su Windows Privilege Escalation di Hackita](https://hackita.it/articoli/windows-privilege-escalation/). Il finding decisivo è lo stesso di sempre su questa macchina:
 
 ```
 AlwaysInstallElevated set to 1 in HKLM!

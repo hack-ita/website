@@ -21,7 +21,7 @@ tags:
 
 Negli assessment web professionali, Blind XSS colpisce bersagli di alto valore: pannelli admin, sistemi di log, dashboard analytics, tool interni di gestione. Il ritardo tra iniezione ed esecuzione può essere di ore, giorni o settimane.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss)
+→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)
 
 ***
 

@@ -17,9 +17,9 @@ tags:
   - WebLogic RCE
 ---
 
-La porta 7002 TCP è la versione cifrata di [Oracle WebLogic sulla porta 7001](https://hackita.it/articoli/porta-7001-weblogic). Serve HTTPS per la console web e le applicazioni, T3S per la comunicazione Java cifrata e IIOPS per CORBA over TLS. Per farla breve: tutte le vulnerabilità di WebLogic — le deserializzazioni, i bypass della console, le SSRF — funzionano identicamente sulla 7002. La cifratura TLS protegge il traffico dallo sniffing, ma non ferma un exploit che raggiunge direttamente il server. Il vero vantaggio per il pentester è che la 7002 rivela informazioni aggiuntive attraverso il certificato TLS: hostname interni, nome dell'organizzazione, CA interna e a volte Subject Alternative Names con tutti gli alias del server.
+La porta 7002 TCP è la versione cifrata di [Oracle WebLogic sulla porta 7001](https://hackita.it/articoli/porta-7001-weblogic/). Serve HTTPS per la console web e le applicazioni, T3S per la comunicazione Java cifrata e IIOPS per CORBA over TLS. Per farla breve: tutte le vulnerabilità di WebLogic — le deserializzazioni, i bypass della console, le SSRF — funzionano identicamente sulla 7002. La cifratura TLS protegge il traffico dallo sniffing, ma non ferma un exploit che raggiunge direttamente il server. Il vero vantaggio per il pentester è che la 7002 rivela informazioni aggiuntive attraverso il certificato TLS: hostname interni, nome dell'organizzazione, CA interna e a volte Subject Alternative Names con tutti gli alias del server.
 
-Per l'exploitation completa (CVE, console, T3, SSRF, post-exploitation), la guida di riferimento è la [porta 7001 WebLogic](https://hackita.it/articoli/porta-7001-weblogic). Questo articolo copre ciò che è specifico della 7002.
+Per l'exploitation completa (CVE, console, T3, SSRF, post-exploitation), la guida di riferimento è la [porta 7001 WebLogic](https://hackita.it/articoli/porta-7001-weblogic/). Questo articolo copre ciò che è specifico della 7002.
 
 ## Quando Trovi la 7002
 
@@ -70,7 +70,7 @@ PORT     STATE SERVICE VERSION
 
 * **CN**: hostname interno `wl-prod-01.corp.internal`
 * **SAN**: tre alias → `wl-prod-01.corp.internal`, `weblogic.corp.com`, `erp.corp.com` (è un ERP!)
-* **Issuer**: CA interna `Corp-Internal-CA` → conferma ADCS attivo → vettore per [ADCS abuse](https://hackita.it/articoli/porta-5986-winrm-https)
+* **Issuer**: CA interna `Corp-Internal-CA` → conferma ADCS attivo → vettore per [ADCS abuse](https://hackita.it/articoli/porta-5986-winrm-https/)
 * **Cipher**: TLSv1.0 con RC4 → finding di sicurezza (cifratura debole)
 
 ### Console admin via HTTPS
@@ -206,7 +206,7 @@ Da Node Manager puoi: avviare/fermare server, leggere log, eseguire script — u
 
 ## 5. Detection & Hardening
 
-Tutti gli hardening della [porta 7001](https://hackita.it/articoli/porta-7001-weblogic) si applicano, più:
+Tutti gli hardening della [porta 7001](https://hackita.it/articoli/porta-7001-weblogic/) si applicano, più:
 
 * **Solo TLS 1.2+** — disabilita TLS 1.0 e 1.1 nel config.xml
 * **Cipher forti** — AES-256-GCM, ECDHE key exchange

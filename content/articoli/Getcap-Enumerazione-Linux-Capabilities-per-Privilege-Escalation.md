@@ -170,7 +170,7 @@ chroot /tmp/hostfs /bin/bash
 # root@host:/#
 ```
 
-Per approfondire container escape techniques avanzate, consulta [strategie di escape da Docker e Kubernetes](https://hackita.it/articoli/container-escape).
+Per approfondire container escape techniques avanzate, consulta [strategie di escape da Docker e Kubernetes](https://hackita.it/articoli/container-escape/).
 
 ***
 
@@ -246,7 +246,7 @@ cat caps.txt | grep setuid
 # Categoria: Capabilities
 ```
 
-Se vuoi approfondire l'uso di GTFOBins per exploitation completa, leggi [come sfruttare GTFOBins per privilege escalation su Linux](https://hackita.it/articoli/gtfobins).
+Se vuoi approfondire l'uso di GTFOBins per exploitation completa, leggi [come sfruttare GTFOBins per privilege escalation su Linux](https://hackita.it/articoli/gtfobins/).
 
 ***
 

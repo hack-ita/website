@@ -21,7 +21,7 @@ Un e-commerce permette di inserire quantità negative nel carrello. Il codice ca
 
 Queste vulnerabilità sono le più difficili da trovare perché **nessun scanner automatico le rileva**. Richiedono comprensione del business, creatività, e la mentalità di chi chiede "cosa succede se faccio questa cosa al contrario, in un ordine diverso, o con un valore assurdo?".
 
-Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa). Vedi anche: [Race Condition](https://hackita.it/articoli/race-condition), [IDOR](https://hackita.it/articoli/idor).
+Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa/). Vedi anche: [Race Condition](https://hackita.it/articoli/race-condition/), [IDOR](https://hackita.it/articoli/idor/).
 
 Riferimenti: [PortSwigger Business Logic](https://portswigger.net/web-security/logic-flaws), [OWASP Business Logic Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/), [HackTricks Business Logic](https://book.hacktricks.wiki/en/pentesting-web/business-logic-vulnerabilities.html).
 

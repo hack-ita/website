@@ -26,7 +26,7 @@ Revsocks opera nelle fasi di pivoting post-exploitation:
 | ----------------- | ----------------- | ---------------------- | ---------------------------------------------------------- |
 | Post-Exploitation | Initial shell     | → Setup reverse tunnel | → Network access                                           |
 | Pivoting          | Foothold stable   | → SOCKS5 proxy         | → Internal scan                                            |
-| Lateral Movement  | Route established | → Proxy traffic        | → [CrackMapExec](https://hackita.it/articoli/crackmapexec) |
+| Lateral Movement  | Route established | → Proxy traffic        | → [CrackMapExec](https://hackita.it/articoli/crackmapexec/) |
 | Persistence       | Access confirmed  | → Persistent tunnel    | → Long-term access                                         |
 
 ## Installazione e Setup
@@ -270,8 +270,8 @@ proxychains smbclient -L //10.10.10.100/ -U guest
 1. **Initial Access (20min)**: Exploit webserver → shell
 2. **Tunnel Setup (10min)**: Deploy revsocks → SOCKS proxy attivo
 3. **Internal Recon (20min)**: Scan rete interna via proxy
-4. **Credential Harvesting (20min)**: [CrackMapExec](https://hackita.it/articoli/crackmapexec) → hash dump
-5. **Lateral Movement (20min)**: [PsExec](https://hackita.it/articoli/psexec) verso DC
+4. **Credential Harvesting (20min)**: [CrackMapExec](https://hackita.it/articoli/crackmapexec/) → hash dump
+5. **Lateral Movement (20min)**: [PsExec](https://hackita.it/articoli/psexec/) verso DC
 
 ```bash
 # Fase 3-4: Recon e Credential via proxy
@@ -315,10 +315,10 @@ Esegui tunnel durante orari business quando traffico HTTPS è normale:
 
 | Revsocks +                                               | Risultato    | Comando                         |
 | -------------------------------------------------------- | ------------ | ------------------------------- |
-| [Nmap](https://hackita.it/articoli/nmap)                 | Scan interno | `proxychains nmap -sT target`   |
-| [CrackMapExec](https://hackita.it/articoli/crackmapexec) | AD enum      | `proxychains cme smb range`     |
-| [Impacket](https://hackita.it/articoli/impacket)         | WMI/SMB exec | `proxychains wmiexec.py`        |
-| [BloodHound](https://hackita.it/articoli/bloodhound)     | Collection   | `proxychains bloodhound-python` |
+| [Nmap](https://hackita.it/articoli/nmap/)                 | Scan interno | `proxychains nmap -sT target`   |
+| [CrackMapExec](https://hackita.it/articoli/crackmapexec/) | AD enum      | `proxychains cme smb range`     |
+| [Impacket](https://hackita.it/articoli/impacket/)         | WMI/SMB exec | `proxychains wmiexec.py`        |
+| [BloodHound](https://hackita.it/articoli/bloodhound/)     | Collection   | `proxychains bloodhound-python` |
 
 ## Confronto: Revsocks vs Alternative
 

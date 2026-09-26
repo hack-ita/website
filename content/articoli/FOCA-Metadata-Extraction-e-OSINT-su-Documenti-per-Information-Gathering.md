@@ -17,11 +17,11 @@ tags:
   - document-enumeration
 ---
 
-FOCA (Fingerprinting Organizations with Collected Archives) automatizza estrazione metadata da documenti pubblici (PDF, DOCX, XLSX, PPTX) per rivelare informazioni sensibili nascoste: username interni, hostname workstation, software versions, network paths, email addresses e org chart structure. Sviluppato da Informatica64 (Spain) e parte suite ElevenPaths, FOCA eccelle in passive reconnaissance dove [https://hackita.it/articoli/theharvester](https://hackita.it/articoli/theharvester) scopre email ma non infrastructure detail, e dove [https://hackita.it/articoli/maltego](https://hackita.it/articoli/maltego) necessita data source che FOCA genera autonomamente crawlando Google/Bing per documenti pubblici target organization. Versione attuale 4.3.5 (Windows-only) introduce support Office 365 cloud documents, enhanced search engine integration e export formato integrabile con altre piattaforme OSINT.
+FOCA (Fingerprinting Organizations with Collected Archives) automatizza estrazione metadata da documenti pubblici (PDF, DOCX, XLSX, PPTX) per rivelare informazioni sensibili nascoste: username interni, hostname workstation, software versions, network paths, email addresses e org chart structure. Sviluppato da Informatica64 (Spain) e parte suite ElevenPaths, FOCA eccelle in passive reconnaissance dove [https://hackita.it/articoli/theharvester](https://hackita.it/articoli/theharvester/) scopre email ma non infrastructure detail, e dove [https://hackita.it/articoli/maltego](https://hackita.it/articoli/maltego/) necessita data source che FOCA genera autonomamente crawlando Google/Bing per documenti pubblici target organization. Versione attuale 4.3.5 (Windows-only) introduce support Office 365 cloud documents, enhanced search engine integration e export formato integrabile con altre piattaforme OSINT.
 
 ### Cosa imparerai
 
-Questo articolo copre installazione Windows e workaround Linux (Wine/VM), configurazione search engine per document discovery, tecniche metadata extraction da 8+ file types, analysis pattern per identify infrastructure topology, username enumeration per password spraying attacks, software inventory per vulnerability mapping, geolocation inference da timezone metadata, integration con [https://hackita.it/articoli/recon-ng](https://hackita.it/articoli/recon-ng) per data enrichment, countermeasure document sanitization, blue team detection metadata leakage, e enterprise deployment per continuous document monitoring su attack surface pubblico.
+Questo articolo copre installazione Windows e workaround Linux (Wine/VM), configurazione search engine per document discovery, tecniche metadata extraction da 8+ file types, analysis pattern per identify infrastructure topology, username enumeration per password spraying attacks, software inventory per vulnerability mapping, geolocation inference da timezone metadata, integration con [https://hackita.it/articoli/recon-ng](https://hackita.it/articoli/reconng/) per data enrichment, countermeasure document sanitization, blue team detection metadata leakage, e enterprise deployment per continuous document monitoring su attack surface pubblico.
 
 ## Setup e Installazione
 
@@ -404,7 +404,7 @@ Keywords interessanti:
             susan.lee@targetcorp.com
 ```
 
-**Validation step**: Use [https://hackita.it/articoli/theharvester](https://hackita.it/articoli/theharvester) per verificare guessed emails.
+**Validation step**: Use [https://hackita.it/articoli/theharvester](https://hackita.it/articoli/theharvester/) per verificare guessed emails.
 
 ### Software Version Inventory
 
@@ -925,7 +925,7 @@ PyPDF2 + python-docx: Custom scripting
 
 ## Perché è rilevante oggi (2026)
 
-FOCA rimane critico perché **document-based intelligence gap** che altri OSINT tool non coprono — [https://hackita.it/articoli/theharvester](https://hackita.it/articoli/theharvester) trova email ma non internal username format, [https://hackita.it/articoli/spiderfoot](https://hackita.it/articoli/spiderfoot) enumera subdomain ma non hostname workstation, [https://hackita.it/articoli/maltego](https://hackita.it/articoli/maltego) visualizza ma non genera initial infrastructure data. Remote work expansion aumenta document sharing pubblico (Google Drive, Dropbox link sharing, website uploads) senza proper sanitization — 70%+ organizations non implementano automated metadata removal. Compliance framework (GDPR, CCPA) enforcement crescente rende metadata leakage legal liability oltre che security risk. Supply chain attacks necessitano vendor assessment dove FOCA reveals third-party infrastructure via loro public documents. Ransomware groups increasingly use FOCA-style reconnaissance pre-attack per identify high-value targets e internal network topology.
+FOCA rimane critico perché **document-based intelligence gap** che altri OSINT tool non coprono — [https://hackita.it/articoli/theharvester](https://hackita.it/articoli/theharvester/) trova email ma non internal username format, [https://hackita.it/articoli/spiderfoot](https://hackita.it/articoli/spiderfoot/) enumera subdomain ma non hostname workstation, [https://hackita.it/articoli/maltego](https://hackita.it/articoli/maltego/) visualizza ma non genera initial infrastructure data. Remote work expansion aumenta document sharing pubblico (Google Drive, Dropbox link sharing, website uploads) senza proper sanitization — 70%+ organizations non implementano automated metadata removal. Compliance framework (GDPR, CCPA) enforcement crescente rende metadata leakage legal liability oltre che security risk. Supply chain attacks necessitano vendor assessment dove FOCA reveals third-party infrastructure via loro public documents. Ransomware groups increasingly use FOCA-style reconnaissance pre-attack per identify high-value targets e internal network topology.
 
 ## Differenza rispetto ad alternative
 

@@ -1783,7 +1783,7 @@ usa AES e verifica msDS-SupportedEncryptionTypes
 
 * [Kerberos: architettura e flusso](https://hackita.it/articoli/kerberos/)
 * [TGT Kerberos: Ticket Granting Ticket](https://hackita.it/articoli/tgt-kerberos/)
-* [Kerberoasting: guida completa](https://hackita.it/articoli/kerberoasting/)
+* [Kerberoasting: guida completa](https://hackita.it/articoli/kerberos/)
 * [Silver Ticket Attack](https://hackita.it/articoli/silver-ticket/)
 * [Golden Ticket Attack](https://hackita.it/articoli/golden-ticket/)
 * [GetUserSPNs.py con Impacket](https://hackita.it/articoli/getuserspns/)

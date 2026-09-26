@@ -167,7 +167,7 @@ impacket-GetADUsers -all -dc-ip 10.10.10.5 corp.local/user:'Password123!' | tee 
 # 2. Verifica reale degli account senza pre-authentication (AS-REP Roasting)
 impacket-GetNPUsers corp.local/user:'Password123!' -dc-ip 10.10.10.5 -request -format hashcat
 
-# 3. Verifica reale degli account con SPN (Kerberoasting) — vedi anche [Kerberoasting](https://hackita.it/articoli/kerberoasting/)
+# 3. Verifica reale degli account con SPN (Kerberoasting) — vedi anche [Kerberoasting](https://hackita.it/articoli/kerberos/)
 impacket-GetUserSPNs -dc-ip 10.10.10.5 corp.local/user:'Password123!'
 ```
 
@@ -309,7 +309,7 @@ Non basandoti sul nome (`svc_*`). Serve verificare la presenza di un `servicePri
 * [Active Directory: guida all'exploitation](https://hackita.it/articoli/active-directory/)
 * [ldapsearch — query LDAP avanzate](https://hackita.it/articoli/ldapsearch/)
 * [BloodHound — mappa l'AD e trova attack path](https://hackita.it/articoli/bloodhound/)
-* [Kerberoasting](https://hackita.it/articoli/kerberoasting/)
+* [Kerberoasting](https://hackita.it/articoli/kerberos/)
 * [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/)
 * [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
 

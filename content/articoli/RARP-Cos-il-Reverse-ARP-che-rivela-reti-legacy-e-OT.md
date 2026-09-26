@@ -105,7 +105,7 @@ Conoscere RARP permette di:
 * **Capire l'evoluzione verso DHCP** e le sue implicazioni di sicurezza
 * **Contestualizzare ambienti OT/ICS** dove protocolli obsoleti sono la norma
 
-Per capire il livello su cui opera RARP, leggi l'articolo su [Ethernet IEEE 802.3](https://hackita.it/articoli/ethernet-ieee-802-3). Per il protocollo che ha sostituito RARP nella pratica moderna, vedi l'articolo su [DHCP](https://hackita.it/articoli/dhcp)
+Per capire il livello su cui opera RARP, leggi l'articolo su [Ethernet IEEE 802.3](https://hackita.it/articoli/ethernet-ieee-802-3/). Per il protocollo che ha sostituito RARP nella pratica moderna, vedi l'articolo su [DHCP](https://hackita.it/articoli/dhcp/)
 
 ***
 
@@ -129,7 +129,7 @@ tcpdump -i eth0 -nn ether proto 0x8035
 
 Se in una rete trovi traffico RARP, hai un'informazione preziosa: esiste almeno un RARP server in quel segmento, configurato manualmente con una tabella MAC → IP. Quel server è un asset interessante: contiene la mappatura di dispositivi che probabilmente non appaiono nei normali inventari di rete.
 
-Combinando l'analisi RARP con [arp-scan](https://hackita.it/articoli/arp) e [Nmap](https://hackita.it/articoli/nmap), si ottiene una visione più completa dei dispositivi presenti nel segmento, inclusi quelli che non rispondono a ICMP o TCP.
+Combinando l'analisi RARP con [arp-scan](https://hackita.it/articoli/arp/) e [Nmap](https://hackita.it/articoli/nmap/), si ottiene una visione più completa dei dispositivi presenti nel segmento, inclusi quelli che non rispondono a ICMP o TCP.
 
 ### Attack surface: impersonare un RARP server
 
@@ -145,7 +145,7 @@ Questi attacchi sono rari in ambienti moderni ma concreti in reti OT/ICS legacy 
 
 ### Pivoting e contesto OT/ICS
 
-Trovare traffico RARP in un engagement spesso significa essere vicini a sistemi OT. In questi ambienti la segmentazione è spesso assente o mal configurata, e i dispositivi legacy hanno vulnerabilità non patchate da anni. RARP diventa un indicatore di superficie di attacco più ampia da esplorare. Integra questa analisi con tecniche di [man-in-the-middle](https://hackita.it/articoli/man-in-the-middle) e [sniffing](https://hackita.it/articoli/sniffing) per massimizzare la visibilità.
+Trovare traffico RARP in un engagement spesso significa essere vicini a sistemi OT. In questi ambienti la segmentazione è spesso assente o mal configurata, e i dispositivi legacy hanno vulnerabilità non patchate da anni. RARP diventa un indicatore di superficie di attacco più ampia da esplorare. Integra questa analisi con tecniche di [man-in-the-middle](https://hackita.it/articoli/man-in-the-middle/) e [sniffing](https://hackita.it/articoli/sniffing/) per massimizzare la visibilità.
 
 ***
 
@@ -254,7 +254,7 @@ In ambienti dove RARP è ancora attivo:
 Se non puoi eliminare RARP dall'ambiente:
 
 * **Sostituire RARP con DHCP** dove tecnicamente possibile. È la soluzione corretta.
-* **Isolare in VLAN dedicate** i segmenti con dispositivi legacy che usano RARP, separandoli dal resto della rete. Vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan).
+* **Isolare in VLAN dedicate** i segmenti con dispositivi legacy che usano RARP, separandoli dal resto della rete. Vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan/).
 * **Monitorare il RARP server** e configurarlo per loggare tutte le richieste ricevute e le risposte inviate.
 * **Limitare via ACL** il traffico EtherType 0x8035 solo alle porte dove è necessario, disabilitandolo ovunque else.
 * **Inventariare i MAC address** autorizzati a fare richieste RARP e bloccare tutti gli altri a livello di port security.
@@ -306,13 +306,13 @@ Studia il contesto, identifica i dispositivi, e usa quella visibilità per mappa
 
 Approfondisci i protocolli correlati:
 
-* [ARP: come funziona e come sfruttarlo](https://hackita.it/articoli/arp)
-* [Ethernet IEEE 802.3: il livello sottostante](https://hackita.it/articoli/ethernet-ieee-802-3)
-* [DHCP: sicurezza e attacchi](https://hackita.it/articoli/dhcp)
-* [VLAN e 802.1Q: segmentazione e hopping](https://hackita.it/articoli/vlan)
-* [Sniffing su reti locali](https://hackita.it/articoli/sniffing)
-* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle)
-* [Nmap: reconnaissance e discovery](https://hackita.it/articoli/nmap)
+* [ARP: come funziona e come sfruttarlo](https://hackita.it/articoli/arp/)
+* [Ethernet IEEE 802.3: il livello sottostante](https://hackita.it/articoli/ethernet-ieee-802-3/)
+* [DHCP: sicurezza e attacchi](https://hackita.it/articoli/dhcp/)
+* [VLAN e 802.1Q: segmentazione e hopping](https://hackita.it/articoli/vlan/)
+* [Sniffing su reti locali](https://hackita.it/articoli/sniffing/)
+* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle/)
+* [Nmap: reconnaissance e discovery](https://hackita.it/articoli/nmap/)
 
 Riferimento ufficiale: [RFC 903 — A Reverse Address Resolution Protocol](https://datatracker.ietf.org/doc/html/rfc903)
 

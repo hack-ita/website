@@ -136,7 +136,7 @@ Rimuovere il permesso da AdminSDHolder non rimuove automaticamente quelli già p
 
 ### GenericAll su Utente
 
-Con [GenericAll](https://hackita.it/articoli/genericall/) hai il controllo completo sull'oggetto utente. Puoi resettare la password, aggiungere un SPN per il [targeted Kerberoasting](https://hackita.it/articoli/kerberoasting/) o configurare [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/).
+Con [GenericAll](https://hackita.it/articoli/genericall/) hai il controllo completo sull'oggetto utente. Puoi resettare la password, aggiungere un SPN per il [targeted Kerberoasting](https://hackita.it/articoli/kerberos/) o configurare [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/).
 
 ```powershell
 # Reset password senza conoscere quella attuale

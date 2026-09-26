@@ -221,8 +221,8 @@ Sì, se l’OID è collegato a un gruppo privilegiato.
 
 > ESC13 è una delle tecniche più sottovalutate negli attacchi AD CS.
 > Guida completa alle escalation AD CS:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Continua con le prossime tecniche:
-> [https://hackita.it/articoli/esc14-adcs](https://hackita.it/articoli/esc14-adcs) · [https://hackita.it/articoli/esc15-adcs](https://hackita.it/articoli/esc15-adcs)Supporta HackIta:
+> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)Continua con le prossime tecniche:
+> [https://hackita.it/articoli/esc14-adcs](https://hackita.it/articoli/adesc14-adcs/) · [https://hackita.it/articoli/esc15-adcs](https://hackita.it/articoli/adesc15-adcs/)Supporta HackIta:
 > [https://hackita.it/supporto](https://hackita.it/supporto)Vuoi imparare AD exploitation o testare la sicurezza della tua infrastruttura?
 > [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
 > [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)

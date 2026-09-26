@@ -23,7 +23,7 @@ Jupyter Notebook è l'ambiente di sviluppo interattivo più usato al mondo per d
 
 La ragione per cui Jupyter è un target così frequente è la sua natura: è progettato per **eseguire codice arbitrario** — non è un bug, è la funzionalità principale. Il problema nasce quando viene esposto sulla rete senza autenticazione, con un token debole, o su un server che contiene credenziali e dati sensibili. E succede più spesso di quanto immagini — data scientist che lanciano `jupyter notebook --ip=0.0.0.0 --no-browser` per accedere dal portatile e dimenticano che l'hanno fatto.
 
-Un episodio classico: pentest interno per un'azienda di e-commerce, scansione Nmap, porta 8888 su un server del team analytics. Nessuna password, nessun token. Ho aperto il browser, trovato un notebook chiamato `customer_analysis.ipynb` con le credenziali del data warehouse [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql) hardcoded nelle prime celle, e un altro chiamato `ml_pipeline.ipynb` con le API key di AWS S3. Tutto in chiaro, tutto accessibile. Il data scientist non sapeva nemmeno che la porta era raggiungibile dalla rete aziendale.
+Un episodio classico: pentest interno per un'azienda di e-commerce, scansione Nmap, porta 8888 su un server del team analytics. Nessuna password, nessun token. Ho aperto il browser, trovato un notebook chiamato `customer_analysis.ipynb` con le credenziali del data warehouse [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql/) hardcoded nelle prime celle, e un altro chiamato `ml_pipeline.ipynb` con le API key di AWS S3. Tutto in chiaro, tutto accessibile. Il data scientist non sapeva nemmeno che la porta era raggiungibile dalla rete aziendale.
 
 ## Cos'è Jupyter Notebook
 
@@ -241,7 +241,7 @@ done
 
 Cosa trovo tipicamente nei notebook:
 
-* **Connection string** a database ([PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql), [MySQL](https://hackita.it/articoli/porta-3306-mysql), [MongoDB](https://hackita.it/articoli/porta-27017-mongodb))
+* **Connection string** a database ([PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql/), [MySQL](https://hackita.it/articoli/porta-3306-mysql/), [MongoDB](https://hackita.it/articoli/porta-27017-mongodb/))
 * **API key** per servizi cloud (AWS, GCP, Azure)
 * **Token** per API interne
 * **Credenziali SSH/SFTP** per spostare dati
@@ -289,7 +289,7 @@ ip a; netstat -tlnp; cat /etc/hosts
 
 Scansione Nmap → porta 8888 su `10.10.10.80` (hostname `analytics-01`). Nessun token richiesto — il data scientist aveva lanciato Jupyter con `--NotebookApp.token=''` "per comodità".
 
-Sul server: 23 notebook `.ipynb`. In `etl_pipeline.ipynb` c'erano le credenziali del data warehouse PostgreSQL (utente `etl_admin` con `SELECT` su tutto lo schema). In `recommendation_engine.ipynb` c'erano le API key di AWS S3 con permessi `s3:GetObject` su 4 bucket — uno dei quali conteneva i backup del database di produzione con dati di 500.000 clienti (nome, email, indirizzo, storico ordini). In `.env` (visibile nella file list di Jupyter): credenziali [Redis](https://hackita.it/articoli/porta-6379-redis) e chiave segreta JWT dell'applicazione.
+Sul server: 23 notebook `.ipynb`. In `etl_pipeline.ipynb` c'erano le credenziali del data warehouse PostgreSQL (utente `etl_admin` con `SELECT` su tutto lo schema). In `recommendation_engine.ipynb` c'erano le API key di AWS S3 con permessi `s3:GetObject` su 4 bucket — uno dei quali conteneva i backup del database di produzione con dati di 500.000 clienti (nome, email, indirizzo, storico ordini). In `.env` (visibile nella file list di Jupyter): credenziali [Redis](https://hackita.it/articoli/porta-6379-redis/) e chiave segreta JWT dell'applicazione.
 
 Il server aveva anche `sudo` senza password per l'utente `datascientist` (nel sudoers per installare pacchetti Python) → `sudo su` → root.
 

@@ -237,7 +237,7 @@ Per reti WPA2-PSK, un Evil Twin open (senza password) con captive portal è suff
 
 ### Enumeration della rete dopo l'accesso
 
-Una volta connesso alla rete wireless, l'engagement prosegue come una qualsiasi rete interna: [ARP scan](https://hackita.it/articoli/arp), [Nmap](https://hackita.it/articoli/nmap), analisi delle VLAN, ricerca di servizi esposti.
+Una volta connesso alla rete wireless, l'engagement prosegue come una qualsiasi rete interna: [ARP scan](https://hackita.it/articoli/arp/), [Nmap](https://hackita.it/articoli/nmap/), analisi delle VLAN, ricerca di servizi esposti.
 
 ***
 
@@ -356,7 +356,7 @@ Se WPA3 non è disponibile, usa PSK di almeno 20 caratteri casuali. Una password
 
 ### Segmentare le VLAN per SSID
 
-Ogni SSID dovrebbe mappare a una VLAN separata con accesso controllato da ACL. La rete guest non deve vedere la rete corporate. Vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan).
+Ogni SSID dovrebbe mappare a una VLAN separata con accesso controllato da ACL. La rete guest non deve vedere la rete corporate. Vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan/).
 
 ### WIDS (Wireless Intrusion Detection System)
 
@@ -420,13 +420,13 @@ E spesso, l'access point più vulnerabile è quello che nessuno sapeva esistesse
 
 Approfondisci i protocolli e le tecniche correlate:
 
-* [Ethernet IEEE 802.3: il livello cablato a confronto](https://hackita.it/articoli/ethernet-ieee-802-3)
-* [VLAN e 802.1Q: segmentazione degli SSID](https://hackita.it/articoli/vlan)
-* [ARP: spoofing e discovery post-connessione](https://hackita.it/articoli/arp)
-* [Sniffing su reti locali e wireless](https://hackita.it/articoli/sniffing)
-* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle)
-* [Nmap: scanning post-accesso wireless](https://hackita.it/articoli/nmap)
-* [Password cracking: dizionari e hashcat](https://hackita.it/articoli/password-cracking)
+* [Ethernet IEEE 802.3: il livello cablato a confronto](https://hackita.it/articoli/ethernet-ieee-802-3/)
+* [VLAN e 802.1Q: segmentazione degli SSID](https://hackita.it/articoli/vlan/)
+* [ARP: spoofing e discovery post-connessione](https://hackita.it/articoli/arp/)
+* [Sniffing su reti locali e wireless](https://hackita.it/articoli/sniffing/)
+* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle/)
+* [Nmap: scanning post-accesso wireless](https://hackita.it/articoli/nmap/)
+* [Password cracking: dizionari e hashcat](https://hackita.it/articoli/password-cracking/)
 
 Riferimento ufficiale: [IEEE 802.11 — Wireless LAN Medium Access Control and Physical Layer Specifications](https://standards.ieee.org/ieee/802.11/7028/)
 

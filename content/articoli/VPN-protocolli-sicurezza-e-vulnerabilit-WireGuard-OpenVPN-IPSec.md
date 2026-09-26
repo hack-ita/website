@@ -119,7 +119,7 @@ ike-scan --aggressive --id=anyid <target> | grep -i "hash"
 hashcat -m 5300 ike_hash.txt wordlist.txt
 ```
 
-Per una trattazione tecnica completa di IPSec, vedi [IPSec: cos'è e come attaccarlo](https://hackita.it/articoli/ipsec).
+Per una trattazione tecnica completa di IPSec, vedi [IPSec: cos'è e come attaccarlo](https://hackita.it/articoli/ipsec/).
 
 ***
 
@@ -151,7 +151,7 @@ reg query "HKCU\Software\Microsoft\Network\Connections"
 cmdkey /list
 ```
 
-Per i dettagli su PPP e MS-CHAPv2, vedi [PPP: cos'è e come sfruttarlo](https://hackita.it/articoli/ppp-point-to-point-protocol).
+Per i dettagli su PPP e MS-CHAPv2, vedi [PPP: cos'è e come sfruttarlo](https://hackita.it/articoli/ppp-point-to-point-protocol/).
 
 ***
 
@@ -176,7 +176,7 @@ nmap -p 1723 --script pptp-version <target>
 
 **Finding in un pentest:** trovare un server PPTP in produzione è sempre una finding critica. Qualsiasi azienda che lo usa ancora ha un problema di sicurezza immediato. L'handshake è catturabile in rete e la password è recuperabile offline.
 
-Per i dettagli tecnici su PPTP e MS-CHAPv2, vedi [PPP: Point-to-Point Protocol](https://hackita.it/articoli/ppp-point-to-point-protocol).
+Per i dettagli tecnici su PPTP e MS-CHAPv2, vedi [PPP: Point-to-Point Protocol](https://hackita.it/articoli/ppp-point-to-point-protocol/).
 
 ***
 
@@ -223,7 +223,7 @@ tcpdump -i eth0 -nn udp port 1194 -w openvpn_capture.pcap
 # tls.handshake.type == 1  (ClientHello)
 ```
 
-Per i dettagli su TLS e le sue vulnerabilità, vedi [TLS/SSL: cos'è e come analizzarlo](https://hackita.it/articoli/tls-ssl).
+Per i dettagli su TLS e le sue vulnerabilità, vedi [TLS/SSL: cos'è e come analizzarlo](https://hackita.it/articoli/tls-ssl/).
 
 ***
 
@@ -294,7 +294,7 @@ GRE (Generic Routing Encapsulation) è un protocollo di tunneling **senza cifrat
 
 GRE puro (senza IPSec) è visibile in chiaro a chiunque intercetti il traffico. Trovarlo in produzione è spesso una finding: significa che il traffico tra due siti viaggia non cifrato su Internet.
 
-Per i dettagli tecnici su GRE e come identificarlo in rete, vedi [GRE: cos'è e come sfruttarlo in un pentest](https://hackita.it/articoli/gre-generic-routing-encapsulation).
+Per i dettagli tecnici su GRE e come identificarlo in rete, vedi [GRE: cos'è e come sfruttarlo in un pentest](https://hackita.it/articoli/gre-generic-routing-encapsulation/).
 
 ***
 
@@ -491,16 +491,16 @@ In un engagement, gli endpoint VPN sono tra i target con il più alto rapporto f
 
 Approfondisci i protocolli correlati:
 
-* [IPSec: autenticazione, cifratura e attacchi](https://hackita.it/articoli/ipsec)
-* [GRE: tunneling e GRE over IPSec](https://hackita.it/articoli/gre-generic-routing-encapsulation)
-* [PPP e PPTP: autenticazione MS-CHAPv2](https://hackita.it/articoli/ppp-point-to-point-protocol)
-* [TLS/SSL: la base crittografica di OpenVPN](https://hackita.it/articoli/tls-ssl)
-* [UDP: il trasporto di WireGuard e OpenVPN](https://hackita.it/articoli/udp)
-* [TCP: OpenVPN su TCP e bypass firewall](https://hackita.it/articoli/tcp)
-* [VLAN e 802.1Q: segmentazione per endpoint VPN](https://hackita.it/articoli/vlan-802-1q)
-* [Man in the Middle: VPN come protezione e come target](https://hackita.it/articoli/man-in-the-middle)
-* [Sniffing: catturare traffico VPN e handshake](https://hackita.it/articoli/sniffing)
-* [IPv4/IPv6: dual-stack e VPN split tunneling](https://hackita.it/articoli/ipv4-ipv6)
+* [IPSec: autenticazione, cifratura e attacchi](https://hackita.it/articoli/ipsec/)
+* [GRE: tunneling e GRE over IPSec](https://hackita.it/articoli/gre-generic-routing-encapsulation/)
+* [PPP e PPTP: autenticazione MS-CHAPv2](https://hackita.it/articoli/ppp-point-to-point-protocol/)
+* [TLS/SSL: la base crittografica di OpenVPN](https://hackita.it/articoli/tls-ssl/)
+* [UDP: il trasporto di WireGuard e OpenVPN](https://hackita.it/articoli/udp/)
+* [TCP: OpenVPN su TCP e bypass firewall](https://hackita.it/articoli/tcp/)
+* [VLAN e 802.1Q: segmentazione per endpoint VPN](https://hackita.it/articoli/vlan/)
+* [Man in the Middle: VPN come protezione e come target](https://hackita.it/articoli/man-in-the-middle/)
+* [Sniffing: catturare traffico VPN e handshake](https://hackita.it/articoli/sniffing/)
+* [IPv4/IPv6: dual-stack e VPN split tunneling](https://hackita.it/articoli/ipv4-ipv6/)
 * Se gestisci la sicurezza VPN come freelance o libero professionista senza un reparto IT dedicato, può essere utile anche una panoramica meno tecnica e orientata al contesto lavorativo: [Guida alla sicurezza informatica per i freelance](https://cybersafetyzone.com/cybersecurity-for-freelancers/).
 
 Riferimento ufficiale: [RFC 4301 — Security Architecture for IPsec](https://datatracker.ietf.org/doc/html/rfc4301) |

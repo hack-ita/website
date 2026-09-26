@@ -111,7 +111,7 @@ Sliver supporta 4 protocolli:
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **mTLS**       | cifrato, autenticazione reciproca certificato-based                                                                                                                                                                                    |
 | **HTTP/HTTPS** | pensato per confondersi nel traffico web, utile contro egress filtering aggressivo                                                                                                                                                     |
-| **DNS**        | funziona anche quando solo la 53 è aperta in uscita, ma è il più lento e "finicky" da configurare — stesso principio di [Iodine/Dnscat2 su DNS Pivoting](https://hackita.it/articoli/dns-pivoting), ma integrato nativamente in Sliver |
+| **DNS**        | funziona anche quando solo la 53 è aperta in uscita, ma è il più lento e "finicky" da configurare — stesso principio di [Iodine/Dnscat2 su DNS Pivoting](https://hackita.it/articoli/dns-pivoting/), ma integrato nativamente in Sliver |
 | **WireGuard**  | crea di fatto una VPN leggera, raccomandato dagli sviluppatori per stabilità                                                                                                                                                           |
 
 ```bash
@@ -360,7 +360,7 @@ Compromised host                    192.168.1.5:445
    └── 10.10.10.30:80
 ```
 
-`socks5` apre un proxy attraverso l'implant per instradare **qualsiasi tool** ([Impacket](https://hackita.it/articoli/impacket), nmap) verso tutta la rete interna raggiungibile dal compromised host. `portfwd` inoltra **una singola porta specifica** — più chirurgico, utile quando ti serve raggiungere un solo servizio (es. SMB) senza aprire un proxy generico. Per la teoria approfondita, vedi [Pivoting su HackIta](https://hackita.it/articoli/pivoting).
+`socks5` apre un proxy attraverso l'implant per instradare **qualsiasi tool** ([Impacket](https://hackita.it/articoli/impacket/), nmap) verso tutta la rete interna raggiungibile dal compromised host. `portfwd` inoltra **una singola porta specifica** — più chirurgico, utile quando ti serve raggiungere un solo servizio (es. SMB) senza aprire un proxy generico. Per la teoria approfondita, vedi [Pivoting su HackIta](https://hackita.it/articoli/pivoting/).
 
 ### Loot — raccogliere e conservare artefatti
 
@@ -398,7 +398,7 @@ sliver (implant) > rubeus kerberoast
 sliver (implant) > mimikatz -command "sekurlsa::logonpasswords"
 ```
 
-Questo è dove Sliver diventa davvero utile in un contesto [Active Directory su HackIta](https://hackita.it/articoli/active-directory): stessi tool che conosci da [Mimikatz su HackIta](https://hackita.it/articoli/mimikatz) e da Rubeus, eseguiti in-memory tramite l'implant invece che droppati su disco. Il [Kerberoasting su HackIta](https://hackita.it/articoli/kerberoasting) è uno dei task principali una volta che hai una sessione valida. Per l'enumerazione iniziale del dominio, integra anche [BloodHound su HackIta](https://hackita.it/articoli/bloodhound).
+Questo è dove Sliver diventa davvero utile in un contesto [Active Directory su HackIta](https://hackita.it/articoli/active-directory/): stessi tool che conosci da [Mimikatz su HackIta](https://hackita.it/articoli/mimikatz/) e da Rubeus, eseguiti in-memory tramite l'implant invece che droppati su disco. Il [Kerberoasting su HackIta](https://hackita.it/articoli/kerberos/) è uno dei task principali una volta che hai una sessione valida. Per l'enumerazione iniziale del dominio, integra anche [BloodHound su HackIta](https://hackita.it/articoli/bloodhound/).
 
 **Attenzione prima di installare moduli di terze parti:** l'Armory include contributi della community, non solo del team Sliver. Verifica sempre il codice sorgente di un'estensione prima di usarla in un engagement reale.
 
@@ -526,11 +526,11 @@ Sliver è potente, ma non è sempre la scelta migliore. Prima di compilare un be
 
 | Scenario                                 | Usa invece di Sliver                                                                                      | Motivo                                                     |
 | ---------------------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Un singolo comando remoto su SMB/WinRM   | [Impacket](https://hackita.it/articoli/impacket) (`wmiexec.py`, `smbexec.py`)                             | Nessuna compilazione, zero binari, footprint minimo        |
-| Credential validation veloce su più host | [NetExec](https://hackita.it/articoli/netexec) o [CrackMapExec](https://hackita.it/articoli/crackmapexec) | Specificamente progettato per questo, più veloce di Sliver |
+| Un singolo comando remoto su SMB/WinRM   | [Impacket](https://hackita.it/articoli/impacket/) (`wmiexec.py`, `smbexec.py`)                             | Nessuna compilazione, zero binari, footprint minimo        |
+| Credential validation veloce su più host | [NetExec](https://hackita.it/articoli/netexec/) o [CrackMapExec](https://hackita.it/articoli/crackmapexec/) | Specificamente progettato per questo, più veloce di Sliver |
 | Shell interattiva uno-a-uno su WinRM     | Evil-WinRM                                                                                                | Più lean, meno setup, sufficiente per lab                  |
 | Persistenza minima senza C2              | Task schedulati, entry di registro, SharpPersist                                                          | Non serve overhead C2, target-specific                     |
-| Enumerazione rapida AD senza beacon      | [BloodHound](https://hackita.it/articoli/bloodhound) (SharpHound) locale                                  | Raccolgono dati senza mantenere persistenza                |
+| Enumerazione rapida AD senza beacon      | [BloodHound](https://hackita.it/articoli/bloodhound/) (SharpHound) locale                                  | Raccolgono dati senza mantenere persistenza                |
 
 **Sliver ha senso quando:**
 
@@ -552,7 +552,7 @@ Non esiste un protocollo o una configurazione "universalmente stealth" — conta
 * La scelta del protocollo (mTLS/HTTP/DNS/WireGuard) va valutata sul contesto di rete, non su un'etichetta generica di "più silenzioso"
 * Una porta comune (443) non rende automaticamente legittimo il traffico: un processo sospetto che apre una connessione outbound su 443 verso un IP VPS con un TLS fingerprint anomalo resta rilevabile
 * Rotazione di protocolli/porte tra engagement diversi: i difensori costruiscono firme su pattern ricorrenti
-* Esecuzione in-memory via Armory (execute-assembly, sideload) dove possibile, per ridurre il footprint su disco rispetto al droppare binari compilati (vedi anche [LOLBins su HackIta](https://hackita.it/articoli/lolbins) per alternative con tool nativi)
+* Esecuzione in-memory via Armory (execute-assembly, sideload) dove possibile, per ridurre il footprint su disco rispetto al droppare binari compilati (vedi anche [LOLBins su HackIta](https://hackita.it/articoli/lolbins/) per alternative con tool nativi)
 
 Un **redirector** (VPS/proxy intermedio davanti al Teamserver) non rende il C2 invisibile: aggiunge un livello intermedio e riduce l'esposizione diretta del Teamserver, ma il traffico tra redirector e target resta comunque osservabile lato host/rete.
 
@@ -790,15 +790,15 @@ Non va considerato un bypass garantito. La detection dipende dalla versione dell
 
 **Setup & Pivoting:**
 
-* [Pivoting Completo: Recon, Scelta Tool, OPSEC, Scenario End-to-End](https://hackita.it/articoli/pivoting) — come arrivare al target
+* [Pivoting Completo: Recon, Scelta Tool, OPSEC, Scenario End-to-End](https://hackita.it/articoli/pivoting/) — come arrivare al target
 * Ligolo-ng: kernel routing TUN, se raw TCP è disponibile
-* [DNS Pivoting: Iodine e Dnscat2 (ultima risorsa)](https://hackita.it/articoli/dns-pivoting) — listener DNS standalone
+* [DNS Pivoting: Iodine e Dnscat2 (ultima risorsa)](https://hackita.it/articoli/dns-pivoting/) — listener DNS standalone
 
 **Post-Exploitation Active Directory:**
 
-* [Mimikatz: Credential Dumping SAM/LSA/Kerberos](https://hackita.it/articoli/mimikatz) — estrai creds dai moduli Armory
-* [DCSync: NTDS Replication via Kerberos](https://hackita.it/articoli/dcsync) — replica DC database
-* [NetExec: SMB/LDAP Enumeration & Exploitation](https://hackita.it/articoli/netexec) — validazione creds massiva
+* [Mimikatz: Credential Dumping SAM/LSA/Kerberos](https://hackita.it/articoli/mimikatz/) — estrai creds dai moduli Armory
+* [DCSync: NTDS Replication via Kerberos](https://hackita.it/articoli/dcsync/) — replica DC database
+* [NetExec: SMB/LDAP Enumeration & Exploitation](https://hackita.it/articoli/netexec/) — validazione creds massiva
 
 **Riferimenti ufficiali:**
 [Sliver GitHub](https://github.com/BishopFox/sliver) — releases, source code

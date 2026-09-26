@@ -18,7 +18,7 @@ tags:
 
 Lista di riferimento per payload XSS categorizzati per context, tecnica e scopo. Da usare durante pentest e bug bounty per coprire sistematicamente i vettori più comuni e bypassare i filtri frequenti.
 
-→ Torna alla guida principale,per scoprire cos'è xss e le sue varianti: [XSS Completo](https://hackita.it/articoli/xss)
+→ Torna alla guida principale,per scoprire cos'è xss e le sue varianti: [XSS Completo](https://hackita.it/articoli/xss/)
 
 ***
 

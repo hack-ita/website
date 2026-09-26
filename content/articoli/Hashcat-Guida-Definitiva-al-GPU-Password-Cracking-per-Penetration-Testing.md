@@ -17,7 +17,7 @@ tags:
 
 # Hashcat: Guida Definitiva al GPU Password Cracking per Penetration Testing
 
-Hashcat è il motore di password cracking più veloce al mondo. Quando catturi un hash durante un pentest (magari con [Responder](https://hackita.it/articoli/responder)), Hashcat è il tool che lo trasforma in password in chiaro sfruttando la potenza della tua GPU.
+Hashcat è il motore di password cracking più veloce al mondo. Quando catturi un hash durante un pentest (magari con [Responder](https://hackita.it/articoli/responder/)), Hashcat è il tool che lo trasforma in password in chiaro sfruttando la potenza della tua GPU.
 
 Dimentica John the Ripper che impiega ore. Con Hashcat e una GPU decente cracchi milioni di password al secondo. In questa guida impari a usare Hashcat come un vero penetration tester: da zero a cracking di hash enterprise complessi con tecniche che funzionano su target reali.
 
@@ -137,7 +137,7 @@ Prima di craccare devi sapere che tipo di hash hai. Hashcat supporta oltre 300 a
 | Hash Type | Hashcat Mode | Esempio                                                            | Uso Comune                                                      |
 | --------- | ------------ | ------------------------------------------------------------------ | --------------------------------------------------------------- |
 | MD5       | 0            | `5f4dcc3b5aa765d61d8327deb882cf99`                                 | Web apps legacy                                                 |
-| NTLM      | 1000         | `8846f7eaee8fb117ad06bdd830b7586c`                                 | Windows (da [Responder](https://hackita.it/articoli/responder)) |
+| NTLM      | 1000         | `8846f7eaee8fb117ad06bdd830b7586c`                                 | Windows (da [Responder](https://hackita.it/articoli/responder/)) |
 | NTLMv2    | 5600         | `admin::N46iSNekpT:08ca45b7d7ea58ee:...`                           | Windows challenge-response                                      |
 | SHA1      | 100          | `5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8`                         | Git, legacy systems                                             |
 | SHA256    | 1400         | `5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8` | Linux shadow modern                                             |
@@ -265,13 +265,13 @@ hashcat -m 0 hash.txt --show
 ```
 
 Se lavori in ambienti senza GPU o vuoi analizzare formati specifici in modalità CPU, puoi usare l’alternativa storica **John the Ripper**, approfondita in modo operativo qui:
-👉 [https://hackita.it/articoli/john-the-ripper](https://hackita.it/articoli/john-the-ripper)
+👉 [https://hackita.it/articoli/john-the-ripper](https://hackita.it/articoli/john-the-ripper/)
 
 Hashcat resta superiore in termini di velocità grazie all’accelerazione GPU, ma conoscere entrambi i tool è fondamentale in un contesto di penetration testing reale.
 
 ### Cracking Hash NTLM (Windows)
 
-**Scenario:** Catturato hash NTLM con [Responder](https://hackita.it/articoli/responder).
+**Scenario:** Catturato hash NTLM con [Responder](https://hackita.it/articoli/responder/).
 
 ```bash
 # Hash NTLM di "Summer2024!"
@@ -858,7 +858,7 @@ mary:123456
 
 ### Scenario 2: NTLM da Responder
 
-**Catturato con [Responder](https://hackita.it/articoli/responder):**
+**Catturato con [Responder](https://hackita.it/articoli/responder/):**
 
 ```bash
 cat /opt/Responder/logs/SMB-NTLMv2-SSP-192.168.1.50.txt
@@ -938,7 +938,7 @@ hashcat -m 1000 hashes.txt rockyou.txt --show > cracked.txt
 # Estrai solo password
 cut -d: -f2 cracked.txt > passwords.txt
 
-# Spray con [SMBClient](https://hackita.it/articoli/smbclient)
+# Spray con [SMBClient](https://hackita.it/articoli/smbclient/)
 for pwd in $(cat passwords.txt); do
     smbclient -L //target -U admin%$pwd
 done
@@ -1220,7 +1220,7 @@ hashcat --help | grep -i "algoritmo_identificato"
 
 * [Hashcat GitHub](https://github.com/hashcat/hashcat)
 * [Hashcat Wiki](https://hashcat.net/wiki/)
-* [Responder per Hash Capture](https://hackita.it/articoli/responder)
-* [SMBClient per SMB Auth](https://hackita.it/articoli/smbclient)
+* [Responder per Hash Capture](https://hackita.it/articoli/responder/)
+* [SMBClient per SMB Auth](https://hackita.it/articoli/smbclient/)
 
 **Disclaimer Legale:** Hashcat è tool legale per recupero password proprie, penetration testing autorizzato e ricerca sicurezza. L'utilizzo per craccare password di terzi senza esplicito consenso scritto costituisce reato penale. Usa solo su hash di tua proprietà o in contesto di security assessment formalmente autorizzato.

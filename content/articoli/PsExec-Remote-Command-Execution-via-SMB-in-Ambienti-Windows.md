@@ -19,7 +19,7 @@ tags:
 
 Durante engagement Active Directory, PsExec rappresenta il metodo più diretto per propagarsi lateralmente dopo aver ottenuto credenziali amministrative valide. Il tool si posiziona nella fase **Lateral Movement** (MITRE ATT\&CK T1021.002) della kill chain, permettendo di passare da singolo compromesso iniziale a controllo multi-sistema attraverso autenticazione SMB.
 
-In questa guida impari a usare PsExec per remote command execution, tecniche di pass-the-hash con [Impacket](https://hackita.it/articoli/impacket) psexec.py, differenze tra alternative WMI/DCOM per stealth, e strategie di evasion contro monitoring enterprise su Event ID 7045 e artifacts PSEXESVC.
+In questa guida impari a usare PsExec per remote command execution, tecniche di pass-the-hash con [Impacket](https://hackita.it/articoli/impacket/) psexec.py, differenze tra alternative WMI/DCOM per stealth, e strategie di evasion contro monitoring enterprise su Event ID 7045 e artifacts PSEXESVC.
 
 ## Setup e Installazione
 
@@ -447,7 +447,7 @@ psexec.py -hashes :32ed87bdb5fdc5e9cba88547376818d4 CORP/Administrator@$(head -1
 **Molti STATUS\_LOGON\_FAILURE:**
 
 * **Causa:** Hash non valido su quei sistemi (local admin diverso)
-* **Fix:** Usa [CrackMapExec](https://hackita.it/articoli/crackmapexec) per validation massiva
+* **Fix:** Usa [CrackMapExec](https://hackita.it/articoli/crackmapexec/) per validation massiva
 
 ```bash
 crackmapexec smb targets.txt -u Administrator -H 32ed87bdb5fdc5e9cba88547376818d4
@@ -581,11 +581,11 @@ C:\> .\mimikatz.exe "sekurlsa::logonpasswords" exit > creds2.txt
 | Tool                                                 | Protocol  | Binary Drop       | Service          | Stealth    | PTH Support         |
 | ---------------------------------------------------- | --------- | ----------------- | ---------------- | ---------- | ------------------- |
 | **PsExec**                                           | SMB 445   | Sì (PSEXESVC.exe) | Sì               | Basso      | No (Impacket sì)    |
-| **[smbexec](https://hackita.it/articoli/smbexec)**   | SMB 445   | No                | Sì (per-command) | Medio      | Sì                  |
-| **[wmiexec](https://hackita.it/articoli/wmiexec)**   | RPC 135   | No                | No               | Alto       | Sì                  |
-| **[dcomexec](https://hackita.it/articoli/dcomexec)** | RPC 135   | No                | No               | Alto       | Sì                  |
-| **[WinRM](https://hackita.it/articoli/evil-winrm)**  | HTTP 5985 | No                | No               | Medio      | Sì (con evil-winrm) |
-| **[SSH](https://hackita.it/articoli/ssh)**           | TCP 22    | No                | No               | Molto Alto | No                  |
+| **[smbexec](https://hackita.it/articoli/smbexec/)**   | SMB 445   | No                | Sì (per-command) | Medio      | Sì                  |
+| **[wmiexec](https://hackita.it/articoli/wmiexec/)**   | RPC 135   | No                | No               | Alto       | Sì                  |
+| **[dcomexec](https://hackita.it/articoli/dcomexec/)** | RPC 135   | No                | No               | Alto       | Sì                  |
+| **[WinRM](https://hackita.it/articoli/evilwinrm/)**  | HTTP 5985 | No                | No               | Medio      | Sì (con evil-winrm) |
+| **[SSH](https://hackita.it/articoli/ssh/)**           | TCP 22    | No                | No               | Molto Alto | No                  |
 
 **Quando usare PsExec:**
 
@@ -617,7 +617,7 @@ psexec.py CORP/Administrator:P@ssw0rd@192.168.10.50
 crackmapexec smb 192.168.10.0/24 -u admin -H hash --exec-method smbexec -x "whoami"
 ```
 
-Vedi [CrackMapExec guide](https://hackita.it/articoli/crackmapexec) per enumeration completa.
+Vedi [CrackMapExec guide](https://hackita.it/articoli/crackmapexec/) per enumeration completa.
 
 ### Integration con Mimikatz
 
@@ -1010,7 +1010,7 @@ rpcclient -U user target
 
 **Fix:**
 
-* **Hash wrong:** Re-dump con [Mimikatz](https://hackita.it/articoli/mimikatz)
+* **Hash wrong:** Re-dump con [Mimikatz](https://hackita.it/articoli/mimikatz/)
 * **Account locked:** Attendi unlock o usa altro account
 * **Policy:** Verifica password policy dominio
 
@@ -1037,7 +1037,7 @@ Non puoi evitare completamente Event 7045 con PsExec (service creation è core m
 **PsExec**: SMB (445) aperto, target Windows legacy (pre-2012), reliability massima.
 **WinRM**: RPC/WMI bloccati ma HTTP 5985 aperto, necessità interactive PowerShell, meno artifacts forensic.
 
-Vedi [Evil-WinRM guide](https://hackita.it/articoli/evil-winrm) per WinRM exploitation.
+Vedi [Evil-WinRM guide](https://hackita.it/articoli/evilwinrm/) per WinRM exploitation.
 
 **Impacket richiede credenziali Domain Admin?**
 

@@ -211,13 +211,13 @@ Il cluster esegue il comando su un NodeManager → reverse shell da un nodo Hado
 | `/data/raw/`            | Dati grezzi ingeriti (CDR, log, transazioni) | **Altissimo** — dati pre-elaborazione                                                                                   |
 | `/user/hive/warehouse/` | Tabelle Hive (SQL-like su Hadoop)            | Database analytics completo                                                                                             |
 | `/etl/output/`          | Output ETL (dati trasformati)                | Report, aggregazioni                                                                                                    |
-| `/user/sqoop/`          | Dati importati da database SQL               | Mirror di [MySQL](https://hackita.it/articoli/porta-3306-mysql)/[Oracle](https://hackita.it/articoli/porta-1521-oracle) |
+| `/user/sqoop/`          | Dati importati da database SQL               | Mirror di [MySQL](https://hackita.it/articoli/porta-3306-mysql/)/[Oracle](https://hackita.it/articoli/porta-1521-oracle/) |
 | `/tmp/`                 | File temporanei                              | Credenziali, config, dump                                                                                               |
 | `/user/spark/`          | Job Spark output                             | ML models, prediction data                                                                                              |
 
 ## 5. Autenticazione — Kerberos (Quando C'è)
 
-Hadoop supporta [Kerberos](https://hackita.it/articoli/porta-88-kerberos) per l'autenticazione, ma richiede configurazione complessa (KDC, keytab per ogni servizio, SPNEGO per WebHDFS).
+Hadoop supporta [Kerberos](https://hackita.it/articoli/kerberos/) per l'autenticazione, ma richiede configurazione complessa (KDC, keytab per ogni servizio, SPNEGO per WebHDFS).
 
 ```bash
 # Se Kerberos è abilitato, WebHDFS risponde 401 con header Negotiate
@@ -363,7 +363,7 @@ Dal NameNode web UI → dati telco di 3 milioni di utenti → shell sul cluster 
 **Hadoop ha credenziali di default?**
 No nel senso classico: Hadoop non ha login/password. Ha Simple Authentication dove **chiunque può essere chiunque** passando `user.name=` come parametro. È peggio delle credenziali di default — è assenza totale di autenticazione.
 
-**Qual è la differenza tra NameNode e [HBase](https://hackita.it/articoli/porta-16010-hbase)?**
+**Qual è la differenza tra NameNode e [HBase](https://hackita.it/articoli/porta-16010-hbase/)?**
 HDFS (NameNode) è il filesystem distribuito — file e directory. HBase è un database NoSQL che **gira sopra HDFS** — tabelle con righe e colonne. Compromettere il NameNode dà accesso ai dati raw di HBase (i file HFile su HDFS) oltre a tutti gli altri dati.
 
 **Posso scaricare terabyte di dati via WebHDFS?**

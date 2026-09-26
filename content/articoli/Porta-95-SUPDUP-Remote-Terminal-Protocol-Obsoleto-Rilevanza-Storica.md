@@ -93,7 +93,7 @@ Alcuni computer science museums o academic projects mantengono PDP-10 emulators 
 telnet pdp10-emulator.university.edu 95
 ```
 
-**Security note:** Se esiste, treat come [Telnet](https://hackita.it/articoli/telnet) (credentials plaintext, no encryption).
+**Security note:** Se esiste, treat come [Telnet](https://hackita.it/articoli/telnet/) (credentials plaintext, no encryption).
 
 ### Scenario 2: Custom application su porta 95
 
@@ -105,7 +105,7 @@ nc -vn 10.10.10.95 95
 # Analyze response per identify real service
 ```
 
-Se risponde HTTP-like → apply [HTTP exploitation](https://hackita.it/articoli/http).\
+Se risponde HTTP-like → apply [HTTP exploitation](https://hackita.it/articoli/http-https/).\
 Se binary protocol → reverse engineer o skip (custom protocol).
 
 ### Scenario 3: Honeypot

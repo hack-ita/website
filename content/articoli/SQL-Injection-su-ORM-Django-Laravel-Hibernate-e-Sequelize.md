@@ -23,7 +23,7 @@ La SQL Injection su ORM è una delle vulnerabilità più sottovalutate nelle app
 
 E succede in ogni progetto che vedo. La trovo nel **22% dei pentest su applicazioni con ORM** — percentuale che sorprende tutti perché "il framework dovrebbe proteggerci". Il framework protegge se lo usi correttamente. Il problema è che ci sono decine di modi per usarlo scorrettamente, e gli sviluppatori ne trovano sempre di nuovi.
 
-Satellite operativo della [guida pillar SQL Injection](https://hackita.it/articoli/sql-injection). Qui copro ogni ORM maggiore con i pattern vulnerabili specifici, i comandi per testarli e le fix.
+Satellite operativo della [guida pillar SQL Injection](https://hackita.it/articoli/sql-injection/). Qui copro ogni ORM maggiore con i pattern vulnerabili specifici, i comandi per testarli e le fix.
 
 Un caso che racconto nei corsi: applicazione SaaS su Django/PostgreSQL, 100% Django ORM nei modelli, code review con Bandit e Semgrep → zero finding. Ma un endpoint di ricerca usava `QuerySet.extra(where=[f"name LIKE '%{query}%'"])` perché il developer "non riusciva a fare la query con il filter standard". `query = %' UNION SELECT username,password,3,4 FROM auth_user--` → dump utenti admin. Il code review automatico non aveva flaggato `extra()` perché era "Django ORM", non un `raw()`.
 
@@ -449,7 +449,7 @@ Corretto — SQL non permette `ORDER BY ?` come prepared statement. L'unica solu
 
 ***
 
-Vedi la [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection). Vedi anche: [SQLi Classica](https://hackita.it/articoli/sql-injection-classica), [Blind SQLi](https://hackita.it/articoli/blind-sql-injection), [Time-Based SQLi](https://hackita.it/articoli/time-based-sql-injection), [SQLi su API REST](https://hackita.it/articoli/sql-injection-api-rest).
+Vedi la [Guida Completa SQL Injection](https://hackita.it/articoli/sql-injection/). Vedi anche: [SQLi Classica](https://hackita.it/articoli/sql-injection-classica/), [Blind SQLi](https://hackita.it/articoli/blind-sql-injection/), [Time-Based SQLi](https://hackita.it/articoli/time-based-sql-injection/), [SQLi su API REST](https://hackita.it/articoli/sql-injection-api-rest/).
 
 ***
 

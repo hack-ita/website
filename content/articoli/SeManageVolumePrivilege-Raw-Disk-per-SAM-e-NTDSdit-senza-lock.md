@@ -274,8 +274,8 @@ SeManageVolumePrivilege è il vettore di credential dump alternativo quando i me
 
 **Articoli correlati:**
 
-* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege) — stesso risultato, API di filesystem invece di raw disk
-* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege) — dump LSASS da memoria, non tocca il disco
+* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege/) — stesso risultato, API di filesystem invece di raw disk
+* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/) — dump LSASS da memoria, non tocca il disco
 
 **Riferimenti:** [SeManageVolumeExploit](https://github.com/CsEnox/SeManageVolumeExploit) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/manage-the-files-on-a-volume)
 

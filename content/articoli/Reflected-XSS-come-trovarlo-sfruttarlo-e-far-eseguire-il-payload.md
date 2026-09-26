@@ -21,7 +21,7 @@ tags:
 
 Sottovalutato rispetto allo stored XSS, ma con il vettore di delivery giusto l'impatto è identico.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss)
+→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)
 
 ***
 
@@ -253,7 +253,7 @@ dalfox url "https://target.com/search?q=FUZZ" --only-discovery-mode
 
 ## Bypass Filtri Comuni
 
-Filtri specifici per reflected XSS sono discussi in dettaglio in [XSS Filter Bypass](https://hackita.it/articoli/xss-filter-bypass). Casi rapidi:
+Filtri specifici per reflected XSS sono discussi in dettaglio in [XSS Filter Bypass](https://hackita.it/articoli/xss-filter-bypass/). Casi rapidi:
 
 **Tag `<script>` bloccato:**
 
@@ -292,7 +292,7 @@ Il problema vero del reflected XSS lato dev è che spesso il vettore è dimentic
 
 ###### Vuoi migliorare davvero?
 
-Per la formazione 1:1 visita **[http://hackita.it/formazione](http://hackita.it/formazione)**.
+Per la formazione 1:1 visita la **[pagina dei servizi Hackita](https://hackita.it/servizi/)**.
 Se vuoi testare la sicurezza della tua azienda, trovi tutto su **[https://hackita.it/formazione](https://hackita.it/formazione)**.
 Se invece vuoi supportare HackIta, puoi farlo qui:
 

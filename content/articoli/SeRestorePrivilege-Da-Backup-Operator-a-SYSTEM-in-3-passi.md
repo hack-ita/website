@@ -345,9 +345,9 @@ SeRestorePrivilege trasforma un account di backup in un backdoor installer perma
 
 **Articoli correlati:**
 
-* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege) — lettura arbitraria, stesso gruppo di account
-* [SeTakeOwnershipPrivilege](https://hackita.it/articoli/setakeownershipprivilege) — alternativa quando serve prima cambiare ownership
-* [SeRelabelPrivilege](https://hackita.it/articoli/serelabelprivilege) — bypass del layer MIC quando ACL e MIC bloccano entrambi
+* [SeBackupPrivilege](https://hackita.it/articoli/sebackupprivilege/) — lettura arbitraria, stesso gruppo di account
+* [SeTakeOwnershipPrivilege](https://hackita.it/articoli/setakeownershipprivilege/) — alternativa quando serve prima cambiare ownership
+* [SeRelabelPrivilege](https://hackita.it/articoli/serelabelprivilege/) — bypass del layer MIC quando ACL e MIC bloccano entrambi
 
 **Riferimenti:** [Seatbelt](https://github.com/GhostPack/Seatbelt) · [Process Monitor](https://learn.microsoft.com/en-us/sysinternals/downloads/procmon) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/restore-files-and-directories)
 

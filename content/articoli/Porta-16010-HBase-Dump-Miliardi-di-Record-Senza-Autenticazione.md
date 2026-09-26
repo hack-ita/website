@@ -20,13 +20,13 @@ tags:
 
 Apache HBase è il database NoSQL colonnare del mondo Hadoop: gestisce miliardi di righe distribuite su centinaia di nodi, usato da aziende che lavorano con volumi di dati enormi — telco per i CDR (Call Detail Records), banche per lo storico delle transazioni, adtech per i profili comportamentali, IoT per la telemetria dei sensori. La porta 16010 TCP è la **Master Web UI** — il pannello di controllo che mostra lo stato del cluster, le tabelle, i RegionServer, le operazioni in corso. Ma HBase non è solo la 16010: espone anche la **REST API** (porta 8080 o 17010) e la **Thrift API** (porta 9090 o 17020) che permettono di leggere e scrivere dati programmaticamente. E nel design originale di HBase — pensato per girare in un cluster Hadoop protetto dal perimetro di rete — **nessuna di queste interfacce ha autenticazione di default**.
 
-Se sei abituato a testare [MySQL](https://hackita.it/articoli/porta-3306-mysql) o [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql) dove almeno serve una password, HBase ti sorprenderà: ti connetti e leggi miliardi di righe senza che nessuno ti chieda chi sei.
+Se sei abituato a testare [MySQL](https://hackita.it/articoli/porta-3306-mysql/) o [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql/) dove almeno serve una password, HBase ti sorprenderà: ti connetti e leggi miliardi di righe senza che nessuno ti chieda chi sei.
 
 Durante un assessment per una grande telco, ho trovato la 16010 esposta sulla rete interna. La Master UI mostrava 47 tabelle con nomi come `cdr_raw`, `subscriber_profile`, `billing_events`. Con la REST API ho scaricato 500 record dalla tabella dei profili subscriber: nome, cognome, numero di telefono, piano tariffario, IMEI del dispositivo. Il CISO non sapeva nemmeno che HBase avesse un'interfaccia web.
 
 ## Cos'è HBase — Per Chi Non Lavora con Big Data
 
-HBase è un database distribuito modellato su Google Bigtable. A differenza dei database relazionali, organizza i dati in **tabelle con famiglie di colonne** — ogni riga ha una chiave (row key) e può avere milioni di colonne. I dati sono distribuiti su **RegionServer** (i worker che contengono le partizioni dei dati) e coordinati da un **Master** (il controller che gestisce il cluster). Gira tipicamente sopra HDFS ([Hadoop](https://hackita.it/articoli/hadoop-hdfs)) per lo storage distribuito.
+HBase è un database distribuito modellato su Google Bigtable. A differenza dei database relazionali, organizza i dati in **tabelle con famiglie di colonne** — ogni riga ha una chiave (row key) e può avere milioni di colonne. I dati sono distribuiti su **RegionServer** (i worker che contengono le partizioni dei dati) e coordinati da un **Master** (il controller che gestisce il cluster). Gira tipicamente sopra HDFS ([Hadoop](https://hackita.it/articoli/porta-50070-hadoop-namenode/)) per lo storage distribuito.
 
 ```
 Client                     HBase Cluster
@@ -53,7 +53,7 @@ Client                     HBase Cluster
 | 16030          | RegionServer Web UI                                           | Dashboard singolo RegionServer         |
 | 8080 (o 17010) | REST API (Stargate)                                           | Lettura/scrittura via HTTP             |
 | 9090 (o 17020) | Thrift API                                                    | Lettura/scrittura via Thrift           |
-| 2181           | [ZooKeeper](https://hackita.it/articoli/porta-2181-zookeeper) | Coordinamento cluster                  |
+| 2181           | [ZooKeeper](https://hackita.it/articoli/porta-2181-zookeeper/) | Coordinamento cluster                  |
 
 ## 1. Enumerazione
 
@@ -236,7 +236,7 @@ scan 'auth_tokens', {FILTER => "ValueFilter(=, 'substring:admin')"}
 
 ## 4. ZooKeeper — Il Coordinatore
 
-HBase dipende da [ZooKeeper](https://hackita.it/articoli/porta-2181-zookeeper) (porta 2181) per la coordinazione. Se ZooKeeper è accessibile:
+HBase dipende da [ZooKeeper](https://hackita.it/articoli/porta-2181-zookeeper/) (porta 2181) per la coordinazione. Se ZooKeeper è accessibile:
 
 ```bash
 echo "dump" | nc 10.10.10.40 2181
@@ -266,9 +266,9 @@ curl -s http://10.10.10.40:8080/ -H "Accept: application/json"
 Con accesso ai dati HBase:
 
 * **Credenziali** dalla tabella `auth_tokens` → accesso all'applicazione
-* **Session token** → [session hijacking](https://hackita.it/articoli/porta-11211-memcached)
+* **Session token** → [session hijacking](https://hackita.it/articoli/porta-11211-memcached/)
 * **RegionServer hostname/IP** dalla Master UI → scansione nuovi target
-* **ZooKeeper** → mappa completa del cluster [Hadoop](https://hackita.it/articoli/hadoop-hdfs)/[Kafka](https://hackita.it/articoli/porta-9092-kafka)
+* **ZooKeeper** → mappa completa del cluster [Hadoop](https://hackita.it/articoli/porta-50070-hadoop-namenode/)/[Kafka](https://hackita.it/articoli/porta-9092-kafka/)
 * **HDFS** — HBase salva i dati su HDFS → se trovi il NameNode puoi accedere a tutto il filesystem distribuito
 
 ## 7. Detection & Hardening
@@ -286,7 +286,7 @@ Con accesso ai dati HBase:
 **HBase ha una password di default?**
 No — HBase non ha proprio un concetto di password. L'autenticazione è delegata a Kerberos. Senza Kerberos configurato, chiunque raggiunge le porte del cluster ha accesso completo a tutti i dati. Non è un bug — è il design originale per ambienti di rete fidati.
 
-**Posso fare injection su HBase come su [MongoDB](https://hackita.it/articoli/porta-27017-mongodb)?**
+**Posso fare injection su HBase come su [MongoDB](https://hackita.it/articoli/porta-27017-mongodb/)?**
 No nel senso classico: HBase non ha un linguaggio di query come SQL o MQL. L'accesso è tramite API (get/put/scan con row key e filtri). Ma se l'applicazione costruisce le richieste HBase concatenando input utente senza validazione, puoi manipolare il row key range per accedere a dati non autorizzati — un tipo di "parameter tampering" specifico per database key-value.
 
 **Quanti dati posso estrarre da HBase?**

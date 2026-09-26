@@ -15,7 +15,7 @@ tags:
   - metasploit
 ---
 
-Msfconsole è l'interfaccia principale di [Metasploit](https://hackita.it/articoli/metasploit) Framework, il toolkit di exploitation più completo e utilizzato nel penetration testing. Con oltre 2000 exploit, 500 payload e centinaia di moduli auxiliary, Metasploit copre l'intero ciclo di attacco: dalla scansione all'exploitation, dalla post-exploitation al pivoting. In questa guida impari a navigare msfconsole, lanciare exploit, gestire sessioni e condurre post-exploitation professionale.
+Msfconsole è l'interfaccia principale di [Metasploit](https://hackita.it/articoli/metasploit/) Framework, il toolkit di exploitation più completo e utilizzato nel penetration testing. Con oltre 2000 exploit, 500 payload e centinaia di moduli auxiliary, Metasploit copre l'intero ciclo di attacco: dalla scansione all'exploitation, dalla post-exploitation al pivoting. In questa guida impari a navigare msfconsole, lanciare exploit, gestire sessioni e condurre post-exploitation professionale.
 
 ## Posizione nella Kill Chain
 
@@ -23,9 +23,9 @@ Msfconsole è il framework che unisce tutte le fasi dell'attacco:
 
 | Fase              | Tool Precedente                               | Msfconsole            | Tool Successivo                                    |
 | ----------------- | --------------------------------------------- | --------------------- | -------------------------------------------------- |
-| Recon             | [Nmap](https://hackita.it/articoli/nmap) scan | → Auxiliary scanners  | → Vuln identification                              |
+| Recon             | [Nmap](https://hackita.it/articoli/nmap/) scan | → Auxiliary scanners  | → Vuln identification                              |
 | Exploitation      | Vuln confirmed                                | → Exploit modules     | → Shell/Meterpreter                                |
-| Post-Exploitation | Initial shell                                 | → Meterpreter modules | → [Mimikatz](https://hackita.it/articoli/mimikatz) |
+| Post-Exploitation | Initial shell                                 | → Meterpreter modules | → [Mimikatz](https://hackita.it/articoli/mimikatz/) |
 | Pivoting          | Foothold                                      | → Route/Proxy         | → Internal network                                 |
 
 ## Installazione e Setup
@@ -276,7 +276,7 @@ msf6 auxiliary(smb_ms17_010) > run
 3. **Exploitation (15min)**: Exploit primo target
 4. **Post-Exploitation (30min)**: Creds dump, enum
 5. **Pivoting (20min)**: Route interno, scan seconda rete
-6. **Lateral Movement (15min)**: [PsExec](https://hackita.it/articoli/psexec) o pass-the-hash
+6. **Lateral Movement (15min)**: [PsExec](https://hackita.it/articoli/psexec/) o pass-the-hash
 
 ## Defense Evasion
 
@@ -310,10 +310,10 @@ Migra in processo legittimo prima che AV rilevi.
 
 | Msfconsole +                                              | Risultato        | Comando                             |
 | --------------------------------------------------------- | ---------------- | ----------------------------------- |
-| [Nmap](https://hackita.it/articoli/nmap)                  | Import scan      | `db_import nmap.xml`                |
-| [CrackMapExec](https://hackita.it/articoli/crackmapexec)  | Lateral movement | CME trova target → MSF exploitation |
-| [BloodHound](https://hackita.it/articoli/bloodhound)      | Attack path      | BH path → MSF execution             |
-| [Cobalt Strike](https://hackita.it/articoli/cobaltstrike) | C2 avanzato      | MSF initial → CS persistence        |
+| [Nmap](https://hackita.it/articoli/nmap/)                  | Import scan      | `db_import nmap.xml`                |
+| [CrackMapExec](https://hackita.it/articoli/crackmapexec/)  | Lateral movement | CME trova target → MSF exploitation |
+| [BloodHound](https://hackita.it/articoli/bloodhound/)      | Attack path      | BH path → MSF execution             |
+| [Cobalt Strike](https://hackita.it/articoli/cobaltstrike/) | C2 avanzato      | MSF initial → CS persistence        |
 
 ## Confronto Handler
 
@@ -424,7 +424,7 @@ Meterpreter offre funzionalità avanzate (migrate, hashdump, pivoting). Shell st
 
 **Come evito detection AV?**
 
-Encoding, custom templates, stageless payload, migrate rapido. Per target con EDR avanzato, considera [Cobalt Strike](https://hackita.it/articoli/cobaltstrike).
+Encoding, custom templates, stageless payload, migrate rapido. Per target con EDR avanzato, considera [Cobalt Strike](https://hackita.it/articoli/cobaltstrike/).
 
 **Database è necessario?**
 

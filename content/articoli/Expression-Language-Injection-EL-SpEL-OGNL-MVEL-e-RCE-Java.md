@@ -15,11 +15,11 @@ tags:
   - el
 ---
 
-Se la [SSTI](https://hackita.it/articoli/ssti) colpisce i template engine Python/PHP/Node, la **Expression Language Injection** è il suo equivalente nel mondo Java — e ha un track record di devastazione che include il **data breach di Equifax del 2017**: 143 milioni di americani, causato da una OGNL Injection in Apache Struts2. Una delle più grandi violazioni di dati nella storia.
+Se la [SSTI](https://hackita.it/articoli/ssti-server-side-template-injection/) colpisce i template engine Python/PHP/Node, la **Expression Language Injection** è il suo equivalente nel mondo Java — e ha un track record di devastazione che include il **data breach di Equifax del 2017**: 143 milioni di americani, causato da una OGNL Injection in Apache Struts2. Una delle più grandi violazioni di dati nella storia.
 
 L'**EL Injection nel pentesting Java** è una delle vulnerabilità più redditizie su applicazioni enterprise: porta a RCE pre-auth, spesso in meno di 15 minuti, su sistemi con accesso diretto a database, LDAP e Active Directory. La trovo nel **6% dei pentest su applicazioni Java enterprise** — specialmente Spring Boot con SpEL esposto, e sistemi legacy Struts2 non patchati.
 
-Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [SSTI](https://hackita.it/articoli/ssti), [Command Injection](https://hackita.it/articoli/command-injection).
+Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [SSTI](https://hackita.it/articoli/ssti-server-side-template-injection/), [Command Injection](https://hackita.it/articoli/command-injection/).
 
 ***
 
@@ -429,4 +429,4 @@ IMPATTO
 
 ***
 
-Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [SSTI](https://hackita.it/articoli/ssti), [Command Injection](https://hackita.it/articoli/command-injection).
+Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [SSTI](https://hackita.it/articoli/ssti-server-side-template-injection/), [Command Injection](https://hackita.it/articoli/command-injection/).

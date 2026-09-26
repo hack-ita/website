@@ -17,7 +17,7 @@ tags:
   - VPN PSK
 ---
 
-La porta 4500 UDP è usata da IPsec NAT-Traversal (NAT-T), il meccanismo che permette ai tunnel VPN IPsec di funzionare attraverso dispositivi NAT. Quando un client VPN si trova dietro un router con NAT, il protocollo IKE sulla [porta 500](https://hackita.it/articoli/porta-500-isakmp) negozia la connessione e poi il traffico ESP viene incapsulato in UDP sulla porta 4500 per attraversare il NAT. Nel penetration testing, trovare la 4500 aperta conferma la presenza di un concentratore VPN IPsec — il punto di ingresso nella rete corporate. Il valore non è attaccare IPsec in sé (crittograficamente robusto se configurato bene), ma cercare misconfiguration: IKE aggressive mode che espone hash PSK crackabili, Pre-Shared Key deboli e credenziali VPN bruteforcabili.
+La porta 4500 UDP è usata da IPsec NAT-Traversal (NAT-T), il meccanismo che permette ai tunnel VPN IPsec di funzionare attraverso dispositivi NAT. Quando un client VPN si trova dietro un router con NAT, il protocollo IKE sulla [porta 500](https://hackita.it/articoli/porta-500-isakmp/) negozia la connessione e poi il traffico ESP viene incapsulato in UDP sulla porta 4500 per attraversare il NAT. Nel penetration testing, trovare la 4500 aperta conferma la presenza di un concentratore VPN IPsec — il punto di ingresso nella rete corporate. Il valore non è attaccare IPsec in sé (crittograficamente robusto se configurato bene), ma cercare misconfiguration: IKE aggressive mode che espone hash PSK crackabili, Pre-Shared Key deboli e credenziali VPN bruteforcabili.
 
 La porta 4500 lavora sempre in coppia con la 500 (IKE). Se trovi la 4500, scansiona anche la 500 — lì avviene la negoziazione che puoi attaccare.
 
@@ -125,7 +125,7 @@ cat vpn_profile.pcf | grep enc_GroupPwd
 # Decodifica con cisco-decrypt
 ```
 
-Le credenziali VPN spesso coincidono con quelle di [Active Directory](https://hackita.it/articoli/active-directory) (LDAP auth), o si trovano in [repository SVN](https://hackita.it/articoli/porta-3690-svn)/Git, [share NFS](https://hackita.it/articoli/porta-2049-nfs), [dump database](https://hackita.it/articoli/porta-3306-mysql) o email di [phishing](https://hackita.it/articoli/phishing).
+Le credenziali VPN spesso coincidono con quelle di [Active Directory](https://hackita.it/articoli/active-directory/) (LDAP auth), o si trovano in [repository SVN](https://hackita.it/articoli/porta-3690-svn/)/Git, [share NFS](https://hackita.it/articoli/porta-2049-nfs/), [dump database](https://hackita.it/articoli/porta-3306-mysql/) o email di [phishing](https://hackita.it/articoli/phishing/).
 
 ## 4. Dentro la VPN — Post-Connection
 
@@ -138,7 +138,7 @@ ip addr show
 ip route
 ```
 
-Ora sei nella rete interna. Target prioritari: [Domain Controller](https://hackita.it/articoli/dcsync), [RDP](https://hackita.it/articoli/porta-3389-rdp), [SMB](https://hackita.it/articoli/smb), [MySQL](https://hackita.it/articoli/porta-3306-mysql).
+Ora sei nella rete interna. Target prioritari: [Domain Controller](https://hackita.it/articoli/dcsync/), [RDP](https://hackita.it/articoli/porta-3389-rdp/), [SMB](https://hackita.it/articoli/smb/), [MySQL](https://hackita.it/articoli/porta-3306-mysql/).
 
 ```bash
 nmap -sn 10.10.0.0/16

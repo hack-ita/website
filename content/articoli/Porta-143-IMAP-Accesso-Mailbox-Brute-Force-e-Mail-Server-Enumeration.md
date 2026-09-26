@@ -18,7 +18,7 @@ tags:
 
 La porta 143 espone **IMAP** (Internet Message Access Protocol) — il protocollo standard per accesso email server-side, permettendo client di gestire mailbox remote senza scaricare messaggi localmente (contrario a POP3 che scarica e delete). IMAP su TCP porta 143 offre funzionalità avanzate: multi-folder access, server-side search, message flags (read/unread), e sincronizzazione multi-device, operando come interface tra client email (Outlook, Thunderbird, mobile apps) e mail server backend. In penetration testing, la porta 143 è **vettore critico per intelligence gathering**: credential harvesting via brute force, mailbox enumeration per corporate secrets/passwords, email-based lateral movement (VPN creds, AD passwords in emails), e information disclosure via IMAP capabilities probing. Ogni mail server esposto su porta 143 instead of 993 (IMAPS cifrato) trasmette **credentials plaintext** — da IMAP sniffing a password spray su mailbox employees.
 
-IMAP porta 143 domina il 2026 con deployment universale: 99%+ corporate email (Exchange, Gmail, Office 365), mobile email clients (iOS Mail, Android Gmail), e enterprise mail servers (Dovecot, Cyrus, Zimbra). Alternative ([POP3 porta 110](https://hackita.it/articoli/porta-110-pop3), webmail HTTPS) esistono ma IMAP è standard de facto per multi-device sync. Critical security gap: **40%+ mail servers still expose port 143** alongside 993 (Shodan Feb 2026), permettendo plaintext auth fallback se TLS fails. Modern implementations (STARTTLS, OAuth2) mitigano exploit classici ma misconfiguration persiste: no TLS enforcement (plaintext credentials), weak password policy (corporate email = weak passwords), e brute force senza rate limiting. In CTF/AD labs, IMAP enumeration è **high-value target** — email spesso contiene VPN credentials, AD passwords, sensitive corporate data.
+IMAP porta 143 domina il 2026 con deployment universale: 99%+ corporate email (Exchange, Gmail, Office 365), mobile email clients (iOS Mail, Android Gmail), e enterprise mail servers (Dovecot, Cyrus, Zimbra). Alternative ([POP3 porta 110](https://hackita.it/articoli/porta-110-pop3/), webmail HTTPS) esistono ma IMAP è standard de facto per multi-device sync. Critical security gap: **40%+ mail servers still expose port 143** alongside 993 (Shodan Feb 2026), permettendo plaintext auth fallback se TLS fails. Modern implementations (STARTTLS, OAuth2) mitigano exploit classici ma misconfiguration persiste: no TLS enforcement (plaintext credentials), weak password policy (corporate email = weak passwords), e brute force senza rate limiting. In CTF/AD labs, IMAP enumeration è **high-value target** — email spesso contiene VPN credentials, AD passwords, sensitive corporate data.
 
 ***
 
@@ -512,9 +512,9 @@ RECONNAISSANCE
 
 CREDENTIAL HARVEST
 │
-├─ Brute force ([Hydra](https://hackita.it/articoli/hydra)) → Password cracking
+├─ Brute force ([Hydra](https://hackita.it/articoli/hydra/)) → Password cracking
 ├─ Packet sniffing (MITM)                   → Plaintext credentials
-└─ [Password spraying](https://hackita.it/articoli/password-spraying) → Multiple accounts
+└─ [Password spraying](https://hackita.it/articoli/password-spraying/) → Multiple accounts
 
 MAILBOX ACCESS
 │
@@ -525,15 +525,15 @@ MAILBOX ACCESS
 INTELLIGENCE GATHERING
 │
 ├─ VPN credentials → Network access
-├─ [AD passwords](https://hackita.it/articoli/active-directory) → Domain user
+├─ [AD passwords](https://hackita.it/articoli/active-directory/) → Domain user
 ├─ SSH keys/passwords → Server access
 └─ Database credentials → Data theft
 
 LATERAL MOVEMENT
 │
 ├─ Compromised creds → SMB/RDP/SSH
-├─ [Privilege escalation](https://hackita.it/articoli/privesc-linux) → Root/SYSTEM
-└─ [Pivoting](https://hackita.it/articoli/pivoting) → Internal network
+├─ [Privilege escalation](https://hackita.it/articoli/privesc-linux/) → Root/SYSTEM
+└─ [Pivoting](https://hackita.it/articoli/pivoting/) → Internal network
 ```
 
 **Tabella comparativa email protocols:**
@@ -774,11 +774,11 @@ Raramente. Lockout tipicamente solo su web login, non IMAP. Ma test con cautela.
 
 **Quale tool è migliore per IMAP pentest?**
 
-[Hydra](https://hackita.it/articoli/hydra) per brute force, Python `imaplib` per mailbox scraping, `openssl s_client` per STARTTLS testing.
+[Hydra](https://hackita.it/articoli/hydra/) per brute force, Python `imaplib` per mailbox scraping, `openssl s_client` per STARTTLS testing.
 
 **Posso usare IMAP per phishing?**
 
-No directly. IMAP è read-only (retrieve emails). Per send emails serve [SMTP porta 25/587](https://hackita.it/articoli/smtp).
+No directly. IMAP è read-only (retrieve emails). Per send emails serve [SMTP porta 25/587](https://hackita.it/articoli/porta-25-smtp/).
 
 ***
 

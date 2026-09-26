@@ -344,7 +344,7 @@ cat /etc/unrealircd/unrealircd.conf | grep -iE "password|pass|oper"
 
 La configurazione IRC contiene password OPER, link password (per collegare server IRC tra loro) e a volte credenziali di servizi esterni.
 
-Per l'escalation completa: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc).
+Per l'escalation completa: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/).
 
 ## 8. Detection & Hardening
 

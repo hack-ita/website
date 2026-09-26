@@ -13,7 +13,7 @@ tags:
   - privesc-linux
 ---
 
-LinPEAS (Linux Privilege Escalation Awesome Script) è uno script [bash](https://hackita.it/articoli/bash) che automatizza la ricerca di vettori di privilege escalation su sistemi Linux compromessi. A differenza di tool manuali, LinPEAS esegue centinaia di check in pochi secondi, evidenziando configurazioni errate, credenziali esposte, binari SUID sospetti e kernel vulnerabili.
+LinPEAS (Linux Privilege Escalation Awesome Script) è uno script [bash](https://hackita.it/articoli/bash/) che automatizza la ricerca di vettori di privilege escalation su sistemi Linux compromessi. A differenza di tool manuali, LinPEAS esegue centinaia di check in pochi secondi, evidenziando configurazioni errate, credenziali esposte, binari SUID sospetti e kernel vulnerabili.
 
 Lo usi quando hai già una shell su un sistema Linux e devi scalare privilegi rapidamente. È il primo strumento da eseguire dopo aver ottenuto l'accesso iniziale, sia in un pentest enterprise che in un CTF.
 
@@ -390,7 +390,7 @@ Password found: DB_PASS=P@ssw0rd123 in /opt/webapp/config.php
 **COSA FARE SE FALLISCE:**
 
 1. **Curl bloccato da proxy:** Usa wget o trasferisci via SCP
-2. **Output vuoto:** Il sistema ha kernel patchato, prova enumeration manuale con [tecniche manuali per Linux enumeration](https://hackita.it/articoli/linux-enumeration)
+2. **Output vuoto:** Il sistema ha kernel patchato, prova enumeration manuale con [tecniche manuali per Linux enumeration](https://hackita.it/articoli/linux-enumeration/)
 3. **Permission denied su /tmp:** Usa `/dev/shm` o `/var/tmp`
 
 ```bash
@@ -485,7 +485,7 @@ gcc exploit-1.c -o dirtypipe
 
 1. **Compilation error:** Installa gcc o cross-compila sulla tua macchina
 2. **Exploit crash:** Prova versione alternativa dello stesso CVE
-3. **"Already patched":** LinPEAS può dare falsi positivi, verifica manualmente con `uname -r` e confronta con [CVE database per kernel Linux](https://hackita.it/articoli/kernel-exploits)
+3. **"Already patched":** LinPEAS può dare falsi positivi, verifica manualmente con `uname -r` e confronta con [CVE database per kernel Linux](https://hackita.it/articoli/kernel/)
 
 **Timeline:** 5-15 minuti (dipende da download speed e compilation time)
 
@@ -497,7 +497,7 @@ gcc exploit-1.c -o dirtypipe
 
 Dopo exploitation iniziale con metasploit o web shell, LinPEAS è il next step logico.
 
-**Esempio: [Metasploit](https://hackita.it/articoli/metasploit) session → LinPEAS**
+**Esempio: [Metasploit](https://hackita.it/articoli/metasploit/) session → LinPEAS**
 
 ```bash
 # In Metasploit
@@ -1081,7 +1081,7 @@ A: **NO.** LinPEAS è uno strumento di penetration testing e può danneggiare si
 A: Priorità:
 
 1. **Rosso brillante + "VULNERABLE"** → Exploit pubblico disponibile, alta probabilità
-2. **Giallo + "NOPASSWD sudo"** → Immediate privilege escalation con [tecniche sudo bypass](https://hackita.it/articoli/linux-privesc)
+2. **Giallo + "NOPASSWD sudo"** → Immediate privilege escalation con [tecniche sudo bypass](https://hackita.it/articoli/linux-privesc/)
 3. **Giallo + "SUID"** → Controlla GTFOBins per binary specifico
 4. **Blu** → Informazioni utili ma non immediate exploitation
 
@@ -1102,7 +1102,7 @@ A: No in condizioni normali. LinPEAS fa solo **lettura** (enumeration), non modi
 
 **Q: Quanto è aggiornato LinPEAS con nuovi CVE?**
 
-A: Il repository PEASS-ng viene aggiornato mensilmente. Controlla sempre l'ultima release su GitHub. Per CVE critici appena pubblicati (0-day, 1-day), LinPEAS potrebbe non averli ancora. In quel caso, integra con ricerche manuali usando `searchsploit` o [exploit database per kernel](https://hackita.it/articoli/kernel-exploits).
+A: Il repository PEASS-ng viene aggiornato mensilmente. Controlla sempre l'ultima release su GitHub. Per CVE critici appena pubblicati (0-day, 1-day), LinPEAS potrebbe non averli ancora. In quel caso, integra con ricerche manuali usando `searchsploit` o [exploit database per kernel](https://hackita.it/articoli/kernel/).
 
 ***
 

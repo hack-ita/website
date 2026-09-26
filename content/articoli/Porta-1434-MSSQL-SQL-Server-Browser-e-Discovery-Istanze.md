@@ -17,7 +17,7 @@ tags:
   - UDP 1434
 ---
 
-La porta 1434/UDP ospita il SQL Server Browser Service, il servizio di discovery che risponde alle query sulle istanze MSSQL installate su un host. Un singolo pacchetto UDP alla 1434 restituisce nome istanza, versione, porta TCP e pipe name di ogni istanza SQL — senza autenticazione. Queste informazioni alimentano direttamente l'attacco alla [porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql): sapere che esiste un'istanza `SQLEXPRESS` sulla porta 49200 è il primo step per il credential attack.
+La porta 1434/UDP ospita il SQL Server Browser Service, il servizio di discovery che risponde alle query sulle istanze MSSQL installate su un host. Un singolo pacchetto UDP alla 1434 restituisce nome istanza, versione, porta TCP e pipe name di ogni istanza SQL — senza autenticazione. Queste informazioni alimentano direttamente l'attacco alla [porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/): sapere che esiste un'istanza `SQLEXPRESS` sulla porta 49200 è il primo step per il credential attack.
 
 **COSA C'È NELLA PORTA 1434?**
 
@@ -97,7 +97,7 @@ ServerName;SQL01;InstanceName;SQLEXPRESS;IsClustered;No;Version;15.0.4375.4;tcp;
 ServerName;SQL01;InstanceName;DEVDB;IsClustered;No;Version;16.0.4100.1;tcp;49300;;
 ```
 
-**Lettura dell'output:** formato chiave-valore con separatore `;`. Ogni istanza con il suo nome, stato cluster, versione esatta e porta TCP. La versione `15.0.4375.4` corrisponde a SQL Server 2019 CU25 — verifica su [sqlserverbuilds.blogspot.com](https://hackita.it/articoli/porta-1433-mssql) per CVE applicabili.
+**Lettura dell'output:** formato chiave-valore con separatore `;`. Ogni istanza con il suo nome, stato cluster, versione esatta e porta TCP. La versione `15.0.4375.4` corrisponde a SQL Server 2019 CU25 — verifica su [sqlserverbuilds.blogspot.com](https://hackita.it/articoli/porta-1433-mssql/) per CVE applicabili.
 
 ## 3. Enumerazione Avanzata
 
@@ -124,7 +124,7 @@ Nmap scan report for 10.10.10.35
 | ms-sql-info: FINANCEDB tcp:1433, REPORTING tcp:49500
 ```
 
-**Lettura dell'output:** tre host con SQL Server nella subnet — sei istanze totali. La 1434/UDP è il modo più rapido per scoprire tutti i SQL Server in una rete. Per l'[attacco a ciascuna istanza](https://hackita.it/articoli/porta-1433-mssql), usa le porte TCP scoperte.
+**Lettura dell'output:** tre host con SQL Server nella subnet — sei istanze totali. La 1434/UDP è il modo più rapido per scoprire tutti i SQL Server in una rete. Per l'[attacco a ciascuna istanza](https://hackita.it/articoli/porta-1433-mssql/), usa le porte TCP scoperte.
 
 ### Metasploit UDP sweep
 
@@ -164,7 +164,7 @@ crackmapexec mssql 10.10.10.15 -p 49300 -u sa -p 'Password1'
 crackmapexec mssql 10.10.10.15 -p 49300 -u sa -p 'dev'
 ```
 
-**Cosa fai dopo:** SQLEXPRESS e istanze dev sono i target più probabili per credenziali deboli. Con accesso sysadmin su qualsiasi istanza: [xp\_cmdshell per RCE](https://hackita.it/articoli/porta-1433-mssql).
+**Cosa fai dopo:** SQLEXPRESS e istanze dev sono i target più probabili per credenziali deboli. Con accesso sysadmin su qualsiasi istanza: [xp\_cmdshell per RCE](https://hackita.it/articoli/porta-1433-mssql/).
 
 **CVE matching con versione esatta**
 
@@ -182,7 +182,7 @@ Le CVE SQL Server più rilevanti:
 
 **Amplification DDoS (documentazione, non uso)**
 
-La risposta del Browser (200-400 byte) è 8-10x il pacchetto di richiesta (1 byte: `0x02`). Storicamente usato per amplificazione [DDoS](https://hackita.it/articoli/ddos). È un finding di severità bassa ma documentabile.
+La risposta del Browser (200-400 byte) è 8-10x il pacchetto di richiesta (1 byte: `0x02`). Storicamente usato per amplificazione [DDoS](https://hackita.it/articoli/ddos/). È un finding di severità bassa ma documentabile.
 
 ## 5. Scenari Pratici
 

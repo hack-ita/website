@@ -20,7 +20,7 @@ tags:
 
 MongoDB è il database NoSQL document-oriented più popolare al mondo: memorizza dati in documenti JSON (BSON internamente), senza schema fisso, con query potenti e scalabilità orizzontale. Lo usano startup, enterprise, piattaforme SaaS, e-commerce — qualsiasi applicazione moderna che preferisce JSON alle tabelle relazionali. Ascolta sulla porta 27017 TCP e, storicamente, è stato il **database più esposto su Internet**: per anni, la configurazione di default ha fatto bind su `0.0.0.0` senza autenticazione. MongoDB senza password, accessibile da chiunque, con tutti i dati dell'applicazione visibili. Questo ha portato a decine di migliaia di istanze compromesse, ransomware che cancellava i dati e li "vendeva indietro", e data breach massivi.
 
-Nel 2026, MongoDB ha migliorato i default (bind su `localhost` dalla versione 3.6, auth suggerita nel setup), ma il problema è tutt'altro che risolto. Trovo ancora regolarmente istanze senza auth durante i penetration test — soprattutto in ambienti Docker dove il container fa port mapping su `0.0.0.0:27017`, in ambienti di staging promossi in produzione, e in aziende che "non hanno ancora avuto tempo di configurare la sicurezza". E anche quando l'auth c'è, la NoSQL injection è un vettore potente e meno conosciuto rispetto alla [SQL injection](https://hackita.it/articoli/porta-8080-tomcat) classica.
+Nel 2026, MongoDB ha migliorato i default (bind su `localhost` dalla versione 3.6, auth suggerita nel setup), ma il problema è tutt'altro che risolto. Trovo ancora regolarmente istanze senza auth durante i penetration test — soprattutto in ambienti Docker dove il container fa port mapping su `0.0.0.0:27017`, in ambienti di staging promossi in produzione, e in aziende che "non hanno ancora avuto tempo di configurare la sicurezza". E anche quando l'auth c'è, la NoSQL injection è un vettore potente e meno conosciuto rispetto alla [SQL injection](https://hackita.it/articoli/porta-8080-tomcat/) classica.
 
 Un episodio che racconto spesso nei corsi: durante un pentest esterno per una fintech, ho trovato la 27017 esposta su Internet senza autenticazione. Il database conteneva una collection `users` con 45.000 record — email, password in bcrypt, e una collection `kyc_documents` con scan di passaporti e carte d'identità in base64. Nessun firewall, nessuna password. L'azienda gestiva i risparmi dei clienti. Ho scritto il finding con priorità P0 e ho avuto la conferma che è stata la singola vulnerabilità più costosa in termini di remediation che l'azienda abbia mai affrontato.
 
@@ -211,7 +211,7 @@ db.users.find({role: "administrator"}, {email:1, password:1, api_key:1}).pretty(
 db.users.find({mfa_secret: {$exists: true}}, {email:1, mfa_secret:1}).pretty()
 ```
 
-Hash bcrypt → [Hashcat](https://hackita.it/articoli/hashcat) mode 3200. API key → accesso diretto. MFA secret → genera TOTP con `oathtool --totp -b "JBSWY3DPEHPK3PXP"`.
+Hash bcrypt → [Hashcat](https://hackita.it/articoli/hashcat/) mode 3200. API key → accesso diretto. MFA secret → genera TOTP con `oathtool --totp -b "JBSWY3DPEHPK3PXP"`.
 
 ### Session token
 
@@ -220,7 +220,7 @@ Hash bcrypt → [Hashcat](https://hackita.it/articoli/hashcat) mode 3200. API ke
 db.sessions.find({}, {user_id:1, token:1, expires:1}).sort({expires: -1}).limit(50)
 ```
 
-Token di sessione → [session hijacking](https://hackita.it/articoli/porta-11211-memcached) immediato.
+Token di sessione → [session hijacking](https://hackita.it/articoli/porta-11211-memcached/) immediato.
 
 ### Dati finanziari
 
@@ -250,7 +250,7 @@ mongoexport --host 10.10.10.40 --port 27017 --db production --collection users -
 
 ## 5. NoSQL Injection
 
-La NoSQL injection è l'equivalente della [SQL injection](https://hackita.it/articoli/porta-8080-tomcat) per MongoDB. Sfrutta il fatto che le query MongoDB sono oggetti JSON — e se l'applicazione inserisce input utente direttamente nella query, puoi manipolare la logica.
+La NoSQL injection è l'equivalente della [SQL injection](https://hackita.it/articoli/porta-8080-tomcat/) per MongoDB. Sfrutta il fatto che le query MongoDB sono oggetti JSON — e se l'applicazione inserisce input utente direttamente nella query, puoi manipolare la logica.
 
 ### Authentication bypass
 
@@ -451,7 +451,7 @@ db.getCollectionNames().forEach(function(c) {
 })
 ```
 
-Le credenziali trovate in MongoDB → test su [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql), [MySQL](https://hackita.it/articoli/porta-3306-mysql), [Redis](https://hackita.it/articoli/porta-6379-redis), [SSH](https://hackita.it/articoli/ssh), [RabbitMQ](https://hackita.it/articoli/porta-15672-rabbitmq-web), [Elasticsearch](https://hackita.it/articoli/porta-9200-elasticsearch).
+Le credenziali trovate in MongoDB → test su [PostgreSQL](https://hackita.it/articoli/porta-5432-postgresql/), [MySQL](https://hackita.it/articoli/porta-3306-mysql/), [Redis](https://hackita.it/articoli/porta-6379-redis/), [SSH](https://hackita.it/articoli/ssh/), [RabbitMQ](https://hackita.it/articoli/porta-15672-rabbitmq-web/), [Elasticsearch](https://hackita.it/articoli/porta-9200-elasticsearch/).
 
 ```bash
 # Config file MongoDB (credenziali replica set, keyfile)
@@ -479,7 +479,7 @@ Sì, nel 2026 è ancora un problema reale. Le versioni recenti (3.6+) fanno bind
 Diversamente pericolosa: non puoi fare `UNION SELECT` per leggere tabelle arbitrarie, ma puoi bypassare l'autenticazione, estrarre dati con regex blind injection e, con `$where`, eseguire JavaScript lato server. In certi scenari è più facile della SQLi perché molti sviluppatori non sanno che esiste.
 
 **Come trovo MongoDB se non è sulla porta 27017?**
-`nmap -sV --allports target` oppure cerca nei file di configurazione dell'applicazione: `MONGODB_URI`, `MONGO_URL`, `mongoose.connect()` nel codice sorgente (se hai accesso via [Git](https://hackita.it/articoli/porta-9418-git) o [SonarQube](https://hackita.it/articoli/porta-9000-php-fpm-sonarqube)).
+`nmap -sV --allports target` oppure cerca nei file di configurazione dell'applicazione: `MONGODB_URI`, `MONGO_URL`, `mongoose.connect()` nel codice sorgente (se hai accesso via [Git](https://hackita.it/articoli/porta-9418-git/) o [SonarQube](https://hackita.it/articoli/porta-9000-php-fpm-sonarqube/)).
 
 ## 11. Cheat Sheet Finale
 

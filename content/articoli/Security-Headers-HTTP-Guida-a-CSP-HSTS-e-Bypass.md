@@ -24,7 +24,7 @@ tags:
 
 Gli **HTTP security headers** sono istruzioni che il server invia al browser per dirgli cosa può fare con la pagina: quali risorse caricare, quali script eseguire, se la pagina può finire dentro un frame, se deve usare solo HTTPS, cosa condividere nel referrer e quali funzionalità del browser (camera, microfono, geolocalizzazione...) può usare.
 
-Se questi header mancano o sono configurati male, peggiorano l'impatto di vulnerabilità come [XSS](https://hackita.it/articoli/xss), [clickjacking](https://hackita.it/articoli/clickjacking), [MITM](https://hackita.it/articoli/man-in-the-middle) e furto di token. Ma un header mancante, da solo, **non è già una vulnerabilità sfruttabile**: va sempre verificato cosa fa quella pagina, quale funzionalità è in gioco e quale sarebbe il danno reale.
+Se questi header mancano o sono configurati male, peggiorano l'impatto di vulnerabilità come [XSS](https://hackita.it/articoli/xss/), [clickjacking](https://hackita.it/articoli/clickjacking/), [MITM](https://hackita.it/articoli/man-in-the-middle/) e furto di token. Ma un header mancante, da solo, **non è già una vulnerabilità sfruttabile**: va sempre verificato cosa fa quella pagina, quale funzionalità è in gioco e quale sarebbe il danno reale.
 
 Anche gli header presenti vanno controllati, non solo quelli assenti. Una CSP con una allowlist troppo ampia può essere aggirata se, su un dominio già autorizzato, esiste uno script gadget o un endpoint che l'attaccante può controllare. E se in `script-src` c'è `'unsafe-inline'`, la protezione contro gli script inline crolla parecchio — ma le altre direttive della policy possono comunque restare valide.
 
@@ -186,7 +186,7 @@ I redirect diventano interessanti quando portano, dentro un'origine già autoriz
 - comportamento reale del browser, non soltanto quello di curl.
 ```
 
-Approfondimento dedicato sullo sfruttamento generale di questa classe di bug: [Open Redirect: guida completa](https://hackita.it/articoli/open-redirect).
+Approfondimento dedicato sullo sfruttamento generale di questa classe di bug: [Open Redirect: guida completa](https://hackita.it/articoli/open-redirect/).
 
 ### Debolezza 5 — Nonce Prevedibile, Riusato o Copiato su Input Non Fidato
 
@@ -363,7 +363,7 @@ add_header X-Frame-Options "DENY" always;
 add_header Content-Security-Policy "frame-ancestors 'none';" always;
 ```
 
-Nota: il clickjacking spesso viaggia insieme a un'azione priva di protezione anti-CSRF (token mancante o controllato male) — vale la pena guardare anche quel lato: approfondimento su [CSRF](https://hackita.it/articoli/csrf).
+Nota: il clickjacking spesso viaggia insieme a un'azione priva di protezione anti-CSRF (token mancante o controllato male) — vale la pena guardare anche quel lato: approfondimento su [CSRF](https://hackita.it/articoli/csrf/).
 
 ***
 
@@ -489,7 +489,7 @@ CORP → stabilisce quali origini possono includere una risorsa
 
 Servono soprattutto quando l'app ha bisogno di **cross-origin isolation**, usa `SharedArrayBuffer` o gestisce scenari a rischio di cross-origin leak. Non sono obbligatori ovunque e su un'API consumata da client non-browser non hanno molto senso.
 
-Controllare quali origini possono usare una risorsa è un'idea simile a una misconfigurazione CORS lato applicativo (header `Access-Control-Allow-Origin` troppo permissivo): approfondimento su [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration).
+Controllare quali origini possono usare una risorsa è un'idea simile a una misconfigurazione CORS lato applicativo (header `Access-Control-Allow-Origin` troppo permissivo): approfondimento su [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration/).
 
 ```bash
 curl -skI "https://target.com/" | grep -iE \
@@ -500,7 +500,7 @@ L'assenza di COOP/COEP non è già una vulnerabilità. Attivarli però può bloc
 
 ### Security Headers vs CORS: Qual È la Differenza?
 
-Sono due cose spesso confuse. I security headers visti finora controllano cosa fa il browser (caricare risorse, incorporare la pagina, mandare il referrer, usare permessi); CORS invece decide quali origini possono **leggere** la risposta di una richiesta cross-origin, tramite `Access-Control-Allow-Origin` e header simili. In pratica: la CSP riguarda caricamento ed esecuzione lato client, CORS riguarda l'accesso ai dati lato server. Non si sostituiscono a vicenda — una CSP ben fatta non ripara un CORS permissivo, e viceversa. Approfondimento: [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration).
+Sono due cose spesso confuse. I security headers visti finora controllano cosa fa il browser (caricare risorse, incorporare la pagina, mandare il referrer, usare permessi); CORS invece decide quali origini possono **leggere** la risposta di una richiesta cross-origin, tramite `Access-Control-Allow-Origin` e header simili. In pratica: la CSP riguarda caricamento ed esecuzione lato client, CORS riguarda l'accesso ai dati lato server. Non si sostituiscono a vicenda — una CSP ben fatta non ripara un CORS permissivo, e viceversa. Approfondimento: [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration/).
 
 ***
 
@@ -561,11 +561,11 @@ location /dashboard {
 
 ### Rischi Collegati: Cache Poisoning, Request Smuggling e Session Hijacking
 
-Una cache mal configurata non è solo un problema di dati esposti: se il server o il reverse proxy trattano come "non parte della chiave" header che l'utente può controllare (`X-Forwarded-Host`, parametri non canonicalizzati), una risposta malevola può finire in cache e essere servita a tutti gli utenti dopo. Approfondimento dedicato: [Cache Poisoning: guida completa](https://hackita.it/articoli/cache-poisoning).
+Una cache mal configurata non è solo un problema di dati esposti: se il server o il reverse proxy trattano come "non parte della chiave" header che l'utente può controllare (`X-Forwarded-Host`, parametri non canonicalizzati), una risposta malevola può finire in cache e essere servita a tutti gli utenti dopo. Approfondimento dedicato: [Cache Poisoning: guida completa](https://hackita.it/articoli/cache-poisoning/).
 
-Se il target è dietro un reverse proxy/load balancer e front-end e back-end leggono in modo diverso `Content-Length`/`Transfer-Encoding`, il problema può allargarsi fino a **HTTP Request Smuggling** — bypass dei controlli di accesso e cache poisoning "a monte". Approfondimento: [HTTP Request Smuggling: guida completa](https://hackita.it/articoli/http-request-smuggling).
+Se il target è dietro un reverse proxy/load balancer e front-end e back-end leggono in modo diverso `Content-Length`/`Transfer-Encoding`, il problema può allargarsi fino a **HTTP Request Smuggling** — bypass dei controlli di accesso e cache poisoning "a monte". Approfondimento: [HTTP Request Smuggling: guida completa](https://hackita.it/articoli/http-request-smuggling/).
 
-Infine, se un endpoint di sessione finisce cachato senza `no-store`, il rischio concreto è che il token venga servito a un altro utente: è lo stesso tipo di impatto di un classico [session hijacking](https://hackita.it/articoli/session-hijacking).
+Infine, se un endpoint di sessione finisce cachato senza `no-store`, il rischio concreto è che il token venga servito a un altro utente: è lo stesso tipo di impatto di un classico [session hijacking](https://hackita.it/articoli/session-hijacking/).
 
 ***
 
@@ -871,17 +871,17 @@ Tutti quelli della checklist a inizio articolo, ma con priorità diverse a secon
 
 ## Articoli Collegati su Hackita
 
-* [XSS](https://hackita.it/articoli/xss)
-* [Clickjacking](https://hackita.it/articoli/clickjacking)
-* [Man-in-the-Middle](https://hackita.it/articoli/man-in-the-middle)
-* [HTTP e HTTPS](https://hackita.it/articoli/http-https)
-* [Attacchi alle Applicazioni Web](https://hackita.it/articoli/attacchi-applicazioni-web)
-* [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration)
-* [CSRF](https://hackita.it/articoli/csrf)
-* [Open Redirect](https://hackita.it/articoli/open-redirect)
-* [Cache Poisoning](https://hackita.it/articoli/cache-poisoning)
-* [HTTP Request Smuggling](https://hackita.it/articoli/http-request-smuggling)
-* [Session Hijacking](https://hackita.it/articoli/session-hijacking)
+* [XSS](https://hackita.it/articoli/xss/)
+* [Clickjacking](https://hackita.it/articoli/clickjacking/)
+* [Man-in-the-Middle](https://hackita.it/articoli/man-in-the-middle/)
+* [HTTP e HTTPS](https://hackita.it/articoli/http-https/)
+* [Attacchi alle Applicazioni Web](https://hackita.it/articoli/attacchi-applicazioni-web/)
+* [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration/)
+* [CSRF](https://hackita.it/articoli/csrf/)
+* [Open Redirect](https://hackita.it/articoli/open-redirect/)
+* [Cache Poisoning](https://hackita.it/articoli/cache-poisoning/)
+* [HTTP Request Smuggling](https://hackita.it/articoli/http-request-smuggling/)
+* [Session Hijacking](https://hackita.it/articoli/session-hijacking/)
 
 ***
 

@@ -122,7 +122,7 @@ python3 radiuscrack.py -f radius_capture.pcap -w /usr/share/wordlists/rockyou.tx
 * `12345678`
 * Nome dell'organizzazione (es: `corplocal`)
 
-**Cosa fai dopo:** con lo shared secret puoi decifrare le password in ogni pacchetto Access-Request catturato — e puoi creare pacchetti RADIUS validi per [autenticarti sulla rete](https://hackita.it/articoli/wifi).
+**Cosa fai dopo:** con lo shared secret puoi decifrare le password in ogni pacchetto Access-Request catturato — e puoi creare pacchetti RADIUS validi per [autenticarti sulla rete](https://hackita.it/articoli/wifi-802-11/).
 
 **Credential spray su RADIUS**
 
@@ -143,7 +143,7 @@ Received Access-Accept Id 3 from 10.10.10.5:1812
   Tunnel-Private-Group-Id = 10
 ```
 
-**Lettura dell'output:** `Access-Accept` con VLAN 10 assegnata — credenziali valide e l'utente viene messo nella VLAN 10. Le stesse credenziali funzionano su AD — testa su [SMB/LDAP](https://hackita.it/articoli/active-directory).
+**Lettura dell'output:** `Access-Accept` con VLAN 10 assegnata — credenziali valide e l'utente viene messo nella VLAN 10. Le stesse credenziali funzionano su AD — testa su [SMB/LDAP](https://hackita.it/articoli/active-directory/).
 
 **Evil twin AP per intercettazione EAP**
 
@@ -163,7 +163,7 @@ hostapd-wpe: STA [client_mac] - challenge: a1b2c3d4e5f6a7b8
 hostapd-wpe: STA [client_mac] - response: 11223344556677889900...
 ```
 
-**Cosa fai dopo:** hai il challenge-response MS-CHAPv2 dell'utente. Cracka con hashcat mode 5500: `hashcat -m 5500 chapcrack_hash.txt rockyou.txt`. La password crackata è la password AD dell'utente. Per la [compromissione Wi-Fi enterprise](https://hackita.it/articoli/wifi), questa è la tecnica più efficace.
+**Cosa fai dopo:** hai il challenge-response MS-CHAPv2 dell'utente. Cracka con hashcat mode 5500: `hashcat -m 5500 chapcrack_hash.txt rockyou.txt`. La password crackata è la password AD dell'utente. Per la [compromissione Wi-Fi enterprise](https://hackita.it/articoli/wifi-802-11/), questa è la tecnica più efficace.
 
 ## 4. Scenari Pratici
 

@@ -111,7 +111,7 @@ La wordlist default di Arjun contiene \~25.000 nomi di parametri. Per target spe
 arjun -u http://target/endpoint -w custom_params.txt
 ```
 
-Genera una wordlist da [Waybackurls](https://hackita.it/articoli/waybackurls):
+Genera una wordlist da [Waybackurls](https://hackita.it/articoli/waybackurls/):
 
 ```bash
 echo "target.com" | waybackurls | grep "?" | sed 's/.*?//' | tr '&' '\n' | cut -d= -f1 | sort -u > target_params.txt
@@ -267,7 +267,7 @@ arjun -u http://10.10.10.50/login -m POST
 
 **Flusso operativo:**
 
-[Gobuster](https://hackita.it/articoli/gobuster) (endpoint discovery) → **Arjun (parameter discovery)** → [sqlmap](https://hackita.it/articoli/sqlmap) oppure [Burp](https://hackita.it/articoli/burp-suite) (vulnerability testing)
+[Gobuster](https://hackita.it/articoli/gobuster/) (endpoint discovery) → **Arjun (parameter discovery)** → [sqlmap](https://hackita.it/articoli/sqlmap/) oppure [Burp](https://hackita.it/articoli/burp-suite/) (vulnerability testing)
 
 ```bash
 # Gobuster trova endpoint

@@ -1,0 +1,31 @@
+# Hackita — Ethical Hacking, Pentest e Sicurezza Informatica
+{{ printf "\n" }}
+> {{ site.Params.description }}
+{{ printf "\n" }}
+Hackita è un progetto italiano di cybersecurity offensiva: guide operative, walkthrough e approfondimenti tecnici su penetration testing, red team, Active Directory, web hacking, exploit e vulnerability assessment. Tutti i contenuti hanno finalità legali, etiche e formative.
+{{ printf "\n" }}
+## Categorie
+{{ with site.GetPage "/categories" }}{{ range .Pages.ByWeight }}
+- [{{ .Title }}]({{ .Permalink }}){{ with .Description }}: {{ . | plainify }}{{ end }}
+{{- end }}{{ end }}
+{{ printf "\n" }}
+## Articoli in evidenza
+{{ range first 20 (where (where site.RegularPages "Section" "articoli") "Params.featured" "eq" true) }}
+- [{{ .Title | plainify | strings.TrimSpace }}]({{ .Permalink }}){{ with .Description }}: {{ . | plainify | truncate 160 }}{{ end }}
+{{- end }}
+{{ printf "\n" }}
+## Articoli recenti
+{{ range first 40 (where site.RegularPages "Section" "articoli") }}
+- [{{ .Title | plainify | strings.TrimSpace }}]({{ .Permalink }})
+{{- end }}
+{{ printf "\n" }}
+## Pagine
+{{ range where site.RegularPages "Section" "in" (slice "about" "servizi" "supporto" "contatto") }}
+- [{{ .Title }}]({{ .Permalink }})
+{{- end }}
+- [Tutti gli articoli]({{ "articoli/" | absURL }})
+- [Shop Hackita](https://shop.hackita.it)
+{{ printf "\n" }}
+## Sitemap
+- Indice completo degli articoli: {{ "articoli/sitemap.xml" | absURL }}
+- Sitemap del sito: {{ "sitemap.xml" | absURL }}

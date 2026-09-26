@@ -193,7 +193,7 @@ ssh yossi@10.10.10.73
 
 ## Privesc: yossi → root (gruppo disk)
 
-I gruppi di yossi includono `disk`, che dà accesso in lettura diretta ai device grezzi (`/dev/sda1`, `/dev/sda5` la swap), bypassando completamente i permessi sui singoli file del filesystem — perché si sta leggendo il blocco fisico, non passando dalla VFS. Ne parlo in dettaglio, con tutti i gruppi Linux sfruttabili per privesc, in [questo articolo](https://hackita.it/articoli/group-linux-privilege-escalation).
+I gruppi di yossi includono `disk`, che dà accesso in lettura diretta ai device grezzi (`/dev/sda1`, `/dev/sda5` la swap), bypassando completamente i permessi sui singoli file del filesystem — perché si sta leggendo il blocco fisico, non passando dalla VFS. Ne parlo in dettaglio, con tutti i gruppi Linux sfruttabili per privesc, in [questo articolo](https://hackita.it/articoli/group-linux-privilege-escalation/).
 
 Con `debugfs` monto la partizione principale in sola lettura logica e vado dritto alla chiave privata SSH di root, senza bisogno di leggere flag o shadow:
 

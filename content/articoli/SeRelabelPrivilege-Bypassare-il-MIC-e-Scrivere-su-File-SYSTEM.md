@@ -309,7 +309,7 @@ SeRelabelPrivilege è il bypass specifico per il layer MIC — indispensabile qu
 
 **Articoli correlati:**
 
-* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege) — bypass ACL diretto, un passo
-* [SeTakeOwnershipPrivilege](https://hackita.it/articoli/setakeownershipprivilege) — bypass ownership + ACL
+* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege/) — bypass ACL diretto, un passo
+* [SeTakeOwnershipPrivilege](https://hackita.it/articoli/setakeownershipprivilege/) — bypass ownership + ACL
 
 **Riferimenti:** [NtObjectManager](https://github.com/googleprojectzero/sandbox-attacksurface-analysis-tools) · [Microsoft Docs MIC](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/modify-an-object-label)

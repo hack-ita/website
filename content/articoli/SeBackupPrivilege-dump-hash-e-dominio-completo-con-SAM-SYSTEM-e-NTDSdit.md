@@ -346,9 +346,9 @@ SeBackupPrivilege non è escalation locale — è la chiave per tutti gli hash d
 
 **Articoli correlati:**
 
-* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege) — il complemento: scrittura arbitraria bypass ACL
-* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege) — credential dump alternativo via memoria LSASS
-* [SeMachineAccountPrivilege](https://hackita.it/articoli/semachineaccountprivilege) — altro path verso DA senza privilegi elevati
+* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege/) — il complemento: scrittura arbitraria bypass ACL
+* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/) — credential dump alternativo via memoria LSASS
+* [SeMachineAccountPrivilege](https://hackita.it/articoli/semachineaccountprivilege/) — altro path verso DA senza privilegi elevati
 
 **Riferimenti:** [BackupOperatorToDA](https://github.com/mpgn/BackupOperatorToDA) · [Impacket](https://github.com/fortra/impacket) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/back-up-files-and-directories)
 

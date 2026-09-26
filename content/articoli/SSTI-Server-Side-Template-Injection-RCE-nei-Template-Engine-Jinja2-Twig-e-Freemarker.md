@@ -15,11 +15,11 @@ tags:
 featured: true
 ---
 
-I template engine sono ovunque nelle applicazioni moderne: [Jinja2](https://hackita.it/articoli/jinja2-ssti-rce) per Flask/Django, [Twig](https://hackita.it/articoli/twig-ssti-rce) per Symfony/Laravel, [FreeMarker](https://hackita.it/articoli/freemarker-ssti-rce) per Spring Boot, [Thymeleaf](https://hackita.it/articoli/thymeleaf-ssti-rce) per applicazioni Java Spring, [ERB](https://hackita.it/articoli/erb-ssti-rce) per Ruby on Rails, [Velocity](https://hackita.it/articoli/velocity-ssti-rce) in ambienti enterprise legacy, [Mako](https://hackita.it/articoli/mako-ssti-rce) per Pyramid/Python, [Pebble](https://hackita.it/articoli/pebble-ssti-rce) in microservizi Java, [Smarty](https://hackita.it/articoli/smarty-ssti-rce) nei CMS PHP di vecchia generazione. Il problema nasce quando lo sviluppatore inserisce l'input dell'utente **dentro il template** invece di passarlo come variabile.
+I template engine sono ovunque nelle applicazioni moderne: [Jinja2](https://hackita.it/articoli/jinja2-ssti-rce/) per Flask/Django, [Twig](https://hackita.it/articoli/twig-ssti-rce/) per Symfony/Laravel, [FreeMarker](https://hackita.it/articoli/freemarker-ssti-rce/) per Spring Boot, [Thymeleaf](https://hackita.it/articoli/thymeleaf-ssti-rce/) per applicazioni Java Spring, [ERB](https://hackita.it/articoli/erb-ssti-rce/) per Ruby on Rails, [Velocity](https://hackita.it/articoli/velocity-ssti-rce/) in ambienti enterprise legacy, [Mako](https://hackita.it/articoli/mako-ssti-rce/) per Pyramid/Python, [Pebble](https://hackita.it/articoli/pebble-ssti-rce/) in microservizi Java, [Smarty](https://hackita.it/articoli/smarty-ssti-rce/) nei CMS PHP di vecchia generazione. Il problema nasce quando lo sviluppatore inserisce l'input dell'utente **dentro il template** invece di passarlo come variabile.
 
 La **Server-Side Template Injection** (SSTI) è una vulnerabilità server-side che porta a **RCE completa** nella maggior parte dei casi — accesso diretto al sistema operativo, filesystem e credenziali dell'applicazione. Non è paragonabile alla XSS: non colpisce il browser della vittima, colpisce il server.
 
-Questa guida copre **9 template engine** — Jinja2, Twig, FreeMarker, Thymeleaf, ERB, Velocity, Mako, Pebble, Smarty — con detection, fingerprint, payload reali, tecniche blind e sandbox bypass. Fa parte del cluster [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [XSS](https://hackita.it/articoli/xss/), [SQL Injection](https://hackita.it/articoli/sqlmap/), [XPath Injection](https://hackita.it/articoli/xpath-injection/).
+Questa guida copre **9 template engine** — Jinja2, Twig, FreeMarker, Thymeleaf, ERB, Velocity, Mako, Pebble, Smarty — con detection, fingerprint, payload reali, tecniche blind e sandbox bypass. Fa parte del cluster [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [XSS](https://hackita.it/articoli/xss/), [SQL Injection](https://hackita.it/articoli/sqlmap/), [XPath Injection](https://hackita.it/articoli/xpath-injection/).
 
 ***
 
@@ -84,15 +84,15 @@ Una sola tabella, usala come riferimento rapido. Nelle sezioni successive trovi 
 
 | Engine                                                        | Linguaggio | Payload conferma | Output atteso                                        |
 | ------------------------------------------------------------- | ---------- | ---------------- | ---------------------------------------------------- |
-| [Jinja2](https://hackita.it/articoli/jinja2-ssti-rce)         | Python     | `{{7*7}}`        | `49`                                                 |
-| [Twig](https://hackita.it/articoli/twig-ssti-rce)             | PHP        | `{{7*7}}`        | `49`                                                 |
-| [FreeMarker](https://hackita.it/articoli/freemarker-ssti-rce) | Java       | `${7*7}`         | `49`                                                 |
-| [Thymeleaf](https://hackita.it/articoli/thymeleaf-ssti-rce)   | Java       | `[[${7*7}]]`     | `49`                                                 |
-| [ERB](https://hackita.it/articoli/erb-ssti-rce)               | Ruby       | `<%= 7*7 %>`     | `49`                                                 |
-| [Velocity](https://hackita.it/articoli/velocity-ssti-rce)     | Java       | `${7*7}`         | `49` (se la variabile non è definita, niente output) |
-| [Mako](https://hackita.it/articoli/mako-ssti-rce)             | Python     | `${7*7}`         | `49`                                                 |
-| [Pebble](https://hackita.it/articoli/pebble-ssti-rce)         | Java       | `{{7*7}}`        | `49`                                                 |
-| [Smarty](https://hackita.it/articoli/smarty-ssti-rce)         | PHP        | `{7*7}`          | `49`                                                 |
+| [Jinja2](https://hackita.it/articoli/jinja2-ssti-rce/)         | Python     | `{{7*7}}`        | `49`                                                 |
+| [Twig](https://hackita.it/articoli/twig-ssti-rce/)             | PHP        | `{{7*7}}`        | `49`                                                 |
+| [FreeMarker](https://hackita.it/articoli/freemarker-ssti-rce/) | Java       | `${7*7}`         | `49`                                                 |
+| [Thymeleaf](https://hackita.it/articoli/thymeleaf-ssti-rce/)   | Java       | `[[${7*7}]]`     | `49`                                                 |
+| [ERB](https://hackita.it/articoli/erb-ssti-rce/)               | Ruby       | `<%= 7*7 %>`     | `49`                                                 |
+| [Velocity](https://hackita.it/articoli/velocity-ssti-rce/)     | Java       | `${7*7}`         | `49` (se la variabile non è definita, niente output) |
+| [Mako](https://hackita.it/articoli/mako-ssti-rce/)             | Python     | `${7*7}`         | `49`                                                 |
+| [Pebble](https://hackita.it/articoli/pebble-ssti-rce/)         | Java       | `{{7*7}}`        | `49`                                                 |
+| [Smarty](https://hackita.it/articoli/smarty-ssti-rce/)         | PHP        | `{7*7}`          | `49`                                                 |
 
 **Segnali rapidi che fanno sospettare una SSTI:** campo di input che riflette il testo con qualcosa di strano (testo mancante, errore parziale) — errori verbose con stack trace che menzionano `jinja2`, `twig`, `freemarker`, `thymeleaf` — risposta di dimensione diversa rispetto a input normale — funzionalità "preview" o "anteprima" che renderizza HTML dinamico — API che accettano un campo `template` o `body` in JSON.
 
@@ -138,7 +138,7 @@ ${7?upper_case}       → errore = FreeMarker | niente = Velocity
 {{config}}     → mostra configurazione Flask
 ```
 
-Guida completa: [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce)
+Guida completa: [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce/)
 
 ### Fingerprint Twig
 
@@ -147,7 +147,7 @@ Guida completa: [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce
 {{_self}}      → mostra info Twig
 ```
 
-Guida completa: [Twig SSTI e sandbox bypass](https://hackita.it/articoli/twig-ssti-rce)
+Guida completa: [Twig SSTI e sandbox bypass](https://hackita.it/articoli/twig-ssti-rce/)
 
 ### Fingerprint FreeMarker
 
@@ -155,7 +155,7 @@ Guida completa: [Twig SSTI e sandbox bypass](https://hackita.it/articoli/twig-ss
 ${7?upper_case}  → errore (non è una stringa → FreeMarker confermato)
 ```
 
-Guida completa: [FreeMarker SSTI](https://hackita.it/articoli/freemarker-ssti-rce)
+Guida completa: [FreeMarker SSTI](https://hackita.it/articoli/freemarker-ssti-rce/)
 
 ### Fingerprint Thymeleaf
 
@@ -163,7 +163,7 @@ Guida completa: [FreeMarker SSTI](https://hackita.it/articoli/freemarker-ssti-rc
 [[${7*7}]]       → 49
 ```
 
-Guida completa: [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce)
+Guida completa: [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce/)
 
 ### Fingerprint Mako
 
@@ -172,7 +172,7 @@ ${7*7}             → 49 (stessa sintassi di FreeMarker)
 <% x=7*7 %>${x}   → 49 (conferma Mako — esegue Python diretto nei code block)
 ```
 
-Guida completa: [Mako SSTI](https://hackita.it/articoli/mako-ssti-rce)
+Guida completa: [Mako SSTI](https://hackita.it/articoli/mako-ssti-rce/)
 
 ### Fingerprint Pebble
 
@@ -181,7 +181,7 @@ Guida completa: [Mako SSTI](https://hackita.it/articoli/mako-ssti-rce)
 {{7*'7'}}          → errore Java (non moltiplica stringhe — differenzia da Jinja2)
 ```
 
-Guida completa: [Pebble SSTI](https://hackita.it/articoli/pebble-ssti-rce)
+Guida completa: [Pebble SSTI](https://hackita.it/articoli/pebble-ssti-rce/)
 
 ### Fingerprint Smarty
 
@@ -190,23 +190,23 @@ Guida completa: [Pebble SSTI](https://hackita.it/articoli/pebble-ssti-rce)
 {$smarty.version}  → numero versione Smarty
 ```
 
-Guida completa: [Smarty SSTI](https://hackita.it/articoli/smarty-ssti-rce)
+Guida completa: [Smarty SSTI](https://hackita.it/articoli/smarty-ssti-rce/)
 
 ***
 
 ## Approfondimenti per engine
 
-Guide satellite dedicate — ogni pagina tratta un engine in dettaglio e rimanda a questo pillar e alla [guida Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa):
+Guide satellite dedicate — ogni pagina tratta un engine in dettaglio e rimanda a questo pillar e alla [guida Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/):
 
-* [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce) — MRO traversal, bypass filtri, Flask config leak, reverse shell
-* [Twig SSTI e sandbox bypass](https://hackita.it/articoli/twig-ssti-rce) — versioni, sandbox mode, CMS ecosystem
-* [FreeMarker SSTI in Java](https://hackita.it/articoli/freemarker-ssti-rce) — Execute utility, Runtime, Spring Boot
-* [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce) — Spring MVC, expression language
-* [ERB SSTI in Ruby](https://hackita.it/articoli/erb-ssti-rce) — Rails, Sinatra, file read e RCE
-* [Velocity SSTI](https://hackita.it/articoli/velocity-ssti-rce) — ambienti Java enterprise, context abuse
-* [Mako SSTI in Python](https://hackita.it/articoli/mako-ssti-rce) — Pyramid, Python diretto, import os senza traversal
-* [Pebble SSTI in Java](https://hackita.it/articoli/pebble-ssti-rce) — sintassi Jinja2-like su JVM, reflection pre-3.0.9
-* [Smarty SSTI in PHP](https://hackita.it/articoli/smarty-ssti-rce) — CMS legacy PHP, sandbox bypass, modifier exploitation
+* [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce/) — MRO traversal, bypass filtri, Flask config leak, reverse shell
+* [Twig SSTI e sandbox bypass](https://hackita.it/articoli/twig-ssti-rce/) — versioni, sandbox mode, CMS ecosystem
+* [FreeMarker SSTI in Java](https://hackita.it/articoli/freemarker-ssti-rce/) — Execute utility, Runtime, Spring Boot
+* [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce/) — Spring MVC, expression language
+* [ERB SSTI in Ruby](https://hackita.it/articoli/erb-ssti-rce/) — Rails, Sinatra, file read e RCE
+* [Velocity SSTI](https://hackita.it/articoli/velocity-ssti-rce/) — ambienti Java enterprise, context abuse
+* [Mako SSTI in Python](https://hackita.it/articoli/mako-ssti-rce/) — Pyramid, Python diretto, import os senza traversal
+* [Pebble SSTI in Java](https://hackita.it/articoli/pebble-ssti-rce/) — sintassi Jinja2-like su JVM, reflection pre-3.0.9
+* [Smarty SSTI in PHP](https://hackita.it/articoli/smarty-ssti-rce/) — CMS legacy PHP, sandbox bypass, modifier exploitation
 
 ***
 
@@ -370,7 +370,7 @@ Twig è il template engine più diffuso nell'ecosistema PHP, presente in Symfony
 ${runtime.exec("id")}
 ```
 
-Guida completa: [FreeMarker SSTI in Java](https://hackita.it/articoli/freemarker-ssti-rce)
+Guida completa: [FreeMarker SSTI in Java](https://hackita.it/articoli/freemarker-ssti-rce/)
 
 ### Thymeleaf exploitation (Java — Spring)
 
@@ -382,21 +382,21 @@ Guida completa: [FreeMarker SSTI in Java](https://hackita.it/articoli/freemarker
 [[${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.String).valueOf(new char[]{'i','d'})).getInputStream())}]]
 ```
 
-Guida completa: [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce)
+Guida completa: [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce/)
 
 ### Differenze pratiche tra engine
 
 | Engine     | Linguaggio | Delimitatori       | Sandbox           | Guida                                                                   |
 | ---------- | ---------- | ------------------ | ----------------- | ----------------------------------------------------------------------- |
-| Jinja2     | Python     | `{{ }}` `{% %}`    | Opzionale         | [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce)       |
-| Twig       | PHP        | `{{ }}` `{% %}`    | Opzionale         | [Twig SSTI e sandbox bypass](https://hackita.it/articoli/twig-ssti-rce) |
-| FreeMarker | Java       | `${}` `<#...>`     | No                | [FreeMarker SSTI](https://hackita.it/articoli/freemarker-ssti-rce)      |
-| Thymeleaf  | Java       | `[[${...}]]` `th:` | Parziale          | [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce)        |
-| ERB        | Ruby       | `<%= %>` `<% %>`   | No                | [ERB SSTI](https://hackita.it/articoli/erb-ssti-rce)                    |
-| Velocity   | Java       | `${}` `#set`       | No                | [Velocity SSTI](https://hackita.it/articoli/velocity-ssti-rce)          |
-| Mako       | Python     | `${}` `<% %>`      | No                | [Mako SSTI](https://hackita.it/articoli/mako-ssti-rce)                  |
-| Pebble     | Java       | `{{ }}` `{% %}`    | Parziale (3.0.9+) | [Pebble SSTI](https://hackita.it/articoli/pebble-ssti-rce)              |
-| Smarty     | PHP        | `{...}`            | Opzionale         | [Smarty SSTI](https://hackita.it/articoli/smarty-ssti-rce)              |
+| Jinja2     | Python     | `{{ }}` `{% %}`    | Opzionale         | [Jinja2 SSTI to RCE](https://hackita.it/articoli/jinja2-ssti-rce/)       |
+| Twig       | PHP        | `{{ }}` `{% %}`    | Opzionale         | [Twig SSTI e sandbox bypass](https://hackita.it/articoli/twig-ssti-rce/) |
+| FreeMarker | Java       | `${}` `<#...>`     | No                | [FreeMarker SSTI](https://hackita.it/articoli/freemarker-ssti-rce/)      |
+| Thymeleaf  | Java       | `[[${...}]]` `th:` | Parziale          | [Thymeleaf SSTI](https://hackita.it/articoli/thymeleaf-ssti-rce/)        |
+| ERB        | Ruby       | `<%= %>` `<% %>`   | No                | [ERB SSTI](https://hackita.it/articoli/erb-ssti-rce/)                    |
+| Velocity   | Java       | `${}` `#set`       | No                | [Velocity SSTI](https://hackita.it/articoli/velocity-ssti-rce/)          |
+| Mako       | Python     | `${}` `<% %>`      | No                | [Mako SSTI](https://hackita.it/articoli/mako-ssti-rce/)                  |
+| Pebble     | Java       | `{{ }}` `{% %}`    | Parziale (3.0.9+) | [Pebble SSTI](https://hackita.it/articoli/pebble-ssti-rce/)              |
+| Smarty     | PHP        | `{...}`            | Opzionale         | [Smarty SSTI](https://hackita.it/articoli/smarty-ssti-rce/)              |
 
 ***
 
@@ -642,7 +642,7 @@ No. Usano gli stessi delimitatori `{{}}` ma logiche diverse. Jinja2 si basa sul 
 
 ***
 
-Parte del cluster [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [XSS](https://hackita.it/articoli/xss/), [SQLMap](https://hackita.it/articoli/sqlmap/), [XPath Injection](https://hackita.it/articoli/xpath-injection/), [Burp Suite](https://hackita.it/articoli/burp-suite/), [OWASP ZAP](https://hackita.it/articoli/owasp-zap/), [Wappalyzer](https://hackita.it/articoli/wappalyzer/), [WhatWeb](https://hackita.it/articoli/whatweb/), [Vulnerability Exploitation](https://hackita.it/articoli/vulnerability-exploitation/).
+Parte del cluster [Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [XSS](https://hackita.it/articoli/xss/), [SQLMap](https://hackita.it/articoli/sqlmap/), [XPath Injection](https://hackita.it/articoli/xpath-injection/), [Burp Suite](https://hackita.it/articoli/burp-suite/), [OWASP ZAP](https://hackita.it/articoli/owasp-zap/), [Wappalyzer](https://hackita.it/articoli/wappalyzer/), [WhatWeb](https://hackita.it/articoli/whatweb/), [Vulnerability Exploitation](https://hackita.it/articoli/vulnerability-exploitation/).
 
 **Riferimenti esterni**: [PortSwigger Web Security Academy — SSTI](https://portswigger.net/web-security/server-side-template-injection) · [OWASP WSTG — Testing for SSTI](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/18-Testing_for_Server-side_Template_Injection) · [PortSwigger Research — SSTI](https://portswigger.net/research/server-side-template-injection)
 

@@ -17,9 +17,9 @@ featured: true
 
 Il session cookie è la chiave della porta: dopo il login, il server genera un token di sessione, lo invia al browser come cookie, e da quel momento **ogni request con quel cookie è autenticata** come quell'utente. Non servono più username e password — il cookie è la prova di identità. Se l'attaccante ottiene il cookie, **diventa la vittima**: accede al suo account, ai suoi dati, alle sue funzionalità. Senza conoscere la password, senza triggerare alert di login sospetto.
 
-È un attacco che incontro con una frequenza sorprendente. Non perché il furto di sessione sia difficile da prevenire — i flag `HttpOnly`, `Secure`, `SameSite` esistono da anni — ma perché **gli sviluppatori dimenticano di metterli**. O li mettono ma lasciano una [XSS](https://hackita.it/articoli/xss) che rende `HttpOnly` irrilevante. O configurano HTTPS ma dimenticano il flag `Secure` e il cookie viaggia in chiaro sulla prima request HTTP.
+È un attacco che incontro con una frequenza sorprendente. Non perché il furto di sessione sia difficile da prevenire — i flag `HttpOnly`, `Secure`, `SameSite` esistono da anni — ma perché **gli sviluppatori dimenticano di metterli**. O li mettono ma lasciano una [XSS](https://hackita.it/articoli/xss/) che rende `HttpOnly` irrilevante. O configurano HTTPS ma dimenticano il flag `Secure` e il cookie viaggia in chiaro sulla prima request HTTP.
 
-Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [JWT Attack](https://hackita.it/articoli/jwt-attack), [CSRF](https://hackita.it/articoli/csrf).
+Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [JWT Attack](https://hackita.it/articoli/jwt/), [CSRF](https://hackita.it/articoli/csrf/).
 
 Riferimenti: [PortSwigger Session Management](https://portswigger.net/web-security/authentication/other-mechanisms), [OWASP Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html).
 
@@ -76,7 +76,7 @@ done
 
 ## Vettore 1 — Furto Cookie Via XSS
 
-Se il flag `HttpOnly` manca, una [XSS](https://hackita.it/articoli/xss) permette di rubare il cookie con `document.cookie`:
+Se il flag `HttpOnly` manca, una [XSS](https://hackita.it/articoli/xss/) permette di rubare il cookie con `document.cookie`:
 
 ```javascript
 // XSS stored o reflected che esfiltra il cookie:
@@ -405,6 +405,6 @@ ESCALATION
 
 Riferimenti: [PortSwigger Session Management vulnerabilities](https://portswigger.net/web-security/authentication/other-mechanisms), [OWASP Session Management Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/), [HackTricks Cookies](https://book.hacktricks.wiki/en/pentesting-web/hacking-with-cookies/index.html).
 
-Satellite della [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [JWT Attack](https://hackita.it/articoli/jwt-attack), [CSRF](https://hackita.it/articoli/csrf), [XSS](https://hackita.it/articoli/xss).
+Satellite della [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [JWT Attack](https://hackita.it/articoli/jwt/), [CSRF](https://hackita.it/articoli/csrf/), [XSS](https://hackita.it/articoli/xss/).
 
 > Il tuo cookie ha `HttpOnly`? La sessione è invalidata al logout? Il token ha entropia sufficiente? [Penetration test HackIta](https://hackita.it/servizi) per ogni falla nella gestione sessioni. Dal cookie al takeover: [formazione 1:1](https://hackita.it/formazione).

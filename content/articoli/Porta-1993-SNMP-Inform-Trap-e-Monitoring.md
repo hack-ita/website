@@ -17,7 +17,7 @@ tags:
   - Network Monitoring
 ---
 
-> **Executive Summary** — La porta 1993/UDP è registrata IANA per il servizio `snmp-tcp-port` ed è talvolta associata a SNMP Inform, la variante "affidabile" delle SNMP Trap. Mentre le Trap (porta 162) sono fire-and-forget (il dispositivo invia senza conferma), gli Inform richiedono un ACK dal ricevente — garantendo la consegna. In pratica, la maggior parte delle implementazioni usa la porta 162 anche per gli Inform. Se trovi la 1993 aperta, stai guardando un SNMP manager o collector alternativo. Per la guida completa su SNMP Trap e le tecniche di attacco, consulta la [guida alla porta 162 SNMP Trap](https://hackita.it/articoli/porta-162-snmptrap).
+> **Executive Summary** — La porta 1993/UDP è registrata IANA per il servizio `snmp-tcp-port` ed è talvolta associata a SNMP Inform, la variante "affidabile" delle SNMP Trap. Mentre le Trap (porta 162) sono fire-and-forget (il dispositivo invia senza conferma), gli Inform richiedono un ACK dal ricevente — garantendo la consegna. In pratica, la maggior parte delle implementazioni usa la porta 162 anche per gli Inform. Se trovi la 1993 aperta, stai guardando un SNMP manager o collector alternativo. Per la guida completa su SNMP Trap e le tecniche di attacco, consulta la [guida alla porta 162 SNMP Trap](https://hackita.it/articoli/porta-162-snmptrap/).
 
 **Cos’è la porta 1993 (SNMP Inform)**
 
@@ -75,7 +75,7 @@ SNMPv2-MIB::sysName.0 = STRING: monitor01.corp.local
 FOUND: public
 ```
 
-**Lettura dell'output:** la porta 1993 risponde a query SNMP con community `public`. Il sistema è un server di monitoring Linux. Da qui puoi enumerare l'intera configurazione come su qualsiasi porta SNMP. Per l'[enumerazione SNMP completa](https://hackita.it/articoli/porta-162-snmptrap), usa le stesse tecniche della porta 161/162.
+**Lettura dell'output:** la porta 1993 risponde a query SNMP con community `public`. Il sistema è un server di monitoring Linux. Da qui puoi enumerare l'intera configurazione come su qualsiasi porta SNMP. Per l'[enumerazione SNMP completa](https://hackita.it/articoli/porta-162-snmptrap/), usa le stesse tecniche della porta 161/162.
 
 ## 3. Tecniche Offensive
 
@@ -148,7 +148,7 @@ snmpwalk -v2c -c public 10.10.10.5:1993 system
 | Community brute | `onesixtyone -c community.txt [target]:1993`                               |
 | Capture traffic | `tcpdump -i eth0 udp port 1993 -w inform.pcap`                             |
 | Inject Inform   | `snmptrap -v 2c -c public [target]:1993 '' [OID]`                          |
-| Correlate       | Vedi [porta 162 SNMP Trap](https://hackita.it/articoli/porta-162-snmptrap) |
+| Correlate       | Vedi [porta 162 SNMP Trap](https://hackita.it/articoli/porta-162-snmptrap/) |
 
 ### Perché Porta 1993 è rilevante
 

@@ -16,11 +16,11 @@ tags:
   - rce
 ---
 
-La [Command Injection](https://hackita.it/articoli/command-injection) copre il principio generale: input utente che finisce in una shell. La **OS Command Injection** scende al livello del sistema operativo — le differenze tra Linux e Windows, l'**argument injection** (manipolare gli argomenti di un comando senza usare separatori), l'exploitation di tool specifici (ImageMagick, ffmpeg, Git, tar, curl), e la privilege escalation immediata post-exploitation.
+La [Command Injection](https://hackita.it/articoli/command-injection/) copre il principio generale: input utente che finisce in una shell. La **OS Command Injection** scende al livello del sistema operativo — le differenze tra Linux e Windows, l'**argument injection** (manipolare gli argomenti di un comando senza usare separatori), l'exploitation di tool specifici (ImageMagick, ffmpeg, Git, tar, curl), e la privilege escalation immediata post-exploitation.
 
 La distinzione è importante perché nel 2026 molte applicazioni filtrano correttamente i separatori di comandi (`;`, `|`, `&&`) ma non proteggono contro l'**argument injection** — dove l'attaccante non aggiunge un nuovo comando ma manipola gli argomenti del comando esistente per ottenere lo stesso risultato.
 
-Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa).
+Satellite operativo della [guida pillar Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/).
 
 ## Cos'è la OS Command Injection?
 
@@ -207,4 +207,4 @@ Ho escalato con un payload ffmpeg che sfruttava il protocol handler `concat` per
 
 ***
 
-Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa). Vedi anche: [Command Injection](https://hackita.it/articoli/command-injection), [SSTI](https://hackita.it/articoli/ssti).
+Satellite della [Guida Completa Injection Attacks](https://hackita.it/articoli/injection-attacks-guida-completa/). Vedi anche: [Command Injection](https://hackita.it/articoli/command-injection/), [SSTI](https://hackita.it/articoli/ssti-server-side-template-injection/).

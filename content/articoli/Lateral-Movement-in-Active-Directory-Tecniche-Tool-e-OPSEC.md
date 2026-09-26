@@ -40,7 +40,7 @@ Per qualsiasi tecnica di lateral movement servono:
 * Accesso di rete al target sulla porta richiesta
 * Privilegi sufficienti sul target (quasi sempre local admin o domain admin)
 
-Le credenziali si ottengono tipicamente via [credential dumping](https://hackita.it/articoli/credential-dumping/) da LSASS, [DCSync](https://hackita.it/articoli/dcsync/), [Kerberoasting](https://hackita.it/articoli/kerberoasting/) o [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/).
+Le credenziali si ottengono tipicamente via [credential dumping](https://hackita.it/articoli/credential-dumping/) da LSASS, [DCSync](https://hackita.it/articoli/dcsync/), [Kerberoasting](https://hackita.it/articoli/kerberos/) o [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/).
 
 ***
 

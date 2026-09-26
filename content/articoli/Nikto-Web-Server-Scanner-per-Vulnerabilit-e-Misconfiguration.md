@@ -212,7 +212,7 @@ Scansiona attraverso un tunnel SOCKS o HTTP proxy:
 nikto -h http://172.16.0.10 -useproxy http://127.0.0.1:8080
 ```
 
-Integra con [Burp Suite](https://hackita.it/articoli/burp-suite) come proxy per catturare tutte le richieste generate da Nikto e analizzarle manualmente.
+Integra con [Burp Suite](https://hackita.it/articoli/burp-suite/) come proxy per catturare tutte le richieste generate da Nikto e analizzarle manualmente.
 
 ### Scansione con virtual host specifico
 
@@ -303,7 +303,7 @@ Nikto si posiziona dopo il port scanning e prima dell'analisi manuale.
 
 **Flusso operativo:**
 
-[Masscan](https://hackita.it/articoli/masscan) (port scan) → Nmap (service detection) → **Nikto (vulnerability scan)** → Burp Suite (manual testing)
+[Masscan](https://hackita.it/articoli/masscan/) (port scan) → Nmap (service detection) → **Nikto (vulnerability scan)** → Burp Suite (manual testing)
 
 **Passaggio dati:**
 
@@ -320,7 +320,7 @@ while read host; do
 done < web_targets.txt
 ```
 
-| Criterio            | Nikto    | [Nuclei](https://hackita.it/articoli/nuclei) | ZAP   | Nessus   |
+| Criterio            | Nikto    | [Nuclei](https://hackita.it/articoli/nuclei/) | ZAP   | Nessus   |
 | ------------------- | -------- | -------------------------------------------- | ----- | -------- |
 | Velocità            | ★★★☆☆    | ★★★★★                                        | ★★★☆☆ | ★★★★☆    |
 | Detection accuracy  | ★★★☆☆    | ★★★★☆                                        | ★★★★☆ | ★★★★★    |
@@ -351,11 +351,11 @@ Trovi: `/config.php.bak` con credenziali DB, `/admin/` accessibile, `server-stat
 
 **Fase 3 — Exploitation (10 min)**
 
-Le credenziali nel backup config danno accesso al database [MySQL](https://hackita.it/articoli/mysql). Trovi hash delle password admin.
+Le credenziali nel backup config danno accesso al database [MySQL](https://hackita.it/articoli/porta-3306-mysql/). Trovi hash delle password admin.
 
 **Fase 4 — Admin Access (5 min)**
 
-Crack degli hash. Login al pannello admin. Upload di una [web shell](https://hackita.it/articoli/weevely3) tramite funzionalità di upload del CMS.
+Crack degli hash. Login al pannello admin. Upload di una [web shell](https://hackita.it/articoli/weevely3/) tramite funzionalità di upload del CMS.
 
 **Fase 5 — Post-exploitation (20 min)**
 
@@ -480,7 +480,7 @@ No. Controlla vulnerabilità e misconfiguration note. Per testing dinamico avanz
 Non direttamente. Usa `proxychains4 nikto -h target` oppure un proxy HTTP intermedio.
 
 **Nikto sostituisce Nuclei?**
-No. [Nuclei](https://hackita.it/articoli/nuclei) ha template community-driven e aggiornati costantemente, è più veloce e configurabile. Nikto è complementare per check di configurazione classici.
+No. [Nuclei](https://hackita.it/articoli/nuclei/) ha template community-driven e aggiornati costantemente, è più veloce e configurabile. Nikto è complementare per check di configurazione classici.
 
 **Quanto dura una scansione completa?**
 Su un singolo host con tutte le categorie attive: 2-5 minuti. Con HTTPS e evasion: 5-10 minuti.

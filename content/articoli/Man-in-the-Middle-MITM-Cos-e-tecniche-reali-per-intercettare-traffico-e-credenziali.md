@@ -84,7 +84,7 @@ Il traffico viene re-inoltrato alla destinazione originale. La connessione riman
 
 ### ARP Spoofing (ARP Poisoning)
 
-L'ARP spoofing è la tecnica MITM più usata su reti locali. Sfrutta una caratteristica strutturale del protocollo [ARP](https://hackita.it/articoli/arp): non ha autenticazione. Qualsiasi host può inviare una ARP Reply affermando di essere chiunque.
+L'ARP spoofing è la tecnica MITM più usata su reti locali. Sfrutta una caratteristica strutturale del protocollo [ARP](https://hackita.it/articoli/arp/): non ha autenticazione. Qualsiasi host può inviare una ARP Reply affermando di essere chiunque.
 
 L'attaccante invia Gratuitous ARP Reply false a entrambe le vittime:
 
@@ -107,7 +107,7 @@ arp.spoof on
 net.sniff on
 ```
 
-Per i dettagli tecnici sul protocollo ARP e le sue vulnerabilità, vedi la guida completa su [ARP: cos'è e come funziona](https://hackita.it/articoli/arp-address-resolution-protocol).
+Per i dettagli tecnici sul protocollo ARP e le sue vulnerabilità, vedi la guida completa su [ARP: cos'è e come funziona](https://hackita.it/articoli/arp/).
 
 ### Rogue Gateway via VRRP/HSRP Spoofing
 
@@ -127,7 +127,7 @@ vrrp = (Ether(dst="01:00:5e:00:00:12") /
 sendp(vrrp, iface="eth0", loop=1, inter=1)
 ```
 
-Approfondisci i protocolli di ridondanza gateway in [VRRP, HSRP e CARP: cos'è e come attaccarli](https://hackita.it/articoli/vrrp-hsrp-carp).
+Approfondisci i protocolli di ridondanza gateway in [VRRP, HSRP e CARP: cos'è e come attaccarli](https://hackita.it/articoli/vrrp-hsrp-carp/).
 
 ### Rogue DHCP Server
 
@@ -165,7 +165,7 @@ EOF
 hostapd /tmp/hostapd.conf
 ```
 
-Una volta connessi all'Evil Twin, tutti i client ricevono DHCP dal server dell'attaccante e il loro traffico è completamente visibile. Per i dettagli sul protocollo wireless e le tecniche di attacco, vedi [Wi-Fi 802.11: cos'è e come attaccarlo](https://hackita.it/articoli/wifi-802-11).
+Una volta connessi all'Evil Twin, tutti i client ricevono DHCP dal server dell'attaccante e il loro traffico è completamente visibile. Per i dettagli sul protocollo wireless e le tecniche di attacco, vedi [Wi-Fi 802.11: cos'è e come attaccarlo](https://hackita.it/articoli/wifi-802-11/).
 
 ### DNS Spoofing
 
@@ -245,7 +245,7 @@ SSL stripping è mitigato da **HSTS (HTTP Strict Transport Security)**: un heade
 
 Ma HSTS ha un limite fondamentale: funziona solo se il client ha già visitato il sito almeno una volta e ha memorizzato la policy. Al **primo accesso** (o se il client non ha la entry in cache), SSL stripping funziona ancora. Esistono varianti avanzate come **HSTS bypass** che sfruttano sottodomini non nella preload list.
 
-Per una comprensione approfondita di TLS e come viene attaccato, vedi [TLS/SSL: cos'è e come analizzarlo in un pentest](https://hackita.it/articoli/tls-ssl).
+Per una comprensione approfondita di TLS e come viene attaccato, vedi [TLS/SSL: cos'è e come analizzarlo in un pentest](https://hackita.it/articoli/tls-ssl/).
 
 ***
 
@@ -441,7 +441,7 @@ In posizione MITM su una rete enterprise, questi protocolli trasmettono credenzi
 | SMB/NTLM        | 445    | Hash NTLMv2                | Responder + hashcat  |
 | Kerberos        | 88     | TGT/ST crackabili          | Responder, impacket  |
 
-Tutti i protocolli su [TCP](https://hackita.it/articoli/tcp) non cifrati sono vulnerabili in posizione MITM. Per i dettagli su sniffing del traffico in chiaro, vedi la guida su [sniffing su reti locali](https://hackita.it/articoli/sniffing).
+Tutti i protocolli su [TCP](https://hackita.it/articoli/tcp/) non cifrati sono vulnerabili in posizione MITM. Per i dettagli su sniffing del traffico in chiaro, vedi la guida su [sniffing su reti locali](https://hackita.it/articoli/sniffing/).
 
 ***
 
@@ -602,7 +602,7 @@ interface GigabitEthernet1/0/24   ! Uplink
 standby 1 authentication md5 key-string <strong-password>
 ```
 
-Previene il HSRP takeover da host non autorizzati. Per i dettagli, vedi [VRRP, HSRP e CARP: hardening](https://hackita.it/articoli/vrrp-hsrp-carp).
+Previene il HSRP takeover da host non autorizzati. Per i dettagli, vedi [VRRP, HSRP e CARP: hardening](https://hackita.it/articoli/vrrp-hsrp-carp/).
 
 ### Livello 2: 802.1X Network Access Control
 
@@ -624,7 +624,7 @@ Per applicazioni mobile e API critiche, il pinning del certificato (o del public
 
 In ambienti zero-trust, sia client che server presentano certificati per l'autenticazione reciproca. Un MITM non può completare l'handshake TLS senza il certificato client legittimo.
 
-Per tutti i dettagli su TLS e le sue protezioni contro MITM, vedi [TLS/SSL: cos'è e come funziona](https://hackita.it/articoli/tls-ssl).
+Per tutti i dettagli su TLS e le sue protezioni contro MITM, vedi [TLS/SSL: cos'è e come funziona](https://hackita.it/articoli/tls-ssl/).
 
 ### Monitoraggio: arpwatch e ZeroTrustNetwork
 
@@ -692,18 +692,18 @@ In un engagement di internal network pentesting, il MITM è quasi sempre fattibi
 
 Approfondisci i protocolli e le tecniche correlate:
 
-* [ARP: address resolution e spoofing](https://hackita.it/articoli/arp)
-* [TCP: handshake e session hijacking](https://hackita.it/articoli/tcp)
-* [TLS/SSL: cifratura e SSL stripping](https://hackita.it/articoli/tls-ssl)
-* [VRRP, HSRP e CARP: gateway spoofing](https://hackita.it/articoli/vrrp-hsrp-carp)
-* [Wi-Fi 802.11: Evil Twin e deauthentication](https://hackita.it/articoli/wifi-802-11)
-* [DNS: spoofing e cache poisoning](https://hackita.it/articoli/dns)
-* [DHCP: rogue server e MITM](https://hackita.it/articoli/dhcp)
-* [Ethernet IEEE 802.3: livello datalink e ARP](https://hackita.it/articoli/ethernet-ieee-802-3)
-* [VLAN e 802.1Q: segmentazione e MITM cross-VLAN](https://hackita.it/articoli/vlan)
-* [IPv4/IPv6: ICMP redirect e NDP spoofing](https://hackita.it/articoli/ipv4-ipv6)
-* [IPSec: protezione contro MITM a livello 3](https://hackita.it/articoli/ipsec)
-* [NTP: downgrade per HSTS bypass](https://hackita.it/articoli/ntp)
+* [ARP: address resolution e spoofing](https://hackita.it/articoli/arp/)
+* [TCP: handshake e session hijacking](https://hackita.it/articoli/tcp/)
+* [TLS/SSL: cifratura e SSL stripping](https://hackita.it/articoli/tls-ssl/)
+* [VRRP, HSRP e CARP: gateway spoofing](https://hackita.it/articoli/vrrp-hsrp-carp/)
+* [Wi-Fi 802.11: Evil Twin e deauthentication](https://hackita.it/articoli/wifi-802-11/)
+* [DNS: spoofing e cache poisoning](https://hackita.it/articoli/dns/)
+* [DHCP: rogue server e MITM](https://hackita.it/articoli/dhcp/)
+* [Ethernet IEEE 802.3: livello datalink e ARP](https://hackita.it/articoli/ethernet-ieee-802-3/)
+* [VLAN e 802.1Q: segmentazione e MITM cross-VLAN](https://hackita.it/articoli/vlan/)
+* [IPv4/IPv6: ICMP redirect e NDP spoofing](https://hackita.it/articoli/ipv4-ipv6/)
+* [IPSec: protezione contro MITM a livello 3](https://hackita.it/articoli/ipsec/)
+* [NTP: downgrade per HSTS bypass](https://hackita.it/articoli/ntp/)
 
 Riferimento tecnico: [RFC 5246 — The TLS Protocol](https://datatracker.ietf.org/doc/html/rfc5246)
 

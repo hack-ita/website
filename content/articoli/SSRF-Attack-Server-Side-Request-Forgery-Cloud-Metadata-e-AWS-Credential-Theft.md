@@ -22,7 +22,7 @@ Stai testando un'applicazione web, trovi un parametro che accetta un URL — un 
 
 Un parametro URL in un form di configurazione webhook, e in otto minuti ti ritrovi con le chiavi dell'intera infrastruttura AWS. Non sto esagerando — è quello che succede nel caso studio alla fine di questo articolo.
 
-Satellite della [guida pillar API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa). Vedi anche: [XXE](https://hackita.it/articoli/xxe), [Open Redirect](https://hackita.it/articoli/open-redirect).
+Satellite della [guida pillar API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/). Vedi anche: [XXE](https://hackita.it/articoli/xxe/), [Open Redirect](https://hackita.it/articoli/open-redirect/).
 
 Riferimenti: [PortSwigger SSRF](https://portswigger.net/web-security/ssrf), [OWASP SSRF Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html), [HackTricks SSRF](https://book.hacktricks.wiki/en/pentesting-web/ssrf-server-side-request-forgery/index.html).
 
@@ -387,6 +387,6 @@ POST-EXPLOITATION
 
 Riferimenti: [PortSwigger SSRF](https://portswigger.net/web-security/ssrf), [OWASP SSRF Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html), [HackTricks SSRF](https://book.hacktricks.wiki/en/pentesting-web/ssrf-server-side-request-forgery/index.html), [SSRFmap](https://github.com/swisskyrepo/SSRFmap).
 
-Satellite della [Guida API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa). Vedi anche: [XXE](https://hackita.it/articoli/xxe), [Open Redirect](https://hackita.it/articoli/open-redirect).
+Satellite della [Guida API & Modern Web Attacks](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/). Vedi anche: [XXE](https://hackita.it/articoli/xxe/), [Open Redirect](https://hackita.it/articoli/open-redirect/).
 
 > I tuoi webhook controllano l'URL di destinazione? Il metadata cloud è raggiungibile dall'applicazione? Il filtro resiste all'encoding decimale? [Penetration test API HackIta](https://hackita.it/servizi) per trovare ogni SSRF. Dal webhook al cloud takeover: [formazione 1:1](https://hackita.it/formazione).

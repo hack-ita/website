@@ -17,7 +17,7 @@ tags:
   - COPY PROGRAM
 ---
 
-PostgreSQL è il database relazionale open source più avanzato e uno dei più diffusi in ambienti enterprise, SaaS e infrastrutture cloud. Ascolta sulla porta 5432 TCP e alimenta applicazioni web (Django, Rails, Spring), piattaforme analytics, data warehouse e microservizi. Nel penetration testing, PostgreSQL ha una superficie di attacco più ampia di [MySQL](https://hackita.it/articoli/porta-3306-mysql) grazie a funzionalità native come `COPY TO/FROM PROGRAM` che permette di eseguire comandi di sistema direttamente da una query SQL — senza bisogno di UDF esterne o exploit. In pratica: se hai credenziali con il privilegio giusto, hai una shell.
+PostgreSQL è il database relazionale open source più avanzato e uno dei più diffusi in ambienti enterprise, SaaS e infrastrutture cloud. Ascolta sulla porta 5432 TCP e alimenta applicazioni web (Django, Rails, Spring), piattaforme analytics, data warehouse e microservizi. Nel penetration testing, PostgreSQL ha una superficie di attacco più ampia di [MySQL](https://hackita.it/articoli/porta-3306-mysql/) grazie a funzionalità native come `COPY TO/FROM PROGRAM` che permette di eseguire comandi di sistema direttamente da una query SQL — senza bisogno di UDF esterne o exploit. In pratica: se hai credenziali con il privilegio giusto, hai una shell.
 
 PostgreSQL è spesso il database dietro applicazioni critiche — Django admin panel, GitLab, SonarQube, Grafana, Confluence, Keycloak. Compromettere il database significa compromettere l'applicazione e i dati di tutti i suoi utenti.
 
@@ -46,7 +46,7 @@ nmap -p 5432 --script=pgsql-brute,pgsql-info 10.10.10.40
 |_  compiled by gcc 12.2.0, 64-bit
 ```
 
-La versione esatta → cerca CVE su [Exploit-DB](https://hackita.it/articoli/exploit-db).
+La versione esatta → cerca CVE su [Exploit-DB](https://hackita.it/articoli/exploitdb/).
 
 ### Banner grab manuale
 
@@ -166,7 +166,7 @@ SELECT usename, passwd FROM pg_shadow;
 
 **Formati hash PostgreSQL:**
 
-* **md5** (legacy): `md5` + MD5(password + username) → [Hashcat](https://hackita.it/articoli/hashcat) mode 11
+* **md5** (legacy): `md5` + MD5(password + username) → [Hashcat](https://hackita.it/articoli/hashcat/) mode 11
 * **SCRAM-SHA-256** (PostgreSQL 10+): più robusto, hashcat mode 28600
 
 ```bash
@@ -421,10 +421,10 @@ Path comuni di escalation:
 * **sudo -l** → l'utente postgres ha sudo su qualcosa?
 * **SUID binaries** → find / -perm -4000
 * **Kernel exploit** se il sistema è vecchio
-* **Credenziali in .pgpass** di altri utenti → test su [SSH](https://hackita.it/articoli/ssh)
+* **Credenziali in .pgpass** di altri utenti → test su [SSH](https://hackita.it/articoli/ssh/)
 * **pg\_hba.conf con trust** per connessioni locali → qualsiasi utente si connette senza password
 
-Per la guida completa: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc) e [Linux Enumeration](https://hackita.it/articoli/linux-enumeration).
+Per la guida completa: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/) e [Linux Enumeration](https://hackita.it/articoli/linux-enumeration/).
 
 ## 8. Lateral Movement
 
@@ -439,7 +439,7 @@ COPY tmp FROM PROGRAM 'grep -riE "jdbc|mysql|mongodb|redis" /opt/ /var/www/ /hom
 COPY tmp FROM PROGRAM 'for h in $(seq 1 254); do timeout 0.5 bash -c "echo >/dev/tcp/10.10.10.$h/22" 2>/dev/null && echo "10.10.10.$h:22 open"; done';
 ```
 
-Credenziali trovate → testa su [SSH](https://hackita.it/articoli/ssh), [RDP](https://hackita.it/articoli/porta-3389-rdp), [SMB](https://hackita.it/articoli/smb), [Redis](https://hackita.it/articoli/porta-6379-redis).
+Credenziali trovate → testa su [SSH](https://hackita.it/articoli/ssh/), [RDP](https://hackita.it/articoli/porta-3389-rdp/), [SMB](https://hackita.it/articoli/smb/), [Redis](https://hackita.it/articoli/porta-6379-redis/).
 
 ## 9. Detection & Hardening
 

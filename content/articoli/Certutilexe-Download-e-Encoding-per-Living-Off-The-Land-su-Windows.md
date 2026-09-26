@@ -25,7 +25,7 @@ Certutil.exe è un tool nativo Windows progettato per la gestione certificati, m
 
 Certutil è un tool LOLBIN (Living Off the Land Binary) che interviene principalmente nelle fasi di delivery e execution, ma anche in post-exploitation per trasferimento dati.
 
-I **[LOLBins (Living-Off-the-Land Binaries)](https://hackita.it/articoli/LOLBins)** sono **programmi legittimi e firmati di Windows** che **possono essere abusati** durante un **CTF, lab o pentest** per eseguire azioni offensive **senza usare tool esterni**.
+I **[LOLBins (Living-Off-the-Land Binaries)](https://hackita.it/articoli/LOLBins/)** sono **programmi legittimi e firmati di Windows** che **possono essere abusati** durante un **CTF, lab o pentest** per eseguire azioni offensive **senza usare tool esterni**.
 
 ### Perché sono potenti nei CTF
 
@@ -44,8 +44,8 @@ I **[LOLBins (Living-Off-the-Land Binaries)](https://hackita.it/articoli/LOLBins
 
 | Fase            | Tool Precedente                                         | Certutil                 | Tool Successivo                                  |
 | --------------- | ------------------------------------------------------- | ------------------------ | ------------------------------------------------ |
-| Delivery        | [Gophish](https://hackita.it/articoli/gophish) phishing | → Download payload       | → Execution                                      |
-| Execution       | Initial foothold                                        | → Decode payload         | → [WinPEAS](https://hackita.it/articoli/winpeas) |
+| Delivery        | [Gophish](https://hackita.it/articoli/gophish/) phishing | → Download payload       | → Execution                                      |
+| Execution       | Initial foothold                                        | → Decode payload         | → [WinPEAS](https://hackita.it/articoli/winpeas/) |
 | Exfiltration    | Data collection                                         | → Encode Base64          | → Transfer out                                   |
 | Defense Evasion | Payload creation                                        | → Bypass AV con encoding | → Persistence                                    |
 
@@ -349,10 +349,10 @@ CertUtil: -hashfile command completed successfully.
 
 | Certutil +                                                     | Risultato             | Comando                                |
 | -------------------------------------------------------------- | --------------------- | -------------------------------------- |
-| [Metasploit](https://hackita.it/articoli/metasploit-framework) | Delivery payload      | certutil download → msfconsole handler |
-| [PowerShell](https://hackita.it/articoli/powershell)           | Fileless execution    | certutil decode → IEX memory           |
-| [PsExec](https://hackita.it/articoli/psexec)                   | Remote payload deploy | psexec → certutil su target            |
-| [CrackMapExec](https://hackita.it/articoli/crackmapexec)       | Mass deployment       | cme exec → certutil one-liner          |
+| [Metasploit](https://hackita.it/articoli/metasploit/) | Delivery payload      | certutil download → msfconsole handler |
+| [PowerShell](https://hackita.it/articoli/powershell/)           | Fileless execution    | certutil decode → IEX memory           |
+| [PsExec](https://hackita.it/articoli/psexec/)                   | Remote payload deploy | psexec → certutil su target            |
+| [CrackMapExec](https://hackita.it/articoli/crackmapexec/)       | Mass deployment       | cme exec → certutil one-liner          |
 
 ## Confronto: Certutil vs Alternative di Download
 

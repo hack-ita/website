@@ -18,7 +18,7 @@ tags:
 
 Impacket è una suite Python sviluppata da Fortra (ex Core Security) che implementa manipulation di protocolli di rete Microsoft (SMB, MSRPC, LDAP, Kerberos) per operazioni offensive su ambienti Windows e Active Directory. La libreria fornisce accesso low-level ai protocolli permettendo exploitation avanzata come DCSync, pass-the-hash, Kerberos delegation attacks e SMB relay senza necessità di binari Windows nativi.
 
-La forza di Impacket risiede nella capacità di eseguire attacchi complessi da sistema Linux/macOS contro infrastrutture Windows, eliminando dipendenze da tooling Windows-based. Gli script della suite coprono l'intero ciclo di un engagement: da reconnaissance (GetADUsers.py) a lateral movement (psexec.py, wmiexec.py) fino a domain takeover (secretsdump.py per DCSync). Impacket si integra perfettamente con output di [Responder](https://hackita.it/articoli/responder) per relay attacks e [Hashcat](https://hackita.it/articoli/hashcat) per hash cracking.
+La forza di Impacket risiede nella capacità di eseguire attacchi complessi da sistema Linux/macOS contro infrastrutture Windows, eliminando dipendenze da tooling Windows-based. Gli script della suite coprono l'intero ciclo di un engagement: da reconnaissance (GetADUsers.py) a lateral movement (psexec.py, wmiexec.py) fino a domain takeover (secretsdump.py per DCSync). Impacket si integra perfettamente con output di [Responder](https://hackita.it/articoli/responder/) per relay attacks e [Hashcat](https://hackita.it/articoli/hashcat/) per hash cracking.
 
 In questa guida impari a usare gli script Impacket fondamentali per penetration testing Active Directory, tecniche di pass-the-hash per lateral movement stealth, DCSync per extraction completa domain database, e differenze tra psexec.py/wmiexec.py/smbexec.py per scegliere il metodo ottimale in base a detection posture target.
 
@@ -99,54 +99,54 @@ Impacket fornisce \~60 script Python per operazioni specifiche. I più rilevanti
 
 ## Remote Execution
 
-* [`psexec`](https://hackita.it/articoli/psexec)
+* [`psexec`](https://hackita.it/articoli/psexec/)
   Esegue comandi remoti creando un servizio temporaneo via SMB. Metodo diretto e molto affidabile per ottenere shell SYSTEM.
-* [`smbexec`](https://hackita.it/articoli/smbexec)
+* [`smbexec`](https://hackita.it/articoli/smbexec/)
   Variante più stealth rispetto a psexec: usa share SMB e file temporanei senza installare un servizio persistente.
-* [`wmiexec`](https://hackita.it/articoli/wmiexec)
+* [`wmiexec`](https://hackita.it/articoli/wmiexec/)
   Esecuzione remota tramite WMI. Spesso più silenzioso lato AV/EDR rispetto a psexec.
-* [`dcomexec`](https://hackita.it/articoli/dcomexec)
+* [`dcomexec`](https://hackita.it/articoli/dcomexec/)
   Abusa di DCOM per command execution remota quando WMI è filtrato.
-* [`atexec`](https://hackita.it/articoli/atexec)
+* [`atexec`](https://hackita.it/articoli/atexec/)
   Sfrutta Task Scheduler per creare task remoti che eseguono comandi privilegiati.
 
 ***
 
 ## Credential Access
 
-* [`secretsdump`](https://hackita.it/articoli/secretsdump)
+* [`secretsdump`](https://hackita.it/articoli/secretsdump/)
   Dump di hash NTLM da SAM/LSA oppure attacco DCSync contro il Domain Controller.
-* [`GetNPUsers`](https://hackita.it/articoli/getnpusers)
+* [`GetNPUsers`](https://hackita.it/articoli/getnpusers/)
   AS-REP Roasting: estrae hash di account con pre-authentication disabilitata.
-* [`GetUserSPNs`](https://hackita.it/articoli/getuserspns)
+* [`GetUserSPNs`](https://hackita.it/articoli/getuserspns/)
   Kerberoasting: richiede ticket di servizio (TGS) per crack offline.
-* [`getTGT`](https://hackita.it/articoli/gettgt)
+* [`getTGT`](https://hackita.it/articoli/gettgt/)
   Richiede un Ticket Granting Ticket valido usando credenziali o hash.
-* [`getST`](https://hackita.it/articoli/getst)
+* [`getST`](https://hackita.it/articoli/getst/)
   Richiede un Service Ticket specifico per un servizio nel dominio.
 
 ***
 
 ## Enumeration
 
-* [`GetADUsers`](https://hackita.it/articoli/getadusers)
+* [`GetADUsers`](https://hackita.it/articoli/getadusers/)
   Enumerazione utenti Active Directory via LDAP.
-* [`lookupsid`](https://hackita.it/articoli/lookupsid)
+* [`lookupsid`](https://hackita.it/articoli/lookupsid/)
   Brute-force dei SID per mappare utenti e gruppi di dominio.
-* [`rpcdump`](https://hackita.it/articoli/rpcdump)
+* [`rpcdump`](https://hackita.it/articoli/rpcdump/)
   Elenca endpoint RPC esposti su un host Windows.
-* [`samrdump`](https://hackita.it/articoli/samrdump)
+* [`samrdump`](https://hackita.it/articoli/samrdump/)
   Dump di informazioni sugli account tramite protocollo SAMR.
 
 ***
 
 ## SMB Operations
 
-* [`smbclient`](https://hackita.it/articoli/smbclient)
+* [`smbclient`](https://hackita.it/articoli/smbclient/)
   Client SMB interattivo per navigare share e trasferire file.
-* [`smbserver`](https://hackita.it/articoli/smbserver)
+* [`smbserver`](https://hackita.it/articoli/smbserver/)
   Avvia un server SMB locale per ricevere file o montare share durante un attacco.
-* [`ntlmrelayx`](https://hackita.it/articoli/ntlmrelayx)
+* [`ntlmrelayx`](https://hackita.it/articoli/ntlmrelayx/)
   Framework per NTLM relay: intercetta autenticazioni NTLM e le rilancia verso altri servizi per escalation o lateral movement.
 
 ### psexec.py: Remote Execution Base
@@ -404,7 +404,7 @@ hashcat -m 18200 asrep_hashes.txt rockyou.txt
 * **AS-REP roasting:** Non richiede credenziali valide (userlist sufficient)
 * **Kerberoasting:** Richiede credenziali domain user
 
-### [NTLM](https://hackita.it/articoli/ntlm) Relay con ntlmrelayx.py
+### [NTLM](https://hackita.it/articoli/ntlm/) Relay con ntlmrelayx.py
 
 ```bash
 # Setup relay to target

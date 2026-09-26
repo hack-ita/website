@@ -25,7 +25,7 @@ Hai una shell su un sistema Linux. Sei `www-data`, o un utente con pochi privile
 
 Questo processo si chiama **enumerazione**: raccogliere informazioni sul sistema in modo sistematico, prima di provare qualsiasi exploit. Non esiste un singolo comando che funziona sempre — il path verso root cambia su ogni macchina, e l'unico modo per trovarlo è guardare con metodo.
 
-Questa guida si concentra sulla parte di **enumerazione**: i comandi giusti, cosa significa ogni output, come distinguere un finding vero da uno che sembra interessante ma non lo è. Per l'exploitation completa di ogni vettore (con tutte le varianti e i prerequisiti) trovi la guida dedicata: [linux-privesc](https://hackita.it/articoli/linux-privesc). Qui trovi solo cosa serve per riconoscere il vettore e validarlo prima di passare all'exploitation vera e propria.
+Questa guida si concentra sulla parte di **enumerazione**: i comandi giusti, cosa significa ogni output, come distinguere un finding vero da uno che sembra interessante ma non lo è. Per l'exploitation completa di ogni vettore (con tutte le varianti e i prerequisiti) trovi la guida dedicata: [linux-privesc](https://hackita.it/articoli/linux-privesc/). Qui trovi solo cosa serve per riconoscere il vettore e validarlo prima di passare all'exploitation vera e propria.
 
 Per ogni controllo useremo lo stesso schema: **cosa controllare → comando → condizione vulnerabile → approfondimento**.
 
@@ -178,7 +178,7 @@ sudo --version
 sudo -u#-1 /bin/bash  # test, solo se la regola Runas lo permette
 ```
 
-**Approfondimento:** [gtfobins](https://hackita.it/articoli/gtfobins) per l'elenco completo dei binari sfruttabili via sudo/SUID; exploitation dettagliata su [linux-privesc](https://hackita.it/articoli/linux-privesc).
+**Approfondimento:** [gtfobins](https://hackita.it/articoli/gtfobins/) per l'elenco completo dei binari sfruttabili via sudo/SUID; exploitation dettagliata su [linux-privesc](https://hackita.it/articoli/linux-privesc/).
 
 ***
 
@@ -199,7 +199,7 @@ find / -perm -4000 -type f 2>/dev/null | xargs ls -la
 
 **Condizione vulnerabile:** un binario SUID (standard o custom) che compare nella lista di [GTFOBins](https://gtfobins.github.io) sotto la sezione SUID, e il cui proprietario è effettivamente root.
 
-**Approfondimento:** [suid](https://hackita.it/articoli/suid) per la guida dedicata.
+**Approfondimento:** [suid](https://hackita.it/articoli/suid/) per la guida dedicata.
 
 ***
 
@@ -244,7 +244,7 @@ cap_sys_module        → può caricare moduli del kernel → escalation quasi c
 cap_chown             → permette di cambiare proprietario di qualsiasi file
 ```
 
-**Approfondimento:** [getcap](https://hackita.it/articoli/getcap).
+**Approfondimento:** [getcap](https://hackita.it/articoli/getcap/).
 
 ***
 
@@ -284,7 +284,7 @@ chmod +x /tmp/pspy
 /tmp/pspy
 ```
 
-**Approfondimento:** [crontab](https://hackita.it/articoli/crontab), [pspy](https://hackita.it/articoli/pspy).
+**Approfondimento:** [crontab](https://hackita.it/articoli/crontab/), [pspy](https://hackita.it/articoli/pspy/).
 
 ***
 
@@ -423,7 +423,7 @@ Se trovi un servizio raggiunto solo su `127.0.0.1`, puoi comunque testarlo facen
 ssh -L 8080:127.0.0.1:8080 user@TARGET
 ```
 
-Per muoverti oltre la singola macchina (altre subnet viste con `ip route`): [pivoting](https://hackita.it/articoli/pivoting).
+Per muoverti oltre la singola macchina (altre subnet viste con `ip route`): [pivoting](https://hackita.it/articoli/pivoting/).
 
 ***
 
@@ -506,9 +506,9 @@ Dopo l'enumerazione manuale rapida, un tool automatico ti evita di perdere detta
 
 | Tool                                           | Punto di forza                                      | Quando usarlo                                                    |
 | ---------------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
-| [LinPEAS](https://hackita.it/articoli/linpeas) | Copertura più ampia, output a colori per priorità   | Prima passata, quando vuoi il quadro più completo possibile      |
-| [LinEnum](https://hackita.it/articoli/linenum) | Dati grezzi, nessun automatismo di interpretazione  | Quando vuoi controllare tu stesso ogni voce, senza filtri        |
-| [LSE](https://hackita.it/articoli/lse)         | Output organizzato a livelli di verbosità crescente | Ambienti dove vuoi partire dal minimo indispensabile (livello 0) |
+| [LinPEAS](https://hackita.it/articoli/linpeas/) | Copertura più ampia, output a colori per priorità   | Prima passata, quando vuoi il quadro più completo possibile      |
+| [LinEnum](https://hackita.it/articoli/linenum/) | Dati grezzi, nessun automatismo di interpretazione  | Quando vuoi controllare tu stesso ogni voce, senza filtri        |
+| [LSE](https://hackita.it/articoli/lse/)         | Output organizzato a livelli di verbosità crescente | Ambienti dove vuoi partire dal minimo indispensabile (livello 0) |
 
 I finding segnalati come "alta priorità" (in rosso/giallo in LinPEAS) sono presentati dal progetto come findings ad alta confidenza — non un dato statistico misurato sul tuo target specifico. Vanno comunque validati manualmente: esistono falsi positivi.
 

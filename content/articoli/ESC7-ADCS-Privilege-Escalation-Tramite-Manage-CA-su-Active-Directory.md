@@ -205,7 +205,7 @@ Sì. Un attaccante può forzare l'emissione di certificati per utenti privilegia
 
 ### Qual è la differenza tra ESC7 e ESC4?
 
-[ESC4](https://hackita.it/articoli/esc4-adcs) modifica un singolo template.
+[ESC4](https://hackita.it/articoli/esc4-adcs/) modifica un singolo template.
 ESC7 compromette direttamente la **Certificate Authority**.
 
 ***
@@ -215,8 +215,8 @@ ESC7 compromette direttamente la **Certificate Authority**.
 ***
 
 > ESC7 mostra quanto sia critica la sicurezza della Certificate Authority. Per vedere tutte le tecniche certificate attack leggi la guida completa:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Continua con le escalation successive:
-> [https://hackita.it/articoli/esc8-adcs](https://hackita.it/articoli/esc8-adcs) · [https://hackita.it/articoli/esc9-adcs](https://hackita.it/articoli/esc9-adcs)Se questo contenuto ti è utile puoi supportare il progetto HackIta su
+> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)Continua con le escalation successive:
+> [https://hackita.it/articoli/esc8-adcs](https://hackita.it/articoli/esc8-adcs/) · [https://hackita.it/articoli/esc9-adcs](https://hackita.it/articoli/esc9-adcs/)Se questo contenuto ti è utile puoi supportare il progetto HackIta su
 > [https://hackita.it/supporto](https://hackita.it/supporto)Vuoi imparare pentesting Active Directory oppure testare la sicurezza della tua infrastruttura?
 > [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
 > [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)

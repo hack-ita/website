@@ -16,7 +16,7 @@ tags:
   - windows
 ---
 
-La porta 42 gestisce la **replica WINS** (Windows Internet Name Service) — un protocollo legacy Microsoft per risoluzione nomi NetBIOS in reti Windows pre-Active Directory. WINS Replication usa TCP/UDP porta 42 per sincronizzare database NetBIOS tra server WINS primari e secondari, operando come precursore di DNS dinamico in ambienti Windows NT 4.0/2000. In penetration testing, la porta 42 espone **information disclosure critica**: mappature NetBIOS→IP di tutti gli host Windows nella rete, enumerazione domini/workgroup senza autenticazione, e fingerprinting topologia rete per [lateral movement](https://hackita.it/articoli/pivoting). Ogni ambiente Windows legacy con WINS attivo rivela l'intera mappa della rete attraverso query non autenticate.
+La porta 42 gestisce la **replica WINS** (Windows Internet Name Service) — un protocollo legacy Microsoft per risoluzione nomi NetBIOS in reti Windows pre-Active Directory. WINS Replication usa TCP/UDP porta 42 per sincronizzare database NetBIOS tra server WINS primari e secondari, operando come precursore di DNS dinamico in ambienti Windows NT 4.0/2000. In penetration testing, la porta 42 espone **information disclosure critica**: mappature NetBIOS→IP di tutti gli host Windows nella rete, enumerazione domini/workgroup senza autenticazione, e fingerprinting topologia rete per [lateral movement](https://hackita.it/articoli/pivoting/). Ogni ambiente Windows legacy con WINS attivo rivela l'intera mappa della rete attraverso query non autenticate.
 
 WINS sopravvive nel 2026 solo in reti enterprise con Windows Server 2003/2008 legacy ancora operativi, spesso in settori regolamentati (finance, healthcare) dove migration è bloccata da compliance o costi proibitivi. In CTF, WINS compare raramente ma indica sempre **macchine Windows antiche** con vulnerabilità multiple (MS08-067, MS17-010).
 
@@ -179,7 +179,7 @@ enum4linux -a -w CORP 10.10.10.42
 * **High-value targets:** FILESERVER, SQL01
 * **Workstations:** WORKSTATION1, WORKSTATION2
 
-Usare per targeting [SMB](https://hackita.it/articoli/smb) exploit o [credential spraying](https://hackita.it/articoli/password-spraying).
+Usare per targeting [SMB](https://hackita.it/articoli/smb/) exploit o [credential spraying](https://hackita.it/articoli/password-spraying/).
 
 ### 2. Username enumeration via Messenger service
 
@@ -196,7 +196,7 @@ JDOE<03>          # User jdoe logged su WORKSTATION1
 SQLSERVICE<03>    # Service account logged su SQL01
 ```
 
-Usernames per [password spraying](https://hackita.it/articoli/password-spraying) o [Kerberos](https://hackita.it/articoli/kerberos) attacks.
+Usernames per [password spraying](https://hackita.it/articoli/password-spraying/) o [Kerberos](https://hackita.it/articoli/kerberos/) attacks.
 
 ### 3. Domain controller targeting
 
@@ -205,7 +205,7 @@ Usernames per [password spraying](https://hackita.it/articoli/password-spraying)
 nmblookup -U 10.10.10.42 -R 'CORP<1B>'
 # 10.10.10.10 CORP<1B>
 
-# Target DC01 con [crackmapexec](https://hackita.it/articoli/crackmapexec)
+# Target DC01 con [crackmapexec](https://hackita.it/articoli/crackmapexec/)
 crackmapexec smb 10.10.10.10 -u Administrator -p passwords.txt
 ```
 
@@ -288,7 +288,7 @@ python3 zerologon_exploit.py DC01 10.10.10.10
 **COSA FARE SE FALLISCE:**
 
 * Se WINS non risponde UDP → provare TCP porta 42
-* Se no NetBIOS names → WINS database vuoto, usare [SMB](https://hackita.it/articoli/smb) enum diretta
+* Se no NetBIOS names → WINS database vuoto, usare [SMB](https://hackita.it/articoli/smb/) enum diretta
 * Se multiple domains → query ogni domain: `nmblookup 'DOMAIN<1C>'`
 
 ### Scenario 3 — Legacy network reconnaissance
@@ -312,7 +312,7 @@ done
 10.10.5.150: Windows 7
 ```
 
-**Targeting Windows XP/2003 con [MS08-067](https://hackita.it/articoli/ms08-067):**
+**Targeting Windows XP/2003 con [MS08-067](https://hackita.it/articoli/ms08-067/):**
 
 ```bash
 msfconsole -q
@@ -344,10 +344,10 @@ ENUMERATION
 
 EXPLOITATION
 │
-├─ A) WINS enum → DC identification → [Zerologon](https://hackita.it/articoli/zerologon)
+├─ A) WINS enum → DC identification → [Zerologon](https://hackita.it/articoli/zerologon/)
 ├─ B) File server enum → share access → credential leak
-├─ C) Username harvest → [password spray](https://hackita.it/articoli/password-spraying) → AD compromise
-└─ D) Legacy host ID → [MS08-067](https://hackita.it/articoli/ms08-067) → initial access
+├─ C) Username harvest → [password spray](https://hackita.it/articoli/password-spraying/) → AD compromise
+└─ D) Legacy host ID → [MS08-067](https://hackita.it/articoli/ms08-067/) → initial access
 
 POST-EXPLOITATION
 │
@@ -361,7 +361,7 @@ POST-EXPLOITATION
 | WINS       | 42    | TCP/UDP    | NetBIOS names (legacy Windows) | ❌ Obsoleto                                                            |
 | NetBIOS-NS | 137   | UDP        | Local broadcast NetBIOS        | ⚠️ Disabilitato di default Windows 10+                                |
 | DNS        | 53    | TCP/UDP    | Domain names (universal)       | ✅ Standard                                                            |
-| LLMNR      | 5355  | UDP        | Local multicast (fallback DNS) | ⚠️ Attack vector ([responder](https://hackita.it/articoli/responder)) |
+| LLMNR      | 5355  | UDP        | Local multicast (fallback DNS) | ⚠️ Attack vector ([responder](https://hackita.it/articoli/responder/)) |
 | mDNS       | 5353  | UDP        | Zeroconf (Apple/Linux)         | ✅ IoT, Mac networks                                                   |
 
 ***
@@ -520,7 +520,7 @@ Solo in reti legacy Windows Server 2003/2008 non migrate. Microsoft ha deprecato
 
 **Posso exploitare WINS per RCE?**
 
-No. WINS è un servizio di name resolution read-only. L'exploitation è information disclosure (network mapping) non code execution. Post-enum, target i servizi rivelati ([SMB](https://hackita.it/articoli/smb), RDP, SQL).
+No. WINS è un servizio di name resolution read-only. L'exploitation è information disclosure (network mapping) non code execution. Post-enum, target i servizi rivelati ([SMB](https://hackita.it/articoli/smb/), RDP, SQL).
 
 **Come distinguo WINS da DNS?**
 
@@ -589,7 +589,7 @@ WINS enumeration è **moderatamente rumoroso** — nbtscan di una /16 genera mig
 
 1. **Targeted queries:** nmblookup specifico invece di mass scan
 2. **Passive collection:** Se già dentro, dump WINS database da server invece di query esterne
-3. **Alternate recon:** [SMB](https://hackita.it/articoli/smb) null session enum più stealth di NetBIOS broadcast
+3. **Alternate recon:** [SMB](https://hackita.it/articoli/smb/) null session enum più stealth di NetBIOS broadcast
 
 ***
 

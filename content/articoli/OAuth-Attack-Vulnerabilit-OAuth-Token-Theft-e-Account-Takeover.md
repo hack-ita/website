@@ -19,7 +19,7 @@ OAuth è ovunque: "Accedi con Google", "Sign in with GitHub", "Login with Facebo
 
 L'attacco più impattante è la combinazione **open redirect nel redirect\_uri + token theft**: l'attaccante manipola il parametro `redirect_uri` per puntare a un dominio sotto il suo controllo, la vittima clicca "Autorizza", e il token (o l'authorization code) viene inviato all'attaccante invece che all'applicazione legittima. Account takeover senza alcuna interazione sospetta — la vittima ha solo cliccato "Accedi con Google" come fa ogni giorno.
 
-Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [Password Reset Attack](https://hackita.it/articoli/password-reset-attack), [CSRF](https://hackita.it/articoli/csrf).
+Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/), [CSRF](https://hackita.it/articoli/csrf/).
 
 Riferimenti: [PortSwigger OAuth labs](https://portswigger.net/web-security/oauth), [OAuth 2.0 Security Best Practices (IETF)](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics), [HackTricks OAuth](https://book.hacktricks.wiki/en/pentesting-web/oauth-to-account-takeover.html).
 
@@ -454,6 +454,6 @@ FLOW
 
 Riferimenti: [PortSwigger OAuth vulnerabilities](https://portswigger.net/web-security/oauth), [OAuth 2.0 Security Best Practices](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics), [HackTricks OAuth to Account Takeover](https://book.hacktricks.wiki/en/pentesting-web/oauth-to-account-takeover.html), [Aaron Parecki OAuth.com](https://www.oauth.com/).
 
-Satellite della [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa). Vedi anche: [CSRF](https://hackita.it/articoli/csrf), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack), [Session Hijacking](https://hackita.it/articoli/session-hijacking).
+Satellite della [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [CSRF](https://hackita.it/articoli/csrf/), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/), [Session Hijacking](https://hackita.it/articoli/session-hijacking/).
 
 > Il tuo flusso OAuth ha il parametro state? Il redirect\_uri è validato rigorosamente? La pagina di callback carica risorse esterne? [Penetration test HackIta](https://hackita.it/servizi) per testare ogni punto del flusso OAuth. Dal redirect all'account takeover: [formazione 1:1](https://hackita.it/formazione).

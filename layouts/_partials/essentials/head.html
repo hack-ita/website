@@ -9,7 +9,7 @@
 {{ end }}
 
 {{/* Title */}}
-<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Page.Title }} - {{ site.Title }}{{ end }}</title>
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Page.Title }} | Hackita{{ end }}</title>
 <meta name="description" content="{{ with .Description }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description | default "HackIta - Offensive security blog" }}{{ end }}">
 <link rel="canonical" href="{{ .Permalink }}">
 
@@ -35,3 +35,6 @@
 {{ partial "essentials/schema.html" . }}
 {{ partial "opengraph.html" . }}
 {{ partial "twitter_cards.html" . }}
+
+{{/* Google Analytics 4 — renders only when services.googleAnalytics.ID is set */}}
+{{ template "_internal/google_analytics.html" . }}

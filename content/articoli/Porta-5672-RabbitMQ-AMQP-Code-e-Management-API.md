@@ -148,7 +148,7 @@ grep -riE "amqp://|RABBITMQ_" /opt/ /var/www/ /home/ 2>/dev/null
 amqp://app_user:AppQ_2025!@mq-prod-01.corp.internal:5672/production
 ```
 
-Connection string con credenziali in chiaro — trovata nei file `.env`, `application.yml`, `docker-compose.yml`, e nei [repository SVN/Git](https://hackita.it/articoli/porta-3690-svn).
+Connection string con credenziali in chiaro — trovata nei file `.env`, `application.yml`, `docker-compose.yml`, e nei [repository SVN/Git](https://hackita.it/articoli/porta-3690-svn/).
 
 ## 3. Management API — Enumerazione Completa
 

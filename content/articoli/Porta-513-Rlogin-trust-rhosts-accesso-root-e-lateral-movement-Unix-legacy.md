@@ -124,11 +124,11 @@ Testing bin: Login incorrect
 Testing daemon: Login incorrect
 ```
 
-**Lettura dell'output:** `root` e `oracle` hanno trust attivo (login diretto senza password). `admin` chiede password (trust non configurato per questo utente). `bin` e `daemon` sono disabilitati per login. Focus su root e oracle come vettori di accesso. Per analizzare i file trust in dettaglio, segui le [tecniche di post-exploitation su Unix](https://hackita.it/articoli/postexploitation).
+**Lettura dell'output:** `root` e `oracle` hanno trust attivo (login diretto senza password). `admin` chiede password (trust non configurato per questo utente). `bin` e `daemon` sono disabilitati per login. Focus su root e oracle come vettori di accesso. Per analizzare i file trust in dettaglio, segui le [tecniche di post-exploitation su Unix](https://hackita.it/articoli/postexploitation/).
 
 ### Lettura file trust da host compromesso
 
-Se hai già accesso a un host (via rexec, ad esempio — vedi la [guida alla porta 512](https://hackita.it/articoli/rexec)):
+Se hai già accesso a un host (via rexec, ad esempio — vedi la [guida alla porta 512](https://hackita.it/articoli/porta-512-rexec/)):
 
 ```bash
 cat /etc/hosts.equiv 2>/dev/null
@@ -182,7 +182,7 @@ done
 10.10.10.42 root: Last login: Wed Feb 04
 ```
 
-**Lettura dell'output:** da questo host hai trust root verso .40 e .42. Da quei host, ripeti per mappare l'intera trust chain. Ogni hop trusted espande la tua superficie di accesso. Integra questi dati nella [mappa della kill chain](https://hackita.it/articoli/killchain).
+**Lettura dell'output:** da questo host hai trust root verso .40 e .42. Da quei host, ripeti per mappare l'intera trust chain. Ogni hop trusted espande la tua superficie di accesso. Integra questi dati nella [mappa della kill chain](https://hackita.it/articoli/killchain/).
 
 ## 4. Tecniche Offensive
 
@@ -232,7 +232,7 @@ prod-db01
 Password:
 ```
 
-**Cosa fai dopo:** sei su un terzo host (prod-db01) ancora come root, senza aver mai digitato una password. Continua la catena — leggi `.rhosts` per trovare il prossimo hop. Questa tecnica escala esponenzialmente con il numero di host trusted. Per automatizzare, consulta le [tecniche di pivoting](https://hackita.it/articoli/pivoting).
+**Cosa fai dopo:** sei su un terzo host (prod-db01) ancora come root, senza aver mai digitato una password. Continua la catena — leggi `.rhosts` per trovare il prossimo hop. Questa tecnica escala esponenzialmente con il numero di host trusted. Per automatizzare, consulta le [tecniche di pivoting](https://hackita.it/articoli/pivoting/).
 
 **Abuso di trust parziale (user-to-root)**
 
@@ -262,7 +262,7 @@ User oracle may run the following commands:
 oracle is not in the sudoers file. This incident will be reported.
 ```
 
-**Cosa fai dopo:** se sudo è disponibile su un comando specifico, cerca GTFOBins per escalation. Se ci sono SUID insoliti, analizzali. Anche senza privesc, l'accesso oracle dà accesso al database — estrai dati sensibili con [tecniche di database exploitation](https://hackita.it/articoli/enumeration).
+**Cosa fai dopo:** se sudo è disponibile su un comando specifico, cerca GTFOBins per escalation. Se ci sono SUID insoliti, analizzali. Anche senza privesc, l'accesso oracle dà accesso al database — estrai dati sensibili con [tecniche di database exploitation](https://hackita.it/articoli/enumeration/).
 
 ## 5. Scenari Pratici di Pentest
 

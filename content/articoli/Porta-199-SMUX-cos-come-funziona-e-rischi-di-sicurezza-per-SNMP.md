@@ -99,7 +99,7 @@ Seguito da bytes binari non leggibili (il server invia una challenge o attende u
 
 ### Fingerprint del master agent tramite SNMP correlato
 
-SMUX non opera in isolamento: è sempre accoppiato con un agente SNMP sulla porta 161. Enumerando la 161 ottieni informazioni cruciali sul contesto di SMUX. Per una guida completa sull'enumerazione SNMP, consulta la [guida alla porta 161](https://hackita.it/articoli/snmp).
+SMUX non opera in isolamento: è sempre accoppiato con un agente SNMP sulla porta 161. Enumerando la 161 ottieni informazioni cruciali sul contesto di SMUX. Per una guida completa sull'enumerazione SNMP, consulta la [guida alla porta 161](https://hackita.it/articoli/snmp/).
 
 ```bash
 snmpwalk -v 2c -c public 10.10.10.30 system
@@ -171,7 +171,7 @@ s.close()
 [+] SMUX accepted OpenPDU - no auth required!
 ```
 
-**Lettura dell'output:** il master agent ha accettato la registrazione senza password. Questo è il segnale che puoi registrare un subagent arbitrario e iniziare a manipolare l'albero MIB. Approfondisci le tecniche di [exploitation SNMP](https://hackita.it/articoli/snmp) per combinare SMUX con write access.
+**Lettura dell'output:** il master agent ha accettato la registrazione senza password. Questo è il segnale che puoi registrare un subagent arbitrario e iniziare a manipolare l'albero MIB. Approfondisci le tecniche di [exploitation SNMP](https://hackita.it/articoli/snmp/) per combinare SMUX con write access.
 
 ### Verifica configurazione SMUX nel file snmpd.conf
 
@@ -242,7 +242,7 @@ while True:
 [-] Registration rejected - identity not allowed
 ```
 
-**Cosa fai dopo:** il tuo subagent è registrato con priorità massima. Quando qualcuno (o il NMS) esegue query SNMP per gli OID che hai registrato, la query arriva a te. Puoi rispondere con dati falsificati o usare questo canale per esfiltrare informazioni. Consulta la guida sul [post-exploitation](https://hackita.it/articoli/postexploitation) per le fasi successive.
+**Cosa fai dopo:** il tuo subagent è registrato con priorità massima. Quando qualcuno (o il NMS) esegue query SNMP per gli OID che hai registrato, la query arriva a te. Puoi rispondere con dati falsificati o usare questo canale per esfiltrare informazioni. Consulta la guida sul [post-exploitation](https://hackita.it/articoli/postexploitation/) per le fasi successive.
 
 **OID hijacking — sostituzione di subagent legittimo**
 
@@ -303,7 +303,7 @@ SNMPv2-SMI::enterprises.2.6.191.9.1.2.0 = INTEGER: 5000
 Timeout: No Response from 10.10.10.30
 ```
 
-**Cosa fai dopo:** l'albero enterprise IBM rivela filesystem (`/dev/hdisk0`, `/usr` al 95% — quasi pieno), istanze DB2 (`db2inst1`) e configurazione middleware. L'utente `db2inst1` e la porta 5000 sono target per accesso diretto al database. Usa queste info per costruire il tuo percorso di [lateral movement](https://hackita.it/articoli/pivoting).
+**Cosa fai dopo:** l'albero enterprise IBM rivela filesystem (`/dev/hdisk0`, `/usr` al 95% — quasi pieno), istanze DB2 (`db2inst1`) e configurazione middleware. L'utente `db2inst1` e la porta 5000 sono target per accesso diretto al database. Usa queste info per costruire il tuo percorso di [lateral movement](https://hackita.it/articoli/pivoting/).
 
 ## 5. Scenari Pratici di Pentest
 

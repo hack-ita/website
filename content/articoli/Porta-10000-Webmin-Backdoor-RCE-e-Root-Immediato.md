@@ -18,7 +18,7 @@ tags:
   - porta-10000
 ---
 
-Webmin è il pannello di amministrazione web per server Linux/Unix più longevo e diffuso: nato nel 1997, permette di gestire utenti, cron job, firewall, DNS, Apache, [MySQL](https://hackita.it/articoli/porta-3306-mysql), file e praticamente qualsiasi aspetto del sistema operativo — il tutto da un'interfaccia web sulla porta 10000 TCP (HTTPS con certificato self-signed). La particolarità che lo rende un target così prezioso nel penetration testing è che Webmin gira come **root**. Non come utente limitato, non come www-data: come root. Questo significa che ogni vulnerabilità in Webmin — e ne ha avute parecchie — è una vulnerabilità con privilegi massimi. Non serve escalation, non serve privilege escalation: comprometti Webmin e hai root.
+Webmin è il pannello di amministrazione web per server Linux/Unix più longevo e diffuso: nato nel 1997, permette di gestire utenti, cron job, firewall, DNS, Apache, [MySQL](https://hackita.it/articoli/porta-3306-mysql/), file e praticamente qualsiasi aspetto del sistema operativo — il tutto da un'interfaccia web sulla porta 10000 TCP (HTTPS con certificato self-signed). La particolarità che lo rende un target così prezioso nel penetration testing è che Webmin gira come **root**. Non come utente limitato, non come www-data: come root. Questo significa che ogni vulnerabilità in Webmin — e ne ha avute parecchie — è una vulnerabilità con privilegi massimi. Non serve escalation, non serve privilege escalation: comprometti Webmin e hai root.
 
 La storia recente di Webmin è costellata di CVE critiche, tra cui una **backdoor inserita direttamente nel codice sorgente** (CVE-2019-15107) e una **command injection CVSS 9.9** scoperta a fine 2024 (CVE-2024-12828). Se durante un pentest trovi la porta 10000 aperta, fermati e dedicagli attenzione — le probabilità di ottenere una shell root sono alte.
 
@@ -26,7 +26,7 @@ Ricordo un assessment interno per un'azienda manifatturiera nel nord Italia: il 
 
 ## Cos'è Webmin — Per Chi Non lo Conosce
 
-Webmin trasforma la gestione di un server Linux in un'esperienza da browser: invece di connetterti via [SSH](https://hackita.it/articoli/ssh) e digitare comandi, apri `https://server:10000` e fai tutto con click e form. Gestisci utenti, installi pacchetti, configuri Apache, crei cron job, modifichi file. Virtualmin (plugin) aggiunge hosting web, Usermin dà accesso limitato agli utenti non-admin. È usatissimo da piccole aziende, hosting provider, scuole e chiunque preferisca un'interfaccia grafica alla riga di comando.
+Webmin trasforma la gestione di un server Linux in un'esperienza da browser: invece di connetterti via [SSH](https://hackita.it/articoli/ssh/) e digitare comandi, apri `https://server:10000` e fai tutto con click e form. Gestisci utenti, installi pacchetti, configuri Apache, crei cron job, modifichi file. Virtualmin (plugin) aggiunge hosting web, Usermin dà accesso limitato agli utenti non-admin. È usatissimo da piccole aziende, hosting provider, scuole e chiunque preferisca un'interfaccia grafica alla riga di comando.
 
 ```
 Browser                          Server Linux
@@ -259,7 +259,7 @@ cat /root/.ssh/id_rsa
 ## 6. Mini FAQ
 
 **Webmin è sicuro da usare nel 2026?**
-Sì, se aggiornato all'ultima versione (2.621+) e non esposto su Internet. Le CVE critiche sono tutte fixate, ma la storia insegna che ne arrivano di nuove regolarmente. L'alternativa è [Cockpit](https://hackita.it/articoli/porta-9090-web-console) (Red Hat), che ha una superficie di attacco più ridotta.
+Sì, se aggiornato all'ultima versione (2.621+) e non esposto su Internet. Le CVE critiche sono tutte fixate, ma la storia insegna che ne arrivano di nuove regolarmente. L'alternativa è [Cockpit](https://hackita.it/articoli/porta-9090-web-console/) (Red Hat), che ha una superficie di attacco più ridotta.
 
 **La backdoor CVE-2019-15107 è ancora sfruttabile?**
 Solo su versioni ≤1.920, che nel 2026 non dovrebbero esistere. Ma ne trovo ancora — soprattutto su server Debian/Ubuntu vecchi in aziende che "non toccano ciò che funziona". Controlla la versione con `nmap -sV -p 10000`.

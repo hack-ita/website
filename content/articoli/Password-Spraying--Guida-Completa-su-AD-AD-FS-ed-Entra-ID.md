@@ -308,7 +308,7 @@ ldapsearch -x -H ldap://<DC_IP> -b "DC=corp,DC=local" "(objectClass=domain)" loc
 nxc ldap <DC_IP> -u jsmith -p 'PatternStagionale!' --users
 ```
 
-Un singolo account compromesso apre la porta a enumerazione AD completa, [Kerberoasting](https://hackita.it/articoli/kerberoasting/) e [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/).
+Un singolo account compromesso apre la porta a enumerazione AD completa, [Kerberoasting](https://hackita.it/articoli/kerberos/) e [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/).
 
 ***
 

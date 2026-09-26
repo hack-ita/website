@@ -402,7 +402,7 @@ su firefart
 
 **Timeline:** 5 minuti (2min download/compile + 3min exploitation)
 
-Per approfondire altri kernel exploit su Linux legacy, consulta la nostra guida su [come sfruttare vulnerabilità kernel per privilege escalation](https://hackita.it/articoli/kernel-exploits-linux).
+Per approfondire altri kernel exploit su Linux legacy, consulta la nostra guida su [come sfruttare vulnerabilità kernel per privilege escalation](https://hackita.it/articoli/kernel/).
 
 **Cosa fare se fallisce:**
 
@@ -465,7 +465,7 @@ ls -la rootshell
 
 **Timeline:** 3-5 minuti (se hai network access al NFS)
 
-Se vuoi approfondire configurazioni NFS insicure e altre tecniche di network privilege escalation, leggi il nostro articolo su [exploitation di servizi di rete mal configurati](https://hackita.it/articoli/network-services-exploitation).
+Se vuoi approfondire configurazioni NFS insicure e altre tecniche di network privilege escalation, leggi il nostro articolo su [exploitation di servizi di rete mal configurati](https://hackita.it/articoli/network-services-exploitation/).
 
 ***
 
@@ -779,7 +779,7 @@ Questo identifica vulnerabilità **comuni** in tutto l'environment (priorità pa
 
 **Timeline:** 15-20 minuti per 50 server (parallelo)
 
-Se lavori spesso con infrastrutture enterprise miste, ti consiglio di leggere anche la nostra guida su [strategie di enumeration per ambienti multi-piattaforma](https://hackita.it/articoli/multi-platform-enumeration).
+Se lavori spesso con infrastrutture enterprise miste, ti consiglio di leggere anche la nostra guida su [strategie di enumeration per ambienti multi-piattaforma](https://hackita.it/articoli/multi-platform-enumeration/).
 
 ***
 
@@ -837,7 +837,7 @@ usermod -L systemupdate
 
 **Timeline:** 10 minuti (detailed scan) + analysis time
 
-Per tecniche avanzate di incident response e detection di backdoor, consulta [come identificare e rimuovere persistence su sistemi Unix](https://hackita.it/articoli/unix-persistence-detection).
+Per tecniche avanzate di incident response e detection di backdoor, consulta [come identificare e rimuovere persistence su sistemi Unix](https://hackita.it/articoli/unix-persistence-detection/).
 
 ***
 
@@ -1142,7 +1142,7 @@ cat /root/root.txt
 
 **Ruolo di Unix-PrivEsc-Check:** Cruciale per identificare `sudo dtappgather` NOPASSWD su sistema Solaris dove LinPEAS/LinEnum non funzionano. Senza Unix-PrivEsc-Check, avremmo dovuto fare enumeration manuale per ore.
 
-Se ti interessa approfondire tecniche di lateral movement e pivoting dopo aver ottenuto root, leggi [strategie di post-exploitation e network pivoting](https://hackita.it/articoli/post-exploitation-pivoting).
+Se ti interessa approfondire tecniche di lateral movement e pivoting dopo aver ottenuto root, leggi [strategie di post-exploitation e network pivoting](https://hackita.it/articoli/post-exploitation-pivoting/).
 
 ***
 
@@ -1590,7 +1590,7 @@ perl -v  # Verifica perl funziona
 
 **Q: Unix-PrivEsc-Check funziona su macOS?**
 
-A: Parzialmente. macOS è basato su BSD, non Linux. Molti check funzionano (SUID, sudo, file permissions) ma alcuni sono Linux-specific (capabilities, cgroups). Per macOS, considera tool specifici come [MacSploit](https://hackita.it/articoli/macos-privilege-escalation) oppure esegui Unix-PrivEsc-Check e ignora errori BSD-incompatibili.
+A: Parzialmente. macOS è basato su BSD, non Linux. Molti check funzionano (SUID, sudo, file permissions) ma alcuni sono Linux-specific (capabilities, cgroups). Per macOS, considera tool specifici come [MacSploit](https://hackita.it/articoli/macos-privilege-escalation/) oppure esegui Unix-PrivEsc-Check e ignora errori BSD-incompatibili.
 
 ***
 

@@ -124,7 +124,7 @@ nc -vn 10.10.10.113 113
 
 **Intel:** User `alice` ha SSH attivo.
 
-**Pentest use case:** Minimal — username enumeration è più facile via [SMTP VRFY](https://hackita.it/articoli/smtp), LDAP, o RPC.
+**Pentest use case:** Minimal — username enumeration è più facile via [SMTP VRFY](https://hackita.it/articoli/porta-25-smtp/), LDAP, o RPC.
 
 ### 2. Information disclosure per lateral movement
 
@@ -146,7 +146,7 @@ done
 10.10.10.150: 80, 80 : USERID : UNIX : dbuser
 ```
 
-**Intel:** Username `webadmin` e `dbuser` per targeting [password spraying](https://hackita.it/articoli/password-spraying).
+**Intel:** Username `webadmin` e `dbuser` per targeting [password spraying](https://hackita.it/articoli/password-spraying/).
 
 ### 3. Ident spoofing (attacker-controlled identd)
 

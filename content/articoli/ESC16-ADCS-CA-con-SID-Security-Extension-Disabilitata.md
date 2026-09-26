@@ -355,7 +355,7 @@ Sì, tramite **UPN manipulation o SAN injection**.
 
 > ESC16 è l’ultima tecnica della serie AD CS certificate attacks.
 > Guida completa:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)Supporta HackIta:
+> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)Supporta HackIta:
 > [https://hackita.it/supporto](https://hackita.it/supporto)Pentest Active Directory o formazione offensiva:
 > [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
 > [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)

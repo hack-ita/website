@@ -22,8 +22,8 @@ Un **Web Application Firewall (WAF)** è spesso il primo ostacolo che incontri i
 
 Questa guida copre le tecniche di bypass per i WAF più diffusi, con un approccio metodico: prima capisci il WAF, poi lo aggiri.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss)\
-→ Per bypass di filtri applicativi: [XSS Filter Bypass](https://hackita.it/articoli/xss-filter-bypass)
+→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)\
+→ Per bypass di filtri applicativi: [XSS Filter Bypass](https://hackita.it/articoli/xss-filter-bypass/)
 
 ***
 

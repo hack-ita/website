@@ -26,7 +26,7 @@ tags:
 * Lo *shared secret* è condiviso con la 1812 — compromesso una volta, valido anche per l’accounting
 * I pacchetti accounting intercettati rivelano utenti attivi e IP assegnati — intelligence diretta per lateral movement
 
-Per il dettaglio completo su RADIUS (shared secret cracking, credential spray, evil twin), consulta la [guida alla porta 1812 RADIUS Auth](https://hackita.it/articoli/porta-1812-radius-auth). Qui ci concentriamo sulle specificità dell'accounting.
+Per il dettaglio completo su RADIUS (shared secret cracking, credential spray, evil twin), consulta la [guida alla porta 1812 RADIUS Auth](https://hackita.it/articoli/porta-1812-radius-auth/). Qui ci concentriamo sulle specificità dell'accounting.
 
 ## 1. Anatomia Tecnica
 
@@ -82,7 +82,7 @@ admin       10.10.10.202    10.10.10.1
 ceo         10.10.10.203    10.10.10.2
 ```
 
-**Lettura dell'output:** tre utenti connessi via VPN/Wi-Fi con i loro IP interni. `admin` sulla 10.10.10.202 è un target — il suo IP ti permette di attaccarlo direttamente. `ceo` arriva da un AP diverso (10.10.10.2). Queste informazioni alimentano il [lateral movement](https://hackita.it/articoli/post-exploitation).
+**Lettura dell'output:** tre utenti connessi via VPN/Wi-Fi con i loro IP interni. `admin` sulla 10.10.10.202 è un target — il suo IP ti permette di attaccarlo direttamente. `ceo` arriva da un AP diverso (10.10.10.2). Queste informazioni alimentano il [lateral movement](https://hackita.it/articoli/post-exploitation/).
 
 ## 4. Cosa puoi fare con l'accounting
 
@@ -98,7 +98,7 @@ ceo         10.10.10.203    10.10.10.2
 | Scan           | `nmap -sU -p 1813 [target]`                                                                                        |
 | Capture        | `tcpdump -i eth0 udp port 1813 -w acct.pcap`                                                                       |
 | Decode         | `tshark -r acct.pcap -o "radius.shared_secret:[secret]" -T fields -e radius.User_Name -e radius.Framed_IP_Address` |
-| Correlate auth | Usa lo stesso shared secret sulla [porta 1812](https://hackita.it/articoli/porta-1812-radius-auth)                 |
+| Correlate auth | Usa lo stesso shared secret sulla [porta 1812](https://hackita.it/articoli/porta-1812-radius-auth/)                 |
 
 ### Perché Porta 1813 è rilevante
 

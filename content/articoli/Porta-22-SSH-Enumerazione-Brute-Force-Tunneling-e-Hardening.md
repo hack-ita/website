@@ -18,7 +18,7 @@ tags:
 featured: true
 ---
 
-La porta 22 è il gateway cifrato verso l'amministrazione remota di server e sistemi Unix/Linux — e rappresenta uno dei target più frequenti in penetration testing. Secure Shell (SSH) ha sostituito Telnet e [rlogin](https://hackita.it/articoli/porta-513-rlogin) negli anni '90 portando cifratura end-to-end, autenticazione forte e integrità dei dati. Nonostante la robustezza del protocollo, le misconfigurazioni umane trasformano SSH in un punto d'accesso diretto: credenziali deboli, chiavi private esposte, algoritmi obsoleti e versioni vulnerabili aprono la strada a compromise complete del sistema. In ambiente lab e CTF, la porta 22 è un elemento ricorrente: dal brute force con Hydra all'exploitation di CVE specifici come CVE-2018-15473 (username enumeration) fino alle tecniche di pivoting con SSH tunneling.
+La porta 22 è il gateway cifrato verso l'amministrazione remota di server e sistemi Unix/Linux — e rappresenta uno dei target più frequenti in penetration testing. Secure Shell (SSH) ha sostituito Telnet e [rlogin](https://hackita.it/articoli/porta-513-rlogin/) negli anni '90 portando cifratura end-to-end, autenticazione forte e integrità dei dati. Nonostante la robustezza del protocollo, le misconfigurazioni umane trasformano SSH in un punto d'accesso diretto: credenziali deboli, chiavi private esposte, algoritmi obsoleti e versioni vulnerabili aprono la strada a compromise complete del sistema. In ambiente lab e CTF, la porta 22 è un elemento ricorrente: dal brute force con Hydra all'exploitation di CVE specifici come CVE-2018-15473 (username enumeration) fino alle tecniche di pivoting con SSH tunneling.
 
 SSH sopravvive e prospera nel 2026 per ragioni concrete: è l'unico protocollo standard per amministrazione remota sicura in ambienti Unix/Linux, è integrato nativamente in ogni distribuzione moderna, supporta autenticazione multi-fattore e con chiavi RSA/ED25519, e permette tunneling sicuro per altri protocolli. In ambito DevOps, SSH è il backbone di CI/CD pipeline, deployment automatizzati e configurazione Infrastructure as Code con Ansible/Terraform.
 
@@ -54,7 +54,7 @@ Le **misconfigurazioni comuni** sulla porta 22 includono: PermitRootLogin abilit
 
 ## Enumerazione base: nmap e banner grabbing
 
-Il primo passo è identificare la versione di SSH in esecuzione e gli algoritmi supportati. [Nmap](https://hackita.it/articoli/nmap) offre script NSE dedicati per SSH.
+Il primo passo è identificare la versione di SSH in esecuzione e gli algoritmi supportati. [Nmap](https://hackita.it/articoli/nmap/) offre script NSE dedicati per SSH.
 
 ```bash
 nmap -sV -sC -p 22 10.10.10.10
@@ -168,7 +168,7 @@ Il CVE-2018-15473 sfrutta una differenza nel tempo di risposta tra username esis
 
 ### 1. Brute force con Hydra
 
-SSH è il target più comune per brute force. [Hydra](https://hackita.it/articoli/hydra) supporta multi-threading e dizionari custom.
+SSH è il target più comune per brute force. [Hydra](https://hackita.it/articoli/hydra/) supporta multi-threading e dizionari custom.
 
 ```bash
 hydra -l admin -P /usr/share/wordlists/rockyou.txt -t 4 ssh://10.10.10.10
@@ -424,7 +424,7 @@ POST-EXPLOITATION
 | ssh-audit                                            | Alta     | Alta    | Analisi configurazione sicurezza      |
 | Hydra                                                | Alta     | Bassa   | Brute force parallelo                 |
 | Medusa                                               | Media    | Media   | Brute force con rate limiting custom  |
-| [Metasploit](https://hackita.it/articoli/metasploit) | Bassa    | Bassa   | Exploitation automatizzata            |
+| [Metasploit](https://hackita.it/articoli/metasploit/) | Bassa    | Bassa   | Exploitation automatizzata            |
 | ssh\_enum.py                                         | Alta     | Media   | User enumeration CVE-2018-15473       |
 | John the Ripper                                      | Media    | N/A     | Crack passphrase chiavi SSH offline   |
 

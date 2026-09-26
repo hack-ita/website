@@ -292,7 +292,7 @@ Sì — la versione unauthenticated di PetitPotam (CVE-2021-36942) è stata patc
 
 ### Qual è la differenza tra ESC8 e ESC6?
 
-[ESC6](https://hackita.it/articoli/esc6-adcs) sfrutta configurazioni della CA sui template.
+[ESC6](https://hackita.it/articoli/esc6-adcs/) sfrutta configurazioni della CA sui template.
 ESC8 sfrutta **NTLM relay verso l'interfaccia web della CA**.
 
 ***
@@ -303,10 +303,10 @@ ESC8 sfrutta **NTLM relay verso l'interfaccia web della CA**.
 
 > ESC8 è uno degli attacchi più comuni contro AD CS.
 > Per vedere tutte le tecniche certificate attack consulta la guida completa:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16)\
+> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)\
 > \
 > Continua con le escalation successive:
-> [https://hackita.it/articoli/esc9-adcs](https://hackita.it/articoli/esc9-adcs) · [https://hackita.it/articoli/esc10-adcs](https://hackita.it/articoli/esc10-adcs)\
+> [https://hackita.it/articoli/esc9-adcs](https://hackita.it/articoli/esc9-adcs/) · [https://hackita.it/articoli/esc10-adcs](https://hackita.it/articoli/esc10-adcs/)\
 >
 > Riferimenti tecnici:
 > [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)

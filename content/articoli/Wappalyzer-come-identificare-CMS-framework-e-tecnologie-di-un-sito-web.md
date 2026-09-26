@@ -168,7 +168,7 @@ L'API restituisce dati storici sulla tecnologia del target, utile per tracciare 
 
 ### Analisi JavaScript-rendered content
 
-A differenza di [WhatWeb](https://hackita.it/articoli/whatweb), Wappalyzer CLI usa Chromium headless per renderizzare JavaScript. Questo significa che rileva:
+A differenza di [WhatWeb](https://hackita.it/articoli/whatweb/), Wappalyzer CLI usa Chromium headless per renderizzare JavaScript. Questo significa che rileva:
 
 * Single Page Applications (React, Vue, Angular)
 * Widget dinamici caricati a runtime
@@ -211,7 +211,7 @@ Apri il browser con l'estensione, visita il target. Wappalyzer mostra:
 WordPress 6.2.1 | PHP 7.4 | Apache 2.4.41 | jQuery 3.5.1
 ```
 
-**Azione successiva:** WordPress 6.2.1 + PHP 7.4 sono versioni con CVE note. Lancia [Nuclei](https://hackita.it/articoli/nuclei) con template WordPress.
+**Azione successiva:** WordPress 6.2.1 + PHP 7.4 sono versioni con CVE note. Lancia [Nuclei](https://hackita.it/articoli/nuclei/) con template WordPress.
 
 **Cosa fare se fallisce:**
 
@@ -262,7 +262,7 @@ Wappalyzer si inserisce nella fase iniziale di tech discovery.
 
 **Flusso operativo:**
 
-[Subfinder](https://hackita.it/articoli/subfinder)/Amass (subdomain) → Httpx (probe) → **Wappalyzer (tech ID)** → Nuclei/WPScan (vuln scan mirato)
+[Subfinder](https://hackita.it/articoli/subfinder/)/Amass (subdomain) → Httpx (probe) → **Wappalyzer (tech ID)** → Nuclei/WPScan (vuln scan mirato)
 
 **Passaggio dati:**
 

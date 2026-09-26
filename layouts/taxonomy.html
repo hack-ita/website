@@ -53,12 +53,12 @@
         {{ range $i, $p := .Pages.ByWeight }}
         {{ $odd := modBool $i 2 }}
         <li class="relative p-1">
-            <a href="{{ .RelPermalink }}" class="absolute inset-0 z-10"></a>
+            <a href="{{ .RelPermalink }}" aria-label="{{ .Title }}" class="absolute inset-0 z-10"></a>
             <div class="absolute inset-0 bg-linear-to-tl from-transparent to-primary from-70% rounded-md"></div>
             <article class="relative flex flex-col bg-light-bg dark:bg-accent {{ if $odd }}lg:flex-row{{ else }}lg:flex-row-reverse{{ end }} gap-5 rounded-md p-5 shadow-xl transition-shadow hover:shadow-primary/20 border border-dark/20 dark:border-light/20">
                 <!-- Image -->
                 <figure class="lg:flex-2/5">
-                  {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "rounded-md") }}
+                  {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "w-full aspect-video object-cover rounded-md") }}
                 </figure>
                 
                 <!-- Content -->

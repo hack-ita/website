@@ -245,7 +245,7 @@ SeTcbPrivilege su un account non di sistema = compromissione pregressa o misconf
 
 **Articoli correlati:**
 
-* [SeCreateTokenPrivilege](https://hackita.it/articoli/secreatetokenprivilege) — token forgery via syscall diretta
-* [SeImpersonatePrivilege](https://hackita.it/articoli/seimpersonateprivilege) — token capture reattivo, molto più comune
+* [SeCreateTokenPrivilege](https://hackita.it/articoli/secreatetokenprivilege/) — token forgery via syscall diretta
+* [SeImpersonatePrivilege](https://hackita.it/articoli/seimpersonateprivilege/) — token capture reattivo, molto più comune
 
 **Riferimenti:** [token-priv PoC](https://github.com/hatRiot/token-priv) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/act-as-part-of-the-operating-system)

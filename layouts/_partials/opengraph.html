@@ -1,0 +1,43 @@
+{{- /*
+  Custom Open Graph tags (overrides Hugo's embedded _internal/opengraph.html
+  that head.html calls via `partial "opengraph.html"`).
+
+  Image resolution order, so every article gets its own social-preview image:
+    1. page front-matter `images` (list)
+    2. page front-matter `image` (single — what the blog collection uses)
+    3. site-wide `params.images` fallback (the Hackita hero)
+  All image paths are emitted as absolute URLs.
+*/ -}}
+{{- $images := slice -}}
+{{- with .Params.images }}{{ $images = . }}{{ end -}}
+{{- if not $images }}{{ with .Params.image }}{{ $images = slice . }}{{ end }}{{ end -}}
+{{- if not $images }}{{ with site.Params.images }}{{ $images = . }}{{ end }}{{ end -}}
+
+{{- $title := cond .IsHome site.Title .Title -}}
+{{- $desc := "" -}}
+{{- with .Description }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | plainify }}{{ else }}{{ $desc = site.Params.description }}{{ end }}{{ end -}}
+{{- $ogtype := cond (and .IsPage (eq .Section "articoli")) "article" "website" -}}
+
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc | plainify | truncate 200 }}">
+<meta property="og:locale" content="{{ site.Language.Lang }}">
+<meta property="og:type" content="{{ $ogtype }}">
+{{- range $images }}
+<meta property="og:image" content="{{ . | absURL }}">
+{{- end }}
+{{- if eq $ogtype "article" }}
+{{- with .PublishDate }}
+<meta property="article:published_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- with .Lastmod }}
+<meta property="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- range .Params.categories }}
+<meta property="article:section" content="{{ . }}">
+{{- end }}
+{{- range .Params.tags }}
+<meta property="article:tag" content="{{ . }}">
+{{- end }}
+{{- end }}

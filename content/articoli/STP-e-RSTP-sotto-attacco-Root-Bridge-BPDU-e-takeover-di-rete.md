@@ -119,7 +119,7 @@ Un attaccante che diventa Root Bridge controlla quali percorsi sono attivi e qua
 * **Denial of Service:** destabilizzando la topologia e causando riconvergenze continue
 * **Mappatura precisa della topologia fisica:** le BPDU rivelano la struttura della rete
 
-Conoscere STP significa capire uno dei meccanismi fondamentali che regola il traffico a livello 2. Per il contesto delle VLAN su cui opera STP, vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan). Per il livello fisico, leggi [Ethernet IEEE 802.3](https://hackita.it/articoli/ethernet-ieee-802-3).
+Conoscere STP significa capire uno dei meccanismi fondamentali che regola il traffico a livello 2. Per il contesto delle VLAN su cui opera STP, vedi [VLAN e 802.1Q](https://hackita.it/articoli/vlan/). Per il livello fisico, leggi [Ethernet IEEE 802.3](https://hackita.it/articoli/ethernet-ieee-802-3/).
 
 ***
 
@@ -184,7 +184,7 @@ Una volta diventato Root Bridge, tutto il traffico che prima passava per percors
 
 ### Pivoting tramite manipolazione STP
 
-Diventare Root Bridge in un segmento specifico permette di intercettare il traffico inter-switch senza usare ARP spoofing — rendendo l'attacco meno rumoroso e più difficile da rilevare con tool tradizionali come arpwatch. Combinato con tecniche di [sniffing](https://hackita.it/articoli/sniffing) e [man-in-the-middle](https://hackita.it/articoli/man-in-the-middle), dà visibilità sul traffico di interi segmenti di rete.
+Diventare Root Bridge in un segmento specifico permette di intercettare il traffico inter-switch senza usare ARP spoofing — rendendo l'attacco meno rumoroso e più difficile da rilevare con tool tradizionali come arpwatch. Combinato con tecniche di [sniffing](https://hackita.it/articoli/sniffing/) e [man-in-the-middle](https://hackita.it/articoli/man-in-the-middle/), dà visibilità sul traffico di interi segmenti di rete.
 
 ***
 
@@ -368,13 +368,13 @@ BPDU Guard, Root Guard, configurazione esplicita del Root Bridge: tre misure sem
 
 Approfondisci i protocolli e le tecniche correlate:
 
-* [Ethernet IEEE 802.3: frame e livello datalink](https://hackita.it/articoli/ethernet-ieee-802-3)
-* [VLAN e 802.1Q: segmentazione e hopping](https://hackita.it/articoli/vlan)
-* [LLDP: discovery passivo dell'infrastruttura](https://hackita.it/articoli/lldp-link-layer-discovery-protocol)
-* [ARP: spoofing e cache poisoning](https://hackita.it/articoli/arp)
-* [Sniffing su reti locali](https://hackita.it/articoli/sniffing)
-* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle)
-* [Nmap: reconnaissance e port scanning](https://hackita.it/articoli/nmap)
+* [Ethernet IEEE 802.3: frame e livello datalink](https://hackita.it/articoli/ethernet-ieee-802-3/)
+* [VLAN e 802.1Q: segmentazione e hopping](https://hackita.it/articoli/vlan/)
+* [LLDP: discovery passivo dell'infrastruttura](https://hackita.it/articoli/lldp/)
+* [ARP: spoofing e cache poisoning](https://hackita.it/articoli/arp/)
+* [Sniffing su reti locali](https://hackita.it/articoli/sniffing/)
+* [Man in the Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle/)
+* [Nmap: reconnaissance e port scanning](https://hackita.it/articoli/nmap/)
 
 Riferimento ufficiale: [IEEE 802.1D — MAC Bridges and Virtual Bridged Local Area Networks](https://standards.ieee.org/ieee/802.1D/3387/)
 

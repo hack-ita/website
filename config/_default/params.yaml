@@ -18,7 +18,32 @@ footer:
 # hides that icon instead of linking to the network's homepage. Fill in the
 # real profile URL to bring an icon back.
 social:
+  # X/Twitter handle for twitter:site / twitter:creator card tags (e.g. @hackita).
+  twitter_handle: ''
   facebook: ''
   instagram: ''
   twitter: ''
   linkedin: ''
+
+# GTranslate auto-translation widget.
+# FREE tier is live now (enable: true, pro: false) — client-side widget, no
+# account/key needed, but translated pages are NOT indexed by Google.
+# To go PRO later: purchase GTranslate Pro, connect the site in their dashboard,
+# then set `pro: true` here and redeploy. That switches on indexable translated
+# URLs (/en/, /fr/ ...) + hreflang for SEO. No other code changes needed.
+# The GTranslate Pro subscription is billed by GTranslate directly to the client.
+gtranslate:
+  enable: true
+  pro: false
+  widget: float            # float | dropdown | flags | popup | globe
+  default_language: it
+  languages:
+    - it
+    - en
+    - fr
+    - es
+    - de
+  switcher_horizontal_position: left
+  switcher_vertical_position: bottom
+  # Pro-only (ignored while pro: false):
+  url_structure: sub_directory   # sub_directory (/en/) | sub_domain (en.)

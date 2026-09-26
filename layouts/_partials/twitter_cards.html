@@ -1,0 +1,26 @@
+{{- /*
+  Custom Twitter Card tags (overrides Hugo's embedded
+  _internal/twitter_cards.html). Uses the same per-page image resolution as
+  opengraph.html so the Twitter/X preview matches the Open Graph preview.
+  twitter:site is emitted only when a real handle is configured, so we never
+  ship a broken/empty handle.
+*/ -}}
+{{- $images := slice -}}
+{{- with .Params.images }}{{ $images = . }}{{ end -}}
+{{- if not $images }}{{ with .Params.image }}{{ $images = slice . }}{{ end }}{{ end -}}
+{{- if not $images }}{{ with site.Params.images }}{{ $images = . }}{{ end }}{{ end -}}
+
+{{- $title := cond .IsHome site.Title .Title -}}
+{{- $desc := "" -}}
+{{- with .Description }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | plainify }}{{ else }}{{ $desc = site.Params.description }}{{ end }}{{ end -}}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $desc | plainify | truncate 200 }}">
+{{- with (index $images 0) }}
+<meta name="twitter:image" content="{{ . | absURL }}">
+{{- end }}
+{{- with site.Params.social.twitter_handle }}
+<meta name="twitter:site" content="{{ . }}">
+<meta name="twitter:creator" content="{{ . }}">
+{{- end }}

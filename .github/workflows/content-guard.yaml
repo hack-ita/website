@@ -1,0 +1,56 @@
+name: Content deletion guard
+
+# Catches the failure mode that silently removed live articles before: a stale
+# local checkout pushed over newer TinaCloud content, deleting published posts.
+# Runs on every push to main and FAILS LOUDLY (red check + email) when a push
+# removes an unusual number of article files, so it is caught immediately
+# instead of sitting unnoticed for weeks. It does not block Netlify or the push
+# itself — it is an alarm. Intentional bulk deletes: add [allow-delete] to a
+# commit message.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for unexpected article deletions
+        env:
+          THRESHOLD: "3"
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          set -e
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "New branch / no prior SHA — skipping guard."
+            exit 0
+          fi
+
+          DELETED_LIST=$(git diff --diff-filter=D --name-only "$BEFORE" "$AFTER" -- 'content/articoli/*.md' || true)
+          DELETED=$(printf '%s\n' "$DELETED_LIST" | grep -c . || true)
+          echo "Article files deleted in this push: $DELETED (threshold $THRESHOLD)"
+          if [ -n "$DELETED_LIST" ]; then
+            echo "$DELETED_LIST" | sed 's/^/  deleted: /'
+          fi
+
+          if git log --format=%B "$BEFORE..$AFTER" | grep -q '\[allow-delete\]'; then
+            echo "Override marker [allow-delete] present — allowing."
+            exit 0
+          fi
+
+          if [ "$DELETED" -gt "$THRESHOLD" ]; then
+            echo "::error::$DELETED published articles were deleted in this push (limit $THRESHOLD)."
+            echo "::error::This is the stale-push pattern that made live pages 404. Verify the deletions are intentional."
+            echo "::error::If intentional, add [allow-delete] to a commit message and re-push. Otherwise: git revert this push."
+            exit 1
+          fi
+          echo "OK — deletions within safe limit."

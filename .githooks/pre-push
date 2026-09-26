@@ -1,0 +1,33 @@
+#!/bin/sh
+# Pre-push guard: stops a STALE local checkout from silently deleting published
+# articles that still exist on origin/main (the cause of disappearing pages).
+#
+# One-time setup per clone:   git config core.hooksPath .githooks
+# Bypass a deliberate delete:  git push --no-verify
+
+remote="$1"
+THRESHOLD=3
+
+git fetch -q "$remote" main 2>/dev/null || {
+  echo "pre-push: could not fetch $remote (offline?), skipping guard."
+  exit 0
+}
+base=$(git rev-parse -q --verify FETCH_HEAD 2>/dev/null) || exit 0
+
+tmp_remote=$(mktemp) || exit 0
+tmp_head=$(mktemp) || { rm -f "$tmp_remote"; exit 0; }
+git ls-tree -r --name-only "$base" -- content/articoli 2>/dev/null | sort > "$tmp_remote"
+git ls-tree -r --name-only HEAD  -- content/articoli 2>/dev/null | sort > "$tmp_head"
+missing=$(comm -23 "$tmp_remote" "$tmp_head" | grep -c . || true)
+rm -f "$tmp_remote" "$tmp_head"
+
+if [ "${missing:-0}" -gt "$THRESHOLD" ]; then
+  echo ""
+  echo "PUSH BLOCKED: your branch is missing $missing article file(s) present on $remote/main."
+  echo "  Looks like a stale checkout — pushing it would delete published pages (they would 404)."
+  echo "  Fix:  git pull --rebase origin main   then push again."
+  echo "  Intentional bulk delete:  git push --no-verify"
+  echo ""
+  exit 1
+fi
+exit 0

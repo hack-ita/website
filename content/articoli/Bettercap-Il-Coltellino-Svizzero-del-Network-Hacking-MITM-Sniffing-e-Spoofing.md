@@ -1,15 +1,11 @@
 ---
-title: >-
-  Bettercap: Il Coltellino Svizzero del Network Hacking (MITM, Sniffing e
-  Spoofing)
+title: 'Bettercap: Cos''è'', MITM, ARP Spoofing e Sniffing su Kali Linux'
 slug: bettercap
-description: >-
-  Bettercap è uno degli strumenti più potenti per attacchi man-in-the-middle,
-  sniffing e spoofing. Scopri come usarlo da terminale per dominare le reti in
-  modo rapido ed efficace.
+description: 'Cos''è Bettercap e come funziona? Scopri il framework per network hacking e MITM: tutorial su Kali Linux, ARP spoofing, sniffing, network recon, PCAP e proxy.'
 image: /BETTERCAP.webp
 draft: false
 date: 2026-01-21T00:00:00.000Z
+lastmod: 2026-09-14T00:00:00.000Z
 categories:
   - tools
 subcategories:
@@ -20,92 +16,73 @@ tags:
   - spoofing
 ---
 
-# Bettercap: Il Coltellino Svizzero del Network Hacking (MITM, Sniffing e Spoofing)
+# Bettercap: MITM, ARP Spoofing, Sniffing e Network Recon su Kali Linux
 
-Risolvi subito il classico “**non vedo host / non sniffa nulla**” e arrivi a un **MITM verificabile in lab** (pcap + indicatori di detection), senza uscire dal perimetro autorizzato.
+Bettercap è un framework modulare scritto in Go per network reconnaissance e attacchi adversary-in-the-middle (MITM) su reti IPv4/IPv6, con moduli aggiuntivi per Wi-Fi, BLE, HID e CAN bus. Su Kali Linux lo usi per scoprire host con `net.recon`/`net.probe`, posizionarti in mezzo al traffico con `arp.spoof` o `dns.spoof`, e catturarlo con `net.sniff` — il tutto da un'unica sessione interattiva, scriptabile tramite caplet.
 
-## Intro
+Tutto quello che segue va usato solo su lab, CTF, HTB/PG o reti per cui hai autorizzazione esplicita.
 
-Bettercap è un framework modulare in stile console interattiva per **recon e attacchi adversary-in-the-middle (MITM)** su reti IPv4/IPv6 (oltre a moduli wireless/altro), pensato per sessioni ripetibili e automatizzabili.
+## Cos'è Bettercap
 
-In un lab ti serve perché unisce discovery, spoofing e sniffing in un unico workflow, con comandi “accendi/spegni” e parametri configurabili, senza incollarti a 10 tool diversi.
+Bettercap non è "un tool ARP": è un framework che copre recon, spoofing (ARP, DNS, NDP), sniffing, proxy HTTP/HTTPS, Wi-Fi, e una Web UI/API REST per orchestrare tutto. Il punto di forza non è il singolo comando, ma il controllo del contesto — interfaccia corretta, subnet, gateway, target — dentro un'unica sessione.
 
-Cosa farai/imparerai:
+## A cosa serve Bettercap
 
-* Identificare interfaccia/gateway/subnet senza perdere tempo.
-* Fare discovery host con `net.recon` e `net.probe`.
-* Eseguire un MITM “da lab” con `arp.spoof` e cattura con `net.sniff` (pcap).
-* Capire quando usare proxy/UI e quando invece è meglio un tool dedicato.
+* Host discovery su una LAN (passiva e attiva)
+* ARP spoofing / MITM su IPv4
+* NDP spoofing / MITM su IPv6
+* DNS spoofing
+* Packet sniffing con export in pcap
+* Intercettazione HTTP/HTTPS via proxy
+* Automazione di sessioni ripetibili tramite caplet
+* Gestione e visualizzazione da Web UI o API REST
 
-Nota etica: tutto ciò che segue è **solo per lab/CTF/HTB/PG/VM personali o autorizzate**; niente uso su reti reali non consentite.
+Quando non è la scelta giusta: se devi solo analizzare un pcap già catturato o fare ispezione protocollare approfondita, uno strumento dedicato come [Wireshark](https://hackita.it/articoli/wireshark/) è più indicato.
 
-## Cos’è BETTERCAP e dove si incastra nel workflow
+## Bettercap: moduli e funzionalità principali
 
-> **In breve:** Bettercap è una console modulare per recon + MITM: scopri host, fai spoofing e sniffi traffico in una sessione controllabile e automatizzabile.
+| Modulo                       | Funzione                                        |
+| ---------------------------- | ----------------------------------------------- |
+| `net.recon`                  | Host discovery passiva (legge la tabella ARP)   |
+| `net.probe`                  | Host discovery attiva (invia probe alla subnet) |
+| `arp.spoof`                  | MITM basato su ARP (IPv4)                       |
+| `ndp.spoof`                  | MITM basato su NDP (IPv6)                       |
+| `dns.spoof`                  | DNS spoofing                                    |
+| `net.sniff`                  | Packet sniffing, con export pcap                |
+| `http.proxy` / `https.proxy` | Intercettazione/modifica traffico HTTP/HTTPS    |
+| `wifi.recon`                 | Wireless reconnaissance                         |
+| `ui`                         | Web UI                                          |
+| `api.rest`                   | API REST                                        |
+| `caplets`                    | Automazione di sequenze di comandi              |
 
-Bettercap “rende operativo” il network hacking: entri in sessione, abiliti moduli (recon, sniff, spoof, proxy), setti parametri e leggi eventi in tempo reale. Il punto non è “il comando magico”, ma **controllare contesto**: interfaccia corretta, subnet, gateway, target.
+## Prerequisiti
 
-Quando NON usarlo: se devi solo analizzare un pcap o fare ispezione profonda, vai diretto su strumenti dedicati (vedi sezione “Alternative”).
+* Kali Linux o altra distro Linux, con privilegi di root/sudo
+* Un'interfaccia di rete sulla stessa subnet del lab (VM attacker e target sullo stesso segmento L2)
+* Accesso a una rete di laboratorio o comunque autorizzata
+* Idealmente, una seconda VM target per generare traffico da osservare
 
-## Installazione + quick sanity check (versione e interfaccia)
+## Installazione su Kali Linux
 
-> **In breve:** installa, verifica versione/build e parti sempre specificando l’interfaccia con `-iface` per evitare sessioni “vuote”.
-
-Su Kali spesso lo installi dai repo; se hai mismatch di versione/moduli, usa la documentazione ufficiale per release/compilazione.
-
-Perché: installare in modo ripetibile e non debug-gare mezza giornata per un binario vecchio.
-
-Cosa aspettarti: pacchetto installato e comando `bettercap` disponibile.
-
-Comando:
+Su Kali è nei repository ufficiali:
 
 ```bash
 sudo apt update && sudo apt install -y bettercap
 ```
 
-Esempio di output (può variare):
-
-```text
-Reading package lists... Done
-Building dependency tree... Done
-Setting up bettercap ...
-```
-
-Interpretazione: se l’install va a buon fine, puoi invocare `bettercap` e i moduli base saranno disponibili.
-
-Errore comune + fix: `Unable to locate package` → repo non aggiornati o distro diversa; passa alle opzioni di installazione ufficiali (binaries/Go/source).
-
-Perché: verificare build/versione prima di seguire guide e comandi.
-
-Cosa aspettarti: stampa versione/build e termina.
-
-Comando:
+Verifica versione prima di seguire qualunque guida (nomi e parametri dei moduli cambiano tra versioni):
 
 ```bash
 bettercap -version
 ```
 
-Esempio di output (può variare):
-
-```text
-bettercap v2.x (build abcdef)
-```
-
-Interpretazione: se la versione è “troppo diversa” rispetto ai comandi che usi, aspettati nomi/parametri cambiati.
-
-Errore comune + fix: `permission denied` su alcune funzioni → avvia la sessione con `sudo` quando lavori su interfacce/moduli che richiedono privilegi.
-
-Perché: legare Bettercap all’interfaccia giusta (il 90% dei “non funziona”).
-
-Cosa aspettarti: sessione interattiva con prompt e subnet/gateway rilevati.
-
-Comando:
+Avvia sempre specificando l'interfaccia in modo esplicito — è la causa più comune di sessioni "vuote" che sembrano non funzionare:
 
 ```bash
 sudo bettercap -iface eth0
 ```
 
-Esempio di output (può variare):
+Output atteso:
 
 ```text
 bettercap v2.x
@@ -113,177 +90,112 @@ bettercap v2.x
 [19:21:00] [sys.log] interface: eth0 (10.10.10.20/24)
 ```
 
-Interpretazione: se vedi IP/subnet coerenti col lab, sei pronto per discovery e moduli.
+Se gateway e subnet stampati corrispondono al lab, sei pronto. Se l'interfaccia è sbagliata (es. `wlan0` invece di `eth0`), verificalo con `ip a` fuori da Bettercap e riavvia con `-iface` corretto.
 
-Errore comune + fix: interfaccia sbagliata (es. `wlan0` vs `eth0`) → controlla con `ip a` fuori da Bettercap e riparti con `-iface` corretto.
+## Quick Start: il primo workflow in 3 comandi
 
-Per approfondire la scoperta host prima di entrare in Bettercap, in lab spesso conviene partire da [arp-scan per la discovery in LAN](/articoli/arp-scan/) (pillar “recon veloce”).
+Se vuoi solo vedere Bettercap funzionare prima di capire ogni dettaglio:
 
-## Sessione interattiva: 3 pattern che userai sempre (set/get, concatenazione, caplets)
+```bash
+sudo bettercap -iface eth0
+```
 
-> **In breve:** in sessione userai sempre `set/get`, concatenazione con `;` e caplets per automatizzare.
+```text
+net.recon on
+net.show
+```
 
-Pattern 1: concatenare comandi con `;` per workflow rapidi (es. “clear; net.show”).
+Se compaiono host con IP e MAC, la sessione è impostata correttamente. Da qui puoi proseguire con la guida completa qui sotto per capire cosa succede realmente sotto al singolo comando.
 
-Pattern 2: `set` e `get` per parametri dei moduli.
+## Bettercap commands: i comandi essenziali
 
-Pattern 3: caplets (`.cap`) per ripetere sequenze identiche tra lab diversi.
+| Comando                | Funzione                         |
+| ---------------------- | -------------------------------- |
+| `help`                 | Mostra l'help                    |
+| `get <param>`          | Legge un parametro               |
+| `set <param> <valore>` | Imposta un parametro             |
+| `net.recon on`         | Avvia host discovery passiva     |
+| `net.probe on`         | Avvia host discovery attiva      |
+| `net.show`             | Mostra gli host rilevati         |
+| `arp.spoof on`         | Avvia ARP spoofing               |
+| `net.sniff on`         | Avvia packet sniffing            |
+| `net.sniff stats`      | Mostra statistiche dello sniffer |
+| `caplets.show`         | Mostra i caplet installati       |
+| `events.show`          | Mostra gli eventi registrati     |
+| `ui on`                | Avvia la Web UI                  |
 
-Perché: installare/aggiornare caplets “pronti” e avere un baseline ripetibile.
+## Sessione interattiva: i tre pattern che userai sempre
 
-Cosa aspettarti: download/aggiornamento caplets e ritorno al prompt.
+In sessione ricorrono sempre tre pattern: `set`/`get` per i parametri dei moduli, concatenazione di comandi con `;` (es. `clear; net.show`), e i caplet — file `.cap` che raggruppano una sequenza di comandi da riusare identica tra lab diversi.
 
-Comando:
+Per aggiornare l'indice dei caplet disponibili:
 
 ```bash
 sudo bettercap -eval "caplets.update; q"
 ```
 
-Esempio di output (può variare):
-
-```text
-[caplets] downloading caplets index ...
-[caplets] updated.
-```
-
-Interpretazione: dopo l’update, puoi usare caplets di esempio e scoprire percorsi/nomi.
-
-Errore comune + fix: proxy/rete del lab blocca download → fai update da rete consentita o usa caplets locali.
-
-Perché: vedere cosa hai installato e dove Bettercap cerca i caplets.
-
-Cosa aspettarti: lista di caplets e percorsi di ricerca.
-
-Comando:
+Per vedere quali hai già installati e dove Bettercap li cerca:
 
 ```text
 caplets.show
 ```
 
-Esempio di output (può variare):
+Se stai facendo un test rapido una tantum, i caplet sono spesso overkill: meglio comandi manuali diretti.
 
-```text
-local-sniffer
-netmon
-...
-```
+## Network reconnaissance: net.recon e net.probe
 
-Interpretazione: se vedi caplets noti, puoi “include” o avviarli con `-caplet`.
-
-Errore comune + fix: “caplet not found” → controlla `caplets.paths` e percorso `/usr/local/share/bettercap/caplets/`.
-
-Quando NON usarlo: se stai facendo un one-shot rapidissimo, i caplets possono essere overkill; vai di comandi manuali.
-
-## Recon host: net.recon + net.probe (discovery senza impazzire)
-
-> **In breve:** `net.recon` scopre host leggendo periodicamente la tabella ARP, `net.probe` stimola la subnet per far “uscire” host silenziosi.
-
-Perché: popolare una lista endpoint coerente prima di qualsiasi MITM/sniff.
-
-Cosa aspettarti: comparsa di endpoint e metadati in `net.show`.
-
-Comando:
+`net.recon` non è uno scanner completo della subnet: legge periodicamente la tabella ARP del sistema, quindi mostra solo host di cui è già arrivata una risposta ARP. Per far emergere host silenziosi serve `net.probe`, che invia probe attivi alla subnet.
 
 ```text
 net.recon on
 ```
 
-Esempio di output (può variare):
-
 ```text
 [net.recon] new endpoint 10.10.10.10 08:00:27:aa:bb:cc
 ```
 
-Interpretazione: se compaiono endpoint, la tua interfaccia/subnet è corretta.
-
-Errore comune + fix: non vedi nulla → spesso sei su rete virtuale diversa (NAT/Host-only/Bridge). Ricontrolla la NIC e riparti.
-
-Perché: forzare discovery attiva nella subnet del lab.
-
-Cosa aspettarti: nuovi endpoint rilevati (in combo con net.recon).
-
-Comando:
+Se non vedi nulla, il problema è quasi sempre la rete virtuale (NAT/Host-only/Bridge) o l'interfaccia sbagliata — ricontrolla con `ip a`/`ip r` fuori da Bettercap.
 
 ```text
 net.probe on
 ```
 
-Esempio di output (può variare):
+Se dopo l'attivazione del probe compaiono nuovi endpoint, la subnet aveva host che non rispondevano spontaneamente. Su reti grandi o instabili, anche in lab, `net.probe` può generare rumore: limita il CIDR o disattivalo dopo la baseline.
 
-```text
-[net.probe] probing 10.10.10.0/24 ...
-```
+Come alternativa più mirata per la sola discovery, in lab puoi anche partire da [arp-scan](https://hackita.it/articoli/arp-scan/) o da [netdiscover](https://hackita.it/articoli/netdiscover/) prima di entrare in Bettercap.
 
-Interpretazione: se dopo pochi secondi vedi host in più, la rete aveva endpoint “silenziosi”.
+## ARP spoofing e MITM con Bettercap
 
-Errore comune + fix: “rumore” e troppi eventi → spegni `net.probe` e tieni solo `net.recon` per baseline.
-
-Quando NON usarlo: su reti grandi o instabili (anche in lab) rischi di sporcare risultati; limita CIDR e fai probe mirato.
-
-Se vuoi un’alternativa rapida per discovery in lab (senza sessione interattiva), puoi incrociare con [netdiscover per host discovery](/articoli/netdiscover/) (spoke “scansione leggera”).
-
-## MITM “da lab”: arp.spoof + net.sniff (pcap e credenziali dove possibile)
-
-> **In breve:** in lab puoi posizionarti “in mezzo” con `arp.spoof` e catturare traffico con `net.sniff` (salvando anche su pcap). Poi validi e chiudi con detection/hardening.
-
-Qui entriamo nella parte “abuso tipico”: **ARP spoofing/MITM**. Per restare puliti:
-
-* validazione solo in lab (VM su stessa subnet),
-* detection (indicatori su ARP, log, switch),
-* mitigazione (DAI/DHCP snooping, segmentazione, HTTPS/HSTS lato app).
-
-Perché: selezionare in modo esplicito il target del lab (mai “tutta la rete” a caso).
-
-Cosa aspettarti: parametro impostato, poi avvio spoof.
-
-Comando:
+Con `arp.spoof` ti posizioni tra target e gateway a livello L2. Seleziona sempre un target esplicito, mai l'intera subnet a caso:
 
 ```text
 set arp.spoof.targets 10.10.10.10; arp.spoof on
 ```
 
-Esempio di output (può variare):
-
 ```text
 [arp.spoof] spoofing 10.10.10.10 ...
 ```
 
-Interpretazione: stai tentando MITM verso il target indicato. Se il lab ha protezioni, può fallire (ed è normale).
+Se lo spoof non parte o la connettività del target si interrompe, spesso è una protezione del lab (Dynamic ARP Inspection, ARP spoofing protection sul gateway) che sta facendo il suo lavoro correttamente — non un bug di Bettercap. In quel caso, valida su un lab senza queste protezioni o passa a evidenze puramente passive.
 
-Errore comune + fix: non passa nulla o si interrompe → rete con protezioni anti-ARP spoof (bene!); prova a validare in un lab “più semplice” o passa a scenario non-MITM.
+## Network sniffing con net.sniff e pcap
 
-Perché: sniffare e salvare evidenze su pcap per analisi post.
-
-Cosa aspettarti: file pcap scritto e (se `verbose`/parsing attivo) eventi applicativi.
-
-Comando:
+Una volta in MITM (o anche solo in ascolto), `net.sniff` cattura il traffico e può salvarlo su pcap:
 
 ```text
 set net.sniff.output /tmp/lab-sniff.pcap; net.sniff on
 ```
-
-Esempio di output (può variare):
 
 ```text
 [net.sniff] output: /tmp/lab-sniff.pcap
 [net.sniff] started
 ```
 
-Interpretazione: anche se non “vedi credenziali”, la pcap è oro per validare traffico e ricostruire cosa succede.
-
-Errore comune + fix: pcap vuota → controlla filtro e interfaccia: `get net.sniff.filter` e verifica che non stai escludendo troppo.
-
-Perché: controllare statistiche e configurazione della sessione sniff.
-
-Cosa aspettarti: contatori, filtro, output path.
-
-Comando:
+Per verificare che stia effettivamente catturando qualcosa:
 
 ```text
 net.sniff stats
 ```
-
-Esempio di output (può variare):
 
 ```text
 filter: not arp
@@ -291,342 +203,219 @@ output: /tmp/lab-sniff.pcap
 packets: 1234
 ```
 
-Interpretazione: se i pacchetti crescono, stai catturando. Se restano a zero, stai sniffando nel posto sbagliato.
+Se il contatore resta a zero, o hai un filtro troppo aggressivo o stai sniffando sull'interfaccia sbagliata. Anche senza credenziali in chiaro, una pcap resta la prova più solida e ripetibile di quello che è successo — apribile con [Wireshark](https://hackita.it/articoli/wireshark/) per confermare che i flussi coincidano col test.
 
-Errore comune + fix: `packets: 0` → tipicamente interfaccia sbagliata o traffico assente (target inattivo).
+## DNS spoofing con Bettercap
 
-Validazione in lab (a): apri la pcap con [Wireshark per analizzare traffico e indicatori](/articoli/wireshark/) (pillar “analisi”) e verifica che i flussi coincidano con il test.
+Il modulo `dns.spoof` risponde a query DNS del target con un IP a tua scelta, invece di lasciarle andare al resolver legittimo — utile in lab per dimostrare l'impatto di un DNS in chiaro senza DNSSEC/DoH.
 
-Segnali di detection (b): variazioni sospette in ARP cache (MAC del gateway che cambia), burst di ARP reply, mismatch IP↔MAC ripetuti, endpoint che “perde” connettività se l’attacco degrada.
+```text
+set dns.spoof.domains target-lab.local
+set dns.spoof.address 10.10.10.20
+dns.spoof on
+```
 
-Hardening/mitigazione (c): su switch gestiti abilita **Dynamic ARP Inspection (DAI)** e **DHCP snooping**; segmenta (VLAN), riduci L2 broadcast, e lato applicazione alza la barra con TLS/HSTS (riduce downgrade e traffico in chiaro).
+A differenza dell'ARP spoofing, che agisce a livello L2 su tutto il traffico verso il target, il DNS spoofing agisce selettivamente solo sulle risoluzioni dei domini che indichi — più chirurgico, ma richiede comunque di essere già in mezzo al traffico (tipicamente via `arp.spoof` attivo in parallelo).
 
-Quando NON usarlo: se l’obiettivo è solo “osservare” o fare troubleshooting di rete, evita MITM e resta su `net.recon` + capture passiva.
+## IPv6 e NDP spoofing
 
-Per un confronto pratico “sniff puro” vs sessione modulare, vedi anche [tcpdump per cattura rapida da CLI](/articoli/tcpdump/) (child “sniff minimalista”).
+Bettercap copre anche reti IPv6: al posto dell'ARP (che esiste solo in IPv4), IPv6 usa il protocollo NDP (Neighbor Discovery Protocol) per la risoluzione degli indirizzi a livello locale. Il modulo `ndp.spoof` fa l'equivalente IPv6 dell'ARP spoofing:
 
-## Proxy e UI: quando conviene (http.proxy / Web UI)
+```text
+set ndp.spoof.targets fe80::1
+ndp.spoof on
+```
 
-> **In breve:** i proxy di Bettercap servono quando vuoi intercettare/strumentare traffico a un livello più alto; la Web UI è comoda per visualizzare e orchestrare, ma in lab va esposta con criterio.
+Molti lab e reti reali hanno ancora IPv6 attivo di default anche se il traffico "principale" è pensato per girare su IPv4: questo rende `ndp.spoof` un vettore spesso trascurato sia in attacco che in detection.
 
-Perché: attivare un proxy HTTP trasparente (solo in contesto MITM autorizzato).
+## HTTP/HTTPS proxy con Bettercap
 
-Cosa aspettarti: proxy in ascolto e redirezione del traffico HTTP (se combinato con spoofer/route coerenti).
-
-Comando:
+Per intercettare traffico a livello applicativo, non solo di rete, Bettercap espone un proxy:
 
 ```text
 http.proxy on
 ```
 
-Esempio di output (può variare):
-
 ```text
 [http.proxy] started on 0.0.0.0:8080
 ```
 
-Interpretazione: se il lab genera traffico HTTP, ora hai un punto centrale per osservare/modificare (sempre in ambito autorizzato).
+Molte applicazioni oggi sono HTTPS-only: per quel traffico serve `https.proxy`, che comporta l'installazione di un certificato sul lato client — fattibile in lab, molto più delicato (e fuori scope) su dispositivi che non controlli.
 
-Errore comune + fix: “non vedo richieste” → molte app sono HTTPS-only; per HTTP puro, usa un servizio di lab in chiaro o passa a strumenti dedicati.
+## Bettercap Web UI
 
-Perché: avviare la Web UI per vedere sessione/moduli in modo visuale.
-
-Cosa aspettarti: UI attiva e raggiungibile (di default su loopback).
-
-Comando:
+Per impostazione predefinita la Web UI viene associata a `127.0.0.1:8080`:
 
 ```bash
 sudo bettercap -eval "ui on"
 ```
 
-Esempio di output (può variare):
-
 ```text
 [ui] web ui running at http://127.0.0.1:8080/
 ```
 
-Interpretazione: apri browser in locale sulla VM e gestisci moduli/parametri dalla UI.
+Se non è raggiungibile, controlla di non avere già qualcosa sulla stessa porta e imposta esplicitamente `ui.address`/`ui.port` se ti serve un binding diverso da loopback. In un lab rumoroso o remoto, la UI è spesso un extra: per ripetibilità resta sulla CLI.
 
-Errore comune + fix: UI non raggiungibile → bind su indirizzo sbagliato o porta occupata; setta `ui.address` e `ui.port` in modo esplicito.
+## Caplets e automazione
 
-Quando NON usarlo: se sei in un lab “rumoroso” o remoto, la UI può essere un extra inutile; resta su CLI per ripetibilità.
+I caplet sono script `.cap` che raggruppano una sequenza di comandi Bettercap, caricabili con `-caplet` all'avvio o dalla sessione stessa. Sono utili quando ripeti lo stesso workflow (recon → spoof → sniff) su lab diversi e vuoi evitare di ridigitare gli stessi comandi ogni volta.
 
-Se il tuo focus è “proxy applicativo” con workflow web (request/response, replay, scripting), spesso è più efficiente usare [mitmproxy per intercettare HTTP(S)](/articoli/mitmproxy/) (spoke “proxy puro”).
+## Troubleshooting
 
-## Errori comuni e troubleshooting (quello che ti blocca davvero)
+**`net.recon` non trova host.** Quasi sempre NIC sbagliata o rete virtuale non condivisa tra le VM. Riparti con `sudo bettercap -iface <nic>` dopo aver verificato con `ip a`/`ip r`.
 
-> **In breve:** il 90% dei problemi è interfaccia/subnet errata, target non nel segmento L2, filtri troppo aggressivi o protezioni anti-ARP spoof nel lab.
+**`net.sniff` resta a pacchetti zero.** Traffico assente, filtro troppo stretto, o interfaccia senza flusso reale. Imposta l'output pcap e controlla i contatori con `net.sniff stats` prima di stringere il filtro.
 
-Caso 1: `net.recon` non trova host.
+**`arp.spoof` non funziona o rompe la connettività.** Spesso è una protezione del lab (Dynamic ARP Inspection, anti-ARP-spoofing sul gateway) o una configurazione full-duplex/target incoerente. Valida su un lab più semplice, oppure limitati a recon e cattura passiva.
 
-* Perché succede: NIC sbagliata o rete virtuale non condivisa.
-* Fix: riparti con `sudo bettercap -iface <nic>` e controlla fuori dal tool (es. `ip a`, `ip r`).
+## Come rilevare ARP spoofing e attività Bettercap
 
-Caso 2: `net.sniff` a pacchetti zero.
+**Sull'endpoint:** cambi improvvisi nella cache ARP, in particolare del MAC associato al gateway; associazioni IP↔MAC duplicate o incoerenti.
 
-* Perché succede: traffico assente, filtro errato o stai sniffando un’interfaccia senza flusso.
-* Fix: imposta output pcap e verifica contatori con `net.sniff stats`; riduci filtro solo dopo aver visto pacchetti.
+**Sulla rete:** burst anomali di ARP reply, gratuitous ARP fuori pattern, mismatch ripetuti IP↔MAC.
 
-Caso 3: `arp.spoof` “non funziona” o si rompe la connettività.
+**Sullo switch:** se gestito, abilita **Dynamic ARP Inspection (DAI)** e **DHCP snooping** — sono i controlli più efficaci contro questa classe di attacco.
 
-* Perché succede: protezioni (DAI), ARP spoofing protection sul gateway, oppure configurazione fullduplex/target non coerente.
-* Fix: valida in un lab semplice (switch virtuale senza protezioni) o resta su scenari non-MITM; se vuoi solo evidenze, cattura passiva.
+**Telemetria Bettercap stessa:** la sessione espone eventi come `net.sniff.*`, `http.spoofed-request`, `http.spoofed-response`, `mod.started`/`mod.stopped`, utili se stai costruendo detection basata sui log di un lab controllato.
 
-Quando NON usarlo: se stai cercando “stabilità” e il lab è fragile, evita moduli invasivi (spoof/ban) e lavora su recon/sniff passivo.
+## Hardening contro ARP/NDP spoofing
 
-## Alternative e tool correlati (quando preferirli)
+* Dynamic ARP Inspection + DHCP snooping su switch gestiti
+* Segmentazione L2 (VLAN), per ridurre la portata di un singolo dominio di broadcast
+* TLS ovunque e policy HSTS lato applicazione, per ridurre il valore pratico di un MITM sul traffico intercettato
+* Per IPv6, controlli equivalenti su NDP dove supportati dall'infrastruttura
+* Non abituare gli utenti ad accettare warning sui certificati: è spesso l'anello debole che riapre scenari MITM anche con TLS configurato
 
-> **In breve:** Bettercap è “all-in-one”, ma per task specifici strumenti dedicati sono più veloci o più profondi.
+## Bettercap vs Ettercap vs Wireshark vs mitmproxy
 
-* Per analisi visuale e dissezione profonda: Wireshark (pillar).
-* Per cattura veloce e scripting minimale: tcpdump/tshark (child).
-* Per MITM “storico” e approccio diverso: Ettercap.
-* Per capture di credenziali Windows via name resolution poisoning in lab AD: tool specifici (Responder/Inveigh).
+| Tool                                                | Punto di forza                                                                                  |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Bettercap                                           | Framework modulare, recon + spoof + sniff + proxy in un'unica sessione automatizzabile          |
+| [Ettercap](https://hackita.it/articoli/ettercap/)   | MITM "storico", interfaccia e filtri diversi, più leggero per certi scenari mirati              |
+| [Wireshark](https://hackita.it/articoli/wireshark/) | Analisi e dissezione approfondita dei pacchetti, non pensato per generare l'attacco             |
+| [mitmproxy](https://hackita.it/articoli/mitmproxy/) | Intercettazione HTTP/HTTPS scriptabile in Python, quando il focus è solo il livello applicativo |
+| [tcpdump](https://hackita.it/articoli/tcpdump/)     | Cattura rapida da riga di comando, minimale                                                     |
 
-Quando NON usarlo: se hai già un tool “best-in-class” per quel task e Bettercap aggiunge solo complessità.
+Se il lab richiede recon, MITM a livello di rete e sniffing nella stessa sessione, Bettercap è la scelta più naturale; se il focus è solo l'analisi approfondita di un pcap o l'intercettazione HTTP scriptabile, gli strumenti dedicati sopra sono spesso più efficienti.
 
-## Hardening & detection (log, regole, alert, best practice)
+## Scenario pratico: Bettercap su una macchina HTB/PG
 
-> **In breve:** non “blocchi il tool”, blocchi la tecnica: controlli L2 (DAI/DHCP snooping), osservabilità ARP, e cifratura/app policy corrette.
-
-Detection pratica in lab:
-
-* Monitor ARP cache su client/gateway e cerca cambi MAC improvvisi per lo stesso IP.
-* Cerca storm di ARP reply e incongruenze IP↔MAC ripetute.
-* Se hai switch/virtual switch con feature, abilita log/alert su ARP inspection (quando disponibile).
-
-Hardening:
-
-* Dynamic ARP Inspection + DHCP snooping (reti gestite).
-* Segmentazione L2 (VLAN), riduzione broadcast.
-* TLS everywhere e policy HSTS lato web app (riduce valore di MITM sul traffico in chiaro).
-* Educazione/controlli su warning certificati (utente che “accetta qualsiasi cosa” riapre scenari).
-
-Quando NON usarlo: se il tuo obiettivo è solo “difesa web”, non fissarti su MITM L2; lavora su TLS/HSTS e sicurezza applicativa.
-
-## Scenario pratico: BETTERCAP su una macchina HTB/PG
-
-Ambiente: Kali attacker `10.10.10.20`, target `10.10.10.10`, gateway lab `10.10.10.1` (tutto su rete VM autorizzata).
-
-Obiettivo: posizionarti in MITM verso il target e salvare una pcap per evidenze.
-
-Perché: eseguire una sequenza minima (recon → spoof target → sniff → pcap).
-
-Cosa aspettarti: endpoint rilevati, avvio spoof, file `/tmp/lab-sniff.pcap` popolato.
-
-Comando:
+Ambiente: attaccante Kali `10.10.10.20`, target `10.10.10.10`, gateway del lab `10.10.10.1`, tutto sulla stessa rete VM autorizzata. Obiettivo: MITM verso il target con evidenza salvata su pcap.
 
 ```text
 net.recon on; net.show
 ```
-
-Esempio di output (può variare):
 
 ```text
 10.10.10.10 08:00:27:aa:bb:cc
 10.10.10.1  52:54:00:11:22:33
 ```
 
-Interpretazione: hai target e gateway visibili: prerequisito per qualunque MITM L2.
-
-Errore comune + fix: `net.show` vuoto → interfaccia/rete errata; riparti con `-iface`.
-
-Perché: avviare MITM mirato sul target (non “tutta la subnet”).
-
-Cosa aspettarti: spoof attivo verso target.
-
-Comando:
+Target e gateway visibili: prerequisito per qualunque MITM L2. Se `net.show` risulta vuoto, l'interfaccia o la rete sono sbagliate — riparti con `-iface` corretto.
 
 ```text
 set arp.spoof.targets 10.10.10.10; arp.spoof on
 ```
 
-Esempio di output (può variare):
-
-```text
-[arp.spoof] spoofing 10.10.10.10 ...
-```
-
-Interpretazione: stai tentando di inserirti tra target e gateway in questo lab.
-
-Errore comune + fix: l’attacco fallisce su lab “protetti” → è un risultato valido; passa a evidenze passive.
-
-Perché: catturare traffico e salvarlo in pcap.
-
-Cosa aspettarti: pcap creata e contatori in crescita.
-
-Comando:
-
 ```text
 set net.sniff.output /tmp/lab-sniff.pcap; net.sniff on
 ```
 
-Esempio di output (può variare):
+Da qui genera traffico dal target (ping, navigazione su un servizio del lab) e verifica con `net.sniff stats` che i pacchetti crescano. Se l'attacco fallisce su un lab protetto, è comunque un risultato valido: documenta il comportamento e passa a evidenze passive.
+
+## Bettercap Cheat Sheet
 
 ```text
-[net.sniff] started
-```
-
-Interpretazione: ora puoi generare traffico dal target (ping, browsing su servizio lab) e poi analizzare la pcap.
-
-Errore comune + fix: pcap vuota → verifica `net.sniff stats` e presenza traffico reale.
-
-Risultato atteso: file `/tmp/lab-sniff.pcap` non vuoto e flussi coerenti con l’attività del target.
-
-Detection + hardening: in detection, cerca anomalie ARP (IP↔MAC che “slitta”) e storm ARP; in hardening, abilita DAI/DHCP snooping dove possibile e forza TLS/HSTS lato app per ridurre impatto.
-
-## Playbook 10 minuti: BETTERCAP in un lab
-
-### Step 1 – Fissa il perimetro e la NIC
-
-Prima di tutto conferma che sei su VM/lab autorizzato e identifica la NIC corretta (es. `eth0`).
-
-```bash
-sudo bettercap -iface eth0
-```
-
-### Step 2 – Aggiorna caplets e baseline
-
-Aggiorna i caplets per avere workflow ripetibili.
-
-```bash
-sudo bettercap -eval "caplets.update; q"
-```
-
-### Step 3 – Discovery passiva
-
-Accendi discovery e verifica che emergano endpoint.
-
-```text
-net.recon on; net.show
-```
-
-### Step 4 – Discovery attiva se serve
-
-Se vedi poco, abilita probe per far “parlare” host silenziosi.
-
-```text
-net.probe on; net.show
-```
-
-### Step 5 – MITM mirato (solo se richiesto dal lab)
-
-Se il lab richiede MITM, seleziona target specifico e avvia spoof.
-
-```text
-set arp.spoof.targets 10.10.10.10; arp.spoof on
-```
-
-### Step 6 – Sniff e pcap come evidenza
-
-Salva sempre su pcap: è la tua prova ripetibile.
-
-```text
-set net.sniff.output /tmp/lab-sniff.pcap; net.sniff on
-```
-
-### Step 7 – Stop pulito e note
-
-Spegni moduli e annota risultati/detection.
-
-```text
-net.sniff off; arp.spoof off; net.probe off; net.recon off
+bettercap -iface eth0
+net.recon on
+net.probe on
+net.show
+arp.spoof on
+net.sniff on
+net.sniff stats
+dns.spoof on
+ndp.spoof on
+caplets.show
+events.show 10
+ui on
 ```
 
 ## Checklist operativa
 
-* Conferma perimetro: solo lab/CTF/HTB/PG/VM autorizzate.
-* Avvia Bettercap con `-iface` esplicito (mai “auto” alla cieca).
-* Verifica IP/subnet/gateway stampati a inizio sessione.
-* Avvia `net.recon` e controlla `net.show` prima di tutto.
-* Usa `net.probe` solo se la discovery passiva è povera.
-* Se fai MITM, imposta sempre `arp.spoof.targets` (target mirato).
-* Prima dello sniff, imposta `net.sniff.output` su pcap.
-* Usa `net.sniff stats` per confermare contatori e filtro.
-* Evita moduli invasivi se il lab è instabile (ban/deauth ecc.).
-* Chiudi i moduli in ordine e ripristina (stop pulito).
-* Analizza la pcap con tool dedicati quando serve.
-* Scrivi detection + mitigazioni osservate (DAI/DHCP snooping/TLS).
-
-## Riassunto 80/20
-
-| Obiettivo                    | Azione pratica           | Comando/Strumento                         |
-| ---------------------------- | ------------------------ | ----------------------------------------- |
-| Entrare in sessione corretta | Lega la NIC giusta       | `sudo bettercap -iface eth0`              |
-| Discovery host               | Avvia discovery passiva  | `net.recon on`                            |
-| Discovery “spinta”           | Stimola la subnet        | `net.probe on`                            |
-| MITM mirato (lab)            | Seleziona target e spoof | `set arp.spoof.targets ...; arp.spoof on` |
-| Evidenze ripetibili          | Salva sniff su pcap      | `set net.sniff.output ...; net.sniff on`  |
-| Validazione                  | Analizza pcap e flussi   | `wireshark` / `tshark`                    |
-
-## Concetti controintuitivi
-
-* **“Non vedo host → la rete è vuota”**
-  Quasi sempre è la NIC/rete VM sbagliata. Prima correggi `-iface` e subnet, poi giudichi il tool.
-* **“net.recon dovrebbe scoprire tutto”**
-  `net.recon` si appoggia a ciò che l’ARP table “sa”; se vuoi far emergere host, serve `net.probe` in lab.
-* **“MITM = solo roba web”**
-  MITM è livello rete: se ti metti in mezzo, tutto ciò che non è protetto bene diventa osservabile/manipolabile.
-* **“Basta HTTPS e sono a posto”**
-  HTTPS aiuta tantissimo, ma misconfig (assenza HSTS, downgrade, utenti che accettano cert sospetti) riaprono scenari.
+* Conferma il perimetro: solo lab/CTF/HTB/PG/VM autorizzate
+* Avvia sempre con `-iface` esplicito, mai in automatico alla cieca
+* Verifica IP/subnet/gateway stampati all'avvio della sessione
+* Avvia `net.recon` e controlla `net.show` prima di ogni altra cosa
+* Usa `net.probe` solo se la discovery passiva è povera
+* Per il MITM, imposta sempre un target esplicito con `arp.spoof.targets`
+* Prima dello sniff, imposta `net.sniff.output` su pcap
+* Usa `net.sniff stats` per confermare filtro e contatori
+* Evita moduli invasivi se il lab è instabile
+* Chiudi i moduli in ordine e ripristina lo stato a fine sessione
+* Analizza la pcap con strumenti dedicati quando serve
+* Documenta detection e mitigazioni osservate (DAI/DHCP snooping/TLS)
 
 ## FAQ
 
-D: Bettercap è solo per attaccare?
+**A cosa serve Bettercap?**
+A network reconnaissance, ARP/NDP/DNS spoofing, packet sniffing e intercettazione HTTP/HTTPS, il tutto orchestrato da un'unica sessione interattiva.
 
-R: No: in lab è ottimo anche per recon e osservabilità. Il problema è che include moduli MITM, quindi va usato solo in ambienti autorizzati.
+**Bettercap è disponibile su Kali Linux?**
+Sì, è nei repository ufficiali: `sudo apt install bettercap`.
 
-D: Qual è il comando “minimo” per partire senza perdere tempo?
+**Qual è la differenza tra net.recon e net.probe?**
+`net.recon` legge periodicamente la tabella ARP (discovery passiva); `net.probe` invia probe attivi alla subnet per far emergere host silenziosi.
 
-R: `sudo bettercap -iface eth0` e poi `net.recon on; net.show`. Se non vedi nulla, il problema è quasi sempre la rete/NIC.
+**Cos'è arp.spoof in Bettercap?**
+Il modulo che esegue ARP spoofing per posizionarsi come man-in-the-middle tra un target e il gateway su reti IPv4.
 
-D: net.recon vs net.probe: cosa cambia davvero?
+**Cos'è net.sniff in Bettercap?**
+Il modulo di packet sniffing, che può esportare il traffico catturato in un file pcap per analisi successive.
 
-R: `net.recon` è discovery “passiva” via ARP table; `net.probe` manda probe per far emergere endpoint silenziosi nella subnet.
+**Come avvio Bettercap?**
+`sudo bettercap -iface <interfaccia>`, specificando sempre l'interfaccia corretta per la subnet del lab.
 
-D: Perché la pcap è più importante del “vedere credenziali”?
+**Perché Bettercap non trova host?**
+Quasi sempre per interfaccia di rete sbagliata o VM su segmenti virtuali diversi (NAT vs Bridge vs Host-only).
 
-R: Perché la pcap è ripetibile e verificabile: dimostra flussi, timing e indicatori anche quando non c’è traffico in chiaro.
+**Perché l'ARP spoofing con Bettercap non funziona?**
+Spesso perché il lab ha protezioni anti-ARP-spoofing (Dynamic ARP Inspection) attive — è un esito valido, non un bug.
 
-D: arp.spoof non funziona: è un bug?
+**Bettercap funziona con IPv6?**
+Sì, tramite il modulo `ndp.spoof`, l'equivalente IPv6 dell'ARP spoofing.
 
-R: Spesso no: molte reti (anche lab avanzati) hanno protezioni anti-ARP spoof. È un outcome valido: passa a recon/sniff passivo o cambia lab.
+**Bettercap può intercettare traffico HTTPS?**
+Sì, con `https.proxy`, ma richiede l'installazione di un certificato lato client — fattibile in lab, non su dispositivi che non controlli.
 
-## Link utili su HackIta.it
+**Cosa sono i caplet di Bettercap?**
+Script `.cap` che raggruppano sequenze di comandi Bettercap, per rendere ripetibile lo stesso workflow tra lab diversi.
 
-* [Ettercap per MITM e sniffing in rete](/articoli/ettercap/)
-* [Tshark: analisi pcap da terminale](/articoli/tshark/)
-* [Wireshark: dissezione e analisi traffico](/articoli/wireshark/)
-* [Responder: capture in lab Windows/AD](/articoli/responder/)
-* [Inveigh: alternative Windows-centric a Responder](/articoli/inveigh/)
+**Cos'è la Web UI di Bettercap?**
+Un'interfaccia grafica, di default su `127.0.0.1:8080`, per visualizzare e orchestrare i moduli della sessione senza usare solo la CLI.
 
-In coda:
-
-* /supporto/
-* /contatto/
-* /articoli/
-* /servizi/
-* /about/
-* /categorie/
+**Bettercap vs Ettercap: quale usare?**
+Bettercap copre recon, spoof, sniff e proxy in un unico framework automatizzabile; Ettercap resta un'opzione più leggera per MITM mirati e ha un approccio diverso ai filtri.
 
 ## Riferimenti autorevoli
 
-* [Bettercap – Installation (documentazione ufficiale)](https://www.bettercap.org/project/installation/) (\[bettercap]\[1])
-* [Bettercap – Interactive Session (CLI, caplets, -iface/-version)](https://www.bettercap.org/usage/interactive_session/) (\[bettercap]\[2])
-* [Bettercap – arp.spoof module (targets/fullduplex)](https://www.bettercap.org/modules/ethernet/spoofers/arpspoof/) (\[bettercap]\[3])
-* [Bettercap – net.sniff module (filter/output/pcap)](https://www.bettercap.org/modules/ethernet/netsniff/) (\[bettercap]\[4])
-* [Bettercap – Web UI (ui on)](https://www.bettercap.org/usage/web_ui/) (\[bettercap]\[5])
+* [Bettercap – Overview](https://www.bettercap.org/project/introduction/)
+* [Bettercap – Installation](https://www.bettercap.org/project/installation/)
+* [Bettercap – Interactive Session](https://www.bettercap.org/usage/interactive_session/)
+* [Bettercap – net.recon](https://www.bettercap.org/modules/ethernet/netrecon/)
+* [Bettercap – arp.spoof](https://www.bettercap.org/modules/ethernet/spoofers/arpspoof/)
+* [Bettercap – net.sniff](https://www.bettercap.org/modules/ethernet/netsniff/)
+* [Bettercap – dns.spoof](https://www.bettercap.org/modules/ethernet/spoofers/dnsspoof/)
+* [Bettercap – Ethernet Spoofers (ndp.spoof incluso)](https://www.bettercap.org/modules/ethernet/spoofers/introduction/)
+* [Bettercap – Web UI](https://www.bettercap.org/modules/core/ui/)
+* [Logos Red – Man-in-the-Middle Attack: ARP Spoofing](https://logos-red.com/blog/how-to-perform-a-man-in-the-middle-attack-arp-spoofing/): walkthrough indipendente con lab Kali/Arch Linux passo dopo passo
 
-## CTA finale HackITA
+## Link utili su HackIta
 
-Se questa guida ti è stata utile, puoi supportare HackIta qui: /supporto/ — ci aiuta a pubblicare playbook aggiornati e “lab-first”.
-
-Vuoi accelerare sul serio? Formazione 1:1 pratica (debug insieme, metodo da lab, workflow da pentest): /servizi/
-
-Per aziende o team: assessment e hardening in contesti autorizzati (network/app, review e best practice): /servizi/
-
-(1): [https://www.bettercap.org/project/installation/?utm\_source=chatgpt.com](https://www.bettercap.org/project/installation/?utm_source=chatgpt.com) "Installation"
-(2): [https://www.bettercap.org/usage/interactive\_session/](https://www.bettercap.org/usage/interactive_session/) "Interactive Session | bettercap"
-(3): [https://www.bettercap.org/modules/ethernet/spoofers/arpspoof/](https://www.bettercap.org/modules/ethernet/spoofers/arpspoof/) "arp.spoof | bettercap"
-(4): [https://www.bettercap.org/modules/ethernet/netsniff/](https://www.bettercap.org/modules/ethernet/netsniff/) "net.sniff - net.fuzz | bettercap"
-(5): [https://www.bettercap.org/usage/web\_ui/?utm\_source=chatgpt.com](https://www.bettercap.org/usage/web_ui/?utm_source=chatgpt.com) "Web UI"
+* [Ettercap per MITM e sniffing in rete](https://hackita.it/articoli/ettercap/)
+* [Wireshark: dissezione e analisi del traffico](https://hackita.it/articoli/wireshark/)
+* [tcpdump: cattura rapida da terminale](https://hackita.it/articoli/tcpdump/)
+* [mitmproxy: intercettazione HTTP/HTTPS scriptabile](https://hackita.it/articoli/mitmproxy/)
+* [arp-scan per la discovery interna](https://hackita.it/articoli/arp-scan/)
+* [netdiscover per host discovery in LAN](https://hackita.it/articoli/netdiscover/)
+* [Responder: capture in lab Windows/AD](https://hackita.it/articoli/responder/)
+* [Inveigh: alternativa Windows-centric a Responder](https://hackita.it/articoli/inveigh/)

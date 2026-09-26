@@ -1,12 +1,7 @@
 ---
-title: >-
-  Ettercap: Intercettare, Manipolare e Snoopare il Traffico di Rete con
-  Facilità"
+title: 'Ettercap: Tutorial MITM, ARP Spoofing e Sniffing su Kali Linux'
 slug: ettercap
-description: >-
-  Scopri come usare Ettercap per attacchi man-in-the-middle, sniffing e
-  manipolazione del traffico di rete. Una guida tecnica chiara pensata per chi
-  esplora le basi dell'hacking etico e dell'analisi delle comunicazioni.
+description: 'Cos''è Ettercap e come funziona? Guida pratica a MITM, ARP spoofing e sniffing su Kali Linux, con installazione, filtri, packet capture e comandi.'
 image: /ettercap.webp
 draft: false
 date: 2026-01-21T00:00:00.000Z

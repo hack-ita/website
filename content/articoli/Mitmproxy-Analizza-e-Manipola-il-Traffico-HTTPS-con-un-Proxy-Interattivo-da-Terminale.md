@@ -1,13 +1,7 @@
 ---
-title: >-
-  Mitmproxy: Analizza e Manipola il Traffico HTTPS con un Proxy Interattivo da
-  Terminale
+title: 'Mitmproxy: Intercettare e Analizzare Traffico HTTP/HTTPS'
 slug: mitmproxy
-description: >-
-  Mitmproxy è un proxy HTTP/HTTPS potente e interattivo per sniffare,
-  ispezionare e modificare il traffico di rete direttamente da terminale. Ideale
-  per penetration tester, sviluppatori e ethical hacker che vogliono capire cosa
-  passa davvero nei pacchetti.
+description: 'Guida pratica a mitmproxy: configura il proxy, intercetta HTTPS, installa la CA, filtra e modifica i flow, salva sessioni e risolvi i problemi comuni.'
 image: /mitmproxu.webp
 draft: false
 date: 2026-01-22T00:00:00.000Z
@@ -18,388 +12,266 @@ subcategories:
 tags:
   - mitmproxy
   - mitm
-  - ''
+  - HTTPS
+  - Proxy
+  - API Security
+  - Traffic Analysis
 ---
 
-# Mitmproxy: Analizza e Manipola il Traffico HTTPS con un Proxy Interattivo da Terminale
+# Mitmproxy: Intercettare e Manipolare Traffico HTTP/HTTPS da Terminale
 
-Se la tua app “non passa dal proxy” o l’HTTPS ti spara errori di certificato in HTB/PG, qui configuri mitmproxy (CA + filtri) e validi subito traffico e modifiche in modo ripetibile.
+mitmproxy è un proxy interattivo che si posiziona tra client e server per intercettare, ispezionare e modificare traffico HTTP e HTTPS in tempo reale. Permette di analizzare cosa manda davvero un'applicazione, scovare token e header nascosti, verificare se le validazioni sono realmente server-side o solo cosmetiche lato client, e salvare sessioni per replay successivi.
 
-## Intro
+In un workflow di lab/pentest autorizzato su HTB, PG o ambienti di staging, mitmproxy entra tipicamente dopo una prima ricognizione: hai un endpoint o una feature sospetta e vuoi capire flussi, parametri e comportamento reale prima di automatizzare.
 
-mitmproxy è un proxy MITM interattivo che intercetta traffico HTTP/HTTPS e ti permette di ispezionarlo e modificarlo al volo.
+Il progetto include tre interfacce sullo stesso motore: **mitmproxy** (TUI interattiva da terminale), **mitmweb** (UI web), **mitmdump** (CLI stile tcpdump, ideale per automazione e scripting).
 
-In un lab/pentest autorizzato ti serve per capire cosa manda davvero un client (browser/app), scovare leakage (token, header, parametri), e verificare se le validazioni sono server-side o solo “cosmetiche” lato client.
+## Cos'è mitmproxy e come funziona
 
-Cosa farai in pratica:
+Quando configuri il client per usare mitmproxy come proxy, ogni richiesta HTTP o HTTPS passa attraverso il proxy prima di raggiungere il server. mitmproxy presenta un certificato firmato con la propria CA — che dev'essere installata nel client — così da "aprire" TLS sul tratto client→proxy e ricostruirlo sul tratto proxy→server. Il risultato è accesso completo al traffico in chiaro, anche se la connessione originale usa HTTPS.
 
-* Configurare client e CA per vedere anche HTTPS.
-* Filtrare e intercettare solo gli endpoint interessanti.
-* Modificare richieste/risposte e salvare le sessioni per replay.
-* Gestire i problemi tipici (niente traffico, cert error, pinning).
+Questo lo rende diverso da uno sniffer di rete come [tcpdump](https://hackita.it/articoli/tcpdump/) o [TShark](https://hackita.it/articoli/tshark/), che catturano pacchetti ma non vedono il contenuto TLS senza le chiavi di sessione. Se invece hai bisogno di MITM a livello di rete (ARP spoofing, spoofing L2 per forzare traffico verso il proxy), strumenti come [Bettercap](https://hackita.it/articoli/bettercap/) o [Ettercap](https://hackita.it/articoli/ettercap/) si occupano del layer inferiore — mitmproxy lavora sulla parte HTTP/HTTPS.
 
-Nota etica: usa tutto solo su lab/CTF/HTB/PG/VM personali o sistemi con autorizzazione esplicita.
+## Installazione e sanity check su Kali Linux
 
-## Cos’è mitmproxy e dove si incastra nel workflow
+Su Kali e sulla maggior parte delle distro Linux:
 
-> **In breve:** mitmproxy sta “in mezzo” tra client e server: vedi ogni request/response e puoi manipolarla per test controllati. È ideale quando vuoi osservabilità e tampering rapido, senza riscrivere l’app.
+```bash
+sudo apt update && sudo apt install -y mitmproxy
+```
 
-mitmproxy è più “chirurgico” dei MITM a livello rete: lavori su HTTP(S) con un’interfaccia interattiva (mitmproxy), una UI web (mitmweb) o una CLI stile tcpdump (mitmdump).
-
-Quando lo usi davvero in un workflow offensivo da lab:
-
-* Dopo una prima ricognizione: hai un endpoint/feature sospetta e vuoi capire parametri, token e flussi.
-* Prima di automatizzare: catturi 1–2 sessioni pulite e poi le trasformi (replay/script).
-* Quando il client fa cose “strane”: header custom, websocket, HTTP/2, redirect, caching.
-
-Se invece il tuo scenario è MITM “di rete” (ARP spoofing, sniffing L2), spesso ha più senso partire da tool dedicati come **Bettercap** e poi usare mitmproxy per la parte HTTP(S): vedi “Bettercap: Il Coltellino Svizzero del Network Hacking” su HackIta: [Bettercap (MITM, sniffing e spoofing)](https://hackita.it/articoli/bettercap/).
-
-## Installazione e quick sanity check (Kali/Linux)
-
-> **In breve:** su Linux puoi usare binari ufficiali o pacchetti della distro (spesso più vecchi). Prima verifica che parta e che ascolti, poi fai un test HTTP semplice.
-
-Prima regola operativa: se ti serve una feature recente, preferisci installazione ufficiale; se ti basta “farlo andare” in lab, va bene anche il pacchetto distro (sapendo che può laggare).
-
-**Perché:** sapere “che versione ho” ti evita bug/flag che non esistono.
-**Cosa aspettarti:** un output con versione e nessun errore di import/deps.
+Per una versione più recente, usa i binari ufficiali da [mitmproxy.org](https://mitmproxy.org/). Prima di qualunque altra cosa, verifica versione e partenza:
 
 ```bash
 mitmproxy --version
 ```
 
-Se vuoi una UI web (comoda per review rapida):
-
-**Perché:** mitmweb ti dà navigazione e ricerca più comode per set di flow medi.
-**Cosa aspettarti:** un servizio web locale e flussi che compaiono mentre navighi.
-
-```bash
-mitmweb
-```
-
-E sanity check “sto vedendo traffico?”:
-
-**Perché:** isolare subito se il problema è “client non punta al proxy”.
-**Cosa aspettarti:** eventi tipo `client connect` / nuove flow quando navighi.
+Avvia la TUI interattiva:
 
 ```bash
 mitmproxy
 ```
 
-Errore comune + fix: “parte mitmproxy ma non vedo nulla” → prima ancora dei certificati, controlla che il client stia davvero usando `127.0.0.1:8080` (o IP della macchina proxy) e che firewall/isolamento Wi-Fi non blocchino.
+Avvia la UI web (comoda per review e ricerca su set di flow medi):
 
-## Setup proxy + CA: vedere HTTPS senza impazzire
+```bash
+mitmweb
+```
 
-> **In breve:** configuri il client per usare il proxy, poi installi la CA di mitmproxy: senza CA vedrai solo HTTP o errori TLS.
+Prima ancora dei certificati, verifica che il client stia davvero usando `127.0.0.1:8080` come proxy: il problema più comune non è la CA, ma che il traffico non arriva mai al proxy. Appena un client si connette, nel log vedrai `client connect` — se non compare, il routing è sbagliato, non mitmproxy.
 
-Il 90% dei “non funziona” è qui: o il client non usa il proxy, o l’HTTPS fallisce perché la CA non è trusted.
+## Setup proxy e CA: vedere HTTPS senza errori
+
+Configurare il client e installare la CA sono i due passi che sblocano la maggior parte dei blocchi. Senza CA trustata vedrai solo HTTP o errori TLS.
 
 ### Step 1 – Imposta il proxy nel client
 
-**Perché:** mitmproxy in modalità “regular” è un proxy esplicito: il client deve puntarci.
-**Cosa aspettarti:** già su HTTP puro dovresti vedere flow.
-
-Esempio (variabile d’ambiente per tool CLI in lab):
+Per tool CLI in lab, le variabili d'ambiente sono il modo più rapido:
 
 ```bash
 export http_proxy=http://127.0.0.1:8080
 export https_proxy=http://127.0.0.1:8080
 ```
 
-Esempio di output (può variare):
+Questi valori valgono solo nel terminale in cui li esporti. Se usi un altro terminale o lanci il comando con sudo, il proxy non verrà ereditato. Per browser, configura la proxy manuale nelle impostazioni di rete su `127.0.0.1:8080`.
 
-```text
-# nessun output: sono variabili d'ambiente nel processo corrente
+### Step 2 – Installa la CA per intercettare HTTPS
+
+mitmproxy genera la propria CA al primo avvio e la salva in `~/.mitmproxy/`. Per installare la CA nei vari contesti:
+
+**Browser (Firefox/Chrome):** apri con il browser la pagina speciale `http://mitm.it` (funziona solo se il browser usa già il proxy) per scaricare e installare il certificato guidato.
+
+**Sistema Linux (es. Kali):** copia il certificato nel trust store del sistema e aggiornalo.
+
+```bash
+sudo cp ~/.mitmproxy/mitmproxy-ca-cert.pem /usr/local/share/ca-certificates/mitmproxy-ca.crt
+sudo update-ca-certificates
 ```
 
-Interpretazione: ora tool come `curl` useranno il proxy (nel terminale in cui hai esportato).
-
-Errore comune + fix: “curl ignora il proxy” → verifica che non stai usando un alias che sovrascrive opzioni, e che non stai lanciando il comando in una shell diversa.
-
-### Step 2 – Installa la CA (HTTPS)
-
-**Perché:** mitmproxy genera certificati al volo e firma con la sua CA; il client deve fidarsi.
-**Cosa aspettarti:** dopo l’installazione, HTTPS si apre senza warning (in lab).
-
-Quick path comodo: apri dal client la pagina di onboarding e installa la CA (di solito passando dal dominio “magico” dell’onboarding). Se non riesci, installa manualmente la CA dal path locale.
-
-Esempio manuale (CLI in lab, usando la CA generata in `~/.mitmproxy`):
+**Tool CLI specifico (senza installare CA a livello sistema):** usa `--cacert` per indicare la CA solo a quella singola esecuzione — non installa nulla nel sistema, vale solo per quel comando:
 
 ```bash
 curl --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem https://example.com/
 ```
 
-Esempio di output (può variare):
+Se l'output è HTML senza errori TLS, CA e proxy funzionano correttamente insieme.
 
-```html
-<!doctype html>
-<html>
-<head><title>Example Domain</title></head>
-<body>Example Domain</body>
-</html>
-```
+Nota: Wireshark può aprire un PCAP del traffico, ma non decifra automaticamente le sessioni TLS solo perché il traffico è passato da mitmproxy — senza le chiavi di sessione (log SSLKEYLOGFILE) rimane opaco anche in un file pcap.
 
-Interpretazione: se vedi HTML senza errori TLS, CA e proxy stanno lavorando.
+## Proxy modes: quale usare e quando
 
-Errore comune + fix: “SSL certificate problem / unknown issuer” → la CA non è installata/trustata nel contesto giusto (browser store vs sistema vs app).
+### Regular (default) — proxy esplicito
 
-## Proxy modes che usi davvero (regular, local, reverse, upstream)
-
-> **In breve:** inizia con “regular”; usa “local capture” se vuoi catturare app locali senza configurare proxy; “reverse” per mettere mitmproxy davanti a un server; “upstream” per catena di proxy.
-
-### Regular (default) – il più robusto
-
-**Perché:** la configurazione è semplice e prevedibile.
-**Cosa aspettarti:** il proxy ascolta e vedi flow appena il client lo usa.
+Il client deve configurare mitmproxy come proxy. È il modo più stabile e prevedibile:
 
 ```bash
 mitmproxy
 ```
 
-Errore comune + fix: “il browser non passa dal proxy” → ricontrolla IP/porta e che non ci sia PAC/auto-config che sovrascrive.
+Errore comune: il browser non usa il proxy perché un file PAC o auto-config lo sovrascrive. Controlla nelle impostazioni del browser che non ci sia una configurazione automatica attiva.
 
-### Local capture – quando l’app bypassa le proxy settings
+### Local capture — cattura app che bypassano le proxy settings
 
-**Perché:** alcune app ignorano le impostazioni di sistema e non passano dal proxy esplicito.
-**Cosa aspettarti:** vedi traffico di processi locali senza configurare proxy dentro l’app.
+Alcune app ignorano le impostazioni proxy di sistema. La modalità local capture intercetta le connessioni a livello sistema tramite reindirizzamento senza richiedere configurazione esplicita nell'app:
 
 ```bash
 mitmproxy --mode local
 ```
 
-Interpretazione: utile in lab per catturare tool locali “testardi”, riducendo frizione.
+Utile per tool locali che non si lasciano configurare facilmente. Avvia prima mitmproxy, poi l'applicazione da catturare. Il supporto dipende dall'OS: funziona bene su Linux, può richiedere configurazione aggiuntiva su macOS.
 
-Errore comune + fix: “non cattura nulla” → avvia prima mitmproxy, poi l’app, e verifica permessi/OS supportati.
+### Reverse — mitmproxy davanti a un server specifico
 
-### Reverse – “metto mitmproxy davanti al server”
-
-**Perché:** perfetto per testare un backend specifico senza configurare ogni client in modo complicato.
-**Cosa aspettarti:** mitmproxy ascolta localmente e inoltra al server target.
+mitmproxy ascolta localmente e inoltra tutto verso un server target. Il client punta a mitmproxy invece che al server reale:
 
 ```bash
 mitmproxy --mode reverse:https://example.com
 ```
 
-Errore comune + fix: loop o host header strani → in reverse mode alcuni header vengono riscritti; se il backend è sensibile, devi ragionare su host header e routing.
+Utile per testare un backend senza riconfigurare ogni singolo client. Attenzione all'header `Host`: in reverse mode mitmproxy riscrive l'Host in base alla destinazione, il che può creare comportamenti inattesi su backend che lo validano rigorosamente — verifica il comportamento del tuo target specifico.
 
-### Upstream – “mitmproxy davanti a un altro proxy”
+### Upstream — mitmproxy in catena con un altro proxy
 
-**Perché:** utile quando devi rispettare un proxy aziendale/lab e vuoi comunque ispezionare/alterare.
-**Cosa aspettarti:** tutto passa da mitmproxy e poi va al proxy upstream.
+Tutto passa prima da mitmproxy e poi a un proxy upstream (es. un proxy aziendale o di lab):
 
 ```bash
 mitmdump --mode upstream:http://127.0.0.1:8081
 ```
 
-Errore comune + fix: auth upstream → se l’upstream richiede credenziali, devi configurarle nelle opzioni (altrimenti vedrai connect error).
+Se l'upstream richiede autenticazione, configurala nelle opzioni di mitmproxy altrimenti vedrai errori di connessione.
 
-Nota: se il tuo caso d’uso è “trasparente” con routing/ARP e senza configurare client, spesso è più complesso e fragile; in quei casi, strumenti L2 come [Ettercap](https://hackita.it/articoli/ettercap/) o Bettercap sono più adatti per portare il traffico “verso” il proxy in un lab controllato.
+## View filter e intercept filter: la differenza che conta
 
-## Intercept & modifica on-the-fly: filtri, edit, replay rapido
+Sono due meccanismi distinti e spesso confusi:
 
-> **In breve:** non intercettare tutto: filtra. Intercetta solo richieste su endpoint target e modifica header/body per verificare validazioni server-side.
+**View filter**: filtra quali flow *vengono mostrati* nell'interfaccia. Non influisce sul traffico che passa — il proxy intercetta tutto, ma mostra solo ciò che corrisponde al filtro. Si imposta con `f` nel TUI o con `--view-filter` da riga di comando.
 
-### Intercetta solo ciò che ti interessa (flow filter)
+**Intercept filter**: mette in *pausa* i flow che corrispondono al filtro, bloccando la richiesta finché non interagisci manualmente. Si imposta con `i` nel TUI o con `--intercept`. Intercettare tutto è quasi sempre controproducente: blocchi risorse statiche, health check, analytics — e perdi tempo su traffico irrilevante.
 
-**Perché:** intercettare tutto ti distrugge il tempo e rende il test ingestibile.
-**Cosa aspettarti:** solo alcune richieste vanno in pausa (intercepted) e puoi editarle.
-
-Nel TUI di mitmproxy (console), entra nel prompt comandi e imposta l’intercept su URL specifiche (esempio regex) e solo request:
+Esempio di intercept filter nel TUI — metti in pausa solo le POST verso endpoint API, lasciando passare il resto:
 
 ```text
 :set intercept "~u /api/v1/.* & ~q"
 ```
 
-Esempio di output (può variare):
+La sintassi dei filtri mitmproxy:
 
-```text
-Set intercept filter to "~u /api/v1/.* & ~q"
-```
+* `~u` — match sull'URL
+* `~q` — solo richieste (request)
+* `~s` — solo risposte (response)
+* `~m POST` — solo metodo POST
+* `~h Cookie` — match su header
+* `&` / `|` / `!` — AND, OR, NOT
 
-Interpretazione: ora mitmproxy mette in pausa solo le richieste che matchano quel pattern.
+Combinazione tipica in lab: view filter largo per avere visibilità, intercept filter stretto per agire su quello che ti interessa.
 
-Errore comune + fix: “non intercetta nulla” → la regex non matcha davvero; prima usa un view filter più largo, poi stringi.
+## Intercettare e modificare richieste al volo
 
-### Modifica rapida di header o parametri (validazione in lab)
+Una volta che una richiesta è in pausa (intercepted), nel TUI puoi selezionarla, premere `e` per editarla, modificare header, parametri o body, e poi `a` per riprendere il flusso. Questo è il workflow base per verificare se un controllo è realmente server-side:
 
-**Perché:** vuoi capire se un controllo è server-side o solo UI.
-**Cosa aspettarti:** cambi un campo e osservi status code, body, redirect, o differenze di contenuto.
+* Rimuovi un header di sicurezza che il client aggiunge e osserva se il server risponde lo stesso
+* Cambia un parametro numerico (`id=1` → `id=2`) per testare IDOR
+* Modifica un flag o un claim nel body della richiesta e verifica se il server lo accetta
 
-Esempio operativo (concetto): intercetta una POST di login o un’API call e prova a:
+Un `200` non significa necessariamente che il test "sia riuscito": guarda sempre il body e l'effetto reale sulla risposta — un server può rispondere 200 ignorando silenziosamente i campi modificati.
 
-* rimuovere un header di sicurezza che il client aggiunge,
-* cambiare un parametro numerico (`id=1` → `id=2`) per validare IDOR in lab,
-* modificare un claim/flag lato client (se presente) e verificare se il server lo accetta.
+## Salvare sessioni e replay
 
-Segnali di detection: spike di `4xx/5xx`, pattern anomalo su endpoint sensibili, mismatch tra User-Agent e device reale, sequenze ripetute su risorse protette.
-Hardening: enforce authorization server-side, rate limit, audit su endpoint, token binding dove possibile, e test automatici per param tampering.
-
-### Salva flow per analisi e replay (mitmdump)
-
-**Perché:** vuoi ripetibilità: catturo una sessione “pulita” e la riuso.
-**Cosa aspettarti:** un file di flow salvato e riutilizzabile.
+Registra tutto quello che passa nel proxy su file:
 
 ```bash
 mitmdump -w lab_capture.mitm
 ```
 
-Esempio di output (può variare):
+Rileggi il file in modo interattivo:
 
-```text
-[08:41:12.123] Proxy server listening at http://127.0.0.1:8080
+```bash
+mitmdump -r lab_capture.mitm
 ```
 
-Interpretazione: ora tutto quello che passa nel proxy viene scritto nel file.
-
-Errore comune + fix: “file vuoto” → non sta passando traffico nel proxy; torna a verificare config client.
-
-Replay client-side (senza bindare la porta proxy):
-
-**Perché:** replay di richieste registrate per vedere differenze e regression.
-**Cosa aspettarti:** richieste ri-eseguite e nuove flow risultanti.
+Replay delle richieste registrate (senza avviare un proxy in ascolto):
 
 ```bash
 mitmdump -nC lab_capture.mitm
 ```
 
-Errore comune + fix: replay che fallisce per token scaduti → cattura una sessione fresca o riduci la finestra del test.
+Il replay è utile per ripetere un test senza dover ricreare manualmente la sessione, ma attenzione ai token scaduti: se la sessione originale è troppo vecchia, il server risponderà con 401/403. In quel caso, cattura una sessione fresca e usa quella.
 
-## Casi d’uso offensivi da lab + validazione e mitigazioni
+## Casi d'uso in lab: cosa validare e come
 
-> **In breve:** mitmproxy è perfetto per testare auth, sessione, e integrità dei dati: osservi token/header e provi tampering controllato per verificare controlli server-side.
+### Token e sessione
 
-### 1) Token e sessione: dove nascono e dove “scappano”
+Intercetta le chiamate post-login e traccia dove passa il token (cookie vs header `Authorization`). Verifica gli attributi del cookie (`Secure`, `HttpOnly`, `SameSite`) e la scadenza. Poi testa logout: il token viene realmente invalidato server-side, o continua a funzionare? Un token che non viene invalidato al logout è una vulnerabilità reale, non solo teorica.
 
-Validazione in lab:
+### Param tampering e IDOR
 
-* intercetta chiamate dopo login e identifica dove passa il token (cookie vs header `Authorization`).
-* verifica `Secure`, `HttpOnly`, `SameSite` e scadenze.
-* prova logout e controlla se il token viene invalidato o resta valido.
+Intercetta una richiesta sensibile (update profilo, cambio email, accesso a risorsa) e modifica un parametro alla volta. Se il server risponde 200 accettando parametri che non dovrebbe — ID di altri utenti, ruoli elevati, campi readonly — stai documentando un finding concreto.
 
-Segnali di detection: accessi da IP insoliti, sessioni multiple, token reuse, user-agent inconsistente.
-Hardening: rotation token, invalidazione logout, TTL brevi, refresh token sicuri, binding a device/claims e audit trail.
+### Verifica validazioni server-side vs client-side
 
-### 2) Param tampering: l’API si fida del client?
+Molte applicazioni eseguono validazioni in JavaScript lato client (formato email, lunghezza password, campi obbligatori) che il server non ripete. mitmproxy ti permette di inviare dati che il client non avrebbe mai trasmesso, verificando se il backend si fida ciecamente dell'input.
 
-Validazione in lab:
+Segnali di detection: picchi di 4xx/5xx, pattern anomali su endpoint sensibili, serie di richieste su ID incrementali, user-agent inconsistente rispetto alla sessione.
 
-* intercetta una request “sensibile” (es. update profilo) e modifica solo 1 parametro per volta.
-* osserva se il server risponde con `200` o con `403/400` e se l’output cambia davvero.
+Hardening: enforce dell'authorization server-side, rate limit, audit su accessi negati, token binding, validation strict lato server indipendente dal client.
 
-Segnali di detection: serie di tentativi su ID incrementali, pattern di 403, anomalie su endpoint admin.
-Hardening: authorization check per oggetto (ABAC/RBAC), validation strict, e logging su accessi negati.
+### WPAD e proxy auto-discovery in lab
 
-### 3) WPAD/Proxy auto-config in LAN lab (attenzione)
+In reti Windows, alcuni client tentano di scoprire automaticamente un proxy via WPAD. Questo può forzare traffico verso un proxy non autorizzato e potenzialmente esporre autenticazioni NTLM — vettore classico abbinato a tool come [Responder](https://hackita.it/articoli/responder/). mitmproxy può ricevere quel traffico se si posiziona come destinazione WPAD in un lab controllato, ma la parte di avvelenamento DNS/LLMNR che porta il traffico lì è gestita da strumenti diversi.
 
-In lab interno, alcune reti Windows possono scoprire proxy via WPAD: è un vettore classico per forzare traffico verso un proxy e catturare auth in ambienti deboli.
+Hardening: disabilitare WPAD dove non serve, bloccare LLMNR/NBT-NS, monitorare richieste DNS verso `wpad` e autenticazioni NTLM verso host insoliti.
 
-Validazione in lab:
+## Troubleshooting: no traffic, cert error, pinning
 
-* isola un segmento di rete di test,
-* simula la discovery e osserva richieste WPAD/proxy,
-* verifica se credenziali/hash vengono esposti in modo non atteso.
+### Nessun traffico visibile
 
-Segnali di detection: richieste DNS/LLMNR/NBT-NS “strane”, traffico WPAD, auth NTLM verso host non attesi.
-Hardening: disabilitare WPAD dove non serve, bloccare LLMNR/NBT-NS, e monitorare comportamenti anomali. Approfondimento su HackIta: [Responder (LLMNR/NBT-NS/WPAD)](https://hackita.it/articoli/responder/).
+Prima escludi i problemi TLS testando un endpoint HTTP puro. Se funziona, il problema è la CA. Se non funziona nemmeno l'HTTP, il client non sta usando il proxy: verifica IP/porta, assenza di configurazioni PAC che sovrascrivono le proxy settings, e che non ci sia client isolation sulla rete Wi-Fi di lab.
 
-## Errori comuni e troubleshooting (no traffic, cert error, pinning)
+### Errori di certificato HTTPS
 
-> **In breve:** risolvi in ordine: (1) il client arriva al proxy? (2) HTTPS: CA installata? (3) pinning o bypass delle proxy settings? (4) filtri troppo stretti?
+La CA non è nello store corretto. Distingui: store del browser (Firefox ha il proprio, separato dal sistema), store del sistema operativo, store specifico dell'applicazione. Installa la CA nel contesto esatto usato dall'applicazione che stai testando. `curl --cacert` vale solo per quell'esecuzione, non modifica il sistema.
 
-### Caso 1: “Non vedo nessun traffico”
+### App mobile o app che bypassa proxy settings
 
-**Perché:** è quasi sempre routing/proxy settings, non mitmproxy.
-**Cosa aspettarti:** se il client arriva, nel log vedrai `client connect`.
+Molte app mobile bypassano le proxy settings di sistema o implementano certificate pinning, che blocca il MITM anche con CA installata. Le opzioni in un contesto autorizzato sono: usare una build debug/staging senza pinning, richiedere agli sviluppatori un toggle di pinning per l'ambiente di test, o usare la modalità `--mode local` di mitmproxy per catturare a livello più basso. Non cercare di bypassare il pinning su app di produzione senza autorizzazione esplicita.
 
-Fix rapido:
+### HTTP/3 e QUIC
 
-* prova prima con un HTTP non cifrato (per escludere CA).
-* verifica che non ci sia “client isolation” sulla Wi-Fi.
-* se sei su rete/VM, controlla NAT/bridged.
+mitmproxy supporta HTTP/1, HTTP/2 e WebSocket. HTTP/3 (su QUIC/UDP) ha supporto limitato o assente nelle versioni attuali — verifica la documentazione della versione specifica che stai usando. Se il client usa HTTP/3 e vuoi forzarlo su HTTP/2 o HTTP/1 per l'intercettazione, puoi bloccare UDP verso la porta 443 per disabilitare QUIC lato client.
 
-Per confermare che i pacchetti “esistono” davvero, puoi fare un check con un capture tool e poi tornare al layer HTTP. Vedi su HackIta: [tcpdump da terminale](https://hackita.it/articoli/tcpdump/).
+### Intercept che blocca tutto
 
-### Caso 2: “HTTPS dà errori di certificato”
+Hai un intercept filter troppo largo. Stringilo: usa `~u` per URL specifiche, `~q` solo per request, `~m POST` solo per certi metodi. Usa il view filter per vedere il traffico senza fermarlo, e l'intercept solo quando sei pronto ad agire manualmente.
 
-**Perché:** la CA non è trustata nello store giusto.
-**Cosa aspettarti:** dopo trust corretto, niente warning e flow completi.
+## Hardening contro proxy MITM
 
-Fix rapido:
+* **Certificate pinning** selettivo sulle comunicazioni critiche, specialmente app mobile
+* **mTLS** per canali che richiedono autenticazione reciproca
+* **Policy sul certificate store**: impedire l'aggiunta di CA non autorizzate, alert su modifiche
+* **Monitoring egress**: proxy non standard, porte anomale, WPAD anomalo in LAN
+* **Alert su TLS anomalo**: picchi di errori TLS, user-agent inconsistente rispetto alla sessione
 
-* installa la CA sul dispositivo/browser usato (non solo sul sistema).
-* per app mobile: spesso serve store di sistema o una build debug (dipende dall’app).
+mitmproxy genera traffico riconoscibile: header `Via`, pattern specifici nelle richieste verso l'endpoint di onboarding, processi `mitmproxy`/`mitmdump` in esecuzione. In un assessment, non trattarlo come invisibile.
 
-### Caso 3: “Alcune app non si lasciano intercettare (pinning)”
+## Scenario pratico su HTB/PG
 
-**Perché:** il pinning blocca MITM anche se la CA è installata.
-**Cosa aspettarti:** errori TLS nell’app o richieste che non compaiono.
-
-Fix “pulito” in contesto autorizzato:
-
-* usa build debug/config di test senza pinning,
-* chiedi ai dev un toggle di pinning per ambienti di staging,
-* se ti interessa solo “ripulire la vista”, usa filtri (view\_filter) o ignora domini non target.
-
-### Caso 4: “Intercept continua a interrompermi”
-
-**Perché:** hai intercettato troppo largo.
-**Cosa aspettarti:** con filtri stretti lavori fluido.
-
-Fix rapido:
-
-* intercetta solo request (`~q`) e solo URL target (`~u`), combinati con `&`.
-
-## Hardening & detection: come ridurre l’impatto del MITM in azienda
-
-> **In breve:** lato difesa riduci superficie: pinning dove sensato, policy su store certificati, monitor su proxy non autorizzati, e logging su anomalie di sessione.
-
-Hardening utile (reale) contro MITM:
-
-* Cert pinning selettivo (soprattutto su app mobile) e gestione corretta delle eccezioni in debug/staging.
-* mTLS per canali davvero critici (quando gestibile).
-* Policy endpoint: impedire aggiunta di root CA non autorizzate e alert su modifiche allo store certificati.
-* Monitor su egress: proxy non standard, porte anomale, o pattern di “proxy chaining”.
-
-Detection pratica:
-
-* alert su picchi di errori TLS e su user agent “impossibili”,
-* correlazione su sessioni: riuso token da contesti diversi, geo/IP inconsistente,
-* controllo integrity su PAC/WPAD e DNS anomalo in LAN.
-
-Se devi fare analisi “di pacchetto” e vuoi anche decriptare TLS per confrontare flusso HTTP vs PCAP in un lab, la combo mitmproxy + Wireshark è una strada comune: su HackIta hai una base pronta in [Wireshark in azione](https://hackita.it/articoli/wireshark/).
-
-## Scenario pratico: mitmproxy su una macchina HTB/PG
-
-> **In breve:** configuri proxy locale, installi CA, intercetti solo un endpoint API e validi un tampering controllato con risultato osservabile.
-
-Ambiente:
-
-* Attacker VM (Kali): `10.10.10.10`
-* Target lab web/app: `http://10.10.10.20` (fittizio)
-* Obiettivo: intercettare una richiesta API e verificare che il server validi davvero i parametri (server-side).
-
-**Perché:** vuoi un test ripetibile con 2–4 azioni, senza “rumore”.
-**Cosa aspettarti:** flow visibili, un endpoint in pausa (intercepted), e una risposta diversa (es. 400/403) quando tamperi.
+Ambiente: Kali su `10.10.10.10`, target web su `10.10.10.20`. Obiettivo: intercettare una chiamata API e verificare se il server valida i parametri server-side.
 
 ```bash
 mitmproxy
 ```
 
-Azione 2: imposta il browser (o il tool) per usare `127.0.0.1:8080`, poi visita una pagina HTTP e conferma che compaiono flow.
+Configura il browser per usare `127.0.0.1:8080`, visita un endpoint HTTP del target e verifica che compaiano flow nella TUI. Installa la CA e ripeti su un endpoint HTTPS — se non ci sono errori TLS, il setup è corretto.
 
-Azione 3: installa la CA (onboarding) e visita un endpoint HTTPS del lab (o un dominio di test), verificando che non ci siano errori TLS.
+Imposta un intercept filter sull'endpoint API target:
 
-Azione 4: intercetta solo l’API target e modifica un parametro “innocuo ma controllabile” (es. un campo di ordinamento o un ID in un lab apposta).
+```text
+:set intercept "~u /api/ & ~q"
+```
 
-Risultato atteso concreto:
+Genera una richiesta dall'applicazione. La richiesta si blocca — modifica un parametro (es. `id=1` → `id=2`), riprendi il flusso con `a` e osserva la risposta. Un 403 o un 400 indica validazione server-side; un 200 con dati di un altro utente indica un IDOR.
 
-* vedi la request in pausa,
-* dopo la modifica ottieni un `400/403` se il server valida, oppure un `200` con comportamento cambiato (se il lab è vulnerabile).
-
-Detection + hardening (in breve): logga tentativi ripetuti su endpoint sensibili, rate limit sugli ID incrementali, e authorization check per oggetto per bloccare tampering/IDOR.
-
-## Playbook 10 minuti: mitmproxy in un lab
-
-> **In breve:** in 5–8 step passi da “zero” a “intercept mirato + capture + replay”, senza perdere tempo su traffico inutile.
+## Playbook 10 minuti: mitmproxy in lab
 
 ### Step 1 – Avvia mitmproxy e verifica che ascolti
 
@@ -407,29 +279,33 @@ Detection + hardening (in breve): logga tentativi ripetuti su endpoint sensibili
 mitmproxy
 ```
 
-### Step 2 – Punta il client al proxy (browser o variabili env)
+### Step 2 – Punta il client al proxy
 
-Imposta proxy su `127.0.0.1:8080` e visita un sito HTTP per confermare che arrivano flow.
+Configura `127.0.0.1:8080`, visita un sito HTTP e verifica che compaiano flow.
 
-### Step 3 – Abilita HTTPS installando la CA
+### Step 3 – Installa la CA per HTTPS
 
-Apri l’onboarding dal client e installa la CA nello store corretto (browser/sistema, a seconda del target).
+Apri `http://mitm.it` con il browser che usi per il test, oppure installa manualmente la CA nello store corretto.
 
-### Step 4 – Restringi la vista ai flow utili (view filter)
+### Step 4 – Imposta un view filter per ridurre il rumore
 
-Usa un filtro per vedere solo ciò che ti interessa (es. solo un host o un path) e ridurre rumore.
+Filtra per host o path: vedi solo ciò che ti interessa senza intercettare ancora nulla.
 
-### Step 5 – Configura intercept selettivo su endpoint target
+### Step 5 – Configura l'intercept selettivo
 
-Imposta `set intercept` con un filtro URL e solo request (`~q`), così lavori senza interruzioni inutili.
+```text
+:set intercept "~u /api/.* & ~q"
+```
 
-### Step 6 – Salva una sessione pulita con mitmdump
+Solo le richieste verso quel path si bloccheranno.
+
+### Step 6 – Salva una sessione pulita
 
 ```bash
 mitmdump -w lab_capture.mitm
 ```
 
-### Step 7 – Replay controllato per ripetibilità
+### Step 7 – Replay per ripetibilità
 
 ```bash
 mitmdump -nC lab_capture.mitm
@@ -437,110 +313,65 @@ mitmdump -nC lab_capture.mitm
 
 ## Checklist operativa
 
-> **In breve:** se segui questa checklist, eviti il 90% dei fail (no traffic / cert / filtri / pinning).
-
-* Hai verificato che il client punta davvero a `127.0.0.1:8080` (o IP della VM proxy).
-* Prima hai testato HTTP non cifrato per escludere problemi TLS.
-* Hai installato la CA nello store giusto (browser vs sistema vs app).
-* Hai limitato la vista con un filtro invece di “guardare tutto”.
-* Hai intercettato solo URL target e solo request (`~q`) per non bloccarti.
-* Hai salvato una sessione “pulita” prima di fare tampering pesante.
-* Hai annotato status code e differenze di response per ogni singolo test.
-* Hai testato un parametro alla volta (tampering controllato).
-* Hai verificato effetti server-side (non solo UI).
-* Hai considerato pinning/bypass proxy settings se alcune app non generano flow.
-* Hai logging/detection in mente (anche in lab) per capire cosa sarebbe visibile in produzione.
+* Il client punta davvero a `127.0.0.1:8080`?
+* Hai testato prima un endpoint HTTP puro per escludere problemi TLS?
+* Hai installato la CA nello store corretto per il client che stai usando?
+* Hai distinto view filter (solo visualizzazione) da intercept filter (pausa)?
+* Stai intercettando solo URL/metodo specifici, non tutto il traffico?
+* Hai salvato una sessione pulita prima di fare tampering?
+* Stai valutando l'effetto reale della risposta, non solo lo status code?
+* Se un'app non genera flow, hai considerato bypass delle proxy settings o pinning?
 
 ## Riassunto 80/20
 
-> **In breve:** questi sono i 6 use-case che ti danno valore subito con pochissimi comandi.
-
-| Obiettivo               | Azione pratica                                 | Comando/Strumento                    |
-| ----------------------- | ---------------------------------------------- | ------------------------------------ |
-| Vedere traffico HTTP(S) | Avvia proxy e punta il client                  | `mitmproxy`                          |
-| HTTPS senza errori      | Installa CA / usa CA locale                    | `~/.mitmproxy/mitmproxy-ca-cert.pem` |
-| Ridurre rumore          | Filtra vista e intercetta selettivo            | `set intercept` + filtri             |
-| Tampering controllato   | Modifica 1 parametro/header e osserva risposta | TUI edit flow                        |
-| Salvare sessione        | Registra flow su file                          | `mitmdump -w lab_capture.mitm`       |
-| Ripetibilità            | Replay richieste registrate                    | `mitmdump -nC lab_capture.mitm`      |
+| Obiettivo                           | Comando/Azione                                |
+| ----------------------------------- | --------------------------------------------- |
+| Avvio TUI interattiva               | `mitmproxy`                                   |
+| Avvio UI web                        | `mitmweb`                                     |
+| Cattura in chiaro senza interazione | `mitmdump -w file.mitm`                       |
+| Visualizzare solo un host           | View filter: `~d example.com`                 |
+| Intercettare solo POST su /api      | Intercept: `~u /api/.* & ~q & ~m POST`        |
+| Modificare una richiesta            | Seleziona flow → `e` → modifica → `a`         |
+| Replay sessione salvata             | `mitmdump -nC file.mitm`                      |
+| Reverse proxy verso un server       | `mitmproxy --mode reverse:https://target.com` |
 
 ## Concetti controintuitivi
 
-> **In breve:** sono i trabocchetti che fanno perdere ore, anche a chi “sa usare i proxy”.
+**"Se l'HTTPS non funziona, è colpa di mitmproxy."** Quasi sempre è la CA: installata nel posto sbagliato (sistema vs browser vs app), o non installata affatto nel client che stai usando.
 
-* **“Se vedo HTTP, allora anche HTTPS funzionerà”**
-  No: senza CA trustata, HTTPS fallisce o resta “opaco”. Risolvi prima la CA, poi i filtri.
-* **“Intercept tutto così non mi perdo nulla”**
-  Ti autodossi: intercetta solo ciò che stai testando (URL + request) e usa view filter per il resto.
-* **“Se l’app non passa dal proxy, è colpa di mitmproxy”**
-  Spesso è bypass delle proxy settings o pinning. In lab serve un approccio dedicato (debug build/modalità adatta).
-* **“Un 200 significa che il test è riuscito”**
-  Non sempre: guarda il body e l’effetto reale. Un server può rispondere 200 ma ignorare i campi.
+**"Intercetto tutto così non mi perdo nulla."** Ti blocchi da solo: risorse statiche, analytics, health check, CDN — tutto si mette in pausa e il sito smette di funzionare. Usa l'intercept solo su URL specifiche.
+
+**"Un 200 in risposta significa che il test è riuscito."** Non sempre. Guarda il body e l'effetto reale. Un server può rispondere 200 ignorando silenziosamente i parametri modificati.
+
+**"mitmproxy non è rilevabile."** Lo è: header `Via`, pattern di richieste verso l'endpoint di onboarding, processi in esecuzione, CA aggiunta al trust store. Non trattarlo come stealth per default.
+
+**"Se l'app non passa dal proxy, è colpa di mitmproxy."** Spesso è bypass delle proxy settings o certificate pinning. Cambia approccio (local capture, build debug) invece di cercare di forzare la configurazione.
 
 ## FAQ
 
-> **In breve:** risposte rapide ai problemi più frequenti in lab.
+**Qual è la differenza tra mitmproxy, mitmweb e mitmdump?**
+Stesso motore, interfacce diverse. mitmproxy è TUI interattiva da terminale, mitmweb è UI web, mitmdump è CLI senza interfaccia — ideale per scripting e automazione.
 
-D: mitmproxy non vede traffico, ma il browser naviga. Perché?
+**Come vedo traffico HTTPS senza errori di certificato?**
+Installa la CA di mitmproxy (`~/.mitmproxy/mitmproxy-ca-cert.pem`) nello store corretto per il client che stai usando. Il metodo di installazione dipende dal browser o dall'applicazione specifica.
 
-R: Il browser probabilmente non sta usando il proxy (o un PAC lo sovrascrive). Verifica IP/porta e prova un HTTP semplice prima dell’HTTPS.
+**Qual è la differenza tra view filter e intercept filter?**
+Il view filter filtra cosa viene mostrato nell'interfaccia senza toccare il traffico. L'intercept filter mette in pausa i flow corrispondenti finché non interagisci manualmente.
 
-D: HTTPS dà “unknown issuer” anche dopo aver installato la CA.
+**Come salvo e replay una sessione?**
+`mitmdump -w file.mitm` per salvare, `mitmdump -nC file.mitm` per replay. Se i token sono scaduti, cattura una sessione più recente.
 
-R: La CA non è nello store giusto (browser vs sistema) o non è stata trustata correttamente. In lab, conferma con `curl --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem`.
+**Alcune app non generano flow anche con proxy configurato. Perché?**
+Probabilmente bypassano le proxy settings di sistema o usano certificate pinning. Prova la modalità `--mode local` o richiedi una build di test senza pinning in contesto autorizzato.
 
-D: Alcune richieste non compaiono, soprattutto da app mobile.
+**mitmproxy supporta HTTP/3?**
+Il supporto è limitato nelle versioni attuali. Se il client usa HTTP/3 su QUIC, puoi disabilitare QUIC lato client bloccando UDP sulla porta 443 per forzare HTTP/2.
 
-R: Molte app bypassano proxy settings o usano pinning. In contesto autorizzato, serve modalità adatta (es. local capture) o configurazione/staging senza pinning.
+**Quando conviene usare mitmweb invece di mitmproxy?**
+Quando hai molti flow da navigare e ricercare — la UI web è più comoda per review e filtri visuali. mitmproxy TUI è più veloce per workflow da tastiera durante un test attivo.
 
-D: Posso salvare e rigiocare una sessione?
+## Riferimenti ufficiali
 
-R: Sì: registra con `mitmdump -w file.mitm` e fai replay con `mitmdump -nC file.mitm`. Se i token scadono, cattura una sessione più fresca.
-
-D: Qual è la differenza tra mitmproxy e mitmweb?
-
-R: Stesso motore, interfacce diverse: TUI vs UI web. In lab, mitmweb è comodo per review e ricerca, mitmproxy è più “tastiera-driven”.
-
-D: Quando NON usarlo?
-
-R: Se ti serve sniffing L2 puro o traffico non HTTP(S), usa strumenti dedicati (pcap/IDS) e poi torna a mitmproxy quando ti serve manipolare HTTP(S).
-
-## Link utili su HackIta.it
-
-> **In breve:** tool “spoke/child” che si incastrano bene con mitmproxy (MITM, sniffing, troubleshooting e LAN abuse in lab).
-
-* [Bettercap (MITM, sniffing e spoofing)](https://hackita.it/articoli/bettercap/)
-* [Ettercap: intercettare e manipolare traffico di rete](https://hackita.it/articoli/ettercap/)
-* [tcpdump: analizzare traffico da terminale](https://hackita.it/articoli/tcpdump/)
-* [TShark: analizzare traffico da terminale](https://hackita.it/articoli/tshark/)
-* [Wireshark: analisi traffico e credenziali in lab](https://hackita.it/articoli/wireshark/)
-* [Responder: attacco LLMNR/NBT-NS/WPAD in LAN](https://hackita.it/articoli/responder/)
-
-Pagine istituzionali:
-
-* /supporto/
-* /contatto/
-* /articoli/
-* /servizi/
-* /about/
-* /categorie/
-
-## Riferimenti autorevoli
-
-> **In breve:** due fonti primarie per modalità e gestione certificati (le parti che “rompono” più spesso in lab).
-
-* [mitmproxy Docs — Proxy Modes](https://docs.mitmproxy.org/stable/concepts/modes/). (\[docs.mitmproxy.org]\[1])
-* [mitmproxy Docs — Certificates](https://docs.mitmproxy.org/stable/concepts/certificates/). (\[docs.mitmproxy.org]\[2])
-
-## CTA finale HackIta
-
-> **In breve:** se questo contenuto ti fa risparmiare tempo in lab, puoi supportare il progetto e accelerare la tua crescita.
-
-Supporta HackIta: se vuoi che pubblichi più playbook e guide operative come questa, trovi il link qui: /supporto/
-
-Formazione 1:1: se vuoi una roadmap pratica (HTB/PG/OffSec) e sessioni mirate sui tuoi blocker, trovi tutto su: /servizi/
-
-Servizi per aziende/assessment: per security assessment e attività di testing in contesti autorizzati (web, AD, network), trovi i dettagli su: /servizi/
-
-(1): [https://docs.mitmproxy.org/stable/concepts/modes/](https://docs.mitmproxy.org/stable/concepts/modes/) "Proxy Modes"
-(2): [https://docs.mitmproxy.org/stable/concepts/certificates/?utm\_source=chatgpt.com](https://docs.mitmproxy.org/stable/concepts/certificates/?utm_source=chatgpt.com) "Certificates"
+* [mitmproxy Docs – Proxy Modes](https://docs.mitmproxy.org/stable/concepts/modes/)
+* [mitmproxy Docs – Certificates](https://docs.mitmproxy.org/stable/concepts/certificates/)
+* [mitmproxy Docs – Filter Expressions](https://docs.mitmproxy.org/stable/concepts/filters/)

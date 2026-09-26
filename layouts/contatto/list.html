@@ -42,7 +42,7 @@
                 <!-- Additional message textarea -->
                 {{ partial "components/input.html" (dict 
                     "for" "messaggio aggiuntivo" 
-                    "type" "textarea"
+                    "type" "textarea" "required" "true" "minlength" "40"
                 ) }}
 
                 {{ partial "shared/fake-captcha.html" . }}

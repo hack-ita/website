@@ -38,7 +38,7 @@
     <!-- Message textarea -->
     {{ partial "components/input.html" (dict 
         "type" "textarea" 
-        "for" "Messaggio"
+        "required" "true" "minlength" "40" "for" "Messaggio"
     ) }}
 
     {{ partial "shared/fake-captcha.html" . }}

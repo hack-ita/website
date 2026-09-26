@@ -10,6 +10,10 @@
             placeholder="{{ .for }}"
             class="hn-input hn-field hn-input-area"
             aria-label="{{ .for }}"
+            {{ if eq .required "true" }}required{{ end }}
+            {{ with .minlength }}minlength="{{ . }}"
+            oninvalid="this.setCustomValidity('Il messaggio deve contenere almeno {{ . }} caratteri.')"
+            oninput="this.setCustomValidity('')"{{ end }}
         ></textarea>
         {{ else }}
         <input
@@ -20,6 +24,7 @@
             class="hn-input hn-field"
             aria-label="{{ .for }}"
             {{ if eq .required "true" }}required{{ end }}
+            {{ with .minlength }}minlength="{{ . }}"{{ end }}
         />
         {{ end }}
     </div>

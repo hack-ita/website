@@ -1,9 +1,11 @@
 ---
 title: 'Dark Web: Cos’è, Come Entrare e Come Funziona '
 slug: dark-web
-description: 'Cos''è il dark web, la differenza con deep web e Tor, l''economia criminale che ci circola davvero e cosa c''è di vero nelle leggende come le Red Room.'
+description: >-
+  Cos'è il dark web, la differenza con deep web e Tor, l'economia criminale che
+  ci circola davvero e cosa c'è di vero nelle leggende come le Red Room.
 image: /dark-web-cose-come-funziona.webp
-draft: true
+draft: false
 date: 2026-09-27T00:00:00.000Z
 categories:
   - guides-resources

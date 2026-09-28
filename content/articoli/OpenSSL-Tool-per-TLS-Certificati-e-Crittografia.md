@@ -1,9 +1,11 @@
 ---
 title: 'OpenSSL: Tool per TLS, Certificati e Crittografia'
 slug: openssl
-description: 'OpenSSL per TLS, certificati X.509, RSA ed ECDSA, PKI, s_client e crittografia. Comandi pratici per Linux, Windows, troubleshooting e pentest.'
+description: >-
+  OpenSSL per TLS, certificati X.509, RSA ed ECDSA, PKI, s_client e
+  crittografia. Comandi pratici per Linux, Windows, troubleshooting e pentest.
 image: /openssl-tls-certificati-crittografia.webp
-draft: true
+draft: false
 date: 2026-09-28T00:00:00.000Z
 categories:
   - tools

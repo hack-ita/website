@@ -23,3 +23,17 @@ command = "npm run build"
   pretty_urls = true
 [build.processing.images]
   compress = true
+
+# The GTranslate-served sub-domain (en.hackita.it) loads our fingerprinted
+# CSS/JS cross-origin from hackita.it. Those files use Subresource Integrity
+# (integrity + crossorigin="anonymous"), which requires CORS — without it the
+# browser blocks them and the translated pages render unstyled / without JS.
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"

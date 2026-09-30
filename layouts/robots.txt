@@ -6,3 +6,5 @@ Disallow: /images/dev/
 
 Sitemap: {{ "sitemap.xml" | absURL }}
 Sitemap: {{ "articoli/sitemap.xml" | absURL }}
+Sitemap: https://en.hackita.it/sitemap.xml
+Sitemap: https://en.hackita.it/articoli/sitemap.xml

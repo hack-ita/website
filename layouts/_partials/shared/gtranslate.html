@@ -1,42 +1,53 @@
 {{- /*
-  GTranslate language switcher.
-
-  Renders only when params.gtranslate.enable is true.
-
-  FREE tier (pro: false) — active now:
-    - Client-side widget loaded from GTranslate's public CDN. No account, key or
-      subscription required. Translations happen on the fly in the visitor's
-      browser via GTranslate's free engine.
-    - Source language = default_language (Italian); targets = languages list.
-    - Limitation: translations are NOT separate indexable URLs, so Google does
-      not index the English/other-language versions. That is a PRO-only feature.
-
-  PRO tier (pro: true) — later, after purchasing GTranslate Pro:
-    - Set params.gtranslate.pro: true. Nothing else in the codebase changes.
-    - Adds url_structure (sub_directory: /en/, /fr/ ...) + browser-language
-      detection. GTranslate's network then serves indexable translated URLs and
-      injects hreflang automatically, so Google can index each language. This
-      also requires the site to be connected in the GTranslate dashboard.
+  Custom language switcher for GTranslate Pro sub-domain setup (en.hackita.it).
+  A hand-built dropdown (native <select> can't show flag images) with inline SVG
+  flags + language names, themed to match the header. Links are set by JS at
+  runtime so they stay correct on both hackita.it and en.hackita.it (GTranslate
+  rewrites server-side hrefs; our JS overrides them after load). Marked
+  translate="no" so GTranslate doesn't translate the language labels.
+  Toggle with params.gtranslate.enable.
 */ -}}
-{{- with site.Params.gtranslate }}
-{{- if .enable }}
-{{- $widget := .widget | default "float" -}}
-<div class="gtranslate_wrapper"></div>
+{{- if site.Params.gtranslate.enable }}
+<details class="lang-switcher notranslate" translate="no" data-lang-switcher>
+  <summary aria-haspopup="listbox" aria-label="Seleziona lingua / Select language">
+    <span class="lang-flag" data-current-flag></span>
+    <span class="lang-name" data-current-name>Italiano</span>
+    <svg class="lang-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </summary>
+  <ul class="lang-menu" role="listbox">
+    <li>
+      <a role="option" data-lang="it" hreflang="it" href="/">
+        <span class="lang-flag"><svg width="20" height="14" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect width="1" height="2" x="2" fill="#ce2b37"/></svg></span>
+        <span>Italiano</span>
+      </a>
+    </li>
+    <li>
+      <a role="option" data-lang="en" hreflang="en" href="/">
+        <span class="lang-flag"><svg width="20" height="14" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#c8102e" stroke-width="4"/><rect x="25" width="10" height="30" fill="#fff"/><rect y="10" width="60" height="10" fill="#fff"/><rect x="27" width="6" height="30" fill="#c8102e"/><rect y="12" width="60" height="6" fill="#c8102e"/></svg></span>
+        <span>English</span>
+      </a>
+    </li>
+  </ul>
+</details>
 <script>
-  window.gtranslateSettings = {
-    "default_language": {{ .default_language | default "it" }},
-    "languages": {{ .languages | default (slice "it" "en") }},
-    "wrapper_selector": ".gtranslate_wrapper",
-    "flag_style": "3d",
-    "switcher_horizontal_position": {{ .switcher_horizontal_position | default "right" }},
-    "switcher_vertical_position": {{ .switcher_vertical_position | default "bottom" }}
-    {{- if .pro -}},
-    "detect_browser_language": true,
-    "native_language_names": true,
-    "url_structure": {{ .url_structure | default "sub_directory" }}
-    {{- end }}
-  };
+(function(){
+  var el=document.querySelector('[data-lang-switcher]');if(!el)return;
+  var path=location.pathname+location.search+location.hash;
+  var base=location.hostname.replace(/^en\./,'');
+  var cur=/^en\./.test(location.hostname)?'en':'it';
+  el.querySelectorAll('a[data-lang]').forEach(function(a){
+    var l=a.getAttribute('data-lang');
+    a.href='https://'+(l==='en'?'en.':'')+base+path;
+    a.classList.toggle('is-active',l===cur);
+  });
+  var c=el.querySelector('a[data-lang="'+cur+'"]');
+  if(c){
+    el.querySelector('[data-current-name]').textContent=c.querySelector('span:last-child').textContent;
+    var f=c.querySelector('.lang-flag');if(f)el.querySelector('[data-current-flag]').innerHTML=f.innerHTML;
+  }
+  el.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){el.removeAttribute('open');});});
+  document.addEventListener('click',function(e){if(!el.contains(e.target))el.removeAttribute('open');});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')el.removeAttribute('open');});
+})();
 </script>
-<script src="https://cdn.gtranslate.net/widgets/latest/{{ $widget }}.js" defer></script>
-{{- end }}
 {{- end }}

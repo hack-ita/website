@@ -669,3 +669,59 @@ pre:has(> code) {
 }
 
 @keyframes flicker { 0%,100% { opacity: 1; } 50% { opacity: 0.8; } }
+
+/* ===========================
+   Language switcher (custom dropdown with flags) — header
+=========================== */
+.lang-switcher { position: relative; font: inherit; }
+.lang-switcher summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  color: #000000;
+  user-select: none;
+}
+.lang-switcher summary::-webkit-details-marker { display: none; }
+.lang-switcher summary:hover { border-color: var(--color-primary); }
+.dark .lang-switcher summary { border-color: rgba(255, 255, 255, 0.2); background: #000000; color: #ffffff; }
+.lang-flag { display: inline-flex; line-height: 0; }
+.lang-flag svg { display: block; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); }
+.dark .lang-flag svg { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2); }
+.lang-caret { transition: transform 0.2s ease; opacity: 0.8; }
+.lang-switcher[open] .lang-caret { transform: rotate(180deg); }
+.lang-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 60;
+  min-width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+.dark .lang-menu { background: #111111; border-color: rgba(255, 255, 255, 0.15); }
+.lang-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.25rem;
+  color: #000000;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.dark .lang-menu a { color: #ffffff; }
+.lang-menu a:hover { background: var(--color-primary); color: #ffffff; }
+.lang-menu a:hover .lang-flag svg { box-shadow: 0 0 0 1px rgba(255,255,255,0.6); }
+.lang-menu a.is-active { color: var(--color-primary); font-weight: 600; }
+.lang-menu a.is-active:hover { color: #ffffff; }

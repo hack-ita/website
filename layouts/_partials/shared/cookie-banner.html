@@ -1,0 +1,28 @@
+{{/* Simple informational cookie notice (Italian). Shows once, remembers the
+     "Accetto" click in localStorage. Themed to the site's dark UI + brand red. */}}
+<div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[70] px-4 pb-4 hidden" role="dialog" aria-live="polite" aria-label="Avviso cookie">
+  <div class="max-w-3xl mx-auto p-5 rounded-md border border-primary bg-dark/95 backdrop-blur-md shadow-xl flex flex-col sm:flex-row sm:items-center gap-4">
+    <p class="text-sm text-light grow text-pretty">
+      🍪 Utilizziamo i cookie per migliorare la tua esperienza di navigazione e per analizzare il traffico del sito. Continuando la navigazione accetti il loro utilizzo.
+    </p>
+    <button id="cookie-accept" type="button" class="shrink-0 uppercase font-bold text-sm px-6 py-3 rounded-md bg-primary text-light hover:opacity-90 transition-opacity cursor-pointer">
+      Accetto
+    </button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='cookieConsent';
+  var b=document.getElementById('cookie-banner');
+  if(!b)return;
+  var accepted=false;
+  try{accepted=localStorage.getItem(KEY)==='1';}catch(e){}
+  if(accepted)return;
+  b.classList.remove('hidden');
+  var btn=document.getElementById('cookie-accept');
+  if(btn)btn.addEventListener('click',function(){
+    try{localStorage.setItem(KEY,'1');}catch(e){}
+    b.classList.add('hidden');
+  });
+})();
+</script>

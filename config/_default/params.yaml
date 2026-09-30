@@ -25,25 +25,9 @@ social:
   twitter: ''
   linkedin: ''
 
-# GTranslate auto-translation widget.
-# FREE tier is live now (enable: true, pro: false) — client-side widget, no
-# account/key needed, but translated pages are NOT indexed by Google.
-# To go PRO later: purchase GTranslate Pro, connect the site in their dashboard,
-# then set `pro: true` here and redeploy. That switches on indexable translated
-# URLs (/en/, /fr/ ...) + hreflang for SEO. No other code changes needed.
-# The GTranslate Pro subscription is billed by GTranslate directly to the client.
+# GTranslate Pro — English sub-domain (en.hackita.it). The full widget config
+# (languages, colors, url_structure sub_domain) lives in
+# layouts/_partials/shared/gtranslate.html, pasted from GTranslate's dashboard.
+# This flag just turns the whole switcher on/off.
 gtranslate:
   enable: true
-  pro: false
-  widget: float            # float | dropdown | flags | popup | globe
-  default_language: it
-  languages:
-    - it
-    - en
-    - fr
-    - es
-    - de
-  switcher_horizontal_position: left
-  switcher_vertical_position: bottom
-  # Pro-only (ignored while pro: false):
-  url_structure: sub_directory   # sub_directory (/en/) | sub_domain (en.)

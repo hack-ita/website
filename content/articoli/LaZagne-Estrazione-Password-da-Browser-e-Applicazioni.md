@@ -23,7 +23,7 @@ LaZagne è particolarmente potente per **lateral movement**: dopo aver compromes
 
 Il tool è scritto in Python ma ha build standalone (.exe per Windows) che non richiedono Python installato sul target. Supporta output in JSON, facilmente parsabile per automation. È mantenuto attivamente con update frequenti per supportare nuove applicazioni.
 
-In questo articolo imparerai come usare LaZagne su diverse piattaforme, interpretare l'output, integrazione con framework post-exploitation ([Metasploit](https://hackita.it/articoli/metasploit/), [Cobalt Strike](https://hackita.it/articoli/cobalt-strike/)), e come difendersi dal credential harvesting. Vedrai esempi pratici di lateral movement usando credenziali recuperate, e techniques per maximize recovery success.
+In questo articolo imparerai come usare LaZagne su diverse piattaforme, interpretare l'output, integrazione con framework post-exploitation ([Metasploit](https://hackita.it/articoli/metasploit/), [Cobalt Strike](https://hackita.it/articoli/cobaltstrike/)), e come difendersi dal credential harvesting. Vedrai esempi pratici di lateral movement usando credenziali recuperate, e techniques per maximize recovery success.
 
 ***
 

@@ -17,9 +17,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $title }}">
 <meta name="twitter:description" content="{{ $desc | plainify | truncate 200 }}">
-{{- with (index $images 0) }}
+{{- with $images }}{{ with index . 0 }}
 <meta name="twitter:image" content="{{ . | absURL }}">
-{{- end }}
+{{- end }}{{ end }}
 {{- with site.Params.social.twitter_handle }}
 <meta name="twitter:site" content="{{ . }}">
 <meta name="twitter:creator" content="{{ . }}">

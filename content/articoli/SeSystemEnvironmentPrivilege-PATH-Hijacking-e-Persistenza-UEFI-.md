@@ -1,5 +1,5 @@
 ---
-title: 'SeSystemEnvironmentPrivilege: PATH Hijacking e Persistenza UEFI '
+title: 'SeSystemEnvironmentPrivilege: PATH Hijacking e Persistenza UEFI'
 slug: sesystemenvironmentprivilege
 description: >-
   Sfrutta SeSystemEnvironmentPrivilege per PATH hijacking e shell SYSTEM.

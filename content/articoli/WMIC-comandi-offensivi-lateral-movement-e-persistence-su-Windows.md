@@ -361,7 +361,7 @@ Leggi le nostre guide su [crackmapexec](https://hackita.it/articoli/crackmapexec
 
 | Framework                                                      | Modulo WMI                              | Funzionalità                                                        |
 | -------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------------- |
-| **[Cobalt Strike](https://hackita.it/articoli/cobalt-strike/)** | `remote-exec wmi TARGET "command"`      | Esecuzione remota, BOF per WMI ProcCreate e EventSub                |
+| **[Cobalt Strike](https://hackita.it/articoli/cobaltstrike/)** | `remote-exec wmi TARGET "command"`      | Esecuzione remota, BOF per WMI ProcCreate e EventSub                |
 | **Metasploit**                                                 | `exploit/windows/local/wmi`             | Esecuzione remota via WMI su TCP 135                                |
 | **[Metasploit](https://hackita.it/articoli/metasploit/)**       | `exploit/windows/local/wmi_persistence` | Persistence via 5 metodi (EVENT, INTERVAL, LOGON, PROCESS, WAITFOR) |
 | **[Empire](https://hackita.it/articoli/empire/)**               | `lateral_movement/invoke_wmi`           | Lateral movement con launcher PowerShell base64                     |

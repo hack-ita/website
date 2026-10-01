@@ -14,7 +14,6 @@ subcategories:
   - active-directory
 tags:
   - porta-windows
-  - ''
 featured: true
 ---
 
@@ -185,7 +184,7 @@ minPwdLength: 8
 maxPwdAge: -36288000000000
 ```
 
-**Lettura dell'output:** lockout dopo 5 tentativi falliti, durata lockout 30 minuti (-18000000000 in 100-nanosecond intervals). Password minima 8 caratteri, storia di 12 password, max age 42 giorni. Questi parametri calibrano il tuo [attacco di password spraying](https://hackita.it/articoli/passwordspraying/): massimo 4 tentativi per utente, poi attendi 31 minuti.
+**Lettura dell'output:** lockout dopo 5 tentativi falliti, durata lockout 30 minuti (-18000000000 in 100-nanosecond intervals). Password minima 8 caratteri, storia di 12 password, max age 42 giorni. Questi parametri calibrano il tuo [attacco di password spraying](https://hackita.it/articoli/password-spraying/): massimo 4 tentativi per utente, poi attendi 31 minuti.
 
 ### Ricerca di computer e Domain Controller
 

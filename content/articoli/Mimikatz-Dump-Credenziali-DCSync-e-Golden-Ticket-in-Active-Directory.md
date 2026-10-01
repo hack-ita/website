@@ -12,7 +12,7 @@ categories:
 subcategories:
   - high
 tags:
-  - 'CVE Windows '
+  - 'CVE Windows'
 featured: true
 ---
 

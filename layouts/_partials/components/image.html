@@ -47,6 +47,8 @@ sources that need resizing, are processed now.
         loading="lazy"
         {{ end }}
     >
-{{ else }}
+{{ else if $src }}
+    {{/* only warn for a real path that could not be resolved; callers
+         legitimately pass no src (e.g. tag/subcategory pages without image) */}}
     {{ warnf "Image not found: %s" $src }}
 {{ end }}

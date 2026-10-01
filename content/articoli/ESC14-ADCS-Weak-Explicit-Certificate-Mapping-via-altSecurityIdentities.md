@@ -16,7 +16,6 @@ tags:
   - ad
   - adcs
   - esc
-  - ''
 ---
 
 ESC14 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che sfrutta configurazioni deboli dell’attributo **`altSecurityIdentities`** negli oggetti Active Directory. Questo attributo permette di creare **explicit certificate mapping**, cioè associare manualmente un certificato X.509 a un account AD per l’autenticazione.

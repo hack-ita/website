@@ -171,3 +171,12 @@
 
 # SQL Injections
 /articoli/sql-injection-guida-completa            /articoli/sql-injection-classica/                   301
+
+# Tag pages whose slug changed when stray spaces were trimmed from the tag
+# values (" red team" -> "red team"): keep the old URLs from 404ing.
+/tags/-information-disclosure                       /tags/information-disclosure/                       301
+/tags/-living-off-the-land                          /tags/living-off-the-land/                          301
+/tags/-mfa-fatigue                                  /tags/mfa-fatigue/                                  301
+/tags/-red-team                                     /tags/red-team/                                     301
+/tags/cve-windows-                                  /tags/cve-windows/                                  301
+/tags/enumeration-penetration-testing-              /tags/enumeration-penetration-testing/              301

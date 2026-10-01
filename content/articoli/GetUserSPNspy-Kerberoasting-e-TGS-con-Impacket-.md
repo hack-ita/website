@@ -1,5 +1,5 @@
 ---
-title: 'GetUserSPNs.py: Kerberoasting e TGS con Impacket '
+title: 'GetUserSPNs.py: Kerberoasting e TGS con Impacket'
 slug: getuserspns
 description: >-
   Guida a impacket-GetUserSPNs per enumerare account con SPN e richiedere TGS
@@ -11,7 +11,7 @@ date: 2026-07-30T00:00:00.000Z
 categories:
   - tools
 subcategories:
-  - expoit
+  - exploit
 tags:
   - impacket
   - getuserspns

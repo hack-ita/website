@@ -10,7 +10,7 @@ date: 2026-02-27T00:00:00.000Z
 categories:
   - web-hacking
 subcategories:
-  - expoit
+  - exploit
 tags:
   - social-engineering
   - phishing

@@ -8,7 +8,7 @@ date: 2026-07-11T00:00:00.000Z
 categories:
   - web-hacking
 subcategories:
-  - expoit
+  - exploit
 tags:
   - sql-injection
   - mssql

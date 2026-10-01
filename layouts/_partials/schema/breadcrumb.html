@@ -1,36 +1,35 @@
 {{/* schema/breadcrumb.html */}}
 
 {{ $items := slice }}
-{{ $position := 1 }}
 
 {{ if not .IsHome }}
 
   {{ $items = $items | append (dict
     "@type" "ListItem"
-    "position" $position
+    "position" 1
     "name" "Home"
     "item" site.BaseURL
   ) }}
 
+  {{/* .Ancestors already includes the home page; skip it so Home is not
+       duplicated as the breadcrumb root (matches the visible breadcrumb). */}}
   {{ range .Ancestors.Reverse }}
-    {{ $position = add $position 1 }}
-    {{ $items = $items | append (dict
-      "@type" "ListItem"
-      "position" $position
-      "name" .Title
-      "item" .Permalink
-    ) }}
+    {{ if not .IsHome }}
+      {{ $items = $items | append (dict
+        "@type" "ListItem"
+        "position" (add (len $items) 1)
+        "name" .Title
+        "item" .Permalink
+      ) }}
+    {{ end }}
   {{ end }}
 
-  {{ if gt (len $items) 1 }}
-    {{ $position = add $position 1 }}
-    {{ $items = $items | append (dict
-      "@type" "ListItem"
-      "position" $position
-      "name" .Title
-      "item" .Permalink
-    ) }}
-  {{ end }}
+  {{ $items = $items | append (dict
+    "@type" "ListItem"
+    "position" (add (len $items) 1)
+    "name" .Title
+    "item" .Permalink
+  ) }}
 
 {{ end }}
 

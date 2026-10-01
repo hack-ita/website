@@ -1,6 +1,6 @@
 {{ define "main" }}
-<img data-pagefind-meta="image[src]" src="{{ .Params.image | relURL }}" style="display:none">
-<meta data-pagefind-meta="description[content]" content="{{ .Description }}">
+{{ with .Params.image }}<img data-pagefind-meta="image[src]" src="{{ . | relURL }}" alt="" style="display:none">{{ end }}
+<meta data-pagefind-meta="description[content]" content="{{ .Description | replaceRE `<br\s*/?>` " " }}">
 {{ if eq .Section "articoli" }}
 <div id="reading-progress" class="fixed z-60 top-0 left-0 w-full h-1 bg-transparent">
     <div id="reading-progress-bar" class="h-full bg-primary"></div>
@@ -52,7 +52,7 @@
 
         <!-- Description -->
         {{ with .Description }}
-        <p class="text-dark dark:text-light text-pretty text-lg">{{ . }}</p>
+        <p class="text-dark dark:text-light text-pretty text-lg">{{ . | replaceRE `<br\s*/?>` " " }}</p>
         {{ end }}
 
 
@@ -87,7 +87,7 @@
     </article>
 
     <!-- Table of Contents -->
-    <button class="text-dark dark:text-light fixed right-0 top-30 lg:hidden z-40 sideBarToggler">
+    <button type="button" aria-label="Mostra o nascondi l'indice dell'articolo" class="text-dark dark:text-light fixed right-0 top-30 lg:hidden z-40 sideBarToggler">
       <div class="bg-light-bg dark:bg-accent rounded-l-md border border-r-0 border-dark/20 dark:border-light/20 p-3">
         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-8" viewBox="0 0 16 16">
           <path class="fill-current" d="M12.5 3a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm0 3a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm.5 3.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5m-.5 2.5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1z"/>
@@ -100,10 +100,14 @@
       <div
         class="bg-light-bg dark:bg-accent rounded-md border border-dark/20 dark:border-light/20 border-l-4 border-l-primary shadow-xl p-5 text-dark dark:text-light h-[85vh] lg:h-[80vh] flex flex-col pt-10 lg:pt-5"
         aria-label="Table of Contents">
+        {{/* Pages without headings (e.g. /servizi/* sub-pages) would otherwise
+             render an empty "Indice" heading and list. */}}
+        {{ if .Fragments.Headings }}
         <h2 class="text-primary mb-3 hero-heading">Indice</h2>
         <div class="overflow-y-scroll grow min-h-0">
           {{ .TableOfContents }}
         </div>
+        {{ end }}
         <div class="relative h-[20vh] shrink-0 mt-5">
           <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="absolute inset-0 z-10"></a>
           <img src='{{ "images/shop_link_wide.jpeg" | relURL }}' alt="Banner Hackita Shop: felpa, magliette e zaino della collezione 'Mentalità Offensiva' — scopri lo shop Hackita" class="size-full absolute inset-0 object-cover">

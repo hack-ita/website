@@ -135,7 +135,7 @@ drwxr-xr-x   2 ftp ftp     4096 Dec 01 incoming/
 Login failed.
 ```
 
-**Lettura dell'output:** anonymous attivo con directory `pub/` (lettura) e `incoming/` (potenzialmente writable). Per [upload di file malevoli](https://hackita.it/articoli/webshell/) testa la scrittura su `incoming/`.
+**Lettura dell'output:** anonymous attivo con directory `pub/` (lettura) e `incoming/` (potenzialmente writable). Per [upload di file malevoli](https://hackita.it/articoli/web-shell/) testa la scrittura su `incoming/`.
 
 ### File listing ricorsivo
 

@@ -10,15 +10,13 @@
 {{ $isCategoryPage := false }}
 
 {{/* Detect if we're on a category taxonomy page */}}
-{{ if eq .Kind "taxonomy" }}
-  {{ if eq .Type "categories" }}
-    {{ $isCategoryPage = true }}
-    {{ $currentCategory = .Title | urlize }}
-  {{ end }}
+{{ if and (eq .Kind "term") (eq .Data.Plural "categories") }}
+  {{ $isCategoryPage = true }}
+  {{ $currentCategory = .Data.Term | urlize }}
 {{ end }}
 
 <div class="flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-center mb-10">
-  <h4 class="heading-sm text-dark dark:text-light">Filtri</h4>
+  <h3 class="heading-sm text-dark dark:text-light">Filtri</h3>
 
   <div
     id="taxonomyFilters"
@@ -27,7 +25,7 @@
 
     {{/* CATEGORY FILTER */}}
     <div class="flex flex-col gap-1">
-      <label class="text-sm font-medium uppercase text-dark dark:text-light">
+      <label for="filter-category" class="text-sm font-medium uppercase text-dark dark:text-light">
         Categoria
       </label>
       <select
@@ -40,8 +38,10 @@
                text-dark dark:text-light
                focus:outline-none focus:ring-2 focus:ring-primary transition">
         <option value="all">TUTTE</option>
-        {{ range $site.Taxonomies.categories }}
-          <option value="{{ .Page.Title | urlize }}">
+        {{/* value must be the term key: it is what the posts' data-categories
+             and the subcategory map below use (e.g. "guides-resources"). */}}
+        {{ range $term, $_ := $site.Taxonomies.categories }}
+          <option value="{{ $term | urlize }}">
             {{ .Page.Title }}
           </option>
         {{ end }}
@@ -50,7 +50,7 @@
 
     {{/* SUBCATEGORY FILTER */}}
     <div class="flex flex-col gap-1">
-      <label class="text-sm font-medium uppercase text-dark dark:text-light">
+      <label for="filter-subcategory" class="text-sm font-medium uppercase text-dark dark:text-light">
         Sottocategoria
       </label>
       <select

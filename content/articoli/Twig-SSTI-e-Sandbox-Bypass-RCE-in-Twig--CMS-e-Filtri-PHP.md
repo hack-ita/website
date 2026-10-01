@@ -298,7 +298,7 @@ Windows espone diversi percorsi tramite variabili d'ambiente, pensate per render
 | `%ProgramFiles%`            | Program Files (versione a 64 bit su sistema a 64 bit)           |
 | `%ProgramData%`             | ProgramData                                                     |
 | `%SystemRoot%` / `%WinDir%` | C:\Windows                                                      |
-| `%USERPROFILE%`             | C:\Users\\<utente corrente>                                     |
+| `%USERPROFILE%`             | C:\Users\\\<utente corrente>                                     |
 | `%PUBLIC%`                  | C:\Users\Public, cartella condivisa tra tutti gli utenti        |
 | `%HOMEDRIVE%`               | la lettera del disco che ospita il profilo utente (di norma C:) |
 | `%HOMEPATH%`                | il percorso del profilo utente, relativo a HOMEDRIVE            |

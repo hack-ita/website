@@ -95,6 +95,18 @@ const initCritical = () => {
 
   // MENU TOGGLE
   if (FEATURES.menu && DOM.menuToggler && DOM.menu) {
+    // Same breakpoint as Tailwind's `lg:` (64rem): from there up the menu is
+    // always visible, below it is hidden until the toggler opens it.
+    const desktopMQ = window.matchMedia("(min-width: 64rem)");
+
+    // Keep the closed mobile menu out of the tab order / accessibility tree
+    // (it is only visually hidden with opacity-0) and keep aria-expanded in sync.
+    const syncMenuA11y = () => {
+      const open = !DOM.menu.classList.contains("opacity-0");
+      DOM.menuToggler.setAttribute("aria-expanded", String(open));
+      DOM.menu.inert = !open && !desktopMQ.matches;
+    };
+
     DOM.menuToggler.addEventListener(
       "click",
       () => {
@@ -105,9 +117,12 @@ const initCritical = () => {
         DOM.menu.classList.toggle("pointer-events-none");
         DOM.menu.classList.toggle("opacity-0");
         document.body.classList.toggle("overflow-hidden");
+        syncMenuA11y();
       },
       { passive: true }
     );
+    desktopMQ.addEventListener?.("change", syncMenuA11y);
+    syncMenuA11y();
     log("Menu initialized");
   }
 
@@ -177,13 +192,16 @@ const initCritical = () => {
         }
 
         let captchaVerified = false;
+        let captchaVerifying = false;
         
         // Captcha click handler
         captchaBox.addEventListener('click', function(e) {
-          if (captchaVerified) return;
+          if (captchaVerified || captchaVerifying) return;
+          captchaVerifying = true;
           
           // Disable further clicks
           this.style.pointerEvents = 'none';
+          this.setAttribute('aria-busy', 'true');
           
           // Show checking state
           checkbox.classList.add('checking');
@@ -202,20 +220,33 @@ const initCritical = () => {
             checkmark.classList.add('show');
             
             captchaVerified = true;
+            captchaBox.removeAttribute('aria-busy');
+            captchaBox.setAttribute('aria-checked', 'true');
             
             // After a short delay, fade out captcha and show button
             setTimeout(() => {
               captchaWrapper.classList.add('captcha-fade-out');
               
               setTimeout(() => {
+                // Hiding the captcha would drop keyboard focus to <body>:
+                // hand it to the submit button that replaces it instead.
+                const hadFocus = captchaWrapper.contains(document.activeElement);
                 captchaWrapper.style.display = 'none';
                 submitButton.style.display = 'inline-flex';
                 submitButton.classList.remove('hidden');
                 submitButton.classList.add('button-enter');
+                if (hadFocus) submitButton.focus();
               }, 400);
             }, 800);
           }, verificationTime);
         }, { passive: true });
+
+        // Keyboard support (role="checkbox"): Space / Enter verify like a click
+        captchaBox.addEventListener('keydown', function(e) {
+          if (e.key !== ' ' && e.key !== 'Enter') return;
+          e.preventDefault();
+          this.click();
+        });
       });
 
       log(`Captcha initialized (${forms.length} forms)`);
@@ -672,7 +703,10 @@ const initDeferred = () => {
           let highlighted = text;
 
           for (const word of terms) {
-            const regex = new RegExp(`(${word})`, "gi");
+            // Escape regex metacharacters: queries like "c++" or "(x)" would
+            // otherwise throw and break the result list.
+            const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const regex = new RegExp(`(${escaped})`, "gi");
             highlighted = highlighted.replace(regex, "<mark>$1</mark>");
           }
 
@@ -883,15 +917,13 @@ const initDeferred = () => {
           return error("Invalid map JSON", e);
         }
 
-        // Detect if we're on a category page by checking the URL path
-        const currentPath = window.location.pathname;
-        const categoryPageMatch = currentPath.match(
-          /^\/categories\/([^\/]+)\/?$/,
-        );
-        const isCategoryPage = !!categoryPageMatch;
-        const currentCategory = categoryPageMatch
-          ? categoryPageMatch[1].toLowerCase()
-          : null;
+        // Detect if we're on a category page. filters.html renders the term
+        // key on the select (category pages live under /categorie/<slug>/,
+        // so the URL is not a reliable source for it).
+        const isCategoryPage = catSelect.dataset.isCategoryPage === "true";
+        const currentCategory =
+          (isCategoryPage && catSelect.dataset.currentCategory?.toLowerCase()) ||
+          null;
 
         const normalize = (raw = "") =>
           raw
@@ -1052,7 +1084,7 @@ const initDeferred = () => {
           },
         });
 
-        let heroTextSwiper = new Swiper(".heroTextSwiper", {
+        const heroTextOptions = {
           loop: true,
           spaceBetween: 10,
           noSwiping: true,
@@ -1065,7 +1097,8 @@ const initDeferred = () => {
               noSwiping: false,
             },
           },
-        });
+        };
+        let heroTextSwiper = new Swiper(".heroTextSwiper", heroTextOptions);
 
         const AUTOPLAY_DELAY = 5000;
         let desktopAutoPlayInterval = null;
@@ -1083,19 +1116,28 @@ const initDeferred = () => {
           heroImgSwiper.slideToLoop(index);
         };
 
+        let heroMode = null;
+        let hoverListenersBound = false;
+
         const setupDesktopHoverSync = () => {
-          heroTextSwiper.destroy();
+          // Unlink the controller first: a destroyed swiper left as
+          // controller.control makes every heroImgSwiper slide change throw.
+          heroImgSwiper.controller.control = undefined;
+          if (!heroTextSwiper.destroyed) heroTextSwiper.destroy();
           clearDesktopAutoplay();
           const slides = $$(".heroTextSwiper .swiper-slide");
           if (!slides.length) return;
           setActiveSlide(slides, 0);
-          slides.forEach((slide, i) =>
-            slide.addEventListener(
-              "mouseenter",
-              () => setActiveSlide(slides, i),
-              { passive: true },
-            ),
-          );
+          if (!hoverListenersBound) {
+            hoverListenersBound = true;
+            slides.forEach((slide, i) =>
+              slide.addEventListener(
+                "mouseenter",
+                () => heroMode === "desktop" && setActiveSlide(slides, i),
+                { passive: true },
+              ),
+            );
+          }
           let idx = 0;
           desktopAutoPlayInterval = setInterval(() => {
             idx = (idx + 1) % slides.length;
@@ -1105,13 +1147,20 @@ const initDeferred = () => {
 
         const setupMobileSync = () => {
           clearDesktopAutoplay();
+          // Coming back from desktop (e.g. tablet rotation) the text swiper
+          // was destroyed: rebuild it before linking it again.
+          if (heroTextSwiper.destroyed) {
+            heroTextSwiper = new Swiper(".heroTextSwiper", heroTextOptions);
+          }
           heroImgSwiper.controller.control = heroTextSwiper;
         };
 
+        // Only re-run when crossing the breakpoint, not on every resize event.
         const setupHoverSync = () => {
-          window.innerWidth >= 1024
-            ? setupDesktopHoverSync()
-            : setupMobileSync();
+          const mode = window.innerWidth >= 1024 ? "desktop" : "mobile";
+          if (mode === heroMode) return;
+          heroMode = mode;
+          mode === "desktop" ? setupDesktopHoverSync() : setupMobileSync();
         };
 
         window.addEventListener("resize", setupHoverSync, { passive: true });

@@ -1,3 +1,4 @@
+{{- $brand := site.Params.brand | default "Hackita" -}}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,16 +19,20 @@
   {{ end }}
   "author": {
     "@type": "Organization",
-    "name": "{{ site.Title }}"
+    "@id": "{{ site.BaseURL }}#organization",
+    "name": "{{ $brand }}",
+    "url": "{{ site.BaseURL }}"
   },
   "publisher": {
     "@id": "{{ site.BaseURL }}#organization"
-  },
-  {{ with .Params.categories }}
-  "articleSection": {{ jsonify . }},
-  {{ end }}
-  {{ with .Params.tags }}
+  }
+  {{- /* optional trailing fields carry their own leading comma, so the
+         object stays valid JSON whichever of them is missing */ -}}
+  {{- with .Params.categories }},
+  "articleSection": {{ jsonify . | safeJS }}
+  {{- end }}
+  {{- with .Params.tags }},
   "keywords": "{{ delimit . ", " }}"
-  {{ end }}
+  {{- end }}
 }
 </script>

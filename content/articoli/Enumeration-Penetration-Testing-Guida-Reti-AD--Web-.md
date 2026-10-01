@@ -1,5 +1,5 @@
 ---
-title: 'Enumeration Penetration Testing: Guida Reti, AD & Web '
+title: 'Enumeration Penetration Testing: Guida Reti, AD & Web'
 slug: enumeration
 description: >-
   Enumeration offensiva 2026: host discovery, SMB, LDAP, Kerberos, BloodHound,
@@ -12,7 +12,7 @@ categories:
 subcategories:
   - tecniche
 tags:
-  - 'enumeration penetration testing '
+  - 'enumeration penetration testing'
   - active directory enumeration
   - pentest methodology
 ---

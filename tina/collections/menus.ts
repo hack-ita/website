@@ -16,6 +16,7 @@ const MenuSettings: Collection = {
       fields: [
         { type: "string", name: "name", label: "Name" },
         { type: "string", name: "pageRef", label: "Page Reference" },
+        { type: "string", name: "url", label: "URL (external or absolute path)" },
         { type: "number", name: "weight", label: "Order" },
       ],
     },
@@ -27,6 +28,7 @@ const MenuSettings: Collection = {
       fields: [
         { type: "string", name: "name", label: "Name" },
         { type: "string", name: "pageRef", label: "Page Reference" },
+        { type: "string", name: "url", label: "URL (external or absolute path)" },
         { type: "number", name: "weight", label: "Order" },
       ],
     },

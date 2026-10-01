@@ -9,7 +9,7 @@ lastmod: 2026-07-13T00:00:00.000Z
 categories:
   - tools
 subcategories:
-  - expoit
+  - exploit
 tags:
   - certificate-services
   - certificate-abuse

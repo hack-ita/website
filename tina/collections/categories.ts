@@ -27,6 +27,17 @@ const Categories: Collection = {
     },
     {
       type: "string",
+      name: "url",
+      label: "URL",
+      description: "Custom permalink for this category (e.g. categorie/cve).",
+    },
+    {
+      type: "string",
+      name: "hero_title",
+      label: "Hero Title",
+    },
+    {
+      type: "string",
       name: "description",
       label: "Description",
       ui: {
@@ -42,6 +53,12 @@ const Categories: Collection = {
       type: "string",
       name: "tags",
       label: "Tags",
+      list: true,
+    },
+    {
+      type: "string",
+      name: "subcategories",
+      label: "Subcategories",
       list: true,
     },
   ],

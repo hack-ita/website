@@ -322,7 +322,7 @@ GodPotato sì. Su Server 2022 con patch recenti prova SweetPotato con vettore Ef
 
 ***
 
-SeImpersonatePrivilege trasforma qualsiasi RCE su un servizio Windows in una shell SYSTEM — è il privilegio che trovi più spesso nei pentest reali. Una volta ottenuto SYSTEM, il passo successivo è il dump delle credenziali: vedi [SeDebugPrivilege](05-sedebugprivilege.md) per estrarre hash da LSASS senza tool esterni.
+SeImpersonatePrivilege trasforma qualsiasi RCE su un servizio Windows in una shell SYSTEM — è il privilegio che trovi più spesso nei pentest reali. Una volta ottenuto SYSTEM, il passo successivo è il dump delle credenziali: vedi [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/) per estrarre hash da LSASS senza tool esterni.
 
 ***
 

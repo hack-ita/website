@@ -18,10 +18,12 @@
     <!-- Wallets -->
     <ul class="rounded-md p-3 lg:p-10 shadow-xl border border-dark/10 bg-light-bg grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-      <p class="text-dark lg:col-span-3 max-w-3xl text-pretty">
-        Le donazioni vengono usate per acquistare macchine vulnerabili, provare PoC su CVE reali,
-        mantenere attivi i lab e continuare a pubblicare nuovi contenuti tecnici su HackIta.
-      </p>
+      <li class="lg:col-span-3">
+        <p class="text-dark max-w-3xl text-pretty">
+          Le donazioni vengono usate per acquistare macchine vulnerabili, provare PoC su CVE reali,
+          mantenere attivi i lab e continuare a pubblicare nuovi contenuti tecnici su HackIta.
+        </p>
+      </li>
 
       <!-- BTC -->
       <li>
@@ -36,6 +38,7 @@
           {{ partial "components/qr.html" (dict
             "currency" "btc"
             "address" "bc1pdmfsepjye2x9e9t77ga737puf4j2d9v56z6wk9jvcg38498xqx0qcl6r9e"
+            "alt" "QR code dell'indirizzo Bitcoin (BTC) per le donazioni"
             "class" "mx-auto size-40"
           ) }}
 
@@ -72,6 +75,7 @@
           {{ partial "components/qr.html" (dict
             "currency" "xmr"
             "address" "48j1LhT6QQGRCFTwJSTnDz1V3twpAvg6mjL5WYSqV5v5R7EgK8u1tKTMx7XvHTgd2dGNxkruaAxbFeZcVmEtjik3HnSWhPN"
+            "alt" "QR code dell'indirizzo Monero (XMR) per le donazioni"
             "class" "mx-auto size-40"
           ) }}
 

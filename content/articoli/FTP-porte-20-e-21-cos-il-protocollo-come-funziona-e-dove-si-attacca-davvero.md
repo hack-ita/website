@@ -156,7 +156,7 @@ Le tecniche offensive su FTP si dividono in tre categorie: abuso di funzionalit�
 
 In un ambiente CTF, prima del brute force provare manualmente le combinazioni più comuni: `anonymous`/vuoto, `ftp`/`ftp`, `admin`/`admin`, `root`/`root`, `ftpuser`/`password`. I server FTP non hanno password di default proprie — autenticano contro gli account di sistema — ma i device embedded (APC UPS, Schneider PLC, Beijer HMI) spesso usano credenziali hardcoded come `device`/`apc` o `sysdiag`/`factorycast@schneider`.
 
-**Accesso anonimo con upload:** se il login anonimo è abilitato con permessi di scrittura, caricare una [webshell](https://hackita.it/articoli/webshell/) nella directory del web server rappresenta un path diretto verso RCE:
+**Accesso anonimo con upload:** se il login anonimo è abilitato con permessi di scrittura, caricare una [webshell](https://hackita.it/articoli/web-shell/) nella directory del web server rappresenta un path diretto verso RCE:
 
 ```bash
 ftp 10.10.10.50

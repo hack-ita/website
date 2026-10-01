@@ -12,7 +12,6 @@ subcategories:
   - recon
 tags:
   - inveigh
-  - ''
 ---
 
 # Inveigh: LLMNR, NBNS e WPAD per Catturare NetNTLM

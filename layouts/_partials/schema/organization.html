@@ -1,9 +1,10 @@
+{{- $brand := site.Params.brand | default "Hackita" -}}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": "{{ site.BaseURL }}#organization",
-  "name": "{{ site.Title }}",
+  "name": "{{ $brand }}",
   "url": "{{ site.BaseURL }}",
   {{ with site.Params.header.logo }}
   "logo": {

@@ -1,17 +1,13 @@
+{{- $brand := site.Params.brand | default "Hackita" -}}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": "{{ site.BaseURL }}#website",
   "url": "{{ site.BaseURL }}",
-  "name": "{{ site.Title }}",
+  "name": "{{ $brand }}",
   "publisher": {
     "@id": "{{ site.BaseURL }}#organization"
-  },
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "{{ site.BaseURL }}search/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
   }
 }
 </script>

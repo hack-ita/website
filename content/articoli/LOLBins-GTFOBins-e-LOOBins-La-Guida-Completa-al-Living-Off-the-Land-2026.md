@@ -14,8 +14,8 @@ subcategories:
   - tecniche
 tags:
   - lolbins
-  - ' living off the land'
-  - ' red team'
+  - 'living off the land'
+  - 'red team'
   - evasione antivirus
 ---
 

@@ -13,7 +13,6 @@ subcategories:
   - recon
 tags:
   - snmp
-  - ''
 ---
 
 # Snmp-Check: Enumerazione SNMP rapida (v1/v2c) in lab

@@ -292,7 +292,7 @@ proxychains smbexec.py CORP/admin:pass@10.10.10.50
 
 ## Confronto con Alternative
 
-| Caratteristica | SMBExec     | [PsExec](https://hackita.it/articoli/psxec/) | [WMIExec](https://hackita.it/articoli/wmiexec/) | [AtExec](https://hackita.it/articoli/atexec/) |
+| Caratteristica | SMBExec     | [PsExec](https://hackita.it/articoli/psexec/) | [WMIExec](https://hackita.it/articoli/wmiexec/) | [AtExec](https://hackita.it/articoli/atexec/) |
 | -------------- | ----------- | ------------------------------------------- | ---------------------------------------------- | -------------------------------------------- |
 | File su disco  | No          | Sì (.exe)                                   | No                                             | No                                           |
 | Meccanismo     | SCM + cmd   | SCM + binario                               | WMI                                            | Task Scheduler                               |

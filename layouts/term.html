@@ -10,11 +10,11 @@
 
       <span
         class="py-1 px-3 rounded-full text-center text-sm border border-primary text-dark dark:text-light uppercase relative">
-        Categoria {{ .Title }}
+        {{ if eq .Data.Plural "categories" }}Categoria{{ else if eq .Data.Plural "subcategories" }}Sottocategoria{{ else }}Tag{{ end }} {{ .Title }}
       </span>
 
       <h1 id="category-title" class="text-dark dark:text-light hero-heading uppercase">
-        {{ .Params.hero_title }}
+        {{ .Params.hero_title | default .Title }}
       </h1>
 
       {{ with .Description }}
@@ -29,7 +29,7 @@
         <div class="flex flex-col gap-2">
           <dt class="text-dark dark:text-light">Articoli</dt>
           <dd class="heading-sm text-dark dark:text-light">
-            <strong class="text-primary">{{ .Pages.Len }}+</strong> Note
+            <strong class="text-primary">{{ .RegularPages.Len }}+</strong> Note
           </dd>
         </div>
 
@@ -52,7 +52,7 @@
 
     <!-- Image -->
     <figure class="lg:shrink-0">
-      {{ partial "components/image.html" (dict "src" .Params.image "alt" ( print "Categoria " .Title " - " .Params.hero_title) "class" "h-full lg:h-80 object-cover rounded-md") }}
+      {{ partial "components/image.html" (dict "src" .Params.image "alt" (printf "Categoria %s" .Title) "class" "h-full lg:h-80 object-cover rounded-md") }}
     </figure>
 
   </div>
@@ -83,7 +83,9 @@
   </div>
 
     <ul class="flex flex-col gap-10">
-        {{ range .Pages }}
+        {{/* RegularPages: category _index.md files carry tags/subcategories,
+             so .Pages would also list the category hub pages as "articles". */}}
+        {{ range .RegularPages }}
           <li
             class="post-item grid relative lg:grid-cols-5 gap-5 p-5 lg:p-3 bg-glass border border-dark/20 dark:border-light/20 rounded-md shadow-xl transition-shadow hover:shadow-primary/20"
             {{ with .Params.categories }}

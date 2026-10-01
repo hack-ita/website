@@ -48,7 +48,7 @@ Prima di procedere con gli scenari pratici, è fondamentale verificare di utiliz
 
 Impacket 0.13.0 introduce miglioramenti significativi: refactoring completo del client SMB, channel binding Kerberos, e supporto Python 3.13. wmiexec-Pro merita attenzione particolare perché opera **esclusivamente sulla porta 135**, eliminando la dipendenza da SMB—caratteristica cruciale quando la porta 445 è bloccata o monitorata intensivamente.
 
-Per approfondire altri tool Impacket essenziali per il penetration testing, consulta la nostra guida su [secretsdump e DCSync](hackita.it/articoli/dcsync).
+Per approfondire altri tool Impacket essenziali per il penetration testing, consulta la nostra guida su [secretsdump e DCSync](https://hackita.it/articoli/dcsync/).
 
 ## Scenari completi di lateral movement
 
@@ -74,7 +74,7 @@ La shell semi-interattiva permette l'esecuzione di comandi sequenziali. I comand
 
 ### Scenario 2: Pass-the-Hash da workstation compromessa
 
-Dopo aver estratto hash NTLM con [Mimikatz](hackita.it/articoli/mimikatz), il movimento laterale prosegue senza necessità della password in chiaro:
+Dopo aver estratto hash NTLM con [Mimikatz](https://hackita.it/articoli/mimikatz/), il movimento laterale prosegue senza necessità della password in chiaro:
 
 ```bash
 # Verifica hash su più target
@@ -272,8 +272,8 @@ Sì, wmiexec-Pro opera esclusivamente sulla porta 135 senza necessità di SMB. Q
 
 **Link interni correlati:**
 
-* [DCSync e Secretsdump: estrazione credenziali AD](hackita.it/articoli/dcsync)
-* [Mimikatz: credential extraction avanzata](hackita.it/articoli/mimikatz)
+* [DCSync e Secretsdump: estrazione credenziali AD](https://hackita.it/articoli/dcsync/)
+* [Mimikatz: credential extraction avanzata](https://hackita.it/articoli/mimikatz/)
 * [Persistence in Active Directory](hackita.it/articoli/persistence-active-directory)
 * [Threat Hunting per Lateral Movement](hackita.it/articoli/threat-hunting-lateral-movement)
-* [PowerView: enumerazione Active Directory](hackita.it/articoli/powerview)
+* [PowerView: enumerazione Active Directory](https://hackita.it/articoli/powerview/)

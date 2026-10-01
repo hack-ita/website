@@ -10,7 +10,7 @@ date: 2026-08-10T00:00:00.000Z
 categories:
   - tools
 subcategories:
-  - expoit
+  - exploit
 tags:
   - xsser
   - cross-site scripting

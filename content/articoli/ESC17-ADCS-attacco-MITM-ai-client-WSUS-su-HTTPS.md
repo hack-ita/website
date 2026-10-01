@@ -1,7 +1,7 @@
 ---
 title: 'ESC17 ADCS: attacco MITM ai client WSUS su HTTPS'
 slug: esc17-adcs
-description: 'ESC17 ADCS sfrutta SAN controllabili per impersonare WSUS su HTTPS. Scopri richiesta del certificato con Certipy, MITM con wsuks, privesc e detection. '
+description: 'ESC17 ADCS sfrutta SAN controllabili per impersonare WSUS su HTTPS. Scopri richiesta del certificato con Certipy, MITM con wsuks, privesc e detection.'
 image: /esc17-adcs-wsus-https.webp
 draft: false
 date: 2026-07-21T00:00:00.000Z

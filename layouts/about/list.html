@@ -68,7 +68,7 @@
 {{/* content */}}
 {{ with .Params.extra_content }}
 {{ if .enable }}
-<section class="pt-3 pb-10 px-5 bg-dark dark:bg-light light-mask" aria-labelledby="light-section-heading">
+<section class="pt-3 pb-10 px-5 bg-dark dark:bg-light light-mask" aria-label="{{ .title }}">
   <article class="max-w-7xl mx-auto space-y-10 py-10">
     {{ partial "components/heading.html" (dict "text" .title "invert" "true") }}
     <p class="text-light dark:text-dark text-center text-xl mt-4" >
@@ -83,7 +83,7 @@
 {{/* faqs */}}
 {{ with .Params.faqs }}
 {{ if .enable }}
-<section class="bg-mask" aria-labelledby="faq-section-heading">
+<section class="bg-mask" aria-label="{{ .title }}">
   <div class="max-w-7xl mx-auto space-y-10 py-10 px-5">
     {{ partial "components/heading.html" (dict "text" .title) }}
 

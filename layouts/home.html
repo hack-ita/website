@@ -121,7 +121,7 @@
 
     <!-- See More Button -->
     <div class="flex justify-center items-stretch" >
-      {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di piú" "url" "/categorie/") }}
+      {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di più" "url" "/categorie/") }}
     </div>
 
   </div>
@@ -217,12 +217,12 @@
         <p class="text-dark dark:text-light text-balance">
           {{ .content | safeHTML }}
         </p>
-        {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di piú" "url" "/about/") }}
+        {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di più" "url" "/about/") }}
       </div>
 
       <!-- Image Column -->
       <figure class="lg:w-1/2"  >
-        {{ partial "components/image.html" (dict "src" .image "alt" .Title "class" "lg:w-150 lg:ml-auto") }}
+        {{ partial "components/image.html" (dict "src" .image "alt" .title "class" "lg:w-150 lg:ml-auto") }}
       </figure>
 
     </div>

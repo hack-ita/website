@@ -13,7 +13,7 @@ categories:
 subcategories:
   - porte
 tags:
-  - ' information-disclosure'
+  - 'information-disclosure'
   - recon
   - mongodb
 ---

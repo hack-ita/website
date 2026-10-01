@@ -40,7 +40,7 @@
       <div class="flex items-stretch gap-5">
         {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Continua a leggere" "title" .Title "url" .RelPermalink) }}
         {{ $allUrl := "/articoli/" }}
-        {{ with .Params.categories }}{{ $allUrl = (printf "/categorie/%s" (index . 0)) | urlize }}{{ end }}
+        {{ with .Params.categories }}{{ with site.GetPage (printf "/categories/%s" (index . 0)) }}{{ $allUrl = .RelPermalink }}{{ end }}{{ end }}
         {{ partial "components/button.html" (dict "primary" "true" "link" "true" "label" "Tutti gli articoli" "url" $allUrl) }}
       </div>
     </div>
@@ -69,9 +69,8 @@
   
     <!-- ALL POSTS WRAPPER -->
     <div id="allPosts">
-      {{ $taxPage := .Site.GetPage "taxonomyTerm" "categories" }}
+      {{ $taxPage := site.GetPage "/categories" }}
       {{ range $taxPage.Pages.ByWeight }}
-        {{ $term := index $.Site.Taxonomies.categories .Title }}
       <div class="category-group">
   
         <div class="w-full h-0.5 bg-linear-to-r from-transparent via-primary to-transparent"></div>
@@ -89,12 +88,12 @@
             </div>
             <div class="flex justify-between">
               <!-- Navigation buttons (optional) -->
-              <button class="{{ .Page.Title | urlize }}-button-prev text-primary cursor-pointer">
+              <button type="button" aria-label="Articoli precedenti: {{ .Page.Title }}" class="{{ .Page.Title | urlize }}-button-prev text-primary cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-7" viewBox="0 0 16 16">
                   <path fill="currentColor" fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
                 </svg>
               </button>
-              <button class="{{ .Page.Title | urlize }}-button-next text-primary cursor-pointer">
+              <button type="button" aria-label="Articoli successivi: {{ .Page.Title }}" class="{{ .Page.Title | urlize }}-button-next text-primary cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-7" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
                 </svg>

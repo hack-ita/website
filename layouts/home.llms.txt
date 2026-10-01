@@ -20,9 +20,9 @@ Hackita è un progetto italiano di cybersecurity offensiva: guide operative, wal
 {{- end }}
 {{ printf "\n" }}
 ## Pagine
-{{ range where site.RegularPages "Section" "in" (slice "about" "servizi" "supporto" "contatto") }}
+{{ range slice "about" "servizi" "supporto" "contatto" }}{{ with site.GetPage (printf "/%s" .) }}
 - [{{ .Title }}]({{ .Permalink }})
-{{- end }}
+{{- end }}{{ end }}
 - [Tutti gli articoli]({{ "articoli/" | absURL }})
 - [Shop Hackita](https://shop.hackita.it)
 {{ printf "\n" }}

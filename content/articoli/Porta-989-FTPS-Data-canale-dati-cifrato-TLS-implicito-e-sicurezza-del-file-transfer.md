@@ -228,7 +228,7 @@ lftp> put /tmp/shell.php -o /var/www/html/shell.php
 shell.php uploaded
 ```
 
-**Cosa fai dopo:** se la directory corrisponde alla web root, hai una webshell accessibile via browser. Consulta le [tecniche di upload e webshell](https://hackita.it/articoli/webshell/).
+**Cosa fai dopo:** se la directory corrisponde alla web root, hai una webshell accessibile via browser. Consulta le [tecniche di upload e webshell](https://hackita.it/articoli/web-shell/).
 
 **MitM sul canale dati con cipher deboli**
 

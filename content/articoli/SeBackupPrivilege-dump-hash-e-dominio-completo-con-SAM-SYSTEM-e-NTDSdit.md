@@ -336,7 +336,7 @@ In pratica sì. Puoi estrarre NTDS.dit, ottenere KRBTGT, creare Golden Ticket. N
 Sì — usa le backup API internamente e le attiva autonomamente. Disabled non è un blocco per `reg save` e `robocopy /B`.
 
 **Con SeBackupPrivilege posso anche scrivere file?**
-No — solo lettura. Per la scrittura serve [SeRestorePrivilege](04-serestoreprivilege.md). I Backup Operators hanno entrambi per default.
+No — solo lettura. Per la scrittura serve [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege/). I Backup Operators hanno entrambi per default.
 
 ***
 

@@ -4,27 +4,29 @@
 
     <!-- Image -->
     <figure class="lg:col-span-4">
-      {{ partial "components/image.html" (dict "src" .Params.image "alt" .Params.hero_title "class" "size-full rounded-md lg:h-80 object-cover") }}
+      {{ partial "components/image.html" (dict "src" .Params.image "alt" (.Params.hero_title | default .Title) "class" "size-full rounded-md lg:h-80 object-cover") }}
     </figure>
 
     <!-- Text Content -->
     <header class="lg:col-span-5 flex flex-col justify-start items-start gap-5">
       {{ partial "components/breadcrumb.html" . }}
 
+      {{ if eq .Data.Plural "categories" }}
       <span class="py-1 px-3 rounded-full text-center text-sm border border-primary text-dark dark:text-light uppercase relative">
         Esplora le categorie
       </span>
+      {{ end }}
 
-      <h1 class="text-dark dark:text-light hero-heading uppercase">{{ .Params.hero_title }}</h1>
+      <h1 class="text-dark dark:text-light hero-heading uppercase">{{ .Params.hero_title | default .Title }}</h1>
 
       <p class="text-dark dark:text-light">{{ .Description }}</p>
 
       <!-- Stats -->
       <dl class="flex gap-x-10 gap-y-5 items-stretch flex-wrap">
         <div class="flex flex-col gap-2">
-          <dt class="text-dark dark:text-light">Categorie</dt>
+          <dt class="text-dark dark:text-light">{{ if eq .Data.Plural "categories" }}Categorie{{ else }}{{ .Title }}{{ end }}</dt>
           <dd class="heading-sm text-dark dark:text-light">
-            <span class="text-primary heading-sm">{{ .Data.Terms | len }}</span> Percorsi
+            <span class="text-primary heading-sm">{{ .Data.Terms | len }}</span>{{ if eq .Data.Plural "categories" }} Percorsi{{ end }}
           </dd>
         </div>
         <div class="flex flex-col gap-2">
@@ -74,7 +76,7 @@
                     <ul class="flex flex-wrap gap-3 items-stretch relative z-20">
                         {{ range .Params.subcategories }}
                         <li class="py-1 px-3 uppercase text-sm rounded-full border border-dark dark:border-light text-dark dark:text-light">
-                          <a href="{{ printf "/subcategories/%s" (. | urlize) }}">{{ . }}</a>
+                          <a href="{{ printf "/subcategories/%s/" (. | urlize) }}">{{ . }}</a>
                         </li>
                         {{ end }}
                     </ul>

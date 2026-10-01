@@ -1,7 +1,7 @@
 ---
-title: 'HTB Search Walktrough – GMSA, Kerberoast e AD Certificate '
+title: 'HTB Search Walktrough – GMSA, Kerberoast e AD Certificate'
 slug: htb-search-walkthrough
-description: 'Writeup completo di HTB Search: foothold tramite credenziali in un''immagine, Kerberoasting, GMSA abuse e due path distinti verso Domain Admin. '
+description: 'Writeup completo di HTB Search: foothold tramite credenziali in un''immagine, Kerberoasting, GMSA abuse e due path distinti verso Domain Admin.'
 image: /search (1).webp
 draft: false
 date: 2026-06-11T00:00:00.000Z

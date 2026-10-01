@@ -1,5 +1,5 @@
 ---
-title: 'Dark Web: Cos’è, Come Entrare e Come Funziona '
+title: 'Dark Web: Cos’è, Come Entrare e Come Funziona'
 slug: dark-web
 description: >-
   Cos'è il dark web, la differenza con deep web e Tor, l'economia criminale che

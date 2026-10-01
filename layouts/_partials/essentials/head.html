@@ -2,7 +2,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-{{ if eq .Kind "term" }}
+{{/* Single source of truth for indexability (also gates hreflang below):
+     taxonomy term pages (unchanged strategy), the 404 page, and pages that
+     opt out with `noindex: true` in front matter (e.g. the /grazie/ form
+     confirmation page). */}}
+{{ $noindex := or (eq .Kind "term") (eq .Kind "404") (eq .Params.noindex true) }}
+{{ if $noindex }}
 <meta name="robots" content="noindex,follow">
 {{ else }}
 <meta name="robots" content="index, follow">
@@ -15,8 +20,8 @@
 
 {{/* hreflang: Italian original + English (GTranslate en. sub-domain) + x-default.
      Rendered on the hackita.it pages; the en.hackita.it side is served by
-     GTranslate. Skipped on noindex term pages. */}}
-{{ if ne .Kind "term" }}
+     GTranslate. Skipped on noindex pages. */}}
+{{ if not $noindex }}
 <link rel="alternate" hreflang="it" href="{{ .Permalink }}">
 <link rel="alternate" hreflang="en" href="{{ printf "https://en.hackita.it%s" .RelPermalink }}">
 <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">

@@ -428,4 +428,4 @@ Path comuni: [kernel exploit](https://hackita.it/articoli/kernel/) se sistema ve
 Riferimento: Redis Security documentation, HackTricks Redis, OSCP methodology. Uso esclusivo in ambienti autorizzati.
 [https://hacktricks.wiki/en/network-services-pentesting/6379-pentesting-redis.html](https://hacktricks.wiki/en/network-services-pentesting/6379-pentesting-redis.html)
 
-> Se questo contenuto ti è utile, supporta il progetto HackIta con una [donazione](https://hackita.it/SUPPORTO) per mantenere le guide gratuite e aggiornate. Hai un'azienda? Scopri il nostro [penetration test professionale](https://hackita.it/servizi).
+> Se questo contenuto ti è utile, supporta il progetto HackIta con una [donazione](https://hackita.it/supporto) per mantenere le guide gratuite e aggiornate. Hai un'azienda? Scopri il nostro [penetration test professionale](https://hackita.it/servizi).

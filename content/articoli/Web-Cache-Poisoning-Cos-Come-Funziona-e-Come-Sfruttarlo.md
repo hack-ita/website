@@ -12,7 +12,7 @@ date: 2026-06-04T00:00:00.000Z
 categories:
   - web-hacking
 subcategories:
-  - expoit
+  - exploit
 tags:
   - web cache poisoning
   - cache key injection

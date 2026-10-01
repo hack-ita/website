@@ -119,7 +119,7 @@ Verifica anche se RunAsPPL è attivo (blocca il dump standard):
 Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" | Select-Object RunAsPPL
 ```
 
-Se `RunAsPPL = 1` → lsass è Protected Process → il dump standard fallisce → serve BYOVD (vedi [SeLoadDriverPrivilege](07-seloaddriverprivilege.md)).
+Se `RunAsPPL = 1` → lsass è Protected Process → il dump standard fallisce → serve BYOVD (vedi [SeLoadDriverPrivilege](https://hackita.it/articoli/seloaddriverprivilege/)).
 
 ***
 
@@ -241,7 +241,7 @@ meterpreter > hashdump
 
 **`Disabled` in `whoami /priv` — il dump fallisce** — Sei in un token non elevato (UAC split). Avvia un processo elevato o bypassa UAC prima. `comsvcs.dll` richiede token elevato.
 
-**comsvcs.dll produce file 0 byte** — RunAsPPL attivo (`RunAsPPL = 1`). Verifica con `Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa | Select-Object RunAsPPL`. Se è 1, serve BYOVD — vedi [SeLoadDriverPrivilege](07-seloaddriverprivilege.md).
+**comsvcs.dll produce file 0 byte** — RunAsPPL attivo (`RunAsPPL = 1`). Verifica con `Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa | Select-Object RunAsPPL`. Se è 1, serve BYOVD — vedi [SeLoadDriverPrivilege](https://hackita.it/articoli/seloaddriverprivilege/).
 
 **pypykatz mostra hash vuoti o solo NTLM senza password** — WDigest disabilitato (default da Win 8.1+). Gli hash NTLM ci sono comunque — sufficienti per Pass-the-Hash e PTT.
 
@@ -285,7 +285,7 @@ Parti con `comsvcs.dll` — nessun tool da caricare. Se l'EDR lo flagga per patt
 
 ## Quando fallisce
 
-* **RunAsPPL attivo** (`RunAsPPL = 1`) → `OpenProcess` su lsass fallisce anche con SeDebugPrivilege → serve BYOVD (vedi [SeLoadDriverPrivilege](07-seloaddriverprivilege.md))
+* **RunAsPPL attivo** (`RunAsPPL = 1`) → `OpenProcess` su lsass fallisce anche con SeDebugPrivilege → serve BYOVD (vedi [SeLoadDriverPrivilege](https://hackita.it/articoli/seloaddriverprivilege/))
 * **Credential Guard** → le credenziali protette sono isolate in VBS → non presenti nel dump standard
 * **Token non elevato** → Disabled in `whoami /priv` → avvia processo elevato
 * **WDigest disabilitato** (default da Win 8.1+) → nessuna password in chiaro → ma gli hash NTLM sono sempre presenti → sufficienti per PTH

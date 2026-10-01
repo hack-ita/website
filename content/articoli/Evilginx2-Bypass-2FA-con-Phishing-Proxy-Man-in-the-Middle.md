@@ -10,7 +10,7 @@ date: 2026-02-11T00:00:00.000Z
 categories:
   - tools
 subcategories:
-  - expoit
+  - exploit
 tags:
   - phising
 ---

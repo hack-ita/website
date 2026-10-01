@@ -8,7 +8,7 @@ date: 2026-07-25T00:00:00.000Z
 categories:
   - tools
 subcategories:
-  - expoit
+  - exploit
 tags:
   - as-rep-roasting
   - no-preauth

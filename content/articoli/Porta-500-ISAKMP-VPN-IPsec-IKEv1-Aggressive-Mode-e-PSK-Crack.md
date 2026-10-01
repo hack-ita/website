@@ -290,7 +290,7 @@ done
 (nessun output - nessun utente valido trovato)
 ```
 
-**Cosa fai dopo:** hai enumerato utenti validi sul gateway VPN. Combina con un [password spray mirato](https://hackita.it/articoli/passwordspray/) sugli utenti trovati.
+**Cosa fai dopo:** hai enumerato utenti validi sul gateway VPN. Combina con un [password spray mirato](https://hackita.it/articoli/password-spraying/) sugli utenti trovati.
 
 ## 5. Scenari Pratici di Pentest
 

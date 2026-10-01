@@ -12,8 +12,7 @@ categories:
   - networking
 subcategories:
   - porte
-tags:
-  - ''
+tags: []
 ---
 
 La porta 143 espone **IMAP** (Internet Message Access Protocol) — il protocollo standard per accesso email server-side, permettendo client di gestire mailbox remote senza scaricare messaggi localmente (contrario a POP3 che scarica e delete). IMAP su TCP porta 143 offre funzionalità avanzate: multi-folder access, server-side search, message flags (read/unread), e sincronizzazione multi-device, operando come interface tra client email (Outlook, Thunderbird, mobile apps) e mail server backend. In penetration testing, la porta 143 è **vettore critico per intelligence gathering**: credential harvesting via brute force, mailbox enumeration per corporate secrets/passwords, email-based lateral movement (VPN creds, AD passwords in emails), e information disclosure via IMAP capabilities probing. Ogni mail server esposto su porta 143 instead of 993 (IMAPS cifrato) trasmette **credentials plaintext** — da IMAP sniffing a password spray su mailbox employees.

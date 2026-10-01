@@ -19,4 +19,10 @@
 {{/* List / taxonomy pages */}}
 {{ else }}
   {{ partial "schema/webpage.html" . }}
+  {{/* Category hubs are indexable, so give them a BreadcrumbList matching the
+       visible breadcrumb. Tag/subcategory taxonomies stay noindex and keep
+       just the WebPage node. */}}
+  {{ if eq .Data.Plural "categories" }}
+  {{ partial "schema/breadcrumb.html" . }}
+  {{ end }}
 {{ end }}

@@ -1,0 +1,31 @@
+{{- /*
+  Root sitemap.xml — overrides Hugo's internal template so the sitemap matches
+  the site's indexability strategy. A page is listed only when it is NOT
+  noindex (seo/noindex.html is the single source of truth, shared with
+  essentials/head.html) and has not opted out via `sitemap.disable`.
+
+  Net effect: articles, regular pages and the category hubs (/categorie/ and
+  each /categorie/<cat>/) are included; tag and subcategory taxonomies, the
+  404 page and `noindex: true` pages (e.g. /grazie/) are excluded — removing
+  the previous "noindex + present in sitemap" contradiction without blindly
+  dropping every taxonomy.
+*/ -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+{{- /* $seen dedupes by URL: two content files that share a slug (see
+       scripts/known-duplicate-slugs.json) resolve to one URL and must be listed
+       once. site.Pages order is deterministic, so the output is stable. */ -}}
+{{- $seen := slice }}
+{{- range site.Pages }}
+{{- if and .Permalink (not (in $seen .Permalink)) (not (partial "seo/noindex.html" .)) (not (default false .Params.sitemap.disable)) }}
+{{- $seen = $seen | append .Permalink }}
+  <url>
+    <loc>{{ .Permalink }}</loc>
+    {{- if not .Lastmod.IsZero }}
+    <lastmod>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    {{- end }}
+  </url>
+{{- end }}
+{{- end }}
+</urlset>

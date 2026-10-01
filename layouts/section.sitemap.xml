@@ -1,8 +1,12 @@
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML -}}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
+{{- /* $seen dedupes by URL: articles sharing a slug (see
+       scripts/known-duplicate-slugs.json) resolve to one URL, listed once. */ -}}
+{{- $seen := slice }}
 {{- range .RegularPages }}
-{{- if not (default false .Params.sitemap.disable) }}
+{{- if and (not (in $seen .Permalink)) (not (default false .Params.sitemap.disable)) }}
+{{- $seen = $seen | append .Permalink }}
   <url>
     <loc>{{ .Permalink }}</loc>
     {{- if not .Lastmod.IsZero }}

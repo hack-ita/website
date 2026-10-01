@@ -1,0 +1,12 @@
+{
+  "_comment": "Baseline of KNOWN, pre-existing duplicate article slugs awaiting an editorial decision (two full articles share one /articoli/<slug>/ URL, so Hugo picks a nondeterministic winner per build). check-duplicate-slugs.mjs treats these as accepted so CI stays green, but FAILS on any NEW duplicate. Resolve an entry editorially (pick the canonical article, change the other's slug, add a redirect) and then remove it from this list. Do NOT add new entries to silence a real collision.",
+  "known": [
+    "cache-poisoning",
+    "injection-attacks-guida-completa",
+    "lazagne",
+    "ldapsearch",
+    "mitmproxy",
+    "smbexec",
+    "sshuttle"
+  ]
+}

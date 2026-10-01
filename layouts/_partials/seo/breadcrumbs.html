@@ -1,0 +1,36 @@
+{{- /*
+  seo/breadcrumbs.html — single source of truth for the breadcrumb trail, so
+  the visible breadcrumb (components/breadcrumb.html) and the BreadcrumbList
+  JSON-LD (schema/breadcrumb.html) can never disagree.
+
+  Returns an ordered slice of dicts: { name, rel, abs, current }.
+    - rel: relative URL for the visible <a>.
+    - abs: absolute URL for schema.org "item".
+    - current: true for the page itself (rendered as plain text, last item).
+
+  Trail:
+    - Articles are placed under their primary category hub
+      (Home -> Category -> Article) to push internal-link equity to the
+      category hubs. If the category can't be resolved, it falls back to
+      Hugo's .Ancestors (Home -> Articoli -> Article).
+    - Every other page uses .Ancestors unchanged.
+*/ -}}
+{{- $crumbs := slice (dict "name" "Home" "rel" site.Home.RelPermalink "abs" site.Home.Permalink "current" false) -}}
+{{- $handled := false -}}
+{{- if and .IsPage (eq .Section "articoli") -}}
+  {{- with .Params.categories -}}
+    {{- with site.GetPage (printf "/categories/%s" (index . 0)) -}}
+      {{- $crumbs = $crumbs | append (dict "name" .Title "rel" .RelPermalink "abs" .Permalink "current" false) -}}
+      {{- $handled = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $handled -}}
+  {{- range .Ancestors.Reverse -}}
+    {{- if not .IsHome -}}
+      {{- $crumbs = $crumbs | append (dict "name" .LinkTitle "rel" .RelPermalink "abs" .Permalink "current" false) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $crumbs = $crumbs | append (dict "name" .Title "rel" .RelPermalink "abs" .Permalink "current" true) -}}
+{{- return $crumbs -}}

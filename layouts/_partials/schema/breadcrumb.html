@@ -1,38 +1,15 @@
-{{/* schema/breadcrumb.html */}}
-
+{{- /* BreadcrumbList JSON-LD. Trail comes from seo/breadcrumbs.html so it
+       matches the visible breadcrumb (components/breadcrumb.html) exactly. */ -}}
+{{ $crumbs := partial "seo/breadcrumbs.html" . }}
 {{ $items := slice }}
-
-{{ if not .IsHome }}
-
+{{ range $i, $c := $crumbs }}
   {{ $items = $items | append (dict
     "@type" "ListItem"
-    "position" 1
-    "name" "Home"
-    "item" site.BaseURL
+    "position" (add $i 1)
+    "name" $c.name
+    "item" $c.abs
   ) }}
-
-  {{/* .Ancestors already includes the home page; skip it so Home is not
-       duplicated as the breadcrumb root (matches the visible breadcrumb). */}}
-  {{ range .Ancestors.Reverse }}
-    {{ if not .IsHome }}
-      {{ $items = $items | append (dict
-        "@type" "ListItem"
-        "position" (add (len $items) 1)
-        "name" .Title
-        "item" .Permalink
-      ) }}
-    {{ end }}
-  {{ end }}
-
-  {{ $items = $items | append (dict
-    "@type" "ListItem"
-    "position" (add (len $items) 1)
-    "name" .Title
-    "item" .Permalink
-  ) }}
-
 {{ end }}
-
 {{ if gt (len $items) 1 }}
 <script type="application/ld+json">
 {

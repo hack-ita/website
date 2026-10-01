@@ -1,0 +1,18 @@
+{{- /*
+  seo/noindex.html — single source of truth for indexability.
+
+  Returns a boolean: true when the page MUST carry robots=noindex AND be kept
+  out of the sitemap. Used by essentials/head.html (robots + hreflang gating)
+  and by sitemap.xml so the two never contradict each other.
+
+  Strategy (explicit, type-aware — NOT a blanket "every term => noindex"):
+    - Category taxonomy pages (the /categorie/ hub and each /categorie/<cat>/)
+      are strategic, indexable topical hubs.
+    - Tag and subcategory taxonomy pages (listing + term) stay noindex: thin,
+      auto-generated listings with no standalone editorial value.
+    - The 404 page and any page with `noindex: true` in front matter
+      (e.g. /grazie/) stay noindex.
+*/ -}}
+{{- $isTaxPage := or (eq .Kind "term") (eq .Kind "taxonomy") -}}
+{{- $isCategoryTax := and $isTaxPage (eq .Data.Plural "categories") -}}
+{{- return (or (eq .Kind "404") (eq .Params.noindex true) (and $isTaxPage (not $isCategoryTax))) -}}

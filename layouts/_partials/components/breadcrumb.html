@@ -1,14 +1,19 @@
+{{- /* Visible breadcrumb. Trail comes from seo/breadcrumbs.html so it stays
+       identical to the BreadcrumbList JSON-LD (schema/breadcrumb.html). */ -}}
+{{ $crumbs := partial "seo/breadcrumbs.html" . }}
 <nav data-pagefind-ignore aria-label="breadcrumb" class="text-dark dark:text-light">
   <ol class="flex flex-wrap items-center list-none p-0 m-0">
-    {{ range .Ancestors.Reverse }}
+    {{ range $crumbs }}
+      {{ if .current }}
+      <li class="text-dark/70 dark:text-light/90 uppercase text-xs font-semibold" aria-current="page">
+        {{ .name }}
+      </li>
+      {{ else }}
       <li class="flex items-center">
-        {{ $label := cond .IsHome "Home" .LinkTitle }}
-        {{ partial "components/link.html" (dict "label" $label "url" .RelPermalink "class" "text-xs") }}
+        {{ partial "components/link.html" (dict "label" .name "url" .rel "class" "text-xs") }}
         <span class="mx-3">/</span>
       </li>
+      {{ end }}
     {{ end }}
-    <li class="text-dark/70 dark:text-light/90 uppercase text-xs font-semibold" aria-current="page">
-      {{ .Title }}
-    </li>
   </ol>
 </nav>

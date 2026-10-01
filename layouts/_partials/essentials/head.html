@@ -2,11 +2,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-{{/* Single source of truth for indexability (also gates hreflang below):
-     taxonomy term pages (unchanged strategy), the 404 page, and pages that
-     opt out with `noindex: true` in front matter (e.g. the /grazie/ form
-     confirmation page). */}}
-{{ $noindex := or (eq .Kind "term") (eq .Kind "404") (eq .Params.noindex true) }}
+{{/* Indexability is decided once, in seo/noindex.html, so robots, hreflang
+     (below) and the sitemap never disagree. Category taxonomy pages are
+     indexable topical hubs; tag/subcategory taxonomies, 404 and
+     `noindex: true` pages (e.g. /grazie/) stay noindex. */}}
+{{ $noindex := partial "seo/noindex.html" . }}
 {{ if $noindex }}
 <meta name="robots" content="noindex,follow">
 {{ else }}
@@ -15,7 +15,7 @@
 
 {{/* Title */}}
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Page.Title }} | Hackita{{ end }}</title>
-<meta name="description" content="{{ with .Description }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description | default "HackIta - Offensive security blog" }}{{ end }}">
+<meta name="description" content="{{ with .Description }}{{ . | plainify | truncate 160 }}{{ else }}{{ with partial "seo/intro.html" . }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description | default "HackIta - Offensive security blog" }}{{ end }}{{ end }}">
 <link rel="canonical" href="{{ .Permalink }}">
 
 {{/* hreflang: Italian original + English (GTranslate en. sub-domain) + x-default.

@@ -13,7 +13,8 @@
     "build:admin": "npx tinacms build",
     "build:hugo": "git config core.quotepath false && hugo --gc --minify --printPathWarnings --baseURL \"$URL\"",
     "build:index": "npx pagefind --site public",
-    "build": "npm run build:admin && npm run build:hugo && npm run build:index"
+    "build": "npm run build:admin && npm run build:hugo && npm run build:index",
+    "check:slugs": "node scripts/check-duplicate-slugs.mjs"
   },
   "dependencies": {
     "@netlify/functions": "^5.1.2",

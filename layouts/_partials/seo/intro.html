@@ -1,0 +1,15 @@
+{{- /*
+  seo/intro.html — the page's own visible intro text, used as a description
+  fallback when a page has no `description` in front matter (e.g. /servizi/ and
+  /about/, whose Tina schemas have no description field but do have an editorial
+  `content.content` intro shown on the page). Returns "" when there is none, so
+  callers fall through to their existing fallbacks. Nothing is invented: this is
+  text the page already displays.
+*/ -}}
+{{- $intro := "" -}}
+{{- with .Params.content -}}
+  {{- if reflect.IsMap . -}}
+    {{- with index . "content" -}}{{- $intro = . -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $intro -}}

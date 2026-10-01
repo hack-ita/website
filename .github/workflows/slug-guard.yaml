@@ -1,0 +1,32 @@
+name: Duplicate slug guard
+
+# Catches a silent data-loss failure mode: two published articles that resolve
+# to the same /articoli/<slug>/ URL. Hugo keeps only one (the winner changes per
+# build) so the other article vanishes from that URL. Runs on every push to main
+# and on PRs, and FAILS LOUDLY (red check + email) when a NEW duplicate slug is
+# introduced. Pre-existing collisions awaiting an editorial decision are listed
+# in scripts/known-duplicate-slugs.json and allowed. Like content-guard, this is
+# an alarm — it does not block Netlify or the push itself.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "content/articoli/**"
+      - "scripts/check-duplicate-slugs.mjs"
+      - "scripts/known-duplicate-slugs.json"
+
+permissions:
+  contents: read
+
+jobs:
+  slugs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Check for duplicate article slugs
+        run: node scripts/check-duplicate-slugs.mjs

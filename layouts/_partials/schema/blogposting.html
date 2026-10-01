@@ -7,6 +7,11 @@
   "headline": "{{ .Title }}",
   "description": "{{ with .Description }}{{ . }}{{ else }}{{ .Summary | plainify }}{{ end }}",
   "url": "{{ .Permalink }}",
+  "inLanguage": "it-IT",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ .Permalink }}"
+  },
   {{ with .Params.image }}
   "image": {
     "@type": "ImageObject",

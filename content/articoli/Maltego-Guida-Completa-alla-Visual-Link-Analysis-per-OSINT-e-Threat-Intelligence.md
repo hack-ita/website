@@ -1,11 +1,11 @@
 ---
-title: 'Maltego OSINT: Reconnaissance, Transform e Graph Analysis'
+title: 'Maltego: Cos’è e Come Usarlo per OSINT e Transform (2026)'
 slug: maltego
-description: 'Scopri cos''è Maltego per OSINT e reconnaissance: usa Entity, Transform, pivot e graph analysis per correlare domini, IP, email, persone e infrastruttura.'
+description: 'Come Installare Maltego per OSINT e reconnaissance: usa Entity, Transform, pivot e graph analysis per correlare domini, IP, email, persone e infrastrutture.'
 image: /maltego-osint-visual-analysis.webp
 draft: false
 date: 2026-02-08T00:00:00.000Z
-lastmod: 2026-09-14T00:00:00.000Z
+lastmod: 2026-10-03T00:00:00.000Z
 categories:
   - tools
 subcategories:
@@ -18,9 +18,13 @@ tags:
   - Attack Surface Discovery
 ---
 
-# Maltego: OSINT, Reconnaissance e Graph Analysis
+# Maltego OSINT: Reconnaissance, Transform e Graph Analysis
 
-Maltego collega dati provenienti da fonti diverse — DNS, WHOIS, certificati, breach database, social media, API commerciali — attraverso un sistema di **entity** e **transform**, e li visualizza come grafo di relazioni. Non è principalmente un tool di raccolta dati: è un ambiente per correlare e visualizzare dati che altri tool (come [TheHarvester](https://hackita.it/articoli/theharvester/) o [Recon-ng](https://hackita.it/articoli/reconng/)) raccolgono più velocemente in forma grezza. Il valore di Maltego emerge quando devi collegare quei dati tra loro — dominio → IP → ASN → organizzazione — e vedere relazioni che in un elenco testuale restano invisibili.
+**Maltego è uno strumento di OSINT e reconnaissance che serve a trovare, collegare e visualizzare informazioni su un obiettivo.** Inserisci un dato iniziale — per esempio un dominio, un indirizzo IP, un'email o un nome — e Maltego può cercare informazioni correlate attraverso diverse fonti e mostrarti come sono collegate tra loro.
+
+Il risultato non è una semplice lista di dati, ma una **mappa delle relazioni**: un dominio può portare a un IP, l'IP a un ASN, l'ASN a un'organizzazione, l'organizzazione ad altri domini o infrastrutture e così via. Questo permette di fare **pivot** da un'informazione all'altra e scoprire connessioni che sarebbero difficili da individuare analizzando i dati separatamente.
+
+Maltego utilizza **Entity** per rappresentare gli elementi che stai analizzando e **Transform** per ottenere nuovi dati collegati a quegli elementi. Può interrogare fonti come DNS, WHOIS, certificati, breach database, social media e API di servizi esterni. È qui che emerge la sua differenza rispetto a strumenti come [TheHarvester](https://hackita.it/articoli/theharvester/) e [Recon-ng](https://hackita.it/articoli/reconng/): Maltego è pensato soprattutto per **correlare e visualizzare le informazioni raccolte**, costruendo un grafo che rende immediatamente visibili le relazioni tra i dati.
 
 ## Maltego in 30 Secondi
 

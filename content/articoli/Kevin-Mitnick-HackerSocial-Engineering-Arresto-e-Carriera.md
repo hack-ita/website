@@ -3,7 +3,7 @@ title: 'Kevin Mitnick: Hacker,Social Engineering, Arresto e Carriera'
 slug: kevin-mitnick
 description: |
   Kevin David Mitnick, noto come The Condor e The Darkside Hacker, è stato uno degli hacker più famosi: social engineering, arresto, carriera e morte nel 2023.
-image: /kevin-mitnick-the-condor-darkside-hacker-social-engineering.webp
+image: /Kevin-david-mitnick-the-condor-darkside-hacker-social-engineering.webp
 draft: true
 date: 2026-10-07T13:19:24.906Z
 lastmod: 2026-10-07T13:20:19.738Z
@@ -17,6 +17,7 @@ tags:
   - the condor
   - social engineering
   - darkside hacker
+featured: true
 ---
 
 # Kevin Mitnick: Chi Era, Cosa Fece e la Sua Storia

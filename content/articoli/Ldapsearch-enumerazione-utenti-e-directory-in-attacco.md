@@ -1,18 +1,21 @@
 ---
 title: 'ldapsearch: Comandi LDAP per Enumerare Utenti, Gruppi e AD'
 slug: ldapsearch
-description: 'ldapsearch su Kali Linux: RootDSE, Base DN, bind LDAP, utenti, gruppi, computer, SPN, LDAPS e troubleshooting per l''enumerazione di Active Directory.'
-image: /LDAPSEARCH.webp
+description: 'ldapsearch per pentest: RootDSE, Base DN, bind LDAP, utenti, gruppi, computer, SPN, LDAPS e troubleshooting per l''enumerazione di Active Directory e cheat sheet'
+image: /ldapsearch-ldap-enumeration-active-directory.webp
 draft: false
 date: 2026-01-23T00:00:00.000Z
-lastmod: 2026-09-16T00:00:00.000Z
+lastmod: 2026-10-04T00:00:00.000Z
 categories:
   - tools
 subcategories:
   - recon
 tags:
-  - ldapsearch
-  - active directory
+  - LDAP
+  - Active Directory
+  - LDAP Enumeration
+  - Windows
+  - Penetration Testing
 ---
 
 # ldapsearch: Enumerazione LDAP e Active Directory da Kali Linux

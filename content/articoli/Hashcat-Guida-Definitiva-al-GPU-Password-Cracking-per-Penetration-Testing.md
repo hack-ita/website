@@ -1,8 +1,8 @@
 ---
-title: 'Hashcat: Guida Definitiva al GPU Password Cracking per Penetration Testing'
+title: 'Hashcat: Password Cracking con GPU, Hash, Modes e Rules'
 slug: hashcat
-description: 'Hashcat: guida pratica GPU password cracking per hash NTLM, MD5, SHA, bcrypt. Attack modes, mask patterns, wordlist rules e tecniche reali da CTF e penetration testing.'
-image: /Gemini_Generated_Image_tovhewtovhewtovh.webp
+description: 'Hashcat: guida pratica GPU password cracking per hash NTLM, MD5, SHA, bcrypt. Attack modes, mask patterns, wordlist rules e tecniche reali da CTF e pentest.'
+image: /hashcat-gpu-password-cracking-linux-windows.webp
 draft: false
 date: 2026-02-04T00:00:00.000Z
 categories:
@@ -134,15 +134,15 @@ Prima di craccare devi sapere che tipo di hash hai. Hashcat supporta oltre 300 a
 
 ### Hash Comuni Penetration Testing
 
-| Hash Type | Hashcat Mode | Esempio                                                            | Uso Comune                                                      |
-| --------- | ------------ | ------------------------------------------------------------------ | --------------------------------------------------------------- |
-| MD5       | 0            | `5f4dcc3b5aa765d61d8327deb882cf99`                                 | Web apps legacy                                                 |
+| Hash Type | Hashcat Mode | Esempio                                                            | Uso Comune                                                       |
+| --------- | ------------ | ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| MD5       | 0            | `5f4dcc3b5aa765d61d8327deb882cf99`                                 | Web apps legacy                                                  |
 | NTLM      | 1000         | `8846f7eaee8fb117ad06bdd830b7586c`                                 | Windows (da [Responder](https://hackita.it/articoli/responder/)) |
-| NTLMv2    | 5600         | `admin::N46iSNekpT:08ca45b7d7ea58ee:...`                           | Windows challenge-response                                      |
-| SHA1      | 100          | `5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8`                         | Git, legacy systems                                             |
-| SHA256    | 1400         | `5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8` | Linux shadow modern                                             |
-| bcrypt    | 3200         | `$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy`     | Web apps secure                                                 |
-| WPA2      | 22000        | `WPA*02*hash*BSSID*STATION*ESSID...`                               | WiFi handshake                                                  |
+| NTLMv2    | 5600         | `admin::N46iSNekpT:08ca45b7d7ea58ee:...`                           | Windows challenge-response                                       |
+| SHA1      | 100          | `5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8`                         | Git, legacy systems                                              |
+| SHA256    | 1400         | `5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8` | Linux shadow modern                                              |
+| bcrypt    | 3200         | `$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy`     | Web apps secure                                                  |
+| WPA2      | 22000        | `WPA*02*hash*BSSID*STATION*ESSID...`                               | WiFi handshake                                                   |
 
 ### Identificazione Automatica
 

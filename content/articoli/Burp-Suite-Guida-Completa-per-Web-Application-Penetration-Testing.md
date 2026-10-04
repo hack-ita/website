@@ -1,10 +1,8 @@
 ---
-title: 'Burp Suite: Guida Completa per Web Application Penetration Testing'
+title: 'Burp Suite: Guida al Web Application Penetration Testing'
 slug: burp-suite
-description: >-
-  Burp Suite guida pratica al web application penetration testing: Proxy,
-  Repeater, Intruder, SQLi, XSS, CSRF e API exploitation reali.
-image: /Gemini_Generated_Image_f9v38cf9v38cf9v3 (3).webp
+description: 'Burp Suite: come usarlo nel web penetration testing: scopri Proxy, Repeater, Intruder e Scanner e come testare SQLi, XSS, CSRF, API, autenticazione e segreti.'
+image: /burp-suite-web-application-penetration-testing.webp
 draft: false
 date: 2026-02-05T00:00:00.000Z
 categories:
@@ -15,10 +13,12 @@ tags:
   - burp suite
   - web fuzzing
   - web hacking
+  - Web Application Security
+  - Web Penetration Testing
 featured: true
 ---
 
-# Burp Suite: Guida Completa per Web Application Penetration Testing
+# Come Usare Burp Suite per il Penetration Testing Web
 
 Burp Suite è lo strumento indispensabile per penetration testing di applicazioni web. Sviluppato da PortSwigger, Burp Suite è l'intercepting proxy più usato al mondo dai security researcher per trovare vulnerabilità in web app moderne.
 

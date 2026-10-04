@@ -1,10 +1,7 @@
 ---
-title: 'Brute Force Attack: Tecniche, Tool e Bypass nel Penetration Testing'
+title: 'Brute Force Attack: Significato, Tecniche, Tool, Bypass '
 slug: brute-force
-description: >-
-  Brute Force attack nel penetration testing: password cracking, credential
-  stuffing, wordlist, Hydra, Burp Intruder e bypass rate limit nei sistemi di
-  autenticazione.
+description: 'Brute Force attack nel penetration testing: password cracking, credential stuffing, wordlist, Hydra, Burp Intruder e bypass rate limit nei sistemi con auth.'
 image: /brute (1).webp
 draft: false
 date: 2026-03-05T00:00:00.000Z
@@ -17,18 +14,19 @@ tags:
   - password attacks
 ---
 
-# Brute Force Attack: Tecniche, Password Spraying e Credential Stuffing
+# Brute Force Attack: Cos'è, Tecniche, Password Spraying e Credential Stuffing
 
-Il **Brute Force Attack **è una tecnica di attacco in cui un attaccante prova molte combinazioni di username e password fino a trovare credenziali valide. Nel penetration testing viene usato per testare la sicurezza dei sistemi di autenticazione, delle API di login e dei pannelli amministrativi.
-Il brute force è l'attacco più vecchio e meno sofisticato del web: prova username e password finché non entri. Nessun exploit, nessuna vulnerabilità tecnica — solo perseveranza e un buon dizionario. Sembra primitivo, eppure è la causa di una fetta enorme dei breach reali. La ragione è semplice: le persone usano password deboli, le riusano su più servizi, e le applicazioni spesso non implementano protezioni adeguate (rate limit, lockout, CAPTCHA).
+Il **Brute Force Attack** è una tecnica di attacco che consiste nel provare ripetutamente combinazioni di username e password fino a individuare credenziali valide. Nel penetration testing viene utilizzato per verificare la robustezza dei sistemi di autenticazione, dei pannelli di login, delle API e degli account esposti a Internet.
 
-Nel 2026 il brute force "puro" (provare `aaaa`, `aaab`, `aaac`...) è morto. Quello che funziona è il **credential stuffing** (email e password da breach precedenti) e il **password spraying** (una password comune contro migliaia di utenti). Con i database di breach pubblici che superano i 10 miliardi di credenziali, la probabilità che almeno un utente del tuo target abbia una password già leakata è vicina alla certezza.
+Il brute force può essere eseguito in modi diversi. Nel caso più semplice vengono provate numerose combinazioni di password, mentre approcci come **password spraying** e **credential stuffing** sfruttano strategie differenti per ottenere l'accesso senza dover tentare sistematicamente tutte le possibili password.
 
-Satellite della [guida pillar Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [2FA Bypass](https://hackita.it/articoli/2fa-bypass/), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/).
+Il **password spraying** consiste nel provare una o poche password comuni contro molti account, riducendo il rischio di bloccare ripetutamente un singolo utente. Il **credential stuffing**, invece, utilizza coppie username/password già compromesse in precedenti violazioni di dati e le prova su altri servizi, sfruttando il riutilizzo delle credenziali.
 
-Riferimenti: [OWASP Credential Stuffing Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html), [HackTricks Brute Force](https://book.hacktricks.wiki/en/generic-methodologies-and-resources/brute-force.html).
+Per questo motivo, durante un assessment non è sufficiente verificare soltanto la possibilità di effettuare tentativi ripetuti: bisogna analizzare anche **rate limiting, account lockout, CAPTCHA, autenticazione multifattore e rilevamento dei tentativi anomali**.
 
-***
+Questa guida approfondisce le principali tecniche di attacco alle credenziali, come vengono utilizzate durante un penetration test e quali contromisure possono essere adottate per proteggerle.
+
+La guida fa parte del percorso **[Auth & Access Control](/articoli/auth-access-control-guida-completa/)**. Puoi approfondire anche **[2FA Bypass](/articoli/2fa-bypass/)** e **[Password Reset Attack](/articoli/password-reset-attack/)**.
 
 ## Le 3 Strategie — Scegli Quella Giusta
 
@@ -523,5 +521,3 @@ POST-EXPLOITATION
 Riferimenti: [OWASP Credential Stuffing Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html), [OWASP Brute Force Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/04-Testing_for_Brute_Force), [HackTricks Brute Force](https://book.hacktricks.wiki/en/generic-methodologies-and-resources/brute-force.html), [SecLists Password Lists](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
 
 Leggi la [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [2FA Bypass](https://hackita.it/articoli/2fa-bypass/), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/), [Privilege Escalation Web](https://hackita.it/articoli/privilege-escalation-web/).
-
-> Il rate limit blocca `X-Forwarded-For` rotation? Il CAPTCHA protegge anche l'API? Il password spray con `Company2026!` trova account? Approfondisci anche [2FA Bypass](https://hackita.it/articoli/2fa-bypass/) e [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/). Per testare la sicurezza del login della tua applicazione o azienda puoi richiedere un [penetration test HackIta](https://hackita.it/servizi). Per imparare tecniche reali di password spraying, credential stuffing e brute force testing è disponibile anche la formazione 1:1. Riferimenti: [https://owasp.org/www-project-web-security-testing-guide/latest/4-Web\_Application\_Security\_Testing/04-Authentication\_Testing/04-Testing\_for\_Brute\_Force](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/04-Testing_for_Brute_Force) — [https://cheatsheetseries.owasp.org/cheatsheets/Credential\_Stuffing\_Prevention\_Cheat\_Sheet.html](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html)

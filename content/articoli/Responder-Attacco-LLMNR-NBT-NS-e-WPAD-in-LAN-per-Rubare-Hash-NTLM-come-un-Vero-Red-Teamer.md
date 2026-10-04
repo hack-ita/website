@@ -1,11 +1,11 @@
 ---
 title: 'Responder: Cattura Hash NTLM su Linux, LLMNR, NBT-NS e Relay'
 slug: responder
-description: 'Guida pratica a Responder: cattura hash NTLM/NetNTLMv2 tramite LLMNR, NBT-NS e WPAD, con cracking e NTLM relay in penetration test e lab.'
-image: /responder.webp
+description: 'Responder per Linux: come catturare hash NTLM/NetNTLMv2 con LLMNR, NBT-NS e WPAD, fare cracking e NTLM relay nei penetration test e nei lab Windows in sicurezza'
+image: /responder-ntlm-llmnr-wpad-ntlm-relay.webp
 draft: false
 date: 2026-01-22T00:00:00.000Z
-lastmod: 2026-09-15T00:00:00.000Z
+lastmod: 2026-10-04T00:00:00.000Z
 categories:
   - tools
 subcategories:

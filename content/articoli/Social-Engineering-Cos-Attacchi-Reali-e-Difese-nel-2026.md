@@ -1,11 +1,8 @@
 ---
 title: 'Social Engineering: Cos''è, Attacchi Reali e Difese nel 2026'
 slug: social
-description: >-
-  Social Engineering: framework psicologici, pretexting, vishing, impersonation,
-  physical access, OSINT per targeting e tecniche operative. Dalla teoria
-  all'engagement reale.
-image: /social.webp
+description: 'Social Engineering, o ingegneria sociale: cos''è, significato, come funziona e quali tecniche usa, tra OSINT, pretexting, vishing, phishing e impersonation.'
+image: /social-engineering-tecniche-osint-pretexting-vishing.webp
 draft: false
 date: 2026-02-28T00:00:00.000Z
 categories:
@@ -15,17 +12,20 @@ subcategories:
 tags:
   - set
   - phishing
+  - Social Engineering
+  - Penetration Testing
+  - Pretexting
 ---
 
-# Social Engineering: Manipolazione Umana nel Pentest — Framework, Tecniche e Operazioni
+# Social Engineering: Cos'è l'Ingegneria Sociale e Come Funziona
 
-> **Executive Summary** — Il social engineering è l'arte di manipolare le persone per ottenere informazioni, accesso o azioni che normalmente non concederebbero. Nel pentest, il social engineering è il vettore che bypassa ogni controllo tecnico: non importa quanto sia forte il firewall, se convinci un dipendente a darti le credenziali VPN al telefono. Il social engineering non è solo phishing (che è una sotto-categoria) — include vishing (telefono), pretexting (costruzione di identità false), impersonation (fingere di essere qualcuno), tailgating (accesso fisico), baiting (chiavette USB) e elicitation (estrazione di informazioni in conversazione). Questo articolo copre il framework psicologico, le tecniche operative e il workflow completo per un engagement di social engineering.
+Il **social engineering** o anche detta in italiano: “**ingegneria sociale**” sfrutta il fattore umano,manipolando le persone per ottenere informazioni, accesso o azioni che un attaccante non potrebbe ottenere direttamente attraverso i normali controlli tecnici. Nel penetration test, questo significa mettere alla prova non solo sistemi e infrastrutture, ma anche le procedure e il comportamento delle persone che li utilizzano.
 
-**TL;DR**
+Un firewall può bloccare una connessione malevola, l'MFA può proteggere un account e un EDR può rilevare un payload. Ma se un dipendente viene convinto a fornire un'informazione sensibile, approvare una richiesta o seguire una procedura apparentemente legittima, parte della catena di sicurezza può essere aggirata senza sfruttare alcuna vulnerabilità software.
 
-* Il social engineering sfrutta 6 principi psicologici (Cialdini): reciprocità, impegno, riprova sociale, autorità, simpatia, scarsità
-* Il pretexting (storia credibile) è la skill più importante — senza pretext, nessuna tecnica funziona
-* L’OSINT è il moltiplicatore: più conosci il target → più credibile il pretext → più successo
+Il social engineering non coincide con il solo **phishing**. Comprende **vishing, pretexting, impersonation, smishing, quishing, tailgating, baiting ed elicitation**, con tecniche e canali diversi che possono essere combinati nello stesso engagement.
+
+In questa guida analizziamo come viene costruito un attacco di social engineering, dal **targeting tramite OSINT** alla scelta del pretesto, dalle tecniche di interazione agli scenari utilizzati nei penetration test e nei red team, fino alle contromisure necessarie per rilevarli e bloccarli.
 
 ## Perché il Social Engineering è il Vettore più Efficace
 
@@ -576,19 +576,19 @@ OBBLIGATORIO prima di qualsiasi engagement:
 
 ## 10. Toolchain
 
-| Tool                                 | Funzione                                                                              |
-| ------------------------------------ | ------------------------------------------------------------------------------------- |
+| Tool                                 | Funzione                                                                               |
+| ------------------------------------ | -------------------------------------------------------------------------------------- |
 | **GoPhish**                          | Campagne phishing email — vedi [guida phishing](https://hackita.it/articoli/phishing/) |
-| **Evilginx**                         | MFA bypass via reverse proxy                                                          |
-| **SET (Social Engineering Toolkit)** | Quick attacks: clone site, HTA, QR                                                    |
-| **theHarvester**                     | OSINT email e sottodomini                                                             |
-| **Maltego**                          | OSINT grafico — relazioni tra persone, organizzazioni, infrastruttura                 |
-| **SpiderFoot**                       | OSINT automatizzato                                                                   |
-| **SpoofCard / SIPVicious**           | Caller ID spoofing per vishing                                                        |
-| **WiFi Pineapple**                   | Rogue AP per credential harvest                                                       |
-| **Rubber Ducky / Bash Bunny**        | Payload USB per baiting                                                               |
-| **LAN Turtle**                       | Rogue device di rete                                                                  |
-| **dnstwist**                         | Genera varianti di dominio per phishing                                               |
+| **Evilginx**                         | MFA bypass via reverse proxy                                                           |
+| **SET (Social Engineering Toolkit)** | Quick attacks: clone site, HTA, QR                                                     |
+| **theHarvester**                     | OSINT email e sottodomini                                                              |
+| **Maltego**                          | OSINT grafico — relazioni tra persone, organizzazioni, infrastruttura                  |
+| **SpiderFoot**                       | OSINT automatizzato                                                                    |
+| **SpoofCard / SIPVicious**           | Caller ID spoofing per vishing                                                         |
+| **WiFi Pineapple**                   | Rogue AP per credential harvest                                                        |
+| **Rubber Ducky / Bash Bunny**        | Payload USB per baiting                                                                |
+| **LAN Turtle**                       | Rogue device di rete                                                                   |
+| **dnstwist**                         | Genera varianti di dominio per phishing                                                |
 
 ## 11. Cheat Sheet Finale
 

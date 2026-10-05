@@ -1,9 +1,11 @@
 ---
 title: 'Spyware: Cos''è, Come Scoprirlo e il Caso Pegasus'
 slug: spyware
-description: 'Scopri come funziona uno spyware, i segnali per scoprirlo su telefono e PC, la differenza con lo stalkerware, come rimuoverlo e cosa riverò il caso Pegasus.'
+description: >-
+  Scopri come funziona uno spyware, i segnali per scoprirlo su telefono e PC, la
+  differenza con lo stalkerware, come rimuoverlo e cosa riverò il caso Pegasus.
 image: /spyware-come-funziona-segnali-stalkerware-pegasus.webp
-draft: true
+draft: false
 date: 2026-10-05T12:51:09.532Z
 lastmod: 2026-10-05T12:54:59.616Z
 categories:

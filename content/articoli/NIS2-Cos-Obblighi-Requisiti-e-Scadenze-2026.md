@@ -1,9 +1,11 @@
 ---
 title: 'NIS2: Cos''è, Obblighi, Requisiti e Scadenze 2026'
 slug: nis2
-description: 'NIS2 spiegata semplice: cos''è la direttiva NIS 2, a chi si applica, obblighi, notifica incidenti in 24 ore, sanzioni fino a 10 milioni e scadenze 2026.'
+description: >-
+  NIS2 spiegata semplice: cos'è la direttiva NIS 2, a chi si applica, obblighi,
+  notifica incidenti in 24 ore, sanzioni fino a 10 milioni e scadenze 2026.
 image: /nis2-direttiva-cybersecurity.webp
-draft: true
+draft: false
 date: 2026-10-05T23:10:28.888Z
 lastmod: 2026-10-05T23:11:15.568Z
 categories:

@@ -1,7 +1,7 @@
 ---
 title: 'Data Center Basilicata: il caso Kraken e il giallo hacker'
 slug: data-center-basilicata-kraken-attacco-hacker
-description: 'Data Center Basilicata in tilt: guasto tecnico, pagine in russo e Kraken. Cosa è successo e cosa sappiamo sull’ipotesi di attacco hacker alla Regione.'
+description: 'I Data Center in Basilicata sono stati hackerati? Pagine in russo e Kraken indicano un attacco hacker: cosa è successo a Regione, sanità e ospedali lucani?'
 image: /data-center-basilicata-attacco-hacker-kraken.webp
 draft: false
 date: 2026-10-04T20:25:07.949Z

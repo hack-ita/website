@@ -1,9 +1,12 @@
 ---
 title: 'Botnet: il Caso Mirai e Come Riconoscerne Uno Attivo'
 slug: botnet
-description: 'Cos''è un botnet, come un dispositivo diventa uno zombie controllato a distanza, come riconoscerlo e il caso Mirai che mise in crisi mezzo internet nel 2016.'
+description: >-
+  Cos'è un botnet, come un dispositivo diventa uno zombie controllato a
+  distanza, come riconoscerlo e il caso Mirai che mise in crisi mezzo internet
+  nel 2016.
 image: /botnet-cose-come-funziona-attacchi-hackita.webp
-draft: true
+draft: false
 date: 2026-10-06T12:11:18.874Z
 lastmod: 2026-10-06T12:11:38.117Z
 categories:

@@ -17,9 +17,9 @@ tags:
 featured: true
 ---
 
-# Gli ospedali della Basilicata sono stati hackerati? Cosa sappiamo davvero sul caso Kraken
+# Sanità ed ospedali della Basilicata hackerati? Cosa sappiamo davvero sul caso Kraken
 
-**Gli ospedali della Basilicata sono stati hackerati?** È la domanda che migliaia di cittadini lucani hanno digitato su Google in questi giorni, dopo giorni di CUP bloccato, visite impossibili da prenotare e un sito regionale sparito dalla rete. La risposta ufficiale è no: la Regione parla di un guasto tecnico. Ma nel frattempo, dentro il sito istituzionale, è comparsa una parola che un guasto hardware non può spiegare da solo: **Kraken**, scritta in russo, insieme a link verso un marketplace del dark web.
+La sanità e gli ospedali** della Basilicata sono stati hackerati?** È la domanda che migliaia di cittadini lucani hanno digitato su Google in questi giorni, dopo giorni di CUP bloccato, visite impossibili da prenotare e un sito regionale sparito dalla rete. La risposta ufficiale è no: la Regione parla di un guasto tecnico. Ma nel frattempo, dentro il sito istituzionale, è comparsa una parola che un guasto hardware non può spiegare da solo: **Kraken**, scritta in russo, insieme a link verso un marketplace del dark web.
 
 **In breve:** al momento non risultano prove pubbliche che il blocco del Data Center Unico Regionale sia stato causato da un attacco hacker. La Regione attribuisce il disservizio a un'anomalia dell'impianto di raffreddamento e al mancato avvio del backup, ed esclude accessi abusivi o sottrazione di dati personali. Separatamente, sono state documentate pagine del sito istituzionale con contenuti in russo e riferimenti a Kraken: il collegamento tra i due eventi non è stato dimostrato, ma le due cose sono successe nello stesso sito, nella stessa settimana.
 

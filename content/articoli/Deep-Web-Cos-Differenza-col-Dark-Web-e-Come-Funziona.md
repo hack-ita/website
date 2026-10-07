@@ -1,9 +1,11 @@
 ---
 title: 'Deep Web: Cos''è, Differenza col Dark Web e Come Funziona'
 slug: deep-web
-description: 'Deep web spiegato semplice: cos''è, come entrarci e come funziona, esempi, differenze con surface web e dark web, se serve Tor e se è legale navigarci.'
+description: >-
+  Deep web spiegato semplice: cos'è, come entrarci e come funziona, esempi,
+  differenze con surface web e dark web, se serve Tor e se è legale navigarci.
 image: /dark-web-cose-come-funziona-rete-tor.webp
-draft: true
+draft: false
 date: 2026-10-07T23:18:15.769Z
 lastmod: 2026-10-07T23:16:04.558Z
 categories:

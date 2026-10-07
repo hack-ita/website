@@ -32,7 +32,7 @@ Il container escape va tenuto distinto da concetti vicini ma diversi:
 
 | Tecnica                                                            | Obiettivo                                                                                               |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| [Privilege escalation](https://hackita.it/articoli/linux-privesc/) | Ottenere privilegi maggiori nello stesso ambiente (es. da utente a root, ma sempre dentro il container) |
+| [Privilege escalation](/articoli/linux-privesc/) | Ottenere privilegi maggiori nello stesso ambiente (es. da utente a root, ma sempre dentro il container) |
 | Container escape                                                   | Uscire dall'isolamento del container verso l'host o il runtime                                          |
 | Lateral movement                                                   | Muoversi verso altri sistemi/container dopo aver ottenuto un punto d'appoggio                           |
 | Kubernetes privilege escalation                                    | Ottenere privilegi maggiori nel cluster (RBAC, service account) senza necessariamente uscire dal pod    |
@@ -57,7 +57,7 @@ La privilege escalation cambia il livello di privilegio; il container escape cam
 
 ## Perché è Fondamentale nel Pentest Moderno
 
-In molti ambienti cloud-native attuali, ottenere [RCE](https://hackita.it/articoli/rce/) su un'applicazione web porta a una shell all'interno di un container Docker o di un pod Kubernetes, non direttamente sull'host — è un pattern molto comune negli stack containerizzati, anche se non universale: dipende da come l'applicazione target è effettivamente deployata. La catena tipica in un ambiente cloud-native è:
+In molti ambienti cloud-native attuali, ottenere [RCE](/articoli/rce/) su un'applicazione web porta a una shell all'interno di un container Docker o di un pod Kubernetes, non direttamente sull'host — è un pattern molto comune negli stack containerizzati, anche se non universale: dipende da come l'applicazione target è effettivamente deployata. La catena tipica in un ambiente cloud-native è:
 
 ```
 RCE nell'app web
@@ -274,7 +274,7 @@ which ctr
 ctr image list
 ```
 
-Per il dettaglio sull'exploitation della Docker API esposta via rete (non socket locale), la tecnica è identica cambiando solo il trasporto: vedi la guida sulla [porta 2375 Docker API](https://hackita.it/articoli/porta-2375-docker-api/). Per l'hardening lato Docker, vedi la guida dedicata a [Docker security](https://hackita.it/articoli/docker-security/).
+Per il dettaglio sull'exploitation della Docker API esposta via rete (non socket locale), la tecnica è identica cambiando solo il trasporto: vedi la guida sulla [porta 2375 Docker API](/articoli/porta-2375-docker-api/). Per l'hardening lato Docker, vedi la guida dedicata a [Docker security](/articoli/docker-security/).
 
 ## 4. Escape via Linux Capabilities
 
@@ -422,7 +422,7 @@ Il caricamento del modulo, se tutto è andato a buon fine, apre una reverse shel
 
 ## 5. Escape da Kubernetes Pod
 
-In Kubernetes, l'escape da un pod segue le stesse logiche viste per Docker ma con vettori aggiuntivi legati al control plane: service account token, API server, kubelet, etcd — per un approfondimento specifico sulla exploitation dell'ambiente Kubernetes, vedi la guida a [Kubernetes security](https://hackita.it/articoli/kubernetes-security-exploitation/). È importante non trattare Kubernetes come una semplice estensione di Docker: un pod compromesso non equivale automaticamente a un container escape, e un container escape su un nodo non equivale automaticamente a compromissione del cluster. I livelli sono distinti:
+In Kubernetes, l'escape da un pod segue le stesse logiche viste per Docker ma con vettori aggiuntivi legati al control plane: service account token, API server, kubelet, etcd — per un approfondimento specifico sulla exploitation dell'ambiente Kubernetes, vedi la guida a [Kubernetes security](/articoli/kubernetes-security-exploitation/). È importante non trattare Kubernetes come una semplice estensione di Docker: un pod compromesso non equivale automaticamente a un container escape, e un container escape su un nodo non equivale automaticamente a compromissione del cluster. I livelli sono distinti:
 
 ```
 Application compromise
@@ -497,7 +497,7 @@ kubectl get secrets -A
 kubectl get secret db-credentials -o jsonpath='{.data.password}' | base64 -d
 ```
 
-I secret spesso contengono credenziali database, API key, certificati TLS, token di servizi esterni, incluse credenziali cloud che aprono la strada a privilege escalation nel provider — vedi la guida [AWS security](https://hackita.it/articoli/aws-security/) per l'abuso di credenziali IAM ottenute in questo modo.
+I secret spesso contengono credenziali database, API key, certificati TLS, token di servizi esterni, incluse credenziali cloud che aprono la strada a privilege escalation nel provider — vedi la guida [AWS security](/articoli/aws-security/) per l'abuso di credenziali IAM ottenute in questo modo.
 
 ### Kubelet API (porta 10250)
 
@@ -515,7 +515,7 @@ etcdctl --endpoints=http://[etcd_ip]:2379 get /registry/secrets/default/db-crede
 
 ## 6. Escape via Cloud Metadata (IMDS)
 
-Se il container gira su un'istanza cloud (EC2, GCE, Azure VM), il servizio di metadata dell'istanza può esporre credenziali temporanee assegnate a quella macchina. Questo endpoint è spesso raggiunto anche dall'esterno del container tramite [SSRF](https://hackita.it/articoli/ssrf/) su un'applicazione web che gira sulla stessa istanza — non serve necessariamente essere già dentro un container per sfruttarlo.
+Se il container gira su un'istanza cloud (EC2, GCE, Azure VM), il servizio di metadata dell'istanza può esporre credenziali temporanee assegnate a quella macchina. Questo endpoint è spesso raggiunto anche dall'esterno del container tramite [SSRF](/articoli/ssrf/) su un'applicazione web che gira sulla stessa istanza — non serve necessariamente essere già dentro un container per sfruttarlo.
 
 ```bash
 # AWS IMDSv1
@@ -533,7 +533,7 @@ curl -s -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/i
 curl -s -H "Metadata: true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
 ```
 
-Le credenziali ottenute permettono di proseguire con la privilege escalation lato cloud provider — vedi [AWS security](https://hackita.it/articoli/aws-security/) per i passi successivi lato AWS. Da un singolo container compromesso, se IMDSv2 non è forzato e il traffico verso il metadata endpoint non è altrimenti limitato, è possibile arrivare a privilegi ampi sull'account cloud — l'impatto reale dipende comunque dai permessi assegnati al ruolo IAM/service account dell'istanza.
+Le credenziali ottenute permettono di proseguire con la privilege escalation lato cloud provider — vedi [AWS security](/articoli/aws-security/) per i passi successivi lato AWS. Da un singolo container compromesso, se IMDSv2 non è forzato e il traffico verso il metadata endpoint non è altrimenti limitato, è possibile arrivare a privilegi ampi sull'account cloud — l'impatto reale dipende comunque dai permessi assegnati al ruolo IAM/service account dell'istanza.
 
 ## 7. Escape via Kernel Exploit
 
@@ -749,14 +749,14 @@ Il container escape non è un singolo exploit ma una famiglia di tecniche che sf
 
 ## Articoli Correlati
 
-* [RCE](https://hackita.it/articoli/rce/) — come si arriva a una shell nel container in primo luogo
-* [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/) — la fase successiva/precedente rispetto al container escape
-* [Docker Security](https://hackita.it/articoli/docker-security/) — hardening e configurazione sicura di Docker
-* [Kubernetes Security](https://hackita.it/articoli/kubernetes-security-exploitation/) — exploitation e difesa specifiche per cluster K8s
-* [Porta 2375 Docker API](https://hackita.it/articoli/porta-2375-docker-api/) — stesso vettore del Docker socket, esposto via rete
-* [SSRF](https://hackita.it/articoli/ssrf/) — vettore comune per raggiungere il cloud metadata service
-* [AWS Security](https://hackita.it/articoli/aws-security/) — privilege escalation con le credenziali ottenute via IMDS
-* [Cloud Security Automation](https://hackita.it/articoli/cloud-security-automation/) — automatizzare l'auditing di ambienti cloud-native
+* [RCE](/articoli/rce/) — come si arriva a una shell nel container in primo luogo
+* [Linux Privilege Escalation](/articoli/linux-privesc/) — la fase successiva/precedente rispetto al container escape
+* [Docker Security](/articoli/docker-security/) — hardening e configurazione sicura di Docker
+* [Kubernetes Security](/articoli/kubernetes-security-exploitation/) — exploitation e difesa specifiche per cluster K8s
+* [Porta 2375 Docker API](/articoli/porta-2375-docker-api/) — stesso vettore del Docker socket, esposto via rete
+* [SSRF](/articoli/ssrf/) — vettore comune per raggiungere il cloud metadata service
+* [AWS Security](/articoli/aws-security/) — privilege escalation con le credenziali ottenute via IMDS
+* [Cloud Security Automation](/articoli/cloud-security-automation/) — automatizzare l'auditing di ambienti cloud-native
 
 ## Fonti e riferimenti
 

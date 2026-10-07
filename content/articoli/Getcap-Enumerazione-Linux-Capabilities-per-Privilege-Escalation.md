@@ -170,7 +170,7 @@ chroot /tmp/hostfs /bin/bash
 # root@host:/#
 ```
 
-Per approfondire container escape techniques avanzate, consulta [strategie di escape da Docker e Kubernetes](https://hackita.it/articoli/container-escape/).
+Per approfondire container escape techniques avanzate, consulta [strategie di escape da Docker e Kubernetes](/articoli/container-escape/).
 
 ***
 
@@ -246,11 +246,11 @@ cat caps.txt | grep setuid
 # Categoria: Capabilities
 ```
 
-Se vuoi approfondire l'uso di GTFOBins per exploitation completa, leggi [come sfruttare GTFOBins per privilege escalation su Linux](https://hackita.it/articoli/gtfobins/).
+Se vuoi approfondire l'uso di GTFOBins per exploitation completa, leggi [come sfruttare GTFOBins per privilege escalation su Linux](/articoli/gtfobins/).
 
 ***
 
-### Getcap + [LinPEAS](https://hackita.it/linpeas)
+### Getcap + [LinPEAS](/linpeas)
 
 ```bash
 # LinPEAS include getcap check
@@ -387,4 +387,4 @@ Getcap è tool nativo Linux per system administration. L'uso per privilege escal
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

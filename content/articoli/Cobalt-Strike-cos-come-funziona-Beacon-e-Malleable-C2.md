@@ -25,7 +25,7 @@ featured: true
 
 Cobalt Strike è uno dei framework C2 commerciali più utilizzati nel red teaming professionale: modella il comportamento di un attaccante avanzato — persistenza, movimento laterale, pivoting, comunicazioni mascherate da traffico legittimo — per testare quanto un'organizzazione riesca davvero a rilevare e rispondere a un'intrusione, non solo a bloccarne l'exploit iniziale.
 
-**Prerequisiti:** licenza Cobalt Strike valida (è software commerciale, non open source), un ambiente di lab o un engagement autorizzato per iscritto, familiarità con [Active Directory](https://hackita.it/articoli/active-directory/) e post-exploitation Windows.
+**Prerequisiti:** licenza Cobalt Strike valida (è software commerciale, non open source), un ambiente di lab o un engagement autorizzato per iscritto, familiarità con [Active Directory](/articoli/active-directory/) e post-exploitation Windows.
 
 ***
 
@@ -143,13 +143,13 @@ beacon> logonpasswords                  # dump credenziali via Mimikatz integrat
 beacon> dcsync CORP.local CORP\krbtgt   # DCSync su un account specifico
 ```
 
-`dcsync` in Beacon replica la stessa tecnica descritta nella guida a [DCSync](https://hackita.it/articoli/dcsync/), integrata direttamente nella sessione invece di richiedere un tool esterno separato.
+`dcsync` in Beacon replica la stessa tecnica descritta nella guida a [DCSync](/articoli/dcsync/), integrata direttamente nella sessione invece di richiedere un tool esterno separato.
 
 Il Golden Ticket in Cobalt Strike **non** si genera con un comando digitato in console: si usa dal menu grafico `[beacon] → Access → Golden Ticket`, fornendo utente, dominio, SID e hash krbtgt — Cobalt Strike richiama Mimikatz internamente e inietta il ticket nella sessione.
 
 `TARGET` è l'host di destinazione, `LISTENER` è il nome del listener che il nuovo beacon userà per collegarsi indietro — non il nome del protocollo. È un errore comune confondere i due parametri quando si copia un esempio senza guardare la sintassi con attenzione.
 
-Questi comandi ricalcano quello che fanno manualmente tool come [Impacket](https://hackita.it/articoli/impacket/) (`psexec.py`, `wmiexec.py`) — la differenza è che qui restano nella stessa sessione e nello stesso set di log del team server, comodo per il reporting a fine engagement. Per il dump di credenziali via Mimikatz integrato, vale la stessa logica della guida dedicata a [Mimikatz](https://hackita.it/articoli/mimikatz/): un conto è l'autenticazione, un altro i privilegi effettivi ottenuti.
+Questi comandi ricalcano quello che fanno manualmente tool come [Impacket](/articoli/impacket/) (`psexec.py`, `wmiexec.py`) — la differenza è che qui restano nella stessa sessione e nello stesso set di log del team server, comodo per il reporting a fine engagement. Per il dump di credenziali via Mimikatz integrato, vale la stessa logica della guida dedicata a [Mimikatz](/articoli/mimikatz/): un conto è l'autenticazione, un altro i privilegi effettivi ottenuti.
 
 ### Beacon Peer-to-Peer (SMB e TCP)
 
@@ -170,7 +170,7 @@ Solo il beacon "parent" della catena parla davvero con il team server — gli al
 beacon> socks 1080
 ```
 
-Apre un proxy SOCKS sul team server che instrada il traffico attraverso il beacon compromesso, verso la rete interna che il beacon stesso può raggiungere — utile per puntare tool esterni (Nmap, un browser, un client RDP) contro segmenti di rete altrimenti irraggiungibili. Concettualmente è lo stesso principio di [Chisel](https://hackita.it/articoli/chisel/), integrato nativamente nel framework.
+Apre un proxy SOCKS sul team server che instrada il traffico attraverso il beacon compromesso, verso la rete interna che il beacon stesso può raggiungere — utile per puntare tool esterni (Nmap, un browser, un client RDP) contro segmenti di rete altrimenti irraggiungibili. Concettualmente è lo stesso principio di [Chisel](/articoli/chisel/), integrato nativamente nel framework.
 
 ```text
 beacon> ssh 10.10.17.12:22 username password
@@ -231,10 +231,10 @@ Sapere come viene rilevato Cobalt Strike è importante tanto quanto saperlo usar
 **Indicatori host:**
 
 * Artefatti di process injection tipici (allocazioni di memoria RWX, thread iniettati in processi legittimi)
-* Log di creazione servizi/task per `psexec`/`jump`, simili a quelli di [Impacket](https://hackita.it/articoli/impacket/) e altri tool di lateral movement
+* Log di creazione servizi/task per `psexec`/`jump`, simili a quelli di [Impacket](/articoli/impacket/) e altri tool di lateral movement
 * Attività WMI anomala, se usata per l'esecuzione remota
 * Regole YARA pubbliche che identificano pattern nel beacon (specialmente su versioni craccate/leaked, spesso non aggiornate e con firme note)
-* Attività di [Mimikatz](https://hackita.it/articoli/mimikatz/) integrato, con gli stessi indicatori EDR del tool standalone
+* Attività di [Mimikatz](/articoli/mimikatz/) integrato, con gli stessi indicatori EDR del tool standalone
 
 **Contromisura pratica per i difensori:** un profilo Malleable C2 di default, un certificato TLS non valido/auto-firmato e check-in a intervalli fissi restano tra i segnali più facili da intercettare — molte detection efficaci partono proprio da questi elementi prima ancora di arrivare all'analisi approfondita degli host.
 
@@ -386,12 +386,12 @@ SSH:          beacon> ssh IP:22 user password
 
 **Guide correlate su hackita.it:**
 
-* [Active Directory: Attack Paths Completi](https://hackita.it/articoli/active-directory/)
-* [Impacket: Tool Suite per AD](https://hackita.it/articoli/impacket/)
-* [Mimikatz su HackIta](https://hackita.it/articoli/mimikatz/)
-* [Chisel: TCP Tunneling per Pivoting](https://hackita.it/articoli/chisel/)
-* [Kerberos](https://hackita.it/articoli/kerberos/)
-* [Credential Dumping: Come Estrarre Hash](https://hackita.it/articoli/credential-dumping/)
+* [Active Directory: Attack Paths Completi](/articoli/active-directory/)
+* [Impacket: Tool Suite per AD](/articoli/impacket/)
+* [Mimikatz su HackIta](/articoli/mimikatz/)
+* [Chisel: TCP Tunneling per Pivoting](/articoli/chisel/)
+* [Kerberos](/articoli/kerberos/)
+* [Credential Dumping: Come Estrarre Hash](/articoli/credential-dumping/)
 
 ## Riferimenti
 

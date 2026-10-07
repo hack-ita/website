@@ -321,4 +321,4 @@ Per compliance continua sì. Per un report leggibile cross-servizio con mapping 
 
 ***
 
-*Documentazione ufficiale: [AWS Config](https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html). Per l'enumerazione IAM/S3/EC2 di base e la parte SSRF/IMDS, vedi la nostra guida al pentest AWS, [Tool Penetration Testing su HackIta](https://hackita.it/articoli/tool-penetration-testing/) e [HTTP e HTTPS su HackIta](https://hackita.it/articoli/http-https/).*
+*Documentazione ufficiale: [AWS Config](https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html). Per l'enumerazione IAM/S3/EC2 di base e la parte SSRF/IMDS, vedi la nostra guida al pentest AWS, [Tool Penetration Testing su HackIta](/articoli/tool-penetration-testing/) e [HTTP e HTTPS su HackIta](/articoli/http-https/).*

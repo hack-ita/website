@@ -56,11 +56,11 @@ Molti incidenti reali toccano più tipi insieme: il ransomware moderno, per esem
 
 | Causa                                                 | Come porta a un breach                                                                                                             |
 | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **[Phishing](https://hackita.it/articoli/phishing/)** | Un dipendente consegna le credenziali o installa un malware                                                                        |
-| **Credenziali rubate o riutilizzate**                 | Attacchi come il [credential stuffing](https://hackita.it/articoli/credential-stuffing/) provano le stesse password su più servizi |
-| **Vulnerabilità non corrette**                        | Una falla nota (n-day) o uno [zero-day](https://hackita.it/articoli/zero-day/) su un servizio esposto                              |
-| **Applicazioni web vulnerabili**                      | Una [SQL injection](https://hackita.it/articoli/sql-injection/) permette di leggere l'intero database                              |
-| **Configurazioni errate**                             | Database, bucket cloud o [backup esposti sul web](https://hackita.it/articoli/backup-exposure/) senza autenticazione               |
+| **[Phishing](/articoli/phishing/)** | Un dipendente consegna le credenziali o installa un malware                                                                        |
+| **Credenziali rubate o riutilizzate**                 | Attacchi come il [credential stuffing](/articoli/credential-stuffing/) provano le stesse password su più servizi |
+| **Vulnerabilità non corrette**                        | Una falla nota (n-day) o uno [zero-day](/articoli/zero-day/) su un servizio esposto                              |
+| **Applicazioni web vulnerabili**                      | Una [SQL injection](/articoli/sql-injection/) permette di leggere l'intero database                              |
+| **Configurazioni errate**                             | Database, bucket cloud o [backup esposti sul web](/articoli/backup-exposure/) senza autenticazione               |
 | **Insider**                                           | Un dipendente accede senza motivo a dati che non gli servono                                                                       |
 | **Supply chain**                                      | Si compromette un fornitore per arrivare ai suoi clienti                                                                           |
 | **Ransomware con doppia estorsione**                  | I dati vengono copiati e poi cifrati                                                                                               |
@@ -74,11 +74,11 @@ Nel report IBM 2026 la compromissione della supply chain risulta il secondo vett
 
 ## Come avviene un data breach, passo per passo
 
-Un'intrusione che porta a un breach segue spesso una sequenza simile a quella della [Cyber Kill Chain](https://hackita.it/articoli/cyber-kill-chain/):
+Un'intrusione che porta a un breach segue spesso una sequenza simile a quella della [Cyber Kill Chain](/articoli/cyber-kill-chain/):
 
 1. **Accesso iniziale**: phishing, credenziali rubate, vulnerabilità di un servizio esposto.
-2. **Consolidamento e [privilege escalation](https://hackita.it/articoli/privilege-escalation-windows/)**: l'attaccante ottiene privilegi più alti.
-3. **[Movimento laterale](https://hackita.it/articoli/lateral-movement/)**: si sposta verso i sistemi che contengono i dati interessanti.
+2. **Consolidamento e [privilege escalation](/articoli/privilege-escalation-windows/)**: l'attaccante ottiene privilegi più alti.
+3. **[Movimento laterale](/articoli/lateral-movement/)**: si sposta verso i sistemi che contengono i dati interessanti.
 4. **Raccolta ed esfiltrazione**: i dati vengono copiati verso l'esterno.
 5. **Scoperta**: qualcuno nota qualcosa, oppure l'attaccante rivendica o vende i dati.
 
@@ -105,7 +105,7 @@ Un attaccante raramente vuole "un dato": vuole accessi e informazioni che può t
 | ------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Yahoo**           | 2013      | Compromessi circa 3 miliardi di account, resi noti tra il 2016 e il 2017                                                                                                               |
 | **Equifax**         | 2017      | Rubati i dati di circa 147 milioni di persone sfruttando una vulnerabilità di Apache Struts (CVE-2017-5638) per cui la patch esisteva già                                              |
-| **Capital One**     | 2019      | Una [SSRF](https://hackita.it/articoli/ssrf/) combinata con una configurazione errata ha permesso di accedere ai dati di circa 100 milioni di clienti negli Stati Uniti                |
+| **Capital One**     | 2019      | Una [SSRF](/articoli/ssrf/) combinata con una configurazione errata ha permesso di accedere ai dati di circa 100 milioni di clienti negli Stati Uniti                |
 | **MOVEit Transfer** | 2023      | Una SQL injection (CVE-2023-34362) sfruttata dal gruppo Cl0p ha colpito centinaia di organizzazioni                                                                                    |
 | **Intesa Sanpaolo** | 2022-2024 | Un dipendente ha consultato senza giustificato motivo i dati di 3.573 clienti, con oltre 6.600 accessi. Il Garante ha sanzionato la banca con **31,8 milioni di euro** (30 marzo 2026) |
 
@@ -141,7 +141,7 @@ Una sequenza pratica, da adattare al caso:
 | **6. Documentare**               | Registro delle violazioni: vanno annotate anche quelle non notificate                                                                |
 | **7. Rimediare e imparare**      | Correggere la causa, aggiornare le procedure, fare un'analisi post-incidente                                                         |
 
-**Non ogni data breach va notificato al Garante**: la notifica serve quando la violazione può comportare un rischio per i diritti e le libertà delle persone. Se il rischio è improbabile non c'è obbligo di notifica, ma la violazione va comunque documentata nel registro. Le regole complete sono nella guida al [GDPR](https://hackita.it/articoli/gdpr/) e nella guida alla [direttiva NIS 2](https://hackita.it/articoli/nis2/). Il punto più critico è il tempo: il conteggio parte da quando **vieni a conoscenza** della violazione, e per questo servono procedure scritte e ruoli chiari prima che succeda.
+**Non ogni data breach va notificato al Garante**: la notifica serve quando la violazione può comportare un rischio per i diritti e le libertà delle persone. Se il rischio è improbabile non c'è obbligo di notifica, ma la violazione va comunque documentata nel registro. Le regole complete sono nella guida al [GDPR](/articoli/gdpr/) e nella guida alla [direttiva NIS 2](/articoli/nis2/). Il punto più critico è il tempo: il conteggio parte da quando **vieni a conoscenza** della violazione, e per questo servono procedure scritte e ruoli chiari prima che succeda.
 
 ## Data breach: cosa fare se i tuoi dati sono stati violati
 
@@ -187,7 +187,7 @@ Nessuna misura azzera il rischio, ma queste riducono molto probabilità e danni:
 
 ## Data breach GDPR e NIS2: la regola delle 72 ore e cosa cambia
 
-In Europa il data breach è regolato dal [GDPR](https://hackita.it/articoli/gdpr/) (artt. 33 e 34) e, per i settori critici, dalla [NIS2](https://hackita.it/articoli/nis2/):
+In Europa il data breach è regolato dal [GDPR](/articoli/gdpr/) (artt. 33 e 34) e, per i settori critici, dalla [NIS2](/articoli/nis2/):
 
 |                     | **GDPR**                     | **NIS2**                             |
 | ------------------- | ---------------------------- | ------------------------------------ |

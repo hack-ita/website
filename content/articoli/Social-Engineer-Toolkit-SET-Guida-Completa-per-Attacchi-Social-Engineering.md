@@ -259,7 +259,7 @@ Enter encoding (shikata_ga_nai, etc): shikata_ga_nai
 Enter iterations: 5
 ```
 
-Per evasion più avanzata, genera con [msfvenom](https://hackita.it/articoli/msfconsole/) separatamente e importa in SET.
+Per evasion più avanzata, genera con [msfvenom](/articoli/msfconsole/) separatamente e importa in SET.
 
 ### Integrazione Metasploit
 
@@ -288,7 +288,7 @@ SET gestisce il credential harvesting, tu gestisci l'infrastruttura di delivery.
 
 Obiettivo: testare awareness dipendenti di un'azienda.
 
-**Step 1** - Raccogli email con [theHarvester](https://hackita.it/articoli/theharvester/):
+**Step 1** - Raccogli email con [theHarvester](/articoli/theharvester/):
 
 ```bash
 theHarvester -d targetcompany.com -b google,linkedin -l 500
@@ -469,11 +469,11 @@ OSINT approfondito sul target. Usa contesto realistico (progetti in corso, colle
 
 **SET vs Gophish?**
 
-SET è più versatile (payload, USB, web attacks multipli). [Gophish](https://hackita.it/articoli/gophish/) eccelle in email phishing con tracking avanzato e reporting. Per campagne awareness pure, Gophish. Per pentest completi, SET.
+SET è più versatile (payload, USB, web attacks multipli). [Gophish](/articoli/gophish/) eccelle in email phishing con tracking avanzato e reporting. Per campagne awareness pure, Gophish. Per pentest completi, SET.
 
 **Come bypasso 2FA?**
 
-SET standard non bypassa 2FA. Per session hijacking con 2FA attivo, usa [Evilginx2](https://hackita.it/articoli/evilginx2/) che intercetta token di sessione post-autenticazione.
+SET standard non bypassa 2FA. Per session hijacking con 2FA attivo, usa [Evilginx2](/articoli/evilginx2/) che intercetta token di sessione post-autenticazione.
 
 **Posso usare SET per awareness training?**
 
@@ -485,6 +485,6 @@ Dominio aged, SSL valido, infrastruttura pulita (non blacklisted), invio gradual
 
 ***
 
-*Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per campagne social engineering autorizzate e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).*
+*Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per campagne social engineering autorizzate e formazione 1:1, scopri [hackita.it/servizi](/servizi).*
 
 **Risorse**: [SET GitHub](https://github.com/trustedsec/social-engineer-toolkit) | [TrustedSec](https://www.trustedsec.com/)

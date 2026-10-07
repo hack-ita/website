@@ -221,9 +221,9 @@ snmpwalk -v3 -u snmp-user -l authPriv -a SHA -A AuthPass123 -x AES -X PrivPass12
 
 Approfondisci le tecniche di enumerazione correlate in:
 
-* [https://hackita.it/articoli/snmp](https://hackita.it/articoli/snmp/)
-* [https://hackita.it/articoli/nmap](https://hackita.it/articoli/nmap/)
-* [https://hackita.it/articoli/pivoting](https://hackita.it/articoli/pivoting/)
+* [https://hackita.it/articoli/snmp](/articoli/snmp/)
+* [https://hackita.it/articoli/nmap](/articoli/nmap/)
+* [https://hackita.it/articoli/pivoting](/articoli/pivoting/)
 
 Riferimenti tecnici ufficiali e documentazione:
 
@@ -232,7 +232,7 @@ Riferimenti tecnici ufficiali e documentazione:
 * [https://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/7281-snmp-best-practices.html](https://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/7281-snmp-best-practices.html)
 
 Se vuoi migliorare la postura di sicurezza della tua azienda o testare realisticamente queste tecniche in un contesto controllato:
-[https://hackita.it/servizi](https://hackita.it/servizi)
+[https://hackita.it/servizi](/servizi)
 
 Se vuoi supportare il progetto HackITA:
-[https://hackita.it/supporta](https://hackita.it/supporta)
+[https://hackita.it/supporta](/supporta)

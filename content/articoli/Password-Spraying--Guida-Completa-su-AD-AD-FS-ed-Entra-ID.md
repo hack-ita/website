@@ -40,7 +40,7 @@ Classificato da MITRE ATT\&CK come [T1110.003](https://attack.mitre.org/techniqu
 | **Brute force**         | Molte password su un account                  | Alto                                | Alto               |
 | **Credential stuffing** | Coppie username:password già valide da breach | Basso per account, ma già associate | Variabile          |
 
-Password spraying e credential stuffing si assomigliano nel "restare sotto il lockout", ma differiscono nella fonte: lo spraying prova password *indovinate*, lo stuffing usa credenziali *già rubate e associate*. Vedi [credential stuffing](https://hackita.it/articoli/credential-stuffing/) per l'approfondimento.
+Password spraying e credential stuffing si assomigliano nel "restare sotto il lockout", ma differiscono nella fonte: lo spraying prova password *indovinate*, lo stuffing usa credenziali *già rubate e associate*. Vedi [credential stuffing](/articoli/credential-stuffing/) per l'approfondimento.
 
 ***
 
@@ -308,7 +308,7 @@ ldapsearch -x -H ldap://<DC_IP> -b "DC=corp,DC=local" "(objectClass=domain)" loc
 nxc ldap <DC_IP> -u jsmith -p 'PatternStagionale!' --users
 ```
 
-Un singolo account compromesso apre la porta a enumerazione AD completa, [Kerberoasting](https://hackita.it/articoli/kerberos/) e [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/).
+Un singolo account compromesso apre la porta a enumerazione AD completa, [Kerberoasting](/articoli/kerberos/) e [AS-REP Roasting](/articoli/as-rep-roasting/).
 
 ***
 

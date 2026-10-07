@@ -31,7 +31,7 @@ Questo scenario potrebbe permettere di:
 
 Se la chiave della CA viene compromessa, l’attaccante può generare **Golden Certificates**, cioè certificati validi per qualsiasi account del dominio.
 
-Per questo motivo ESC12 è spesso citato insieme agli altri certificate attacks, anche se tecnicamente è più vicino a una **vulnerabilità hardware/software post-compromise** che a una misconfiguration AD CS come [ESC5](https://hackita.it/articoli/esc5-adcs/) o [ESC7](https://hackita.it/articoli/esc7-adcs/).
+Per questo motivo ESC12 è spesso citato insieme agli altri certificate attacks, anche se tecnicamente è più vicino a una **vulnerabilità hardware/software post-compromise** che a una misconfiguration AD CS come [ESC5](/articoli/esc5-adcs/) o [ESC7](/articoli/esc7-adcs/).
 
 ***
 
@@ -178,7 +178,7 @@ Sì. Se la chiave della CA viene compromessa l’attaccante può generare certif
 
 ### Qual è la differenza tra ESC12 e ESC5?
 
-[ESC5](https://hackita.it/articoli/esc5-adcs/) riguarda ACL PKI deboli.
+[ESC5](/articoli/esc5-adcs/) riguarda ACL PKI deboli.
 ESC12 riguarda vulnerabilità nello **stack YubiHSM2**.
 
 ***
@@ -189,10 +189,10 @@ ESC12 riguarda vulnerabilità nello **stack YubiHSM2**.
 
 > ESC12 è uno scenario raro ma estremamente critico nella sicurezza delle PKI enterprise.
 > Per vedere tutte le tecniche certificate attack consulta la guida completa:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)Continua con le escalation successive:
-> [https://hackita.it/articoli/esc13-adcs](https://hackita.it/articoli/esc13-adcs/) · [https://hackita.it/articoli/esc14-adcs](https://hackita.it/articoli/adesc14-adcs/)Supporta HackIta:
-> [https://hackita.it/supporto](https://hackita.it/supporto)Vuoi imparare pentesting Active Directory o testare la sicurezza della tua infrastruttura?
-> [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
+> [https://hackita.it/articoli/adcs-esc1-esc16](/articoli/adcs-esc1-esc16/)Continua con le escalation successive:
+> [https://hackita.it/articoli/esc13-adcs](/articoli/esc13-adcs/) · [https://hackita.it/articoli/esc14-adcs](/articoli/adesc14-adcs/)Supporta HackIta:
+> [https://hackita.it/supporto](/supporto)Vuoi imparare pentesting Active Directory o testare la sicurezza della tua infrastruttura?
+> [https://hackita.it/servizi](/servizi)Riferimenti tecnici:
 > [https://pkiblog.knobloch.info/esc12-shell-access-to-adcs-ca-with-yubihsm/](https://pkiblog.knobloch.info/esc12-shell-access-to-adcs-ca-with-yubihsm/)
 > [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)
 > [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)

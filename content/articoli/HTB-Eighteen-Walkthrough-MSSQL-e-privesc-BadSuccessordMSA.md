@@ -74,7 +74,7 @@ enum_impersonate
 
 `kevin` può impersonare l'account **appdev**, quello realmente usato dall'applicazione web per parlare col database. Con `exec_as_login appdev` si ottiene accesso completo a `financial_planner`, dove la tabella `users` contiene l'hash della password dell'utente admin del sito.
 
-Per approfondire l'enumerazione e l'abuso di MSSQL (impersonation, link server, xp\_cmdshell e tecniche correlate) vedi l'articolo dedicato su hackita: [Porta 1433 - MSSQL](https://hackita.it/articoli/porta-1433-mssql/).
+Per approfondire l'enumerazione e l'abuso di MSSQL (impersonation, link server, xp\_cmdshell e tecniche correlate) vedi l'articolo dedicato su hackita: [Porta 1433 - MSSQL](/articoli/porta-1433-mssql/).
 
 Non conoscendo ancora l'hash reale dell'amministratore (va craccato, come vedremo tra poco), il tentativo più rapido è generare un hash Werkzeug di cui si conosce già la password in chiaro e inserirlo direttamente nella tabella, così da avere subito un accesso admin funzionante senza aspettare il cracking. Cerco online un generatore di hash Werkzeug e creo l'hash che inserirò nel database.
 
@@ -252,4 +252,4 @@ C'era anche il rischio concreto di perdersi lato web: trattandosi di un'app Flas
 
 ***
 
-*Articolo a cura del team di [Hackita](https://hackita.it) — risorse italiane di offensive security, walkthrough HTB/ProLabs e preparazione OSCE3.*
+*Articolo a cura del team di [Hackita](/) — risorse italiane di offensive security, walkthrough HTB/ProLabs e preparazione OSCE3.*

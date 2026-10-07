@@ -20,7 +20,7 @@ tags:
 
 # RAT (Remote Access Trojan): Cos'è e Come Funziona
 
-Un RAT, Remote Access Trojan, è un [trojan](https://hackita.it/articoli/trojan/) progettato per dare a un operatore remoto la capacità di eseguire comandi e controllare determinate funzioni di un dispositivo compromesso — non solo rubare dati una volta e sparire, ma restare connesso e comandare quel dispositivo nel tempo. Le capacità effettive dipendono dal malware specifico e dai privilegi ottenuti: possono includere accesso ai file, esecuzione di comandi, keylogging, screenshot e, quando supportato da dispositivo e sistema operativo, attivazione di webcam o microfono.
+Un RAT, Remote Access Trojan, è un [trojan](/articoli/trojan/) progettato per dare a un operatore remoto la capacità di eseguire comandi e controllare determinate funzioni di un dispositivo compromesso — non solo rubare dati una volta e sparire, ma restare connesso e comandare quel dispositivo nel tempo. Le capacità effettive dipendono dal malware specifico e dai privilegi ottenuti: possono includere accesso ai file, esecuzione di comandi, keylogging, screenshot e, quando supportato da dispositivo e sistema operativo, attivazione di webcam o microfono.
 
 > **In breve:** un RAT è un trojan che fornisce controllo remoto continuativo su un dispositivo infetto, con capacità che variano da malware a malware — dal semplice accesso ai file fino a webcam, microfono e tastiera nei casi più completi.
 
@@ -39,7 +39,7 @@ Come arriva un RAT sul dispositivo non è diverso dagli altri trojan: allegati d
 | Accesso webcam/microfono                                    | Attivazione da remoto, quando supportata da hardware, driver e privilegi ottenuti              |
 | Screen capture                                              | Screenshot o registrazione continua dello schermo                                              |
 | Esecuzione comandi                                          | Lanciare programmi, aprire una shell, installare altro malware                                 |
-| Uso come nodo [botnet](https://hackita.it/articoli/botnet/) | Il dispositivo compromesso viene aggiunto a una rete più ampia, per attacchi DDoS o come proxy |
+| Uso come nodo [botnet](/articoli/botnet/) | Il dispositivo compromesso viene aggiunto a una rete più ampia, per attacchi DDoS o come proxy |
 
 ## Back Orifice: un Precursore dei RAT Moderni
 
@@ -53,7 +53,7 @@ Nel maggio 2014 l'[FBI](https://www.fbi.gov/news/stories/international-blackshad
 
 ## RAT vs Backdoor vs Spyware
 
-I termini si sovrappongono spesso nella pratica, ma indicano concetti diversi. **Backdoor** descrive in modo ampio qualsiasi meccanismo che consenta accesso o controllo non autorizzato attraverso un percorso nascosto — non è sinonimo di RAT: un RAT può implementare una backdoor come uno dei suoi meccanismi di accesso, ma "backdoor" da sola non implica le funzionalità interattive tipiche di un RAT (keylogging, webcam, controllo in tempo reale). Uno [spyware](https://hackita.it/articoli/spyware/) è definito dallo scopo (raccogliere informazioni), mentre un RAT è definito dalla capacità (controllo remoto attivo) — un RAT è quasi sempre anche uno spyware, ma non tutti gli spyware permettono un controllo interattivo in tempo reale come fa un RAT.
+I termini si sovrappongono spesso nella pratica, ma indicano concetti diversi. **Backdoor** descrive in modo ampio qualsiasi meccanismo che consenta accesso o controllo non autorizzato attraverso un percorso nascosto — non è sinonimo di RAT: un RAT può implementare una backdoor come uno dei suoi meccanismi di accesso, ma "backdoor" da sola non implica le funzionalità interattive tipiche di un RAT (keylogging, webcam, controllo in tempo reale). Uno [spyware](/articoli/spyware/) è definito dallo scopo (raccogliere informazioni), mentre un RAT è definito dalla capacità (controllo remoto attivo) — un RAT è quasi sempre anche uno spyware, ma non tutti gli spyware permettono un controllo interattivo in tempo reale come fa un RAT.
 
 ## Come Riconoscere un RAT
 

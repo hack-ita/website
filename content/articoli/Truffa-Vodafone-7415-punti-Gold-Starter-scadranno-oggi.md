@@ -191,7 +191,7 @@ Non serve imparare a memoria tutti i trucchi di questa truffa specifica — ne i
 
 **Per controllare qualsiasi cosa riguardi un tuo account — punti, offerte, pagamenti — apri sempre tu stesso l'app o il sito ufficiale, scrivendo l'indirizzo di tua iniziativa. Non seguire mai il link che ti arriva dentro un messaggio, anche se sembra scritto da chi dice di essere.**
 
-Se vuoi capire meglio come funzionano queste truffe in generale, anche a livello un po' più tecnico, ne parliamo anche negli articoli su [cos'è il phishing e come si riconosce](https://hackita.it/articoli/phishing/) e su [le tecniche di manipolazione psicologica usate online](https://hackita.it/articoli/social/).
+Se vuoi capire meglio come funzionano queste truffe in generale, anche a livello un po' più tecnico, ne parliamo anche negli articoli su [cos'è il phishing e come si riconosce](/articoli/phishing/) e su [le tecniche di manipolazione psicologica usate online](/articoli/social/).
 
 Se hai ricevuto un SMS simile e hai dei dubbi, o vuoi solo una conferma prima di cliccare qualcosa, puoi scriverci a **[info@hackita.it](mailto:info@hackita.it)**: rispondiamo volentieri, meglio una domanda in più che un problema dopo.
 

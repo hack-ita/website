@@ -20,7 +20,7 @@ tags:
 
 # Rootkit: Cos'è, Come Funziona e Perché è Così Difficile da Trovare
 
-Un rootkit è un software, o un insieme di componenti, progettato per nascondere la presenza di un attaccante, di altro malware o di determinate attività su un sistema — non necessariamente per mantenere accesso privilegiato di per sé, ma per far sì che quell'accesso, una volta ottenuto, resti invisibile il più a lungo possibile. Non è un malware con un obiettivo proprio come un [ransomware](https://hackita.it/articoli/ransomware/) o uno [spyware](https://hackita.it/articoli/spyware/): è l'infrastruttura di occultamento che permette ad altro malware — o a un intruso in carne e ossa — di restare invisibile.
+Un rootkit è un software, o un insieme di componenti, progettato per nascondere la presenza di un attaccante, di altro malware o di determinate attività su un sistema — non necessariamente per mantenere accesso privilegiato di per sé, ma per far sì che quell'accesso, una volta ottenuto, resti invisibile il più a lungo possibile. Non è un malware con un obiettivo proprio come un [ransomware](/articoli/ransomware/) o uno [spyware](/articoli/spyware/): è l'infrastruttura di occultamento che permette ad altro malware — o a un intruso in carne e ossa — di restare invisibile.
 
 Vale la pena chiarire subito una confusione comune: **rootkit non è sinonimo di persistenza**. La persistenza è la capacità di mantenere l'accesso a un sistema dopo un riavvio o altre modifiche; il rootkit riguarda l'occultamento di quell'accesso, non il fatto che sopravviva nel tempo. Un rootkit viene spesso usato per supportare la persistenza — nascondendo il meccanismo che la garantisce — ma le due funzioni restano concettualmente distinte, e un malware può avere l'una senza l'altra.
 
@@ -43,7 +43,7 @@ Da distinguere dal firmware rootkit c'è l'**hardware implant**: un componente f
 
 ## Come Viene Installato un Rootkit
 
-Un rootkit quasi mai è il primo passo di un attacco: prima serve un livello di accesso sufficiente a installarlo, che tipicamente arriva da altrove. I vettori più comuni sono un [trojan](https://hackita.it/articoli/trojan/) o altro malware già presente sul sistema che lo scarica come secondo stadio, lo sfruttamento di una vulnerabilità non corretta, credenziali amministrative compromesse, software piratato che lo nasconde al suo interno o, nei casi più rari, accesso fisico diretto al dispositivo. Una volta ottenuto l'accesso necessario, il livello a cui il rootkit si installa — user-mode, kernel-mode, boot o firmware — determina quanto sarà difficile trovarlo ed eliminarlo in seguito.
+Un rootkit quasi mai è il primo passo di un attacco: prima serve un livello di accesso sufficiente a installarlo, che tipicamente arriva da altrove. I vettori più comuni sono un [trojan](/articoli/trojan/) o altro malware già presente sul sistema che lo scarica come secondo stadio, lo sfruttamento di una vulnerabilità non corretta, credenziali amministrative compromesse, software piratato che lo nasconde al suo interno o, nei casi più rari, accesso fisico diretto al dispositivo. Una volta ottenuto l'accesso necessario, il livello a cui il rootkit si installa — user-mode, kernel-mode, boot o firmware — determina quanto sarà difficile trovarlo ed eliminarlo in seguito.
 
 ## Il Caso Sony BMG: un Rootkit Installato da un'Azienda Legittima
 
@@ -55,7 +55,7 @@ Il caso resta rilevante ancora oggi per una ragione precisa: dimostra che un roo
 
 ## Il Caso ZeroAccess: quando il Rootkit è Criminale fin dall'Inizio
 
-Se Sony BMG mostra come nasce un rootkit per errore, **ZeroAccess** mostra come viene costruito apposta. Scoperto nel 2011, questo trojan si diffondeva mascherato da crack o keygen per software piratato e, una volta eseguito, infettava il Master Boot Record del disco usando tecniche rootkit per restare invisibile agli antivirus. Il sistema compromesso diventava un nodo di un [botnet](https://hackita.it/articoli/botnet/) peer-to-peer stimato in almeno 9 milioni di sistemi nel suo picco, usato principalmente per due attività redditizie: mining di Bitcoin e click fraud pubblicitario, quest'ultimo capace di generare fino a 100.000 dollari al giorno per chi lo controllava. A differenza di Sony BMG, qui il rootkit non era un effetto collaterale di una protezione anticopia: era l'infrastruttura pensata fin dal primo giorno per rendere il resto dell'operazione criminale sostenibile su scala milionaria.
+Se Sony BMG mostra come nasce un rootkit per errore, **ZeroAccess** mostra come viene costruito apposta. Scoperto nel 2011, questo trojan si diffondeva mascherato da crack o keygen per software piratato e, una volta eseguito, infettava il Master Boot Record del disco usando tecniche rootkit per restare invisibile agli antivirus. Il sistema compromesso diventava un nodo di un [botnet](/articoli/botnet/) peer-to-peer stimato in almeno 9 milioni di sistemi nel suo picco, usato principalmente per due attività redditizie: mining di Bitcoin e click fraud pubblicitario, quest'ultimo capace di generare fino a 100.000 dollari al giorno per chi lo controllava. A differenza di Sony BMG, qui il rootkit non era un effetto collaterale di una protezione anticopia: era l'infrastruttura pensata fin dal primo giorno per rendere il resto dell'operazione criminale sostenibile su scala milionaria.
 
 ## Come Rilevare un Rootkit
 

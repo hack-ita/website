@@ -201,4 +201,4 @@ Non intrinsecamente, ma porta non-standard aperta è suspicious. Spesso indica s
 
 > **Disclaimer:** Tutti i comandi sono destinati esclusivamente all'uso in ambienti autorizzati. L'autore e HackIta declinano ogni responsabilità per usi impropri.
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

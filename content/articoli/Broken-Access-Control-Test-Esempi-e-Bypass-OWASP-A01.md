@@ -187,7 +187,7 @@ BFLA        → posso usare una funzione non autorizzata
 BAC         → categoria generale che comprende entrambi
 ```
 
-Per una metodologia dedicata agli identificatori consulta [IDOR](https://hackita.it/articoli/idor/).
+Per una metodologia dedicata agli identificatori consulta [IDOR](/articoli/idor/).
 
 ***
 
@@ -1071,7 +1071,7 @@ Questo test ha senso soltanto quando la libreria server accetta token non firmat
 
 La semplice modifica del payload non funziona se la firma viene verificata correttamente.
 
-Per algoritmi, chiavi, claim e bypass specifici consulta [JWT](https://hackita.it/articoli/jwt/).
+Per algoritmi, chiavi, claim e bypass specifici consulta [JWT](/articoli/jwt/).
 
 ***
 
@@ -1179,7 +1179,7 @@ Strumenti complementari:
 * Burp Comparer;
 * Match and Replace.
 
-Consulta anche [Burp Suite](https://hackita.it/articoli/burp-suite/).
+Consulta anche [Burp Suite](/articoli/burp-suite/).
 
 ***
 
@@ -1595,14 +1595,14 @@ curl -sk -i \
 
 ## Articoli Hackita correlati
 
-* [IDOR — Insecure Direct Object Reference](https://hackita.it/articoli/idor/)
-* [Auth e Access Control: guida completa](https://hackita.it/articoli/auth-access-control-guida-completa/)
-* [Privilege Escalation Web](https://hackita.it/articoli/privilege-escalation-web/)
-* [JWT: exploitation e bypass](https://hackita.it/articoli/jwt/)
-* [CORS Misconfiguration](https://hackita.it/articoli/cors-misconfiguration/)
-* [ffuf](https://hackita.it/articoli/ffuf/)
-* [Burp Suite](https://hackita.it/articoli/burp-suite/)
-* [Attacchi alle applicazioni web](https://hackita.it/articoli/attacchi-applicazioni-web/)
+* [IDOR — Insecure Direct Object Reference](/articoli/idor/)
+* [Auth e Access Control: guida completa](/articoli/auth-access-control-guida-completa/)
+* [Privilege Escalation Web](/articoli/privilege-escalation-web/)
+* [JWT: exploitation e bypass](/articoli/jwt/)
+* [CORS Misconfiguration](/articoli/cors-misconfiguration/)
+* [ffuf](/articoli/ffuf/)
+* [Burp Suite](/articoli/burp-suite/)
+* [Attacchi alle applicazioni web](/articoli/attacchi-applicazioni-web/)
 
 ***
 

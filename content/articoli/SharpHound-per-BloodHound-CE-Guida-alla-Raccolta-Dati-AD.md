@@ -21,7 +21,7 @@ tags:
 
 SharpHound CE è il collector ufficiale di BloodHound per gli ambienti Active Directory. Eseguito nel contesto di un utente di dominio, utilizza LDAP e le API native di Windows per raccogliere informazioni su utenti, gruppi, computer, sessioni, ACL e relazioni privilegiate.
 
-I risultati vengono salvati in file JSON, normalmente compressi in un archivio ZIP, da importare in [BloodHound](https://hackita.it/articoli/bloodhound/) CE. La piattaforma trasforma questi dati in un grafo di nodi e relazioni, permettendo di individuare configurazioni rischiose e attack path verso obiettivi ad alto valore, inclusi i gruppi Domain Admin.
+I risultati vengono salvati in file JSON, normalmente compressi in un archivio ZIP, da importare in [BloodHound](/articoli/bloodhound/) CE. La piattaforma trasforma questi dati in un grafo di nodi e relazioni, permettendo di individuare configurazioni rischiose e attack path verso obiettivi ad alto valore, inclusi i gruppi Domain Admin.
 
 In questa guida vedrai come eseguire SharpHound, scegliere i metodi di raccolta, utilizzare i flag principali, ridurre l’impatto dell’enumerazione e importare correttamente i dati in BloodHound CE.
 
@@ -215,7 +215,7 @@ Il file più pesante è quasi sempre `acls.json` — su domini grandi può arriv
 | Modifiche AD     | No                                    | Sì (Set-DomainObject, Add-DomainGroupMember) |
 | Stealth          | Meno (query LDAP massive)             | Più (query selettive)                        |
 
-**In pratica:** SharpHound per la mappa d'insieme, [PowerView](https://hackita.it/articoli/powerview/) per le query specifiche e le modifiche agli oggetti AD.
+**In pratica:** SharpHound per la mappa d'insieme, [PowerView](/articoli/powerview/) per le query specifiche e le modifiche agli oggetti AD.
 
 ***
 

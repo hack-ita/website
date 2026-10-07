@@ -238,7 +238,7 @@ ls -la /usr/bin/python3.8
 
 **Esempi:**
 
-**base64 con [SUID](https://hackita.it/articoli/suid/):**
+**base64 con [SUID](/articoli/suid/):**
 
 ```bash
 # Leggi /etc/shadow
@@ -483,7 +483,7 @@ export PATH=/tmp:$PATH
 # Root shell quando chiama "tar"!
 ```
 
-Se vuoi approfondire i top 100 comandi più usati di kali linux consulta la [lista dei top 100 comandi Linux](https://hackita.it/articoli/top-100-comandi-linux/).
+Se vuoi approfondire i top 100 comandi più usati di kali linux consulta la [lista dei top 100 comandi Linux](/articoli/top-100-comandi-linux/).
 
 ***
 
@@ -540,7 +540,7 @@ sudo docker run -v /:/mnt --rm -it alpine chroot /mnt sh
 
 🎓 **Cosa è successo:** Docker con sudo può montare filesystem host (`/`) nel container. `chroot /mnt` fa escape verso host.
 
-Per approfondire container escape techniques e Docker security, consulta [tecniche di escape da container Docker e Kubernetes](https://hackita.it/articoli/container-escape/).
+Per approfondire container escape techniques e Docker security, consulta [tecniche di escape da container Docker e Kubernetes](/articoli/container-escape/).
 
 ***
 
@@ -942,7 +942,7 @@ Estensione di GTFOBins che mostra exploitation via argument injection.
 
 Complementare a GTFOBins. Copre privilege escalation techniques oltre binary exploitation.
 
-Se vuoi una visione completa delle tecniche di privilege escalation Linux, combina GTFOBins con la nostra guida [comprehensive privilege escalation roadmap per Linux](https://hackita.it/articoli/linux-privesc/).
+Se vuoi una visione completa delle tecniche di privilege escalation Linux, combina GTFOBins con la nostra guida [comprehensive privilege escalation roadmap per Linux](/articoli/linux-privesc/).
 
 ***
 
@@ -1193,4 +1193,4 @@ L'autore di questo articolo e HackIta declinano ogni responsabilità per usi imp
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

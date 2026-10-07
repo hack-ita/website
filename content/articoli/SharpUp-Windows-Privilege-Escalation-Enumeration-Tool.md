@@ -44,8 +44,8 @@ SYSTEM
 | ------------------------------------------------- | ---------- | ---------------------------------------------------------------- |
 | SharpUp                                           | C#         | Ci sono vettori di local privesc tra i check portati da PowerUp? |
 | PowerUp                                           | PowerShell | Stesso obiettivo, coverage più ampia, più facilmente rilevato    |
-| [Seatbelt](https://hackita.it/articoli/seatbelt/) | C#         | Cosa c'è su questa macchina in generale? (host survey)           |
-| [winPEAS](https://hackita.it/articoli/winpeas/)   | C#/batch   | Enumerazione privesc molto più ampia di SharpUp                  |
+| [Seatbelt](/articoli/seatbelt/) | C#         | Cosa c'è su questa macchina in generale? (host survey)           |
+| [winPEAS](/articoli/winpeas/)   | C#/batch   | Enumerazione privesc molto più ampia di SharpUp                  |
 
 SharpUp e Seatbelt non fanno la stessa cosa: Seatbelt ti dà un quadro generale dell'host, SharpUp è mirato sui vettori di privilege escalation specifici che PowerUp sapeva già cercare. Un workflow tipico li usa in sequenza, non in alternativa.
 
@@ -390,7 +390,7 @@ Pass-the-Hash / lateral movement
 Enumerazione e attacco AD
 ```
 
-Per questi passi successivi: [Mimikatz](https://hackita.it/articoli/mimikatz/), [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/), [DCSync](https://hackita.it/articoli/dcsync/), [PsExec](https://hackita.it/articoli/psexec/). Non li duplico qui: SharpUp finisce quando finisce il local privilege escalation.
+Per questi passi successivi: [Mimikatz](/articoli/mimikatz/), [Pass-the-Hash](/articoli/pass-the-hash/), [DCSync](/articoli/dcsync/), [PsExec](/articoli/psexec/). Non li duplico qui: SharpUp finisce quando finisce il local privilege escalation.
 
 ## Execute-Assembly
 
@@ -413,7 +413,7 @@ In framework di post-exploitation compatibili con .NET, l'assembly può essere c
 
 **Nessun risultato con un check specifico** — verifica se il contesto lo esclude senza `audit`: rilancia con `audit <check>` per forzarlo.
 
-**"Nessuna vulnerabilità trovata"** — significa solo che *i check eseguiti* non hanno trovato condizioni, non che il sistema sia sicuro nel complesso. SharpUp copre un sottoinsieme mirato delle tecniche di PowerUp: per coverage più ampia serve [winPEAS](https://hackita.it/articoli/winpeas/) o PowerUp stesso.
+**"Nessuna vulnerabilità trovata"** — significa solo che *i check eseguiti* non hanno trovato condizioni, non che il sistema sia sicuro nel complesso. SharpUp copre un sottoinsieme mirato delle tecniche di PowerUp: per coverage più ampia serve [winPEAS](/articoli/winpeas/) o PowerUp stesso.
 
 **Nome del check rifiutato** — controlla la tabella sopra: i nomi sono case-sensitive e non hanno alias (`HijackableDLLs` non esiste, il check si chiama `ProcessDLLHijack`).
 

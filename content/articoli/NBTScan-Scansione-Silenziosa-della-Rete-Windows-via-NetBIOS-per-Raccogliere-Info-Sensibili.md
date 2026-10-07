@@ -99,7 +99,7 @@ printf "10.10.10.10\n10.10.10.20\n10.10.10.25\n" > targets.txt
 nbtscan -f targets.txt
 ```
 
-Utile quando il discovery L2 è già stato fatto (es. con [ARP-Scan](https://hackita.it/articoli/arp-scan/)): nbtscan diventa identificazione e priorità, non discovery puro. Assicurati che il file abbia un IP per riga senza spazi o CRLF residui.
+Utile quando il discovery L2 è già stato fatto (es. con [ARP-Scan](/articoli/arp-scan/)): nbtscan diventa identificazione e priorità, non discovery puro. Assicurati che il file abbia un IP per riga senza spazi o CRLF residui.
 
 ## Interpretare i Suffix NetBIOS
 
@@ -128,11 +128,11 @@ Il MAC `00-00-00-00-00-00` può comparire su Samba o sistemi non Windows: nbtsca
 nbtscan -v 10.10.10.0/24 | grep "<20>" | awk '{print $1}' > smb_targets.txt
 ```
 
-Ottieni una lista di IP con motivo, non una subnet a caso, da passare a tool SMB come [smbclient](https://hackita.it/articoli/smbclient/). Se l'output non è nel formato atteso, usa `-s` per un separatore custom e fai parsing robusto (vedi sezione successiva).
+Ottieni una lista di IP con motivo, non una subnet a caso, da passare a tool SMB come [smbclient](/articoli/smbclient/). Se l'output non è nel formato atteso, usa `-s` per un separatore custom e fai parsing robusto (vedi sezione successiva).
 
 ### Nomi NetBIOS come base per test di poisoning (solo lab)
 
-I nomi macchina raccolti sono utili anche per costruire scenari controllati legati a risoluzione nomi debole in LAN — lo step naturale successivo, sempre in ambiente autorizzato, è [Responder per LLMNR/NBT-NS/WPAD](https://hackita.it/articoli/responder/). In quel contesto conviene già pensare alle mitigazioni lato difesa: disabilitare LLMNR/NBNS dove non serve e abilitare SMB signing.
+I nomi macchina raccolti sono utili anche per costruire scenari controllati legati a risoluzione nomi debole in LAN — lo step naturale successivo, sempre in ambiente autorizzato, è [Responder per LLMNR/NBT-NS/WPAD](/articoli/responder/). In quel contesto conviene già pensare alle mitigazioni lato difesa: disabilitare LLMNR/NBNS dove non serve e abilitare SMB signing.
 
 ## Parsing e Automazione
 
@@ -147,7 +147,7 @@ head -5 nbtscan.csv
 10.10.10.25,DC01,<server>,<unknown>,00:0c:29:11:22:33
 ```
 
-Output senza header e con separatore scelto, pronto per filtri o pipeline verso strumenti successivi come [CrackMapExec/NetExec](https://hackita.it/articoli/crackmapexec/). `-s` non si combina con la modalità dump: per debug usa `-v` o `-d`.
+Output senza header e con separatore scelto, pronto per filtri o pipeline verso strumenti successivi come [CrackMapExec/NetExec](/articoli/crackmapexec/). `-s` non si combina con la modalità dump: per debug usa `-v` o `-d`.
 
 ## Errori Comuni
 
@@ -161,10 +161,10 @@ Output senza header e con separatore scelto, pronto per filtri o pipeline verso 
 
 nbtscan copre solo la NetBIOS name intelligence. Per il resto del workflow:
 
-* Discovery L2 più affidabile: [ARP-Scan](https://hackita.it/articoli/arp-scan/) o [Netdiscover](https://hackita.it/articoli/netdiscover/)
-* Enumerazione share e permessi SMB: [smbclient](https://hackita.it/articoli/smbclient/)
-* Posture SMB/AD e triage rapido: [CrackMapExec/NetExec](https://hackita.it/articoli/crackmapexec/)
-* Analisi del traffico generato: [Wireshark](https://hackita.it/articoli/wireshark/)
+* Discovery L2 più affidabile: [ARP-Scan](/articoli/arp-scan/) o [Netdiscover](/articoli/netdiscover/)
+* Enumerazione share e permessi SMB: [smbclient](/articoli/smbclient/)
+* Posture SMB/AD e triage rapido: [CrackMapExec/NetExec](/articoli/crackmapexec/)
+* Analisi del traffico generato: [Wireshark](/articoli/wireshark/)
 
 nbtscan non sostituisce uno scanner di porte né un framework SMB: resta uno strumento mirato su NetBIOS.
 

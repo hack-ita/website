@@ -20,11 +20,11 @@ tags:
 
 # atexec.py — Esecuzione Remota via Task Scheduler con Impacket
 
-`atexec.py` è un tool di [Impacket](https://hackita.it/articoli/impacket/) che ti fa eseguire **un singolo comando alla volta** su una macchina Windows remota, usando le tue credenziali (password, hash NTLM o ticket Kerberos). Non ti dà una shell interattiva: gli dai un comando, quello parte sul target, e ti ritorna solo l'output di quel comando. Poi la connessione finisce. Se vuoi lanciare un altro comando, richiami di nuovo `atexec.py`.
+`atexec.py` è un tool di [Impacket](/articoli/impacket/) che ti fa eseguire **un singolo comando alla volta** su una macchina Windows remota, usando le tue credenziali (password, hash NTLM o ticket Kerberos). Non ti dà una shell interattiva: gli dai un comando, quello parte sul target, e ti ritorna solo l'output di quel comando. Poi la connessione finisce. Se vuoi lanciare un altro comando, richiami di nuovo `atexec.py`.
 
 Il modo in cui lo fa: sfrutta il **Task Scheduler** di Windows (lo stesso servizio che gestisce le attività pianificate) da remoto, tramite RPC (protocollo MS-TSCH). In pratica crea una task pianificata sul target che esegue il tuo comando, aspetta che finisca, legge l'output e poi cancella la task. Tutto tramite SMB, quindi ti basta la porta 445 aperta.
 
-A differenza di [psexec.py](https://hackita.it/articoli/psexec/) che crea un servizio Windows, o di [wmiexec.py](https://hackita.it/articoli/wmiexec/) che usa WMI e ti dà qualcosa di più simile a una shell, atexec passa dallo [Scheduled Task](https://hackita.it/articoli/scheduled-task/) — e per questo il comando gira nel contesto `NT AUTHORITY\SYSTEM`, cioè con i massimi privilegi sulla macchina.
+A differenza di [psexec.py](/articoli/psexec/) che crea un servizio Windows, o di [wmiexec.py](/articoli/wmiexec/) che usa WMI e ti dà qualcosa di più simile a una shell, atexec passa dallo [Scheduled Task](/articoli/scheduled-task/) — e per questo il comando gira nel contesto `NT AUTHORITY\SYSTEM`, cioè con i massimi privilegi sulla macchina.
 
 Riferimento ufficiale: [Impacket su GitHub — fortra/impacket](https://github.com/fortra/impacket/blob/master/examples/atexec.py)
 
@@ -47,9 +47,9 @@ Ogni volta che lanci `atexec.py`, il tool fa tutto il ciclo da capo — non c'è
 | Tool                                               | Protocollo                   | Porta      | Tipo output       | Artefatti principali                       |
 | -------------------------------------------------- | ---------------------------- | ---------- | ----------------- | ------------------------------------------ |
 | `atexec.py`                                        | MS-TSCH (Task Scheduler RPC) | 445        | Singolo comando   | Task scheduler creato/eliminato, file .tmp |
-| [wmiexec.py](https://hackita.it/articoli/wmiexec/) | WMI / DCOM                   | 135 + alto | Semi-interattivo  | Processo WMI, nessun servizio              |
-| [smbexec.py](https://hackita.it/articoli/smbexec/) | SMB (servizio)               | 445        | Semi-interattivo  | Servizio creato/eliminato                  |
-| [psexec.py](https://hackita.it/articoli/psexec/)   | SMB (servizio + exec)        | 445        | Shell interattiva | Servizio + binario su ADMIN$               |
+| [wmiexec.py](/articoli/wmiexec/) | WMI / DCOM                   | 135 + alto | Semi-interattivo  | Processo WMI, nessun servizio              |
+| [smbexec.py](/articoli/smbexec/) | SMB (servizio)               | 445        | Semi-interattivo  | Servizio creato/eliminato                  |
+| [psexec.py](/articoli/psexec/)   | SMB (servizio + exec)        | 445        | Shell interattiva | Servizio + binario su ADMIN$               |
 | `dcomexec.py`                                      | DCOM                         | 135 + alto | Semi-interattivo  | Oggetto DCOM istanziato                    |
 
 ## Sintassi e opzioni
@@ -96,7 +96,7 @@ impacket-atexec ./administrator:Password123@10.10.10.5 'whoami'
 
 ### Pass-the-Hash
 
-Con l'NT hash ottenuto via [Mimikatz](https://hackita.it/articoli/mimikatz/) o [DCSync](https://hackita.it/articoli/dcsync/) — non serve la password in chiaro:
+Con l'NT hash ottenuto via [Mimikatz](/articoli/mimikatz/) o [DCSync](/articoli/dcsync/) — non serve la password in chiaro:
 
 ```bash
 # LM hash può essere vuoto (aad3b435...)
@@ -106,7 +106,7 @@ impacket-atexec -hashes aad3b435b51404eeaad3b435b51404ee:NThashQUI corp.local/ad
 impacket-atexec -hashes :NThashQUI corp.local/administrator@10.10.10.5 'whoami'
 ```
 
-Approfondisci la tecnica in [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/).
+Approfondisci la tecnica in [Pass-the-Hash](/articoli/pass-the-hash/).
 
 ### Kerberos (Pass-the-Ticket)
 
@@ -116,7 +116,7 @@ impacket-atexec -k -no-pass corp.local/administrator@dc01.corp.local 'whoami'
 # ATTENZIONE: usa sempre l'FQDN con Kerberos, non l'IP
 ```
 
-Se ottieni accesso sufficiente alla memoria di un host (es. [dump del TGT](https://hackita.it/articoli/tgt-kerberos/)), puoi verificare la presenza di ticket Kerberos riutilizzabili e valutare un successivo Pass-the-Ticket con atexec al posto della password.
+Se ottieni accesso sufficiente alla memoria di un host (es. [dump del TGT](/articoli/tgt-kerberos/)), puoi verificare la presenza di ticket Kerberos riutilizzabili e valutare un successivo Pass-the-Ticket con atexec al posto della password.
 
 ### Reverse shell tramite atexec
 
@@ -161,9 +161,9 @@ atexec è la scelta giusta quando:
 
 Non è la scelta giusta quando:
 
-* Ti serve una shell interattiva → usa [wmiexec.py](https://hackita.it/articoli/wmiexec/) o evil-winrm
+* Ti serve una shell interattiva → usa [wmiexec.py](/articoli/wmiexec/) o evil-winrm
 * L'ambiente blocca Task Scheduler via RPC → valuta `dcomexec.py` (stesso principio, protocollo DCOM)
-* Hai bisogno di output in tempo reale → usa [smbexec.py](https://hackita.it/articoli/smbexec/)
+* Hai bisogno di output in tempo reale → usa [smbexec.py](/articoli/smbexec/)
 
 ## Requisiti
 
@@ -209,7 +209,7 @@ Riferimento MITRE: [T1053.005 — Scheduled Task](https://attack.mitre.org/techn
 **Mitigazioni per ridurre il rumore:**
 
 * Preferisci un singolo comando utile invece di più comandi separati — ogni esecuzione genera la stessa sequenza di eventi
-* In ambienti con EDR attivo considera [wmiexec.py](https://hackita.it/articoli/wmiexec/) con `--nooutput` o metodi nativi LOLBin
+* In ambienti con EDR attivo considera [wmiexec.py](/articoli/wmiexec/) con `--nooutput` o metodi nativi LOLBin
 
 **Su "stealth":** atexec evita la creazione di un servizio (a differenza di psexec/smbexec), ma non è invisibile — genera comunque task con nome casuale, esecuzione come SYSTEM, XML caratteristico e file temporaneo a 8 lettere. Il codice ufficiale conferma questi artefatti, e MITRE include creazione, esecuzione e cancellazione dei task tra i segnali da correlare.
 

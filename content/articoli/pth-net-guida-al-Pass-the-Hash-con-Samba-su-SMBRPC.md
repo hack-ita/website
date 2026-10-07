@@ -28,7 +28,7 @@ tags:
 
 Il risultato si chiama **pth-net**, ma il binario reale spesso resta `net` — cambia solo il meccanismo di autenticazione che accetta.
 
-Collegamento diretto con [pass-the-hash](https://hackita.it/articoli/pass-the-hash/): pth-net è uno dei tanti *client* che implementano la tecnica, insieme a [impacket](https://hackita.it/articoli/impacket/) e [crackmapexec](https://hackita.it/articoli/crackmapexec/)/[netexec](https://hackita.it/articoli/netexec/).
+Collegamento diretto con [pass-the-hash](/articoli/pass-the-hash/): pth-net è uno dei tanti *client* che implementano la tecnica, insieme a [impacket](/articoli/impacket/) e [crackmapexec](/articoli/crackmapexec/)/[netexec](/articoli/netexec/).
 
 ## Differenza tra net e pth-net
 
@@ -63,7 +63,7 @@ sessione SMB stabilita
 chiamate RPC incapsulate su named pipe SMB (\PIPE\srvsvc, \PIPE\samr, ecc.)
 ```
 
-pth-net semplicemente ti evita il passaggio "calcola l'hash dalla password": glielo passi già pronto (magari estratto con [mimikatz](https://hackita.it/articoli/mimikatz/) o via secretsdump di [impacket](https://hackita.it/articoli/impacket/)) e lui lo usa direttamente nello scambio di autenticazione.
+pth-net semplicemente ti evita il passaggio "calcola l'hash dalla password": glielo passi già pronto (magari estratto con [mimikatz](/articoli/mimikatz/) o via secretsdump di [impacket](/articoli/impacket/)) e lui lo usa direttamente nello scambio di autenticazione.
 
 ## Prerequisiti
 
@@ -236,7 +236,7 @@ SYSVOL         Disk      Logon server share
 Backups        Disk      Backup share
 ```
 
-A cosa serve: ti dice dove puoi entrare a curiosare. Share non standard come `Backups` sono spesso una miniera — script con password hardcoded, backup di configurazioni, file .xml/.config con credenziali. Da qui passi naturalmente a [smbclient](https://hackita.it/articoli/smbclient/) per navigarci dentro.
+A cosa serve: ti dice dove puoi entrare a curiosare. Share non standard come `Backups` sono spesso una miniera — script con password hardcoded, backup di configurazioni, file .xml/.config con credenziali. Da qui passi naturalmente a [smbclient](/articoli/smbclient/) per navigarci dentro.
 
 ### net rpc file — file aperti in quel momento
 
@@ -389,7 +389,7 @@ pth-net rpc group addmem "Domain Admins" hackita -U 'hackita.lab/admin%:edc1fb55
 
 Nessun output in caso di successo (verifica con `net rpc group members "Domain Admins"` subito dopo per confermare). In caso di permessi insufficienti: `NT_STATUS_ACCESS_DENIED`.
 
-Aggiunge l'utente `hackita` al gruppo `Domain Admins`. Serve un account con diritti di scrittura su quel gruppo (es. compromesso via [ForceChangePassword](https://hackita.it/articoli/active-directory/) o già Domain Admin). Stesso principio funziona per rimuovere un membro (`delmem` al posto di `addmem`).
+Aggiunge l'utente `hackita` al gruppo `Domain Admins`. Serve un account con diritti di scrittura su quel gruppo (es. compromesso via [ForceChangePassword](/articoli/active-directory/) o già Domain Admin). Stesso principio funziona per rimuovere un membro (`delmem` al posto di `addmem`).
 
 **Reset password di un altro utente** (abuso di `ForceChangePassword`/`GenericAll` su un account target):
 
@@ -417,7 +417,7 @@ Microsoft Windows [Version 10.0.17763.1]
 C:\Windows\system32>
 ```
 
-Se il tuo obiettivo non è enumerare ma **eseguire codice**, pth-winexe (o meglio ancora `wmiexec.py`/`psexec.py` di [impacket](https://hackita.it/articoli/impacket/), più moderni e mantenuti) è lo strumento giusto, non pth-net.
+Se il tuo obiettivo non è enumerare ma **eseguire codice**, pth-winexe (o meglio ancora `wmiexec.py`/`psexec.py` di [impacket](/articoli/impacket/), più moderni e mantenuti) è lo strumento giusto, non pth-net.
 
 ## Flusso operativo tipico
 
@@ -437,11 +437,11 @@ net rpc service     → se hai privilegi, verifica servizi controllabili
 
 ## Quando NON usare pth-net
 
-* **Devi fare spraying dell'hash su decine/centinaia di host** → usa [netexec](https://hackita.it/articoli/netexec/), pensato per il multi-target
-* **Ti serve una shell interattiva completa** → [evilwinrm](https://hackita.it/articoli/evilwinrm/) (se WinRM è aperto) o [wmiexec](https://hackita.it/articoli/wmiexec/)/[psexec](https://hackita.it/articoli/psexec/) via [impacket](https://hackita.it/articoli/impacket/)
-* **Hai già la password in chiaro** → usa [rpcclient](https://hackita.it/articoli/rpcclient/) o `net` originale, non serve pth
+* **Devi fare spraying dell'hash su decine/centinaia di host** → usa [netexec](/articoli/netexec/), pensato per il multi-target
+* **Ti serve una shell interattiva completa** → [evilwinrm](/articoli/evilwinrm/) (se WinRM è aperto) o [wmiexec](/articoli/wmiexec/)/[psexec](/articoli/psexec/) via [impacket](/articoli/impacket/)
+* **Hai già la password in chiaro** → usa [rpcclient](/articoli/rpcclient/) o `net` originale, non serve pth
 * **Il target è Kerberos-only** → NTLM è rifiutato a monte, serve un approccio via ticket
-* **Devi fare relay, non solo autenticazione diretta** → guarda ntlmrelayx di [impacket](https://hackita.it/articoli/impacket/)
+* **Devi fare relay, non solo autenticazione diretta** → guarda ntlmrelayx di [impacket](/articoli/impacket/)
 
 ***
 
@@ -457,7 +457,7 @@ Domain SID: S-1-5-21-3623811015-3361044348-30300820
 Cosa significa riga per riga:
 
 * **Domain Name**: nome NetBIOS del dominio, ti conferma che l'autenticazione è andata a buon fine
-* **Domain SID**: identificatore univoco del dominio. Utile per costruire manualmente SID di utenti/gruppi noti (es. `S-1-5-21-...-512` = Domain Admins) quando non hai [bloodhound](https://hackita.it/articoli/bloodhound/) o altri tool di mappatura a disposizione
+* **Domain SID**: identificatore univoco del dominio. Utile per costruire manualmente SID di utenti/gruppi noti (es. `S-1-5-21-...-512` = Domain Admins) quando non hai [bloodhound](/articoli/bloodhound/) o altri tool di mappatura a disposizione
 
 ***
 
@@ -520,7 +520,7 @@ Un singolo evento isolato non basta a identificare un Pass-the-Hash: va **correl
 * segmentazione di rete: porta 445 raggiungibile solo da reti/jump host amministrativi
 * tiering degli account amministrativi (Tier 0/1/2)
 
-Per approfondire la difesa vedi anche [windows-privilege-escalation](https://hackita.it/articoli/windows-privilege-escalation/) e [active-directory](https://hackita.it/articoli/active-directory/).
+Per approfondire la difesa vedi anche [windows-privilege-escalation](/articoli/windows-privilege-escalation/) e [active-directory](/articoli/active-directory/).
 
 ***
 
@@ -533,7 +533,7 @@ Sì, l'autenticazione NTLM (v1/v2) è quella intercettata dalla libreria pth-too
 Serve il nome utente (o il RID se stai bypassando la risoluzione nome→SID), il SID da solo non è sufficiente per l'header di autenticazione NTLM.
 
 **pth-net funziona su share SMB con Kerberos-only enforcement?**
-No: se il target accetta solo Kerberos e ha disabilitato NTLM come meccanismo di autenticazione, Pass-the-Hash via NTLM (quindi anche pth-net) non funziona — serve un approccio diverso (Pass-the-Ticket, con [kerberos](https://hackita.it/articoli/kerberos/)).
+No: se il target accetta solo Kerberos e ha disabilitato NTLM come meccanismo di autenticazione, Pass-the-Hash via NTLM (quindi anche pth-net) non funziona — serve un approccio diverso (Pass-the-Ticket, con [kerberos](/articoli/kerberos/)).
 
 **È legale usare pth-net?**
 Sì, in laboratori autorizzati, CTF, piattaforme come Hack The Box o in un pentest con autorizzazione scritta. Fuori da questi contesti è accesso abusivo a sistema informatico.
@@ -559,4 +559,4 @@ Sì, in laboratori autorizzati, CTF, piattaforme come Hack The Box o in un pente
 
 `pth-net` è uno strumento "vecchia scuola" ma ancora estremamente utile quando serve enumerazione RPC precisa con un hash NTLM, senza il sovraccarico di tool più moderni. Conoscerlo bene ti dà anche una comprensione più profonda di *come* funziona Pass-the-Hash sotto al cofano — cosa che NetExec o Impacket ti nascondono dietro un'interfaccia comoda.
 
-Per continuare lo studio: [pass-the-hash](https://hackita.it/articoli/pass-the-hash/), [impacket](https://hackita.it/articoli/impacket/), [netexec](https://hackita.it/articoli/netexec/), [crackmapexec](https://hackita.it/articoli/crackmapexec/), [rpcclient](https://hackita.it/articoli/rpcclient/), [smb](https://hackita.it/articoli/smb/), [bloodhound](https://hackita.it/articoli/bloodhound/), [responder](https://hackita.it/articoli/responder/).
+Per continuare lo studio: [pass-the-hash](/articoli/pass-the-hash/), [impacket](/articoli/impacket/), [netexec](/articoli/netexec/), [crackmapexec](/articoli/crackmapexec/), [rpcclient](/articoli/rpcclient/), [smb](/articoli/smb/), [bloodhound](/articoli/bloodhound/), [responder](/articoli/responder/).

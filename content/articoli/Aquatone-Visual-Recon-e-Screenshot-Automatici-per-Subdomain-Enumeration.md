@@ -123,7 +123,7 @@ Salta la fase di port scanning e fa solo screenshot degli URL forniti.
 seq 1 254 | sed 's/^/http:\/\/172.16.0./' | aquatone -ports 80,443,8080 -out internal_recon/
 ```
 
-Screenshot di tutta una subnet /24 su porte web. Perfetto dopo un [pivoting](https://hackita.it/articoli/sshuttle/) con SSHuttle.
+Screenshot di tutta una subnet /24 su porte web. Perfetto dopo un [pivoting](/articoli/sshuttle/) con SSHuttle.
 
 ***
 
@@ -198,7 +198,7 @@ cat external_assets.txt | aquatone -out scan_$(date +%Y%m%d)/
 
 **Flusso:**
 
-[Subfinder](https://hackita.it/articoli/subfinder/) → [Httpx](https://hackita.it/articoli/httpx/) → **Aquatone (visual triage)** → [Nuclei](https://hackita.it/articoli/nuclei/) (vuln scan su target selezionati)
+[Subfinder](/articoli/subfinder/) → [Httpx](/articoli/httpx/) → **Aquatone (visual triage)** → [Nuclei](/articoli/nuclei/) (vuln scan su target selezionati)
 
 | Tool              | Screenshot | Report HTML      | Port scan | Speed |
 | ----------------- | ---------- | ---------------- | --------- | ----- |
@@ -299,4 +299,4 @@ Sì, genera gli IP e pipali in Aquatone.
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

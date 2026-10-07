@@ -35,7 +35,7 @@ Per capire il comportamento di un worm si può usare un modello concettuale in c
 
 ## Worm vs Virus: la Differenza che Conta
 
-È la confusione più comune sull'argomento, e la distinzione è netta. Un [virus](https://hackita.it/articoli/virus-informatico/) ha bisogno di un file ospite a cui agganciarsi e della sua esecuzione, di solito innescata da un utente che lo apre. Un worm non ha bisogno di un file ospite: è un programma completo e indipendente che si copia da solo da un sistema all'altro, tipicamente sfruttando una vulnerabilità di rete o i contatti trovati sul dispositivo infetto — anche se, a seconda del vettore, alcune modalità di diffusione (come l'apertura di un allegato email infetto) restano legate a un'azione su un sistema di destinazione.
+È la confusione più comune sull'argomento, e la distinzione è netta. Un [virus](/articoli/virus-informatico/) ha bisogno di un file ospite a cui agganciarsi e della sua esecuzione, di solito innescata da un utente che lo apre. Un worm non ha bisogno di un file ospite: è un programma completo e indipendente che si copia da solo da un sistema all'altro, tipicamente sfruttando una vulnerabilità di rete o i contatti trovati sul dispositivo infetto — anche se, a seconda del vettore, alcune modalità di diffusione (come l'apertura di un allegato email infetto) restano legate a un'azione su un sistema di destinazione.
 
 |                         | Worm                                                                    | Virus                              |
 | ----------------------- | ----------------------------------------------------------------------- | ---------------------------------- |
@@ -44,7 +44,7 @@ Per capire il comportamento di un worm si può usare un modello concettuale in c
 | Azione umana necessaria | Dipende dal vettore — spesso nessuna, a volte l'apertura di un allegato | Sì — deve eseguire il file infetto |
 | Velocità di diffusione  | Molto alta                                                              | Legata all'azione umana            |
 
-In pratica: un virus è un passeggero che aspetta un passaggio, un worm guida la propria macchina. Entrambi sono sottocategorie di [malware](https://hackita.it/articoli/malware/), ma il modo in cui si spostano è opposto.
+In pratica: un virus è un passeggero che aspetta un passaggio, un worm guida la propria macchina. Entrambi sono sottocategorie di [malware](/articoli/malware/), ma il modo in cui si spostano è opposto.
 
 ## Come si Diffonde un Worm
 
@@ -65,7 +65,7 @@ I worm sfruttano essenzialmente tre vie di propagazione, spesso combinandole:
 
 ## Cosa Fa un Worm Dopo l'Infezione
 
-La diffusione è solo il mezzo: il danno reale dipende dal **payload**, la parte del worm che esegue l'azione dannosa vera e propria. Alcuni worm hanno un payload distruttivo (cancellano o cifrano file), altri installano una backdoor che apre il sistema a ulteriori attacchi, altri ancora trasformano il dispositivo in parte di una **[botnet](https://hackita.it/articoli/botnet/)** — una rete di macchine compromesse controllate da remoto. In molti casi, però, il danno più grande non è nemmeno nel payload: è la diffusione stessa. Un worm che si replica senza controllo consuma banda e risorse, saturando reti aziendali intere fino a mandarle in tilt anche senza un payload esplicitamente distruttivo.
+La diffusione è solo il mezzo: il danno reale dipende dal **payload**, la parte del worm che esegue l'azione dannosa vera e propria. Alcuni worm hanno un payload distruttivo (cancellano o cifrano file), altri installano una backdoor che apre il sistema a ulteriori attacchi, altri ancora trasformano il dispositivo in parte di una **[botnet](/articoli/botnet/)** — una rete di macchine compromesse controllate da remoto. In molti casi, però, il danno più grande non è nemmeno nel payload: è la diffusione stessa. Un worm che si replica senza controllo consuma banda e risorse, saturando reti aziendali intere fino a mandarle in tilt anche senza un payload esplicitamente distruttivo.
 
 ## Come si Propaga un Worm in una Rete Aziendale
 
@@ -79,8 +79,8 @@ Alcuni segnali valgono per un utente qualunque: rallentamenti improvvisi, consum
 
 Per collocare bene il worm nella famiglia malware, conviene chiarire due confini che spesso si sovrappongono:
 
-* Un [trojan](https://hackita.it/articoli/trojan/) non si replica affatto: si finge software legittimo per farsi installare dall'utente. Il worm è l'opposto — non chiede permesso a nessuno.
-* Il [ransomware](https://hackita.it/articoli/ransomware/) non è definito da come si diffonde ma da cosa fa (cifra i file e chiede un riscatto): può quindi *usare* un meccanismo da worm per propagarsi. WannaCry è proprio questo — un ransomware con capacità di worm, il che spiega perché fece così tanti danni così in fretta.
+* Un [trojan](/articoli/trojan/) non si replica affatto: si finge software legittimo per farsi installare dall'utente. Il worm è l'opposto — non chiede permesso a nessuno.
+* Il [ransomware](/articoli/ransomware/) non è definito da come si diffonde ma da cosa fa (cifra i file e chiede un riscatto): può quindi *usare* un meccanismo da worm per propagarsi. WannaCry è proprio questo — un ransomware con capacità di worm, il che spiega perché fece così tanti danni così in fretta.
 
 ## I Worm più Famosi della Storia
 

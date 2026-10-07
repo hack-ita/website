@@ -294,7 +294,7 @@ done | grep "\[+\]"
 
 **Una chiave = accesso a 20+ server!**
 
-Per approfondire automation di lateral movement, consulta [scripting per automated lateral movement in Linux](https://hackita.it/articoli/linux-lateral-movement-automation/).
+Per approfondire automation di lateral movement, consulta [scripting per automated lateral movement in Linux](/articoli/linux-lateral-movement-automation/).
 
 ***
 
@@ -360,7 +360,7 @@ ssh john@target
 
 ***
 
-O in alternativa nache hashcat, e si abbiamo entrambi gli articoli, clicca [qui per hashcat ](https://hackita.it/articoli/hashcat/)e [qui per john the ripper.](https://hackita.it/articoli/john-the-ripper/)
+O in alternativa nache hashcat, e si abbiamo entrambi gli articoli, clicca [qui per hashcat ](/articoli/hashcat/)e [qui per john the ripper.](/articoli/john-the-ripper/)
 
 ### Key correlation (matching keys to hosts)
 
@@ -463,7 +463,7 @@ ls -la ~/.ssh/
 command="/usr/local/bin/backup.sh",no-port-forwarding,no-x11-forwarding ssh-rsa AAAAB3...
 ```
 
-Per approfondire SSH hardening, leggi [best practices per SSH security in enterprise](https://hackita.it/articoli/ssh-security-hardening/).
+Per approfondire SSH hardening, leggi [best practices per SSH security in enterprise](/articoli/ssh-security-hardening/).
 
 ***
 
@@ -583,4 +583,4 @@ SSH-KeyHunter è tool per **security research e penetration testing autorizzato*
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

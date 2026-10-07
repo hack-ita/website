@@ -22,7 +22,7 @@ tags:
 
 ## Introduzione
 
-Feroxbuster è uno scanner di directory e file web scritto in Rust con ricorsione automatica, link extraction e resume capability. Si posiziona tra [Nmap](https://hackita.it/articoli/nmap/) service detection e exploitation: dopo aver identificato porte HTTP/HTTPS aperte, Feroxbuster enumera endpoint nascosti (admin panel, backup file, API routes, config esposti) che diventano entry point per privilege escalation o data exfiltration.
+Feroxbuster è uno scanner di directory e file web scritto in Rust con ricorsione automatica, link extraction e resume capability. Si posiziona tra [Nmap](/articoli/nmap/) service detection e exploitation: dopo aver identificato porte HTTP/HTTPS aperte, Feroxbuster enumera endpoint nascosti (admin panel, backup file, API routes, config esposti) che diventano entry point per privilege escalation o data exfiltration.
 
 La kill chain tipica: Reconnaissance (SpiderFoot/Amass) → Port Scan (Nmap) → **Content Discovery (Feroxbuster)** → Vulnerability Scanning (Nikto/Nuclei) → Exploitation (Metasploit/manual).
 
@@ -401,7 +401,7 @@ curl http://ctf-challenge.com/admin/backup/flag.txt
 **COSA FARE SE FALLISCE:**
 
 * Nessun risultato? Cambia wordlist: prova `directory-list-2.3-medium.txt` (220k entries)
-* 403 ovunque? Testa [bypass tecniche](https://hackita.it/articoli/bypass/): `X-Original-URL`, `X-Rewrite-URL` headers
+* 403 ovunque? Testa [bypass tecniche](/articoli/bypass/): `X-Original-URL`, `X-Rewrite-URL` headers
 * Timeout? Aumenta `--timeout 20`
 
 ### Scenario 2: Enterprise Web App - Admin Panel Discovery
@@ -594,7 +594,7 @@ hydra -L usernames.txt -P cracked_passwords.txt ssh://target.com
 # → SSH access con user "developer"
 
 # STEP 8: Privilege Escalation (varia)
-# Pivot interno con [Chisel](https://hackita.it/articoli/chisel/) + [LinPEAS](https://hackita.it/articoli/linpeas/)
+# Pivot interno con [Chisel](/articoli/chisel/) + [LinPEAS](/articoli/linpeas/)
 ```
 
 **Risultato:** Accesso SSH → pivot rete interna → Active Directory compromise.
@@ -1049,4 +1049,4 @@ Questo contenuto è esclusivamente per penetration testing autorizzato e formazi
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

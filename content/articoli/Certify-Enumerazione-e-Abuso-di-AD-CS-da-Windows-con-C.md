@@ -17,9 +17,9 @@ tags:
 
 # Certify 2.0: Guida Completa a AD CS Enumeration e Abuse da Windows
 
-**Certify** è il tool C# di GhostPack per enumerare e verificare configurazioni vulnerabili in **Active Directory Certificate Services (AD CS)** direttamente da Windows. La versione 2.0 usa i comandi `enum-cas`, `enum-templates`, `request`, `request-agent`, `request-download`, `manage-ca` e `manage-template`; identifica condizioni legate alle tecniche ESC1–ESC16 e restituisce i certificati in formato **PFX Base64**, utilizzabile direttamente con [Rubeus](https://hackita.it/articoli/rubeus/).
+**Certify** è il tool C# di GhostPack per enumerare e verificare configurazioni vulnerabili in **Active Directory Certificate Services (AD CS)** direttamente da Windows. La versione 2.0 usa i comandi `enum-cas`, `enum-templates`, `request`, `request-agent`, `request-download`, `manage-ca` e `manage-template`; identifica condizioni legate alle tecniche ESC1–ESC16 e restituisce i certificati in formato **PFX Base64**, utilizzabile direttamente con [Rubeus](/articoli/rubeus/).
 
-È il complemento Windows-native di [Certipy](https://hackita.it/articoli/certipy/): Certify è ideale quando hai una sessione Windows nel dominio e vuoi analizzare AD CS senza installare Python, mentre Certipy rimane più comodo da Linux e per workflow come NTLM relay, autenticazione e Shadow Credentials.
+È il complemento Windows-native di [Certipy](/articoli/certipy/): Certify è ideale quando hai una sessione Windows nel dominio e vuoi analizzare AD CS senza installare Python, mentre Certipy rimane più comodo da Linux e per workflow come NTLM relay, autenticazione e Shadow Credentials.
 
 ***
 
@@ -36,7 +36,7 @@ Per capire il suo ruolo servono quattro concetti:
 
 Una misconfiguration può quindi trasformare un normale diritto di enrollment in un percorso di privilege escalation: il certificato emesso dalla CA è una credenziale valida e può consentire l’autenticazione come un altro account.
 
-Per la panoramica completa delle tecniche consulta [AD CS ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16/) e la guida agli [EKU e OID di AD CS](https://hackita.it/articoli/adcs-eku-oid-offensive/).
+Per la panoramica completa delle tecniche consulta [AD CS ESC1–ESC16](/articoli/adcs-esc1-esc16/) e la guida agli [EKU e OID di AD CS](/articoli/adcs-eku-oid-offensive/).
 
 ***
 
@@ -241,7 +241,7 @@ Controlla soprattutto:
 * ACL modificabili da utenti non privilegiati;
 * oggetti PKI con `WriteProperty`, `WriteDacl`, `WriteOwner` o ownership anomala.
 
-Approfondimento: [ESC13 tramite Issuance Policy OID](https://hackita.it/articoli/esc13-adcs/).
+Approfondimento: [ESC13 tramite Issuance Policy OID](/articoli/esc13-adcs/).
 
 ***
 
@@ -317,7 +317,7 @@ Get-ADUser Administrator -Properties objectSid |
 
 Certify 2.0 restituisce un blocco `Certificate (PFX)` codificato Base64. Non è necessario passare da OpenSSL, salvo richiesta esplicita di output legacy con `--output-pem`.
 
-Approfondimento: [ESC1 AD CS](https://hackita.it/articoli/esc1-adcs/).
+Approfondimento: [ESC1 AD CS](/articoli/esc1-adcs/).
 
 ***
 
@@ -365,7 +365,7 @@ Se il PFX dell’Enrollment Agent è protetto da password, aggiungi:
 --agent-pass 'PasswordPFX'
 ```
 
-Approfondimento sugli EKU: [AD CS EKU e OID](https://hackita.it/articoli/adcs-eku-oid-offensive/).
+Approfondimento sugli EKU: [AD CS EKU e OID](/articoli/adcs-eku-oid-offensive/).
 
 ***
 
@@ -404,7 +404,7 @@ Certify 2.0 include `manage-template` per gestire impostazioni e ACL durante tes
 # --write-dacl <SID>
 ```
 
-Le modifiche ai template devono essere concordate prima del test, documentate e ripristinate subito dopo la prova. Per un workflow completo e reversibile consulta [ESC4 AD CS Template Hijacking](https://hackita.it/articoli/esc4-adcs/).
+Le modifiche ai template devono essere concordate prima del test, documentate e ripristinate subito dopo la prova. Per un workflow completo e reversibile consulta [ESC4 AD CS Template Hijacking](/articoli/esc4-adcs/).
 
 ### ESC7 — Ruoli delegati sulla CA
 
@@ -438,7 +438,7 @@ Certify 2.0 può gestire template pubblicati, ruoli e richieste pending tramite 
   --private-key <BASE64_PRIVATE_KEY>
 ```
 
-Approfondimento: [ESC7 Manage CA](https://hackita.it/articoli/esc7-adcs/).
+Approfondimento: [ESC7 Manage CA](/articoli/esc7-adcs/).
 
 ***
 
@@ -477,9 +477,9 @@ Per ESC15 in un laboratorio non aggiornato, Certify 2.0 supporta `--application-
 
 Approfondimenti:
 
-* [ESC6 AD CS](https://hackita.it/articoli/esc6-adcs/)
-* [ESC9 AD CS](https://hackita.it/articoli/esc9-adcs/)
-* [ESC16 AD CS](https://hackita.it/articoli/esc16-adcs/)
+* [ESC6 AD CS](/articoli/esc6-adcs/)
+* [ESC9 AD CS](/articoli/esc9-adcs/)
+* [ESC16 AD CS](/articoli/esc16-adcs/)
 
 ***
 
@@ -518,7 +518,7 @@ Controlla i ticket della sessione:
 klist
 ```
 
-Da qui il percorso dipende dai privilegi dell’identità ottenuta. Le guide correlate sono [Rubeus](https://hackita.it/articoli/rubeus/), [DCSync](https://hackita.it/articoli/dcsync/) e [Golden Ticket](https://hackita.it/articoli/golden-ticket/).
+Da qui il percorso dipende dai privilegi dell’identità ottenuta. Le guide correlate sono [Rubeus](/articoli/rubeus/), [DCSync](/articoli/dcsync/) e [Golden Ticket](/articoli/golden-ticket/).
 
 ***
 
@@ -856,10 +856,10 @@ Il workflow corretto è:
 2. `enum-templates` per isolare template pubblicati, vulnerabili e realmente utilizzabili dal principal;
 3. verifica manuale di EKU, SAN, SID extension, approval, firme e ACL;
 4. `request` o `request-agent` soltanto dopo aver confermato i prerequisiti;
-5. autenticazione con [Rubeus](https://hackita.it/articoli/rubeus/) e correlazione difensiva tra `4887` e `4768`;
+5. autenticazione con [Rubeus](/articoli/rubeus/) e correlazione difensiva tra `4887` e `4768`;
 6. ripristino, revoca e documentazione delle modifiche eseguite durante il test.
 
-Per i workflow Linux, relay e autenticazione integrata continua con [Certipy](https://hackita.it/articoli/certipy/). Per l’intero attack surface consulta [AD CS ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
+Per i workflow Linux, relay e autenticazione integrata continua con [Certipy](/articoli/certipy/). Per l’intero attack surface consulta [AD CS ESC1–ESC16](/articoli/adcs-esc1-esc16/).
 
 ***
 

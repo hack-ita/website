@@ -17,7 +17,7 @@ tags:
 
 # HasSession: cos'è, come si enumera e tutte le metodologie di abuso/privesc
 
-**HasSession** è l'edge di [BloodHound](https://hackita.it/articoli/bloodhound/) rappresentato come `(Computer)-[:HasSession]->(User)`: indica che un utente ha (o aveva, al momento della raccolta) una sessione di logon su quel computer. Non è un privilegio da sfruttare direttamente — è un'informazione di **posizionamento**: dice dove andare a caccia se vuoi le credenziali o il token di un utente specifico, magari un Domain Admin. Da lì in poi le strade sono diverse: dump di credenziali, furto di token, keylogging, hijacking di sessione RDP, o attacchi di coercizione come RemotePotato0.
+**HasSession** è l'edge di [BloodHound](/articoli/bloodhound/) rappresentato come `(Computer)-[:HasSession]->(User)`: indica che un utente ha (o aveva, al momento della raccolta) una sessione di logon su quel computer. Non è un privilegio da sfruttare direttamente — è un'informazione di **posizionamento**: dice dove andare a caccia se vuoi le credenziali o il token di un utente specifico, magari un Domain Admin. Da lì in poi le strade sono diverse: dump di credenziali, furto di token, keylogging, hijacking di sessione RDP, o attacchi di coercizione come RemotePotato0.
 
 ***
 
@@ -196,7 +196,7 @@ mimikatz # token::list
 mimikatz # token::elevate /domainadmin
 ```
 
-`token::elevate` cerca un token con privilegi di Domain Admin tra i processi attivi e lo impersona. Con Metasploit, l'equivalente è il modulo **Incognito** (`list_tokens -u` per elencare i token disponibili, `impersonate_token` per assumerne uno) — stessa logica, tool diverso, utile se stai già operando con un Meterpreter piuttosto che con mimikatz standalone. Questo è il passaggio che concretamente trasforma un `HasSession` trovato in [account takeover](https://hackita.it/articoli/account-takeover/) vero e proprio.
+`token::elevate` cerca un token con privilegi di Domain Admin tra i processi attivi e lo impersona. Con Metasploit, l'equivalente è il modulo **Incognito** (`list_tokens -u` per elencare i token disponibili, `impersonate_token` per assumerne uno) — stessa logica, tool diverso, utile se stai già operando con un Meterpreter piuttosto che con mimikatz standalone. Questo è il passaggio che concretamente trasforma un `HasSession` trovato in [account takeover](/articoli/account-takeover/) vero e proprio.
 
 In alternativa, per estrarre direttamente le credenziali dalla memoria:
 
@@ -204,7 +204,7 @@ In alternativa, per estrarre direttamente le credenziali dalla memoria:
 mimikatz # sekurlsa::logonpasswords
 ```
 
-funziona a patto che LSASS non sia protetto (PPL, Credential Guard) — vedi la sezione mitigazioni. Il risultato più prezioso qui è spesso proprio l'hash NTLM da riusare per [pass-the-hash](https://hackita.it/articoli/pass-the-hash/) su altri host.
+funziona a patto che LSASS non sia protetto (PPL, Credential Guard) — vedi la sezione mitigazioni. Il risultato più prezioso qui è spesso proprio l'hash NTLM da riusare per [pass-the-hash](/articoli/pass-the-hash/) su altri host.
 
 **Trucco per forzare credenziali in chiaro:** se WDigest è abilitato (o lo abiliti tu con permessi di amministratore), Windows tiene in memoria la password in **chiaro**, non solo l'hash:
 
@@ -290,7 +290,7 @@ mstsc /shadow:<ID_sessione> /control
 
 ### 5. Kerberos ticket theft (Pass-the-Ticket)
 
-Una sessione può esporre anche materiale Kerberos, non solo hash NTLM: TGT dell'utente, service ticket (TGS), chiavi AES/RC4 presenti nella sessione LSA. Con [mimikatz](https://hackita.it/articoli/mimikatz/):
+Una sessione può esporre anche materiale Kerberos, non solo hash NTLM: TGT dell'utente, service ticket (TGS), chiavi AES/RC4 presenti nella sessione LSA. Con [mimikatz](/articoli/mimikatz/):
 
 ```cmd
 mimikatz # sekurlsa::tickets /export
@@ -381,7 +381,7 @@ Un account di servizio con `msDS-AllowedToDelegateTo` popolato ha **delega Kerbe
 
 RemotePotato0 non si limita a enumerare una sessione, la **usa attivamente**: sfrutta il servizio di attivazione DCOM per forzare un utente con sessione interattiva sulla stessa macchina (tipicamente un Domain Admin in sessione 1, mentre l'attaccante opera da un'altra sessione) ad autenticarsi verso un server RPC/OXID controllato dall'attaccante.
 
-**Attenzione a non confonderlo con la famiglia "Potato" classica** ([RottenPotato, JuicyPotato, PrintSpoofer, RoguePotato](https://hackita.it/articoli/seimpersonateprivilege/)): quelle sfruttano `SeImpersonatePrivilege` per ottenere SYSTEM coercendo un'autenticazione da un **servizio** locale (BITS, Print Spooler), senza bisogno che nessun altro utente sia loggato. RemotePotato0 invece è specificamente **session-based**: non ti serve SYSTEM come obiettivo, ti serve che un utente privilegiato specifico abbia sessione attiva sulla stessa macchina — è proprio per questo che rientra in un articolo su HasSession e gli altri no.
+**Attenzione a non confonderlo con la famiglia "Potato" classica** ([RottenPotato, JuicyPotato, PrintSpoofer, RoguePotato](/articoli/seimpersonateprivilege/)): quelle sfruttano `SeImpersonatePrivilege` per ottenere SYSTEM coercendo un'autenticazione da un **servizio** locale (BITS, Print Spooler), senza bisogno che nessun altro utente sia loggato. RemotePotato0 invece è specificamente **session-based**: non ti serve SYSTEM come obiettivo, ti serve che un utente privilegiato specifico abbia sessione attiva sulla stessa macchina — è proprio per questo che rientra in un articolo su HasSession e gli altri no.
 
 Il tool ha **due modalità distinte**, da non confondere:
 
@@ -418,7 +418,7 @@ sudo socat -v TCP-LISTEN:135,fork,reuseaddr TCP:<IP_MACCHINA_TARGET>:9999
 
 ## Decision tree operativa
 
-Una volta trovato un `HasSession`, questa è la logica per scegliere la tecnica giusta senza sprecare tempo — la stessa struttura che vale per qualsiasi [privilege escalation su Windows](https://hackita.it/articoli/windows-privilege-escalation/) partendo da un punto d'appoggio:
+Una volta trovato un `HasSession`, questa è la logica per scegliere la tecnica giusta senza sprecare tempo — la stessa struttura che vale per qualsiasi [privilege escalation su Windows](/articoli/windows-privilege-escalation/) partendo da un punto d'appoggio:
 
 ```text
 Trovo HasSession

@@ -61,7 +61,7 @@ La riga `+ +` in questi file è il jackpot: permette a QUALSIASI host e QUALSIAS
 
 ## Identificazione di R-Services
 
-Prima di attaccare, identifica i servizi con [Nmap](https://hackita.it/articoli/nmap/):
+Prima di attaccare, identifica i servizi con [Nmap](/articoli/nmap/):
 
 ```bash
 nmap -sV -p 512,513,514 192.168.1.0/24
@@ -175,10 +175,10 @@ done
 
 | Rsh +                                                          | Risultato                   | Uso                      |
 | -------------------------------------------------------------- | --------------------------- | ------------------------ |
-| [Nmap](https://hackita.it/articoli/nmap/)                       | Identificazione r-services  | `nmap -p 512-514 target` |
+| [Nmap](/articoli/nmap/)                       | Identificazione r-services  | `nmap -p 512-514 target` |
 | NFS                                                            | Injection .rhosts via mount | Comprometti trust        |
-| [Hydra](https://hackita.it/articoli/hydra/)                     | Bruteforce rexec            | `hydra rexec://target`   |
-| [Metasploit](https://hackita.it/articoli/metasploit/) | Moduli rsh\_login           | Scanner automatizzato    |
+| [Hydra](/articoli/hydra/)                     | Bruteforce rexec            | `hydra rexec://target`   |
+| [Metasploit](/articoli/metasploit/) | Moduli rsh\_login           | Scanner automatizzato    |
 
 ## Metasploit per R-Services
 
@@ -238,10 +238,10 @@ Disabilitare i servizi, usare SSH, firewall su porte 512-514.
 
 **È legale testare Rsh?**
 
-Solo su sistemi autorizzati. Per penetration test legacy, [hackita.it/servizi](https://hackita.it/servizi).
+Solo su sistemi autorizzati. Per penetration test legacy, [hackita.it/servizi](/servizi).
 
 ***
 
-*Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).*
+*Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).*
 
 **Risorse**: [R-Services Wikipedia](https://en.wikipedia.org/wiki/Berkeley_r-commands)

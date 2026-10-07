@@ -209,10 +209,10 @@ R: Sì, tool come `bettercap` (più moderno e estendibile) e `arpspoof` (più se
 
 ## Link Utili su HackIta
 
-* [Come supportare HackIta](https://hackita.it/supporto/) – Se questa guida ti è stata utile, considera di sostenere il progetto per permetterci di creare più contenuti.
-* [Tutti gli articoli di HackIta](https://hackita.it/articoli/) – Esplora altre guide pratiche su tool e tecniche di hacking etico.
-* [Servizi professionali di HackIta](https://hackita.it/servizi/) – Se cerchi consulenza o formazione personalizzata per la tua azienda, contattaci.
-* [Chi c’è dietro HackIta](https://hackita.it/about/) – Scopri la missione e le persone dietro questa community.
+* [Come supportare HackIta](/supporto/) – Se questa guida ti è stata utile, considera di sostenere il progetto per permetterci di creare più contenuti.
+* [Tutti gli articoli di HackIta](/articoli/) – Esplora altre guide pratiche su tool e tecniche di hacking etico.
+* [Servizi professionali di HackIta](/servizi/) – Se cerchi consulenza o formazione personalizzata per la tua azienda, contattaci.
+* [Chi c’è dietro HackIta](/about/) – Scopri la missione e le persone dietro questa community.
 
 ***
 

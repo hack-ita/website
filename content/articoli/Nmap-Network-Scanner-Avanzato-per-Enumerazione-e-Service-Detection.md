@@ -341,18 +341,18 @@ Questa è la mappa porta → prossimo strumento che uso io stesso durante un ass
 
 | Porta/e   | Servizio   | Comando Nmap iniziale                                       | Prossimo passo                                                                                                                                                                                                                                                  |
 | --------- | ---------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 21        | FTP        | `nmap -p21 -sV --script ftp-anon target`                    | [Porta 21 FTP](https://hackita.it/articoli/porta-21-ftp/)                                                                                                                                                                                                       |
-| 22        | SSH        | `nmap -p22 -sV --script ssh-auth-methods target`            | [SSH](https://hackita.it/articoli/ssh/)                                                                                                                                                                                                                         |
-| 25        | SMTP       | `nmap -p25 -sV --script smtp-commands target`               | [Porta 25 SMTP](https://hackita.it/articoli/porta-25-smtp/)                                                                                                                                                                                                     |
-| 53        | DNS        | `nmap -p53 --script dns-zone-transfer target`               | [DNS](https://hackita.it/articoli/dns/)                                                                                                                                                                                                                         |
-| 80/443    | HTTP/HTTPS | `nmap -p80,443 -sV --script http-title,http-headers target` | [Burp Suite](https://hackita.it/articoli/burp-suite/), [ffuf](https://hackita.it/articoli/ffuf/), [Gobuster](https://hackita.it/articoli/gobuster/)                                                                                                             |
-| 88        | Kerberos   | `nmap -p88 -sV target`                                      | [Kerberos](https://hackita.it/articoli/kerberos/), [Kerberoasting](https://hackita.it/articoli/kerberoasting/), [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/)                                                                                 |
-| 135/445   | RPC/SMB    | `nmap -p135,445 --script smb-enum-shares target`            | [SMB](https://hackita.it/articoli/smb/), [smbclient](https://hackita.it/articoli/smbclient/), [rpcclient](https://hackita.it/articoli/rpcclient/), [enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/), [NetExec](https://hackita.it/articoli/netexec/) |
-| 389/636   | LDAP/LDAPS | `nmap -p389,636 --script ldap-rootdse target`               | [Porta 389 LDAP](https://hackita.it/articoli/porta-389-ldap/), [ldapsearch](https://hackita.it/articoli/ldapsearch/)                                                                                                                                            |
-| 1433      | MSSQL      | `nmap -p1433 --script ms-sql-info target`                   | [Porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/)                                                                                                                                                                                               |
-| 3306      | MySQL      | `nmap -p3306 --script mysql-info target`                    | [Porta 3306 MySQL](https://hackita.it/articoli/porta-3306-mysql/)                                                                                                                                                                                               |
-| 3389      | RDP        | `nmap -p3389 -sV target`                                    | [Porta 3389 RDP](https://hackita.it/articoli/porta-3389-rdp/)                                                                                                                                                                                                   |
-| 5985/5986 | WinRM      | `nmap -p5985 -sV target`                                    | [Porta 5985 WinRM](https://hackita.it/articoli/porta-5985-winrm/), [Evil-WinRM](https://hackita.it/articoli/evilwinrm/)                                                                                                                                         |
+| 21        | FTP        | `nmap -p21 -sV --script ftp-anon target`                    | [Porta 21 FTP](/articoli/porta-21-ftp/)                                                                                                                                                                                                       |
+| 22        | SSH        | `nmap -p22 -sV --script ssh-auth-methods target`            | [SSH](/articoli/ssh/)                                                                                                                                                                                                                         |
+| 25        | SMTP       | `nmap -p25 -sV --script smtp-commands target`               | [Porta 25 SMTP](/articoli/porta-25-smtp/)                                                                                                                                                                                                     |
+| 53        | DNS        | `nmap -p53 --script dns-zone-transfer target`               | [DNS](/articoli/dns/)                                                                                                                                                                                                                         |
+| 80/443    | HTTP/HTTPS | `nmap -p80,443 -sV --script http-title,http-headers target` | [Burp Suite](/articoli/burp-suite/), [ffuf](/articoli/ffuf/), [Gobuster](/articoli/gobuster/)                                                                                                             |
+| 88        | Kerberos   | `nmap -p88 -sV target`                                      | [Kerberos](/articoli/kerberos/), [Kerberoasting](/articoli/kerberoasting/), [AS-REP Roasting](/articoli/as-rep-roasting/)                                                                                 |
+| 135/445   | RPC/SMB    | `nmap -p135,445 --script smb-enum-shares target`            | [SMB](/articoli/smb/), [smbclient](/articoli/smbclient/), [rpcclient](/articoli/rpcclient/), [enum4linux-ng](/articoli/enum4linux-ng/), [NetExec](/articoli/netexec/) |
+| 389/636   | LDAP/LDAPS | `nmap -p389,636 --script ldap-rootdse target`               | [Porta 389 LDAP](/articoli/porta-389-ldap/), [ldapsearch](/articoli/ldapsearch/)                                                                                                                                            |
+| 1433      | MSSQL      | `nmap -p1433 --script ms-sql-info target`                   | [Porta 1433 MSSQL](/articoli/porta-1433-mssql/)                                                                                                                                                                                               |
+| 3306      | MySQL      | `nmap -p3306 --script mysql-info target`                    | [Porta 3306 MySQL](/articoli/porta-3306-mysql/)                                                                                                                                                                                               |
+| 3389      | RDP        | `nmap -p3389 -sV target`                                    | [Porta 3389 RDP](/articoli/porta-3389-rdp/)                                                                                                                                                                                                   |
+| 5985/5986 | WinRM      | `nmap -p5985 -sV target`                                    | [Porta 5985 WinRM](/articoli/porta-5985-winrm/), [Evil-WinRM](/articoli/evilwinrm/)                                                                                                                                         |
 
 ## Nmap NSE: lo Scripting Engine
 
@@ -413,7 +413,7 @@ nmap -p 445 --script "smb-vuln*" target
 445/tcp → SMB detection → NSE enumeration → strumenti dedicati
 ```
 
-Nmap fornisce discovery e prima enumeration; per approfondire passa a [rpcclient](https://hackita.it/articoli/rpcclient/), [smbclient](https://hackita.it/articoli/smbclient/), [enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) o [NetExec](https://hackita.it/articoli/netexec/) — vedi la tabella [Porte Principali](#porte-principali-cosa-fare-dopo) sopra per il quadro completo.
+Nmap fornisce discovery e prima enumeration; per approfondire passa a [rpcclient](/articoli/rpcclient/), [smbclient](/articoli/smbclient/), [enum4linux-ng](/articoli/enum4linux-ng/) o [NetExec](/articoli/netexec/) — vedi la tabella [Porte Principali](#porte-principali-cosa-fare-dopo) sopra per il quadro completo.
 
 ## LDAP e Active Directory Enumeration
 
@@ -426,7 +426,7 @@ nmap -p 389 --script ldap-search target
 389/636 → LDAP/LDAPS detection → RootDSE → Naming Context → enumerazione
 ```
 
-Nmap contribuisce alla discovery iniziale; per l'enumerazione approfondita passa a [ldapsearch](https://hackita.it/articoli/ldapsearch/). Attività come [Kerberoasting](https://hackita.it/articoli/kerberoasting/) e [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/) richiedono poi strumenti dedicati, non Nmap direttamente.
+Nmap contribuisce alla discovery iniziale; per l'enumerazione approfondita passa a [ldapsearch](/articoli/ldapsearch/). Attività come [Kerberoasting](/articoli/kerberoasting/) e [AS-REP Roasting](/articoli/as-rep-roasting/) richiedono poi strumenti dedicati, non Nmap direttamente.
 
 ## Web Server Enumeration
 
@@ -441,7 +441,7 @@ nmap -p 80,443 --script http-waf-detect,http-waf-fingerprint target
 80/443/8080/8443 → service detection → HTTP NSE → technology identification → enumerazione mirata
 ```
 
-Dopo il fingerprinting iniziale, passa a [Burp Suite](https://hackita.it/articoli/burp-suite/), [ffuf](https://hackita.it/articoli/ffuf/) o [Gobuster](https://hackita.it/articoli/gobuster/) per l'enumerazione web vera e propria.
+Dopo il fingerprinting iniziale, passa a [Burp Suite](/articoli/burp-suite/), [ffuf](/articoli/ffuf/) o [Gobuster](/articoli/gobuster/) per l'enumerazione web vera e propria.
 
 ## SSH Enumeration
 
@@ -450,7 +450,7 @@ nmap -p 22 -sV target
 nmap -p 22 --script ssh-auth-methods target
 ```
 
-Per l'enumerazione e l'hardening SSH nel dettaglio vedi l'articolo dedicato su [SSH](https://hackita.it/articoli/ssh/).
+Per l'enumerazione e l'hardening SSH nel dettaglio vedi l'articolo dedicato su [SSH](/articoli/ssh/).
 
 ## DNS Enumeration
 
@@ -459,7 +459,7 @@ nmap -p 53 --script dns-service-discovery target
 nmap -p 53 --script dns-zone-transfer --script-args dns-zone-transfer.domain=example.com ns.example.com
 ```
 
-Per la reconnaissance DNS completa vedi l'articolo su [DNS](https://hackita.it/articoli/dns/).
+Per la reconnaissance DNS completa vedi l'articolo su [DNS](/articoli/dns/).
 
 ## Database Discovery
 
@@ -474,7 +474,7 @@ ls /usr/share/nmap/scripts/ | grep -Ei 'postgres|pgsql'
 nmap --script-help <script>
 ```
 
-Per l'attacco mirato ai singoli DBMS vedi [Porta 3306 MySQL](https://hackita.it/articoli/porta-3306-mysql/) e [Porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/).
+Per l'attacco mirato ai singoli DBMS vedi [Porta 3306 MySQL](/articoli/porta-3306-mysql/) e [Porta 1433 MSSQL](/articoli/porta-1433-mssql/).
 
 ## IoT e OT Discovery
 

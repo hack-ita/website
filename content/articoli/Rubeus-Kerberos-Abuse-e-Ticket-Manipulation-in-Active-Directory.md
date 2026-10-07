@@ -18,9 +18,9 @@ tags:
 
 # Rubeus: Attacchi Kerberos in Active Directory, Guida Completa per Pentest
 
-Rubeus è il tool C# di GhostPack per interagire a basso livello col protocollo [Kerberos](https://hackita.it/articoli/kerberos/) in Active Directory: richiede TGT/TGS via API di autenticazione senza toccare LSASS, il che lo rende l'alternativa a [Mimikatz](https://hackita.it/articoli/mimikatz/) quando serve credential access senza privilegi amministrativi. Copre Kerberoasting, AS-REP Roasting, Pass-the-Ticket, Overpass-the-Hash, abuse della delegation e forgery di ticket (golden/silver/diamond). Versione corrente: v2.3.3.
+Rubeus è il tool C# di GhostPack per interagire a basso livello col protocollo [Kerberos](/articoli/kerberos/) in Active Directory: richiede TGT/TGS via API di autenticazione senza toccare LSASS, il che lo rende l'alternativa a [Mimikatz](/articoli/mimikatz/) quando serve credential access senza privilegi amministrativi. Copre Kerberoasting, AS-REP Roasting, Pass-the-Ticket, Overpass-the-Hash, abuse della delegation e forgery di ticket (golden/silver/diamond). Versione corrente: v2.3.3.
 
-In un assessment Active Directory reale è raro trovare decine di account kerberoastable pronti all'uso: più spesso ne trovi 1-3 interessanti, quindi conviene incrociare subito Rubeus con [BloodHound](https://hackita.it/articoli/bloodhound/) per capire quali portano davvero a privilegi utili, invece di crackare hash a caso.
+In un assessment Active Directory reale è raro trovare decine di account kerberoastable pronti all'uso: più spesso ne trovi 1-3 interessanti, quindi conviene incrociare subito Rubeus con [BloodHound](/articoli/bloodhound/) per capire quali portano davvero a privilegi utili, invece di crackare hash a caso.
 
 ## Cosa imparerai
 
@@ -40,7 +40,7 @@ In un assessment Active Directory reale è raro trovare decine di account kerber
 | Framework       | .NET 3.5/4.0/4.5 (default net35, retargettabile)                                                                                                                                                               |
 | Sistema target  | Windows domain-joined, Windows 7+/Server 2008+                                                                                                                                                                 |
 | Credenziali     | Utente di dominio valido (per molte azioni), admin locale solo per `dump` da LSASS                                                                                                                             |
-| Conoscenze base | [Active Directory](https://hackita.it/articoli/active-directory-pentesting/), [Kerberos](https://hackita.it/articoli/kerberos/), concetti di [lateral movement](https://hackita.it/articoli/lateral-movement/) |
+| Conoscenze base | [Active Directory](/articoli/active-directory-pentesting/), [Kerberos](/articoli/kerberos/), concetti di [lateral movement](/articoli/lateral-movement/) |
 | Autorizzazione  | Contratto di penetration test/red team firmato, scope autorizzato per iscritto                                                                                                                                 |
 
 ## 1. Perché Rubeus e non Mimikatz?
@@ -76,7 +76,7 @@ msbuild Rubeus.sln /p:Configuration=Release
 
 Il target framework di default è .NET 3.5 — se manca sul sistema di build, cambialo aprendo il progetto: Project → Rubeus Properties → Target Framework (net40/net45 sono le alternative comuni).
 
-Output in `bin\Release\Rubeus.exe`. Per l'esecuzione in-memory (senza toccare disco), caricalo come assembly da byte array o usa `execute-assembly` di [Cobalt Strike](https://hackita.it/articoli/cobaltstrike/):
+Output in `bin\Release\Rubeus.exe`. Per l'esecuzione in-memory (senza toccare disco), caricalo come assembly da byte array o usa `execute-assembly` di [Cobalt Strike](/articoli/cobaltstrike/):
 
 ```powershell
 $bytes = [System.IO.File]::ReadAllBytes("Rubeus.exe")
@@ -123,7 +123,7 @@ Rubeus.exe kerberoast /user:svc_sql /outfile:hashes.txt
 
 **Kerberoast con pre-auth disabilitato** (`/preauth`), per account che non richiedono Kerberos pre-authentication — combina kerberoasting e AS-REP roasting in un'unica richiesta.
 
-Crack con [Hashcat](https://hackita.it/articoli/hashcat/):
+Crack con [Hashcat](/articoli/hashcat/):
 
 ```bash
 hashcat -m 13100 hashes.txt rockyou.txt   # RC4
@@ -136,7 +136,7 @@ hashcat -m 19700 hashes.txt rockyou.txt   # AES256
 
 Nella pratica capita spesso che il cracking non recuperi nulla nemmeno dopo ore: quasi sempre non è un problema di Hashcat ma della password policy — se l'azienda applica password complesse su tutti i service account, conviene concentrare il tempo su altri vettori invece di insistere sul crack.
 
-In ambienti enterprise moderni è sempre più comune trovare service account su gMSA (Group Managed Service Account) con password AES256 casuali e ruotate automaticamente: in quel caso il Kerberoasting non porta praticamente a nulla, e conviene spostarsi subito su delegation abuse o [ADCS](https://hackita.it/articoli/esc8-adcs/) invece di insistere.
+In ambienti enterprise moderni è sempre più comune trovare service account su gMSA (Group Managed Service Account) con password AES256 casuali e ruotate automaticamente: in quel caso il Kerberoasting non porta praticamente a nulla, e conviene spostarsi subito su delegation abuse o [ADCS](/articoli/esc8-adcs/) invece di insistere.
 
 ### Detection e difesa
 
@@ -192,7 +192,7 @@ hashcat -m 18200 asrep.txt rockyou.txt
 | Password    | `/password:PASS`        | Credenziali in chiaro disponibili                                                           |
 | Hash NTLM   | `/rc4:HASH`             | Overpass-the-Hash da un dump precedente                                                     |
 | Chiave AES  | `/aes256:KEY`           | Evita il downgrade a RC4, meno rumoroso                                                     |
-| Certificato | `/certificate:file.pfx` | PKINIT con certificato rubato (es. via [ADCS ESC8](https://hackita.it/articoli/esc8-adcs/)) |
+| Certificato | `/certificate:file.pfx` | PKINIT con certificato rubato (es. via [ADCS ESC8](/articoli/esc8-adcs/)) |
 
 Sintassi completa:
 
@@ -276,7 +276,7 @@ Rubeus.exe s4u /user:USER </rc4:HASH | /aes256:HASH> /impersonateuser:TARGET /ms
 Rubeus.exe s4u /user:svc_account /rc4:HASH /impersonateuser:administrator /msdsspn:cifs/server.corp.local /ptt
 ```
 
-Con **Resource-Based Constrained Delegation** (RBCD), se controlli un computer account puoi configurare tu stesso la delegation verso il target — vedi la guida dedicata a [RBCD](https://hackita.it/articoli/rbcd/) per il setup completo dell'attributo `msDS-AllowedToActOnBehalfOfOtherIdentity`.
+Con **Resource-Based Constrained Delegation** (RBCD), se controlli un computer account puoi configurare tu stesso la delegation verso il target — vedi la guida dedicata a [RBCD](/articoli/rbcd/) per il setup completo dell'attributo `msDS-AllowedToActOnBehalfOfOtherIdentity`.
 
 **Unconstrained delegation** è il caso più pericoloso: se un host la ha configurata, ogni utente che vi si autentica lascia un TGT riutilizzabile in memoria. Rubeus può monitorare l'arrivo di nuovi ticket:
 
@@ -528,7 +528,7 @@ Rubeus.exe ptt /ticket:BASE64_QUI
 
 ### Da .kirbi a .ccache (uso con Impacket)
 
-Rubeus e Mimikatz lavorano in formato `.kirbi`, ma gli strumenti Linux basati su [Impacket](https://hackita.it/articoli/impacket/) (wmiexec.py, secretsdump.py, ecc.) leggono solo `.ccache`. È lo stesso ticket, cambia solo il contenitore binario — serve convertire per portare un ticket ottenuto su Windows dentro un tool Python su Linux.
+Rubeus e Mimikatz lavorano in formato `.kirbi`, ma gli strumenti Linux basati su [Impacket](/articoli/impacket/) (wmiexec.py, secretsdump.py, ecc.) leggono solo `.ccache`. È lo stesso ticket, cambia solo il contenitore binario — serve convertire per portare un ticket ottenuto su Windows dentro un tool Python su Linux.
 
 **Step 1: Decodificare base64 → .kirbi**
 
@@ -920,7 +920,7 @@ Rubeus oggi è lo standard di facto nei Red Team engagement per tutto ciò che r
 | Rubeus                                                             | C#         | No (tranne `dump`)     | Completo (S4U, RBCD, unconstrained) | Binario/execute-assembly       |
 | Kekeo                                                              | C          | Sì (vecchio approccio) | Parziale                            | Binario (discontinuato)        |
 | Mimikatz                                                           | C          | Sì                     | Parziale                            | Binario                        |
-| [Impacket](https://hackita.it/articoli/impacket/) (GetUserSPNs.py) | Python     | No                     | Limitato                            | Remoto, da Linux               |
+| [Impacket](/articoli/impacket/) (GetUserSPNs.py) | Python     | No                     | Limitato                            | Remoto, da Linux               |
 | Invoke-Kerberoast                                                  | PowerShell | No                     | No                                  | Script, più rilevabile da AMSI |
 
 ### Rubeus può forgiare golden e silver ticket come Mimikatz?
@@ -1018,12 +1018,12 @@ Sempre più account di servizio usano gMSA (Group Managed Service Account) — l
 
 ## Guide correlate su hackita.it
 
-* [Kerberos: protocollo e attacchi](https://hackita.it/articoli/kerberos/)
-* [Kerberoasting](https://hackita.it/articoli/kerberos/)
-* [Mimikatz](https://hackita.it/articoli/mimikatz/)
-* [Golden Ticket](https://hackita.it/articoli/golden-ticket/)
-* [Silver Ticket](https://hackita.it/articoli/silver-ticket/)
-* [RBCD: Resource-Based Constrained Delegation](https://hackita.it/articoli/rbcd/)
+* [Kerberos: protocollo e attacchi](/articoli/kerberos/)
+* [Kerberoasting](/articoli/kerberos/)
+* [Mimikatz](/articoli/mimikatz/)
+* [Golden Ticket](/articoli/golden-ticket/)
+* [Silver Ticket](/articoli/silver-ticket/)
+* [RBCD: Resource-Based Constrained Delegation](/articoli/rbcd/)
 
 ## Riferimenti
 

@@ -18,7 +18,7 @@ tags:
 
 Lista di riferimento per payload XSS categorizzati per context, tecnica e scopo. Da usare durante pentest e bug bounty per coprire sistematicamente i vettori più comuni e bypassare i filtri frequenti.
 
-→ Torna alla guida principale,per scoprire cos'è xss e le sue varianti: [XSS Completo](https://hackita.it/articoli/xss/)
+→ Torna alla guida principale,per scoprire cos'è xss e le sue varianti: [XSS Completo](/articoli/xss/)
 
 ***
 
@@ -406,7 +406,7 @@ jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert())//%0D%0A%0d%0a//</stYle/</t
 
 *Disclaimer: Usa questi payload solo su sistemi con autorizzazione esplicita scritta. Attività non autorizzate su sistemi altrui costituiscono reato penale (art. 615-ter c.p.).*
 
-Vuoi migliorare davvero le tue competenze offensive con un percorso **1:1**? Vai su [HackIta Formazione](https://hackita.it/servizi).\
-Se invece vuoi testare la sicurezza della tua azienda con un assessment professionale, trovi tutto su [HackIta Servizi](https://hackita.it/servizi).\
-Se questo contenuto ti è stato utile e vuoi supportare il progetto, puoi farlo su [HackIta Supporto](https://hackita.it/supporto).\
+Vuoi migliorare davvero le tue competenze offensive con un percorso **1:1**? Vai su [HackIta Formazione](/servizi).\
+Se invece vuoi testare la sicurezza della tua azienda con un assessment professionale, trovi tutto su [HackIta Servizi](/servizi).\
+Se questo contenuto ti è stato utile e vuoi supportare il progetto, puoi farlo su [HackIta Supporto](/supporto).\
 Per un approfondimento esterno utile anche lato difesa, vedi la [OWASP Cross Site Scripting Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html).

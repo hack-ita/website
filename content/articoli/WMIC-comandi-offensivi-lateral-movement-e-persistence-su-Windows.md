@@ -355,19 +355,19 @@ nxc smb TARGET -u user -p 'pass' -x 'command' --exec-method wmiexec
 
 NetExec supporta cinque metodi di esecuzione: **wmiexec** (default, più stealth), **atexec** (scheduled task), **smbexec** (servizio), **mmcexec** (MMC), e **wmiexec-event** (event subscription).
 
-Leggi le nostre guide su [crackmapexec](https://hackita.it/articoli/crackmapexec/) e [netexec](https://hackita.it/articoli/netexec/) 
+Leggi le nostre guide su [crackmapexec](/articoli/crackmapexec/) e [netexec](/articoli/netexec/) 
 
 ### Framework C2: Cobalt Strike, Metasploit, Empire
 
 | Framework                                                      | Modulo WMI                              | Funzionalità                                                        |
 | -------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------------- |
-| **[Cobalt Strike](https://hackita.it/articoli/cobalt-strike/)** | `remote-exec wmi TARGET "command"`      | Esecuzione remota, BOF per WMI ProcCreate e EventSub                |
+| **[Cobalt Strike](/articoli/cobalt-strike/)** | `remote-exec wmi TARGET "command"`      | Esecuzione remota, BOF per WMI ProcCreate e EventSub                |
 | **Metasploit**                                                 | `exploit/windows/local/wmi`             | Esecuzione remota via WMI su TCP 135                                |
-| **[Metasploit](https://hackita.it/articoli/metasploit/)**       | `exploit/windows/local/wmi_persistence` | Persistence via 5 metodi (EVENT, INTERVAL, LOGON, PROCESS, WAITFOR) |
-| **[Empire](https://hackita.it/articoli/empire/)**               | `lateral_movement/invoke_wmi`           | Lateral movement con launcher PowerShell base64                     |
-| **[Sliver](https://hackita.it/articoli/silver/)**               | `execute -o wmic /node:<IP> ...`        | Esecuzione diretta + SharpWMI via Armory                            |
+| **[Metasploit](/articoli/metasploit/)**       | `exploit/windows/local/wmi_persistence` | Persistence via 5 metodi (EVENT, INTERVAL, LOGON, PROCESS, WAITFOR) |
+| **[Empire](/articoli/empire/)**               | `lateral_movement/invoke_wmi`           | Lateral movement con launcher PowerShell base64                     |
+| **[Sliver](/articoli/silver/)**               | `execute -o wmic /node:<IP> ...`        | Esecuzione diretta + SharpWMI via Armory                            |
 
-**Il WMIC nativo non supporta [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)** — richiede password in chiaro. Per PTH su WMI servono [Impacket](https://hackita.it/articoli/impacket/), NetExec, o Invoke-WMIExec (PowerShell di Kevin Robertson). Requisito aggiuntivo: per account non-RID-500, il registro `LocalAccountTokenFilterPolicy` deve essere impostato a `1` sul target per bypassare la restrizione UAC remota.
+**Il WMIC nativo non supporta [Pass-the-Hash](/articoli/pass-the-hash/)** — richiede password in chiaro. Per PTH su WMI servono [Impacket](/articoli/impacket/), NetExec, o Invoke-WMIExec (PowerShell di Kevin Robertson). Requisito aggiuntivo: per account non-RID-500, il registro `LocalAccountTokenFilterPolicy` deve essere impostato a `1` sul target per bypassare la restrizione UAC remota.
 
 ***
 

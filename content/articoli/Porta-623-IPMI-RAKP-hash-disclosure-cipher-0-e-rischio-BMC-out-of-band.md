@@ -141,7 +141,7 @@ nmap -sU -p 623 --script ipmi-cipher-zero 10.10.10.50
 |   NOT VULNERABLE
 ```
 
-**Lettura dell'output:** cipher 0 = nessuna autenticazione. Qualsiasi password funziona. Serve solo un username valido (quasi sempre `ADMIN`, `admin`, `root`). Per capire l'impatto completo, consulta la [guida al privilege escalation](https://hackita.it/articoli/linux-privesc/).
+**Lettura dell'output:** cipher 0 = nessuna autenticazione. Qualsiasi password funziona. Serve solo un username valido (quasi sempre `ADMIN`, `admin`, `root`). Per capire l'impatto completo, consulta la [guida al privilege escalation](/articoli/linux-privesc/).
 
 ### Sfruttamento cipher 0
 
@@ -179,7 +179,7 @@ run
 [*] Hash(es) written to /tmp/ipmi_hashes.txt
 ```
 
-**Lettura dell'output:** hash HMAC-SHA1 estratti per entrambi gli utenti — senza aver fornito alcuna password. Questo è il cuore della vulnerabilità IPMI 2.0: il BMC invia l'hash a chiunque ne faccia richiesta. Per il cracking massivo degli hash, scopri le [tecniche di password cracking con hashcat](https://hackita.it/articoli/brute-force/).
+**Lettura dell'output:** hash HMAC-SHA1 estratti per entrambi gli utenti — senza aver fornito alcuna password. Questo è il cuore della vulnerabilità IPMI 2.0: il BMC invia l'hash a chiunque ne faccia richiesta. Per il cracking massivo degli hash, scopri le [tecniche di password cracking con hashcat](/articoli/brute-force/).
 
 ## 4. Tecniche Offensive
 
@@ -420,7 +420,7 @@ Riduzione rumore: zero tentativi di cracking, nessun handshake RAKP
 | ---------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------- |
 | 623/udp filtered                                           | Firewall blocca IPMI            | BMC su VLAN separata — serve accesso a quella VLAN                      |
 | `ipmi_dumphashes` no hash                                  | Username non valido o IPMI 1.5  | Prova username comuni: ADMIN, admin, root, Administrator                |
-| [hashcat](https://hackita.it/articoli/hashcat/) `Exhausted` | Password complessa              | Aggiungi regole: `hashcat -m 7300 -r best64.rule` o custom mask         |
+| [hashcat](/articoli/hashcat/) `Exhausted` | Password complessa              | Aggiungi regole: `hashcat -m 7300 -r best64.rule` o custom mask         |
 | `Unable to establish session`                              | IPMI 1.5 (non supporta RAKP)    | RAKP funziona solo su IPMI 2.0 — testa credenziali default direttamente |
 | SOL timeout                                                | Serial-over-LAN non configurato | Accedi via web interface del BMC per KVM                                |
 
@@ -432,7 +432,7 @@ R: Durante il handshake RAKP, il BMC invia un hash HMAC-SHA1 della password dell
 
 **D: Porta 623 è TCP o UDP?**
 
-R: Principalmente [UDP](https://hackita.it/articoli/udp/). IPMI usa RMCP su UDP 623 per il canale di management. Alcuni BMC espongono anche servizi [TCP](https://hackita.it/articoli/tcp/) sulla stessa porta per funzionalità aggiuntive.
+R: Principalmente [UDP](/articoli/udp/). IPMI usa RMCP su UDP 623 per il canale di management. Alcuni BMC espongono anche servizi [TCP](/articoli/tcp/) sulla stessa porta per funzionalità aggiuntive.
 
 **D: Cosa significa cipher suite 0?**
 
@@ -481,4 +481,4 @@ L'hash extraction RAKP è una singola richiesta UDP — profilo bassissimo. Il c
 
 Tutti i comandi e le tecniche sono destinati esclusivamente ad ambienti autorizzati: penetration test con contratto, lab, CTF. Riferimento: IPMI 2.0 Specification, CVE-2013-4786, CVE-2024-54085. Approfondimento: [https://www.speedguide.net/port.php?port=623](https://www.speedguide.net/port.php?port=623)
 
-> Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+> Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

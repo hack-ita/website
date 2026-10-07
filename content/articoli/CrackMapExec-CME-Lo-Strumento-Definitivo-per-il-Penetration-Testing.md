@@ -17,9 +17,9 @@ tags:
 
 # CrackMapExec (CME): Comandi Legacy e Traduzione verso NetExec
 
-CrackMapExec (CME) è stato per anni il tool di riferimento per validare credenziali, enumerare SMB/AD e muoversi lateralmente in una rete Windows con un solo binario. Il repository originale è **archiviato dal 6 dicembre 2023** e non riceve più fix. Il successore mantenuto dalla community è [NetExec](https://hackita.it/articoli/netexec/) (binario `nxc`), stessa filosofia, protocolli e moduli aggiornati.
+CrackMapExec (CME) è stato per anni il tool di riferimento per validare credenziali, enumerare SMB/AD e muoversi lateralmente in una rete Windows con un solo binario. Il repository originale è **archiviato dal 6 dicembre 2023** e non riceve più fix. Il successore mantenuto dalla community è [NetExec](/articoli/netexec/) (binario `nxc`), stessa filosofia, protocolli e moduli aggiornati.
 
-Questa pagina non è una seconda guida NetExec: esiste per chi arriva da una vecchia cheat sheet, un vecchio corso o un vecchio walkthrough scritto in sintassi `crackmapexec` e deve tradurla in comandi che funzionano davvero oggi. Per l'uso operativo completo vai dritto alla [guida NetExec](https://hackita.it/articoli/netexec/).
+Questa pagina non è una seconda guida NetExec: esiste per chi arriva da una vecchia cheat sheet, un vecchio corso o un vecchio walkthrough scritto in sintassi `crackmapexec` e deve tradurla in comandi che funzionano davvero oggi. Per l'uso operativo completo vai dritto alla [guida NetExec](/articoli/netexec/).
 
 ## CrackMapExec È Ancora Utilizzabile?
 
@@ -30,7 +30,7 @@ Tecnicamente puoi ancora installarlo (`pipx install crackmapexec`), ma è una sc
 * comandi trovati in guide storiche possono non esistere più nella build che riesci a installare;
 * i controlli contro versioni recenti di Windows possono dare falsi negativi.
 
-Mantieni CME solo dentro una VM congelata quando devi riprodurre esattamente un vecchio laboratorio o una write-up che lo richiede esplicitamente. Per tutto il resto, [NetExec](https://hackita.it/articoli/netexec/).
+Mantieni CME solo dentro una VM congelata quando devi riprodurre esattamente un vecchio laboratorio o una write-up che lo richiede esplicitamente. Per tutto il resto, [NetExec](/articoli/netexec/).
 
 ## Traduzione Comandi: da CrackMapExec a NetExec
 
@@ -72,8 +72,8 @@ Per la sintassi base sì. Kerberos, moduli, file transfer e output hanno flag e 
 Perché la guida NetExec è scritta per l'uso attuale, non per la retrocompatibilità con la sintassi CME. Questa pagina esiste apposta per colmare quel salto.
 
 **Devo installare CrackMapExec per imparare il tool?**
-No. Installa direttamente [NetExec](https://hackita.it/articoli/netexec/): la curva di apprendimento è la stessa, ma lavori con un tool che riceve ancora aggiornamenti.
+No. Installa direttamente [NetExec](/articoli/netexec/): la curva di apprendimento è la stessa, ma lavori con un tool che riceve ancora aggiornamenti.
 
 ***
 
-Per il workflow operativo completo — enumerazione, password spraying, Pass-the-Hash, Kerberos, dump credenziali, lateral movement — vai alla [guida NetExec](https://hackita.it/articoli/netexec/). Usa questi strumenti esclusivamente su sistemi di tua proprietà o in ambienti autorizzati.
+Per il workflow operativo completo — enumerazione, password spraying, Pass-the-Hash, Kerberos, dump credenziali, lateral movement — vai alla [guida NetExec](/articoli/netexec/). Usa questi strumenti esclusivamente su sistemi di tua proprietà o in ambienti autorizzati.

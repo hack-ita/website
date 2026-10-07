@@ -89,7 +89,7 @@ Il passo dopo l'OUI è sempre lo stesso: verificare cosa gira davvero su quell'h
 nmap -sV -p 22,80,443,445,3389,5985 -iL live_hosts.txt --open
 ```
 
-Da lì, in base ai servizi trovati, il workflow prosegue su [Nmap](https://hackita.it/articoli/nmap/), [SMB](https://hackita.it/articoli/smb/) o [LDAP](https://hackita.it/articoli/porta-389-ldap/) — non su `arp-scan`, il cui compito finisce con la lista di IP/MAC.
+Da lì, in base ai servizi trovati, il workflow prosegue su [Nmap](/articoli/nmap/), [SMB](/articoli/smb/) o [LDAP](/articoli/porta-389-ldap/) — non su `arp-scan`, il cui compito finisce con la lista di IP/MAC.
 
 ## Analisi della Cache ARP Locale
 
@@ -155,7 +155,7 @@ sudo arp-scan --interface eth0 --localnet -x | cut -f1 > live_hosts.txt
 nmap -sV -iL live_hosts.txt --open -p 22,80,443,445,3389,5985
 ```
 
-Da qui il lavoro prosegue con gli strumenti giusti per ciascun servizio trovato — [smbclient](https://hackita.it/articoli/smbclient/) per SMB, [ldapsearch](https://hackita.it/articoli/ldapsearch/) per LDAP, e così via. `arp-scan` ha già fatto il suo lavoro: darti la lista di chi c'è.
+Da qui il lavoro prosegue con gli strumenti giusti per ciascun servizio trovato — [smbclient](/articoli/smbclient/) per SMB, [ldapsearch](/articoli/ldapsearch/) per LDAP, e così via. `arp-scan` ha già fatto il suo lavoro: darti la lista di chi c'è.
 
 ## FAQ
 

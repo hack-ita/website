@@ -296,7 +296,7 @@ ldapdomaindump -u 'corp.local\user' -p 'Password123' TARGET_IP \
 # Genera file HTML navigabili con tutti gli oggetti AD
 ```
 
-Vedi: [ldapsearch](https://hackita.it/articoli/ldapsearch/)
+Vedi: [ldapsearch](/articoli/ldapsearch/)
 
 ***
 
@@ -353,7 +353,7 @@ for i in $(seq 500 1100); do
 done
 ```
 
-Vedi: [rpcclient](https://hackita.it/articoli/rpcclient/)
+Vedi: [rpcclient](/articoli/rpcclient/)
 
 ***
 
@@ -380,7 +380,7 @@ snmp-check TARGET_IP -c public
 snmpwalk -v3 -l authNoPriv -u snmpuser -a MD5 -A AuthPass TARGET_IP
 ```
 
-Vedi: [SNMP](https://hackita.it/articoli/snmp/)
+Vedi: [SNMP](/articoli/snmp/)
 
 ***
 
@@ -438,7 +438,7 @@ bloodhound-python -u user -p Password123 -d corp.local \
 # - "Find Computers with Unconstrained Delegation"
 ```
 
-Vedi: [BloodHound](https://hackita.it/articoli/bloodhound/)
+Vedi: [BloodHound](/articoli/bloodhound/)
 
 ### PowerView — Enumeration Granulare da Windows
 
@@ -485,7 +485,7 @@ Get-DomainPolicy | select -ExpandProperty SystemAccess
 Get-DomainDefaultPasswordPolicy
 ```
 
-Vedi: [PowerView](https://hackita.it/articoli/powerview/)
+Vedi: [PowerView](/articoli/powerview/)
 
 ### Impacket per AD Enum da Linux
 
@@ -518,7 +518,7 @@ Get-ObjectAcl -ResolveGUIDs | \
   }
 ```
 
-Vedi: [ACL Abuse](https://hackita.it/articoli/acl-abuse/)
+Vedi: [ACL Abuse](/articoli/acl-abuse/)
 
 ### ADCS Enumeration
 
@@ -530,7 +530,7 @@ certipy-ad find -u user@corp.local -p pass -dc-ip DC_IP -vulnerable -enabled
 certipy-ad find -u user@corp.local -p pass -dc-ip DC_IP -stdout
 ```
 
-Vedi: [Certipy](https://hackita.it/articoli/certipy/)
+Vedi: [Certipy](/articoli/certipy/)
 
 ***
 
@@ -640,7 +640,7 @@ mysql -u root -p -e "SHOW DATABASES;"
 mysql -u root -p -e "SHOW GRANTS FOR 'user'@'host';"
 ```
 
-Vedi: [NetExec](https://hackita.it/articoli/netexec/)
+Vedi: [NetExec](/articoli/netexec/)
 
 ***
 
@@ -671,11 +671,11 @@ EHLO hacker.com
 VRFY admin
 ```
 
-Vedi: [Netcat](https://hackita.it/articoli/netcat/) per connessioni manuali e banner grabbing.
+Vedi: [Netcat](/articoli/netcat/) per connessioni manuali e banner grabbing.
 
 ### SNMP (161 UDP)
 
-Vedi sezione dedicata sopra e [SNMP](https://hackita.it/articoli/snmp/).
+Vedi sezione dedicata sopra e [SNMP](/articoli/snmp/).
 
 ### Redis (6379)
 
@@ -722,7 +722,7 @@ find / -name ".env" 2>/dev/null
 ip addr; ip route; ss -tlnp; arp -a
 ```
 
-Strumenti automatici: [LinPEAS](https://hackita.it/articoli/linpeas/), [LinEnum](https://hackita.it/articoli/linenum/), [tshark](https://hackita.it/articoli/tshark/) per analisi traffico, [Top 100 Comandi Linux](https://hackita.it/articoli/top-100-comandi-linux/) per reference.
+Strumenti automatici: [LinPEAS](/articoli/linpeas/), [LinEnum](/articoli/linenum/), [tshark](/articoli/tshark/) per analisi traffico, [Top 100 Comandi Linux](/articoli/top-100-comandi-linux/) per reference.
 
 ### Windows
 
@@ -743,7 +743,7 @@ wmic service get name,startname,pathname
 cmdkey /list
 ```
 
-Strumenti: [WinPEAS](https://hackita.it/articoli/winpeas/), [WinEnum](https://hackita.it/articoli/winenum/), [WMIC](https://hackita.it/articoli/wmic/)
+Strumenti: [WinPEAS](/articoli/winpeas/), [WinEnum](/articoli/winenum/), [WMIC](/articoli/wmic/)
 
 ***
 
@@ -818,18 +818,18 @@ CON CREDENZIALI:
 
 | Tool                                                                                              | Uso principale                      |
 | ------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| [Nmap](https://hackita.it/articoli/nmap/)                                                         | Port scan, NSE scripts              |
-| [NetExec](https://hackita.it/articoli/netexec/)                                                   | SMB/LDAP/WinRM enum con credenziali |
-| [BloodHound](https://hackita.it/articoli/bloodhound/)                                             | AD attack path analysis             |
-| [PowerView](https://hackita.it/articoli/powerview/)                                               | AD enum da PowerShell               |
-| [ffuf](https://hackita.it/articoli/ffuf/) / [Gobuster](https://hackita.it/articoli/gobuster/)     | Web fuzzing                         |
-| [Impacket](https://hackita.it/articoli/impacket/)                                                 | LDAP, Kerberos, SMB, MSSQL          |
-| [enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/)                                       | SMB/LDAP legacy                     |
-| [LinPEAS](https://hackita.it/articoli/linpeas/) / [LinEnum](https://hackita.it/articoli/linenum/) | Post-compromise Linux               |
-| [WinPEAS](https://hackita.it/articoli/winpeas/)                                                   | Post-compromise Windows             |
-| [Netcat](https://hackita.it/articoli/netcat/)                                                     | Banner grab, connessioni manuali    |
-| [Tshark](https://hackita.it/articoli/tshark/)                                                     | Analisi traffico di rete            |
-| [SNMP tools](https://hackita.it/articoli/snmp/)                                                   | SNMP enumeration                    |
+| [Nmap](/articoli/nmap/)                                                         | Port scan, NSE scripts              |
+| [NetExec](/articoli/netexec/)                                                   | SMB/LDAP/WinRM enum con credenziali |
+| [BloodHound](/articoli/bloodhound/)                                             | AD attack path analysis             |
+| [PowerView](/articoli/powerview/)                                               | AD enum da PowerShell               |
+| [ffuf](/articoli/ffuf/) / [Gobuster](/articoli/gobuster/)     | Web fuzzing                         |
+| [Impacket](/articoli/impacket/)                                                 | LDAP, Kerberos, SMB, MSSQL          |
+| [enum4linux-ng](/articoli/enum4linux-ng/)                                       | SMB/LDAP legacy                     |
+| [LinPEAS](/articoli/linpeas/) / [LinEnum](/articoli/linenum/) | Post-compromise Linux               |
+| [WinPEAS](/articoli/winpeas/)                                                   | Post-compromise Windows             |
+| [Netcat](/articoli/netcat/)                                                     | Banner grab, connessioni manuali    |
+| [Tshark](/articoli/tshark/)                                                     | Analisi traffico di rete            |
+| [SNMP tools](/articoli/snmp/)                                                   | SNMP enumeration                    |
 
 ***
 

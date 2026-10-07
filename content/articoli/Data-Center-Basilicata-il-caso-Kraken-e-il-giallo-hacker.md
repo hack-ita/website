@@ -94,7 +94,7 @@ Le evidenze tecniche che andrebbero verificate per confermare o escludere questo
 * presenza di URL in lingua russa effettivamente indicizzate da Google
 * eventuale **cloaking**, cioè contenuto diverso servito a Googlebot rispetto a quello mostrato agli utenti umani — tecnica che Google segnala esplicitamente come possibile veicolo di hacked content
 
-Nessuno di questi elementi risulta confermato pubblicamente al momento della scrittura di questo articolo. Se emergesse una compromissione reale, si tratterebbe comunque di un incidente di sicurezza da notificare secondo gli schemi previsti dal [GDPR](https://hackita.it/articoli/gdpr/) (se coinvolge dati personali) e dalla [NIS2](https://hackita.it/articoli/nis2/) (se l'ente rientra tra i soggetti tenuti a notifica) — a prescindere dal fatto che configuri o meno un vero e proprio [data breach](https://hackita.it/articoli/data-breach/).
+Nessuno di questi elementi risulta confermato pubblicamente al momento della scrittura di questo articolo. Se emergesse una compromissione reale, si tratterebbe comunque di un incidente di sicurezza da notificare secondo gli schemi previsti dal [GDPR](/articoli/gdpr/) (se coinvolge dati personali) e dalla [NIS2](/articoli/nis2/) (se l'ente rientra tra i soggetti tenuti a notifica) — a prescindere dal fatto che configuri o meno un vero e proprio [data breach](/articoli/data-breach/).
 
 **Checklist operativa per un team che deve verificare un caso simile:**
 
@@ -114,7 +114,7 @@ Sul fronte della sicurezza delle infrastrutture digitali, il quadro normativo di
 
 ## Se fosse stato un ransomware: cosa cambierebbe (e perché pagare non è la soluzione)
 
-Va ribadito: non ci sono evidenze pubbliche che questo caso sia un attacco [ransomware](https://hackita.it/articoli/ransomware/). Ma visto che il sospetto è circolato, vale la pena chiarire in breve come funzionerebbe quello scenario, a scopo puramente informativo.
+Va ribadito: non ci sono evidenze pubbliche che questo caso sia un attacco [ransomware](/articoli/ransomware/). Ma visto che il sospetto è circolato, vale la pena chiarire in breve come funzionerebbe quello scenario, a scopo puramente informativo.
 
 In un attacco ransomware "classico", i dati vengono cifrati e l'attaccante chiede un riscatto (spesso in criptovaluta) per fornire la chiave di decifratura; nelle varianti a doppia estorsione, minaccia anche di pubblicare i dati rubati sul dark web se non si paga. Le autorità italiane (Polizia Postale, ACN) e la prassi internazionale sconsigliano il pagamento del riscatto, per tre motivi concreti: non garantisce il recupero effettivo dei dati, finanzia direttamente le organizzazioni criminali permettendo nuovi attacchi, e non impedisce comunque un'eventuale pubblicazione dei dati già esfiltrati. La strategia difensiva raccomandata resta il ripristino da backup offline/immutabili, non la trattativa con l'attaccante.
 

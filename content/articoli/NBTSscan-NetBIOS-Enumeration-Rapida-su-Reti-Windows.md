@@ -146,7 +146,7 @@ done
 
 ## 6️⃣ Toolchain Integration
 
-**Flusso:** **Nbtscan (NetBIOS enum)** → [Smbmap](https://hackita.it/articoli/smbmap/) (share enum) → [Rpcclient](https://hackita.it/articoli/rpcclient/) (AD enum) → Lateral movement
+**Flusso:** **Nbtscan (NetBIOS enum)** → [Smbmap](/articoli/smbmap/) (share enum) → [Rpcclient](/articoli/rpcclient/) (AD enum) → Lateral movement
 
 | Tool         | NetBIOS  | Velocità /24 | Utente loggato | MAC |
 | ------------ | -------- | ------------ | -------------- | --- |
@@ -158,7 +158,7 @@ done
 
 ## 7️⃣ Attack Chain Completa
 
-**Fase 1:** Nbtscan → mappa 50 host (5 sec). **Fase 2:** DC identificato → [Ldapsearch](https://hackita.it/articoli/ldapsearch/) enum (10 sec). **Fase 3:** Credenziali trovate → lateral movement (15 min). **Timeline:** \~16 min.
+**Fase 1:** Nbtscan → mappa 50 host (5 sec). **Fase 2:** DC identificato → [Ldapsearch](/articoli/ldapsearch/) enum (10 sec). **Fase 3:** Credenziali trovate → lateral movement (15 min). **Timeline:** \~16 min.
 
 ***
 
@@ -227,4 +227,4 @@ done
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

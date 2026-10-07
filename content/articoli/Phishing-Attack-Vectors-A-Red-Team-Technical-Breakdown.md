@@ -19,7 +19,7 @@ tags:
 
 > **Legal disclaimer:** The techniques and tools described in this article are intended exclusively for authorized penetration testing engagements, security research, and educational purposes. Using these methods against systems or individuals without explicit written authorization is illegal under most jurisdictions, including Italy's D.lgs. 231/2001 and the Computer Fraud and Abuse Act (US). HackITA assumes no responsibility for any misuse of the information provided. Always operate within the boundaries of a signed scope agreement.
 
-Phishing is consistently the leading initial access vector in real-world breaches — not because organizations aren't aware of it, but because the techniques keep evolving faster than defenses adapt. The entire delivery chain depends on understanding how TCP/UDP ports and protocols behave — see [HackITA's porte TCP/UDP guida pentest](https://hackita.it/articoli/porte-tcp-udp-pentest/). This article covers the technical attack vectors red teams deploy during phishing simulations.
+Phishing is consistently the leading initial access vector in real-world breaches — not because organizations aren't aware of it, but because the techniques keep evolving faster than defenses adapt. The entire delivery chain depends on understanding how TCP/UDP ports and protocols behave — see [HackITA's porte TCP/UDP guida pentest](/articoli/porte-tcp-udp-pentest/). This article covers the technical attack vectors red teams deploy during phishing simulations.
 
 ***
 
@@ -50,9 +50,9 @@ For OSINT email harvesting before building the target list, **theHarvester** ([g
 theHarvester -d targetcompany.com -b linkedin,google,bing -l 200
 ```
 
-The output feeds directly into GoPhish's target CSV import. For deeper social engineering context and pretext building, see [HackITA's guide on social engineering techniques](https://hackita.it/articoli/socialengineer/).
+The output feeds directly into GoPhish's target CSV import. For deeper social engineering context and pretext building, see [HackITA's guide on social engineering techniques](/articoli/socialengineer/).
 
-For AiTM phishing that captures session cookies post-MFA on top of credentials, see [HackITA's Evilginx 3 guide](https://hackita.it/articoli/evilginx3-aitm-mfa-bypass/).
+For AiTM phishing that captures session cookies post-MFA on top of credentials, see [HackITA's Evilginx 3 guide](/articoli/evilginx3-aitm-mfa-bypass/).
 
 ***
 
@@ -199,7 +199,7 @@ theHarvester -d targetcorp.htb -b linkedin,bing -l 100
 
 **Step 4 — Wait for a click.** GoPhish dashboard shows who opened the email and who submitted credentials. The captured username and password appear in real time under "Results".
 
-**Step 5 — Use captured credentials** to log into the internal service, find a file upload, get a shell, and escalate from there using LinPEAS (see [HackITA's LinPEAS guide](https://hackita.it/articoli/linpeas-linux-privilege-escalation/)).
+**Step 5 — Use captured credentials** to log into the internal service, find a file upload, get a shell, and escalate from there using LinPEAS (see [HackITA's LinPEAS guide](/articoli/linpeas-linux-privilege-escalation/)).
 
 ***
 
@@ -241,7 +241,7 @@ Phishing is broad targeting with generic templates — high volume, low personal
 Out of the box, GoPhish leaves detectable fingerprints in email headers and HTTP responses. For realistic adversary simulation, red teams modify GoPhish to strip identifying headers and run it behind a properly configured sending infrastructure with valid SPF/DKIM/DMARC. The GoPhish documentation covers this configuration in detail.
 
 **What is the most evasive phishing vector in 2025–2026?**
-QR code phishing embedded in PDF attachments consistently bypasses secure email gateways because most solutions don't decode QR images to analyze destination URLs. AiTM proxying (covered in the [HackITA Evilginx 3 guide](https://hackita.it/articoli/evilginx3-aitm-mfa-bypass/)) remains the most technically sophisticated because it renders MFA irrelevant.
+QR code phishing embedded in PDF attachments consistently bypasses secure email gateways because most solutions don't decode QR images to analyze destination URLs. AiTM proxying (covered in the [HackITA Evilginx 3 guide](/articoli/evilginx3-aitm-mfa-bypass/)) remains the most technically sophisticated because it renders MFA irrelevant.
 
 **Are phishing simulations legally required to be authorized?**
 Yes. Running a phishing simulation without written authorization from the target organization violates computer fraud statutes in most jurisdictions, including Italy's D.lgs. 231/2001 framework. Every authorized engagement must begin with a signed scope agreement that explicitly covers phishing as an authorized technique.

@@ -72,7 +72,7 @@ Splunk Enterprise 9.2.1 su Windows è vulnerabile a **CVE-2024-36991** — path 
 
 La causa tecnica: la funzione Python `os.path.join` rimuove il drive letter da un token di path se il drive coincide con quello della directory corrente. Splunk processa il path URL segment per segment e questo comportamento diventa LFI completo.
 
-Per una guida completa all'exploitation di Splunk: [Splunk Pentesting — RCE e Privilege Escalation sulla Porta 8089](https://hackita.it/articoli/splunk-pentesting/).
+Per una guida completa all'exploitation di Splunk: [Splunk Pentesting — RCE e Privilege Escalation sulla Porta 8089](/articoli/splunk-pentesting/).
 
 ### File interessanti da leggere via LFI
 
@@ -384,7 +384,7 @@ La password non funziona più per `alexander.green` su SMB/WinRM — è una vecc
 
 ### RCE via Splunk Malicious App
 
-Con accesso admin alla Web UI si installa un'app malevola che esegue uno script automaticamente ogni 10 secondi. Tutti i dettagli sulla tecnica: [Splunk Pentesting — RCE via app deployment](https://hackita.it/articoli/splunk-pentesting/).
+Con accesso admin alla Web UI si installa un'app malevola che esegue uno script automaticamente ogni 10 secondi. Tutti i dettagli sulla tecnica: [Splunk Pentesting — RCE via app deployment](/articoli/splunk-pentesting/).
 
 ```bash
 git clone https://github.com/0xjpuff/reverse_shell_splunk
@@ -509,4 +509,4 @@ PrintSpoofer64 → SYSTEM → ROOT FLAG
 
 ***
 
-*Writeup su macchina ritirata da HackTheBox. Per approfondire le tecniche Splunk usate in questo walkthrough: [Splunk Pentesting — RCE e Privilege Escalation sulla Porta 8089](https://hackita.it/articoli/splunk-pentesting/).*
+*Writeup su macchina ritirata da HackTheBox. Per approfondire le tecniche Splunk usate in questo walkthrough: [Splunk Pentesting — RCE e Privilege Escalation sulla Porta 8089](/articoli/splunk-pentesting/).*

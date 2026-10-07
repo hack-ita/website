@@ -27,7 +27,7 @@ La reconnaissance nel pentesting è la fase di raccolta di informazioni su un ta
 
 Un target letto bene in reconnaissance vale più di ore di scanning aggressivo: puoi identificare indirizzi aziendali, ruoli e naming convention utili per valutare la superficie di attacco e simulare scenari di social engineering autorizzati, individuare un VPN gateway esposto su Shodan, un `.sql` di backup indicizzato da Google, o credenziali in un repo GitHub pubblico.
 
-**Prerequisiti:** nessuno — è il primo step di ogni engagement. I risultati alimentano [DNS](https://hackita.it/articoli/dns/), la subdomain enumeration, [nmap](https://hackita.it/articoli/nmap/) e tutte le fasi successive.
+**Prerequisiti:** nessuno — è il primo step di ogni engagement. I risultati alimentano [DNS](/articoli/dns/), la subdomain enumeration, [nmap](/articoli/nmap/) e tutte le fasi successive.
 
 ***
 
@@ -62,7 +62,7 @@ theHarvester, Shodan, Dorks         dig, puredns           nmap
 Email, documenti, tech stack        AXFR                   service detection
 ```
 
-La recon alimenta tutto: sapere che il target usa Cisco ASA (trovato su Shodan) ti dice di cercare CVE Cisco. Sapere che un dipendente si chiama Mario Rossi ti dice di provare `m.rossi@`, `mario.rossi@`, `mrossi@` come pattern username — utile poi per password spraying o brute force contro [Active Directory](https://hackita.it/articoli/active-directory/). Sapere che il target usa AWS (da un job posting LinkedIn) ti dice di cercare bucket S3 esposti.
+La recon alimenta tutto: sapere che il target usa Cisco ASA (trovato su Shodan) ti dice di cercare CVE Cisco. Sapere che un dipendente si chiama Mario Rossi ti dice di provare `m.rossi@`, `mario.rossi@`, `mrossi@` come pattern username — utile poi per password spraying o brute force contro [Active Directory](/articoli/active-directory/). Sapere che il target usa AWS (da un job posting LinkedIn) ti dice di cercare bucket S3 esposti.
 
 ***
 
@@ -119,7 +119,7 @@ theHarvester -d target.com -b google --proxy 127.0.0.1:8080
 
 * **Email**: formula il pattern di naming (`nome.cognome@`, `ncognome@`) → usa per username enumeration su servizi di autenticazione, o per simulazioni di phishing autorizzate
 * **Subdomain**: aggiungi alla lista per DNS enumeration e subdomain enumeration attiva
-* **IP**: passa a Shodan per vedere cosa gira su quegli IP, poi a [nmap](https://hackita.it/articoli/nmap/) per il port scan completo
+* **IP**: passa a Shodan per vedere cosa gira su quegli IP, poi a [nmap](/articoli/nmap/) per il port scan completo
 
 > Errore tipico: fidarsi ciecamente dei risultati di theHarvester. Alcune email sono falsi positivi estratti da contesti errati. Verifica sempre il pattern di naming su 2-3 email trovate prima di usarle.
 
@@ -431,7 +431,7 @@ exiftool documento.pdf
 
 **Cosa cerchi nei metadata:**
 
-* **Username** → prova come username SSH, VPN, RDP, o come base per attacchi contro [Active Directory](https://hackita.it/articoli/active-directory/)
+* **Username** → prova come username SSH, VPN, RDP, o come base per attacchi contro [Active Directory](/articoli/active-directory/)
 * **Software versions** → cerca CVE per quella versione
 * **Internal path** → rivela struttura directory interna
 * **Email address** → conferma il pattern di naming
@@ -715,18 +715,18 @@ Report:            modules load reporting/html → run
 
 **Guide correlate su hackita.it:**
 
-* [DNS: Fondamenti e Attacchi](https://hackita.it/articoli/dns/)
-* [Nmap: Port Scanning e Service Detection](https://hackita.it/articoli/nmap/)
-* [SQL Injection: Guida Completa](https://hackita.it/articoli/sql-injection/)
-* [Burp Suite: Intercettare e Analizzare Traffico HTTP](https://hackita.it/articoli/burp-suite/)
-* [Credential Dumping: Come Estrarre Hash](https://hackita.it/articoli/credential-dumping/)
-* [John the Ripper: Password Cracking Completo](https://hackita.it/articoli/john-the-ripper/)
-* [Hashcat: GPU Password Cracking](https://hackita.it/articoli/hashcat/)
-* [Responder: Hash Capture NTLM](https://hackita.it/articoli/responder/)
-* [Active Directory: Attack Paths Completi](https://hackita.it/articoli/active-directory/)
-* [Kerberoasting: Attacchi a Service Account](https://hackita.it/articoli/kerberos/)
-* [Impacket: Tool Suite per AD](https://hackita.it/articoli/impacket/)
-* [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/)
+* [DNS: Fondamenti e Attacchi](/articoli/dns/)
+* [Nmap: Port Scanning e Service Detection](/articoli/nmap/)
+* [SQL Injection: Guida Completa](/articoli/sql-injection/)
+* [Burp Suite: Intercettare e Analizzare Traffico HTTP](/articoli/burp-suite/)
+* [Credential Dumping: Come Estrarre Hash](/articoli/credential-dumping/)
+* [John the Ripper: Password Cracking Completo](/articoli/john-the-ripper/)
+* [Hashcat: GPU Password Cracking](/articoli/hashcat/)
+* [Responder: Hash Capture NTLM](/articoli/responder/)
+* [Active Directory: Attack Paths Completi](/articoli/active-directory/)
+* [Kerberoasting: Attacchi a Service Account](/articoli/kerberos/)
+* [Impacket: Tool Suite per AD](/articoli/impacket/)
+* [Linux Privilege Escalation](/articoli/linux-privesc/)
 
 ## Riferimenti
 

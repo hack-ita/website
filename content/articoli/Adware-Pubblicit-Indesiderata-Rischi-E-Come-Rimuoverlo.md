@@ -28,7 +28,7 @@ Non ogni software che mostra annunci è una minaccia. Molte app gratuite dichiar
 
 ## Come Funziona un Adware
 
-Il meccanismo più comune è l'iniezione di annunci nel browser: l'adware si installa come estensione, modifica le impostazioni del browser o si inserisce come proxy locale tra il dispositivo e internet, in modo da poter aggiungere o sostituire pubblicità nelle pagine visitate — comprese, nei casi peggiori, pagine che userebbero connessioni cifrate. Un'altra modalità comune sono i pop-up generati direttamente dal sistema operativo, indipendenti dal browser aperto. Ci sono infine adware che raccolgono dati di navigazione (siti visitati, ricerche, a volte posizione) per costruire un profilo pubblicitario, avvicinandosi molto a uno [spyware](https://hackita.it/articoli/spyware/) — a quel punto la distinzione è più terminologica che pratica.
+Il meccanismo più comune è l'iniezione di annunci nel browser: l'adware si installa come estensione, modifica le impostazioni del browser o si inserisce come proxy locale tra il dispositivo e internet, in modo da poter aggiungere o sostituire pubblicità nelle pagine visitate — comprese, nei casi peggiori, pagine che userebbero connessioni cifrate. Un'altra modalità comune sono i pop-up generati direttamente dal sistema operativo, indipendenti dal browser aperto. Ci sono infine adware che raccolgono dati di navigazione (siti visitati, ricerche, a volte posizione) per costruire un profilo pubblicitario, avvicinandosi molto a uno [spyware](/articoli/spyware/) — a quel punto la distinzione è più terminologica che pratica.
 
 ## Come Arriva un Adware sul Dispositivo
 
@@ -62,7 +62,7 @@ La difesa più efficace si gioca quasi interamente al momento dell'installazione
 
 **Cos'è un adware?** È un software che mostra pubblicità non richiesta, spesso raccogliendo dati di navigazione per scegliere gli annunci — non sempre malevolo, ma lo diventa quando si installa senza consenso o raccoglie dati senza dichiararlo.
 
-**L'adware è considerato malware?** Dipende dal comportamento: un adware trasparente, dichiarato e senza raccolta dati nascosta è un modello di business, non malware. Diventa malware quando si installa senza consenso, resta anche dopo la disinstallazione del programma che lo ha portato, o raccoglie dati senza dichiararlo — a quel punto rientra a tutti gli effetti nella categoria [malware](https://hackita.it/articoli/malware/).
+**L'adware è considerato malware?** Dipende dal comportamento: un adware trasparente, dichiarato e senza raccolta dati nascosta è un modello di business, non malware. Diventa malware quando si installa senza consenso, resta anche dopo la disinstallazione del programma che lo ha portato, o raccoglie dati senza dichiararlo — a quel punto rientra a tutti gli effetti nella categoria [malware](/articoli/malware/).
 
 **L'adware è pericoloso quanto un virus?** Di norma no: la maggior parte degli adware è fastidiosa più che dannosa. Il caso Superfish dimostra però che un adware mal progettato può creare vulnerabilità di sicurezza reali, non solo pubblicità moleste.
 

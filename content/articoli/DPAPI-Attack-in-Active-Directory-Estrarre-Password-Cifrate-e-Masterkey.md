@@ -433,7 +433,7 @@ Il flusso completo offline:
 
 Dumping LSASS è il modo più diretto per estrarre masterkey DPAPI attive dalla memoria — insieme a hash NTLM, ticket Kerberos e password in chiaro. Il vantaggio di `comsvcs.dll` è che è una DLL **nativa Windows firmata Microsoft**: nessun binario sospetto da caricare, l'analisi la fai offline su Kali.
 
-Per approfondire l'estrazione di credenziali da LSASS con Mimikatz e alternative, leggi il nostro articolo dedicato: [Mimikatz: guida completa all'estrazione di credenziali su Windows](https://hackita.it/articoli/mimikatz/).
+Per approfondire l'estrazione di credenziali da LSASS con Mimikatz e alternative, leggi il nostro articolo dedicato: [Mimikatz: guida completa all'estrazione di credenziali su Windows](/articoli/mimikatz/).
 
 **1. Trova il PID di LSASS**
 

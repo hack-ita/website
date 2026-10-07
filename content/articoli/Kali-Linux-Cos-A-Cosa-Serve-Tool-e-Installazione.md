@@ -46,18 +46,18 @@ Kali è ottimizzato per il lavoro di sicurezza, non per essere un desktop genera
 
 ## Kali Linux: strumenti e tool più importanti
 
-Kali raggruppa gli strumenti in base alla fase del lavoro, seguendo più o meno le fasi di un penetration test e della [Cyber Kill Chain](https://hackita.it/articoli/cyber-kill-chain/):
+Kali raggruppa gli strumenti in base alla fase del lavoro, seguendo più o meno le fasi di un penetration test e della [Cyber Kill Chain](/articoli/cyber-kill-chain/):
 
 | Categoria                    | Cosa serve a fare                        | Tool noti                                                                                                    |
 | ---------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| **Information Gathering**    | Raccogliere informazioni su un bersaglio | [Nmap](https://hackita.it/articoli/nmap/), [Shodan](https://hackita.it/articoli/shodan/)                     |
+| **Information Gathering**    | Raccogliere informazioni su un bersaglio | [Nmap](/articoli/nmap/), [Shodan](/articoli/shodan/)                     |
 | **Vulnerability Analysis**   | Trovare vulnerabilità note               | Nessus, OpenVAS                                                                                              |
-| **Web Application Analysis** | Testare applicazioni web                 | [Burp Suite](https://hackita.it/articoli/burp-suite/), [SQLmap](https://hackita.it/articoli/sqlmap/)         |
-| **Password Attacks**         | Attaccare credenziali                    | [Hashcat](https://hackita.it/articoli/hashcat/), John the Ripper, Hydra                                      |
+| **Web Application Analysis** | Testare applicazioni web                 | [Burp Suite](/articoli/burp-suite/), [SQLmap](/articoli/sqlmap/)         |
+| **Password Attacks**         | Attaccare credenziali                    | [Hashcat](/articoli/hashcat/), John the Ripper, Hydra                                      |
 | **Wireless Attacks**         | Audit di reti Wi-Fi                      | Aircrack-ng                                                                                                  |
-| **Exploitation Tools**       | Sfruttare vulnerabilità                  | [Metasploit](https://hackita.it/articoli/metasploit/)                                                        |
-| **Sniffing & Spoofing**      | Analizzare e manipolare il traffico      | Wireshark, [Responder](https://hackita.it/articoli/responder/)                                               |
-| **Post Exploitation**        | Operare dopo l'accesso iniziale          | [Impacket](https://hackita.it/articoli/impacket/), [CrackMapExec](https://hackita.it/articoli/crackmapexec/) |
+| **Exploitation Tools**       | Sfruttare vulnerabilità                  | [Metasploit](/articoli/metasploit/)                                                        |
+| **Sniffing & Spoofing**      | Analizzare e manipolare il traffico      | Wireshark, [Responder](/articoli/responder/)                                               |
+| **Post Exploitation**        | Operare dopo l'accesso iniziale          | [Impacket](/articoli/impacket/), [CrackMapExec](/articoli/crackmapexec/) |
 | **Forensics**                | Analisi forense                          | Autopsy, Volatility                                                                                          |
 | **Reverse Engineering**      | Analisi di binari                        | Ghidra, GDB                                                                                                  |
 

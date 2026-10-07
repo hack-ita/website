@@ -36,10 +36,10 @@ Porte rilevanti:
 
 * **53** — DNS
 * **88** — Kerberos
-* **111** — [RPC / portmapper](https://hackita.it/articoli/porta-111-rpcbind/)
+* **111** — [RPC / portmapper](/articoli/porta-111-rpcbind/)
 * **389/636** — LDAP/LDAPS
 * **445** — SMB
-* **2049** — [NFS](https://hackita.it/articoli/porta-2049-nfs/) ← primo vettore da esplorare
+* **2049** — [NFS](/articoli/porta-2049-nfs/) ← primo vettore da esplorare
 * **5985/5986** — WinRM
 
 La combinazione porta 111 (portmapper) + 2049 (NFS) è un segnale diretto: c'è uno share NFS esposto. Si enumera subito.
@@ -219,7 +219,7 @@ Il template `StaffAccessCertificate` ha il flag `SubjectRequireEmail` e `Subject
 
 Questo è **ESC9**: abuso del flag `SubjectAltRequireEmail` combinato con la possibilità di modificare l'UPN di un utente terzo.
 
-Per la teoria completa: [ESC9 — ADCS](https://hackita.it/articoli/esc9-adcs/)
+Per la teoria completa: [ESC9 — ADCS](/articoli/esc9-adcs/)
 
 ### Catena di permessi
 
@@ -345,7 +345,7 @@ In questo caso usiamo il formato **RFC822** (email), perché è quello che inclu
 
 Questo è **ESC14**: write su `altSecurityIdentities` + controllo su un utente che può richiedere certificati = impersonazione.
 
-Per la spiegazione dettagliata: [ADCS ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16/)
+Per la spiegazione dettagliata: [ADCS ESC1–ESC16](/articoli/adcs-esc1-esc16/)
 
 ### Exploit
 
@@ -446,10 +446,10 @@ Flag root.
 
 ## Risorse
 
-* [ADCS ESC1–ESC16 — Guida Completa](https://hackita.it/articoli/adcs-esc1-esc16/)
-* [ESC9 — ADCS](https://hackita.it/articoli/esc9-adcs/)
-* [DCSync](https://hackita.it/articoli/dcsync/#metodo-2-secretsdumppy-da-linux--impacket)
-* [RPC / Portmapper — Porta 111](https://hackita.it/articoli/porta-111-rpcbind/)
-* [NFS — Porta 2049](https://hackita.it/articoli/porta-2049-nfs/)
-* [LDAP — Porta 389](https://hackita.it/articoli/porta-389-ldap/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/)
+* [ADCS ESC1–ESC16 — Guida Completa](/articoli/adcs-esc1-esc16/)
+* [ESC9 — ADCS](/articoli/esc9-adcs/)
+* [DCSync](/articoli/dcsync/#metodo-2-secretsdumppy-da-linux--impacket)
+* [RPC / Portmapper — Porta 111](/articoli/porta-111-rpcbind/)
+* [NFS — Porta 2049](/articoli/porta-2049-nfs/)
+* [LDAP — Porta 389](/articoli/porta-389-ldap/)
+* [BloodHound](/articoli/bloodhound/)

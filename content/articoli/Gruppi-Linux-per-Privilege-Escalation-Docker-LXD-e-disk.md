@@ -192,7 +192,7 @@ unshadow passwd.txt shadow.txt > combined.txt
 john --wordlist=/usr/share/wordlists/rockyou.txt combined.txt
 ```
 
-[`john`](https://hackita.it/articoli/john-the-ripper/) prova a indovinare la password provando milioni di parole da una lista già pronta (la "wordlist", qui `rockyou.txt` — una raccolta di password reali trapelate in passato) finché una non produce lo stesso hash. Se l'hash di root si rompe, hai la password in chiaro: puoi fare `su root` o `ssh root@target`. Se si rompe solo quello di un utente normale, hai comunque un salto laterale utile — magari quell'utente è in un gruppo più interessante di quello con cui sei entrato, o ha permessi `sudo`.
+[`john`](/articoli/john-the-ripper/) prova a indovinare la password provando milioni di parole da una lista già pronta (la "wordlist", qui `rockyou.txt` — una raccolta di password reali trapelate in passato) finché una non produce lo stesso hash. Se l'hash di root si rompe, hai la password in chiaro: puoi fare `su root` o `ssh root@target`. Se si rompe solo quello di un utente normale, hai comunque un salto laterale utile — magari quell'utente è in un gruppo più interessante di quello con cui sei entrato, o ha permessi `sudo`.
 
 Il cracking è offline rispetto al target, ma l'accesso e l'esfiltrazione del file possono comunque lasciare tracce (accesso a un file normalmente riservato a root/PAM).
 
@@ -210,7 +210,7 @@ Prima di lanciarlo, tre verifiche che cambiano l'esito:
 * **Rootless vs `userns-remap`**: sono cose diverse. Rootless Docker fa girare daemon e container senza root — qui il vettore non si applica allo stesso modo. `userns-remap` invece lascia il daemon come root, cambia solo la mappatura UID dentro i container: il vettore socket resta valido.
 * **`docker ps: permission denied`** non significa sempre "gruppo non attivo": può essere context sbagliato, un'ACL sul socket, un authorization plugin (un modulo extra che Docker può usare per decidere chi può fare cosa, oltre al semplice gruppo), o un daemon remoto. Riloggarsi/`newgrp docker` risolve solo il caso in cui il GID non è ancora stato acquisito dalla shell corrente.
 
-Per approfondire l'enumerazione di ambienti Docker prima di arrivare a questo punto, vedi [Container Escape](https://hackita.it/articoli/container-escape/).
+Per approfondire l'enumerazione di ambienti Docker prima di arrivare a questo punto, vedi [Container Escape](/articoli/container-escape/).
 
 ## lxd / Incus (GID dinamico) — stesso principio, verifica quale demone e quale gruppo
 
@@ -318,7 +318,7 @@ Se compaiono config di servizi eseguiti da root o librerie caricate da processi 
 
 ## staff (GID 50) — dirottare `/usr/local` e i cron di sistema
 
-Su Debian/Ubuntu, `staff` ha scrittura su `/usr/local` (definizione ufficiale sul [wiki dei System Groups di Debian](https://wiki.debian.org/SystemGroups)), e su queste distribuzioni `/usr/local/bin` precede `/usr/bin` nel `$PATH` (la lista di cartelle in cui il sistema cerca un comando quando lo lanci per nome, in ordine). Un bersaglio concreto è `run-parts`, richiamato da [cron](https://hackita.it/articoli/crontab/) e da molte sessioni SSH (script di MOTD dinamico):
+Su Debian/Ubuntu, `staff` ha scrittura su `/usr/local` (definizione ufficiale sul [wiki dei System Groups di Debian](https://wiki.debian.org/SystemGroups)), e su queste distribuzioni `/usr/local/bin` precede `/usr/bin` nel `$PATH` (la lista di cartelle in cui il sistema cerca un comando quando lo lanci per nome, in ordine). Un bersaglio concreto è `run-parts`, richiamato da [cron](/articoli/crontab/) e da molte sessioni SSH (script di MOTD dinamico):
 
 ```bash
 cat /etc/crontab | grep run-parts
@@ -343,9 +343,9 @@ Nessuno di questi va scartato solo per il nome: qualunque gruppo può contare se
 * **containerd** (`ctr`): se il socket `/run/containerd/containerd.sock` è raggiungibile (di norma solo root, ma verifica sempre i permessi reali — non esiste un gruppo "containerd" universale di default), stesso principio di Docker: `ctr image list`, poi `ctr run --mount type=bind,src=/,dst=/,options=rbind -t <immagine> ubuntu bash`.
 * **podman**: rootless by default, quindi l'appartenenza a un eventuale gruppo non equivale automaticamente a root come per Docker. Verifica prima `podman info` (cerca `rootless: true/false`): solo se rootful, `podman run --privileged` con mount dell'host si comporta come il vettore Docker.
 * **systemd-network** (GID dinamico): su alcune distro i file `.network`/`.netdev` sono leggibili dal gruppo — possono contenere chiavi WireGuard (un protocollo VPN moderno). Dipende dalla configurazione.
-* **[wireshark](https://hackita.it/articoli/wireshark/)** / **pcap** (GID dinamico): `dumpcap` sniffa traffico solo se il binario ha ANCHE la capability `cap_net_raw`/`cap_net_admin` — il gruppo da solo non basta, verifica con [`getcap`](https://hackita.it/articoli/getcap/).
+* **[wireshark](/articoli/wireshark/)** / **pcap** (GID dinamico): `dumpcap` sniffa traffico solo se il binario ha ANCHE la capability `cap_net_raw`/`cap_net_admin` — il gruppo da solo non basta, verifica con [`getcap`](/articoli/getcap/).
 * **lp** (GID 7): accesso alle code di stampa — può esporre il CONTENUTO dei documenti in spool. Diverso da `lpadmin`.
-* **lpadmin** (GID dinamico): amministrazione [CUPS](https://hackita.it/articoli/porta-631-ipp-cups/). Storicamente (CVE-2012-5519) permetteva di far leggere a `cupsd` (root) file arbitrari via un percorso di log impostato dall'interfaccia web. Patchato da anni: rilevante solo su sistemi molto datati.
+* **lpadmin** (GID dinamico): amministrazione [CUPS](/articoli/porta-631-ipp-cups/). Storicamente (CVE-2012-5519) permetteva di far leggere a `cupsd` (root) file arbitrari via un percorso di log impostato dall'interfaccia web. Patchato da anni: rilevante solo su sistemi molto datati.
 * **operator** (GID 37): accesso operativo specifico della piattaforma, spesso porta a disclosure di dati a runtime più che ad accesso diretto.
 * **dialout** (GID 20): porte seriali (`/dev/ttyS*`, `/dev/ttyUSB*`) — centrale con target embedded/router/PLC collegati via seriale; l'impatto dipende interamente dal dispositivo agganciato.
 * **netdev** (GID dinamico): gestione rete via NetworkManager senza sudo. Interessante non solo per modificare DNS/proxy, ma perché rivela credenziali salvate: `nmcli connection show NOME -p` stampa in chiaro la password WiFi/VPN salvata per quella connessione, se presente.
@@ -481,7 +481,7 @@ No — l'eco è disattivato per quell'input. Quello che può finire visibile è 
 Solo su handshake legacy a scambio di chiave RSA statico. Con forward secrecy (ECDHE, TLS 1.3) la chiave privata del server non basta.
 
 **Esiste un modo per enumerare automaticamente i gruppi pericolosi?**
-[LinPEAS](https://hackita.it/articoli/linpeas/) e [LinEnum](https://hackita.it/articoli/linenum/) segnalano i finding — vanno comunque validati manualmente prima di agire.
+[LinPEAS](/articoli/linpeas/) e [LinEnum](/articoli/linenum/) segnalano i finding — vanno comunque validati manualmente prima di agire.
 
 ## Cheat sheet finale: tutti i gruppi in un colpo d'occhio
 
@@ -539,14 +539,14 @@ Solo su handshake legacy a scambio di chiave RSA statico. Con forward secrecy (E
 
 | Articolo                                                                 | Perché leggerlo                                                           |
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/) | Panoramica generale, punto di partenza per l'intero argomento             |
-| [GTFOBins](https://hackita.it/articoli/gtfobins/)                        | Database di binari abusabili, utile per la voce sudo/wheel                |
-| [LinPEAS](https://hackita.it/articoli/linpeas/)                          | Tool di enumerazione automatica, i finding vanno comunque validati a mano |
-| [LinEnum](https://hackita.it/articoli/linenum/)                          | Script di enumerazione alternativo                                        |
-| [Container Escape](https://hackita.it/articoli/container-escape/)        | Tecniche di escape più avanzate, oltre il triage del gruppo               |
-| [Unix Privesc Check](https://hackita.it/articoli/unix-privesc-check/)    | Altro script di enumerazione automatica, alternativo a LinPEAS            |
-| [John the Ripper](https://hackita.it/articoli/john-the-ripper/)          | Il tool usato per craccare gli hash di `/etc/shadow`                      |
-| [Kernel Exploits](https://hackita.it/articoli/kernel/)                   | Il piano B quando nessun gruppo dà accesso utile                          |
+| [Linux Privilege Escalation](/articoli/linux-privesc/) | Panoramica generale, punto di partenza per l'intero argomento             |
+| [GTFOBins](/articoli/gtfobins/)                        | Database di binari abusabili, utile per la voce sudo/wheel                |
+| [LinPEAS](/articoli/linpeas/)                          | Tool di enumerazione automatica, i finding vanno comunque validati a mano |
+| [LinEnum](/articoli/linenum/)                          | Script di enumerazione alternativo                                        |
+| [Container Escape](/articoli/container-escape/)        | Tecniche di escape più avanzate, oltre il triage del gruppo               |
+| [Unix Privesc Check](/articoli/unix-privesc-check/)    | Altro script di enumerazione automatica, alternativo a LinPEAS            |
+| [John the Ripper](/articoli/john-the-ripper/)          | Il tool usato per craccare gli hash di `/etc/shadow`                      |
+| [Kernel Exploits](/articoli/kernel/)                   | Il piano B quando nessun gruppo dà accesso utile                          |
 
 ***
 

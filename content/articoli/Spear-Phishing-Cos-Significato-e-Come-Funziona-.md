@@ -20,7 +20,7 @@ tags:
 
 # Spear Phishing: Come Funziona, Esempi e Come Difendersi
 
-Lo **spear phishing** è una forma mirata di [phishing](https://hackita.it/articoli/phishing/): invece di inviare lo stesso messaggio generico a milioni di destinatari, l'attaccante studia una persona o un'organizzazione specifica e costruisce un messaggio su misura, usando dettagli reali per renderlo credibile. Il nome viene dalla pesca: non si lancia una rete (il phishing di massa), si colpisce un bersaglio preciso con un arpione.
+Lo **spear phishing** è una forma mirata di [phishing](/articoli/phishing/): invece di inviare lo stesso messaggio generico a milioni di destinatari, l'attaccante studia una persona o un'organizzazione specifica e costruisce un messaggio su misura, usando dettagli reali per renderlo credibile. Il nome viene dalla pesca: non si lancia una rete (il phishing di massa), si colpisce un bersaglio preciso con un arpione.
 
 È una tecnica a basso volume ma ad alto impatto: in un'analisi di Barracuda pubblicata nel 2023, le email di spear phishing rappresentavano meno dello **0,1%** del totale degli attacchi via email analizzati, ma risultavano collegate a circa il **66%** delle violazioni osservate nel campione studiato.
 
@@ -39,11 +39,11 @@ La differenza non è il canale o il contenuto in sé, ma lo **sforzo di ricogniz
 
 ## Come funziona un attacco di spear phishing
 
-1. **Ricognizione (OSINT)**: l'attaccante raccoglie informazioni pubbliche sul bersaglio tramite LinkedIn, il sito aziendale, comunicati stampa, social network e, quando possibile, email trapelate in precedenti [data breach](https://hackita.it/articoli/data-breach/).
+1. **Ricognizione (OSINT)**: l'attaccante raccoglie informazioni pubbliche sul bersaglio tramite LinkedIn, il sito aziendale, comunicati stampa, social network e, quando possibile, email trapelate in precedenti [data breach](/articoli/data-breach/).
 2. **Selezione del pretesto**: sceglie un contesto plausibile basato su ciò che ha scoperto: un progetto in corso, un fornitore reale, un evento aziendale, una relazione professionale.
 3. **Costruzione del messaggio**: scrive un'email (o un messaggio su altro canale) che imita lo stile, il linguaggio e le informazioni che il bersaglio si aspetterebbe da quel mittente.
 4. **Consegna**: invia il messaggio, spesso con un senso di urgenza o un'autorità percepita (un capo, un cliente, un collega fidato).
-5. **Sfruttamento**: il click porta a un sito di raccolta credenziali, un allegato con malware, oppure il messaggio stesso chiede direttamente un'azione, come nel [Business Email Compromise](https://hackita.it/articoli/business-email-compromise/).
+5. **Sfruttamento**: il click porta a un sito di raccolta credenziali, un allegato con malware, oppure il messaggio stesso chiede direttamente un'azione, come nel [Business Email Compromise](/articoli/business-email-compromise/).
 
 ## Spear phishing, whaling e BEC: come si collegano
 
@@ -53,7 +53,7 @@ Questi tre termini vengono spesso confusi perché sono strettamente imparentati:
 | --------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | **Spear phishing**                                                                      | Individui o ruoli specifici                                     | Il termine generale per qualsiasi phishing mirato                                                            |
 | **Whaling**                                                                             | Dirigenti e membri del consiglio di amministrazione (*C-suite*) | Un sottoinsieme di spear phishing: stesso principio, bersagli di altissimo livello                           |
-| **[Business Email Compromise](https://hackita.it/articoli/business-email-compromise/)** | Team finanziari, contabilità fornitori                          | Spesso usa lo spear phishing come vettore iniziale, ma punta specificamente a manipolare pagamenti aziendali |
+| **[Business Email Compromise](/articoli/business-email-compromise/)** | Team finanziari, contabilità fornitori                          | Spesso usa lo spear phishing come vettore iniziale, ma punta specificamente a manipolare pagamenti aziendali |
 
 In pratica: lo spear phishing è la tecnica, whaling e BEC sono applicazioni specifiche di quella tecnica verso bersagli o obiettivi particolari.
 
@@ -85,7 +85,7 @@ L'IA generativa ha cambiato l'economia dello spear phishing. Uno studio accademi
 
 Il dato interessante non è solo l'efficacia, pari a quella di un esperto umano, ma il **costo**: generare contenuti personalizzati su larga scala, un tempo compito di un operatore dedicato per ogni bersaglio, oggi richiede una frazione del tempo e del lavoro umano. È bene ricordare che si tratta di uno studio sperimentale su un campione specifico, non di un tasso medio universale valido per ogni campagna reale di spear phishing.
 
-Questo significa che la barriera d'ingresso per campagne un tempo riservate a gruppi molto organizzati si è abbassata: ricognizione automatizzata dai profili social, generazione del testo, persino cloni vocali per rafforzare la credibilità in un secondo contatto telefonico (una tecnica che si intreccia con il [vishing](https://hackita.it/articoli/vishing/)).
+Questo significa che la barriera d'ingresso per campagne un tempo riservate a gruppi molto organizzati si è abbassata: ricognizione automatizzata dai profili social, generazione del testo, persino cloni vocali per rafforzare la credibilità in un secondo contatto telefonico (una tecnica che si intreccia con il [vishing](/articoli/vishing/)).
 
 ## Un caso reale: Ubiquiti Networks, 46,7 milioni di dollari
 

@@ -250,9 +250,9 @@ SeDelegateSessionUserImpersonatePrivilege è un privilegio di nicchia ma critico
 
 **Articoli correlati:**
 
-* [SeImpersonatePrivilege](https://hackita.it/articoli/seimpersonateprivilege/) — il fratello reattivo, più comune
-* [SeAssignPrimaryTokenPrivilege](https://hackita.it/articoli/seassignprimarytokenprivilege/) — assegnazione token a processi figlio
+* [SeImpersonatePrivilege](/articoli/seimpersonateprivilege/) — il fratello reattivo, più comune
+* [SeAssignPrimaryTokenPrivilege](/articoli/seassignprimarytokenprivilege/) — assegnazione token a processi figlio
 
 **Riferimenti:** [NtObjectManager](https://github.com/googleprojectzero/sandbox-attacksurface-analysis-tools) · [James Forshaw - Project Zero](https://googleprojectzero.blogspot.com/) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/impersonate-a-client-after-authentication)
 
-Per assessment su infrastrutture RDS e Citrix: [hackita.it/servizi](https://hackita.it/servizi)
+Per assessment su infrastrutture RDS e Citrix: [hackita.it/servizi](/servizi)

@@ -37,7 +37,7 @@ Bettercap non è "un tool ARP": è un framework che copre recon, spoofing (ARP, 
 * Automazione di sessioni ripetibili tramite caplet
 * Gestione e visualizzazione da Web UI o API REST
 
-Quando non è la scelta giusta: se devi solo analizzare un pcap già catturato o fare ispezione protocollare approfondita, uno strumento dedicato come [Wireshark](https://hackita.it/articoli/wireshark/) è più indicato.
+Quando non è la scelta giusta: se devi solo analizzare un pcap già catturato o fare ispezione protocollare approfondita, uno strumento dedicato come [Wireshark](/articoli/wireshark/) è più indicato.
 
 ## Bettercap: moduli e funzionalità principali
 
@@ -162,7 +162,7 @@ net.probe on
 
 Se dopo l'attivazione del probe compaiono nuovi endpoint, la subnet aveva host che non rispondevano spontaneamente. Su reti grandi o instabili, anche in lab, `net.probe` può generare rumore: limita il CIDR o disattivalo dopo la baseline.
 
-Come alternativa più mirata per la sola discovery, in lab puoi anche partire da [arp-scan](https://hackita.it/articoli/arp-scan/) o da [netdiscover](https://hackita.it/articoli/netdiscover/) prima di entrare in Bettercap.
+Come alternativa più mirata per la sola discovery, in lab puoi anche partire da [arp-scan](/articoli/arp-scan/) o da [netdiscover](/articoli/netdiscover/) prima di entrare in Bettercap.
 
 ## ARP spoofing e MITM con Bettercap
 
@@ -203,7 +203,7 @@ output: /tmp/lab-sniff.pcap
 packets: 1234
 ```
 
-Se il contatore resta a zero, o hai un filtro troppo aggressivo o stai sniffando sull'interfaccia sbagliata. Anche senza credenziali in chiaro, una pcap resta la prova più solida e ripetibile di quello che è successo — apribile con [Wireshark](https://hackita.it/articoli/wireshark/) per confermare che i flussi coincidano col test.
+Se il contatore resta a zero, o hai un filtro troppo aggressivo o stai sniffando sull'interfaccia sbagliata. Anche senza credenziali in chiaro, una pcap resta la prova più solida e ripetibile di quello che è successo — apribile con [Wireshark](/articoli/wireshark/) per confermare che i flussi coincidano col test.
 
 ## DNS spoofing con Bettercap
 
@@ -291,10 +291,10 @@ I caplet sono script `.cap` che raggruppano una sequenza di comandi Bettercap, c
 | Tool                                                | Punto di forza                                                                                  |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | Bettercap                                           | Framework modulare, recon + spoof + sniff + proxy in un'unica sessione automatizzabile          |
-| [Ettercap](https://hackita.it/articoli/ettercap/)   | MITM "storico", interfaccia e filtri diversi, più leggero per certi scenari mirati              |
-| [Wireshark](https://hackita.it/articoli/wireshark/) | Analisi e dissezione approfondita dei pacchetti, non pensato per generare l'attacco             |
-| [mitmproxy](https://hackita.it/articoli/mitmproxy/) | Intercettazione HTTP/HTTPS scriptabile in Python, quando il focus è solo il livello applicativo |
-| [tcpdump](https://hackita.it/articoli/tcpdump/)     | Cattura rapida da riga di comando, minimale                                                     |
+| [Ettercap](/articoli/ettercap/)   | MITM "storico", interfaccia e filtri diversi, più leggero per certi scenari mirati              |
+| [Wireshark](/articoli/wireshark/) | Analisi e dissezione approfondita dei pacchetti, non pensato per generare l'attacco             |
+| [mitmproxy](/articoli/mitmproxy/) | Intercettazione HTTP/HTTPS scriptabile in Python, quando il focus è solo il livello applicativo |
+| [tcpdump](/articoli/tcpdump/)     | Cattura rapida da riga di comando, minimale                                                     |
 
 Se il lab richiede recon, MITM a livello di rete e sniffing nella stessa sessione, Bettercap è la scelta più naturale; se il focus è solo l'analisi approfondita di un pcap o l'intercettazione HTTP scriptabile, gli strumenti dedicati sopra sono spesso più efficienti.
 
@@ -411,11 +411,11 @@ Bettercap copre recon, spoof, sniff e proxy in un unico framework automatizzabil
 
 ## Link utili su HackIta
 
-* [Ettercap per MITM e sniffing in rete](https://hackita.it/articoli/ettercap/)
-* [Wireshark: dissezione e analisi del traffico](https://hackita.it/articoli/wireshark/)
-* [tcpdump: cattura rapida da terminale](https://hackita.it/articoli/tcpdump/)
-* [mitmproxy: intercettazione HTTP/HTTPS scriptabile](https://hackita.it/articoli/mitmproxy/)
-* [arp-scan per la discovery interna](https://hackita.it/articoli/arp-scan/)
-* [netdiscover per host discovery in LAN](https://hackita.it/articoli/netdiscover/)
-* [Responder: capture in lab Windows/AD](https://hackita.it/articoli/responder/)
-* [Inveigh: alternativa Windows-centric a Responder](https://hackita.it/articoli/inveigh/)
+* [Ettercap per MITM e sniffing in rete](/articoli/ettercap/)
+* [Wireshark: dissezione e analisi del traffico](/articoli/wireshark/)
+* [tcpdump: cattura rapida da terminale](/articoli/tcpdump/)
+* [mitmproxy: intercettazione HTTP/HTTPS scriptabile](/articoli/mitmproxy/)
+* [arp-scan per la discovery interna](/articoli/arp-scan/)
+* [netdiscover per host discovery in LAN](/articoli/netdiscover/)
+* [Responder: capture in lab Windows/AD](/articoli/responder/)
+* [Inveigh: alternativa Windows-centric a Responder](/articoli/inveigh/)

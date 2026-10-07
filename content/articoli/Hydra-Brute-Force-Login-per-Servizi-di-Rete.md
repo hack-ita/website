@@ -154,10 +154,10 @@ hydra -l "DOMAIN\\admin" -P passwords.txt rdp://192.168.1.100
 # SMB/CIFS
 hydra -l administrator -P passwords.txt smb://192.168.1.100
 
-# Integra con [CrackMapExec](https://hackita.it/articoli/crackmapexec/) per post-exploitation
+# Integra con [CrackMapExec](/articoli/crackmapexec/) per post-exploitation
 ```
 
-### [MySQL](https://hackita.it/articoli/porta-3306-mysql/) Bruteforce
+### [MySQL](/articoli/porta-3306-mysql/) Bruteforce
 
 ```bash
 # MySQL
@@ -230,7 +230,7 @@ hydra -l admin -P passwords.txt 192.168.1.100 https-post-form \
 ```bash
 # Hydra non gestisce CSRF nativamente
 # Usa Burp Intruder o script custom per CSRF tokens
-# Oppure [Patator](https://hackita.it/articoli/patator/) che supporta token dinamici
+# Oppure [Patator](/articoli/patator/) che supporta token dinamici
 ```
 
 ## Tecniche Avanzate
@@ -491,7 +491,7 @@ hydra ... "...:S=Welcome admin"
 
 **Hydra vs Medusa vs Patator?**
 
-Hydra è il più veloce e supporta più protocolli. Medusa è più stabile per attacchi lunghi. [Patator](https://hackita.it/articoli/patator/) è più flessibile per casi complessi. Usa Hydra come default.
+Hydra è il più veloce e supporta più protocolli. Medusa è più stabile per attacchi lunghi. [Patator](/articoli/patator/) è più flessibile per casi complessi. Usa Hydra come default.
 
 **Come evito account lockout?**
 
@@ -503,14 +503,14 @@ No direttamente. 2FA richiede interazione dinamica. Cerca bypass 2FA o usa tool 
 
 **Posso usare GPU con Hydra?**
 
-No, Hydra è per attacchi online (rete). Per cracking offline con GPU usa [Hashcat](https://hackita.it/articoli/hashcat/).
+No, Hydra è per attacchi online (rete). Per cracking offline con GPU usa [Hashcat](/articoli/hashcat/).
 
 **È legale usare Hydra?**
 
-Solo su sistemi autorizzati. L'uso non autorizzato è reato. Per pentest professionali, [hackita.it/servizi](https://hackita.it/servizi).
+Solo su sistemi autorizzati. L'uso non autorizzato è reato. Per pentest professionali, [hackita.it/servizi](/servizi).
 
 ***
 
-*Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).*
+*Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).*
 
 **Risorse**: [THC-Hydra GitHub](https://github.com/vanhauser-thc/thc-hydra) | [SecLists](https://github.com/danielmiessler/SecLists)

@@ -18,7 +18,7 @@ tags:
 Questa guida raccoglie tutti i tool offensivi usati nel penetration testing, organizzati per fase di attacco — non in ordine alfabetico. Dalla recon OSINT all'exploitation, dal lateral movement AD al pivoting su reti segmentate. Ogni tool ha il suo contesto, il suo momento, il suo caso d'uso reale.
 Ogni fase di un penetration test ha i suoi strumenti. Nmap non serve a nulla se non sai leggere l'output. Mimikatz non funziona senza i privilegi giusti. BloodHound è inutile se non hai prima enumerato il dominio. La scelta del tool sbagliato nel momento sbagliato è la causa principale di engagement falliti e lab non completati.
 
-Il riferimento operativo per chi prepara OSCP, OSEP, lavora su HTB o esegue red team engagement. Per i servizi esposti su ogni porta e i relativi vettori, consulta la [Guida Completa alle Porte TCP/UDP nel Penetration Testing](https://hackita.it/articoli/porte-tcp-udp-pentest/).
+Il riferimento operativo per chi prepara OSCP, OSEP, lavora su HTB o esegue red team engagement. Per i servizi esposti su ogni porta e i relativi vettori, consulta la [Guida Completa alle Porte TCP/UDP nel Penetration Testing](/articoli/porte-tcp-udp-pentest/).
 
 ```
 Recon → Scanning → Enumeration → Exploitation → Post-Exploitation → Pivoting → Exfiltration
@@ -32,16 +32,16 @@ Se stai iniziando o prepari OSCP, questi sono i 10 tool che coprono l'80% dei ca
 
 | #  | Tool                                                  | Perché è essenziale                                        |
 | -- | ----------------------------------------------------- | ---------------------------------------------------------- |
-| 1  | [Nmap](https://hackita.it/articoli/nmap/)             | Port scan, version detection, NSE — tutto parte da qui     |
-| 2  | [Burp Suite](https://hackita.it/articoli/burp-suite/) | Intercept e test vulnerabilità web — insostituibile        |
-| 3  | [BloodHound](https://hackita.it/articoli/bloodhound/) | Attack path AD — ti mostra il percorso verso Domain Admin  |
-| 4  | [NetExec](https://hackita.it/articoli/netexec/)       | Enumerazione e lateral movement Windows — standard attuale |
-| 5  | [Impacket](https://hackita.it/articoli/impacket/)     | Toolkit Python AD — SMB, Kerberos, DCSync, WMI             |
-| 6  | [Responder](https://hackita.it/articoli/responder/)   | NTLM hash capture automatico su LAN — instant win          |
-| 7  | [FFUF](https://hackita.it/articoli/ffuf/)             | Web fuzzing veloce — directory, parametri, vhost           |
-| 8  | [Mimikatz](https://hackita.it/articoli/mimikatz/)     | Dump credenziali Windows — NTLM, Kerberos, DPAPI           |
-| 9  | [LinPEAS](https://hackita.it/articoli/linpeas/)       | Enumera tutto su Linux — privesc in automatico             |
-| 10 | [Hydra](https://hackita.it/articoli/hydra/)           | Brute force multi-protocollo — SSH, FTP, HTTP, SMB         |
+| 1  | [Nmap](/articoli/nmap/)             | Port scan, version detection, NSE — tutto parte da qui     |
+| 2  | [Burp Suite](/articoli/burp-suite/) | Intercept e test vulnerabilità web — insostituibile        |
+| 3  | [BloodHound](/articoli/bloodhound/) | Attack path AD — ti mostra il percorso verso Domain Admin  |
+| 4  | [NetExec](/articoli/netexec/)       | Enumerazione e lateral movement Windows — standard attuale |
+| 5  | [Impacket](/articoli/impacket/)     | Toolkit Python AD — SMB, Kerberos, DCSync, WMI             |
+| 6  | [Responder](/articoli/responder/)   | NTLM hash capture automatico su LAN — instant win          |
+| 7  | [FFUF](/articoli/ffuf/)             | Web fuzzing veloce — directory, parametri, vhost           |
+| 8  | [Mimikatz](/articoli/mimikatz/)     | Dump credenziali Windows — NTLM, Kerberos, DPAPI           |
+| 9  | [LinPEAS](/articoli/linpeas/)       | Enumera tutto su Linux — privesc in automatico             |
+| 10 | [Hydra](/articoli/hydra/)           | Brute force multi-protocollo — SSH, FTP, HTTP, SMB         |
 
 > **NetExec vs CrackMapExec:** NetExec è il fork attivo di CrackMapExec, sviluppato dalla community dopo l'abbandono del progetto originale. Stessa sintassi base, ma NetExec è più aggiornato. Usa NetExec per nuovi engagement, CME se segui documentazione che lo referenzia.
 
@@ -72,24 +72,24 @@ Prima di toccare il target, raccogli tutto quello che puoi da fonti pubbliche. S
 
 | Tool         | Cosa fa nel pentest                                           | Guida                                                     |
 | ------------ | ------------------------------------------------------------- | --------------------------------------------------------- |
-| Amass        | Enumerazione subdomini passiva e attiva, ASN mapping          | [Amass](https://hackita.it/articoli/amass/)               |
-| Aquatone     | Screenshot automatico di tutti i subdomini trovati            | [Aquatone](https://hackita.it/articoli/aquatone/)         |
-| Assetfinder  | Discovery rapido subdomini da fonti OSINT                     | [Assetfinder](https://hackita.it/articoli/assetfinder/)   |
-| Eyewitness   | Screenshot + report visivo di servizi web e RDP               | [Eyewitness](https://hackita.it/articoli/eyewitness/)     |
-| FOCA         | Metadati da documenti pubblici, info su dominio e utenti      | [FOCA](https://hackita.it/articoli/foca/)                 |
-| Gitrob       | Ricerca segreti e credenziali in repository GitHub pubblici   | [Gitrob](https://hackita.it/articoli/gitrob/)             |
-| HostRecon    | Recon rapido su host singolo, tecnologie e servizi            | [HostRecon](https://hackita.it/articoli/hostrecon/)       |
-| HTTPX        | Probe HTTP veloce su lista di host, status code e tech stack  | [HTTPX](https://hackita.it/articoli/httpx/)               |
-| Maltego      | Grafo OSINT visuale — relazioni tra entità, email, IP, domini | [Maltego](https://hackita.it/articoli/maltego/)           |
-| Recon-ng     | Framework OSINT modulare, simile a Metasploit per la recon    | [Recon-ng](https://hackita.it/articoli/reconng/)          |
-| ReconSpider  | OSINT automatizzato multi-fonte su target specifico           | [ReconSpider](https://hackita.it/articoli/reconspider/)   |
-| Shodan       | Motore di ricerca per device esposti — IoT, ICS, servizi      | [Shodan](https://hackita.it/articoli/shodan/)             |
-| SpiderFoot   | OSINT automatizzato, scanning passivo su dominio/IP           | [SpiderFoot](https://hackita.it/articoli/spiderfoot/)     |
-| Subfinder    | Discovery subdomini veloce con certificate transparency       | [Subfinder](https://hackita.it/articoli/subfinder/)       |
-| theHarvester | Email, subdomini, nomi da motori di ricerca e OSINT           | [theHarvester](https://hackita.it/articoli/theharvester/) |
-| Wappalyzer   | Identificazione tecnologie web — CMS, framework, librerie     | [Wappalyzer](https://hackita.it/articoli/wappalyzer/)     |
-| WaybackURLs  | URL storici da Wayback Machine — endpoint nascosti, parametri | [WaybackURLs](https://hackita.it/articoli/waybackurls/)   |
-| WhatWeb      | Fingerprinting tecnologie web da CLI                          | [WhatWeb](https://hackita.it/articoli/whatweb/)           |
+| Amass        | Enumerazione subdomini passiva e attiva, ASN mapping          | [Amass](/articoli/amass/)               |
+| Aquatone     | Screenshot automatico di tutti i subdomini trovati            | [Aquatone](/articoli/aquatone/)         |
+| Assetfinder  | Discovery rapido subdomini da fonti OSINT                     | [Assetfinder](/articoli/assetfinder/)   |
+| Eyewitness   | Screenshot + report visivo di servizi web e RDP               | [Eyewitness](/articoli/eyewitness/)     |
+| FOCA         | Metadati da documenti pubblici, info su dominio e utenti      | [FOCA](/articoli/foca/)                 |
+| Gitrob       | Ricerca segreti e credenziali in repository GitHub pubblici   | [Gitrob](/articoli/gitrob/)             |
+| HostRecon    | Recon rapido su host singolo, tecnologie e servizi            | [HostRecon](/articoli/hostrecon/)       |
+| HTTPX        | Probe HTTP veloce su lista di host, status code e tech stack  | [HTTPX](/articoli/httpx/)               |
+| Maltego      | Grafo OSINT visuale — relazioni tra entità, email, IP, domini | [Maltego](/articoli/maltego/)           |
+| Recon-ng     | Framework OSINT modulare, simile a Metasploit per la recon    | [Recon-ng](/articoli/reconng/)          |
+| ReconSpider  | OSINT automatizzato multi-fonte su target specifico           | [ReconSpider](/articoli/reconspider/)   |
+| Shodan       | Motore di ricerca per device esposti — IoT, ICS, servizi      | [Shodan](/articoli/shodan/)             |
+| SpiderFoot   | OSINT automatizzato, scanning passivo su dominio/IP           | [SpiderFoot](/articoli/spiderfoot/)     |
+| Subfinder    | Discovery subdomini veloce con certificate transparency       | [Subfinder](/articoli/subfinder/)       |
+| theHarvester | Email, subdomini, nomi da motori di ricerca e OSINT           | [theHarvester](/articoli/theharvester/) |
+| Wappalyzer   | Identificazione tecnologie web — CMS, framework, librerie     | [Wappalyzer](/articoli/wappalyzer/)     |
+| WaybackURLs  | URL storici da Wayback Machine — endpoint nascosti, parametri | [WaybackURLs](/articoli/waybackurls/)   |
+| WhatWeb      | Fingerprinting tecnologie web da CLI                          | [WhatWeb](/articoli/whatweb/)           |
 
 ***
 
@@ -99,17 +99,17 @@ Identificato il perimetro OSINT, mappi l'infrastruttura. L'obiettivo è trovare 
 
 | Tool        | Cosa fa nel pentest                                          | Guida                                                   |
 | ----------- | ------------------------------------------------------------ | ------------------------------------------------------- |
-| Nmap        | Port scan, version detection, NSE scripts — lo standard      | [Nmap](https://hackita.it/articoli/nmap/)               |
-| Masscan     | Port scan ad alta velocità su subnet grandi                  | [Masscan](https://hackita.it/articoli/masscan/)         |
-| Arp-scan    | Discovery host su LAN via ARP — più affidabile di ping sweep | [Arp-scan](https://hackita.it/articoli/arp-scan/)       |
-| Netdiscover | Host discovery ARP passivo e attivo su rete locale           | [Netdiscover](https://hackita.it/articoli/netdiscover/) |
-| Ping        | ICMP echo — host discovery base, TTL fingerprinting OS       | [Ping](https://hackita.it/articoli/ping/)               |
-| Nbtscan     | Scan NetBIOS su rete — hostname, dominio, MAC address        | [Nbtscan](https://hackita.it/articoli/nbtscan/)         |
-| NBTSScan    | Alternativa nbtscan per enumeration NetBIOS                  | [NBTSScan](https://hackita.it/articoli/nbtsscan/)       |
-| RPCinfo     | Enumera servizi RPC registrati — NFS, NIS, portmapper        | [RPCinfo](https://hackita.it/articoli/rpcinfo/)         |
-| Showmount   | Lista NFS share esportati — prerequisito per mount anonimo   | [Showmount](https://hackita.it/articoli/showmount/)     |
-| SNMP-check  | Enumera info SNMP — utenti, processi, routing table          | [SNMP-check](https://hackita.it/articoli/snmp-check/)   |
-| SNMPwalk    | Dump completo MIB via SNMP — config device, credenziali      | [SNMPwalk](https://hackita.it/articoli/snmpwalk/)       |
+| Nmap        | Port scan, version detection, NSE scripts — lo standard      | [Nmap](/articoli/nmap/)               |
+| Masscan     | Port scan ad alta velocità su subnet grandi                  | [Masscan](/articoli/masscan/)         |
+| Arp-scan    | Discovery host su LAN via ARP — più affidabile di ping sweep | [Arp-scan](/articoli/arp-scan/)       |
+| Netdiscover | Host discovery ARP passivo e attivo su rete locale           | [Netdiscover](/articoli/netdiscover/) |
+| Ping        | ICMP echo — host discovery base, TTL fingerprinting OS       | [Ping](/articoli/ping/)               |
+| Nbtscan     | Scan NetBIOS su rete — hostname, dominio, MAC address        | [Nbtscan](/articoli/nbtscan/)         |
+| NBTSScan    | Alternativa nbtscan per enumeration NetBIOS                  | [NBTSScan](/articoli/nbtsscan/)       |
+| RPCinfo     | Enumera servizi RPC registrati — NFS, NIS, portmapper        | [RPCinfo](/articoli/rpcinfo/)         |
+| Showmount   | Lista NFS share esportati — prerequisito per mount anonimo   | [Showmount](/articoli/showmount/)     |
+| SNMP-check  | Enumera info SNMP — utenti, processi, routing table          | [SNMP-check](/articoli/snmp-check/)   |
+| SNMPwalk    | Dump completo MIB via SNMP — config device, credenziali      | [SNMPwalk](/articoli/snmpwalk/)       |
 
 ***
 
@@ -119,19 +119,19 @@ Trovati i servizi web, testi ogni superficie: directory nascoste, parametri vuln
 
 | Tool         | Cosa fa nel pentest                                            | Guida                                                     |
 | ------------ | -------------------------------------------------------------- | --------------------------------------------------------- |
-| Burp Suite   | Proxy intercept, scanner vuln web, fuzzer — il centrale        | [Burp Suite](https://hackita.it/articoli/burp-suite/)     |
-| FFUF         | Fuzzing web veloce — directory, parametri, vhost, LFI          | [FFUF](https://hackita.it/articoli/ffuf/)                 |
-| Feroxbuster  | Directory brute force ricorsivo con multi-threading            | [Feroxbuster](https://hackita.it/articoli/feroxbuster/)   |
-| Gobuster     | Directory e DNS brute force — veloce su target singolo         | [Gobuster](https://hackita.it/articoli/gobuster/)         |
-| Dirsearch    | Directory scan con wordlist, filtri su status code             | [Dirsearch](https://hackita.it/articoli/dirsearch/)       |
-| Nikto        | Web server scan automatico — misconfig, header, CVE noti       | [Nikto](https://hackita.it/articoli/nikto/)               |
-| OWASP ZAP    | Scanner DAST open source, alternativa a Burp Suite             | [OWASP ZAP](https://hackita.it/articoli/owasp-zap/)       |
-| Nuclei       | Template-based vulnerability scanner — CVE, misconfiguration   | [Nuclei](https://hackita.it/articoli/nuclei/)             |
-| Arjun        | Parameter discovery — trova parametri GET/POST nascosti        | [Arjun](https://hackita.it/articoli/arjun/)               |
-| Commix       | Command injection automatizzato — trova e sfrutta OS injection | [Commix](https://hackita.it/articoli/commix/)             |
-| SQLmap       | SQL injection automatizzata — dump DB, OS shell, file read     | [SQLmap](https://hackita.it/articoli/sqlmap/)             |
-| SearchSploit | Ricerca exploit in ExploitDB locale — offline, veloce          | [SearchSploit](https://hackita.it/articoli/searchsploit/) |
-| JWT          | Analisi e attacco JSON Web Token — alg:none, weak secret       | [JWT](https://hackita.it/articoli/jwt/)                   |
+| Burp Suite   | Proxy intercept, scanner vuln web, fuzzer — il centrale        | [Burp Suite](/articoli/burp-suite/)     |
+| FFUF         | Fuzzing web veloce — directory, parametri, vhost, LFI          | [FFUF](/articoli/ffuf/)                 |
+| Feroxbuster  | Directory brute force ricorsivo con multi-threading            | [Feroxbuster](/articoli/feroxbuster/)   |
+| Gobuster     | Directory e DNS brute force — veloce su target singolo         | [Gobuster](/articoli/gobuster/)         |
+| Dirsearch    | Directory scan con wordlist, filtri su status code             | [Dirsearch](/articoli/dirsearch/)       |
+| Nikto        | Web server scan automatico — misconfig, header, CVE noti       | [Nikto](/articoli/nikto/)               |
+| OWASP ZAP    | Scanner DAST open source, alternativa a Burp Suite             | [OWASP ZAP](/articoli/owasp-zap/)       |
+| Nuclei       | Template-based vulnerability scanner — CVE, misconfiguration   | [Nuclei](/articoli/nuclei/)             |
+| Arjun        | Parameter discovery — trova parametri GET/POST nascosti        | [Arjun](/articoli/arjun/)               |
+| Commix       | Command injection automatizzato — trova e sfrutta OS injection | [Commix](/articoli/commix/)             |
+| SQLmap       | SQL injection automatizzata — dump DB, OS shell, file read     | [SQLmap](/articoli/sqlmap/)             |
+| SearchSploit | Ricerca exploit in ExploitDB locale — offline, veloce          | [SearchSploit](/articoli/searchsploit/) |
+| JWT          | Analisi e attacco JSON Web Token — alg:none, weak secret       | [JWT](/articoli/jwt/)                   |
 
 ***
 
@@ -141,12 +141,12 @@ Identificata la vulnerabilità, passi all'exploitation. Metasploit gestisce i ca
 
 | Tool                       | Cosa fa nel pentest                                             | Guida                                                                                 |
 | -------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Metasploit                 | Framework exploitation — moduli per centinaia di CVE            | [Metasploit](https://hackita.it/articoli/metasploit/)                                 |
-| msfconsole                 | Interfaccia CLI di Metasploit — uso operativo quotidiano        | [msfconsole](https://hackita.it/articoli/msfconsole/)                                 |
-| ExploitDB                  | Database exploit pubblici — PoC e reference per CVE             | [ExploitDB](https://hackita.it/articoli/exploitdb/)                                   |
-| RouterSploit               | Framework exploitation per dispositivi embedded e router        | [RouterSploit](https://hackita.it/articoli/routersploit/)                             |
-| Weevely3                   | Webshell PHP stealth con canale cifrato — post-exploitation web | [Weevely3](https://hackita.it/articoli/weevely3/)                                     |
-| Vulnerability Exploitation | Metodologia e approccio all'exploitation manuale                | [Vulnerability Exploitation](https://hackita.it/articoli/vulnerability-exploitation/) |
+| Metasploit                 | Framework exploitation — moduli per centinaia di CVE            | [Metasploit](/articoli/metasploit/)                                 |
+| msfconsole                 | Interfaccia CLI di Metasploit — uso operativo quotidiano        | [msfconsole](/articoli/msfconsole/)                                 |
+| ExploitDB                  | Database exploit pubblici — PoC e reference per CVE             | [ExploitDB](/articoli/exploitdb/)                                   |
+| RouterSploit               | Framework exploitation per dispositivi embedded e router        | [RouterSploit](/articoli/routersploit/)                             |
+| Weevely3                   | Webshell PHP stealth con canale cifrato — post-exploitation web | [Weevely3](/articoli/weevely3/)                                     |
+| Vulnerability Exploitation | Metodologia e approccio all'exploitation manuale                | [Vulnerability Exploitation](/articoli/vulnerability-exploitation/) |
 
 ***
 
@@ -156,10 +156,10 @@ Quando non hai exploit disponibili, le credenziali deboli sono spesso la via. Hy
 
 | Tool    | Cosa fa nel pentest                                        | Guida                                           |
 | ------- | ---------------------------------------------------------- | ----------------------------------------------- |
-| Hydra   | Brute force online — SSH, FTP, HTTP, SMB, RDP, mail, DB    | [Hydra](https://hackita.it/articoli/hydra/)     |
-| Medusa  | Brute force parallelo multi-host — alternativa a Hydra     | [Medusa](https://hackita.it/articoli/medusa/)   |
-| Hashcat | Password cracking offline — NTLM, NTLMv2, Kerberos, MD5    | [Hashcat](https://hackita.it/articoli/hashcat/) |
-| Patator | Brute force modulare — più flessibile su protocolli custom | [Patator](https://hackita.it/articoli/patator/) |
+| Hydra   | Brute force online — SSH, FTP, HTTP, SMB, RDP, mail, DB    | [Hydra](/articoli/hydra/)     |
+| Medusa  | Brute force parallelo multi-host — alternativa a Hydra     | [Medusa](/articoli/medusa/)   |
+| Hashcat | Password cracking offline — NTLM, NTLMv2, Kerberos, MD5    | [Hashcat](/articoli/hashcat/) |
+| Patator | Brute force modulare — più flessibile su protocolli custom | [Patator](/articoli/patator/) |
 
 ***
 
@@ -169,34 +169,34 @@ Il cluster più denso. In un AD engagement usi questi tool in sequenza: enumeri 
 
 | Tool                | Cosa fa nel pentest                                                | Guida                                                                  |
 | ------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| BloodHound          | Mappa attack path AD — percorso più corto verso Domain Admin       | [BloodHound](https://hackita.it/articoli/bloodhound/)                  |
-| NetExec             | Enumerazione AD, password spray, exec comandi su Windows           | [NetExec](https://hackita.it/articoli/netexec/)                        |
-| CrackMapExec        | Enumerazione e lateral movement su rete Windows                    | [CrackMapExec](https://hackita.it/articoli/crackmapexec/)              |
-| Impacket            | Toolkit Python — SMB, Kerberos, MSSQL, WMI, DCSync, RPC            | [Impacket](https://hackita.it/articoli/impacket/)                      |
-| Rubeus              | Attacchi Kerberos — AS-REP Roasting, Kerberoasting, ticket forge   | [Rubeus](https://hackita.it/articoli/rubeus/)                          |
-| Mimikatz            | Dump LSASS, NTLM hash, Kerberos ticket, DPAPI secrets              | [Mimikatz](https://hackita.it/articoli/mimikatz/)                      |
-| SafetyKatz          | Mimikatz .NET port — bypass AV, in-memory execution                | [SafetyKatz](https://hackita.it/articoli/safetykatz/)                  |
-| Evil-WinRM          | Shell su WinRM (5985/5986) — lateral movement e file transfer      | [Evil-WinRM](https://hackita.it/articoli/evilwinrm/)                   |
-| Enum4linux-ng       | Enumerazione SMB/LDAP — utenti, share, policy, gruppi              | [Enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/)            |
-| LDAPsearch          | Query LDAP raw — dump utenti, gruppi, GPO, computer                | [LDAPsearch](https://hackita.it/articoli/ldapsearch/)                  |
-| rpcclient           | Shell RPC — enumera utenti, SID, policy via null session           | [rpcclient](https://hackita.it/articoli/rpcclient/)                    |
-| SMBclient           | Accesso share SMB — lista, download, upload file                   | [SMBclient](https://hackita.it/articoli/smbclient/)                    |
-| SMBmap              | Enumera share SMB — permessi, contenuto, drive mapping             | [SMBmap](https://hackita.it/articoli/smbmap/)                          |
-| SMBexec             | Esecuzione comandi via SMB senza toccare disco                     | [SMBexec](https://hackita.it/articoli/smbexec/)                        |
-| WMIexec             | Esecuzione comandi via WMI — agentless, basso rumore               | [WMIexec](https://hackita.it/articoli/wmiexec/)                        |
-| PsExec              | Esecuzione remota via SMB — crea servizio temporaneo               | [PsExec](https://hackita.it/articoli/psexec/)                          |
-| AdFind              | Enumerazione AD via LDAP — alternativa a BloodHound collector      | [AdFind](https://hackita.it/articoli/adfind/)                          |
-| Seatbelt            | Enumera configurazione host Windows — privesc, difese, credenziali | [Seatbelt](https://hackita.it/articoli/seatbelt/)                      |
-| SharpUp             | Individua misconfiguration Windows per privilege escalation        | [SharpUp](https://hackita.it/articoli/sharpup/)                        |
-| SharpDPAPI          | Dump segreti DPAPI — credenziali browser, password manager         | [SharpDPAPI](https://hackita.it/articoli/sharpdpapi/)                  |
-| SharpChrome         | Dump credenziali e cookie Chrome via DPAPI                         | [SharpChrome](https://hackita.it/articoli/sharpchrome/)                |
-| Sherlock            | Trova CVE locali per privilege escalation su Windows               | [Sherlock](https://hackita.it/articoli/sherlock/)                      |
-| Inveigh             | Responder .NET — LLMNR/NBT-NS poisoning da Windows                 | [Inveigh](https://hackita.it/articoli/inveigh/)                        |
-| KeyThief            | Estrae chiavi KeePass dalla memoria — credential theft             | [KeyThief](https://hackita.it/articoli/keethief/)                      |
-| LaZagne             | Dump credenziali da browser, mail client, tool vari                | [LaZagne](https://hackita.it/articoli/lazagne/)                        |
-| Invoke-Manipulation | Bypass AMSI e PowerShell logging — evasion difese                  | [Invoke-Manipulation](https://hackita.it/articoli/invokemanipulation/) |
-| WMIC                | LOLBin Windows — exec comandi, query WMI, lateral movement         | [WMIC](https://hackita.it/articoli/wmic/)                              |
-| Pass-the-Hash       | Usa NTLM hash senza crackarlo per autenticarsi                     | [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)            |
+| BloodHound          | Mappa attack path AD — percorso più corto verso Domain Admin       | [BloodHound](/articoli/bloodhound/)                  |
+| NetExec             | Enumerazione AD, password spray, exec comandi su Windows           | [NetExec](/articoli/netexec/)                        |
+| CrackMapExec        | Enumerazione e lateral movement su rete Windows                    | [CrackMapExec](/articoli/crackmapexec/)              |
+| Impacket            | Toolkit Python — SMB, Kerberos, MSSQL, WMI, DCSync, RPC            | [Impacket](/articoli/impacket/)                      |
+| Rubeus              | Attacchi Kerberos — AS-REP Roasting, Kerberoasting, ticket forge   | [Rubeus](/articoli/rubeus/)                          |
+| Mimikatz            | Dump LSASS, NTLM hash, Kerberos ticket, DPAPI secrets              | [Mimikatz](/articoli/mimikatz/)                      |
+| SafetyKatz          | Mimikatz .NET port — bypass AV, in-memory execution                | [SafetyKatz](/articoli/safetykatz/)                  |
+| Evil-WinRM          | Shell su WinRM (5985/5986) — lateral movement e file transfer      | [Evil-WinRM](/articoli/evilwinrm/)                   |
+| Enum4linux-ng       | Enumerazione SMB/LDAP — utenti, share, policy, gruppi              | [Enum4linux-ng](/articoli/enum4linux-ng/)            |
+| LDAPsearch          | Query LDAP raw — dump utenti, gruppi, GPO, computer                | [LDAPsearch](/articoli/ldapsearch/)                  |
+| rpcclient           | Shell RPC — enumera utenti, SID, policy via null session           | [rpcclient](/articoli/rpcclient/)                    |
+| SMBclient           | Accesso share SMB — lista, download, upload file                   | [SMBclient](/articoli/smbclient/)                    |
+| SMBmap              | Enumera share SMB — permessi, contenuto, drive mapping             | [SMBmap](/articoli/smbmap/)                          |
+| SMBexec             | Esecuzione comandi via SMB senza toccare disco                     | [SMBexec](/articoli/smbexec/)                        |
+| WMIexec             | Esecuzione comandi via WMI — agentless, basso rumore               | [WMIexec](/articoli/wmiexec/)                        |
+| PsExec              | Esecuzione remota via SMB — crea servizio temporaneo               | [PsExec](/articoli/psexec/)                          |
+| AdFind              | Enumerazione AD via LDAP — alternativa a BloodHound collector      | [AdFind](/articoli/adfind/)                          |
+| Seatbelt            | Enumera configurazione host Windows — privesc, difese, credenziali | [Seatbelt](/articoli/seatbelt/)                      |
+| SharpUp             | Individua misconfiguration Windows per privilege escalation        | [SharpUp](/articoli/sharpup/)                        |
+| SharpDPAPI          | Dump segreti DPAPI — credenziali browser, password manager         | [SharpDPAPI](/articoli/sharpdpapi/)                  |
+| SharpChrome         | Dump credenziali e cookie Chrome via DPAPI                         | [SharpChrome](/articoli/sharpchrome/)                |
+| Sherlock            | Trova CVE locali per privilege escalation su Windows               | [Sherlock](/articoli/sherlock/)                      |
+| Inveigh             | Responder .NET — LLMNR/NBT-NS poisoning da Windows                 | [Inveigh](/articoli/inveigh/)                        |
+| KeyThief            | Estrae chiavi KeePass dalla memoria — credential theft             | [KeyThief](/articoli/keethief/)                      |
+| LaZagne             | Dump credenziali da browser, mail client, tool vari                | [LaZagne](/articoli/lazagne/)                        |
+| Invoke-Manipulation | Bypass AMSI e PowerShell logging — evasion difese                  | [Invoke-Manipulation](/articoli/invokemanipulation/) |
+| WMIC                | LOLBin Windows — exec comandi, query WMI, lateral movement         | [WMIC](/articoli/wmic/)                              |
+| Pass-the-Hash       | Usa NTLM hash senza crackarlo per autenticarsi                     | [Pass-the-Hash](/articoli/pass-the-hash/)            |
 
 ***
 
@@ -206,20 +206,20 @@ Ottenuta una shell su Linux, l'obiettivo è diventare root. LinPEAS automatizza 
 
 | Tool               | Cosa fa nel pentest                                               | Guida                                                                 |
 | ------------------ | ----------------------------------------------------------------- | --------------------------------------------------------------------- |
-| LinPEAS            | Enumera automaticamente tutto — privesc, credenziali, config      | [LinPEAS](https://hackita.it/articoli/linpeas/)                       |
-| LinEnum            | Script bash per privilege escalation check — legacy ma affidabile | [LinEnum](https://hackita.it/articoli/linenum/)                       |
-| LSE                | Linux Smart Enumeration — output graduato per priorità            | [LSE](https://hackita.it/articoli/lse/)                               |
-| Lynis              | Audit sistema Linux — trova misconfiguration e hardening gap      | [Lynis](https://hackita.it/articoli/lynis/)                           |
-| GTFOBins           | Riferimento binari Linux per privesc, bypass, shell — essenziale  | [GTFOBins](https://hackita.it/articoli/gtfobins/)                     |
-| Getcap             | Lista capabilities Linux — vettore di privesc spesso ignorato     | [Getcap](https://hackita.it/articoli/getcap/)                         |
-| Pspy               | Monitora processi in tempo reale senza root — trova cron job      | [Pspy](https://hackita.it/articoli/pspy/)                             |
-| JAWS               | PowerShell script per privesc Windows — analogo di LinPEAS        | [JAWS](https://hackita.it/articoli/jaws/)                             |
-| WinPEAS            | Enumerazione automatica Windows per privilege escalation          | [WinPEAS](https://hackita.it/articoli/winpeas/)                       |
-| WinEnum            | Enumera configurazione Windows — servizi, task, permessi          | [WinEnum](https://hackita.it/articoli/winenum/)                       |
-| Unix-PrivEsc-Check | Script Perl per sistemi Unix legacy — compatibile con sh          | [Unix-PrivEsc-Check](https://hackita.it/articoli/unix-privesc-check/) |
-| MimiPenguin        | Dump credenziali da memoria su Linux — gnome-keyring, SSH         | [MimiPenguin](https://hackita.it/articoli/mimipenguin/)               |
-| Chkrootkit         | Individua rootkit installati su sistema Linux                     | [Chkrootkit](https://hackita.it/articoli/chkrootkit/)                 |
-| Osquery            | Query SQL su sistema operativo — processi, rete, file, utenti     | [Osquery](https://hackita.it/articoli/osquery/)                       |
+| LinPEAS            | Enumera automaticamente tutto — privesc, credenziali, config      | [LinPEAS](/articoli/linpeas/)                       |
+| LinEnum            | Script bash per privilege escalation check — legacy ma affidabile | [LinEnum](/articoli/linenum/)                       |
+| LSE                | Linux Smart Enumeration — output graduato per priorità            | [LSE](/articoli/lse/)                               |
+| Lynis              | Audit sistema Linux — trova misconfiguration e hardening gap      | [Lynis](/articoli/lynis/)                           |
+| GTFOBins           | Riferimento binari Linux per privesc, bypass, shell — essenziale  | [GTFOBins](/articoli/gtfobins/)                     |
+| Getcap             | Lista capabilities Linux — vettore di privesc spesso ignorato     | [Getcap](/articoli/getcap/)                         |
+| Pspy               | Monitora processi in tempo reale senza root — trova cron job      | [Pspy](/articoli/pspy/)                             |
+| JAWS               | PowerShell script per privesc Windows — analogo di LinPEAS        | [JAWS](/articoli/jaws/)                             |
+| WinPEAS            | Enumerazione automatica Windows per privilege escalation          | [WinPEAS](/articoli/winpeas/)                       |
+| WinEnum            | Enumera configurazione Windows — servizi, task, permessi          | [WinEnum](/articoli/winenum/)                       |
+| Unix-PrivEsc-Check | Script Perl per sistemi Unix legacy — compatibile con sh          | [Unix-PrivEsc-Check](/articoli/unix-privesc-check/) |
+| MimiPenguin        | Dump credenziali da memoria su Linux — gnome-keyring, SSH         | [MimiPenguin](/articoli/mimipenguin/)               |
+| Chkrootkit         | Individua rootkit installati su sistema Linux                     | [Chkrootkit](/articoli/chkrootkit/)                 |
+| Osquery            | Query SQL su sistema operativo — processi, rete, file, utenti     | [Osquery](/articoli/osquery/)                       |
 
 ***
 
@@ -229,14 +229,14 @@ Dentro la rete, devi raggiungere segmenti non direttamente accessibili. Chisel e
 
 | Tool        | Cosa fa nel pentest                                              | Guida                                                   |
 | ----------- | ---------------------------------------------------------------- | ------------------------------------------------------- |
-| Chisel      | TCP/UDP tunneling via HTTP — funziona anche attraverso proxy     | [Chisel](https://hackita.it/articoli/chisel/)           |
-| Socat       | Relay TCP/UDP multi-uso — port forward, bind/reverse shell       | [Socat](https://hackita.it/articoli/socat/)             |
-| SSHuttle    | VPN via SSH — instrada tutto il traffico senza client aggiuntivo | [SSHuttle](https://hackita.it/articoli/sshuttle/)       |
-| ProxyChains | Instrada tool attraverso SOCKS/HTTP proxy — pivoting trasparente | [ProxyChains](https://hackita.it/articoli/proxychains/) |
-| Plink       | PuTTY CLI — SSH tunneling da Windows senza installazioni         | [Plink](https://hackita.it/articoli/plink/)             |
-| RevSocks    | Reverse SOCKS proxy — utile quando il target è dietro NAT        | [RevSocks](https://hackita.it/articoli/revsocks/)       |
-| Netcat      | TCP/UDP relay, bind/reverse shell, file transfer base            | [Netcat](https://hackita.it/articoli/netcat/)           |
-| nc          | Netcat — varianti e sintassi su sistemi diversi                  | [nc](https://hackita.it/articoli/nc/)                   |
+| Chisel      | TCP/UDP tunneling via HTTP — funziona anche attraverso proxy     | [Chisel](/articoli/chisel/)           |
+| Socat       | Relay TCP/UDP multi-uso — port forward, bind/reverse shell       | [Socat](/articoli/socat/)             |
+| SSHuttle    | VPN via SSH — instrada tutto il traffico senza client aggiuntivo | [SSHuttle](/articoli/sshuttle/)       |
+| ProxyChains | Instrada tool attraverso SOCKS/HTTP proxy — pivoting trasparente | [ProxyChains](/articoli/proxychains/) |
+| Plink       | PuTTY CLI — SSH tunneling da Windows senza installazioni         | [Plink](/articoli/plink/)             |
+| RevSocks    | Reverse SOCKS proxy — utile quando il target è dietro NAT        | [RevSocks](/articoli/revsocks/)       |
+| Netcat      | TCP/UDP relay, bind/reverse shell, file transfer base            | [Netcat](/articoli/netcat/)           |
+| nc          | Netcat — varianti e sintassi su sistemi diversi                  | [nc](/articoli/nc/)                   |
 
 ***
 
@@ -246,13 +246,13 @@ Sulla LAN, il traffico non cifrato è immediata fonte di credenziali. Responder 
 
 | Tool      | Cosa fa nel pentest                                           | Guida                                               |
 | --------- | ------------------------------------------------------------- | --------------------------------------------------- |
-| Wireshark | Analisi traffico GUI — filtra, decodifica, segue stream TCP   | [Wireshark](https://hackita.it/articoli/wireshark/) |
-| Tcpdump   | Packet capture CLI — cattura, filtra, esporta .pcap           | [Tcpdump](https://hackita.it/articoli/tcpdump/)     |
-| Tshark    | Wireshark CLI — analisi offline di file pcap, scriptabile     | [Tshark](https://hackita.it/articoli/tshark/)       |
-| Responder | LLMNR/NBT-NS/MDNS poisoning — cattura NTLM hash in automatico | [Responder](https://hackita.it/articoli/responder/) |
-| Ettercap  | ARP poisoning + MITM — intercetta e modifica traffico LAN     | [Ettercap](https://hackita.it/articoli/ettercap/)   |
-| Bettercap | MITM framework moderno — ARP, DNS, HTTPS downgrade            | [Bettercap](https://hackita.it/articoli/bettercap/) |
-| MITMProxy | Proxy HTTP/HTTPS interattivo — ispeziona e modifica richieste | [MITMProxy](https://hackita.it/articoli/mitmproxy/) |
+| Wireshark | Analisi traffico GUI — filtra, decodifica, segue stream TCP   | [Wireshark](/articoli/wireshark/) |
+| Tcpdump   | Packet capture CLI — cattura, filtra, esporta .pcap           | [Tcpdump](/articoli/tcpdump/)     |
+| Tshark    | Wireshark CLI — analisi offline di file pcap, scriptabile     | [Tshark](/articoli/tshark/)       |
+| Responder | LLMNR/NBT-NS/MDNS poisoning — cattura NTLM hash in automatico | [Responder](/articoli/responder/) |
+| Ettercap  | ARP poisoning + MITM — intercetta e modifica traffico LAN     | [Ettercap](/articoli/ettercap/)   |
+| Bettercap | MITM framework moderno — ARP, DNS, HTTPS downgrade            | [Bettercap](/articoli/bettercap/) |
+| MITMProxy | Proxy HTTP/HTTPS interattivo — ispeziona e modifica richieste | [MITMProxy](/articoli/mitmproxy/) |
 
 ***
 
@@ -262,10 +262,10 @@ Quando non ci sono vulnerabilità tecniche sfruttabili, l'attacco passa per le p
 
 | Tool                    | Cosa fa nel pentest                                              | Guida                                                                  |
 | ----------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| GoPhish                 | Framework phishing — campagne email, landing page, tracking      | [GoPhish](https://hackita.it/articoli/gophish/)                        |
-| EvilGinx2               | Reverse proxy phishing — cattura credenziali e cookie MFA bypass | [EvilGinx2](https://hackita.it/articoli/evilginx2/)                    |
-| BeEF                    | Browser Exploitation Framework — hook browser via XSS stored     | [BeEF](https://hackita.it/articoli/beef/)                              |
-| Social Engineer Toolkit | Framework SE — phishing, vishing, pretexting automatizzato       | [Social Engineer Toolkit](https://hackita.it/articoli/socialengineer/) |
+| GoPhish                 | Framework phishing — campagne email, landing page, tracking      | [GoPhish](/articoli/gophish/)                        |
+| EvilGinx2               | Reverse proxy phishing — cattura credenziali e cookie MFA bypass | [EvilGinx2](/articoli/evilginx2/)                    |
+| BeEF                    | Browser Exploitation Framework — hook browser via XSS stored     | [BeEF](/articoli/beef/)                              |
+| Social Engineer Toolkit | Framework SE — phishing, vishing, pretexting automatizzato       | [Social Engineer Toolkit](/articoli/socialengineer/) |
 
 ***
 
@@ -275,9 +275,9 @@ Ambienti cloud mal configurati espongono bucket S3 pubblici, ruoli IAM con privi
 
 | Tool                     | Cosa fa nel pentest                                | Guida                                                                             |
 | ------------------------ | -------------------------------------------------- | --------------------------------------------------------------------------------- |
-| CloudEnum                | Enumera risorse cloud pubbliche — AWS, Azure, GCP  | [CloudEnum](https://hackita.it/articoli/cloudenum/)                               |
-| S3Scanner                | Trova e testa bucket S3 pubblici o mal configurati | [S3Scanner](https://hackita.it/articoli/s3scanner/)                               |
-| AWS Privilege Escalation | Tecniche e tool per privesc su AWS IAM             | [AWS Privilege Escalation](https://hackita.it/articoli/aws-privilege-escalation/) |
+| CloudEnum                | Enumera risorse cloud pubbliche — AWS, Azure, GCP  | [CloudEnum](/articoli/cloudenum/)                               |
+| S3Scanner                | Trova e testa bucket S3 pubblici o mal configurati | [S3Scanner](/articoli/s3scanner/)                               |
+| AWS Privilege Escalation | Tecniche e tool per privesc su AWS IAM             | [AWS Privilege Escalation](/articoli/aws-privilege-escalation/) |
 
 ***
 
@@ -287,16 +287,16 @@ I tool nativi di Windows sono i più stealth: già presenti sul sistema, firmati
 
 | Tool           | Cosa fa nel pentest                                               | Guida                                                         |
 | -------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- |
-| CertUtil.exe   | Download file, encode/decode base64, verifica certificati         | [CertUtil](https://hackita.it/articoli/certutilexe/)          |
-| WMIC           | Query WMI, exec processi, lateral movement — LOLBin potente       | [WMIC](https://hackita.it/articoli/wmic/)                     |
-| Scheduled Task | Persistenza e privesc via task scheduler Windows                  | [Scheduled Task](https://hackita.it/articoli/scheduled-task/) |
-| Crontab        | Persistenza su Linux via cron — vettore classico di privesc       | [Crontab](https://hackita.it/articoli/crontab/)               |
-| RSH            | Remote shell legacy Unix — accesso senza password via .rhosts     | [RSH](https://hackita.it/articoli/rsh/)                       |
-| Telnet         | Connessione servizi in chiaro, banner grab, test porta            | [Telnet](https://hackita.it/articoli/telnet/)                 |
-| SSH-Audit      | Audit configurazione SSH — algoritmi deboli, versioni vulnerabili | [SSH-Audit](https://hackita.it/articoli/ssh-audit/)           |
-| SSH-KeyHunter  | Cerca chiavi SSH private nel filesystem — post-exploitation       | [SSH-KeyHunter](https://hackita.it/articoli/ssh-keyhunter/)   |
-| Empire         | C2 framework PowerShell/Python — post-exploitation avanzato       | [Empire](https://hackita.it/articoli/empire/)                 |
-| Fail2ban       | Analisi log difensiva — capire i rate limit prima di bruteforce   | [Fail2ban](https://hackita.it/articoli/fail2ban/)             |
+| CertUtil.exe   | Download file, encode/decode base64, verifica certificati         | [CertUtil](/articoli/certutilexe/)          |
+| WMIC           | Query WMI, exec processi, lateral movement — LOLBin potente       | [WMIC](/articoli/wmic/)                     |
+| Scheduled Task | Persistenza e privesc via task scheduler Windows                  | [Scheduled Task](/articoli/scheduled-task/) |
+| Crontab        | Persistenza su Linux via cron — vettore classico di privesc       | [Crontab](/articoli/crontab/)               |
+| RSH            | Remote shell legacy Unix — accesso senza password via .rhosts     | [RSH](/articoli/rsh/)                       |
+| Telnet         | Connessione servizi in chiaro, banner grab, test porta            | [Telnet](/articoli/telnet/)                 |
+| SSH-Audit      | Audit configurazione SSH — algoritmi deboli, versioni vulnerabili | [SSH-Audit](/articoli/ssh-audit/)           |
+| SSH-KeyHunter  | Cerca chiavi SSH private nel filesystem — post-exploitation       | [SSH-KeyHunter](/articoli/ssh-keyhunter/)   |
+| Empire         | C2 framework PowerShell/Python — post-exploitation avanzato       | [Empire](/articoli/empire/)                 |
+| Fail2ban       | Analisi log difensiva — capire i rate limit prima di bruteforce   | [Fail2ban](/articoli/fail2ban/)             |
 
 ***
 
@@ -367,7 +367,7 @@ Lateral movement      →  Ripeti fino a Domain Admin ✅
 
 | Hub                                                                                               | Cosa copre                                                                          |
 | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [Porte TCP/UDP nel Penetration Testing](https://hackita.it/articoli/porte-tcp-udp-pentest/)       | Tutte le porte per scenario offensivo — AD, web, database, mail, DevOps, protocolli |
-| [Web Vulnerabilities & Attack Techniques](https://hackita.it/articoli/attacchi-applicazioni-web/) | SQL injection, XSS, SSRF, SSTI, LFI e tutto il web hacking                          |
+| [Porte TCP/UDP nel Penetration Testing](/articoli/porte-tcp-udp-pentest/)       | Tutte le porte per scenario offensivo — AD, web, database, mail, DevOps, protocolli |
+| [Web Vulnerabilities & Attack Techniques](/articoli/attacchi-applicazioni-web/) | SQL injection, XSS, SSRF, SSTI, LFI e tutto il web hacking                          |
 
-*Per penetration test professionali su infrastrutture reali, [scopri i servizi di HackIta](https://hackita.it/servizi/).*
+*Per penetration test professionali su infrastrutture reali, [scopri i servizi di HackIta](/servizi/).*

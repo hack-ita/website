@@ -39,8 +39,8 @@ La porta 631 è registrata IANA come `ipp` su TCP e UDP. IPP (RFC 8011) è il pr
 
 I servizi sulla porta 631:
 
-1. **[TCP](https://hackita.it/articoli/tcp/) 631**: server web CUPS (interfaccia admin + IPP protocol)
-2. **[UDP](https://hackita.it/articoli/udp/) 631**: cups-browsed (discovery automatica di stampanti sulla rete)
+1. **[TCP](/articoli/tcp/) 631**: server web CUPS (interfaccia admin + IPP protocol)
+2. **[UDP](/articoli/udp/) 631**: cups-browsed (discovery automatica di stampanti sulla rete)
 
 Il flusso della RCE chain (settembre 2024):
 
@@ -141,7 +141,7 @@ Canon_IR2520 - idle
   Model: Canon imageRUNNER 2520
 ```
 
-**Lettura dell'output:** due stampanti configurate con posizione fisica (Piano 2, Reception), modello e URI di connessione. Queste informazioni rivelano la topologia fisica dell'ufficio e IP delle stampanti di rete. Per correlare con la [guida alla porta 515 LPD](https://hackita.it/articoli/porta-515-lpd/), verifica se le stesse stampanti espongono anche il protocollo legacy.
+**Lettura dell'output:** due stampanti configurate con posizione fisica (Piano 2, Reception), modello e URI di connessione. Queste informazioni rivelano la topologia fisica dell'ufficio e IP delle stampanti di rete. Per correlare con la [guida alla porta 515 LPD](/articoli/porta-515-lpd/), verifica se le stesse stampanti espongono anche il protocollo legacy.
 
 ### Verifica cups-browsed attivo
 
@@ -179,7 +179,7 @@ system-default-printer = HP_LaserJet_Pro
 document-format-supported = application/pdf, application/postscript, image/jpeg
 ```
 
-**Lettura dell'output:** versione CUPS esatta, stato della stampante e formati supportati. La versione 2.4.7 è vulnerabile alla chain se cups-browsed è attivo. Per un'analisi SNMP correlata sulle stampanti fisiche, consulta la [guida alla porta 161 SNMP](https://hackita.it/articoli/snmp/).
+**Lettura dell'output:** versione CUPS esatta, stato della stampante e formati supportati. La versione 2.4.7 è vulnerabile alla chain se cups-browsed è attivo. Per un'analisi SNMP correlata sulle stampanti fisiche, consulta la [guida alla porta 161 SNMP](/articoli/snmp/).
 
 ## 4. Tecniche Offensive
 
@@ -212,7 +212,7 @@ Connection from 10.10.10.30
 lp@target:~$
 ```
 
-**Cosa fai dopo:** hai una shell come utente `lp` (l'utente del sistema di stampa). Da qui puoi leggere i job di stampa in `/var/spool/cups/`, cercare credenziali nei documenti stampati, e tentare privilege escalation. Per l'escalation da `lp` a root, consulta le [tecniche di privilege escalation Linux](https://hackita.it/articoli/linux-privesc/).
+**Cosa fai dopo:** hai una shell come utente `lp` (l'utente del sistema di stampa). Da qui puoi leggere i job di stampa in `/var/spool/cups/`, cercare credenziali nei documenti stampati, e tentare privilege escalation. Per l'escalation da `lp` a root, consulta le [tecniche di privilege escalation Linux](/articoli/linux-privesc/).
 
 **Nota critica:** questa catena richiede che un utente stampi sulla stampante malevola. In un engagement reale, puoi rinominare la stampante malevola con il nome della stampante predefinita per aumentare le probabilità.
 
@@ -457,4 +457,4 @@ L'injection UDP è un singolo pacchetto — basso profilo. La connessione di rit
 
 Tutti i comandi e le tecniche sono destinati esclusivamente ad ambienti autorizzati: penetration test con contratto, lab, CTF. Riferimento: RFC 8011 (IPP), CVE-2024-47176, CVE-2024-47076, CVE-2024-47175, CVE-2024-47177,  CVE-2024-35235. Approfondimento: [https://www.speedguide.net/port.php?port=631](https://www.speedguide.net/port.php?port=631)
 
-> Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+> Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

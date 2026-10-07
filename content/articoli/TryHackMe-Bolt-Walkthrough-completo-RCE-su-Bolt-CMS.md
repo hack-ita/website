@@ -36,7 +36,7 @@ Sulla macchina risultano tre porte aperte:
 
 Il punto 80 è un vicolo cieco: pagina placeholder, niente da enumerare. Tutto il lavoro si concentra sulla 8000.
 
-Se preferisci automatizzare gli scan ricorrenti invece di scrivere ogni volta i flag a mano, [mynmap](https://github.com/MyCyb3r/mynmap) è uno script bash che wrappa [nmap](https://hackita.it/articoli/nmap/) con profili di scansione predefiniti (`sudo ./mynmap.sh` per gli scan che richiedono privilegi, es. SYN scan). Utile per velocizzare l'enumerazione iniziale su più macchine, ma il concetto sotto resta sempre lo stesso: scan completo delle porte prima, deep-dive sui servizi interessanti dopo.
+Se preferisci automatizzare gli scan ricorrenti invece di scrivere ogni volta i flag a mano, [mynmap](https://github.com/MyCyb3r/mynmap) è uno script bash che wrappa [nmap](/articoli/nmap/) con profili di scansione predefiniti (`sudo ./mynmap.sh` per gli scan che richiedono privilegi, es. SYN scan). Utile per velocizzare l'enumerazione iniziale su più macchine, ma il concetto sotto resta sempre lo stesso: scan completo delle porte prima, deep-dive sui servizi interessanti dopo.
 
 ## Raccolta informazioni dalla webapp
 
@@ -127,4 +127,4 @@ Bolt è una macchina semplice ma insegna un pattern reale: informazioni sensibil
 
 * [Modulo Metasploit ufficiale](https://www.rapid7.com/db/modules/exploit/unix/webapp/bolt_authenticated_rce/) — Rapid7 VulnDB, dettaglio tecnico del modulo
 * [GitHub Advisory / CVE-2025-34086](https://github.com/advisories/GHSA-p9qc-8jjx-g8cg) — scheda CVE ufficiale con CVSS
-* [nmap](https://hackita.it/articoli/nmap/) e [metasploit](https://hackita.it/articoli/metasploit/) — articoli correlati su Hackita
+* [nmap](/articoli/nmap/) e [metasploit](/articoli/metasploit/) — articoli correlati su Hackita

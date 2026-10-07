@@ -17,7 +17,7 @@ tags:
   - Elasticsearch
 ---
 
-Kibana è l'interfaccia web di visualizzazione dello stack Elastic (ELK: Elasticsearch, Logstash, Kibana). Ascolta sulla porta 5601 TCP e fornisce dashboard interattive, query sui dati indicizzati in Elasticsearch e strumenti di amministrazione. Nel penetration testing, un Kibana esposto è una miniera di informazioni: i log indicizzati in Elasticsearch contengono credenziali in chiaro (login falliti con password nei parametri URL, header Authorization, token API), hostname e IP interni, path delle applicazioni, query SQL e molto altro. Ma Kibana non è solo un viewer passivo — la sua Dev Tools console è un proxy diretto verso [Elasticsearch](https://hackita.it/articoli/porta-9200-elasticsearch/) con tutti i poteri della REST API: dump indici, modifica dati, creazione utenti. E le CVE di Kibana includono RCE pre-auth tramite prototype pollution.
+Kibana è l'interfaccia web di visualizzazione dello stack Elastic (ELK: Elasticsearch, Logstash, Kibana). Ascolta sulla porta 5601 TCP e fornisce dashboard interattive, query sui dati indicizzati in Elasticsearch e strumenti di amministrazione. Nel penetration testing, un Kibana esposto è una miniera di informazioni: i log indicizzati in Elasticsearch contengono credenziali in chiaro (login falliti con password nei parametri URL, header Authorization, token API), hostname e IP interni, path delle applicazioni, query SQL e molto altro. Ma Kibana non è solo un viewer passivo — la sua Dev Tools console è un proxy diretto verso [Elasticsearch](/articoli/porta-9200-elasticsearch/) con tutti i poteri della REST API: dump indici, modifica dati, creazione utenti. E le CVE di Kibana includono RCE pre-auth tramite prototype pollution.
 
 In un'infrastruttura ELK tipica, Kibana raccoglie i log di **tutti** i servizi: web server, applicazioni, firewall, VPN, autenticazione — è il punto di osservazione più completo sulla rete.
 
@@ -383,4 +383,4 @@ PUT _security/user/backdoor
 
 Riferimento: Elastic Security documentation, CVE-2019-7609, HackTricks Kibana/Elasticsearch. Uso esclusivo in ambienti autorizzati. [https://hackviser.com/tactics/pentesting/services/kibana](https://hackviser.com/tactics/pentesting/services/kibana)
 
-> [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).
+> [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

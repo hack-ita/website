@@ -23,7 +23,7 @@ tags:
 
 Per trovare directory e file nascosti su un web server — `/admin`, `/backup.zip`, `/config.php.bak`, panel non linkati — il directory brute forcing è ancora uno dei passi obbligatori nella ricognizione web. **DirBuster** è il tool OWASP Java con GUI, con wordlist incluse e interfaccia visuale che mostra la struttura dell'applicazione man mano che scansiona. Slow rispetto ai tool moderni ma ancora utile quando vuoi ricorsione visuale o stai su un target lento che non sopporta thread aggressivi.
 
-**Prerequisiti:** Java installato, wordlist [SecLists](https://hackita.it/articoli/wordlist/), nozioni base di HTTP (status code, header). Abbina [Burp Suite](https://hackita.it/articoli/burp-suite/) per ispezionare le request durante la scansione.
+**Prerequisiti:** Java installato, wordlist [SecLists](/articoli/wordlist/), nozioni base di HTTP (status code, header). Abbina [Burp Suite](/articoli/burp-suite/) per ispezionare le request durante la scansione.
 
 ***
 
@@ -60,11 +60,11 @@ DirBuster non viene più mantenuto da anni, ma resta usabile. Per la maggior par
 | Tool                                                        | Linguaggio | Velocità | GUI | Ricorsione   | Estensioni | Quando usarlo                                          |
 | ----------------------------------------------------------- | ---------- | -------- | --- | ------------ | ---------- | ------------------------------------------------------ |
 | **DirBuster**                                               | Java       | ★★ lenta | ✅   | ✅ visuale    | ✅          | Quando vuoi GUI, ricorsione visuale, target lenti      |
-| **[ffuf](https://hackita.it/articoli/ffuf/)**               | Go         | ★★★★★    | ❌   | Manuale      | ✅          | Fuzzing generico, parametri, vhost — uso quotidiano    |
-| **[feroxbuster](https://hackita.it/articoli/feroxbuster/)** | Rust       | ★★★★★    | ❌   | ✅ automatica | ✅          | Ricorsione aggressiva e veloce su target robusti       |
-| **[gobuster](https://hackita.it/articoli/gobuster/)**       | Go         | ★★★★     | ❌   | ❌            | ✅          | DNS, vhost, S3 — semplicità e velocità                 |
-| **[wfuzz](https://hackita.it/articoli/wfuzz/)**             | Python     | ★★★      | ❌   | Manuale      | ✅          | Fuzzing avanzato, header, cookie, parametri            |
-| **[dirsearch](https://hackita.it/articoli/dirsearch/)**     | Python     | ★★★      | ❌   | ✅            | ✅          | Buon middle-ground, ricorsione, tecnologie auto-detect |
+| **[ffuf](/articoli/ffuf/)**               | Go         | ★★★★★    | ❌   | Manuale      | ✅          | Fuzzing generico, parametri, vhost — uso quotidiano    |
+| **[feroxbuster](/articoli/feroxbuster/)** | Rust       | ★★★★★    | ❌   | ✅ automatica | ✅          | Ricorsione aggressiva e veloce su target robusti       |
+| **[gobuster](/articoli/gobuster/)**       | Go         | ★★★★     | ❌   | ❌            | ✅          | DNS, vhost, S3 — semplicità e velocità                 |
+| **[wfuzz](/articoli/wfuzz/)**             | Python     | ★★★      | ❌   | Manuale      | ✅          | Fuzzing avanzato, header, cookie, parametri            |
+| **[dirsearch](/articoli/dirsearch/)**     | Python     | ★★★      | ❌   | ✅            | ✅          | Buon middle-ground, ricorsione, tecnologie auto-detect |
 | **dirb**                                                    | C          | ★★       | ❌   | ✅            | ✅          | Legacy, semplice, usa wordlist proprie                 |
 
 **DirBuster vs ffuf: quale scegliere?** Per velocità e uso quotidiano, ffuf. DirBuster ha senso solo se ti serve la GUI o vuoi vedere la ricorsione visualizzata in tempo reale.
@@ -293,7 +293,7 @@ java -jar /usr/share/dirbuster/DirBuster-1.0-RC1.jar \
   -e php,html -t 10 -r results.txt
 ```
 
-Puoi arricchire ulteriormente la wordlist con gli endpoint scoperti manualmente navigando l'applicazione con [Burp Suite](https://hackita.it/articoli/burp-suite/) attivo come proxy.
+Puoi arricchire ulteriormente la wordlist con gli endpoint scoperti manualmente navigando l'applicazione con [Burp Suite](/articoli/burp-suite/) attivo come proxy.
 
 ***
 
@@ -443,10 +443,10 @@ gobuster:   gobuster dir -u http://target.com -w common.txt -x php,bak
 
 **Guide correlate su hackita.it:**
 
-* [wfuzz: Web Fuzzing Avanzato con Encoders e Multi-Position](https://hackita.it/articoli/wfuzz/)
-* [Burp Suite: Intercettare e Analizzare Traffico HTTP](https://hackita.it/articoli/burp-suite/)
-* [Wordlist e SecLists: Guida Operativa](https://hackita.it/articoli/wordlist/)
-* [Attacchi alle Applicazioni Web](https://hackita.it/articoli/attacchi-applicazioni-web/)
+* [wfuzz: Web Fuzzing Avanzato con Encoders e Multi-Position](/articoli/wfuzz/)
+* [Burp Suite: Intercettare e Analizzare Traffico HTTP](/articoli/burp-suite/)
+* [Wordlist e SecLists: Guida Operativa](/articoli/wordlist/)
+* [Attacchi alle Applicazioni Web](/articoli/attacchi-applicazioni-web/)
 
 ## Riferimenti
 

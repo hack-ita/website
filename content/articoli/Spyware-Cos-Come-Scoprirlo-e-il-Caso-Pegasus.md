@@ -24,13 +24,13 @@ tags:
 
 Uno spyware è un malware progettato per raccogliere informazioni su una persona senza che se ne accorga — cosa digita, cosa naviga, dove si trova, a volte persino cosa vede e sente attraverso webcam e microfono. Sul cellulare viene spesso chiamato anche **"app spia"**, dato che nella maggior parte dei casi arriva proprio come un'app apparentemente innocua. A differenza di un virus o di un worm, il suo obiettivo non è danneggiare o replicarsi: è restare invisibile il più a lungo possibile, perché ogni giorno in più di sorveglianza è dati in più raccolti.
 
-> **In breve:** uno spyware è un malware che raccoglie informazioni sulla vittima all'insaputa — attività di navigazione, posizione, comunicazioni — senza necessariamente danneggiare il sistema. Il [keylogger](https://hackita.it/articoli/keylogger/) è una delle sue forme più comuni, ma non l'unica.
+> **In breve:** uno spyware è un malware che raccoglie informazioni sulla vittima all'insaputa — attività di navigazione, posizione, comunicazioni — senza necessariamente danneggiare il sistema. Il [keylogger](/articoli/keylogger/) è una delle sue forme più comuni, ma non l'unica.
 
 ## Come Funziona uno Spyware
 
 Il meccanismo segue quasi sempre lo stesso schema: **installazione** (spesso nascosta dentro un altro programma, un'app o un allegato), **esecuzione silenziosa** all'avvio del sistema o del dispositivo, **raccolta dati** in background secondo quello per cui è stato progettato, e infine **invio periodico** di quei dati a un server controllato da chi lo gestisce. La parte che lo rende difficile da notare non è la raccolta in sé, ma il fatto che ogni fase è pensata per non generare alcun sintomo visibile — a differenza di un virus con un payload distruttivo, lo spyware "funziona bene" proprio quando la vittima non si accorge di nulla.
 
-Come arriva sul dispositivo dipende dal livello di sofisticazione: la maggior parte dello spyware comune si installa tramite un [trojan](https://hackita.it/articoli/trojan/), un'app scaricata fuori dagli store ufficiali, un link di phishing o, nel caso dello stalkerware, l'accesso fisico diretto al telefono di qualcun altro. Gli spyware più avanzati, come Pegasus di cui parliamo tra poco, possono invece sfruttare exploit zero-click che non richiedono alcuna azione della vittima.
+Come arriva sul dispositivo dipende dal livello di sofisticazione: la maggior parte dello spyware comune si installa tramite un [trojan](/articoli/trojan/), un'app scaricata fuori dagli store ufficiali, un link di phishing o, nel caso dello stalkerware, l'accesso fisico diretto al telefono di qualcun altro. Gli spyware più avanzati, come Pegasus di cui parliamo tra poco, possono invece sfruttare exploit zero-click che non richiedono alcuna azione della vittima.
 
 ## Cosa Raccoglie Davvero uno Spyware
 
@@ -90,7 +90,7 @@ Nessuno di questi controlli smaschera uno spyware mercenario avanzato come Pegas
 
 **Cos'è uno spyware?** È un malware che raccoglie informazioni sulla vittima — navigazione, posizione, comunicazioni — senza il suo consenso, restando il più possibile invisibile.
 
-**Qual è la differenza tra spyware e virus?** Il virus è definito dalla replicazione tramite un file ospite; lo spyware è definito dallo scopo (sorveglianza), non dal meccanismo di diffusione, e spesso arriva tramite un [trojan](https://hackita.it/articoli/trojan/).
+**Qual è la differenza tra spyware e virus?** Il virus è definito dalla replicazione tramite un file ospite; lo spyware è definito dallo scopo (sorveglianza), non dal meccanismo di diffusione, e spesso arriva tramite un [trojan](/articoli/trojan/).
 
 **Cos'è Pegasus?** È lo spyware sviluppato da NSO Group, reso famoso dal Pegasus Project del 2021: capace di infettare un telefono senza alcuna azione della vittima e di accedere a messaggi, microfono, webcam e posizione.
 

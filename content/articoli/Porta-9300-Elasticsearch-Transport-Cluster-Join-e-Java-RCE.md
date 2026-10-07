@@ -19,7 +19,7 @@ tags:
   - java-deserialization-rce
 ---
 
-Se la [porta 9200](https://hackita.it/articoli/porta-9200-elasticsearch/) è la porta pubblica di Elasticsearch — quella che risponde alle query REST e che tutti i pentester conoscono — la porta 9300 TCP è il suo lato privato. È il **protocollo di trasporto binario** che i nodi Elasticsearch usano per comunicare tra loro: sincronizzazione degli shard, replicazione dei dati, elezione del master, distribuzione delle query. Non è pensata per essere usata dagli utenti finali, e proprio per questo è spesso più trascurata e meno protetta della 9200.
+Se la [porta 9200](/articoli/porta-9200-elasticsearch/) è la porta pubblica di Elasticsearch — quella che risponde alle query REST e che tutti i pentester conoscono — la porta 9300 TCP è il suo lato privato. È il **protocollo di trasporto binario** che i nodi Elasticsearch usano per comunicare tra loro: sincronizzazione degli shard, replicazione dei dati, elezione del master, distribuzione delle query. Non è pensata per essere usata dagli utenti finali, e proprio per questo è spesso più trascurata e meno protetta della 9200.
 
 Per capire il contesto: Elasticsearch è quasi sempre deployato come cluster di più nodi. I tuoi dati — log, documenti, metriche — non stanno su un singolo server ma sono distribuiti su 3, 5, 10 o più nodi che si scambiano continuamente informazioni attraverso la porta 9300. Questo protocollo binario gestisce operazioni critiche: quando un nodo va offline, gli altri ridistribuiscono i suoi dati; quando fai una query su un nodo, questo contatta gli altri per raccogliere i risultati. La 9300 è il sistema nervoso del cluster.
 
@@ -75,7 +75,7 @@ nmap -p 9300 --script=elasticsearch-info 10.10.10.40
 
 ### Scoprire tutti i nodi del cluster
 
-Se hai accesso alla [porta 9200](https://hackita.it/articoli/porta-9200-elasticsearch/) su qualsiasi nodo:
+Se hai accesso alla [porta 9200](/articoli/porta-9200-elasticsearch/) su qualsiasi nodo:
 
 ```bash
 curl -s http://10.10.10.40:9200/_cat/nodes?v&h=ip,name,node.role,version
@@ -107,7 +107,7 @@ Nelle versioni di Elasticsearch senza TLS sul transport layer (default fino alla
 
 ### Prerequisiti
 
-Devi conoscere il `cluster.name` — lo ottieni dalla [porta 9200](https://hackita.it/articoli/porta-9200-elasticsearch/):
+Devi conoscere il `cluster.name` — lo ottieni dalla [porta 9200](/articoli/porta-9200-elasticsearch/):
 
 ```bash
 curl -s http://10.10.10.40:9200/ | python3 -c "import json,sys;print(json.load(sys.stdin)['cluster_name'])"
@@ -243,4 +243,4 @@ Il traffico sulla 9300 non è cifrato di default — contiene i dati replicati t
 
 Riferimento: Elasticsearch Transport Protocol, HackTricks Elasticsearch, Java Deserialization attacks. Uso esclusivo in ambienti autorizzati.
 
-> L'Elasticsearch della tua azienda ha la porta 9300 aperta verso la rete? [Scoprilo con un assessment HackIta](https://hackita.it/servizi) prima che qualcuno si unisca al tuo cluster. Per imparare l'exploitation distribuita: [formazione avanzata 1:1](https://hackita.it/formazione).
+> L'Elasticsearch della tua azienda ha la porta 9300 aperta verso la rete? [Scoprilo con un assessment HackIta](/servizi) prima che qualcuno si unisca al tuo cluster. Per imparare l'exploitation distribuita: [formazione avanzata 1:1](/formazione).

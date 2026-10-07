@@ -27,7 +27,7 @@ tags:
 
 ## Glossario rapido
 
-Per il protocollo Kerberos completo vedi [Kerberos — autenticazione in Active Directory](https://hackita.it/articoli/kerberos/).
+Per il protocollo Kerberos completo vedi [Kerberos — autenticazione in Active Directory](/articoli/kerberos/).
 
 * **TGS (Ticket Granting Service)**: Ticket per accedere a un singolo servizio specifico (CIFS, LDAP, MSSQL…). Diverso dal TGT che è il "passaporto" generale.
 * **SPN (Service Principal Name)**: Identificatore univoco di un servizio in AD. Formato `servizio/host.dominio`. Es: `cifs/DC01.corp.local`.
@@ -82,12 +82,12 @@ Il Silver Ticket è classificato **[T1558.002](https://attack.mitre.org/techniqu
 
 | Tecnica                                                         | Cosa usi                | Scope                     | Richiede DA? | Contatta DC? |
 | --------------------------------------------------------------- | ----------------------- | ------------------------- | ------------ | ------------ |
-| [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)     | Hash NTLM utente        | Singolo host (NTLM)       | No           | No           |
-| [Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/) | TGT/TGS da LSASS        | Risorse del dominio       | No           | No           |
+| [Pass-the-Hash](/articoli/pass-the-hash/)     | Hash NTLM utente        | Singolo host (NTLM)       | No           | No           |
+| [Pass-the-Ticket](/articoli/pass-the-ticket/) | TGT/TGS da LSASS        | Risorse del dominio       | No           | No           |
 | **Silver Ticket**                                               | Hash service account    | **Singolo servizio/host** | **No**       | **No**       |
-| [Golden Ticket](https://hackita.it/articoli/golden-ticket/)     | Hash krbtgt             | Intero dominio            | Sì           | No           |
-| [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/)   | Hash krbtgt + TGT reale | Intero dominio            | Sì           | Sì           |
-| [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/) | Hash krbtgt + PAC reale | Intero dominio            | Sì           | Sì           |
+| [Golden Ticket](/articoli/golden-ticket/)     | Hash krbtgt             | Intero dominio            | Sì           | No           |
+| [Diamond Ticket](/articoli/diamond-ticket/)   | Hash krbtgt + TGT reale | Intero dominio            | Sì           | Sì           |
+| [Sapphire Ticket](/articoli/sapphire-ticket/) | Hash krbtgt + PAC reale | Intero dominio            | Sì           | Sì           |
 
 Il Silver Ticket è il più stealth di tutti perché non genera **nessun evento sul DC** — né AS-REQ né TGS-REQ. Il servizio target è l'unico punto di contatto.
 
@@ -101,7 +101,7 @@ L'attaccante forgia un TGS direttamente, senza passare dal KDC. Il servizio targ
 
 * Hai l'hash di un **computer account** (`HOST$`) o di un **service account** e vuoi accedere al suo servizio in silenzio.
 * Vuoi **evitare di toccare il KDC** (ambienti con MDI che monitora i TGS-REQ anomali).
-* Hai l'hash di **DC01$** → forgi Silver Ticket per LDAP → esegui [DCSync](https://hackita.it/articoli/dcsync/) **senza essere DA** (scenario devastante, vedi sotto).
+* Hai l'hash di **DC01$** → forgi Silver Ticket per LDAP → esegui [DCSync](/articoli/dcsync/) **senza essere DA** (scenario devastante, vedi sotto).
 * Vuoi **accesso persistente a un singolo servizio** anche dopo il cambio password dell'utente impersonato.
 * Stai lavorando **offline** o in ambienti dove il DC è irraggiungibile.
 
@@ -113,7 +113,7 @@ L'attaccante forgia un TGS direttamente, senza passare dal KDC. Il servizio targ
 
 **1. Kerberoasting (scenario più comune)**
 
-[Kerberoasting](https://hackita.it/articoli/kerberos/) richiede TGS per tutti gli account con SPN, li scarica e li cracka offline con hashcat. L'hash craccato è direttamente utilizzabile per il Silver Ticket.
+[Kerberoasting](/articoli/kerberos/) richiede TGS per tutti gli account con SPN, li scarica e li cracka offline con hashcat. L'hash craccato è direttamente utilizzabile per il Silver Ticket.
 
 ```bash
 # Enumera tutti gli SPN e richiedi i TGS
@@ -127,7 +127,7 @@ hashcat -m 13100 kerberoast.txt /usr/share/wordlists/rockyou.txt
 
 **2. Dump locale della macchina che esegue il servizio**
 
-Se hai accesso locale (local admin) sul server che ospita il servizio, **[Mimikatz](https://hackita.it/articoli/mimikatz/)** può dumpare LSASS e restituire sia l'hash NTLM che le chiavi AES:
+Se hai accesso locale (local admin) sul server che ospita il servizio, **[Mimikatz](/articoli/mimikatz/)** può dumpare LSASS e restituire sia l'hash NTLM che le chiavi AES:
 
 ```powershell
 # Mimikatz — dump LSASS in memoria
@@ -140,9 +140,9 @@ sekurlsa::logonpasswords
 # Computer account = macchina stessa (es. WS01$) → chiave per HOST, CIFS, ecc.
 ```
 
-**3. [DCSync](https://hackita.it/articoli/dcsync/) (se già DA)**
+**3. [DCSync](/articoli/dcsync/) (se già DA)**
 
-Se sei già Domain Admin e vuoi l'hash di un service account o computer account specifico, **[impacket-secretsdump](https://hackita.it/articoli/impacket/)** è il metodo più rapido da Linux:
+Se sei già Domain Admin e vuoi l'hash di un service account o computer account specifico, **[impacket-secretsdump](/articoli/impacket/)** è il metodo più rapido da Linux:
 
 ```bash
 # Impacket
@@ -154,7 +154,7 @@ lsadump::dcsync /domain:corp.local /user:WS01$
 
 **4. NTDS.dit**
 
-Estrae tutti gli hash del dominio in blocco — vedi [DCSync](https://hackita.it/articoli/dcsync/).
+Estrae tutti gli hash del dominio in blocco — vedi [DCSync](/articoli/dcsync/).
 
 **Come estrarre le chiavi AES (non solo NTLM)**
 
@@ -219,7 +219,7 @@ impacket-GetUserSPNs corp.local/user:Password123 -dc-ip DC_IP
 
 ## Step 1 — Identificare il target e ottenere l'hash
 
-Prima di tutto devi sapere qual è il SPN del servizio che vuoi colpire e chi è l'account che lo ospita. Puoi usare [Impacket](https://hackita.it/articoli/impacket/), [NetExec](https://hackita.it/articoli/netexec/), PowerView o [BloodHound](https://hackita.it/articoli/bloodhound/):
+Prima di tutto devi sapere qual è il SPN del servizio che vuoi colpire e chi è l'account che lo ospita. Puoi usare [Impacket](/articoli/impacket/), [NetExec](/articoli/netexec/), PowerView o [BloodHound](/articoli/bloodhound/):
 
 ```bash
 # Enumera tutti i SPN del dominio (con Impacket)
@@ -246,9 +246,9 @@ nxc smb TARGET_IP -u user -p Password123 --computer-accounts
 
 ## Step 2 — Forgiare il Silver Ticket
 
-### Con [Mimikatz](https://hackita.it/articoli/mimikatz/)
+### Con [Mimikatz](/articoli/mimikatz/)
 
-[Mimikatz](https://hackita.it/articoli/mimikatz/) usa il comando `kerberos::golden` anche per i Silver Ticket — la differenza è l'aggiunta di `/target:` e `/service:` e l'uso dell'hash del service account invece di krbtgt.
+[Mimikatz](/articoli/mimikatz/) usa il comando `kerberos::golden` anche per i Silver Ticket — la differenza è l'aggiunta di `/target:` e `/service:` e l'uso dell'hash del service account invece di krbtgt.
 
 ```powershell
 # Silver Ticket per CIFS (accesso file share, C$)
@@ -282,7 +282,7 @@ kerberos::ptt silver_cifs.kirbi
 
 ### Con Rubeus
 
-**[Rubeus](https://hackita.it/articoli/rubeus/)** — per il Silver Ticket usa il subcommand `silver` (diverso dal `golden`):
+**[Rubeus](/articoli/rubeus/)** — per il Silver Ticket usa il subcommand `silver` (diverso dal `golden`):
 
 ```powershell
 # Forge e inject in memoria
@@ -310,7 +310,7 @@ Rubeus.exe silver /service:cifs/SERVER.corp.local /aes256:KEY /user:Admin \
 
 ### Con Impacket da Linux
 
-**ticketer.py** — script [Impacket](https://hackita.it/articoli/impacket/) per forging Silver Ticket da Linux con `-spn`:
+**ticketer.py** — script [Impacket](/articoli/impacket/) per forging Silver Ticket da Linux con `-spn`:
 
 ```bash
 # Con NTLM hash (RC4)
@@ -359,7 +359,7 @@ impacket-ticketConverter silver_cifs.ccache silver_cifs.kirbi
 kekeo.exe "tgs::forge /domain:corp.local /sid:S-1-5-21-XXXXXXXXXX /user:Administrator /service:cifs/SERVER.corp.local /rc4:NTLM_HASH /ptt"
 ```
 
-> In ambienti con EDR che blocca [Mimikatz](https://hackita.it/articoli/mimikatz/) attivamente, kekeo può passare inosservato più facilmente per la sua firma binaria differente e la superficie d'attacco ridotta. Il vantaggio OPSEC principale è che **non interagisce con LSASS** per creare il ticket — usa direttamente le API Kerberos di Windows. Questo evita i pattern di accesso a LSASS che molti EDR tracciano come indicatori di compromissione (OpenProcess su lsass.exe). Non è una soluzione universale ma vale tenerlo in toolkit.
+> In ambienti con EDR che blocca [Mimikatz](/articoli/mimikatz/) attivamente, kekeo può passare inosservato più facilmente per la sua firma binaria differente e la superficie d'attacco ridotta. Il vantaggio OPSEC principale è che **non interagisce con LSASS** per creare il ticket — usa direttamente le API Kerberos di Windows. Questo evita i pattern di accesso a LSASS che molti EDR tracciano come indicatori di compromissione (OpenProcess su lsass.exe). Non è una soluzione universale ma vale tenerlo in toolkit.
 
 ***
 
@@ -422,11 +422,11 @@ impacket-secretsdump -k -no-pass -just-dc-ntlm corp.local/Administrator@DC01.cor
 # → estrae tutti gli hash del dominio incluso krbtgt
 ```
 
-> Questo è uno dei path di escalation più sottovalutati: comprometti un account con accesso limitato al DC (backup, monitoring), ottieni l'hash di `DC01$`, Silver Ticket LDAP, [DCSync](https://hackita.it/articoli/dcsync/) → [Golden Ticket](https://hackita.it/articoli/golden-ticket/). Tutto senza mai essere formalmente Domain Admin.
+> Questo è uno dei path di escalation più sottovalutati: comprometti un account con accesso limitato al DC (backup, monitoring), ottieni l'hash di `DC01$`, Silver Ticket LDAP, [DCSync](/articoli/dcsync/) → [Golden Ticket](/articoli/golden-ticket/). Tutto senza mai essere formalmente Domain Admin.
 
 ### MSSQL — accesso database
 
-L'SPN `MSSQLSvc/host:porta` ti dà accesso al SQL Server come l'account di servizio. Se quell'account è sysadmin, hai `xp_cmdshell` → RCE. Approfondimento completo in [Porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/).
+L'SPN `MSSQLSvc/host:porta` ti dà accesso al SQL Server come l'account di servizio. Se quell'account è sysadmin, hai `xp_cmdshell` → RCE. Approfondimento completo in [Porta 1433 MSSQL](/articoli/porta-1433-mssql/).
 
 ```bash
 python3 ticketer.py -nthash HASH_MSSQL_SVC -domain-sid SID \
@@ -456,7 +456,7 @@ kerberos::golden /user:Administrator /domain:corp.local /sid:SID \
 
 ### RPCSS — WMI e DCOM
 
-L'SPN `rpcss/HOST` ti permette di usare WMI per esecuzione remota di comandi. Da Linux usa **[impacket-wmiexec](https://hackita.it/articoli/impacket/)**:
+L'SPN `rpcss/HOST` ti permette di usare WMI per esecuzione remota di comandi. Da Linux usa **[impacket-wmiexec](/articoli/impacket/)**:
 
 ```powershell
 kerberos::golden /user:Administrator /domain:corp.local /sid:SID \
@@ -570,7 +570,7 @@ impacket-smbclient -k -no-pass corp.local/Administrator@SERVER.corp.local
 Se il service account ha `msDS-SupportedEncryptionTypes` configurato per solo AES, un ticket RC4 viene rifiutato. Usa sempre AES se disponibile. Nei domini moderni, RC4 per un computer account è anomalo e può triggerare alert.
 
 **Durata realistica del ticket**
-Il default dei tool è spesso 10 anni — firma riconoscibile. Usa `/startoffset:0 /endin:600` in [Mimikatz](https://hackita.it/articoli/mimikatz/) o `-duration 600` in ticketer.py per allinearti al default AD (10 ore).
+Il default dei tool è spesso 10 anni — firma riconoscibile. Usa `/startoffset:0 /endin:600` in [Mimikatz](/articoli/mimikatz/) o `-duration 600` in ticketer.py per allinearti al default AD (10 ore).
 
 **Username esistente in AD**
 Post-patch Nov 2021, se PAC validation è attiva il username nel ticket deve esistere in AD. Usa sempre un account reale — preferibilmente con storia di attività legittima su quell'host.
@@ -579,7 +579,7 @@ Post-patch Nov 2021, se PAC validation è attiva il username nel ticket deve esi
 I computer account ruotano la password ogni 30 giorni. Se l'hash è vecchio di più di 30 giorni potrebbe non funzionare. Verifica l'ultima rotazione prima di investire tempo nel forge.
 
 **Inject in processo separato**
-Con [Rubeus](https://hackita.it/articoli/rubeus/) usa `createnetonly` per creare un processo isolato con il ticket, evitando di contaminare la sessione corrente o sovrascrivere ticket legittimi.
+Con [Rubeus](/articoli/rubeus/) usa `createnetonly` per creare un processo isolato con il ticket, evitando di contaminare la sessione corrente o sovrascrivere ticket legittimi.
 
 **Uno SPN alla volta**
 Un Silver Ticket vale per un solo SPN. Se hai bisogno di accedere a CIFS e WMI sullo stesso host, forgi due ticket separati.
@@ -735,7 +735,7 @@ Il Silver Ticket è una tecnica **esclusivamente on-premise**. Non funziona per 
 
 Se l'ambiente usa Azure AD Connect per la sincronizzazione on-prem → cloud, compromettere quel server (o l'account `MSOL_XXXXXXXXXX` che usa) apre vettori verso Azure AD. Un Silver Ticket per CIFS o LDAP sul server Azure AD Connect può essere il ponte tra on-prem e cloud.
 
-> Il Silver Ticket non raggiunge il cloud direttamente — ma può colpire l'infrastruttura ibrida che connette on-prem al cloud. Per attacchi specifici ad Azure AD in ambienti ibridi, vedi [Active Directory — exploitation](https://hackita.it/articoli/active-directory/).
+> Il Silver Ticket non raggiunge il cloud direttamente — ma può colpire l'infrastruttura ibrida che connette on-prem al cloud. Per attacchi specifici ad Azure AD in ambienti ibridi, vedi [Active Directory — exploitation](/articoli/active-directory/).
 
 ***
 
@@ -763,10 +763,10 @@ ValidateKdcPacSignature = 1
 ```
 
 * **Rotazione regolare delle password dei computer account**: Default Windows è 30 giorni — non disabilitarlo.
-* **Monitora [DCSync](https://hackita.it/articoli/dcsync/)**: Event ID 4662 per accessi con diritti di replica. Se vedi DCSync da un account non-DA, indaga immediatamente.
+* **Monitora [DCSync](/articoli/dcsync/)**: Event ID 4662 per accessi con diritti di replica. Se vedi DCSync da un account non-DA, indaga immediatamente.
 * **LAPS** (Local Administrator Solution Password): Password admin locale unica e rotante per ogni macchina — limita il dump locale di LSASS come vettore per ottenere l'hash del computer account.
 * **Protected Users Security Group**: Forza Kerberos (no NTLM), impedisce la delega, richiede AES. Aggiungici tutti gli account privilegiati.
-* **Limita i SPN non necessari**: Rimuovi SPN orfani o inutilizzati — meno superficie di attacco per [Kerberoasting](https://hackita.it/articoli/kerberos/) e Silver Ticket. Usa [BloodHound](https://hackita.it/articoli/bloodhound/) per mappare tutti gli SPN del dominio e identificare quelli ad alto rischio.
+* **Limita i SPN non necessari**: Rimuovi SPN orfani o inutilizzati — meno superficie di attacco per [Kerberoasting](/articoli/kerberos/) e Silver Ticket. Usa [BloodHound](/articoli/bloodhound/) per mappare tutti gli SPN del dominio e identificare quelli ad alto rischio.
 * **Forza AES come encryption type** (`msDS-SupportedEncryptionTypes`): valore `0` (default legacy) = RC4 + tutto accettato. Imposta `24` (AES128+AES256) o `16` (solo AES256) per bloccare i ticket RC4.
 * **Kerberos Armoring (FAST)**: Disponibile da Windows Server 2012, cifra le comunicazioni AS-REQ/TGS-REQ tra client e KDC. Sul Silver Ticket ha impatto limitato — il ticket viene forgiato offline senza toccare il KDC — ma riduce la superficie di attacco su altri vettori Kerberos (AS-REP Roasting, downgrade). Vale abilitarlo nei Domini Funzionali ≥ 2012 tramite GPO `KDC support for claims, compound authentication and Kerberos armoring`.
 
@@ -774,7 +774,7 @@ ValidateKdcPacSignature = 1
 
 ## Confronto: Silver / Golden / Diamond / Sapphire
 
-|                     | [Silver Ticket](https://hackita.it/articoli/silver-ticket/) | [Golden Ticket](https://hackita.it/articoli/golden-ticket/) | [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/) | [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/) |
+|                     | [Silver Ticket](/articoli/silver-ticket/) | [Golden Ticket](/articoli/golden-ticket/) | [Diamond Ticket](/articoli/diamond-ticket/) | [Sapphire Ticket](/articoli/sapphire-ticket/) |
 | ------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- |
 | Hash richiesto      | Service account                                             | krbtgt                                                      | krbtgt + TGT reale                                            | krbtgt + PAC reale                                              |
 | Scope               | Singolo servizio/host                                       | Intero dominio                                              | Intero dominio                                                | Intero dominio                                                  |
@@ -896,20 +896,20 @@ Il path più critico: hash di `DC01$` → Silver Ticket LDAP → DCSync → Gold
 
 ## Articoli correlati
 
-* [Kerberos — autenticazione in Active Directory](https://hackita.it/articoli/kerberos/)
-* [Golden Ticket](https://hackita.it/articoli/golden-ticket/)
-* [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/)
-* [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/)
-* [Kerberoasting](https://hackita.it/articoli/kerberos/)
-* [DCSync](https://hackita.it/articoli/dcsync/)
-* [Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
-* [Mimikatz](https://hackita.it/articoli/mimikatz/)
-* [Rubeus](https://hackita.it/articoli/rubeus/)
-* [Impacket](https://hackita.it/articoli/impacket/)
-* [NetExec](https://hackita.it/articoli/netexec/)
-* [Active Directory — exploitation](https://hackita.it/articoli/active-directory/)
-* [Porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/)
+* [Kerberos — autenticazione in Active Directory](/articoli/kerberos/)
+* [Golden Ticket](/articoli/golden-ticket/)
+* [Diamond Ticket](/articoli/diamond-ticket/)
+* [Sapphire Ticket](/articoli/sapphire-ticket/)
+* [Kerberoasting](/articoli/kerberos/)
+* [DCSync](/articoli/dcsync/)
+* [Pass-the-Ticket](/articoli/pass-the-ticket/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
+* [Mimikatz](/articoli/mimikatz/)
+* [Rubeus](/articoli/rubeus/)
+* [Impacket](/articoli/impacket/)
+* [NetExec](/articoli/netexec/)
+* [Active Directory — exploitation](/articoli/active-directory/)
+* [Porta 1433 MSSQL](/articoli/porta-1433-mssql/)
 
 ***
 

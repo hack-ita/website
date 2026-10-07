@@ -379,7 +379,7 @@ POST /reset-password HTTP/1.1
 email=vittima@target.com&token=IL_TUO_TOKEN
 ```
 
-Approfondimento completo in [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/).
+Approfondimento completo in [Password Reset Attack](/articoli/password-reset-attack/).
 
 ***
 
@@ -460,14 +460,14 @@ Costruisci cookie per admin (user_id=1)
 
 **Articoli correlati:**
 
-* [Auth e Access Control: guida completa](https://hackita.it/articoli/auth-access-control-guida-completa/)
-* [Broken Access Control](https://hackita.it/articoli/broken-access-control/)
-* [2FA Bypass](https://hackita.it/articoli/2fa-bypass/)
-* [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/)
-* [Session Hijacking](https://hackita.it/articoli/session-hijacking/)
-* [Brute Force](https://hackita.it/articoli/brute-force/)
-* [Burp Suite](https://hackita.it/articoli/burp-suite/)
-* [Attacchi Applicazioni Web](https://hackita.it/articoli/attacchi-applicazioni-web/)
+* [Auth e Access Control: guida completa](/articoli/auth-access-control-guida-completa/)
+* [Broken Access Control](/articoli/broken-access-control/)
+* [2FA Bypass](/articoli/2fa-bypass/)
+* [Password Reset Attack](/articoli/password-reset-attack/)
+* [Session Hijacking](/articoli/session-hijacking/)
+* [Brute Force](/articoli/brute-force/)
+* [Burp Suite](/articoli/burp-suite/)
+* [Attacchi Applicazioni Web](/articoli/attacchi-applicazioni-web/)
 
 > Uso esclusivo in ambienti autorizzati.
 

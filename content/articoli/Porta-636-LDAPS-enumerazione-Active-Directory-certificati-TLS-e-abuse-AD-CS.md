@@ -37,7 +37,7 @@ La porta 636 è registrata IANA come `ldaps`. LDAPS stabilisce TLS prima di qual
 
 | Porta                                   | Protocollo | TLS                | Scope               |
 | --------------------------------------- | ---------- | ------------------ | ------------------- |
-| [389](https://hackita.it/articoli/porta-389-ldap/) | LDAP       | STARTTLS opzionale | Dominio singolo     |
+| [389](/articoli/porta-389-ldap/) | LDAP       | STARTTLS opzionale | Dominio singolo     |
 | **636**                                 | **LDAPS**  | **Implicit TLS**   | **Dominio singolo** |
 | 3268                                    | GC         | STARTTLS opzionale | Foresta intera      |
 | 3269                                    | GC-SSL     | Implicit TLS       | Foresta intera      |
@@ -86,7 +86,7 @@ PORT    STATE SERVICE  VERSION
 |   Not valid after: 2027-03-15
 ```
 
-**Cosa ci dice questo output:** il server è `DC01.corp.local` — un domain controller. Dominio AD `corp.local`. CA interna `corp-DC01-CA` — informazione fondamentale per [attacchi AD CS](https://hackita.it/articoli/active-directory/).
+**Cosa ci dice questo output:** il server è `DC01.corp.local` — un domain controller. Dominio AD `corp.local`. CA interna `corp-DC01-CA` — informazione fondamentale per [attacchi AD CS](/articoli/active-directory/).
 
 ### Comando 2: Estrazione certificato completa
 
@@ -150,7 +150,7 @@ sAMAccountName: svc_sql
 userAccountControl: 66048
 ```
 
-**Lettura dell'output:** `j.smith` è Domain Admin con password in chiaro nella description — finding critico. `svc_sql` con `userAccountControl: 66048` (DONT\_EXPIRE\_PASSWORD) — service account target per [Kerberoasting](https://hackita.it/articoli/kerberos/).
+**Lettura dell'output:** `j.smith` è Domain Admin con password in chiaro nella description — finding critico. `svc_sql` con `userAccountControl: 66048` (DONT\_EXPIRE\_PASSWORD) — service account target per [Kerberoasting](/articoli/kerberos/).
 
 ### SPN per Kerberoasting
 
@@ -184,7 +184,7 @@ lockoutThreshold: 5
 lockoutDuration: -18000000000
 ```
 
-**Lettura dell'output:** password minima 8 char, lockout dopo 5 tentativi, durata 30 minuti. Regola il [password spray](https://hackita.it/articoli/brute-force/): max 4 tentativi, pausa 31 minuti.
+**Lettura dell'output:** password minima 8 char, lockout dopo 5 tentativi, durata 30 minuti. Regola il [password spray](/articoli/brute-force/): max 4 tentativi, pausa 31 minuti.
 
 ### Deleghe (constrained delegation)
 
@@ -238,7 +238,7 @@ INFO: Done in 00:02:15
 INFO: Compressing output: 20260206_bloodhound.zip
 ```
 
-**Cosa fai dopo:** importa in BloodHound GUI → cerca Shortest Path to Domain Admins. Concentrati su Kerberoastable accounts, constrained delegation e ACL abuse. Per la guida completa a [BloodHound e AD attack path](https://hackita.it/articoli/active-directory/), consulta l'articolo dedicato.
+**Cosa fai dopo:** importa in BloodHound GUI → cerca Shortest Path to Domain Admins. Concentrati su Kerberoastable accounts, constrained delegation e ACL abuse. Per la guida completa a [BloodHound e AD attack path](/articoli/active-directory/), consulta l'articolo dedicato.
 
 **NTLM relay verso LDAPS**
 
@@ -292,7 +292,7 @@ certipy find -u user@corp.local -p Pass123 -dc-ip 10.10.10.10 -vulnerable
 **Se fallisce:** certificato self-signed → aggiungi `LDAPTLS_REQCERT=never`
 **Tempo stimato:** 10-20 minuti
 
-### Scenario 2: [NTLM](https://hackita.it/articoli/ntlm/) relay chain
+### Scenario 2: [NTLM](/articoli/ntlm/) relay chain
 
 **Step 1:** Verifica channel binding: `crackmapexec ldap [DC] -M ldap-checker`
 **Step 2:** `ntlmrelayx.py -t ldaps://[DC] --escalate-user [user]`
@@ -322,7 +322,7 @@ certipy find -u user@corp.local -p Pass123 -dc-ip 10.10.10.10 -vulnerable
 | NTLM Relay | ntlmrelayx     | `-t ldaps://[DC] --escalate-user`                 | DCSync                |
 | Cert Abuse | certipy        | `find -vulnerable`                                | ESC1-ESC8             |
 
-Leggi la nostra guida principale per sfruttare tutte le esc da 1 a 16 in fase di PrivEsc . [https://hackita.it/articoli/adcs-esc1-esc16/](https://hackita.it/articoli/adcs-esc1-esc16/)
+Leggi la nostra guida principale per sfruttare tutte le esc da 1 a 16 in fase di PrivEsc . [https://hackita.it/articoli/adcs-esc1-esc16/](/articoli/adcs-esc1-esc16/)
 
 ## 7. Detection & Evasion
 
@@ -406,10 +406,10 @@ Ogni DC Active Directory ha la porta 636 aperta. L'enumerazione LDAPS è invisib
 
 ### OPSEC per il Red Team
 
-LDAPS cifra il contenuto — IDS cieco. BloodHound è rumoroso — esegui in orari di punta. Query mirate (SPN, description) sono meno visibili di un dump completo. ldapdomaindump è più silenzioso di [BloodHound](https://hackita.it/articoli/bloodhound/). L'enumerazione LDAP con credenziali utente è attività legittima — difficile da distinguere.
+LDAPS cifra il contenuto — IDS cieco. BloodHound è rumoroso — esegui in orari di punta. Query mirate (SPN, description) sono meno visibili di un dump completo. ldapdomaindump è più silenzioso di [BloodHound](/articoli/bloodhound/). L'enumerazione LDAP con credenziali utente è attività legittima — difficile da distinguere.
 
 ***
 
 Riferimento: RFC 4511, RFC 4513, MS-ADTS. Uso esclusivo in ambienti autorizzati. Approfondimento: [https://www.speedguide.net/port.php?port=636](https://www.speedguide.net/port.php?port=636)
 
-> Vuoi supportare HackIta? [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).
+> Vuoi supportare HackIta? [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

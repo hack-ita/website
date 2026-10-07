@@ -80,7 +80,7 @@ Apparati come FortiGate, Palo Alto, Check Point, Cisco ASA che delimitano il con
 
 ### Scansione delle porte tipiche
 
-Usa [Nmap](https://hackita.it/articoli/nmap/) per individuare i gateway esposti:
+Usa [Nmap](/articoli/nmap/) per individuare i gateway esposti:
 
 ```bash
 # IPsec (IKE)
@@ -190,7 +190,7 @@ ike-scan 203.0.113.200 -A
 tcpdump -i eth0 'udp port 500 or udp port 4500' -w ike_handshake.pcap
 ```
 
-In Wireshark, filtra su `isakmp` e cerca lo scambio IKE Phase 1 in Aggressive Mode: è lì che viene inviato in chiaro l'hash derivato dalla PSK (`SKEYID_a`). Per una guida completa allo strumento vedi [Wireshark](https://hackita.it/articoli/wireshark/). In Main Mode l'hash arriva solo nell'ultimo messaggio, già cifrato: per estrarlo serve analisi offline del pcap.
+In Wireshark, filtra su `isakmp` e cerca lo scambio IKE Phase 1 in Aggressive Mode: è lì che viene inviato in chiaro l'hash derivato dalla PSK (`SKEYID_a`). Per una guida completa allo strumento vedi [Wireshark](/articoli/wireshark/). In Main Mode l'hash arriva solo nell'ultimo messaggio, già cifrato: per estrarlo serve analisi offline del pcap.
 
 ### Estrazione e cracking dell'hash
 
@@ -205,7 +205,7 @@ cd ikecrack
 hashcat -m 5500 psk_hashes.txt /usr/share/wordlists/rockyou.txt
 ```
 
-Guida completa allo strumento: [Hashcat](https://hackita.it/articoli/hashcat/).
+Guida completa allo strumento: [Hashcat](/articoli/hashcat/).
 
 ### Brute force online in Aggressive Mode
 
@@ -243,7 +243,7 @@ Nel 2025, la ricerca KU Leuven/Top10VPN ha documentato una famiglia di vulnerabi
 
 Il problema di fondo: alcuni di questi host aprono la "busta" e inoltrano il contenuto senza controllare se la busta stessa arrivava davvero da chi doveva mandarla. Un attaccante può quindi costruire una busta con dentro un pacchetto che ha come mittente un IP a piacere (**IP spoofing**, cioè falsificare l'indirizzo mittente): l'host la apre comunque e inoltra il pacchetto interno come se provenisse da quel mittente falso. È un meccanismo che permette di nascondere l'origine reale del traffico, non un modo per accedere direttamente alla rete interna del target.
 
-Lo stesso principio di fondo — un servizio che si fida ciecamente di una destinazione indicata dal client, senza verificarla — è alla base anche di una tecnica molto più datata su un protocollo diverso: [FTP bounce](https://hackita.it/articoli/ftp-bounce/).
+Lo stesso principio di fondo — un servizio che si fida ciecamente di una destinazione indicata dal client, senza verificarla — è alla base anche di una tecnica molto più datata su un protocollo diverso: [FTP bounce](/articoli/ftp-bounce/).
 
 La ricerca ha stimato circa 4,26 milioni di host esposti (VPN, router ISP, router core, gateway di rete mobile, alcuni nodi CDN), concentrati soprattutto su reti di alcuni grandi ISP.
 
@@ -408,15 +408,15 @@ set protocols mpls label-switched-path <lsp> spoof-check
 
 ## Strumenti
 
-**Enumerazione ed exploitation VPN**: `ike-scan`, `ikecrack`, moduli Metasploit (`auxiliary/scanner/ipsec/ike_scan` e altri specifici per CVE note), [Burp Suite](https://hackita.it/articoli/burp-suite/) per la parte web delle SSL-VPN, [Shodan](https://hackita.it/articoli/shodan/) per la discovery di gateway esposti.
+**Enumerazione ed exploitation VPN**: `ike-scan`, `ikecrack`, moduli Metasploit (`auxiliary/scanner/ipsec/ike_scan` e altri specifici per CVE note), [Burp Suite](/articoli/burp-suite/) per la parte web delle SSL-VPN, [Shodan](/articoli/shodan/) per la discovery di gateway esposti.
 
-**Crafting e analisi pacchetti**: [Scapy](https://hackita.it/articoli/scapy/) per costruire pacchetti IPIP/GRE/MPLS/IKE custom, [Wireshark](https://hackita.it/articoli/wireshark/) per l'analisi dei protocolli, [tcpdump](https://hackita.it/articoli/tcpdump/) per la cattura, [Hashcat](https://hackita.it/articoli/hashcat/) per il cracking accelerato via GPU.
+**Crafting e analisi pacchetti**: [Scapy](/articoli/scapy/) per costruire pacchetti IPIP/GRE/MPLS/IKE custom, [Wireshark](/articoli/wireshark/) per l'analisi dei protocolli, [tcpdump](/articoli/tcpdump/) per la cattura, [Hashcat](/articoli/hashcat/) per il cracking accelerato via GPU.
 
 **Simulazione di rete**: GNS3 per simulare router e ASA Cisco, StrongSwan come implementazione IPsec di riferimento per i test.
 
 ## Casi reali documentati
 
-**Ransomware via compromissione VPN (gruppo Akira, 2025)**: accesso iniziale tramite CVE-2024-53704 su SonicWall, movimento laterale nella LAN una volta dentro (per approfondire questa fase vedi [pivoting](https://hackita.it/articoli/pivoting/)), cifratura dei server critici. Decine di aziende colpite, danni complessivi stimati oltre 200 milioni di dollari — a conferma che il gateway VPN resta uno dei punti di ingresso più critici in un'infrastruttura aziendale.
+**Ransomware via compromissione VPN (gruppo Akira, 2025)**: accesso iniziale tramite CVE-2024-53704 su SonicWall, movimento laterale nella LAN una volta dentro (per approfondire questa fase vedi [pivoting](/articoli/pivoting/)), cifratura dei server critici. Decine di aziende colpite, danni complessivi stimati oltre 200 milioni di dollari — a conferma che il gateway VPN resta uno dei punti di ingresso più critici in un'infrastruttura aziendale.
 
 **Abuso di tunnel vulnerabili su scala Internet (2025)**: sfruttando gli host esposti a CVE-2024-7595/7596 e correlate, è stato possibile far transitare traffico con IP sorgente spoofato attraverso infrastrutture di ISP e CDN, complicando l'attribuzione del traffico malevolo.
 

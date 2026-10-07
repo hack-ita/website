@@ -140,7 +140,7 @@ PORT    STATE SERVICE
 |_  /h264Preview_01_main - 404 Not Found
 ```
 
-**Lettura dell'output:** il path `/live` e `/cam/realmonitor` rispondono 200 — accessibili senza auth. `/Streaming/Channels/101` richiede credenziali (401). `/h264Preview_01_main` non esiste (404) — non è un Reolink. Per approfondire l'enumerazione dei device IoT, consulta la [guida alla ricognizione di rete](https://hackita.it/articoli/enumeration/).
+**Lettura dell'output:** il path `/live` e `/cam/realmonitor` rispondono 200 — accessibili senza auth. `/Streaming/Channels/101` richiede credenziali (401). `/h264Preview_01_main` non esiste (404) — non è un Reolink. Per approfondire l'enumerazione dei device IoT, consulta la [guida alla ricognizione di rete](/articoli/enumeration/).
 
 ### Cameradar — tool automatizzato
 
@@ -157,7 +157,7 @@ docker run --rm -t ullaakut/cameradar -t 10.10.10.0/24
   10.10.10.52:554 /live [auth: basic] [Generic]
 ```
 
-**Lettura dell'output:** cameradar ha trovato 3 telecamere. La Dahua non ha autenticazione — accesso diretto al feed. La Hikvision usa Digest auth, la generica usa Basic (credenziali in base64, sniffabili). Per correlare con servizi web delle telecamere, consulta le [tecniche di enumerazione HTTP](https://hackita.it/articoli/http-https/).
+**Lettura dell'output:** cameradar ha trovato 3 telecamere. La Dahua non ha autenticazione — accesso diretto al feed. La Hikvision usa Digest auth, la generica usa Basic (credenziali in base64, sniffabili). Per correlare con servizi web delle telecamere, consulta le [tecniche di enumerazione HTTP](/articoli/http-https/).
 
 ### Credenziali default per vendor
 
@@ -215,7 +215,7 @@ hydra -l admin -P /usr/share/wordlists/camera_passwords.txt -f 10.10.10.50 rtsp
 [STATUS] 50 of 50 tries done, no valid pair found
 ```
 
-**Cosa fai dopo:** con le credenziali valide, accedi al feed: `ffplay rtsp://admin:Hik12345@10.10.10.50:554/Streaming/Channels/101`. Accedi anche all'interfaccia web sulla porta 80/443 per configurazione completa del device. Usa le credenziali per testare il [password reuse su altri servizi](https://hackita.it/articoli/brute-force/).
+**Cosa fai dopo:** con le credenziali valide, accedi al feed: `ffplay rtsp://admin:Hik12345@10.10.10.50:554/Streaming/Channels/101`. Accedi anche all'interfaccia web sulla porta 80/443 per configurazione completa del device. Usa le credenziali per testare il [password reuse su altri servizi](/articoli/brute-force/).
 
 **Sfruttamento CVE-2021-36260 (Hikvision RCE)**
 
@@ -238,7 +238,7 @@ uid=0(root) gid=0(root)
 <ResponseStatus><statusCode>4</statusCode></ResponseStatus>
 ```
 
-**Cosa fai dopo:** hai RCE come root sulla telecamera. Puoi estrarre credenziali memorizzate, usare la camera come pivot nella rete (le telecamere sono spesso su VLAN con accesso a segmenti interni). Per pivot avanzato, consulta le [tecniche di lateral movement](https://hackita.it/articoli/pivoting/).
+**Cosa fai dopo:** hai RCE come root sulla telecamera. Puoi estrarre credenziali memorizzate, usare la camera come pivot nella rete (le telecamere sono spesso su VLAN con accesso a segmenti interni). Per pivot avanzato, consulta le [tecniche di lateral movement](/articoli/pivoting/).
 
 ## 5. Scenari Pratici di Pentest
 
@@ -442,4 +442,4 @@ Le telecamere raramente loggano connessioni RTSP in modo dettagliato. Il rischio
 
 Tutti i comandi e le tecniche sono destinati esclusivamente ad ambienti autorizzati: penetration test con contratto, lab, CTF. Riferimento: RFC 7826 (RTSP 2.0), CVE-2021-36260, CVE-2025-65857. Approfondimento: [https://www.speedguide.net/port.php?port=554](https://www.speedguide.net/port.php?port=554)
 
-> Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+> Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

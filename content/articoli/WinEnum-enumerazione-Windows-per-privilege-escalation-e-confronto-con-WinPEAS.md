@@ -134,12 +134,12 @@ Il trade-off è chiaro: WinPEAS è **estremamente rumoroso** e quasi sempre rile
 | Tool                                                 | Linguaggio          | Scope                 | Stealth    | Detection AV | Manutenzione  | Caso d'uso ottimale             |
 | ---------------------------------------------------- | ------------------- | --------------------- | ---------- | ------------ | ------------- | ------------------------------- |
 | **WinEnum** (varie)                                  | PS/Batch/Python     | Limitato              | Alto       | Bassa        | ❌ Abbandonato | Quick check in ambienti con EDR |
-| **[WinPEAS](https://hackita.it/articoli/winpeas/)**   | C#/.bat/.ps1        | Massimo               | Basso      | Alta         | ✅ Attiva      | CTF, lab, assessment senza EDR  |
-| **[PowerUp](https://hackita.it/articoli/powerup/)**   | PowerShell          | Misconfig + exploit   | Medio      | Media-Alta   | ❌ Archiviato  | Service abuse diretto           |
-| **[SharpUp](https://hackita.it/articoli/sharpup/)**   | C# (.NET 3.5)       | Misconfig             | Medio-Alto | Media        | ⚠️ Bassa      | Red team, ambienti no-PS        |
-| **[Seatbelt](https://hackita.it/articoli/seatbelt/)** | C# (.NET 3.5/4.0)   | Situational awareness | Massimo    | Bassa-Media  | ⚠️ Moderata   | Stealth recon, check mirati     |
-| **[JAWS](https://hackita.it/articoli/jaws/)**         | PowerShell 2.0      | Generale              | Medio      | Bassa-Media  | ❌ Abbandonato | Sistemi legacy (Win7/2008)      |
-| **[WES-NG](https://hackita.it/articoli/wes-ng/)**     | Python (off-target) | Patch gap             | Massimo    | Nessuna      | ✅ Attiva      | Analisi patch zero-footprint    |
+| **[WinPEAS](/articoli/winpeas/)**   | C#/.bat/.ps1        | Massimo               | Basso      | Alta         | ✅ Attiva      | CTF, lab, assessment senza EDR  |
+| **[PowerUp](/articoli/powerup/)**   | PowerShell          | Misconfig + exploit   | Medio      | Media-Alta   | ❌ Archiviato  | Service abuse diretto           |
+| **[SharpUp](/articoli/sharpup/)**   | C# (.NET 3.5)       | Misconfig             | Medio-Alto | Media        | ⚠️ Bassa      | Red team, ambienti no-PS        |
+| **[Seatbelt](/articoli/seatbelt/)** | C# (.NET 3.5/4.0)   | Situational awareness | Massimo    | Bassa-Media  | ⚠️ Moderata   | Stealth recon, check mirati     |
+| **[JAWS](/articoli/jaws/)**         | PowerShell 2.0      | Generale              | Medio      | Bassa-Media  | ❌ Abbandonato | Sistemi legacy (Win7/2008)      |
+| **[WES-NG](/articoli/wes-ng/)**     | Python (off-target) | Patch gap             | Massimo    | Nessuna      | ✅ Attiva      | Analisi patch zero-footprint    |
 
 ***
 
@@ -501,12 +501,12 @@ Get-CimInstance Win32_QuickFixEngineering | Select HotFixID,InstalledOn
 
 WinEnum rimane rilevante nel 2026 non per la sua completezza — sotto questo aspetto è stato superato da WinPEAS anni fa — ma per la sua **leggerezza operativa e basso profilo di detection**. In ambienti con EDR attivo, uno script PowerShell da pochi KB che esegue check mirati è infinitamente più praticabile di un binario .NET da centinaia di KB con migliaia di signature note. La strategia ottimale è un approccio **layered**: comandi manuali nativi per la situational awareness iniziale, Seatbelt o WinEnum per check mirati in ambienti monitorati, WinPEAS per sweep completi quando il rischio di detection è accettabile. Il pentester esperto non si affeziona a un singolo tool: sceglie lo strumento giusto in base al contesto operativo, alla postura difensiva del target e alla fase della kill chain in cui si trova.
 
-Vuoi supportare HackIta e aiutare il progetto a crescere? Dai un’occhiata alla pagina [Supporto](https://hackita.it/supporto/).
+Vuoi supportare HackIta e aiutare il progetto a crescere? Dai un’occhiata alla pagina [Supporto](/supporto/).
 
-Se cerchi [formazione 1:1 o servizi di penetration test per aziende](https://hackita.it/servizi/), trovi tutto nella pagina Servizi.
+Se cerchi [formazione 1:1 o servizi di penetration test per aziende](/servizi/), trovi tutto nella pagina Servizi.
 
 Per riferimento esterno sul tool, puoi consultare anche il modulo storico [Invoke-WinEnum in Empire](https://github.com/EmpireProject/Empire/blob/master/data/module_source/situational_awareness/host/Invoke-WinEnum.ps1).
 
-1: [https://hackita.it/supporto/?utm\_source=chatgpt.com](https://hackita.it/supporto/?utm_source=chatgpt.com) "Supporto - HackIta"
-2: [https://hackita.it/servizi/?utm\_source=chatgpt.com](https://hackita.it/servizi/?utm_source=chatgpt.com) "Servizi - HackIta"
+1: [https://hackita.it/supporto/?utm\_source=chatgpt.com](/supporto/?utm_source=chatgpt.com) "Supporto - HackIta"
+2: [https://hackita.it/servizi/?utm\_source=chatgpt.com](/servizi/?utm_source=chatgpt.com) "Servizi - HackIta"
 3: [https://github.com/EmpireProject/Empire/blob/master/data/module\_source/situational\_awareness/host/Invoke-WinEnum.ps1](https://github.com/EmpireProject/Empire/blob/master/data/module_source/situational_awareness/host/Invoke-WinEnum.ps1)?

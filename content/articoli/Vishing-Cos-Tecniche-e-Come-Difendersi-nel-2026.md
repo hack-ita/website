@@ -20,13 +20,13 @@ tags:
 
 # Vishing: Come Funziona il Phishing Telefonico
 
-Il **vishing** (*voice phishing*, phishing vocale) è una truffa in cui l'attaccante telefona alla vittima fingendosi una banca, un corriere, un ente pubblico o un collega, per convincerla a rivelare dati sensibili, leggere un codice OTP o autorizzare un bonifico. È la versione "a voce" del [phishing](https://hackita.it/articoli/phishing/), e con l'arrivo dei cloni vocali basati su intelligenza artificiale è diventata più credibile ed efficace che mai.
+Il **vishing** (*voice phishing*, phishing vocale) è una truffa in cui l'attaccante telefona alla vittima fingendosi una banca, un corriere, un ente pubblico o un collega, per convincerla a rivelare dati sensibili, leggere un codice OTP o autorizzare un bonifico. È la versione "a voce" del [phishing](/articoli/phishing/), e con l'arrivo dei cloni vocali basati su intelligenza artificiale è diventata più credibile ed efficace che mai.
 
 In Italia il fenomeno è tutt'altro che marginale: nel 2025 la Polizia Postale ha gestito oltre **27.000 casi** di cybercrime economico-finanziario, e **AGCOM ha bloccato 43 milioni di chiamate** con numeri contraffatti nello stesso anno.
 
 ## Vishing significato: perché si chiama così
 
-Il termine nasce dall'unione di *voice* e *phishing*: come il phishing via email o SMS ([smishing](https://hackita.it/articoli/smishing/)), il vishing punta a ingannare la vittima per farle compiere un'azione dannosa, ma usa il canale telefonico. La voce umana, in tempo reale, con la possibilità di rispondere a domande e mostrare "sicurezza", è da sempre uno dei vettori più efficaci di social engineering: una persona può fidarsi più facilmente di chi sembra parlarle davvero. Un esempio attuale di quanto queste tecniche continuino a essere utilizzate nel 2026 è la **truffa Vodafone dei falsi punti Gold Starter**, una campagna di smishing che sfrutta il nome del brand per spingere la vittima verso un sito fraudolento e raccogliere dati personali e della carta: [leggi l'analisi della truffa Vodafone su HackITA](https://hackita.it/articoli/vodafone-7415-punti-truffa/).
+Il termine nasce dall'unione di *voice* e *phishing*: come il phishing via email o SMS ([smishing](/articoli/smishing/)), il vishing punta a ingannare la vittima per farle compiere un'azione dannosa, ma usa il canale telefonico. La voce umana, in tempo reale, con la possibilità di rispondere a domande e mostrare "sicurezza", è da sempre uno dei vettori più efficaci di social engineering: una persona può fidarsi più facilmente di chi sembra parlarle davvero. Un esempio attuale di quanto queste tecniche continuino a essere utilizzate nel 2026 è la **truffa Vodafone dei falsi punti Gold Starter**, una campagna di smishing che sfrutta il nome del brand per spingere la vittima verso un sito fraudolento e raccogliere dati personali e della carta: [leggi l'analisi della truffa Vodafone su HackITA](/articoli/vodafone-7415-punti-truffa/).
 
 ## Come funziona un attacco di vishing
 
@@ -95,7 +95,7 @@ Secondo il Verizon Data Breach Investigations Report 2026, il *pretexting* (mani
 
 * considera ogni chiamata non richiesta su temi finanziari come potenzialmente sospetta, anche se il numero sembra corretto;
 * stabilisci con familiari stretti una "parola di sicurezza" da usare in caso di richieste urgenti di denaro per telefono, utile anche contro i cloni vocali;
-* attiva l'[autenticazione a più fattori](https://hackita.it/articoli/mfa/) ovunque possibile: una password ottenuta al telefono da sola non basta a superarla, a patto di non leggere a voce anche il secondo codice.
+* attiva l'[autenticazione a più fattori](/articoli/mfa/) ovunque possibile: una password ottenuta al telefono da sola non basta a superarla, a patto di non leggere a voce anche il secondo codice.
 
 **Per le aziende:**
 

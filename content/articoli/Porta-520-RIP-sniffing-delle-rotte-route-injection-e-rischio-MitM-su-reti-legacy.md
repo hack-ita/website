@@ -116,7 +116,7 @@ tshark -r rip.pcap -Y "rip" -T fields -e ip.src -e rip.ip -e rip.netmask -e rip.
 10.10.10.2	192.168.1.0	255.255.255.0	2
 ```
 
-**Lettura dell'output:** due router, 4 subnet totali. Il .2 ha accesso diretto a 172.16.0.0/16 — la /16 suggerisce un segmento grande (datacenter, OT). Correla con la [guida all'enumerazione di rete](https://hackita.it/articoli/enumeration/) per completare la mappa.
+**Lettura dell'output:** due router, 4 subnet totali. Il .2 ha accesso diretto a 172.16.0.0/16 — la /16 suggerisce un segmento grande (datacenter, OT). Correla con la [guida all'enumerazione di rete](/articoli/enumeration/) per completare la mappa.
 
 ### RIP Request attivo
 
@@ -140,7 +140,7 @@ if ans:
 10.20.0.0/255.255.0.0 metric=3
 ```
 
-**Lettura dell'output:** request con addr 0.0.0.0 forza il router a inviare la tabella completa immediatamente — non devi aspettare il ciclo di 30 secondi. Approfondisci l'uso di scapy per il [fingerprint avanzato](https://hackita.it/articoli/nmap/).
+**Lettura dell'output:** request con addr 0.0.0.0 forza il router a inviare la tabella completa immediatamente — non devi aspettare il ciclo di 30 secondi. Approfondisci l'uso di scapy per il [fingerprint avanzato](/articoli/nmap/).
 
 ## 4. Tecniche Offensive
 
@@ -164,7 +164,7 @@ print('[+] Rotta iniettata: 192.168.1.0/24 via 10.10.10.200 metric 1')
 [+] Rotta iniettata: 192.168.1.0/24 via 10.10.10.200 metric 1
 ```
 
-**Cosa fai dopo:** attiva forwarding (`sysctl -w net.ipv4.ip_forward=1`), poi cattura il traffico con `tcpdump -A net 192.168.1.0/24`. Per il credential harvesting, usa le [tecniche MitM](https://hackita.it/articoli/man-in-the-middle/).
+**Cosa fai dopo:** attiva forwarding (`sysctl -w net.ipv4.ip_forward=1`), poi cattura il traffico con `tcpdump -A net 192.168.1.0/24`. Per il credential harvesting, usa le [tecniche MitM](/articoli/man-in-the-middle/).
 
 **Route poisoning (blackhole)**
 
@@ -188,7 +188,7 @@ while True: send(pkt,verbose=0); time.sleep(25)
 "
 ```
 
-**Cosa fai dopo:** rotta mantenuta attiva — il timer di 25 secondi batte il ciclo standard di 30. Combina con `responder` per [cattura hash NTLM](https://hackita.it/articoli/passwordspray/).
+**Cosa fai dopo:** rotta mantenuta attiva — il timer di 25 secondi batte il ciclo standard di 30. Combina con `responder` per [cattura hash NTLM](/articoli/passwordspray/).
 
 ## 5. Scenari Pratici di Pentest
 
@@ -302,7 +302,7 @@ Riduzione rumore: meno sospetto di un salto a metric 1
 | Errore / Sintomo                  | Causa                    | Fix                                                                   |
 | --------------------------------- | ------------------------ | --------------------------------------------------------------------- |
 | Nessun RIP su tcpdump             | OSPF/EIGRP in uso        | `tcpdump ip proto 89` per OSPF                                        |
-| Injection non accettata           | Auth MD5 attiva          | Cattura hash, [crack offline](https://hackita.it/articoli/brute-force/) |
+| Injection non accettata           | Auth MD5 attiva          | Cattura hash, [crack offline](/articoli/brute-force/) |
 | Scapy non invia multicast         | Rotta multicast mancante | `ip route add 224.0.0.0/4 dev eth0`                                   |
 | Traffico non arriva dopo redirect | IP forwarding off        | `sysctl -w net.ipv4.ip_forward=1`                                     |
 
@@ -347,4 +347,4 @@ Sniffing = invisibile. Injection genera UDP/520 rilevabile. IP spoofing del rout
 
 Riferimento: RFC 2453 (RIPv2), RFC 1058 (RIPv1). Uso esclusivo in ambienti autorizzati. [https://www.speedguide.net/port.php?port=520](https://www.speedguide.net/port.php?port=520)
 
-> [hackita.it/supporto](https://hackita.it/supporto) per donazioni · [hackita.it/servizi](https://hackita.it/servizi) per formazione 1:1.
+> [hackita.it/supporto](/supporto) per donazioni · [hackita.it/servizi](/servizi) per formazione 1:1.

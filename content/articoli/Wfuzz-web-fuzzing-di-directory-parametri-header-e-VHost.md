@@ -22,7 +22,7 @@ tags:
 
 **Wfuzz** è un web fuzzer Python che sostituisce la keyword `FUZZ` con ogni entry di una wordlist in qualsiasi parte di una request HTTP — URL, parametri GET/POST, header, cookie, body JSON. Mentre gobuster e feroxbuster sono ottimizzati per la directory brute force, wfuzz è **completamente generico**: puoi fuzzare qualsiasi campo, con più wordlist simultanee e con encoders integrati. Questo lo rende lo strumento giusto quando devi testare injection points, parametri nascosti, vhost o qualsiasi scenario non standard.
 
-**Prerequisiti:** wordlist (installale con [SecLists](https://hackita.it/articoli/wordlist/)) e [Burp Suite](https://hackita.it/articoli/burp-suite/) come proxy per ispezionare le request.
+**Prerequisiti:** wordlist (installale con [SecLists](/articoli/wordlist/)) e [Burp Suite](/articoli/burp-suite/) come proxy per ispezionare le request.
 
 ***
 
@@ -57,10 +57,10 @@ Prima di iniziare: questi tool fanno cose simili, ma con punti di forza diversi.
 | Tool                                                        | Linguaggio | Velocità | Multi-fuzzing         | Encoders | Ricorsione         | Quando usarlo                                     |
 | ----------------------------------------------------------- | ---------- | -------- | --------------------- | -------- | ------------------ | ------------------------------------------------- |
 | **wfuzz**                                                   | Python     | ★★★      | ✅ FUZZ+FUZ2Z+FUZ3Z    | ✅ molti  | Manuale `-R`       | Massima flessibilità, parameter fuzzing, encoders |
-| **[ffuf](https://hackita.it/articoli/ffuf/)**               | Go         | ★★★★★    | ✅ `-w w1:K1 -w w2:K2` | Base     | Auto `--recursion` | Directory fuzzing veloce, uso quotidiano          |
-| **[feroxbuster](https://hackita.it/articoli/feroxbuster/)** | Rust       | ★★★★★    | ❌                     | ❌        | Auto, aggressiva   | Ricorsione profonda, massima velocità             |
-| **[gobuster](https://hackita.it/articoli/gobuster/)**       | Go         | ★★★★     | ❌                     | ❌        | ❌                  | Semplicità, DNS subdomain, S3 bucket              |
-| **[dirbuster](https://hackita.it/articoli/dirbuster/)**     | Java       | ★★       | ❌                     | ❌        | ✅ GUI              | Legacy, GUI per chi preferisce visual             |
+| **[ffuf](/articoli/ffuf/)**               | Go         | ★★★★★    | ✅ `-w w1:K1 -w w2:K2` | Base     | Auto `--recursion` | Directory fuzzing veloce, uso quotidiano          |
+| **[feroxbuster](/articoli/feroxbuster/)** | Rust       | ★★★★★    | ❌                     | ❌        | Auto, aggressiva   | Ricorsione profonda, massima velocità             |
+| **[gobuster](/articoli/gobuster/)**       | Go         | ★★★★     | ❌                     | ❌        | ❌                  | Semplicità, DNS subdomain, S3 bucket              |
+| **[dirbuster](/articoli/dirbuster/)**     | Java       | ★★       | ❌                     | ❌        | ✅ GUI              | Legacy, GUI per chi preferisce visual             |
 
 **Wfuzz è migliore di ffuf?** No in assoluto: ffuf è generalmente preferibile per directory fuzzing veloce, mentre wfuzz è più interessante quando servono multi-position, parameter fuzzing, header/cookie fuzzing ed encoder — lì gli altri non arrivano.
 
@@ -493,13 +493,13 @@ Sì, con `-d "campo=FUZZ"` per body form-encoded o JSON.
 Sì, con `-H "Header: FUZZ"` per gli header e `-b "cookie=FUZZ"` per i cookie.
 
 **Come faccio fuzzing su applicazione autenticata?**
-Cattura il cookie di sessione post-login con [Burp Suite](https://hackita.it/articoli/burp-suite/), poi usalo con `-H "Cookie: session=abc123"` in ogni request.
+Cattura il cookie di sessione post-login con [Burp Suite](/articoli/burp-suite/), poi usalo con `-H "Cookie: session=abc123"` in ogni request.
 
 **Come gestisco CSRF token?**
 Wfuzz non gestisce CSRF dinamici. Per quello usa Burp Intruder con macro, oppure uno script Python con requests che estrae il token prima di ogni request.
 
 **Qual è la wordlist migliore?**
-`common.txt` per quick win, `directory-list-2.3-medium.txt` per assessment completo, `burp-parameter-names.txt` per parameter discovery. Tutte in [SecLists](https://hackita.it/articoli/wordlist/).
+`common.txt` per quick win, `directory-list-2.3-medium.txt` per assessment completo, `burp-parameter-names.txt` per parameter discovery. Tutte in [SecLists](/articoli/wordlist/).
 
 **Come salvo i risultati per il report?**
 `-f output.json,json` per parsing automatizzato, `-f output.html,html` per leggibilità immediata. Il JSON è comodo per importare in tool di reporting come Dradis.
@@ -568,13 +568,13 @@ HTML:        -f output.html,html
 
 **Guide correlate su hackita.it:**
 
-* [ffuf: Web Fuzzing Veloce in Go](https://hackita.it/articoli/ffuf/)
-* [feroxbuster: Directory Fuzzing Ricorsivo](https://hackita.it/articoli/feroxbuster/)
-* [gobuster: Directory, DNS e VHost Discovery](https://hackita.it/articoli/gobuster/)
-* [Burp Suite: Intercettare e Modificare Richieste HTTP](https://hackita.it/articoli/burp-suite/)
-* [SQL Injection: Guida Completa](https://hackita.it/articoli/sql-injection/)
-* [Wordlist e SecLists: Guida Operativa](https://hackita.it/articoli/wordlist/)
-* [Attacchi alle Applicazioni Web](https://hackita.it/articoli/attacchi-applicazioni-web/)
+* [ffuf: Web Fuzzing Veloce in Go](/articoli/ffuf/)
+* [feroxbuster: Directory Fuzzing Ricorsivo](/articoli/feroxbuster/)
+* [gobuster: Directory, DNS e VHost Discovery](/articoli/gobuster/)
+* [Burp Suite: Intercettare e Modificare Richieste HTTP](/articoli/burp-suite/)
+* [SQL Injection: Guida Completa](/articoli/sql-injection/)
+* [Wordlist e SecLists: Guida Operativa](/articoli/wordlist/)
+* [Attacchi alle Applicazioni Web](/articoli/attacchi-applicazioni-web/)
 
 ## Riferimenti
 

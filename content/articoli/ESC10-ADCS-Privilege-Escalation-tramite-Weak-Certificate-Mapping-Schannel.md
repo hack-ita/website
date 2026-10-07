@@ -244,7 +244,7 @@ Sì. Serve un certificato client authentication.
 
 ### Qual è la differenza tra ESC9 e ESC10?
 
-[ESC9](https://hackita.it/articoli/esc9-adcs/) sfrutta certificati senza SID extension.
+[ESC9](/articoli/esc9-adcs/) sfrutta certificati senza SID extension.
 ESC10 sfrutta **UPN mapping in Schannel**.
 
 ***
@@ -255,10 +255,10 @@ ESC10 sfrutta **UPN mapping in Schannel**.
 
 > ESC10 è una tecnica avanzata di certificate abuse in Active Directory.
 > Per vedere tutte le tecniche AD CS consulta la guida completa:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)Continua con le escalation successive:
-> [https://hackita.it/articoli/esc11-adcs](https://hackita.it/articoli/esc11-adcs/) · [https://hackita.it/articoli/esc12-adcs](https://hackita.it/articoli/esc12-adcs/)Supporta HackIta:
-> [https://hackita.it/supporto](https://hackita.it/supporto)Vuoi imparare pentesting Active Directory o testare la sicurezza della tua infrastruttura?
-> [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
+> [https://hackita.it/articoli/adcs-esc1-esc16](/articoli/adcs-esc1-esc16/)Continua con le escalation successive:
+> [https://hackita.it/articoli/esc11-adcs](/articoli/esc11-adcs/) · [https://hackita.it/articoli/esc12-adcs](/articoli/esc12-adcs/)Supporta HackIta:
+> [https://hackita.it/supporto](/supporto)Vuoi imparare pentesting Active Directory o testare la sicurezza della tua infrastruttura?
+> [https://hackita.it/servizi](/servizi)Riferimenti tecnici:
 > [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)
 > [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
 > [https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/)

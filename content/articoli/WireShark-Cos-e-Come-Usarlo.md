@@ -42,8 +42,8 @@ Sono tool complementari, non alternativi. In un assessment reale li usi insieme:
 | Tool                                                | Interfaccia | Punto di forza                                    | Quando usarlo                                              |
 | --------------------------------------------------- | ----------- | ------------------------------------------------- | ---------------------------------------------------------- |
 | **Wireshark**                                       | GUI         | Analisi visuale, Follow Stream, Export Objects    | Analisi approfondita post-cattura, ricostruzione sessioni  |
-| **[tshark](https://hackita.it/articoli/tshark/)**   | CLI         | Stessa engine di Wireshark, scriptabile           | Automazione, parsing in pipeline, ambienti senza GUI       |
-| **[tcpdump](https://hackita.it/articoli/tcpdump/)** | CLI         | Leggero, presente ovunque su Linux                | Cattura rapida su host remoto/compromesso via SSH          |
+| **[tshark](/articoli/tshark/)**   | CLI         | Stessa engine di Wireshark, scriptabile           | Automazione, parsing in pipeline, ambienti senza GUI       |
+| **[tcpdump](/articoli/tcpdump/)** | CLI         | Leggero, presente ovunque su Linux                | Cattura rapida su host remoto/compromesso via SSH          |
 | **dumpcap**                                         | CLI         | Solo cattura, motore di Wireshark senza dissector | Cattura long-running a basso overhead, poi analisi offline |
 
 Workflow tipico: `tcpdump`/`dumpcap` sul target per catturare senza appesantire la macchina compromessa → trasferisci il `.pcapng` in locale → apri con Wireshark per l'analisi fine.
@@ -161,9 +161,9 @@ dumpcap -i eth0 -f "port 25" -w smtp_auth.pcapng
 smtp.req.command == "AUTH"
 ```
 
-Se durante un internal assessment ottieni una shell su una workstation Windows, Wireshark permette di identificare autenticazioni NTLM, protocolli legacy e comunicazioni interne senza generare traffico aggiuntivo — è l'approccio passivo per eccellenza prima di passare a tecniche attive come [Responder](https://hackita.it/articoli/responder/) o mitm6.
+Se durante un internal assessment ottieni una shell su una workstation Windows, Wireshark permette di identificare autenticazioni NTLM, protocolli legacy e comunicazioni interne senza generare traffico aggiuntivo — è l'approccio passivo per eccellenza prima di passare a tecniche attive come [Responder](/articoli/responder/) o mitm6.
 
-**Analisi handshake [SMB](https://hackita.it/articoli/smb/)/NTLM:**
+**Analisi handshake [SMB](/articoli/smb/)/NTLM:**
 
 ```
 smb2 or ntlmssp
@@ -182,7 +182,7 @@ ntlmssp.auth
 3. Cerca i blocchi `NTLMSSP_CHALLENGE` e `NTLMSSP_AUTH`
 4. Estrai NT/LM hash per strumenti come Hashcat
 
-Se intercetti un handshake NTLM completo puoi valutare anche il relay invece del solo cracking offline — approfondisci in [NTLM Relay](https://hackita.it/articoli/ntlm-relay/).
+Se intercetti un handshake NTLM completo puoi valutare anche il relay invece del solo cracking offline — approfondisci in [NTLM Relay](/articoli/ntlm-relay/).
 
 **Ricerca token in header HTTP:**
 
@@ -289,7 +289,7 @@ tcp.flags.syn == 1 and tcp.flags.ack == 0 and ip.src == 192.168.1.50
 tcp.port == 3389
 ```
 
-**Filtro per traffico [Kerberos](https://hackita.it/articoli/kerberos/):**
+**Filtro per traffico [Kerberos](/articoli/kerberos/):**
 
 ```
 kerberos

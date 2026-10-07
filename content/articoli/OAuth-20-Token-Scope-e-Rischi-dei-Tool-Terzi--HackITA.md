@@ -72,10 +72,10 @@ Qui serve precisione tecnica: **un access token non equivale automaticamente all
 | Token leakage                | Il token finisce in log, URL o storage non protetto                                                                                                                                      |
 | Consent phishing             | L'utente autorizza un'applicazione malevola pensando sia legittima                                                                                                                       |
 | Redirect URI mal configurata | Facilita il furto dell'authorization code/token                                                                                                                                          |
-| Compromissione del client    | L'attaccante ottiene accesso al sistema che gestisce i token, scenario vicino a un classico [session hijacking](https://hackita.it/articoli/session-hijacking/) applicato ai token OAuth |
+| Compromissione del client    | L'attaccante ottiene accesso al sistema che gestisce i token, scenario vicino a un classico [session hijacking](/articoli/session-hijacking/) applicato ai token OAuth |
 | Supply chain                 | Il fornitore del tool stesso viene compromesso                                                                                                                                           |
 
-Per i meccanismi di attacco specifici al protocollo, li abbiamo trattati in dettaglio nel nostro [approfondimento su OAuth Attack](https://hackita.it/articoli/oauth-attack/).
+Per i meccanismi di attacco specifici al protocollo, li abbiamo trattati in dettaglio nel nostro [approfondimento su OAuth Attack](/articoli/oauth-attack/).
 
 ## OAuth token vs password: qual è la differenza?
 
@@ -108,7 +108,7 @@ POST / MESSAGGI / DATI ESPOSTI
 4. L'attaccante usa il token per interagire con le API entro gli scope concessi
 5. L'azienda si accorge dell'anomalia, revoca il token e rimuove l'integrazione
 
-Questo tipo di scenario riguarda in generale qualunque strumento con accesso diretto ad account social e pubblicazione automatica, come un [generatore di post social](https://predis.ai/ai-social-media-post-generator/) collegato a più piattaforme. Il punto non è evitare questi strumenti, che restano utili, ma trattare l'autorizzazione come un accesso da monitorare nel tempo — non diversamente da come si tratterebbe un tentativo di [phishing](https://hackita.it/articoli/phishing-techniques-red-team/) mirato all'account aziendale.
+Questo tipo di scenario riguarda in generale qualunque strumento con accesso diretto ad account social e pubblicazione automatica, come un [generatore di post social](https://predis.ai/ai-social-media-post-generator/) collegato a più piattaforme. Il punto non è evitare questi strumenti, che restano utili, ma trattare l'autorizzazione come un accesso da monitorare nel tempo — non diversamente da come si tratterebbe un tentativo di [phishing](/articoli/phishing-techniques-red-team/) mirato all'account aziendale.
 
 ## Come proteggere gli account aziendali
 

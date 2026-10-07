@@ -24,7 +24,7 @@ tags:
 
 * **A cosa serve rpcclient?** Interroga interfacce RPC su Windows/AD per ottenere utenti, gruppi, SID/RID, policy password e share, quando i permessi lo consentono.
 * **Serve un account?** Non necessariamente — una null session va sempre testata, ma su sistemi moderni l'anonimo è spesso bloccato.
-* **rpcclient enumera i file dentro le share?** No: enumera solo l'esistenza e i metadati delle share. Per il contenuto serve un client file-centric come [smbclient](https://hackita.it/articoli/smbclient/).
+* **rpcclient enumera i file dentro le share?** No: enumera solo l'esistenza e i metadati delle share. Per il contenuto serve un client file-centric come [smbclient](/articoli/smbclient/).
 
 ## Cos'è rpcclient e Come Funziona
 
@@ -120,7 +120,7 @@ rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'queryusergroups 0x45a'
 
 Non assumere quale RID corrisponda a quale gruppo built-in (es. "0x200 = Domain Admins") senza verificarlo nel tuo lab — varia.
 
-Per correlare rapidamente utenti/gruppi con path di escalation reali, passa i dati a [BloodHound](https://hackita.it/articoli/bloodhound/).
+Per correlare rapidamente utenti/gruppi con path di escalation reali, passa i dati a [BloodHound](/articoli/bloodhound/).
 
 ## RID Cycling: Enumerare Utenti Senza Permessi su enumdomusers
 
@@ -182,7 +182,7 @@ Restituisce le informazioni sulla password policy esposte da SAMR — i campi di
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'netshareenumall'
 ```
 
-Enumerare una share non significa avere accesso automatico al suo contenuto: RPC ti dice cosa esiste, per leggerne dentro serve un client file-centric come [smbclient](https://hackita.it/articoli/smbclient/).
+Enumerare una share non significa avere accesso automatico al suo contenuto: RPC ti dice cosa esiste, per leggerne dentro serve un client file-centric come [smbclient](/articoli/smbclient/).
 
 ## Errori e Troubleshooting
 
@@ -198,7 +198,7 @@ Enumerare una share non significa avere accesso automatico al suo contenuto: RPC
 nc -vz 10.10.10.10 445
 ```
 
-**Comportamento diverso per signing/transport** — se il server richiede SMB signing e il client non lo negozia correttamente, la connessione può fallire prima ancora del bind RPC: verifica con [smbclient](https://hackita.it/articoli/smbclient/) se la sessione SMB di base funziona.
+**Comportamento diverso per signing/transport** — se il server richiede SMB signing e il client non lo negozia correttamente, la connessione può fallire prima ancora del bind RPC: verifica con [smbclient](/articoli/smbclient/) se la sessione SMB di base funziona.
 
 ## rpcclient vs smbclient vs ldapsearch vs NetExec vs BloodHound
 
@@ -206,11 +206,11 @@ nc -vz 10.10.10.10 445
 | ----------------------------------------------------- | --------------------------------- |
 | rpcclient                                             | RPC diretto: SAMR, LSARPC, SRVSVC |
 | smbclient                                             | Share e file                      |
-| [ldapsearch](https://hackita.it/articoli/ldapsearch/) | Directory LDAP/AD                 |
-| [NetExec](https://hackita.it/articoli/netexec/)       | Automation e bulk check SMB/AD    |
-| [BloodHound](https://hackita.it/articoli/bloodhound/) | Relazioni e attack path           |
+| [ldapsearch](/articoli/ldapsearch/) | Directory LDAP/AD                 |
+| [NetExec](/articoli/netexec/)       | Automation e bulk check SMB/AD    |
+| [BloodHound](/articoli/bloodhound/) | Relazioni e attack path           |
 
-`rpcclient` non sostituisce `ldapsearch`: sono fonti dati diverse (RPC vs directory LDAP) che spesso confermano o completano a vicenda le stesse informazioni. Per enumerazione SMB/RPC quando LDAP è limitato, [enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) resta una buona prima fotografia prima di scendere nel dettaglio con `rpcclient`.
+`rpcclient` non sostituisce `ldapsearch`: sono fonti dati diverse (RPC vs directory LDAP) che spesso confermano o completano a vicenda le stesse informazioni. Per enumerazione SMB/RPC quando LDAP è limitato, [enum4linux-ng](/articoli/enum4linux-ng/) resta una buona prima fotografia prima di scendere nel dettaglio con `rpcclient`.
 
 ## Scenario Pratico: rpcclient su una Macchina HTB/PG
 
@@ -225,7 +225,7 @@ rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'querydominfo; enumdomusers; e
 rpcclient -U 'LAB/user1%Passw0rd!' 10.10.10.10 -c 'getdompwinfo'
 ```
 
-Risultato atteso: userlist con RID, gruppi disponibili, parametri base della policy password — materiale grezzo da riportare come evidenza e correlare con [BloodHound](https://hackita.it/articoli/bloodhound/) o [smbclient](https://hackita.it/articoli/smbclient/).
+Risultato atteso: userlist con RID, gruppi disponibili, parametri base della policy password — materiale grezzo da riportare come evidenza e correlare con [BloodHound](/articoli/bloodhound/) o [smbclient](/articoli/smbclient/).
 
 ## Playbook Rapido
 

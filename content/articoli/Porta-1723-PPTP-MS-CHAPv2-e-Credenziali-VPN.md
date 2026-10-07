@@ -110,7 +110,7 @@ response: 112233445566778899aabbccddeeff0011223344
 hashcat -m 14000 des_hash.txt -a 3 ?b?b?b?b?b?b?b?b
 ```
 
-**Cosa fai dopo:** la password crackata è la password AD di `j.smith`. Testa su SMB, OWA, [VPN aziendale](https://hackita.it/articoli/porta-1194-openvpn/), RDP.
+**Cosa fai dopo:** la password crackata è la password AD di `j.smith`. Testa su SMB, OWA, [VPN aziendale](/articoli/porta-1194-openvpn/), RDP.
 
 **Connessione PPTP con credenziali note**
 
@@ -127,7 +127,7 @@ local  IP address 10.10.10.201
 remote IP address 10.10.10.5
 ```
 
-**Cosa fai dopo:** connesso alla rete interna via PPTP. Da qui: scan della subnet, [enumera AD](https://hackita.it/articoli/active-directory/), lateral movement.
+**Cosa fai dopo:** connesso alla rete interna via PPTP. Da qui: scan della subnet, [enumera AD](/articoli/active-directory/), lateral movement.
 
 **Brute force PPTP**
 
@@ -182,4 +182,4 @@ PPTP è deprecato ma ancora presente in molte organizzazioni — specialmente PM
 
 Riferimento: MS-CHAP RFC 2759, Marlinspike "Divide and Conquer" 2012. Uso esclusivo in ambienti autorizzati. [https://learn.microsoft.com/it-it/archive/msdn-technet-forums/4d573d87-9417-4229-9e0b-dbf5e58b5f9a](https://learn.microsoft.com/it-it/archive/msdn-technet-forums/4d573d87-9417-4229-9e0b-dbf5e58b5f9a)
 
-> [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).
+> [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

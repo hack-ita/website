@@ -18,11 +18,11 @@ tags:
 
 # Come usare GetNPUsers.py per individuare account AS-REP Roastable in Active Directory
 
-`GetNPUsers.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) e individua account Active Directory sui quali l'opzione **"Do not require Kerberos preauthentication" è abilitata** (flag `UF_DONT_REQUIRE_PREAUTH`) — cioè account che il KDC accetta di autenticare senza la normale prova crittografica preventiva. Per quegli account chiunque può richiedere un AS-REP: la risposta contiene materiale cifrato con la chiave Kerberos a lungo termine derivata dalla password dell'account, materiale che puoi sottoporre a cracking offline per verificare password candidate.
+`GetNPUsers.py` fa parte di [Impacket](/articoli/impacket/) e individua account Active Directory sui quali l'opzione **"Do not require Kerberos preauthentication" è abilitata** (flag `UF_DONT_REQUIRE_PREAUTH`) — cioè account che il KDC accetta di autenticare senza la normale prova crittografica preventiva. Per quegli account chiunque può richiedere un AS-REP: la risposta contiene materiale cifrato con la chiave Kerberos a lungo termine derivata dalla password dell'account, materiale che puoi sottoporre a cracking offline per verificare password candidate.
 
 La tecnica è nota come **AS-REP Roasting**, pubblicata originalmente da [@harmj0y](https://blog.harmj0y.net/activedirectory/roasting-as-reps/). Il ticket ricevuto non diventa direttamente utilizzabile solo perché lo hai ottenuto — senza conoscere la chiave dell'account non puoi decifrarne correttamente la parte necessaria; serve prima il crack offline.
 
-Il flusso completo del [TGT](https://hackita.it/articoli/tgt-kerberos/) e del protocollo [Kerberos](https://hackita.it/articoli/kerberos/) è descritto negli articoli dedicati. Qui ci concentriamo sull'esecuzione pratica.
+Il flusso completo del [TGT](/articoli/tgt-kerberos/) e del protocollo [Kerberos](/articoli/kerberos/) è descritto negli articoli dedicati. Qui ci concentriamo sull'esecuzione pratica.
 
 Riferimento ufficiale: [fortra/impacket — GetNPUsers.py](https://github.com/fortra/impacket/blob/master/examples/GetNPUsers.py)
 MITRE ATT\&CK: [T1558.004 — AS-REP Roasting](https://attack.mitre.org/techniques/T1558/004/)
@@ -186,7 +186,7 @@ john --format=krb5asrep asrep_hashes.txt --wordlist=rockyou.txt
 
 ## AS-REP Roasting forzato — con GenericAll o GenericWrite
 
-Se hai `GenericAll` o `GenericWrite` su un account (verificabile con [BloodHound](https://hackita.it/articoli/bloodhound/)), puoi **disabilitare manualmente la pre-autenticazione** su quell'account, roastarlo, e poi riabilitarla:
+Se hai `GenericAll` o `GenericWrite` su un account (verificabile con [BloodHound](/articoli/bloodhound/)), puoi **disabilitare manualmente la pre-autenticazione** su quell'account, roastarlo, e poi riabilitarla:
 
 ```powershell
 # Con PowerView — disabilita pre-auth (toggle via XOR su userAccountControl)
@@ -198,7 +198,7 @@ Set-DomainObject -Identity target_user -XOR @{useraccountcontrol=4194304} -Verbo
 Set-DomainObject -Identity target_user -XOR @{useraccountcontrol=4194304} -Verbose
 ```
 
-[PowerView](https://hackita.it/articoli/powerview/) è lo strumento che espone `Get-DomainUser`/`Set-DomainObject` usati qui e nell'enumerazione preventiva più sotto.
+[PowerView](/articoli/powerview/) è lo strumento che espone `Get-DomainUser`/`Set-DomainObject` usati qui e nell'enumerazione preventiva più sotto.
 
 **Attenzione con `-XOR`:** inverte il bit, non lo imposta a un valore fisso. Eseguire il comando due volte torna allo stato precedente solo se nessun altro modifica l'attributo nel frattempo e se conoscevi lo stato iniziale. Controlla sempre prima e dopo:
 
@@ -206,7 +206,7 @@ Set-DomainObject -Identity target_user -XOR @{useraccountcontrol=4194304} -Verbo
 Get-DomainUser target_user -Properties userAccountControl | ConvertFrom-UACValue
 ```
 
-Con [bloodyAD](https://hackita.it/articoli/bloodyad/) (da Kali, se hai GenericWrite), che usa azioni esplicite `add`/`remove` invece del toggle XOR — più sicuro perché non rischi di invertire lo stato sbagliato:
+Con [bloodyAD](/articoli/bloodyad/) (da Kali, se hai GenericWrite), che usa azioni esplicite `add`/`remove` invece del toggle XOR — più sicuro perché non rischi di invertire lo stato sbagliato:
 
 ```bash
 bloodyAD -u user -p 'pass' -d corp.local --host 10.10.10.5 add uac -f DONT_REQ_PREAUTH target_user
@@ -318,7 +318,7 @@ Dipende dal prefisso dell'hash: `$krb5asrep$23$` → `-m 18200` (RC4), `$krb5asr
 No. Contiene solo materiale cifrato con la chiave dell'account, craccabile offline. Senza la password non puoi decifrarlo né usarlo per autenticarti.
 
 **Qual è la differenza tra AS-REP Roasting e Kerberoasting?**
-L'AS-REP Roasting sfrutta account senza pre-authentication (`UF_DONT_REQUIRE_PREAUTH`) e non richiede credenziali di dominio nella modalità userlist. Il Kerberoasting richiede credenziali valide e sfrutta account con un `servicePrincipalName` configurato — lo strumento equivalente è [GetUserSPNs.py](https://hackita.it/articoli/getuserspns/), indipendentemente dalla pre-auth.
+L'AS-REP Roasting sfrutta account senza pre-authentication (`UF_DONT_REQUIRE_PREAUTH`) e non richiede credenziali di dominio nella modalità userlist. Il Kerberoasting richiede credenziali valide e sfrutta account con un `servicePrincipalName` configurato — lo strumento equivalente è [GetUserSPNs.py](/articoli/getuserspns/), indipendentemente dalla pre-auth.
 
 ## Cheat Sheet
 
@@ -359,15 +359,15 @@ bloodyAD -u user -p 'pass' -d corp.local --host DC_IP remove uac -f DONT_REQ_PRE
 
 ## Articoli correlati
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [Kerberos: architettura e flusso](https://hackita.it/articoli/kerberos/)
-* [TGT Kerberos](https://hackita.it/articoli/tgt-kerberos/)
-* [AS-REP Roasting: guida completa](https://hackita.it/articoli/as-rep-roasting/)
-* [GetUserSPNs.py — Kerberoasting](https://hackita.it/articoli/getuserspns/)
-* [PowerView](https://hackita.it/articoli/powerview/)
-* [Rubeus](https://hackita.it/articoli/rubeus/)
-* [Hashcat](https://hackita.it/articoli/hashcat/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/)
-* [Active Directory: guida all'exploitation](https://hackita.it/articoli/active-directory/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [Kerberos: architettura e flusso](/articoli/kerberos/)
+* [TGT Kerberos](/articoli/tgt-kerberos/)
+* [AS-REP Roasting: guida completa](/articoli/as-rep-roasting/)
+* [GetUserSPNs.py — Kerberoasting](/articoli/getuserspns/)
+* [PowerView](/articoli/powerview/)
+* [Rubeus](/articoli/rubeus/)
+* [Hashcat](/articoli/hashcat/)
+* [BloodHound](/articoli/bloodhound/)
+* [Active Directory: guida all'exploitation](/articoli/active-directory/)
 
 > Uso esclusivo in ambienti autorizzati.

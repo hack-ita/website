@@ -24,7 +24,7 @@ tags:
 
 `GetUserSPNs.py` fa due cose in sequenza: cerca via LDAP gli account utente con SPN registrati, poi richiede un Service Ticket per ognuno. Quel ticket è cifrato con l'hash della password dell'account — craccabile offline senza interagire mai col target direttamente.
 
-`GetUserSPNs.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) ed è lo strumento standard per il Kerberoasting da Linux. La teoria del perché l'attacco funziona — il TGS cifrato con l'hash dell'account di servizio — è spiegata in dettaglio nell'articolo [TGS e Kerberoasting](https://hackita.it/articoli/tgs/). Qui ci concentriamo sul tool: tutti i flag, gli scenari avanzati, e le scelte OPSEC che fanno la differenza tra un Kerberoasting che fila liscio e uno che finisce in un alert.
+`GetUserSPNs.py` fa parte di [Impacket](/articoli/impacket/) ed è lo strumento standard per il Kerberoasting da Linux. La teoria del perché l'attacco funziona — il TGS cifrato con l'hash dell'account di servizio — è spiegata in dettaglio nell'articolo [TGS e Kerberoasting](/articoli/tgs/). Qui ci concentriamo sul tool: tutti i flag, gli scenari avanzati, e le scelte OPSEC che fanno la differenza tra un Kerberoasting che fila liscio e uno che finisce in un alert.
 
 ***
 
@@ -201,7 +201,7 @@ impacket-GetUserSPNs corp.local/ \
 
 ## Targeted Kerberoasting — forza un SPN su un account
 
-Se hai `GenericWrite` o `GenericAll` su un account che non ha SPN, puoi aggiungerne uno tu — rendendolo Kerberoastable — roastarlo, craccarlo, poi rimuovere l'SPN per non lasciare tracce. Questa è la tecnica nota come **Targeted Kerberoasting**, approfondita nell'articolo [ACL Abuse](https://hackita.it/articoli/acl-abuse/).
+Se hai `GenericWrite` o `GenericAll` su un account che non ha SPN, puoi aggiungerne uno tu — rendendolo Kerberoastable — roastarlo, craccarlo, poi rimuovere l'SPN per non lasciare tracce. Questa è la tecnica nota come **Targeted Kerberoasting**, approfondita nell'articolo [ACL Abuse](/articoli/acl-abuse/).
 
 ```bash
 # Con PowerView — aggiungi SPN all'account target
@@ -289,14 +289,14 @@ john --format=krb5tgs hashes.txt --wordlist=rockyou.txt
 
 **Articoli correlati:**
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [TGS — Service Ticket e Kerberoasting in profondità](https://hackita.it/articoli/tgs/)
-* [Kerberos: architettura e flusso](https://hackita.it/articoli/kerberos/)
-* [ACL Abuse — Targeted Kerberoasting](https://hackita.it/articoli/acl-abuse/)
-* [BloodHound — trova account Kerberoastable](https://hackita.it/articoli/bloodhound/)
-* [Rubeus — Kerberoasting da Windows](https://hackita.it/articoli/rubeus/)
-* [Hashcat: crack degli hash](https://hackita.it/articoli/hashcat/)
-* [getTGT.py — richiedi TGT con hash/AES](https://hackita.it/articoli/gettgt/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [TGS — Service Ticket e Kerberoasting in profondità](/articoli/tgs/)
+* [Kerberos: architettura e flusso](/articoli/kerberos/)
+* [ACL Abuse — Targeted Kerberoasting](/articoli/acl-abuse/)
+* [BloodHound — trova account Kerberoastable](/articoli/bloodhound/)
+* [Rubeus — Kerberoasting da Windows](/articoli/rubeus/)
+* [Hashcat: crack degli hash](/articoli/hashcat/)
+* [getTGT.py — richiedi TGT con hash/AES](/articoli/gettgt/)
 
 > Uso esclusivo in ambienti autorizzati.
 

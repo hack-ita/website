@@ -128,7 +128,7 @@ ike-scan -M -A --id=vpngroup 10.10.10.1
 Ending ike-scan 1.9.5: 1 returned handshake
 ```
 
-**Lettura dell'output:** Aggressive Mode è attivo e il server ha restituito l'hash della PSK nel campo `Hash`. Quel valore è tutto ciò che serve per il cracking offline. L'`--id=vpngroup` specifica il group name — se non lo conosci, il server potrebbe rifiutare. Prova ID comuni: `vpn`, `ipsec`, `remote`, il nome dell'azienda. Per approfondire il fingerprinting VPN, consulta la [guida all'enumerazione di rete](https://hackita.it/articoli/enumeration/).
+**Lettura dell'output:** Aggressive Mode è attivo e il server ha restituito l'hash della PSK nel campo `Hash`. Quel valore è tutto ciò che serve per il cracking offline. L'`--id=vpngroup` specifica il group name — se non lo conosci, il server potrebbe rifiutare. Prova ID comuni: `vpn`, `ipsec`, `remote`, il nome dell'azienda. Per approfondire il fingerprinting VPN, consulta la [guida all'enumerazione di rete](/articoli/enumeration/).
 
 ### Brute force del Group ID
 
@@ -167,7 +167,7 @@ ike-scan -M --trans=5,2,1,2 --trans=7,2,1,2 --trans=5,2,1,5 10.10.10.1
 	SA=(Enc=AES-128 Hash=SHA1 Group=2:modp1024 Auth=PSK)
 ```
 
-**Lettura dell'output:** il gateway accetta AES-128/SHA1/DH2 oltre a 3DES. Questo ti dice quali cifrature sono configurate e se ci sono opzioni deboli. Usa queste informazioni per valutare la sicurezza complessiva del tunnel. Scopri come integrare questi dati nella tua [pipeline di vulnerability assessment](https://hackita.it/articoli/nmap/).
+**Lettura dell'output:** il gateway accetta AES-128/SHA1/DH2 oltre a 3DES. Questo ti dice quali cifrature sono configurate e se ci sono opzioni deboli. Usa queste informazioni per valutare la sicurezza complessiva del tunnel. Scopri come integrare questi dati nella tua [pipeline di vulnerability assessment](/articoli/nmap/).
 
 ### Fingerprint vendor tramite VID
 
@@ -216,7 +216,7 @@ Ending psk-crack: 1 hash cracked
 Ending psk-crack: 0 hashes cracked (wordlist exhausted)
 ```
 
-**Cosa fai dopo:** con la PSK `Vpn@2025!` puoi configurare un client VPN (strongswan, vpnc) per stabilire il tunnel IPsec verso la rete interna. Se il gateway usa XAUTH, servono anche credenziali utente — spesso le stesse dell'Active Directory. Approfondisci le [tecniche di brute force su credenziali AD](https://hackita.it/articoli/brute-force/).
+**Cosa fai dopo:** con la PSK `Vpn@2025!` puoi configurare un client VPN (strongswan, vpnc) per stabilire il tunnel IPsec verso la rete interna. Se il gateway usa XAUTH, servono anche credenziali utente — spesso le stesse dell'Active Directory. Approfondisci le [tecniche di brute force su credenziali AD](/articoli/brute-force/).
 
 **Tunnel establishment con PSK crackata**
 
@@ -264,7 +264,7 @@ parsed INFORMATIONAL response: NO_PROPOSAL_CHOSEN
 establishing IKE_SA failed
 ```
 
-**Cosa fai dopo:** tunnel stabilito. Ora hai accesso alla subnet 192.168.0.0/16. Lancia un discovery con `nmap -sn 192.168.0.0/16` per mappare la rete interna e prosegui con la [kill chain](https://hackita.it/articoli/killchain/).
+**Cosa fai dopo:** tunnel stabilito. Ora hai accesso alla subnet 192.168.0.0/16. Lancia un discovery con `nmap -sn 192.168.0.0/16` per mappare la rete interna e prosegui con la [kill chain](/articoli/killchain/).
 
 **IKEv2 brute force credenziali EAP**
 
@@ -290,7 +290,7 @@ done
 (nessun output - nessun utente valido trovato)
 ```
 
-**Cosa fai dopo:** hai enumerato utenti validi sul gateway VPN. Combina con un [password spray mirato](https://hackita.it/articoli/passwordspray/) sugli utenti trovati.
+**Cosa fai dopo:** hai enumerato utenti validi sul gateway VPN. Combina con un [password spray mirato](/articoli/passwordspray/) sugli utenti trovati.
 
 ## 5. Scenari Pratici di Pentest
 
@@ -539,7 +539,7 @@ Le VPN IPsec restano lo standard per connessioni site-to-site in ambienti enterp
 
 Tutti i comandi e le tecniche sono destinati esclusivamente ad ambienti autorizzati: penetration test con contratto, lab, CTF. Riferimento: RFC 2409 (IKEv1), RFC 7296 (IKEv2), RFC 3948 (NAT-T).
 
-> Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).\
+> Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).\
 >
 
 Leggi anche il manuale officiale di cisco: [http://cisco.com/c/it\_it/support/docs/security-vpn/ipsec-negotiation-ike-protocols/217432-understand-ipsec-ikev1-protocol.html](http://cisco.com/c/it_it/support/docs/security-vpn/ipsec-negotiation-ike-protocols/217432-understand-ipsec-ikev1-protocol.html)

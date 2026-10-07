@@ -61,7 +61,7 @@ Può interagire con dispositivi BLE nelle vicinanze. Alcune funzioni dimostrativ
 
 ### GPIO e BadUSB
 
-I pin GPIO permettono di collegare moduli esterni (schede Wi-Fi, lettori aggiuntivi) e di usare protocolli come UART e SPI per interagire con schede elettroniche. La modalità **BadUSB** emula una tastiera USB e digita comandi automaticamente non appena collegata a un computer: la stessa tecnica di dispositivi come il [Rubber Ducky](https://hackita.it/articoli/rubber-ducky/).
+I pin GPIO permettono di collegare moduli esterni (schede Wi-Fi, lettori aggiuntivi) e di usare protocolli come UART e SPI per interagire con schede elettroniche. La modalità **BadUSB** emula una tastiera USB e digita comandi automaticamente non appena collegata a un computer: la stessa tecnica di dispositivi come il [Rubber Ducky](/articoli/rubber-ducky/).
 
 ## Flipper Zero può clonare carte, badge e telecomandi?
 
@@ -84,7 +84,7 @@ Molti video virali esagerano. Il Flipper Zero:
 * **non clona carte di credito** per pagamenti reali: i chip EMV usano crittografia che il Flipper non sfrutta;
 * **non apre la maggior parte delle auto moderne**: i rolling code non sono replicabili con un semplice replay;
 * **non "hackera" uno smartphone** da solo: le funzioni BLE sono dimostrazioni di interferenza, non un'intrusione nel dispositivo;
-* **non è una SDR** (*Software Defined Radio*): il chip CC1101 copre una banda stretta e non mostra lo spettro radio come fa un [HackRF One](https://hackita.it/articoli/hackrf-one/);
+* **non è una SDR** (*Software Defined Radio*): il chip CC1101 copre una banda stretta e non mostra lo spettro radio come fa un [HackRF One](/articoli/hackrf-one/);
 * **non bypassa la crittografia** dei sistemi moderni: funziona bene contro protocolli vecchi o non cifrati, molto meno contro quelli aggiornati.
 
 ## Flipper Zero vs HackRF One vs Proxmark3
@@ -134,7 +134,7 @@ Nel lavoro di sicurezza fisica e offensiva, il Flipper è utile per:
 * **simulazioni BadUSB** per valutare le policy USB di un'organizzazione (porte bloccate, allowlist dei dispositivi);
 * **didattica**: è uno strumento pratico per capire come funzionano RFID, NFC e protocolli radio a basso livello, prima ancora di parlare di attacco o difesa.
 
-Va sempre usato su sistemi propri o con un'autorizzazione scritta esplicita, come qualsiasi altro strumento da [red team](https://hackita.it/articoli/red-team/).
+Va sempre usato su sistemi propri o con un'autorizzazione scritta esplicita, come qualsiasi altro strumento da [red team](/articoli/red-team/).
 
 ## Dove comprarlo e cosa sapere prima
 

@@ -394,7 +394,7 @@ nc -lvnp 8888
 
 ## Link interni
 
-* [DCSync Attack](https://hackita.it/articoli/dcsync/)
+* [DCSync Attack](/articoli/dcsync/)
 
 ## Link esterni
 

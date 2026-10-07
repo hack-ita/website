@@ -23,7 +23,7 @@ tags:
 
 # Come creare computer account Active Directory con addcomputer.py
 
-`addcomputer.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) e crea, elimina o reimposta la password di un computer account in Active Directory, usando credenziali spesso low-privilege grazie a `ms-DS-MachineAccountQuota`. Il computer account creato è raramente un fine in sé — il caso d'uso più comune di gran lunga è [RBCD](https://hackita.it/articoli/rbcd/), ma può tornare utile anche in alcune catene di relay LDAP, AD CS o SCCM a seconda dei permessi ottenuti lungo la strada.
+`addcomputer.py` fa parte di [Impacket](/articoli/impacket/) e crea, elimina o reimposta la password di un computer account in Active Directory, usando credenziali spesso low-privilege grazie a `ms-DS-MachineAccountQuota`. Il computer account creato è raramente un fine in sé — il caso d'uso più comune di gran lunga è [RBCD](/articoli/rbcd/), ma può tornare utile anche in alcune catene di relay LDAP, AD CS o SCCM a seconda dei permessi ottenuti lungo la strada.
 
 Riferimento ufficiale: [fortra/impacket — addcomputer.py](https://github.com/fortra/impacket/blob/master/examples/addcomputer.py)
 MITRE ATT\&CK: [T1136.002 — Create Account: Domain Account](https://attack.mitre.org/techniques/T1136/002/)
@@ -32,7 +32,7 @@ MITRE ATT\&CK: [T1136.002 — Create Account: Domain Account](https://attack.mit
 
 `ms-DS-MachineAccountQuota` è un attributo di dominio che controlla quanti computer account può creare un utente autenticato. Il valore predefinito è **10**. Ma il risultato reale dipende da più fattori insieme, non solo dal valore di MAQ:
 
-* il privilegio [SeMachineAccountPrivilege](https://hackita.it/articoli/semachineaccountquota/) ("Add workstations to domain")
+* il privilegio [SeMachineAccountPrivilege](/articoli/semachineaccountquota/) ("Add workstations to domain")
 * i permessi di creazione sul container o sulla OU di destinazione
 * eventuali deleghe personalizzate
 * il numero di oggetti già creati da quello stesso utente, tracciato tramite `msDS-CreatorSID`
@@ -211,7 +211,7 @@ ldapsearch -x -H ldap://10.10.10.5 -D "user@hackita.local" -w pass \
 
 ## Workflow RBCD — il caso d'uso principale
 
-Il flusso completo è in [RBCD](https://hackita.it/articoli/rbcd/) e [getST.py](https://hackita.it/articoli/getst/).
+Il flusso completo è in [RBCD](/articoli/rbcd/) e [getST.py](/articoli/getst/).
 
 ```bash
 # STEP 1 — Verifica MAQ
@@ -255,7 +255,7 @@ impacket-addcomputer hackita.local/user:Password123 \
 
 ## Workflow ntlmrelayx — alternativa automatica
 
-[ntlmrelayx.py](https://hackita.it/articoli/ntlmrelayx/) con `--delegate-access` fa tutto questo automaticamente durante un relay LDAPS — crea il computer account, configura RBCD, e stampa le credenziali in un solo passaggio. addcomputer.py serve quando vuoi ottenere lo stesso risultato manualmente, con credenziali dirette invece di un relay attivo.
+[ntlmrelayx.py](/articoli/ntlmrelayx/) con `--delegate-access` fa tutto questo automaticamente durante un relay LDAPS — crea il computer account, configura RBCD, e stampa le credenziali in un solo passaggio. addcomputer.py serve quando vuoi ottenere lo stesso risultato manualmente, con credenziali dirette invece di un relay attivo.
 
 ```bash
 # Automatico (relay)
@@ -372,16 +372,16 @@ impacket-addcomputer hackita.local/user:pass -computer-name 'HACKITA' -dc-ip DC_
 
 ## Articoli correlati
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [RBCD — Resource-Based Constrained Delegation](https://hackita.it/articoli/rbcd/)
-* [getST.py](https://hackita.it/articoli/getst/)
-* [ntlmrelayx.py](https://hackita.it/articoli/ntlmrelayx/)
-* [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/)
-* [SeMachineAccountPrivilege / MachineAccountQuota](https://hackita.it/articoli/semachineaccountquota/)
-* [ldapsearch](https://hackita.it/articoli/ldapsearch/)
-* [bloodyAD](https://hackita.it/articoli/bloodyad/)
-* [Certipy](https://hackita.it/articoli/certipy/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [RBCD — Resource-Based Constrained Delegation](/articoli/rbcd/)
+* [getST.py](/articoli/getst/)
+* [ntlmrelayx.py](/articoli/ntlmrelayx/)
+* [Shadow Credentials](/articoli/shadow-credentials/)
+* [BloodHound](/articoli/bloodhound/)
+* [SeMachineAccountPrivilege / MachineAccountQuota](/articoli/semachineaccountquota/)
+* [ldapsearch](/articoli/ldapsearch/)
+* [bloodyAD](/articoli/bloodyad/)
+* [Certipy](/articoli/certipy/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
 
 > Uso esclusivo in ambienti autorizzati.

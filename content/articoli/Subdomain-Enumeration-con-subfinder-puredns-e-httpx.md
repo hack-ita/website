@@ -26,9 +26,9 @@ tags:
 
 Un target come `company.com` ha la homepage. Dietro ha `dev.company.com` senza autenticazione, `api-v2.company.com` con una versione vecchia del backend, `jenkins.company.com` accessibile da internet, e `cdn-old.company.com` che punta a un servizio cloud non più configurato correttamente e potenzialmente vulnerabile a subdomain takeover. Trovare queste risorse è subdomain enumeration — e la differenza tra trovarne 10 e trovarne 200 sta nella qualità della pipeline.
 
-Questa guida costruisce la pipeline completa: da zero rumore (passive) a brute force accurato, permutazioni intelligenti e validazione live. Per la teoria DNS e i tool di basso livello (dig, dnsrecon, zone transfer) vedi [DNS](https://hackita.it/articoli/dns/).
+Questa guida costruisce la pipeline completa: da zero rumore (passive) a brute force accurato, permutazioni intelligenti e validazione live. Per la teoria DNS e i tool di basso livello (dig, dnsrecon, zone transfer) vedi [DNS](/articoli/dns/).
 
-**Prerequisiti:** una wordlist per il brute force DNS (es. SecLists), [DNS](https://hackita.it/articoli/dns/) per i concetti base.
+**Prerequisiti:** una wordlist per il brute force DNS (es. SecLists), [DNS](/articoli/dns/) per i concetti base.
 
 ***
 
@@ -69,14 +69,14 @@ Ogni fase produce output che alimenta la successiva. Non saltare la fase passiva
 | Tool                                                        | Tipo             | Velocità | Cosa fa                                               |
 | ----------------------------------------------------------- | ---------------- | -------- | ----------------------------------------------------- |
 | **subfinder**                                               | Passive          | ★★★★★    | Interroga decine di fonti API, CT logs, DNS databases |
-| **[amass](https://hackita.it/articoli/amass/)**             | Passive + Active | ★★       | OSINT approfondito, graph topology, molte fonti       |
-| **[assetfinder](https://hackita.it/articoli/assetfinder/)** | Passive          | ★★★★★    | Leggero, quick win, fonti crt.sh + certspotter        |
+| **[amass](/articoli/amass/)**             | Passive + Active | ★★       | OSINT approfondito, graph topology, molte fonti       |
+| **[assetfinder](/articoli/assetfinder/)** | Passive          | ★★★★★    | Leggero, quick win, fonti crt.sh + certspotter        |
 | **chaos**                                                   | Passive          | ★★★★★    | Dataset ProjectDiscovery, aggiornato continuamente    |
 | **gau**                                                     | Passive          | ★★★★     | Wayback Machine, Common Crawl, OTX per sottodomini    |
 | **puredns**                                                 | Active           | ★★★★★    | Brute force accurato con wildcard detection nativa    |
 | **massdns**                                                 | Active           | ★★★★★    | DNS resolver massivo, altissimo throughput            |
 | **alterx**                                                  | Permutazioni     | ★★★★     | Genera varianti di sottodomini trovati                |
-| **[httpx](https://hackita.it/articoli/httpx/)**             | Validazione      | ★★★★★    | Verifica quali rispondono HTTP, status + tech         |
+| **[httpx](/articoli/httpx/)**             | Validazione      | ★★★★★    | Verifica quali rispondono HTTP, status + tech         |
 
 | Obiettivo                  | Tool consigliato                 |
 | -------------------------- | -------------------------------- |
@@ -660,10 +660,10 @@ Fonti key:    securitytrails, shodan, virustotal, censys, bevigil, chaos
 
 **Guide correlate su hackita.it:**
 
-* [DNS Enumeration: Zone Transfer, dnsrecon e Brute Force DNS](https://hackita.it/articoli/dns-enumeration/)
-* [Wordlist e SecLists: Quale Lista DNS Usare](https://hackita.it/articoli/wordlist/)
-* [Reconnaissance: OSINT e Raccolta Informazioni](https://hackita.it/articoli/reconnaissance/)
-* [Linux Enumeration](https://hackita.it/articoli/linux-enumeration/)
+* [DNS Enumeration: Zone Transfer, dnsrecon e Brute Force DNS](/articoli/dns-enumeration/)
+* [Wordlist e SecLists: Quale Lista DNS Usare](/articoli/wordlist/)
+* [Reconnaissance: OSINT e Raccolta Informazioni](/articoli/reconnaissance/)
+* [Linux Enumeration](/articoli/linux-enumeration/)
 
 ## Riferimenti
 

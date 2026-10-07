@@ -17,7 +17,7 @@ tags:
 
 # PowerShell per Etichal Hacker : Comandi, Active Directory e Post-Exploitation
 
-**In sintesi:** PowerShell è integrato in ogni macchina Windows moderna, ha accesso completo al .NET framework, alle API Win32, a WMI e a [Active Directory](https://hackita.it/articoli/active-directory/) — senza installare nulla. Per un pentester è il tool di post-exploitation più versatile disponibile sull'host compromesso, usabile sia per enumeration che per lateral movement.
+**In sintesi:** PowerShell è integrato in ogni macchina Windows moderna, ha accesso completo al .NET framework, alle API Win32, a WMI e a [Active Directory](/articoli/active-directory/) — senza installare nulla. Per un pentester è il tool di post-exploitation più versatile disponibile sull'host compromesso, usabile sia per enumeration che per lateral movement.
 
 ***
 

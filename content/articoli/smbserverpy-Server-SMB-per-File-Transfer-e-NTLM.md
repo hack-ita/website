@@ -21,7 +21,7 @@ tags:
 
 `smbserver.py` avvia un server SMB temporaneo e pubblica una directory locale come condivisione di rete. È utile per trasferire file tra Linux e Windows, registrare autenticazioni NTLM ricevute e osservare callback generate da tecniche di coercizione. Sui client Windows moderni è normalmente necessario `-smb2support`; per distribuire file senza consentire upload conviene aggiungere `-readonly`.
 
-`smbserver.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) e implementa un server [SMB](https://hackita.it/articoli/smb/) direttamente in Python.
+`smbserver.py` fa parte di [Impacket](/articoli/impacket/) e implementa un server [SMB](/articoli/smb/) direttamente in Python.
 
 Il tool viene utilizzato soprattutto durante attività autorizzate di penetration testing e amministrazione di laboratorio per:
 
@@ -262,7 +262,7 @@ sudo impacket-smbserver TRANSFER /tmp/share \
   -hashes LMHASH:NTHASH
 ```
 
-Questo non è un normale attacco [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) contro un server remoto.
+Questo non è un normale attacco [Pass-the-Hash](/articoli/pass-the-hash/) contro un server remoto.
 
 L’hash viene configurato nel server Impacket come segreto con cui verificare l’autenticazione del client. Il client deve comunque dimostrare di possedere la password o il materiale crittografico corrispondente.
 
@@ -553,7 +553,7 @@ La challenge-response Net-NTLMv2:
 
 `smbserver.py` può ricevere e registrare un’autenticazione, ma non implementa un workflow completo di relay verso un secondo servizio.
 
-Per eseguire un relay devi utilizzare [ntlmrelayx.py](https://hackita.it/articoli/ntlmrelayx/) come listener fin dall’inizio.
+Per eseguire un relay devi utilizzare [ntlmrelayx.py](/articoli/ntlmrelayx/) come listener fin dall’inizio.
 
 Non puoi:
 
@@ -1187,13 +1187,13 @@ copy diretto di NTDS.dit     → workflow errato
 
 ## Articoli Hackita correlati
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [SMB: protocollo, porte e sicurezza](https://hackita.it/articoli/smb/)
-* [ntlmrelayx.py: relay delle autenticazioni NTLM](https://hackita.it/articoli/ntlmrelayx/)
-* [Responder: poisoning e autenticazioni NTLM](https://hackita.it/articoli/responder/)
-* [Lateral Movement su Windows](https://hackita.it/articoli/lateral-movement/)
-* [Credential Dumping su Windows](https://hackita.it/articoli/credential-dumping/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [SMB: protocollo, porte e sicurezza](/articoli/smb/)
+* [ntlmrelayx.py: relay delle autenticazioni NTLM](/articoli/ntlmrelayx/)
+* [Responder: poisoning e autenticazioni NTLM](/articoli/responder/)
+* [Lateral Movement su Windows](/articoli/lateral-movement/)
+* [Credential Dumping su Windows](/articoli/credential-dumping/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
 
 ***
 

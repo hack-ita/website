@@ -86,7 +86,7 @@ Modulo intero:
 rsync -av rsync://<target>/backup/ /tmp/dump/
 ```
 
-**`shadow`** contiene password hash — non "hash delle password" genericamente, il formato va identificato prima di craccare. `1800` in [hashcat](https://hackita.it/articoli/hashcat/) è specifico per SHA-512 crypt: se il modulo target usa un algoritmo diverso, quel mode non funziona.
+**`shadow`** contiene password hash — non "hash delle password" genericamente, il formato va identificato prima di craccare. `1800` in [hashcat](/articoli/hashcat/) è specifico per SHA-512 crypt: se il modulo target usa un algoritmo diverso, quel mode non funziona.
 
 ```bash
 hashcat -m 1800 shadow /usr/share/wordlists/rockyou.txt
@@ -182,7 +182,7 @@ nmap -p 873 --script rsync-brute --script-args userdb=users.txt,passdb=passwords
 
 ## Post-Exploitation
 
-Una volta ottenuta una shell, l'enumerazione locale segue lo stesso schema di qualsiasi altro foothold Linux — vedi [LinPEAS](https://hackita.it/articoli/linpeas/) per l'enumerazione automatica dei vettori di privilege escalation. Non è specifico di rsync, quindi non lo duplico qui.
+Una volta ottenuta una shell, l'enumerazione locale segue lo stesso schema di qualsiasi altro foothold Linux — vedi [LinPEAS](/articoli/linpeas/) per l'enumerazione automatica dei vettori di privilege escalation. Non è specifico di rsync, quindi non lo duplico qui.
 
 ## Hardening
 

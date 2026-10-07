@@ -168,7 +168,7 @@ Nel 2025 è stato pubblicato CVE-2025-9074, che riguarda l'esposizione non auten
 
 Il demone Docker gira **come root** sulla macchina, per come è progettato: deve poter creare interfacce di rete, montare filesystem, gestire cgroup, cose che solo root può fare. Chiunque parli con quel demone — che sia via socket locale o via rete — eredita automaticamente quel livello di privilegio. Non è un bug di un singolo container: è così che Docker funziona da sempre, il container non è pensato come barriera di sicurezza contro chi controlla il demone che lo gestisce.
 
-Su HackTheBox e VulnLab questa porta salta fuori in diversi scenari, ed è un ottimo complemento a quanto raccontato nel nostro approfondimento sull'[enumerazione dei servizi Docker](https://hackita.it/articoli/docker-enumeration-tools/):
+Su HackTheBox e VulnLab questa porta salta fuori in diversi scenari, ed è un ottimo complemento a quanto raccontato nel nostro approfondimento sull'[enumerazione dei servizi Docker](/articoli/docker-enumeration-tools/):
 
 * come **punto di ingresso iniziale**, quando un servizio containerizzato viene esposto per errore
 * come **movimento laterale**, quando un host già compromesso può raggiungere il demone di un'altra macchina della rete interna
@@ -247,7 +247,7 @@ Concettualmente sì: in entrambi i casi chi controlla il demone Docker ottiene p
 
 ***
 
-Una volta dentro, i passi successivi seguono la logica generale che spieghiamo nella nostra [guida alla post-exploitation](https://hackita.it/articoli/post-exploitation/): persistenza, raccolta credenziali, movimento verso altri sistemi. E se il target fa parte di un dominio Active Directory, vale la pena rileggersi anche la nostra guida alla [Windows Privilege Escalation](https://hackita.it/articoli/windows-privilege-escalation/), perché spesso la vera domanda non è "come entro" ma "cosa trovo dentro".
+Una volta dentro, i passi successivi seguono la logica generale che spieghiamo nella nostra [guida alla post-exploitation](/articoli/post-exploitation/): persistenza, raccolta credenziali, movimento verso altri sistemi. E se il target fa parte di un dominio Active Directory, vale la pena rileggersi anche la nostra guida alla [Windows Privilege Escalation](/articoli/windows-privilege-escalation/), perché spesso la vera domanda non è "come entro" ma "cosa trovo dentro".
 
 ## In sintesi
 

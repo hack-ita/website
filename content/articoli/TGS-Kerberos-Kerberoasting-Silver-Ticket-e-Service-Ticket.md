@@ -24,7 +24,7 @@ tags:
 
 Il Ticket Granting Service (TGS) è il componente del KDC che e servizio è cifrata con una chiave derivata dalla password dell’account che esegue quel servizio. Se l’account utilizza una password debole, il ticket può essere sottoposto a cracking offline tramite **Kerberoasting**. Se invece possiedi già la chiave dell’account di servizio, puoi creare un **Silver Ticket** senza richiedere un nuovo ticket al Domain Controller.
 
-Dopo aver ottenuto un [TGT Kerberos](https://hackita.it/articoli/tgt-kerberos/), il client può richiedere ticket destinati a servizi specifici del dominio: SQL Server, CIFS, LDAP, HTTP, WinRM, Exchange e molte altre applicazioni integrate con Active Directory.
+Dopo aver ottenuto un [TGT Kerberos](/articoli/tgt-kerberos/), il client può richiedere ticket destinati a servizi specifici del dominio: SQL Server, CIFS, LDAP, HTTP, WinRM, Exchange e molte altre applicazioni integrate con Active Directory.
 
 Questa fase del protocollo è particolarmente interessante durante un penetration test perché:
 
@@ -1781,16 +1781,16 @@ usa AES e verifica msDS-SupportedEncryptionTypes
 
 ## Articoli Correlati
 
-* [Kerberos: architettura e flusso](https://hackita.it/articoli/kerberos/)
-* [TGT Kerberos: Ticket Granting Ticket](https://hackita.it/articoli/tgt-kerberos/)
-* [Kerberoasting: guida completa](https://hackita.it/articoli/kerberos/)
-* [Silver Ticket Attack](https://hackita.it/articoli/silver-ticket/)
-* [Golden Ticket Attack](https://hackita.it/articoli/golden-ticket/)
-* [GetUserSPNs.py con Impacket](https://hackita.it/articoli/getuserspns/)
-* [Rubeus: guida completa](https://hackita.it/articoli/rubeus/)
-* [BloodHound: trovare i path di attacco](https://hackita.it/articoli/bloodhound/)
-* [Credential Dumping su Windows](https://hackita.it/articoli/credential-dumping/)
-* [Pass-the-Ticket in Active Directory](https://hackita.it/articoli/pass-the-ticket/)
+* [Kerberos: architettura e flusso](/articoli/kerberos/)
+* [TGT Kerberos: Ticket Granting Ticket](/articoli/tgt-kerberos/)
+* [Kerberoasting: guida completa](/articoli/kerberos/)
+* [Silver Ticket Attack](/articoli/silver-ticket/)
+* [Golden Ticket Attack](/articoli/golden-ticket/)
+* [GetUserSPNs.py con Impacket](/articoli/getuserspns/)
+* [Rubeus: guida completa](/articoli/rubeus/)
+* [BloodHound: trovare i path di attacco](/articoli/bloodhound/)
+* [Credential Dumping su Windows](/articoli/credential-dumping/)
+* [Pass-the-Ticket in Active Directory](/articoli/pass-the-ticket/)
 
 ***
 

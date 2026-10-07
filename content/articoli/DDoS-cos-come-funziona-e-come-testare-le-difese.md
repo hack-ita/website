@@ -167,9 +167,9 @@ dig target.com +noall +answer   # confronta l'IP risolto prima, durante e dopo i
 
 ## Strumenti
 
-**Generazione di carico**: `hping3` per il traffico di rete (SYN/UDP/ICMP), [Scapy](https://hackita.it/articoli/scapy/) per costruire pacchetti custom (utile anche per dimostrare in lab il meccanismo di un'amplification, senza puntare a servizi di terzi non autorizzati), Vegeta o Apache Bench per il carico HTTP, `iperf3` per il testing di banda.
+**Generazione di carico**: `hping3` per il traffico di rete (SYN/UDP/ICMP), [Scapy](/articoli/scapy/) per costruire pacchetti custom (utile anche per dimostrare in lab il meccanismo di un'amplification, senza puntare a servizi di terzi non autorizzati), Vegeta o Apache Bench per il carico HTTP, `iperf3` per il testing di banda.
 
-**Analisi e monitoraggio**: [Wireshark](https://hackita.it/articoli/wireshark/) per il riconoscimento dei pattern di attacco, [tcpdump](https://hackita.it/articoli/tcpdump/) per la cattura raw, strumenti di NetFlow per l'analisi dei flussi, le API del provider di mitigazione (es. Cloudflare, Akamai) per leggere le statistiche in tempo reale durante il test.
+**Analisi e monitoraggio**: [Wireshark](/articoli/wireshark/) per il riconoscimento dei pattern di attacco, [tcpdump](/articoli/tcpdump/) per la cattura raw, strumenti di NetFlow per l'analisi dei flussi, le API del provider di mitigazione (es. Cloudflare, Akamai) per leggere le statistiche in tempo reale durante il test.
 
 ## Errori comuni durante un DDoS test
 

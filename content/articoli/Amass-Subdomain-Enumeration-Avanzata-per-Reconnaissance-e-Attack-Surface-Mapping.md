@@ -157,7 +157,7 @@ subfinder -d target.com -silent -o subfinder_results.txt
 cat amass_results.txt subfinder_results.txt | sort -u > all_subs.txt
 ```
 
-Amass e [Subfinder](https://hackita.it/articoli/subfinder/) usano fonti parzialmente diverse. La combinazione massimizza la coverage.
+Amass e [Subfinder](/articoli/subfinder/) usano fonti parzialmente diverse. La combinazione massimizza la coverage.
 
 ### Alterations per trovare varianti
 
@@ -221,7 +221,7 @@ amass track -d target.com
 
 **Flusso:**
 
-**Amass (subdomain enum)** → [Httpx](https://hackita.it/articoli/httpx/) (probe) → [Aquatone](https://hackita.it/articoli/aquatone/) (visual recon) → [Nuclei](https://hackita.it/articoli/nuclei/) (vuln scan)
+**Amass (subdomain enum)** → [Httpx](/articoli/httpx/) (probe) → [Aquatone](/articoli/aquatone/) (visual recon) → [Nuclei](/articoli/nuclei/) (vuln scan)
 
 | Tool        | Fonti | Bruteforce | Alterations | API support | Velocità |
 | ----------- | ----- | ---------- | ----------- | ----------- | -------- |
@@ -335,4 +335,4 @@ Più ne configuri, meglio è. Minimo: Shodan, VirusTotal, SecurityTrails.
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

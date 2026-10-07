@@ -54,7 +54,7 @@ In Active Directory Certificate Services (ADCS), ogni certificate template ha un
 
 `msPKI-Certificate-Application-Policy` — la Application Policy proprietaria Microsoft, che se presente nel certificato emesso **sovrascrive** gli EKU standard. Questo è il meccanismo alla base di ESC15.
 
-Per capire come questi template vengono sfruttati nel contesto completo degli attacchi ESC1–ESC16, leggi la [guida completa agli attacchi ADCS su hackita.it](https://hackita.it/articoli/adcs-esc1-esc16/).
+Per capire come questi template vengono sfruttati nel contesto completo degli attacchi ESC1–ESC16, leggi la [guida completa agli attacchi ADCS su hackita.it](/articoli/adcs-esc1-esc16/).
 
 ***
 
@@ -261,7 +261,7 @@ Write-Host "EKU: $($template.Properties['pKIExtendedKeyUsage'])"
 Write-Host "App Policy: $($template.Properties['msPKI-Certificate-Application-Policy'])"
 ```
 
-Per la correlazione degli attributi LDAP con gli oggetti AD, vedi anche la guida a [ldapsearch su hackita.it](https://hackita.it/articoli/ldapsearch/).
+Per la correlazione degli attributi LDAP con gli oggetti AD, vedi anche la guida a [ldapsearch su hackita.it](/articoli/ldapsearch/).
 
 ***
 
@@ -306,9 +306,9 @@ Sì — è il risultato di UnPAC-the-hash. Funziona con Pass-the-Hash via `psexe
 
 ## Risorse correlate
 
-* [Attacchi ADCS ESC1–ESC16 con Certipy — hackita.it](https://hackita.it/articoli/adcs-esc1-esc16/)
-* [HTB Anubis Walkthrough — ESC4 in un ambiente reale — hackita.it](https://hackita.it/articoli/htb-anubis-walkthrough/)
-* [Ldapsearch per enumerazione Active Directory — hackita.it](https://hackita.it/articoli/ldapsearch/)
+* [Attacchi ADCS ESC1–ESC16 con Certipy — hackita.it](/articoli/adcs-esc1-esc16/)
+* [HTB Anubis Walkthrough — ESC4 in un ambiente reale — hackita.it](/articoli/htb-anubis-walkthrough/)
+* [Ldapsearch per enumerazione Active Directory — hackita.it](/articoli/ldapsearch/)
 * [Certified Pre-Owned whitepaper — SpecterOps](https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf)
 * [EKUwu: ESC15 — TrustedSec](https://trustedsec.com/blog/ekuwu-not-just-another-ad-cs-esc)
 * [Certipy wiki ESC1–ESC16 — GitHub](https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation)

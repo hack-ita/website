@@ -22,8 +22,8 @@ Un **Web Application Firewall (WAF)** è spesso il primo ostacolo che incontri i
 
 Questa guida copre le tecniche di bypass per i WAF più diffusi, con un approccio metodico: prima capisci il WAF, poi lo aggiri.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)\
-→ Per bypass di filtri applicativi: [XSS Filter Bypass](https://hackita.it/articoli/xss-filter-bypass/)
+→ Torna alla guida principale: [XSS Completo](/articoli/xss/)\
+→ Per bypass di filtri applicativi: [XSS Filter Bypass](/articoli/xss-filter-bypass/)
 
 ***
 
@@ -359,7 +359,7 @@ Un bypass WAF senza XSS applicativo confermato è un finding minore. Un bypass W
 
 ###### ***Disclaimer: Usa queste tecniche solo su sistemi con autorizzazione esplicita scritta. Attività non autorizzate su sistemi altrui costituiscono reato penale (art. 615-ter c.p.).***
 
-Vuoi migliorare davvero le tue competenze offensive con un percorso **1:1**? Vai su [HackIta Formazione](https://hackita.it/servizi).\
-Se invece vuoi testare la sicurezza della tua azienda con un assessment professionale, trovi tutto su [HackIta Servizi](https://hackita.it/servizi).\
-Se questo contenuto ti è stato utile e vuoi supportare il progetto, puoi farlo su [HackIta Supporto](https://hackita.it/supporto).\
+Vuoi migliorare davvero le tue competenze offensive con un percorso **1:1**? Vai su [HackIta Formazione](/servizi).\
+Se invece vuoi testare la sicurezza della tua azienda con un assessment professionale, trovi tutto su [HackIta Servizi](/servizi).\
+Se questo contenuto ti è stato utile e vuoi supportare il progetto, puoi farlo su [HackIta Supporto](/supporto).\
 Per un approfondimento esterno utile anche lato difesa, vedi [OWASP ModSecurity Core Rule Set](https://coreruleset.org/).

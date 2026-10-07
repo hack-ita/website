@@ -169,7 +169,7 @@ python3 targetedKerberoast.py -u user -p Password123 -d domain.local \
 
 Questo è particolarmente utile dopo un ACL abuse: identificato un account su cui hai GenericWrite da BloodHound, puoi kerberoastarlo anche se normalmente non sarebbe vulnerabile.
 
-Vedi: [ACL Abuse](https://hackita.it/articoli/acl-abuse/) e [BloodHound](https://hackita.it/articoli/bloodhound/)
+Vedi: [ACL Abuse](/articoli/acl-abuse/) e [BloodHound](/articoli/bloodhound/)
 
 ***
 
@@ -233,7 +233,7 @@ Domanda frequente: quando uso Kerberoasting vs AS-REP Roasting?
 | Forza bruta                 | Offline sul TGS        | Offline sull'AS-REP              |
 | Frequenza in ambienti reali | Alta                   | Media                            |
 
-Vedi: [AS-REP Roasting ](https://hackita.it/articoli/as-rep-roasting/)
+Vedi: [AS-REP Roasting ](/articoli/as-rep-roasting/)
 
 ***
 

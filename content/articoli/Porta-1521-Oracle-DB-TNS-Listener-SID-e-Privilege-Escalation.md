@@ -519,4 +519,4 @@ Riferimento: Oracle Security Guide, ODAT documentation, OWASP Oracle Testing, Ha
 
 Leggi anche questo articolo molto operativo: [https://www.verylazytech.com/network-pentesting/oracle-tns-listener-port-1521-1522-1529](https://www.verylazytech.com/network-pentesting/oracle-tns-listener-port-1521-1522-1529)
 
-> I tuoi database Oracle hanno ancora le password di default del 2016? I database link contengono credenziali in chiaro verso altri server? [Penetration test Oracle HackIta](https://hackita.it/servizi) per scoprirlo. Per l'exploitation enterprise database: [formazione 1:1 avanzata](https://hackita.it/formazione).
+> I tuoi database Oracle hanno ancora le password di default del 2016? I database link contengono credenziali in chiaro verso altri server? [Penetration test Oracle HackIta](/servizi) per scoprirlo. Per l'exploitation enterprise database: [formazione 1:1 avanzata](/formazione).

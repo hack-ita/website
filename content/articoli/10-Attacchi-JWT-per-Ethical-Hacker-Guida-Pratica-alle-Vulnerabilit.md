@@ -399,7 +399,7 @@ Mentre ci avviciniamo al 2027, il panorama JWT continua ad evolversi. Gli ethica
 
 Se questo contenuto ti è stato utile e vuoi contribuire alla crescita di HackITA, puoi supportare direttamente il progetto qui:
 
-👉 [https://hackita.it/supporta](https://hackita.it/supporta)
+👉 [https://hackita.it/supporta](/supporta)
 
 Il tuo supporto ci permette di sviluppare lab realistici, guide tecniche avanzate e scenari offensivi multi-step pensati per professionisti della sicurezza.
 
@@ -409,7 +409,7 @@ Il tuo supporto ci permette di sviluppare lab realistici, guide tecniche avanzat
 
 Se rappresenti un’azienda e vuoi valutare concretamente la resilienza della tua infrastruttura contro attacchi mirati, oppure sei un professionista che vuole migliorare con simulazioni reali:
 
-👉 [https://hackita.it/servizi](https://hackita.it/servizi)
+👉 [https://hackita.it/servizi](/servizi)
 
 Red Team assessment su misura, simulazioni complete di kill chain e percorsi formativi avanzati progettati per ambienti enterprise reali.
 

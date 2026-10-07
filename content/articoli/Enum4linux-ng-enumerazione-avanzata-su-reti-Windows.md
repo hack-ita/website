@@ -97,7 +97,7 @@ enum4linux-ng -G 10.10.10.10
 enum4linux-ng -Gm 10.10.10.10
 ```
 
-I membri dei gruppi **non** vengono enumerati di default: serve `-Gm` esplicito per correlare direttamente gruppo → membri, senza passare a query [rpcclient](https://hackita.it/articoli/rpcclient/) manuali.
+I membri dei gruppi **non** vengono enumerati di default: serve `-Gm` esplicito per correlare direttamente gruppo → membri, senza passare a query [rpcclient](/articoli/rpcclient/) manuali.
 
 ### Share
 
@@ -105,7 +105,7 @@ I membri dei gruppi **non** vengono enumerati di default: serve `-Gm` esplicito 
 enum4linux-ng -S 10.10.10.10
 ```
 
-Share non standard (oltre a `IPC$`/`NETLOGON`/`SYSVOL`) sono spesso la fonte di leak più concreta. `NT_STATUS_ACCESS_DENIED` su questo modulo significa che serve autenticazione o che la share è protetta — passa ad auth o valida accesso diretto con [smbclient](https://hackita.it/articoli/smbclient/).
+Share non standard (oltre a `IPC$`/`NETLOGON`/`SYSVOL`) sono spesso la fonte di leak più concreta. `NT_STATUS_ACCESS_DENIED` su questo modulo significa che serve autenticazione o che la share è protetta — passa ad auth o valida accesso diretto con [smbclient](/articoli/smbclient/).
 
 ### Password Policy
 
@@ -189,11 +189,11 @@ L'enumerazione più ricca avviene quando: anonymous/null session sono permissive
 | Tool                                                  | Focus                                                 |
 | ----------------------------------------------------- | ----------------------------------------------------- |
 | enum4linux-ng                                         | Enumerazione automatizzata SMB/RPC/NetBIOS/LDAP       |
-| [rpcclient](https://hackita.it/articoli/rpcclient/)   | Query MS-RPC granulari (SAMR/LSARPC/SRVSVC)           |
-| [smbclient](https://hackita.it/articoli/smbclient/)   | Share e file                                          |
-| [ldapsearch](https://hackita.it/articoli/ldapsearch/) | Directory LDAP/AD con controllo fine su bind e filtri |
-| [NetExec](https://hackita.it/articoli/crackmapexec/)  | Automation/azioni SMB-AD su più host                  |
-| [BloodHound](https://hackita.it/articoli/bloodhound/) | Relazioni e attack path AD                            |
+| [rpcclient](/articoli/rpcclient/)   | Query MS-RPC granulari (SAMR/LSARPC/SRVSVC)           |
+| [smbclient](/articoli/smbclient/)   | Share e file                                          |
+| [ldapsearch](/articoli/ldapsearch/) | Directory LDAP/AD con controllo fine su bind e filtri |
+| [NetExec](/articoli/crackmapexec/)  | Automation/azioni SMB-AD su più host                  |
+| [BloodHound](/articoli/bloodhound/) | Relazioni e attack path AD                            |
 
 enum4linux-ng è il primo comando quando arrivi su un target SMB e vuoi una fotografia completa senza scrivere query manuali; quando serve granularità su un singolo oggetto (RID, filtro LDAP specifico) o operare su molti host insieme, passi agli strumenti dedicati sopra.
 

@@ -28,7 +28,7 @@ tags:
 
 ## Glossario rapido
 
-Prima di addentrarci, chiariamo i termini chiave di Kerberos. Per un approfondimento completo sul protocollo, vedi [Kerberos — come funziona l'autenticazione in AD](https://hackita.it/articoli/kerberos/).
+Prima di addentrarci, chiariamo i termini chiave di Kerberos. Per un approfondimento completo sul protocollo, vedi [Kerberos — come funziona l'autenticazione in AD](/articoli/kerberos/).
 
 * **KDC (Key Distribution Center)**: Il servizio di autenticazione che gira sui Domain Controller. Emette ticket.
 * **TGT (Ticket Granting Ticket)**: Il "passaporto" iniziale che ottieni dopo il login. Firmato con l'hash di krbtgt. Serve a richiedere altri ticket.
@@ -73,18 +73,18 @@ La fiducia è nella **crittografia**, non nel contenuto. Se l'attaccante ha l'ha
 
 ## Introduzione
 
-Il Golden Ticket è classificato **T1558.001 (MITRE ATT\&CK)**. A differenza del [Silver Ticket](https://hackita.it/articoli/silver-ticket/) — che colpisce un singolo servizio — il Golden Ticket compromette l'intera infrastruttura di autenticazione del dominio.
+Il Golden Ticket è classificato **T1558.001 (MITRE ATT\&CK)**. A differenza del [Silver Ticket](/articoli/silver-ticket/) — che colpisce un singolo servizio — il Golden Ticket compromette l'intera infrastruttura di autenticazione del dominio.
 
 **Dove si posiziona rispetto alle altre tecniche:**
 
 | Tecnica                                                         | Cosa usi                  | Scope               | Richiede DA? |
 | --------------------------------------------------------------- | ------------------------- | ------------------- | ------------ |
-| [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)     | Hash NTLM utente          | Singolo host (NTLM) | No           |
-| [Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/) | TGT/TGS estratto da LSASS | Risorse del dominio | No           |
-| [Silver Ticket](https://hackita.it/articoli/silver-ticket/)     | Hash service account      | Singolo servizio    | No           |
+| [Pass-the-Hash](/articoli/pass-the-hash/)     | Hash NTLM utente          | Singolo host (NTLM) | No           |
+| [Pass-the-Ticket](/articoli/pass-the-ticket/) | TGT/TGS estratto da LSASS | Risorse del dominio | No           |
+| [Silver Ticket](/articoli/silver-ticket/)     | Hash service account      | Singolo servizio    | No           |
 | **Golden Ticket**                                               | Hash krbtgt               | **Intero dominio**  | **Sì**       |
-| [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/)   | Hash krbtgt + TGT reale   | **Intero dominio**  | **Sì**       |
-| [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/) | Hash krbtgt + PAC reale   | **Intero dominio**  | **Sì**       |
+| [Diamond Ticket](/articoli/diamond-ticket/)   | Hash krbtgt + TGT reale   | **Intero dominio**  | **Sì**       |
+| [Sapphire Ticket](/articoli/sapphire-ticket/) | Hash krbtgt + PAC reale   | **Intero dominio**  | **Sì**       |
 
 Il Golden Ticket è "il re" perché non ha scadenza naturale, non richiede di conoscere la password dell'utente impersonato, e sopravvive a qualsiasi cambio di password nel dominio — eccetto il doppio reset di krbtgt. APT29 la usa in operazioni di spionaggio documentate da MITRE e CISA. Gruppi ransomware avanzati la combinano con tecniche di esfiltrazione per mantenere accesso persistente anche dopo la scoperta della compromissione iniziale.
 
@@ -114,9 +114,9 @@ Phishing, VPN vulnerabile, server esposto. Ora sei su una macchina interna.
 
 **2. Privilege Escalation**
 
-* **[Kerberoasting](https://hackita.it/articoli/kerberos/)** (T1558.003): Richiedi TGS di account con SPN, li cracki offline con hashcat.
-* **[AS-REP Roasting](https://hackita.it/articoli/asrep-roasting/)** (T1558.004): Utenti senza pre-autenticazione → crack offline AS-REP.
-* **ACL Abuse ([BloodHound](https://hackita.it/articoli/bloodhound/))**: Trovi path verso Domain Admin via GenericAll, WriteDACL, e simili. BloodHound è un tool che mappa graficamente le relazioni di fiducia e le ACL in AD — con "Shortest Path to Domain Admin" trovi il percorso più breve verso il tuo obiettivo.
+* **[Kerberoasting](/articoli/kerberos/)** (T1558.003): Richiedi TGS di account con SPN, li cracki offline con hashcat.
+* **[AS-REP Roasting](/articoli/asrep-roasting/)** (T1558.004): Utenti senza pre-autenticazione → crack offline AS-REP.
+* **ACL Abuse ([BloodHound](/articoli/bloodhound/))**: Trovi path verso Domain Admin via GenericAll, WriteDACL, e simili. BloodHound è un tool che mappa graficamente le relazioni di fiducia e le ACL in AD — con "Shortest Path to Domain Admin" trovi il percorso più breve verso il tuo obiettivo.
 * **Zerologon / PetitPotam / PrintNightmare**: Vulnerabilità critiche che danno accesso diretto al DC.
 
 **3. Permessi DCSync**
@@ -184,11 +184,11 @@ DCSync o dump di NTDS.dit. Catena completa.
 
 ### Via DCSync
 
-Il metodo più comune. Richiede `Replicating Directory Changes All`. Per la guida completa vedi [DCSync](https://hackita.it/articoli/dcsync/).
+Il metodo più comune. Richiede `Replicating Directory Changes All`. Per la guida completa vedi [DCSync](/articoli/dcsync/).
 
-**[impacket-secretsdump](https://hackita.it/articoli/impacket/)** — script Python di Impacket che esegue il DCSync o estrae hash da SAM/LSA/NTDS.dit. Funziona da Linux senza bisogno di essere sul DC.
+**[impacket-secretsdump](/articoli/impacket/)** — script Python di Impacket che esegue il DCSync o estrae hash da SAM/LSA/NTDS.dit. Funziona da Linux senza bisogno di essere sul DC.
 
-**[Mimikatz](https://hackita.it/articoli/mimikatz/)** — tool Windows per dump credenziali da LSASS e manipolazione ticket Kerberos in memoria. `lsadump::dcsync` replica il comportamento di un DC secondario per estrarre hash dall'AD.
+**[Mimikatz](/articoli/mimikatz/)** — tool Windows per dump credenziali da LSASS e manipolazione ticket Kerberos in memoria. `lsadump::dcsync` replica il comportamento di un DC secondario per estrarre hash dall'AD.
 
 ```bash
 # Da Linux — impacket-secretsdump
@@ -272,7 +272,7 @@ Group ID principali da includere:
 
 ### Con Rubeus
 
-**[Rubeus](https://hackita.it/articoli/rubeus/)** — toolkit C# per operazioni Kerberos pure: richiesta, forge e inject di ticket in memoria. Non tocca LSASS direttamente come Mimikatz — superficie di detection ridotta per operazioni Kerberos.
+**[Rubeus](/articoli/rubeus/)** — toolkit C# per operazioni Kerberos pure: richiesta, forge e inject di ticket in memoria. Non tocca LSASS direttamente come Mimikatz — superficie di detection ridotta per operazioni Kerberos.
 
 ```powershell
 # Golden Ticket — inject diretto in memoria con /ptt (pass-the-ticket)
@@ -284,7 +284,7 @@ Rubeus.exe golden /aes256:AES_KEY /domain:corp.local /sid:S-1-5-21-XXXXXXXXXX /u
 
 ### Con Impacket da Linux
 
-**ticketer.py** — script Python di [Impacket](https://hackita.it/articoli/impacket/) per forgiare ticket Kerberos (.ccache) completamente offline da Linux. Produce un file ccache direttamente usabile con `export KRB5CCNAME`.
+**ticketer.py** — script Python di [Impacket](/articoli/impacket/) per forgiare ticket Kerberos (.ccache) completamente offline da Linux. Produce un file ccache direttamente usabile con `export KRB5CCNAME`.
 
 ```bash
 python3 ticketer.py -aesKey <krbtgt_aes256> -domain-sid S-1-5-21-XXXXXXXXXX \
@@ -330,7 +330,7 @@ kerberos::golden /user:Administrator /domain:child.corp.local \
 
 **Automatico con raiseChild.py:**
 
-**raiseChild.py** — script di [Impacket](https://hackita.it/articoli/impacket/) che automatizza completamente la Forest Takeover da child a parent domain. Richiede l'hash di krbtgt del child, gestisce l'Extra SID internamente, e può eseguire comandi direttamente sul DC del parent (es. secretsdump).
+**raiseChild.py** — script di [Impacket](/articoli/impacket/) che automatizza completamente la Forest Takeover da child a parent domain. Richiede l'hash di krbtgt del child, gestisce l'Extra SID internamente, e può eseguire comandi direttamente sul DC del parent (es. secretsdump).
 
 ```bash
 # Con hash NTLM del krbtgt child
@@ -359,9 +359,9 @@ klist   # oppure: klist -c $KRB5CCNAME
 
 **Lateral Movement con i principali tool:**
 
-**[PsExec](https://hackita.it/articoli/psexec/)** — strumento Sysinternals per esecuzione remota via SMB. Copia un servizio sul target, lo esegue, ti restituisce una shell. Rumoroso ma affidabile.
+**[PsExec](/articoli/psexec/)** — strumento Sysinternals per esecuzione remota via SMB. Copia un servizio sul target, lo esegue, ti restituisce una shell. Rumoroso ma affidabile.
 
-**impacket-wmiexec / impacket-smbexec** — script [Impacket](https://hackita.it/articoli/impacket/) per esecuzione remota rispettivamente via WMI e SMB. Più stealth di PsExec perché non droppano servizi.
+**impacket-wmiexec / impacket-smbexec** — script [Impacket](/articoli/impacket/) per esecuzione remota rispettivamente via WMI e SMB. Più stealth di PsExec perché non droppano servizi.
 
 ```powershell
 # Da Windows
@@ -375,7 +375,7 @@ impacket-smbexec -k -no-pass corp.local/Administrator@TARGET
 
 > WinRM con ticket forgiati può fallire se l'ambiente richiede autenticazione interattiva aggiuntiva. Non è universalmente affidabile — testalo sempre prima di contarci.
 
-Per movimenti laterali sistematici su subnet intere, **[NetExec](https://hackita.it/articoli/netexec/)** (ex CrackMapExec) con autenticazione Kerberos è lo standard de facto — enumera, esegue comandi, dumpa SAM su N host in parallelo.
+Per movimenti laterali sistematici su subnet intere, **[NetExec](/articoli/netexec/)** (ex CrackMapExec) con autenticazione Kerberos è lo standard de facto — enumera, esegue comandi, dumpa SAM su N host in parallelo.
 
 ```bash
 export KRB5CCNAME=Administrator.ccache
@@ -389,7 +389,7 @@ netexec smb 192.168.1.0/24 --use-kcache --sam
 
 Il Diamond Ticket modifica un TGT **legittimo** appena rilasciato dal KDC invece di crearne uno da zero. Richiede comunque l'hash di krbtgt, ma l'AS-REQ è presente nei log — nessuna anomalia di assenza. Difficile da rilevare per i sistemi ML di MDI.
 
-**[Rubeus](https://hackita.it/articoli/rubeus/)** — il flag corretto per diamond è `/krbkey` (non `/aes256` che è per `golden`), più `/enctype:aes256` e `/sid` obbligatorio:
+**[Rubeus](/articoli/rubeus/)** — il flag corretto per diamond è `/krbkey` (non `/aes256` che è per `golden`), più `/enctype:aes256` e `/sid` obbligatorio:
 
 ```powershell
 Rubeus.exe diamond /krbkey:AES_KEY /enctype:aes256 \
@@ -398,11 +398,11 @@ Rubeus.exe diamond /krbkey:AES_KEY /enctype:aes256 \
   /groups:512,519 /nowrap /ptt
 ```
 
-Per la guida completa vedi [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/).
+Per la guida completa vedi [Diamond Ticket](/articoli/diamond-ticket/).
 
 **Silver vs Diamond — differenze in breve:**
 
-|                      | [Silver Ticket](https://hackita.it/articoli/silver-ticket/)     | [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/)             |
+|                      | [Silver Ticket](/articoli/silver-ticket/)     | [Diamond Ticket](/articoli/diamond-ticket/)             |
 | -------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | Hash necessario      | Service account (es. computer$)                                 | krbtgt                                                                    |
 | Scope                | Singolo servizio (es. CIFS/HOST)                                | Intero dominio                                                            |
@@ -410,13 +410,13 @@ Per la guida completa vedi [Diamond Ticket](https://hackita.it/articoli/diamond-
 | AS-REQ nei log       | No                                                              | Sì                                                                        |
 | Quando usarlo        | Accesso silenzioso a un servizio specifico senza toccare krbtgt | Persistenza domain-wide con minor rischio di detection rispetto al Golden |
 
-Esiste anche il [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/) — evoluzione ulteriore che estrae il PAC reale tramite S4U2Self+U2U, rendendo il ticket praticamente indistinguibile da uno legittimo.
+Esiste anche il [Sapphire Ticket](/articoli/sapphire-ticket/) — evoluzione ulteriore che estrae il PAC reale tramite S4U2Self+U2U, rendendo il ticket praticamente indistinguibile da uno legittimo.
 
 ***
 
 ## Sapphire Ticket: la frontiera attuale
 
-Il [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/) è l'evoluzione oltre il Diamond. Invece di modificare un TGT legittimo alterando i gruppi, **estrae il PAC reale dell'utente** dal KDC tramite S4U2Self+U2U e lo usa nel ticket forgiato.
+Il [Sapphire Ticket](/articoli/sapphire-ticket/) è l'evoluzione oltre il Diamond. Invece di modificare un TGT legittimo alterando i gruppi, **estrae il PAC reale dell'utente** dal KDC tramite S4U2Self+U2U e lo usa nel ticket forgiato.
 
 > **S4U2Self+U2U:** U2U (User-to-User) è un'estensione Kerberos che permette a un utente di richiedere un ticket per sé stesso, cifrato con la propria chiave invece di quella del servizio. S4U2Self è l'estensione che permette di richiedere un TGS per conto di un altro utente. La combinazione S4U2Self+U2U forza il KDC a generare un ticket che include il PAC autentico dell'utente target — con gruppi, timestamp e checksum identici a quelli che il KDC avrebbe emesso normalmente. L'attaccante poi usa quell'informazione per firmare il ticket forgiato con krbtgt. Il risultato è un ticket il cui PAC è crittograficamente identico a quello che il KDC avrebbe emesso — inclusi gruppi, timestamp e checksum coerenti.
 
@@ -477,10 +477,10 @@ Il doppio reset va eseguito sul PDC Emulator. La replica verso tutti i DC può r
 
 Il Golden Ticket raramente opera in isolamento. In un engagement reale lo trovi concatenato con:
 
-* **[Kerberoasting](https://hackita.it/articoli/kerberos/) (T1558.003)**: Per l'escalation iniziale. TGS di servizi → crack offline.
-* **[AS-REP Roasting](https://hackita.it/articoli/asrep-roasting/) (T1558.004)**: Utenti senza pre-autenticazione → crack offline.
-* **[Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/) (T1550.003)**: Movimento laterale con ticket estratti da LSASS.
-* **[Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/) (T1550.002)**: Per host che non supportano Kerberos.
+* **[Kerberoasting](/articoli/kerberos/) (T1558.003)**: Per l'escalation iniziale. TGS di servizi → crack offline.
+* **[AS-REP Roasting](/articoli/asrep-roasting/) (T1558.004)**: Utenti senza pre-autenticazione → crack offline.
+* **[Pass-the-Ticket](/articoli/pass-the-ticket/) (T1550.003)**: Movimento laterale con ticket estratti da LSASS.
+* **[Pass-the-Hash](/articoli/pass-the-hash/) (T1550.002)**: Per host che non supportano Kerberos.
 
 **Catena reale tipica:**
 
@@ -605,8 +605,8 @@ Set-ADAccountPassword -Identity krbtgt -Reset \
 * **Doppio reset di krbtgt dopo ogni compromissione sospetta** (10-12h tra i due). Usa [New-KrbtgtKeys.ps1](https://github.com/microsoft/New-KrbtgtKeys.ps1).
 * **Forza AES come encryption type:** `msDS-SupportedEncryptionTypes = 24` (AES128+AES256) o `16` (solo AES256). Non previene il Golden Ticket se l'hash AES è già compromesso, ma aumenta il costo dell'attacco.
 * **Monitora DCSync** con alert su Event ID 4662 per accessi all'oggetto krbtgt con diritti di replica.
-* **[Protected Users Security Group](https://hackita.it/articoli/active-directory/):** Aggiungici tutti gli account amministrativi — impedisce NTLM, forza AES, blocca la delega Kerberos.
-* **Mappa tutti i path verso krbtgt con [BloodHound](https://hackita.it/articoli/bloodhound/)** e rimuovi le deleghe non necessarie.
+* **[Protected Users Security Group](/articoli/active-directory/):** Aggiungici tutti gli account amministrativi — impedisce NTLM, forza AES, blocca la delega Kerberos.
+* **Mappa tutti i path verso krbtgt con [BloodHound](/articoli/bloodhound/)** e rimuovi le deleghe non necessarie.
 * **Implementa Microsoft Defender for Identity** per correlazione comportamentale anomalie Kerberos.
 * **Rotazione periodica di krbtgt (almeno semestrale)** come igiene preventiva.
 * **Principio del minimo privilegio:** Pochissimi account dovrebbero avere DCSync rights.
@@ -723,27 +723,27 @@ No. Pulisce solo la cache locale del sistema su cui viene eseguito. Non ha effet
 
 Il Golden Ticket rappresenta il livello più alto di compromissione raggiungibile in un dominio Active Directory. Se l'hash di krbtgt finisce nelle mani di un attaccante, il dominio non è più affidabile — nessun reset di password amministrative risolve il problema senza il doppio reset di krbtgt, seguito da un'analisi completa di tutti i meccanismi di persistenza installati nel frattempo.
 
-La difesa corretta inizia prima: mappare i path verso krbtgt con [BloodHound](https://hackita.it/articoli/bloodhound/), monitorare DCSync in tempo reale, e trattare krbtgt come l'asset più critico dell'intera infrastruttura enterprise — perché lo è.
+La difesa corretta inizia prima: mappare i path verso krbtgt con [BloodHound](/articoli/bloodhound/), monitorare DCSync in tempo reale, e trattare krbtgt come l'asset più critico dell'intera infrastruttura enterprise — perché lo è.
 
 ***
 
 ## Articoli correlati
 
-* [Kerberos — autenticazione in Active Directory](https://hackita.it/articoli/kerberos/)
-* [Silver Ticket](https://hackita.it/articoli/silver-ticket/)
-* [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/)
-* [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/)
-* [DCSync](https://hackita.it/articoli/dcsync/)
-* [Kerberoasting](https://hackita.it/articoli/kerberos/)
-* [AS-REP Roasting](https://hackita.it/articoli/asrep-roasting/)
-* [Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/)
-* [Mimikatz](https://hackita.it/articoli/mimikatz/)
-* [Rubeus](https://hackita.it/articoli/rubeus/)
-* [Impacket](https://hackita.it/articoli/impacket/)
-* [NetExec](https://hackita.it/articoli/netexec/)
-* [Active Directory — exploitation](https://hackita.it/articoli/active-directory/)
+* [Kerberos — autenticazione in Active Directory](/articoli/kerberos/)
+* [Silver Ticket](/articoli/silver-ticket/)
+* [Diamond Ticket](/articoli/diamond-ticket/)
+* [Sapphire Ticket](/articoli/sapphire-ticket/)
+* [DCSync](/articoli/dcsync/)
+* [Kerberoasting](/articoli/kerberos/)
+* [AS-REP Roasting](/articoli/asrep-roasting/)
+* [Pass-the-Ticket](/articoli/pass-the-ticket/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
+* [BloodHound](/articoli/bloodhound/)
+* [Mimikatz](/articoli/mimikatz/)
+* [Rubeus](/articoli/rubeus/)
+* [Impacket](/articoli/impacket/)
+* [NetExec](/articoli/netexec/)
+* [Active Directory — exploitation](/articoli/active-directory/)
 
 ***
 

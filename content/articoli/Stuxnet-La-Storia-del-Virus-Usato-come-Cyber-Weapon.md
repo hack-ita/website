@@ -20,7 +20,7 @@ tags:
 
 # Stuxnet: Come Funzionava il Malware che Colpì l'Iran
 
-**Stuxnet** è un [worm](https://hackita.it/articoli/worm/) informatico scoperto nel giugno 2010, comunemente considerato il primo cyberweapon pubblicamente noto capace di causare danni fisici reali a un'infrastruttura industriale tramite la manipolazione di un sistema di controllo. Il suo bersaglio era l'impianto di arricchimento dell'uranio di **Natanz**, in Iran: non rubava dati, non chiedeva un riscatto, serviva a **distruggere fisicamente** le centrifughe usate per l'arricchimento nucleare, facendole girare a velocità pericolose mentre mostrava agli operatori dati del tutto normali sui monitor di controllo.
+**Stuxnet** è un [worm](/articoli/worm/) informatico scoperto nel giugno 2010, comunemente considerato il primo cyberweapon pubblicamente noto capace di causare danni fisici reali a un'infrastruttura industriale tramite la manipolazione di un sistema di controllo. Il suo bersaglio era l'impianto di arricchimento dell'uranio di **Natanz**, in Iran: non rubava dati, non chiedeva un riscatto, serviva a **distruggere fisicamente** le centrifughe usate per l'arricchimento nucleare, facendole girare a velocità pericolose mentre mostrava agli operatori dati del tutto normali sui monitor di controllo.
 
 È il caso di scuola di come il mondo digitale possa colpire il mondo fisico, e ha definito lo standard per tutti gli attacchi successivi contro sistemi di controllo industriale (ICS/SCADA).
 
@@ -32,7 +32,7 @@ Stuxnet non attaccava genericamente "i computer": era progettato per riconoscere
 
 ## Come funzionava: quattro zero-day in un solo attacco
 
-Quello che ha reso Stuxnet eccezionale, anche oggi, è il numero di vulnerabilità sconosciute usate in un solo attacco: normalmente un gruppo che possiede uno [zero-day](https://hackita.it/articoli/zero-day/) lo usa con parsimonia, proprio per non "bruciarlo" e farlo scoprire. Microsoft ha identificato quattro vulnerabilità Windows sfruttate da Stuxnet, tutte sconosciute al momento dell'attacco:
+Quello che ha reso Stuxnet eccezionale, anche oggi, è il numero di vulnerabilità sconosciute usate in un solo attacco: normalmente un gruppo che possiede uno [zero-day](/articoli/zero-day/) lo usa con parsimonia, proprio per non "bruciarlo" e farlo scoprire. Microsoft ha identificato quattro vulnerabilità Windows sfruttate da Stuxnet, tutte sconosciute al momento dell'attacco:
 
 | Vulnerabilità     | Cosa permetteva                                                                                                                         |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
@@ -55,7 +55,7 @@ Natanz, per ragioni di sicurezza, non era connesso direttamente a Internet (un *
 
 Secondo l'analisi di ISIS, la prima sequenza di attacco portava la frequenza di rotazione fino a circa **1.410 Hz per 15 minuti** (ben oltre i parametri di sicurezza), seguita circa 27 giorni dopo da una seconda sequenza che abbassava drasticamente la frequenza, con ulteriori cicli scanditi a intervalli di circa 27 giorni. Un comportamento così temporizzato, invece di un singolo guasto improvviso, era pensato per sembrare un deterioramento meccanico naturale piuttosto che un sabotaggio deliberato.
 
-Nel frattempo, il worm **falsificava i dati mostrati agli operatori**: secondo la documentazione tecnica raccolta da MITRE ATT\&CK for ICS, Stuxnet intercettava le comunicazioni tra il software di supervisione (WinCC) e il PLC sostituendo la libreria di sistema `s7otbxdx.dll`, usata normalmente per quelle comunicazioni, con una propria versione modificata. In questo modo il worm poteva nascondere il proprio codice iniettato nei blocchi di programma del PLC (in particolare nei blocchi **OB1** e **OB35**, usati per l'esecuzione ciclica della logica di controllo) e mostrare agli operatori valori di processo del tutto normali, mentre le centrifughe venivano danneggiate dall'interno. MITRE classifica questo comportamento come una tecnica di [rootkit](https://hackita.it/articoli/rootkit/) a livello di PLC: non nascondeva solo file sul disco, ma l'intera rappresentazione dello stato reale del processo industriale.
+Nel frattempo, il worm **falsificava i dati mostrati agli operatori**: secondo la documentazione tecnica raccolta da MITRE ATT\&CK for ICS, Stuxnet intercettava le comunicazioni tra il software di supervisione (WinCC) e il PLC sostituendo la libreria di sistema `s7otbxdx.dll`, usata normalmente per quelle comunicazioni, con una propria versione modificata. In questo modo il worm poteva nascondere il proprio codice iniettato nei blocchi di programma del PLC (in particolare nei blocchi **OB1** e **OB35**, usati per l'esecuzione ciclica della logica di controllo) e mostrare agli operatori valori di processo del tutto normali, mentre le centrifughe venivano danneggiate dall'interno. MITRE classifica questo comportamento come una tecnica di [rootkit](/articoli/rootkit/) a livello di PLC: non nascondeva solo file sul disco, ma l'intera rappresentazione dello stato reale del processo industriale.
 
 ## Il danno: circa 1.000 centrifughe compromesse
 

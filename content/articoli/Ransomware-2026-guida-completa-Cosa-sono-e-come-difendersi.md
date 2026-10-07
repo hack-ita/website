@@ -87,13 +87,13 @@ Gli IAB alimentano direttamente l'ecosistema RaaS.
 
 Una volta all'interno, l'attaccante non agisce immediatamente. I gruppi ransomware professionali trascorrono in media **settimane o mesi** nella rete prima di attivare la cifratura. In questo intervallo mappano la rete, identificano i sistemi critici, escalano i privilegi (*privilege escalation*), si spostano lateralmente verso altri host — tecniche documentate da **CrowdStrike**, **Mandiant** e **Palo Alto Networks Unit42** nei loro threat report annuali.
 
-Strumenti nativi di Windows come WMI, PsExec e PowerShell vengono spesso usati in modalità *Living off the Land (LotL)* per ridurre il rumore e sfuggire ai sistemi SIEM. La fase di [enumerazione della rete](https://hackita.it/articoli/enumeration/) è quella in cui vengono identificati i target ad alto valore prima dell'attivazione del payload.
+Strumenti nativi di Windows come WMI, PsExec e PowerShell vengono spesso usati in modalità *Living off the Land (LotL)* per ridurre il rumore e sfuggire ai sistemi SIEM. La fase di [enumerazione della rete](/articoli/enumeration/) è quella in cui vengono identificati i target ad alto valore prima dell'attivazione del payload.
 
 ### Fase 3 — Impact: Preparazione e Cifratura
 
 Prima della cifratura vera e propria, il ransomware tenta di compromettere i sistemi di backup. Secondo il **Sophos State of Ransomware 2024**, nel **94%** degli attacchi gli attaccanti hanno tentato di sabotare i backup, riuscendoci nel **57%** dei casi. La cifratura viene poi attivata in modo coordinato — spesso in orari notturni o durante festività — per massimizzare il danno prima che qualcuno se ne accorga.
 
-In molti casi viene usato il protocollo [NTLM](https://hackita.it/articoli/ntlm/) per il movimento laterale e la compromissione degli account privilegiati — un vettore ancora molto comune negli ambienti Active Directory aziendali.
+In molti casi viene usato il protocollo [NTLM](/articoli/ntlm/) per il movimento laterale e la compromissione degli account privilegiati — un vettore ancora molto comune negli ambienti Active Directory aziendali.
 
 ### Fase 4 — Estorsione e Negoziazione
 
@@ -115,11 +115,11 @@ I principali vettori di infezione documentati dalle organizzazioni di threat int
 
 *(Fonte: elaborazione da Sophos, Verizon DBIR, FBI IC3 2024)*
 
-**Il phishing** rimane il vettore più comune perché sfrutta il fattore umano, il link più debole di qualsiasi catena di sicurezza. Un'email che simula una comunicazione aziendale legittima, un allegato apparentemente innocuo, un link verso una pagina di login clonata: basta un clic inconsapevole. Le tecniche di [phishing offensivo](https://hackita.it/articoli/phishing-techniques-red-team/) usate nei red team engagement sono oggi sofisticate quanto quelle dei criminali — il confine è sottile.
+**Il phishing** rimane il vettore più comune perché sfrutta il fattore umano, il link più debole di qualsiasi catena di sicurezza. Un'email che simula una comunicazione aziendale legittima, un allegato apparentemente innocuo, un link verso una pagina di login clonata: basta un clic inconsapevole. Le tecniche di [phishing offensivo](/articoli/phishing-techniques-red-team/) usate nei red team engagement sono oggi sofisticate quanto quelle dei criminali — il confine è sottile.
 
 Le **vulnerabilità non patchate** rappresentano la seconda causa principale. Gruppi come Clop e BlackCat/ALPHV hanno costruito parte della loro fortuna sull'exploitation rapida di vulnerabilità **zero-day** in software enterprise ampiamente diffusi, come MOVEit Transfer e Cleo.
 
-Il **Remote Desktop Protocol (RDP) esposto su internet** è storicamente uno dei vettori più sfruttati. Credenziali deboli o rubate permettono l'accesso diretto ai sistemi, spesso senza che nessun alert venga generato. Gli [attacchi NTLM Relay](https://hackita.it/articoli/ntlm-relay/) — che sfruttano il protocollo di autenticazione Windows — sono un'altra tecnica comune nella fase di lateral movement, spesso combinata con credenziali rubate via RDP.
+Il **Remote Desktop Protocol (RDP) esposto su internet** è storicamente uno dei vettori più sfruttati. Credenziali deboli o rubate permettono l'accesso diretto ai sistemi, spesso senza che nessun alert venga generato. Gli [attacchi NTLM Relay](/articoli/ntlm-relay/) — che sfruttano il protocollo di autenticazione Windows — sono un'altra tecnica comune nella fase di lateral movement, spesso combinata con credenziali rubate via RDP.
 
 ***
 
@@ -334,7 +334,7 @@ La buona notizia è che la grande maggioranza degli attacchi ransomware è preve
 
 ### 2. Multi-Factor Authentication (MFA)
 
-L'MFA è il controllo di sicurezza con il miglior rapporto costo/beneficio. Rende inutilizzabili le credenziali rubate da sole. Va implementata su tutti i sistemi critici: VPN, email, pannelli di admin, RDP. Vale la pena sapere però che non è infallibile: tecniche come l'[AiTM phishing con Evilginx 3](https://hackita.it/articoli/evilginx3-aitm-mfa-bypass/) dimostrano come sessioni autenticate possano essere intercettate — motivo in più per abbinarla a un monitoraggio comportamentale.
+L'MFA è il controllo di sicurezza con il miglior rapporto costo/beneficio. Rende inutilizzabili le credenziali rubate da sole. Va implementata su tutti i sistemi critici: VPN, email, pannelli di admin, RDP. Vale la pena sapere però che non è infallibile: tecniche come l'[AiTM phishing con Evilginx 3](/articoli/evilginx3-aitm-mfa-bypass/) dimostrano come sessioni autenticate possano essere intercettate — motivo in più per abbinarla a un monitoraggio comportamentale.
 
 ### 3. Patch Management
 

@@ -40,7 +40,7 @@ Aggiungendo `monitors.htb` all'`/etc/hosts` si accede a un blog WordPress dedica
 
 ### Enumerazione WordPress con WPScan
 
-Un'enumerazione con [WPScan](https://hackita.it/articoli/wpscan/) (`wpscan --url http://monitors.htb/ -e ap,t,tt,u`) restituisce diverse vulnerabilità nel core di WordPress 5.5.1, nessuna direttamente sfruttabile per RCE, ma identifica anche un plugin installato: **wp-with-spritz**, versione 1.0, non aggiornato dal 2015.
+Un'enumerazione con [WPScan](/articoli/wpscan/) (`wpscan --url http://monitors.htb/ -e ap,t,tt,u`) restituisce diverse vulnerabilità nel core di WordPress 5.5.1, nessuna direttamente sfruttabile per RCE, ma identifica anche un plugin installato: **wp-with-spritz**, versione 1.0, non aggiornato dal 2015.
 
 ### Il plugin wp-with-spritz: lettura file, non esecuzione
 
@@ -86,7 +86,7 @@ Queste credenziali non funzionano né su WordPress né su SSH, ma sono riutilizz
 
 ### SQL Injection in Cacti — CVE-2020-14295
 
-Cacti 1.2.12 è vulnerabile a [SQL Injection](https://hackita.it/articoli/sql-injection/) non autenticata, tracciata come **CVE-2020-14295**, nel parametro `filter` dell'endpoint `color.php`. La vulnerabilità è documentata in una issue pubblica sul repository GitHub del progetto, dove un membro della community mostra sia la SQLi pura che, in un commento successivo, il modo per trasformarla in esecuzione di comandi arbitrari.
+Cacti 1.2.12 è vulnerabile a [SQL Injection](/articoli/sql-injection/) non autenticata, tracciata come **CVE-2020-14295**, nel parametro `filter` dell'endpoint `color.php`. La vulnerabilità è documentata in una issue pubblica sul repository GitHub del progetto, dove un membro della community mostra sia la SQLi pura che, in un commento successivo, il modo per trasformarla in esecuzione di comandi arbitrari.
 
 Analizzando quella discussione, il punto chiave è che `color.php` non sanitizza correttamente il parametro `filter` prima di usarlo in una query — permettendo di chiudere la stringa originale con `')` e concatenare una `UNION SELECT` che pesca dalla tabella `user_auth` (username/password hash degli utenti Cacti). Ma la parte più interessante emersa dalla discussione è che il database MySQL, con `multiple statements` abilitato lato applicativo, permette anche di **stackare** una seconda query dopo un punto e virgola nella stessa richiesta. Questo apre la strada a un `UPDATE` sulla tabella `settings`, che modifica la colonna `path_php_binary` — il path del binario PHP che Cacti invoca internamente per alcune operazioni pianificate — sostituendolo con un comando shell arbitrario:
 
@@ -135,7 +135,7 @@ Con un port forward SSH (`ssh marcus@target -L 8443:localhost:8443`) è possibil
 
 ### Deserializzazione XML-RPC — CVE-2020-9496
 
-OFBiz 17.12.01 è vulnerabile a [deserializzazione Java](https://hackita.it/articoli/deserialization-attack/) non autenticata nell'endpoint `/webtools/control/xmlrpc`, tracciata come **CVE-2020-9496** e documentata in dettaglio dalla Zero Day Initiative. Il bug risiede nel parsing del protocollo XML-RPC: un tag `<serializable>` non standard, aggiunto come estensione da Apache, permette di inserire un oggetto Java serializzato in base64 dentro il corpo della richiesta XML. Il server lo deserializza senza alcuna validazione, aprendo la strada a una catena di [RCE](https://hackita.it/articoli/rce/) tramite gadget chain.
+OFBiz 17.12.01 è vulnerabile a [deserializzazione Java](/articoli/deserialization-attack/) non autenticata nell'endpoint `/webtools/control/xmlrpc`, tracciata come **CVE-2020-9496** e documentata in dettaglio dalla Zero Day Initiative. Il bug risiede nel parsing del protocollo XML-RPC: un tag `<serializable>` non standard, aggiunto come estensione da Apache, permette di inserire un oggetto Java serializzato in base64 dentro il corpo della richiesta XML. Il server lo deserializza senza alcuna validazione, aprendo la strada a una catena di [RCE](/articoli/rce/) tramite gadget chain.
 
 ```xml
 <?xml version="1.0"?>
@@ -190,7 +190,7 @@ Il binario viaggia byte per byte sulla connessione raw, senza passare da alcun t
 
 ## Container escape
 
-La privilege escalation da root-nel-container a root-sull'host è stata condotta seguendo la stessa metodologia descritta nell'articolo Hackita su [container escape](https://hackita.it/articoli/container-escape/), che copre proprio lo scenario di una webapp in un Docker privilegiato.
+La privilege escalation da root-nel-container a root-sull'host è stata condotta seguendo la stessa metodologia descritta nell'articolo Hackita su [container escape](/articoli/container-escape/), che copre proprio lo scenario di una webapp in un Docker privilegiato.
 
 ### Enumerazione delle capability
 

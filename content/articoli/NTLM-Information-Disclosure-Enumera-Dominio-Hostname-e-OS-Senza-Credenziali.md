@@ -273,7 +273,7 @@ TlRMTVNTUAABAAAAB4IIAAAAAAAAAAAAAAAAAAAAAAA=
 
 ## Caso Reale: Exchange EWS → Password Spray OWA
 
-Questa tecnica è direttamente applicabile al [password spraying](https://hackita.it/articoli/password-spraying/) su Exchange OWA.
+Questa tecnica è direttamente applicabile al [password spraying](/articoli/password-spraying/) su Exchange OWA.
 
 Il problema classico: trovi OWA esposto ma non sai il dominio da usare nel campo login. OWA usa form-based auth — niente NTLM, niente info gratuite dal form.
 
@@ -358,7 +358,7 @@ done
 | --------------------- | ----------------- | --------------------------------------------------------------------------------- |
 | NetBIOS domain name   | `Target_Name`     | Dominio per login NTLM (`CORP\user`)                                              |
 | NetBIOS computer name | Nel Type 2        | Hostname per targeting diretto                                                    |
-| DNS domain name       | Nel Type 2        | FQDN per [DNS enumeration](https://hackita.it/articoli/dns-enumeration/), phishing |
+| DNS domain name       | Nel Type 2        | FQDN per [DNS enumeration](/articoli/dns-enumeration/), phishing |
 | DNS computer name     | Nel Type 2        | FQDN completo del server                                                          |
 | Product Version       | `Product_Version` | OS fingerprinting, CVE matching                                                   |
 
@@ -492,7 +492,7 @@ Sì — usa `-k` con curl per ignorare la verifica del certificato. Il certifica
 
 **Si può fare lo stesso su SMB?**
 
-Su [SMB](https://hackita.it/articoli/smb/) il meccanismo è analogo ma il protocollo è diverso. `nmap --script smb-security-mode` e `crackmapexec smb` rivelano info simili senza autenticazione.
+Su [SMB](/articoli/smb/) il meccanismo è analogo ma il protocollo è diverso. `nmap --script smb-security-mode` e `crackmapexec smb` rivelano info simili senza autenticazione.
 
 ***
 
@@ -512,10 +512,10 @@ Su [SMB](https://hackita.it/articoli/smb/) il meccanismo è analogo ma il protoc
 
 ## Link Correlati
 
-* [Password Spraying su OWA](https://hackita.it/articoli/password-spraying/)
-* [Porta 445 SMB](https://hackita.it/articoli/smb/)
-* [Active Directory Enumeration](https://hackita.it/articoli/active-directory/)
-* [Kerberos Attacks](https://hackita.it/articoli/kerberos/)
+* [Password Spraying su OWA](/articoli/password-spraying/)
+* [Porta 445 SMB](/articoli/smb/)
+* [Active Directory Enumeration](/articoli/active-directory/)
+* [Kerberos Attacks](/articoli/kerberos/)
 
 ***
 
@@ -530,4 +530,4 @@ Su [SMB](https://hackita.it/articoli/smb/) il meccanismo è analogo ma il protoc
 
 > **Disclaimer:** Tutti i comandi e le tecniche descritte sono destinati esclusivamente all'uso in ambienti autorizzati: laboratori personali, macchine CTF e penetration test con autorizzazione scritta. L'autore e HackIta declinano ogni responsabilità per usi impropri. Documentazione ufficiale Microsoft NTLM: [https://docs.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm](https://docs.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm)
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

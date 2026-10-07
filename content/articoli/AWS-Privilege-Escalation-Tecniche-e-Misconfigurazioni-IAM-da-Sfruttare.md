@@ -495,7 +495,7 @@ aws s3 cp s3://corp-backup-prod/db_dump.sql /tmp/
 
 ## 4. IMDS e Metadata — Credenziali dalle Istanze
 
-Se hai accesso a un'istanza EC2 (via [SSRF](https://hackita.it/articoli/ssrf/), [SSH](https://hackita.it/articoli/ssh/), webshell):
+Se hai accesso a un'istanza EC2 (via [SSRF](/articoli/ssrf/), [SSH](/articoli/ssh/), webshell):
 
 ```bash
 # IMDSv1 (deprecato ma ancora comune)
@@ -723,4 +723,4 @@ Ogni azione AWS è loggata in CloudTrail. `CreatePolicyVersion` e `AttachUserPol
 
 Riferimento: Rhino Security Labs "AWS IAM Privilege Escalation Methods", SANS Cloud Security, AWS Security Best Practices. Uso esclusivo in ambienti autorizzati.
 
-> [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).
+> [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

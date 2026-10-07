@@ -25,7 +25,7 @@ Un ethical hacker usa esattamente le tecniche di un attaccante — enumerazione,
 
 ## Ethical Hacker vs Hacker: la Differenza in una Frase
 
-"Hacker" è un termine ampio e neutro, riferito a chi ha competenze tecniche avanzate su sistemi e software, a prescindere da come le usa. "Ethical hacker" restringe il campo a chi le usa sempre con permesso, dentro uno scope concordato, con l'obiettivo di segnalare — non sfruttare a proprio vantaggio — le vulnerabilità trovate. Per la classificazione completa dei vari "colori" di hacker, vedi [White Hat, Black Hat e Grey Hat: le Differenze](https://hackita.it/articoli/white-hat-black-hat-grey-hat/).
+"Hacker" è un termine ampio e neutro, riferito a chi ha competenze tecniche avanzate su sistemi e software, a prescindere da come le usa. "Ethical hacker" restringe il campo a chi le usa sempre con permesso, dentro uno scope concordato, con l'obiettivo di segnalare — non sfruttare a proprio vantaggio — le vulnerabilità trovate. Per la classificazione completa dei vari "colori" di hacker, vedi [White Hat, Black Hat e Grey Hat: le Differenze](/articoli/white-hat-black-hat-grey-hat/).
 
 Definito il confine, resta da capire come si traduce in pratica in una giornata di lavoro.
 
@@ -36,7 +36,7 @@ Il lavoro si svolge quasi sempre dentro un incarico con scope, tempistiche e reg
 1. **Ricognizione** — raccolta di informazioni pubbliche ed enumerazione dei sistemi in scope
 2. **Scanning e vulnerability assessment** — identificazione di servizi, versioni e possibili vettori
 3. **Exploitation** — sfruttamento controllato delle vulnerabilità trovate, per dimostrarne l'impatto reale
-4. **Post-exploitation** — [escalation dei privilegi](https://hackita.it/articoli/windows-privilege-escalation/) e movimento laterale, per verificare fin dove un attaccante reale potrebbe arrivare da quel punto
+4. **Post-exploitation** — [escalation dei privilegi](/articoli/windows-privilege-escalation/) e movimento laterale, per verificare fin dove un attaccante reale potrebbe arrivare da quel punto
 5. **Reporting** — documentazione dettagliata di ogni finding, impatto stimato e raccomandazioni di rimedio
 
 Il reporting non è un dettaglio amministrativo: è spesso la parte su cui viene giudicata la qualità del lavoro, perché è quello che il cliente userà davvero per correggere i problemi.
@@ -61,7 +61,7 @@ Nella pratica i ruoli si sovrappongono spesso — un penetration tester lavora a
 
 ## Quali Strumenti Usa
 
-Variano per specializzazione, ma un nucleo ricorre quasi ovunque: [Nmap](https://hackita.it/articoli/nmap/) per l'enumerazione di rete, [Burp Suite](https://hackita.it/articoli/burp-suite/) e ffuf per il web, [Metasploit](https://hackita.it/articoli/metasploit/) per l'exploitation, [BloodHound](https://hackita.it/articoli/bloodhound/) e Certipy per attacchi in ambienti Active Directory, Hashcat e John the Ripper per il cracking di hash e password.
+Variano per specializzazione, ma un nucleo ricorre quasi ovunque: [Nmap](/articoli/nmap/) per l'enumerazione di rete, [Burp Suite](/articoli/burp-suite/) e ffuf per il web, [Metasploit](/articoli/metasploit/) per l'exploitation, [BloodHound](/articoli/bloodhound/) e Certipy per attacchi in ambienti Active Directory, Hashcat e John the Ripper per il cracking di hash e password.
 
 ## Ethical Hacker vs Cybersecurity
 
@@ -69,7 +69,7 @@ Non sono sinonimi: la cybersecurity è il campo ampio che comprende anche difesa
 
 ## Ethical Hacker: Serve una Certificazione?
 
-Non è obbligatoria per legge, ma nella pratica viene spesso richiesta da clienti e datori di lavoro come prova verificabile delle competenze. CEH (Certified Ethical Hacker) è tra le più conosciute a livello generalista, ma non l'unica strada: il confronto completo, con tabella delle certificazioni e tempi realistici, è in [Come Diventare Ethical Hacker: la Guida Pratica](https://hackita.it/articoli/come-diventare-ethical-hacker/).
+Non è obbligatoria per legge, ma nella pratica viene spesso richiesta da clienti e datori di lavoro come prova verificabile delle competenze. CEH (Certified Ethical Hacker) è tra le più conosciute a livello generalista, ma non l'unica strada: il confronto completo, con tabella delle certificazioni e tempi realistici, è in [Come Diventare Ethical Hacker: la Guida Pratica](/articoli/come-diventare-ethical-hacker/).
 
 ## FAQ
 
@@ -85,4 +85,4 @@ Non è obbligatoria per legge, ma nella pratica viene spesso richiesta da client
 
 **Dove lavora un ethical hacker?** Aziende di cybersecurity, società di consulenza, team di sicurezza interni ad aziende più grandi (banche, fintech, software house), oppure da freelance su bug bounty e incarichi diretti.
 
-**L'ethical hacking è legale?** Sì, ma solo con autorizzazione esplicita e dentro lo scope concordato — le buone intenzioni da sole non bastano, serve il permesso scritto del proprietario del sistema. Il quadro legale completo, comprese le conseguenze di uscire dallo scope, è nell'articolo [Hacker: Cos'è, Tipi di Hacker e Come Diventare Hacker Etico](https://hackita.it/articoli/hacker/).
+**L'ethical hacking è legale?** Sì, ma solo con autorizzazione esplicita e dentro lo scope concordato — le buone intenzioni da sole non bastano, serve il permesso scritto del proprietario del sistema. Il quadro legale completo, comprese le conseguenze di uscire dallo scope, è nell'articolo [Hacker: Cos'è, Tipi di Hacker e Come Diventare Hacker Etico](/articoli/hacker/).

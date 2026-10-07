@@ -24,7 +24,7 @@ Quando un account ha `UF_DONT_REQUIRE_PREAUTH` impostato, il Domain Controller r
 
 Il vettore è particolarmente interessante perché non richiede foothold: se hai una lista di username validi, puoi testare tutti gli account dall'esterno del dominio. Nessuna autenticazione necessaria.
 
-> Un account con pre-autenticazione disabilitata è un hash in attesa di essere crackato. In [Active Directory](https://hackita.it/articoli/active-directory/) questa impostazione viene spesso abilitata per compatibilità con applicazioni legacy — e dimenticata.
+> Un account con pre-autenticazione disabilitata è un hash in attesa di essere crackato. In [Active Directory](/articoli/active-directory/) questa impostazione viene spesso abilitata per compatibilità con applicazioni legacy — e dimenticata.
 
 Classificato da MITRE ATT\&CK come [T1558.004](https://attack.mitre.org/techniques/T1558/004/).
 
@@ -52,7 +52,7 @@ Classificato da MITRE ATT\&CK come [T1558.004](https://attack.mitre.org/techniqu
 
 ***
 
-In una normale autenticazione [Kerberos](https://hackita.it/articoli/kerberos/), il client invia un AS-REQ con un timestamp cifrato con la propria password — questo è il meccanismo di pre-autenticazione. Il DC verifica il timestamp e solo allora emette il TGT.
+In una normale autenticazione [Kerberos](/articoli/kerberos/), il client invia un AS-REQ con un timestamp cifrato con la propria password — questo è il meccanismo di pre-autenticazione. Il DC verifica il timestamp e solo allora emette il TGT.
 
 Con pre-autenticazione disabilitata, il DC salta questa verifica e risponde direttamente con un AS-REP contenente il TGT e una porzione cifrata con la chiave dell'utente (derivata dalla password). Chi riceve quella risposta può tentare di craccarla offline.
 
@@ -242,7 +242,7 @@ bloodyAD -u attacker -p 'Password123!' -d corp.local --host <DC_IP> \
   set object targetuser userAccountControl '512'
 ```
 
-Questo path è mappabile tramite [BloodHound](https://hackita.it/articoli/bloodhound/) cercando edge `GenericWrite` su oggetti utente.
+Questo path è mappabile tramite [BloodHound](/articoli/bloodhound/) cercando edge `GenericWrite` su oggetti utente.
 
 ***
 
@@ -275,7 +275,7 @@ Sei nella rete interna ma non hai ancora credenziali di dominio. Hai però una l
 3. Crachi l'hash in pochi minuti: password `Summer2023!`
 4. Con quelle credenziali entri nel dominio e inizi l'enumerazione AD
 
-Da lì puoi passare a [Kerberoasting](https://hackita.it/articoli/kerberos/) per espandere l'accesso verso i service account.
+Da lì puoi passare a [Kerberoasting](/articoli/kerberos/) per espandere l'accesso verso i service account.
 
 ***
 
@@ -304,7 +304,7 @@ Get-ADUser -Filter * -Properties DoesNotRequirePreAuth | Where-Object {$_.DoesNo
 
 * **Password lunghe** (>25 caratteri) su tutti gli account di servizio — anche se roastable, il crack diventa computazionalmente improponibile
 * Monitorare Event ID 4768 con pre-auth type 0x0 e generare alert immediati
-* Revisitare con [BloodHound](https://hackita.it/articoli/bloodhound/) gli edge `GenericWrite` su oggetti utente per prevenire il Targeted AS-REP Roasting
+* Revisitare con [BloodHound](/articoli/bloodhound/) gli edge `GenericWrite` su oggetti utente per prevenire il Targeted AS-REP Roasting
 
 ***
 
@@ -325,7 +325,7 @@ Non impossibile, ma altamente impraticabile. Con password casuali di 25+ caratte
 
 AS-REP Roasting è spesso il primo passo in un engagement dove non si hanno ancora credenziali di dominio. Un singolo account con pre-autenticazione disabilitata e password debole è sufficiente per ottenere un foothold autenticato nel dominio, da cui iniziare l'enumerazione AD completa.
 
-La mitigazione è semplice e non richiede costi: abilitare la pre-autenticazione su tutti gli account e monitorare i 4768 con type 0x0. La difficoltà è sapere dove guardare — ed è lì che entrano in gioco audit periodici e strumenti come [BloodHound](https://hackita.it/articoli/bloodhound/).
+La mitigazione è semplice e non richiede costi: abilitare la pre-autenticazione su tutti gli account e monitorare i 4768 con type 0x0. La difficoltà è sapere dove guardare — ed è lì che entrano in gioco audit periodici e strumenti come [BloodHound](/articoli/bloodhound/).
 
 ***
 

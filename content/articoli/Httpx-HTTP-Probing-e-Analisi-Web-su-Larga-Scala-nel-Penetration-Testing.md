@@ -144,7 +144,7 @@ Httpx testa ogni host su tutte le porte specificate. Trova servizi web nascosti 
 cat subs.txt | httpx -tech-detect -silent | grep -i wordpress
 ```
 
-Filtra tutti i target WordPress dalla lista. Passa il risultato a [WPScan](https://hackita.it/articoli/wpscan/) o [Nuclei](https://hackita.it/articoli/nuclei/) con template WordPress.
+Filtra tutti i target WordPress dalla lista. Passa il risultato a [WPScan](/articoli/wpscan/) o [Nuclei](/articoli/nuclei/) con template WordPress.
 
 ### Screenshot capture
 
@@ -190,7 +190,7 @@ cat subs.txt | httpx -H "Authorization: Bearer TOKEN" -H "X-Custom: value" -sile
 cat subs.txt | httpx -favicon -silent
 ```
 
-Il favicon hash è un identificatore univoco per applicazioni web. Puoi cercare lo stesso hash su [Shodan](https://hackita.it/articoli/shodan/) per trovare istanze simili.
+Il favicon hash è un identificatore univoco per applicazioni web. Puoi cercare lo stesso hash su [Shodan](/articoli/shodan/) per trovare istanze simili.
 
 ### Match per contenuto
 
@@ -244,7 +244,7 @@ https://admin.corp.com [200] [Admin Panel]
 
 **Cosa fare se fallisce:**
 
-* Title vuoto → SPA che carica il titolo via JS. Httpx non renderizza JS. Usa [Aquatone](https://hackita.it/articoli/aquatone/) per screenshot.
+* Title vuoto → SPA che carica il titolo via JS. Httpx non renderizza JS. Usa [Aquatone](/articoli/aquatone/) per screenshot.
 
 **Timeline:** Istantaneo su lista preparata.
 
@@ -270,7 +270,7 @@ Httpx è il collante tra recon e exploitation.
 
 **Flusso operativo:**
 
-[Subfinder](https://hackita.it/articoli/subfinder/)/[Amass](https://hackita.it/articoli/amass/) (subdomain) → **Httpx (probe + tech)** → [Nuclei](https://hackita.it/articoli/nuclei/)/[ZAP](https://hackita.it/articoli/owasp-zap/) (vuln scan)
+[Subfinder](/articoli/subfinder/)/[Amass](/articoli/amass/) (subdomain) → **Httpx (probe + tech)** → [Nuclei](/articoli/nuclei/)/[ZAP](/articoli/owasp-zap/) (vuln scan)
 
 | Feature        | Httpx    | Httprobe | Curl    | Wget    |
 | -------------- | -------- | -------- | ------- | ------- |
@@ -441,4 +441,4 @@ Non di default. Usa `-follow-redirects` per seguirli.
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

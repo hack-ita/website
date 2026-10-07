@@ -22,7 +22,7 @@ tags:
 
 # GetADUsers.py — Enumerazione Utenti Active Directory con Impacket
 
-`GetADUsers.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) e interroga un Domain Controller via LDAP per ottenere una lista di utenti con quattro attributi: nome account, email, data ultimo cambio password e data ultimo logon. È uno strumento volutamente minimale — niente gruppi, niente descrizioni, niente SPN. Utile come primo passo rapido dopo aver ottenuto le prime credenziali di dominio, non come sostituto di BloodHound o di una query LDAP completa.
+`GetADUsers.py` fa parte di [Impacket](/articoli/impacket/) e interroga un Domain Controller via LDAP per ottenere una lista di utenti con quattro attributi: nome account, email, data ultimo cambio password e data ultimo logon. È uno strumento volutamente minimale — niente gruppi, niente descrizioni, niente SPN. Utile come primo passo rapido dopo aver ottenuto le prime credenziali di dominio, non come sostituto di BloodHound o di una query LDAP completa.
 
 **Nota:** `GetADUsers.py` richiede sempre credenziali valide, anche minime. Se non ne hai ancora nessuna, puoi provare prima un'enumerazione username non autenticata via Kerberos (porta 88):
 
@@ -167,7 +167,7 @@ impacket-GetADUsers -all -dc-ip 10.10.10.5 corp.local/user:'Password123!' | tee 
 # 2. Verifica reale degli account senza pre-authentication (AS-REP Roasting)
 impacket-GetNPUsers corp.local/user:'Password123!' -dc-ip 10.10.10.5 -request -format hashcat
 
-# 3. Verifica reale degli account con SPN (Kerberoasting) — vedi anche [Kerberoasting](https://hackita.it/articoli/kerberos/)
+# 3. Verifica reale degli account con SPN (Kerberoasting) — vedi anche [Kerberoasting](/articoli/kerberos/)
 impacket-GetUserSPNs -dc-ip 10.10.10.5 corp.local/user:'Password123!'
 ```
 
@@ -187,7 +187,7 @@ nxc ldap 10.10.10.5 -u user -p 'Password123!' -M get-desc-users
 nxc ldap 10.10.10.5 -u user -p 'Password123!' --query '(objectCategory=person)' 'sAMAccountName description'
 ```
 
-Per il quadro completo delle relazioni tra utenti, gruppi e permessi nel dominio, lo strumento giusto resta [BloodHound](https://hackita.it/articoli/bloodhound/); per query LDAP personalizzate riga per riga, [ldapsearch](https://hackita.it/articoli/ldapsearch/).
+Per il quadro completo delle relazioni tra utenti, gruppi e permessi nel dominio, lo strumento giusto resta [BloodHound](/articoli/bloodhound/); per query LDAP personalizzate riga per riga, [ldapsearch](/articoli/ldapsearch/).
 
 ## Workflow offensivo realistico
 
@@ -215,8 +215,8 @@ GetADUsers.py -all
 | Tool                                                  | Protocollo | Dettaglio            | Note                                      |
 | ----------------------------------------------------- | ---------- | -------------------- | ----------------------------------------- |
 | `GetADUsers.py`                                       | LDAP       | Minimo (4 attributi) | Rapido, zero installazione, output pulito |
-| [ldapsearch](https://hackita.it/articoli/ldapsearch/) | LDAP       | Completo             | Query personalizzabili, raw output        |
-| [BloodHound](https://hackita.it/articoli/bloodhound/) | LDAP + SMB | Molto alto           | Grafo relazioni, trova attack path        |
+| [ldapsearch](/articoli/ldapsearch/) | LDAP       | Completo             | Query personalizzabili, raw output        |
+| [BloodHound](/articoli/bloodhound/) | LDAP + SMB | Molto alto           | Grafo relazioni, trova attack path        |
 | `nxc ldap`                                            | LDAP       | Alto                 | Gruppi, descrizioni, query libere, moduli |
 
 ## Errori comuni
@@ -305,12 +305,12 @@ Non basandoti sul nome (`svc_*`). Serve verificare la presenza di un `servicePri
 
 ## Articoli correlati
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [Active Directory: guida all'exploitation](https://hackita.it/articoli/active-directory/)
-* [ldapsearch — query LDAP avanzate](https://hackita.it/articoli/ldapsearch/)
-* [BloodHound — mappa l'AD e trova attack path](https://hackita.it/articoli/bloodhound/)
-* [Kerberoasting](https://hackita.it/articoli/kerberos/)
-* [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [Active Directory: guida all'exploitation](/articoli/active-directory/)
+* [ldapsearch — query LDAP avanzate](/articoli/ldapsearch/)
+* [BloodHound — mappa l'AD e trova attack path](/articoli/bloodhound/)
+* [Kerberoasting](/articoli/kerberos/)
+* [AS-REP Roasting](/articoli/as-rep-roasting/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
 
 > Uso esclusivo in ambienti autorizzati.

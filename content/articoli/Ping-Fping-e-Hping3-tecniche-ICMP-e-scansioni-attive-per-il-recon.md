@@ -175,7 +175,7 @@ ICMP OK: passo a enum porte
 
 Interpretazione: “ICMP OK” non significa “porte OK”, ma ti dà un segnale iniziale affidabile.
 
-Errore comune + fix: ICMP bloccato ma host vivo → non fermarti: passa a tecniche L2 in LAN (vedi “host discovery con ARP-Scan” su [https://hackita.it/articoli/arp-scan/](https://hackita.it/articoli/arp-scan/)).
+Errore comune + fix: ICMP bloccato ma host vivo → non fermarti: passa a tecniche L2 in LAN (vedi “host discovery con ARP-Scan” su [https://hackita.it/articoli/arp-scan/](/articoli/arp-scan/)).
 
 ### Test rapido di reachability verso gateway/segmento
 
@@ -273,7 +273,7 @@ Esempio di output (può variare):
 
 Interpretazione: potrebbe essere filtro ICMP o rate-limit; non concludere “morto”.
 
-Errore comune + fix: insistere con ping a raffica → se sei in LAN passa a enumerazione ARP (es. “discovery con Netdiscover” su [https://hackita.it/articoli/netdiscover/](https://hackita.it/articoli/netdiscover/)) oppure valida via TCP su porte note.
+Errore comune + fix: insistere con ping a raffica → se sei in LAN passa a enumerazione ARP (es. “discovery con Netdiscover” su [https://hackita.it/articoli/netdiscover/](/articoli/netdiscover/)) oppure valida via TCP su porte note.
 
 ### “Operation not permitted” / permessi raw socket
 
@@ -345,8 +345,8 @@ Errore comune + fix: riduci frequenza (`-i 1` o più) e usa tool più adatti al 
 
 > **In breve:** se `ping` non basta, scegli tool in base al livello: L2 per LAN, L3/L4 per discovery scalabile, e sniffing per capire cosa succede davvero.
 
-* In LAN: ARP è spesso più affidabile di ICMP (host può bloccare Echo ma rispondere ad ARP). Vedi “host discovery con ARP-Scan” su [https://hackita.it/articoli/arp-scan/](https://hackita.it/articoli/arp-scan/).
-* Per discovery più comodo: Netdiscover è utile quando vuoi “vedere” la LAN senza dipendere da ICMP. Vedi [https://hackita.it/articoli/netdiscover/](https://hackita.it/articoli/netdiscover/).
+* In LAN: ARP è spesso più affidabile di ICMP (host può bloccare Echo ma rispondere ad ARP). Vedi “host discovery con ARP-Scan” su [https://hackita.it/articoli/arp-scan/](/articoli/arp-scan/).
+* Per discovery più comodo: Netdiscover è utile quando vuoi “vedere” la LAN senza dipendere da ICMP. Vedi [https://hackita.it/articoli/netdiscover/](/articoli/netdiscover/).
 * Per capire se l’ICMP parte/torna: cattura traffico (sotto) invece di interpretare solo il sintomo.
 
 Quando NON usarli: se non sei autorizzato sul segmento (vale anche in lab: rimani nel perimetro definito).
@@ -378,7 +378,7 @@ Interpretazione: se vedi request senza reply, è filtro/host; se non vedi nulla,
 
 Errore comune + fix: catturi sull’interfaccia sbagliata → specifica `-i eth0` e riprova.
 
-Per andare oltre, usa analisi GUI o CLI: “analisi traffico con Wireshark” su [https://hackita.it/articoli/wireshark/](https://hackita.it/articoli/wireshark/) e “Wireshark CLI con TShark” su [https://hackita.it/articoli/tshark/](https://hackita.it/articoli/tshark/).
+Per andare oltre, usa analisi GUI o CLI: “analisi traffico con Wireshark” su [https://hackita.it/articoli/wireshark/](/articoli/wireshark/) e “Wireshark CLI con TShark” su [https://hackita.it/articoli/tshark/](/articoli/tshark/).
 
 ### Hardening pragmatico: rate-limit ICMP (non “blind blocking”)
 
@@ -591,12 +591,12 @@ R: Alcuni device filtrano i messaggi ICMP necessari (es. “fragmentation needed
 
 ## Link utili su HackIta.it
 
-* [ARP-Scan per host discovery e pivoting in LAN](https://hackita.it/articoli/arp-scan/)
-* [Netdiscover per scoprire dispositivi e IP in LAN](https://hackita.it/articoli/netdiscover/)
-* [Tcpdump per analizzare traffico di rete da terminale](https://hackita.it/articoli/tcpdump/)
-* [Wireshark per analisi traffico e credenziali in lab](https://hackita.it/articoli/wireshark/)
-* [TShark per analizzare traffico in CLI](https://hackita.it/articoli/tshark/)
-* [Netcat: tool jolly per networking offensivo](https://hackita.it/articoli/netcat/)
+* [ARP-Scan per host discovery e pivoting in LAN](/articoli/arp-scan/)
+* [Netdiscover per scoprire dispositivi e IP in LAN](/articoli/netdiscover/)
+* [Tcpdump per analizzare traffico di rete da terminale](/articoli/tcpdump/)
+* [Wireshark per analisi traffico e credenziali in lab](/articoli/wireshark/)
+* [TShark per analizzare traffico in CLI](/articoli/tshark/)
+* [Netcat: tool jolly per networking offensivo](/articoli/netcat/)
 
 Pagine:
 

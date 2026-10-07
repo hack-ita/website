@@ -58,7 +58,7 @@ Due principi fondamentali:
 1. **Le regole si leggono dall'alto verso il basso**: nella maggior parte dei firewall vale la prima regola che corrisponde al traffico.
 2. **Default deny**: se nessuna regola consente un traffico, viene bloccato. È la configurazione più sicura: si blocca tutto e si apre solo ciò che serve.
 
-Una regola tipica può essere letta così: *consenti TCP verso 203.0.113.10 sulla porta 443 da qualsiasi origine*. Per capire cosa significano porte e protocolli c'è la guida alle [porte TCP e UDP nel pentest](https://hackita.it/articoli/porte-tcp-udp-pentest/).
+Una regola tipica può essere letta così: *consenti TCP verso 203.0.113.10 sulla porta 443 da qualsiasi origine*. Per capire cosa significano porte e protocolli c'è la guida alle [porte TCP e UDP nel pentest](/articoli/porte-tcp-udp-pentest/).
 
 ## Tipi di firewall
 
@@ -85,7 +85,7 @@ Una regola tipica può essere letta così: *consenti TCP verso 203.0.113.10 sull
 
 ## Firewall vs WAF: qual è la differenza?
 
-Sono entrambi firewall, ma guardano cose diverse. Un firewall di rete tradizionale filtra in base a IP, porta e protocollo: non capisce il contenuto di una richiesta HTTP. Un **WAF** (*Web Application Firewall*) lavora invece a livello applicativo, analizza il traffico HTTP/HTTPS verso un sito o un'app e riconosce pattern di attacco come [SQL injection](https://hackita.it/articoli/sql-injection/) o [XSS](https://hackita.it/articoli/xss/). In pratica: il firewall di rete decide chi può bussare alla porta, il WAF controlla cosa c'è scritto nella richiesta una volta che è entrata.
+Sono entrambi firewall, ma guardano cose diverse. Un firewall di rete tradizionale filtra in base a IP, porta e protocollo: non capisce il contenuto di una richiesta HTTP. Un **WAF** (*Web Application Firewall*) lavora invece a livello applicativo, analizza il traffico HTTP/HTTPS verso un sito o un'app e riconosce pattern di attacco come [SQL injection](/articoli/sql-injection/) o [XSS](/articoli/xss/). In pratica: il firewall di rete decide chi può bussare alla porta, il WAF controlla cosa c'è scritto nella richiesta una volta che è entrata.
 
 Molte applicazioni web usano entrambi: firewall di rete per il perimetro, WAF davanti all'applicazione.
 
@@ -100,7 +100,7 @@ Questi strumenti vengono confusi di continuo, ma fanno cose diverse:
 | **IDS**                                     | Rileva traffico sospetto e **avvisa**                                      |
 | **IPS**                                     | Rileva traffico sospetto e lo **blocca**                                   |
 | **WAF**                                     | Protegge in modo specifico le **applicazioni web**                         |
-| **[VPN](https://hackita.it/articoli/vpn/)** | Crea un canale cifrato tra due punti: non filtra, **protegge il transito** |
+| **[VPN](/articoli/vpn/)** | Crea un canale cifrato tra due punti: non filtra, **protegge il transito** |
 
 Si usano insieme: il firewall riduce ciò che può arrivare, l'EDR protegge i dispositivi, l'IDS/IPS osserva il traffico, la VPN protegge i collegamenti remoti.
 
@@ -108,7 +108,7 @@ Si usano insieme: il firewall riduce ciò che può arrivare, l'EDR protegge i di
 
 Spesso si sente parlare di "mappare una porta" sul firewall. Si tratta di **NAT** e **port forwarding**: il router o il firewall inoltra il traffico che arriva su una porta pubblica verso un dispositivo interno (per esempio la porta 443 verso un server web).
 
-Attenzione: il **NAT non è un firewall**. Nasconde gli indirizzi interni ma non filtra per sicurezza. Ogni porta inoltrata verso Internet è un servizio esposto: un server con [RDP aperto sulla porta 3389](https://hackita.it/articoli/porta-3389-rdp/) è un classico bersaglio. Prima di aprire una porta, chiediti se serve davvero, a chi serve e se può stare dietro una VPN.
+Attenzione: il **NAT non è un firewall**. Nasconde gli indirizzi interni ma non filtra per sicurezza. Ogni porta inoltrata verso Internet è un servizio esposto: un server con [RDP aperto sulla porta 3389](/articoli/porta-3389-rdp/) è un classico bersaglio. Prima di aprire una porta, chiediti se serve davvero, a chi serve e se può stare dietro una VPN.
 
 ## Configurazione firewall: regole, default deny e best practice
 
@@ -161,7 +161,7 @@ La seconda riga è un buon punto di partenza per trovare regole in ingresso che 
 
 ## Firewall nel penetration test
 
-Nel penetration test il firewall è uno dei primi ostacoli da capire. Con [Nmap](https://hackita.it/articoli/nmap/) si distinguono tre stati: porta **aperta**, **chiusa** (il sistema risponde che non c'è nulla) e **filtrata** (nessuna risposta o rifiuto: probabile presenza di un firewall).
+Nel penetration test il firewall è uno dei primi ostacoli da capire. Con [Nmap](/articoli/nmap/) si distinguono tre stati: porta **aperta**, **chiusa** (il sistema risponde che non c'è nulla) e **filtrata** (nessuna risposta o rifiuto: probabile presenza di un firewall).
 
 Solo su sistemi tuoi, di un lab o con autorizzazione scritta. Se l'host non risponde al ping, salta la fase di host discovery:
 
@@ -177,7 +177,7 @@ nmap -sA <IP-autorizzato>
 
 Una porta `unfiltered` con ACK vuol dire che i pacchetti la raggiungono (non filtrata da regole stateful); `filtered` significa che Nmap non riesce a determinare se la porta è aperta perché un filtro di rete impedisce alle probe di raggiungerla o alle risposte di tornare. Non implica per forza un firewall in senso stretto, ma è il segnale più comune della sua presenza.
 
-Dal lato dell'attaccante, il filtro **in uscita** (*outbound*) è spesso decisivo: una reverse shell deve comunque uscire dalla rete, e un firewall che blocca il traffico non necessario rende più difficile o più rumorosa una tecnica come [Chisel](https://hackita.it/articoli/chisel/) o il [pivoting](https://hackita.it/articoli/pivoting/). Un firewall con regole outbound "tutto permesso" rende la vita facile a chi è già dentro.
+Dal lato dell'attaccante, il filtro **in uscita** (*outbound*) è spesso decisivo: una reverse shell deve comunque uscire dalla rete, e un firewall che blocca il traffico non necessario rende più difficile o più rumorosa una tecnica come [Chisel](/articoli/chisel/) o il [pivoting](/articoli/pivoting/). Un firewall con regole outbound "tutto permesso" rende la vita facile a chi è già dentro.
 
 ## Errori comuni di configurazione
 
@@ -201,9 +201,9 @@ Un firewall non protegge da:
 * **minacce interne**: un dipendente già dentro la rete;
 * **vulnerabilità del firewall stesso**.
 
-Quest'ultimo punto è reale. I firewall e gli altri dispositivi di bordo sono bersagli frequenti di [zero-day](https://hackita.it/articoli/zero-day/): nel 2024, per esempio, una vulnerabilità di command injection nel componente GlobalProtect di Palo Alto PAN-OS (CVE-2024-3400) è stata sfruttata attivamente prima della patch. Secondo Google Threat Intelligence, nel 2025 quasi la metà degli zero-day sfruttati ha riguardato tecnologie enterprise, spesso dispositivi di bordo dove non c'è un EDR. Un firewall va quindi trattato come un sistema da monitorare e aggiornare, non come una scatola da installare e dimenticare.
+Quest'ultimo punto è reale. I firewall e gli altri dispositivi di bordo sono bersagli frequenti di [zero-day](/articoli/zero-day/): nel 2024, per esempio, una vulnerabilità di command injection nel componente GlobalProtect di Palo Alto PAN-OS (CVE-2024-3400) è stata sfruttata attivamente prima della patch. Secondo Google Threat Intelligence, nel 2025 quasi la metà degli zero-day sfruttati ha riguardato tecnologie enterprise, spesso dispositivi di bordo dove non c'è un EDR. Un firewall va quindi trattato come un sistema da monitorare e aggiornare, non come una scatola da installare e dimenticare.
 
-Se un attaccante supera il perimetro, il danno diventa un [data breach](https://hackita.it/articoli/data-breach/), con gli obblighi di notifica del [GDPR](https://hackita.it/articoli/gdpr/) e, per i soggetti coinvolti, della [direttiva NIS 2](https://hackita.it/articoli/nis2/), che richiede misure adeguate di sicurezza di rete.
+Se un attaccante supera il perimetro, il danno diventa un [data breach](/articoli/data-breach/), con gli obblighi di notifica del [GDPR](/articoli/gdpr/) e, per i soggetti coinvolti, della [direttiva NIS 2](/articoli/nis2/), che richiede misure adeguate di sicurezza di rete.
 
 ## Domande frequenti sul firewall
 

@@ -169,7 +169,7 @@ Per mappare comunicazioni verso una subnet interna, ad esempio traffico SMB o Wi
 sudo tcpdump -i eth1 -nn 'net 172.16.5.0/24 and (port 445 or port 5985)' -w lateral_capture.pcap
 ```
 
-Per un'analisi più strutturata dello stesso traffico — statistiche, estrazione campi, follow stream — [TShark](https://hackita.it/articoli/tshark/) è lo strumento più adatto quando tcpdump da solo non basta più.
+Per un'analisi più strutturata dello stesso traffico — statistiche, estrazione campi, follow stream — [TShark](/articoli/tshark/) è lo strumento più adatto quando tcpdump da solo non basta più.
 
 ## Come rilevare e mitigare lo sniffing con Tcpdump
 
@@ -177,7 +177,7 @@ Per un'analisi più strutturata dello stesso traffico — statistiche, estrazion
 
 * Processo `tcpdump` (o uso di `libpcap`) in esecuzione su host non autorizzati a farlo
 * Interfaccia di rete impostata in modalità promiscua, verificabile con `ip link` o tool dedicati
-* Picchi anomali di traffico ARP su uno switch, spesso segno di ARP spoofing propedeutico a un MITM — vedi anche [Bettercap](https://hackita.it/articoli/bettercap/) per come funziona questa tecnica lato attaccante
+* Picchi anomali di traffico ARP su uno switch, spesso segno di ARP spoofing propedeutico a un MITM — vedi anche [Bettercap](/articoli/bettercap/) per come funziona questa tecnica lato attaccante
 * Richieste sensibili nei log applicativi con IP sorgente improbabile (es. quello del gateway)
 
 **Mitigazioni concrete:**
@@ -193,7 +193,7 @@ Per un'analisi più strutturata dello stesso traffico — statistiche, estrazion
 * Filtri BPF troppo larghi o con parentesi mancanti in espressioni complesse, con catture da GB di traffico inutile
 * Non salvare mai il pcap, perdendo l'unica evidenza ripetibile
 * Interpretare un "bad checksum" come traffico corrotto, quando spesso è solo un effetto del checksum offloading della scheda di rete (disattivabile in lab con `ethtool -K eth0 tx off rx off` per verificare)
-* Provare a decifrare TLS con tcpdump: non è possibile senza le chiavi di sessione — per l'ispezione di traffico HTTPS serve un proxy MITM come [mitmproxy](https://hackita.it/articoli/mitmproxy/)
+* Provare a decifrare TLS con tcpdump: non è possibile senza le chiavi di sessione — per l'ispezione di traffico HTTPS serve un proxy MITM come [mitmproxy](/articoli/mitmproxy/)
 * Sniffing prolungato senza rotazione dei file, fino a riempire il disco dell'host su cui si lavora
 
 ## Tcpdump Cheat Sheet
@@ -226,7 +226,7 @@ A verificare traffico atteso, osservare protocolli in chiaro, salvare pcap per a
 Con `-w file.pcap` durante la cattura; si legge poi con `-r file.pcap`, eventualmente aggiungendo un filtro.
 
 **Qual è la differenza tra tcpdump e Wireshark?**
-Tcpdump è da riga di comando, leggero e sempre disponibile anche via SSH; Wireshark ha un'interfaccia grafica più adatta ad analisi approfondite su un pcap già catturato. [TShark](https://hackita.it/articoli/tshark/) sta nel mezzo: stesso motore di Wireshark, ma da terminale.
+Tcpdump è da riga di comando, leggero e sempre disponibile anche via SSH; Wireshark ha un'interfaccia grafica più adatta ad analisi approfondite su un pcap già catturato. [TShark](/articoli/tshark/) sta nel mezzo: stesso motore di Wireshark, ma da terminale.
 
 **Tcpdump funziona su Kali Linux?**
 Sì, è preinstallato sulla maggior parte delle distribuzioni Linux, Kali incluso.

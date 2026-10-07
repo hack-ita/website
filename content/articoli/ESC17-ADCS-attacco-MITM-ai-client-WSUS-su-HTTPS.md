@@ -321,4 +321,4 @@ La tecnica è già abbastanza matura da essere finita in una macchina Hack The B
 
 Fonte primaria e approfondimenti tecnici completi: **[DigiTrace — Using ADCS to Attack HTTPS-Enabled WSUS Clients](https://blog.digitrace.de/2026/01/using-adcs-to-attack-https-enabled-wsus-clients/)**.
 
-Per continuare lo studio: [ESC1](https://hackita.it/articoli/esc1-adcs/), [ESC8](https://hackita.it/articoli/esc8-adcs/), [ADCS ESC1-ESC16 guida completa](https://hackita.it/articoli/adcs-esc1-esc16/), [active-directory](https://hackita.it/articoli/active-directory/), [windows-privilege-escalation](https://hackita.it/articoli/windows-privilege-escalation/).
+Per continuare lo studio: [ESC1](/articoli/esc1-adcs/), [ESC8](/articoli/esc8-adcs/), [ADCS ESC1-ESC16 guida completa](/articoli/adcs-esc1-esc16/), [active-directory](/articoli/active-directory/), [windows-privilege-escalation](/articoli/windows-privilege-escalation/).

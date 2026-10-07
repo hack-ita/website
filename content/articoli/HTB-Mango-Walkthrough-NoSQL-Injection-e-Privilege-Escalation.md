@@ -62,13 +62,13 @@ Girando sull'applicazione principale (`mango.htb`) salta fuori un endpoint inter
 
 A questo punto, senza sapere ancora nulla su come muoversi, la mossa più naturale è cercare "Flexmonster database" — non tanto per trovare un exploit pronto, quanto per capire con che tipo di stack ci si trova davanti. Flexmonster è un componente per pivot table e reportistica dati: la sua documentazione elenca esplicitamente i backend supportati, e tra questi compare MongoDB.
 
-È un dettaglio piccolo ma che cambia tutto l'approccio: il backend reale dell'applicazione non era relazionale come ci si aspetterebbe di default, ma coerente con un database NoSQL — tanto che, più avanti nella catena d'attacco (dopo l'accesso alla shell), la [porta 27017 di MongoDB](https://hackita.it/articoli/porta-27017-mongodb/) si rivela effettivamente in ascolto sul target. A quel punto, tornando sul form di login del vhost `staging-order.mango.htb`, il sospetto diventa una linea di indagine precisa: se il backend è MongoDB, vale la pena testare payload NoSQL invece che SQL injection classica sul campo di autenticazione.
+È un dettaglio piccolo ma che cambia tutto l'approccio: il backend reale dell'applicazione non era relazionale come ci si aspetterebbe di default, ma coerente con un database NoSQL — tanto che, più avanti nella catena d'attacco (dopo l'accesso alla shell), la [porta 27017 di MongoDB](/articoli/porta-27017-mongodb/) si rivela effettivamente in ascolto sul target. A quel punto, tornando sul form di login del vhost `staging-order.mango.htb`, il sospetto diventa una linea di indagine precisa: se il backend è MongoDB, vale la pena testare payload NoSQL invece che SQL injection classica sul campo di autenticazione.
 
 Questo è un promemoria utile al di là del box specifico: prima di lanciarsi su un form di login con i soliti payload SQLi, vale sempre la pena fare un giro sull'applicazione per capire lo stack tecnologico reale — endpoint dimenticati, librerie di terze parti, messaggi d'errore, header HTTP. Spesso è lì che si trova l'indizio che orienta l'intero attacco.
 
 ## SQL injection vs NoSQL injection: perché qui cambia tutto
 
-Prima di lanciarsi sul form di login vale la pena chiarirsi le idee, perché è il punto dove chi viene dalla SQL injection classica si blocca. Se vuoi una guida completa e dedicata solo a questa tecnica, l'abbiamo trattata a parte: [NoSQL Injection: Guida Completa](https://hackita.it/articoli/nosql-injection/).
+Prima di lanciarsi sul form di login vale la pena chiarirsi le idee, perché è il punto dove chi viene dalla SQL injection classica si blocca. Se vuoi una guida completa e dedicata solo a questa tecnica, l'abbiamo trattata a parte: [NoSQL Injection: Guida Completa](/articoli/nosql-injection/).
 
 In un database relazionale (MySQL, PostgreSQL, MSSQL) i dati stanno in tabelle con colonne fisse, e le query sono stringhe di testo SQL. La SQL injection classica funziona rompendo quella stringa con un apice:
 
@@ -82,7 +82,7 @@ Questo significa che qui non stai rompendo una stringa: stai iniettando direttam
 
 ## Bypass dell'autenticazione
 
-Il form di login di Mango accetta due campi POST, `username` e `password` (verificalo sempre intercettando la richiesta con [Burp Suite](https://hackita.it/articoli/burp-suite/) — i nomi dei campi cambiano da applicazione ad applicazione, non dare mai per scontato che siano `user`/`pass`).
+Il form di login di Mango accetta due campi POST, `username` e `password` (verificalo sempre intercettando la richiesta con [Burp Suite](/articoli/burp-suite/) — i nomi dei campi cambiano da applicazione ad applicazione, non dare mai per scontato che siano `user`/`pass`).
 
 Il payload di bypass più semplice sfrutta l'operatore `$ne` (not equal):
 
@@ -196,7 +196,7 @@ Tra i risultati compare qualcosa di insolito:
 
 `jjs` (Java Java Script) è il tool a riga di comando che fa parte del JDK e permette di eseguire codice JavaScript dentro la JVM tramite il motore Nashorn. Sta in `/usr/lib/jvm/.../bin/` perché è parte dell'installazione Java, non ha nulla di anomalo di per sé — l'anomalia è nei permessi: proprietario `root`, gruppo `admin`, e bit SUID+SGID attivi (`s` al posto di `x`). Chiunque appartenga al gruppo `admin` può eseguirlo con i privilegi effettivi di root.
 
-Da JavaScript dentro Nashorn puoi richiamare classi Java native, incluse `java.lang.ProcessBuilder` e `java.lang.Runtime`, che permettono di lanciare processi di sistema. Dato che `jjs` gira come root, anche i processi che lancia da lì ereditano quel privilegio: è esattamente il pattern catalogato su [GTFOBins](https://hackita.it/articoli/gtfobins/) per questo binario.
+Da JavaScript dentro Nashorn puoi richiamare classi Java native, incluse `java.lang.ProcessBuilder` e `java.lang.Runtime`, che permettono di lanciare processi di sistema. Dato che `jjs` gira come root, anche i processi che lancia da lì ereditano quel privilegio: è esattamente il pattern catalogato su [GTFOBins](/articoli/gtfobins/) per questo binario.
 
 ### La reverse shell
 

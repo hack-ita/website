@@ -21,7 +21,7 @@ tags:
 
 # GetLAPSPassword.py — Leggere le Password LAPS con Impacket
 
-`GetLAPSPassword.py` (wrapper: `impacket-GetLAPSPassword` — il casing conta, Linux distingue maiuscole e minuscole) fa parte di [Impacket](https://hackita.it/articoli/impacket/) ed estrae le password degli amministratori locali gestite da LAPS direttamente da LDAP. Non richiede necessariamente Domain Admin: richiede un'identità che possa leggere l'attributo giusto sull'oggetto computer — e, per le password Windows LAPS cifrate, anche essere autorizzata a decifrarle.
+`GetLAPSPassword.py` (wrapper: `impacket-GetLAPSPassword` — il casing conta, Linux distingue maiuscole e minuscole) fa parte di [Impacket](/articoli/impacket/) ed estrae le password degli amministratori locali gestite da LAPS direttamente da LDAP. Non richiede necessariamente Domain Admin: richiede un'identità che possa leggere l'attributo giusto sull'oggetto computer — e, per le password Windows LAPS cifrate, anche essere autorizzata a decifrarle.
 
 Riferimento ufficiale: [fortra/impacket — GetLAPSPassword.py](https://github.com/fortra/impacket/blob/master/examples/GetLAPSPassword.py)
 
@@ -50,7 +50,7 @@ Per **Windows LAPS cifrato** servono **due condizioni distinte**:
 
 Avere il primo permesso senza il secondo ti fa vedere un blob cifrato illeggibile, non una password.
 
-Trova chi ha questi permessi con [BloodHound](https://hackita.it/articoli/bloodhound/) — l'edge si chiama **ReadLAPSPassword** e copre sia gli attributi legacy sia quelli Windows LAPS. Anche `AllExtendedRights` su un computer object può conferire questa capacità.
+Trova chi ha questi permessi con [BloodHound](/articoli/bloodhound/) — l'edge si chiama **ReadLAPSPassword** e copre sia gli attributi legacy sia quelli Windows LAPS. Anche `AllExtendedRights` su un computer object può conferire questa capacità.
 
 ```bash
 # Con nxc — verifica se il tuo utente ha accesso LAPS
@@ -245,7 +245,7 @@ WS02 → laps_admin → password B
 SRV01 → Administrator → password C
 ```
 
-Da quella macchina, un dump di [credenziali in memoria](https://hackita.it/articoli/credential-dumping/) può rivelare sessioni di dominio se qualcuno vi è loggato — quello è il vero passo successivo per il movimento laterale, non il riuso della password LAPS stessa.
+Da quella macchina, un dump di [credenziali in memoria](/articoli/credential-dumping/) può rivelare sessioni di dominio se qualcuno vi è loggato — quello è il vero passo successivo per il movimento laterale, non il riuso della password LAPS stessa.
 
 ## Cosa restituisce davvero il tool
 
@@ -339,13 +339,13 @@ impacket-psexec TARGET/laps_admin:'LAPS_PASSWORD'@TARGET
 
 ## Articoli correlati
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/)
-* [ldapsearch](https://hackita.it/articoli/ldapsearch/)
-* [ntlmrelayx.py](https://hackita.it/articoli/ntlmrelayx/)
-* [psexec.py](https://hackita.it/articoli/psexec/)
-* [Credential Dumping su Windows](https://hackita.it/articoli/credential-dumping/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
-* [Active Directory: guida all'exploitation](https://hackita.it/articoli/active-directory/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [BloodHound](/articoli/bloodhound/)
+* [ldapsearch](/articoli/ldapsearch/)
+* [ntlmrelayx.py](/articoli/ntlmrelayx/)
+* [psexec.py](/articoli/psexec/)
+* [Credential Dumping su Windows](/articoli/credential-dumping/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
+* [Active Directory: guida all'exploitation](/articoli/active-directory/)
 
 > Uso esclusivo in ambienti autorizzati.

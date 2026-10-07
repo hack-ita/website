@@ -25,7 +25,7 @@ La porta 1194 è il default di OpenVPN, la VPN open-source più diffusa in ambie
 * File `.ovpn` in backup/share/email possono contenere certificati e chiavi embedded — accesso immediato senza password
 * Integrazione con LDAP/AD: credenziali VPN = credenziali dominio — compromissione VPN = compromissione AD
 
-Porta 1194 OpenVPN è il canale [UDP](https://hackita.it/articoli/udp/) (o [TCP](https://hackita.it/articoli/tcp/)) del tunnel VPN cifrato OpenVPN. La porta 1194 vulnerabilità principali sono le credenziali deboli (spesso backend AD/LDAP), i file di configurazione .ovpn con chiavi embedded trovati in backup e share, e le versioni non aggiornate con CVE note. L'enumerazione porta 1194 è limitata — OpenVPN è progettato per non rispondere a probe non autenticati. Nel pentest, la VPN è un target strategico: l'accesso VPN dà connettività alla rete interna completa.
+Porta 1194 OpenVPN è il canale [UDP](/articoli/udp/) (o [TCP](/articoli/tcp/)) del tunnel VPN cifrato OpenVPN. La porta 1194 vulnerabilità principali sono le credenziali deboli (spesso backend AD/LDAP), i file di configurazione .ovpn con chiavi embedded trovati in backup e share, e le versioni non aggiornate con CVE note. L'enumerazione porta 1194 è limitata — OpenVPN è progettato per non rispondere a probe non autenticati. Nel pentest, la VPN è un target strategico: l'accesso VPN dà connettività alla rete interna completa.
 
 ## 1. Anatomia Tecnica della Porta 1194
 
@@ -143,7 +143,7 @@ TUN/TAP device tun0 opened
 Initialization Sequence Completed
 ```
 
-**Cosa fai dopo:** sei sulla rete interna. `ip addr show tun0` rivela l'IP assegnato. Da qui attacca come se fossi fisicamente connesso — [enumerazione AD](https://hackita.it/articoli/active-directory/), scan delle subnet, lateral movement.
+**Cosa fai dopo:** sei sulla rete interna. `ip addr show tun0` rivela l'IP assegnato. Da qui attacca come se fossi fisicamente connesso — [enumerazione AD](/articoli/active-directory/), scan delle subnet, lateral movement.
 
 **Credential brute force su OpenVPN**
 
@@ -344,4 +344,4 @@ OpenVPN resta la VPN open-source più usata in enterprise. L'accesso VPN è il s
 
 Riferimento: OpenVPN documentation, RFC 5246 (TLS). Uso esclusivo in ambienti autorizzati. [https://it.wikipedia.org/wiki/OpenVPN](https://it.wikipedia.org/wiki/OpenVPN)
 
-> [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).
+> [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

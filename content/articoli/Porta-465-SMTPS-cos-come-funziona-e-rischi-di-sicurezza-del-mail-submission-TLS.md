@@ -131,7 +131,7 @@ EHLO test
 
 ### User enumeration via VRFY
 
-Il comando VRFY conferma l'esistenza di un indirizzo email. Per costruire una wordlist efficace, consulta la [guida alla generazione di username](https://hackita.it/articoli/enumeration/).
+Il comando VRFY conferma l'esistenza di un indirizzo email. Per costruire una wordlist efficace, consulta la [guida alla generazione di username](/articoli/enumeration/).
 
 ```bash
 for user in admin administrator root postmaster helpdesk hr it finance ceo cfo; do
@@ -154,7 +154,7 @@ done
 550 5.1.1 <cfo>: Recipient address rejected: User unknown
 ```
 
-**Lettura dell'output:** codice 252 = utente esiste (o il server non conferma/nega esplicitamente). Codice 550 = utente non esiste. Gli utenti `admin`, `root`, `postmaster`, `hr`, `it` sono confermati. Questi diventano target per brute force SMTP e per la [costruzione di email di phishing mirate](https://hackita.it/articoli/phishing/).
+**Lettura dell'output:** codice 252 = utente esiste (o il server non conferma/nega esplicitamente). Codice 550 = utente non esiste. Gli utenti `admin`, `root`, `postmaster`, `hr`, `it` sono confermati. Questi diventano target per brute force SMTP e per la [costruzione di email di phishing mirate](/articoli/phishing/).
 
 ### User enumeration via RCPT TO (alternativa)
 
@@ -214,7 +214,7 @@ openssl s_client -connect 10.10.10.25:465 2>/dev/null | openssl x509 -noout -tex
             DNS:mail.corp.local, DNS:smtp.corp.local, DNS:exchange.corp.local
 ```
 
-**Lettura dell'output:** tre hostname nel SAN — `exchange.corp.local` suggerisce che il server potrebbe avere anche Exchange/OWA. L'email della CA (`ca-admin@corp.local`) è un altro username valido. Approfondisci l'analisi dei certificati nella [guida HTTPS porta 443](https://hackita.it/articoli/https/).
+**Lettura dell'output:** tre hostname nel SAN — `exchange.corp.local` suggerisce che il server potrebbe avere anche Exchange/OWA. L'email della CA (`ca-admin@corp.local`) è un altro username valido. Approfondisci l'analisi dei certificati nella [guida HTTPS porta 443](/articoli/https/).
 
 ## 4. Tecniche Offensive
 
@@ -275,7 +275,7 @@ swaks --to victim@external.com --from admin@corp.local --server 10.10.10.25 --po
 <~~ 554 5.7.1 <victim@external.com>: Relay access denied
 ```
 
-**Cosa fai dopo:** open relay confermato. Puoi inviare email spoofate dal dominio corp.local a qualsiasi destinatario esterno. Questo bypassa SPF perché l'email parte dal server MX legittimo. È un finding critico per il report e un vettore potente per [campagne di phishing](https://hackita.it/articoli/phishing/).
+**Cosa fai dopo:** open relay confermato. Puoi inviare email spoofate dal dominio corp.local a qualsiasi destinatario esterno. Questo bypassa SPF perché l'email parte dal server MX legittimo. È un finding critico per il report e un vettore potente per [campagne di phishing](/articoli/phishing/).
 
 **Internal phishing con credenziali SMTP**
 
@@ -331,7 +331,7 @@ hydra -L email_users.txt -p 'Corp2026!' smtps://10.10.10.25:465 -t 2 -W 5
 0 valid passwords found
 ```
 
-**Cosa fai dopo:** due account compromessi. Verifica se le stesse credenziali funzionano su OWA, VPN o Active Directory. Account email con password deboli spesso riusano la password su tutti i servizi. Approfondisci nella [guida al credential reuse](https://hackita.it/articoli/brute-force/).
+**Cosa fai dopo:** due account compromessi. Verifica se le stesse credenziali funzionano su OWA, VPN o Active Directory. Account email con password deboli spesso riusano la password su tutti i servizi. Approfondisci nella [guida al credential reuse](/articoli/brute-force/).
 
 ## 5. Scenari Pratici di Pentest
 
@@ -600,4 +600,4 @@ I tentativi VRFY e AUTH generano log immediati nel mail server (path: `/var/log/
 
 Tutti i comandi e le tecniche descritti in questo articolo sono destinati esclusivamente ad ambienti autorizzati: penetration test con contratto firmato, laboratori personali, piattaforme CTF. Riferimento tecnico: RFC 8314 (Cleartext Considered Obsolete), RFC 5321 (SMTP), RFC 4954 (SMTP AUTH).
 
-> Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+> Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

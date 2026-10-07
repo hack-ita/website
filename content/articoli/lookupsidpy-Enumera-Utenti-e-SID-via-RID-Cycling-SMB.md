@@ -24,7 +24,7 @@ tags:
 
 `lookupsid` enumera utenti e gruppi Windows iterando i RID via MS-LSAT su porta 445 — senza toccare LDAP. Funziona con credenziali valide, account Guest o in certi casi null session. Ottimo quando la porta 389 è filtrata o non hai credenziali di dominio.
 
-`lookupsid.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) e sfrutta il protocollo MS-LSAT (Local Security Authority) via [SMB](https://hackita.it/articoli/smb/) per risolvere SID in nomi account. La tecnica si chiama **RID cycling**: parte dal SID del dominio, aggiunge incrementalmente il RID (500, 501, 502...) e chiede al sistema di risolverlo in un nome.
+`lookupsid.py` fa parte di [Impacket](/articoli/impacket/) e sfrutta il protocollo MS-LSAT (Local Security Authority) via [SMB](/articoli/smb/) per risolvere SID in nomi account. La tecnica si chiama **RID cycling**: parte dal SID del dominio, aggiunge incrementalmente il RID (500, 501, 502...) e chiede al sistema di risolverlo in un nome.
 
 Riferimento ufficiale: [fortra/impacket — lookupsid.py](https://github.com/fortra/impacket/blob/master/examples/lookupsid.py)
 
@@ -136,7 +136,7 @@ impacket-lookupsid -hashes :NThash corp.local/user@10.10.10.5
 
 ### Null session / Guest account — senza password
 
-Questo è il vantaggio principale su [GetADUsers.py](https://hackita.it/articoli/getadusers/) e [samrdump.py](https://hackita.it/articoli/samrdump/): in certi ambienti legacy o con account Guest abilitato, puoi enumerare utenti **senza nessuna credenziale**.
+Questo è il vantaggio principale su [GetADUsers.py](/articoli/getadusers/) e [samrdump.py](/articoli/samrdump/): in certi ambienti legacy o con account Guest abilitato, puoi enumerare utenti **senza nessuna credenziale**.
 
 ```bash
 
@@ -266,7 +266,7 @@ echo $DOMAIN_SID
 
 ```
 
-Poi usi il SID in combinazione con il hash di krbtgt per il [Golden Ticket](https://hackita.it/articoli/golden-ticket/).
+Poi usi il SID in combinazione con il hash di krbtgt per il [Golden Ticket](/articoli/golden-ticket/).
 
 ***
 
@@ -358,11 +358,11 @@ grep "SidTypeUser" /tmp/lookupsid_raw.txt | grep '\$' | \
 
 \| `lookupsid.py` | MS-LSAT/SMB 445 | ✅ Spesso | ✅ Sì | ✅ Sì |
 
-\| [samrdump.py](https://hackita.it/articoli/samrdump/) | SAMR/SMB 445 | ❌ Win10+ | ❌ No | ✅ Sì |
+\| [samrdump.py](/articoli/samrdump/) | SAMR/SMB 445 | ❌ Win10+ | ❌ No | ✅ Sì |
 
-\| [GetADUsers.py](https://hackita.it/articoli/getadusers/) | LDAP 389 | ❌ No | ❌ No | ❌ No |
+\| [GetADUsers.py](/articoli/getadusers/) | LDAP 389 | ❌ No | ❌ No | ❌ No |
 
-\| [rpcclient](https://hackita.it/articoli/rpcclient/) | RPC/SMB 445 | ✅ Legacy | ✅ Sì | ✅ Sì |
+\| [rpcclient](/articoli/rpcclient/) | RPC/SMB 445 | ✅ Legacy | ✅ Sì | ✅ Sì |
 
 \| `nxc smb --users` | SMB/SAMR | ✅ Legacy | ❌ No | ✅ Sì |
 
@@ -453,14 +453,14 @@ impacket-lookupsid -k -no-pass corp.local/user@TARGET.FQDN
 
 **Articoli correlati:**
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [SMB — porta 445 e attacchi](https://hackita.it/articoli/smb/)
-* [samrdump.py — enumerazione via SAMR](https://hackita.it/articoli/samrdump/)
-* [GetADUsers.py — enumerazione via LDAP](https://hackita.it/articoli/getadusers/)
-* [rpcdump.py — endpoint RPC e named pipe](https://hackita.it/articoli/rpcdump/)
-* [rpcclient — shell RPC interattiva](https://hackita.it/articoli/rpcclient/)
-* [Golden Ticket — usa il SID del dominio](https://hackita.it/articoli/golden-ticket/)
-* [BloodHound — mappa l'AD](https://hackita.it/articoli/bloodhound/)
-* [Active Directory: guida all'exploitation](https://hackita.it/articoli/active-directory/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [SMB — porta 445 e attacchi](/articoli/smb/)
+* [samrdump.py — enumerazione via SAMR](/articoli/samrdump/)
+* [GetADUsers.py — enumerazione via LDAP](/articoli/getadusers/)
+* [rpcdump.py — endpoint RPC e named pipe](/articoli/rpcdump/)
+* [rpcclient — shell RPC interattiva](/articoli/rpcclient/)
+* [Golden Ticket — usa il SID del dominio](/articoli/golden-ticket/)
+* [BloodHound — mappa l'AD](/articoli/bloodhound/)
+* [Active Directory: guida all'exploitation](/articoli/active-directory/)
 
 > Uso esclusivo in ambienti autorizzati.

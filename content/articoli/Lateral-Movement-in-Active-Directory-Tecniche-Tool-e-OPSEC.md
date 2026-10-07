@@ -24,7 +24,7 @@ Il lateral movement è la fase di post-exploitation in cui si usa una credenzial
 
 ***
 
-Ottenere un foothold su un host è solo l'inizio. In un ambiente [Active Directory](https://hackita.it/articoli/active-directory/) enterprise, il valore reale sta negli host successivi — il file server, il DC, la workstation dell'amministratore. Il lateral movement è il processo con cui si usa ciò che si ha (hash, ticket, password) per raggiungere ciò che si vuole.
+Ottenere un foothold su un host è solo l'inizio. In un ambiente [Active Directory](/articoli/active-directory/) enterprise, il valore reale sta negli host successivi — il file server, il DC, la workstation dell'amministratore. Il lateral movement è il processo con cui si usa ciò che si ha (hash, ticket, password) per raggiungere ciò che si vuole.
 
 > Non esiste una tecnica di lateral movement universalmente migliore. La scelta dipende dai prerequisiti disponibili (tipo di credenziale), dalla porta aperta sul target, e dal livello di monitoring del SOC. La tecnica più stealth non è sempre quella più affidabile.
 
@@ -40,7 +40,7 @@ Per qualsiasi tecnica di lateral movement servono:
 * Accesso di rete al target sulla porta richiesta
 * Privilegi sufficienti sul target (quasi sempre local admin o domain admin)
 
-Le credenziali si ottengono tipicamente via [credential dumping](https://hackita.it/articoli/credential-dumping/) da LSASS, [DCSync](https://hackita.it/articoli/dcsync/), [Kerberoasting](https://hackita.it/articoli/kerberos/) o [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/).
+Le credenziali si ottengono tipicamente via [credential dumping](/articoli/credential-dumping/) da LSASS, [DCSync](/articoli/dcsync/), [Kerberoasting](/articoli/kerberos/) o [Pass-the-Hash](/articoli/pass-the-hash/).
 
 ***
 
@@ -111,7 +111,7 @@ nxc smb targets.txt -u administrator -H :NThash -x "whoami"
 sekurlsa::pth /user:administrator /domain:corp.local /ntlm:NThash /run:powershell.exe
 ```
 
-Per la guida completa vedi [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/).
+Per la guida completa vedi [Pass-the-Hash](/articoli/pass-the-hash/).
 
 **PTH funziona con qualsiasi account?** No. Dipende dal supporto NTLM sul target, dai privilegi, dalle **UAC remote restrictions** e dalle policy sui local account. Per impostazione predefinita un account locale membro degli Administrators può ricevere, in connessioni amministrative remote, un token filtrato che impedisce l'accesso ad ADMIN$/C$ — il comportamento dipende da `LocalAccountTokenFilterPolicy`. Gli account di dominio membri degli amministratori locali ricevono normalmente un token amministrativo completo. Gli account nel gruppo **Protected Users** non possono autenticarsi via NTLM.
 
@@ -168,7 +168,7 @@ dir \\TARGET\C$
 Rubeus.exe ptt /ticket:<base64_ticket>
 ```
 
-Per Golden e Silver Ticket vedi gli articoli dedicati: [Golden Ticket](https://hackita.it/articoli/golden-ticket/) e [Silver Ticket](https://hackita.it/articoli/silver-ticket/).
+Per Golden e Silver Ticket vedi gli articoli dedicati: [Golden Ticket](/articoli/golden-ticket/) e [Silver Ticket](/articoli/silver-ticket/).
 
 ***
 
@@ -257,7 +257,7 @@ Invoke-Command -ComputerName (Get-Content hosts.txt) -Credential $cred `
 Test-WSMan -ComputerName TARGET
 ```
 
-Per la guida completa a Evil-WinRM vedi [evil-winrm](https://hackita.it/articoli/evilwinrm/).
+Per la guida completa a Evil-WinRM vedi [evil-winrm](/articoli/evilwinrm/).
 
 ***
 
@@ -329,7 +329,7 @@ Meno comune negli ambienti Windows legacy, ma da verificare soprattutto su **Win
 
 ## Lateral Movement su Larga Scala — NetExec
 
-[NetExec](https://hackita.it/articoli/netexec/) è lo strumento più efficace per muoversi su molti host simultaneamente.
+[NetExec](/articoli/netexec/) è lo strumento più efficace per muoversi su molti host simultaneamente.
 
 ```bash
 nxc smb 192.168.1.0/24 -u administrator -H :NThash

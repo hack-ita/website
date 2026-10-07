@@ -37,7 +37,7 @@ L’impatto dipende dal modo in cui l’input controllato viene inserito nella r
 * errori persistenti;
 * configurazioni errate;
 * denial of service;
-* una [Cross-Site Scripting](https://hackita.it/articoli/xss/) distribuita a più utenti.
+* una [Cross-Site Scripting](/articoli/xss/) distribuita a più utenti.
 
 Il Cache Poisoning riguarda la cache HTTP di CDN, reverse proxy, gateway e applicazioni. Non deve essere confuso con il DNS cache poisoning o con la modifica diretta di database come Redis e Memcached.
 
@@ -80,7 +80,7 @@ Cache HIT
 
 Il backend non viene necessariamente contattato.
 
-Per comprendere meglio metodi, header, richieste e risposte consulta anche la guida Hackita alla [porta 80 e al protocollo HTTP](https://hackita.it/articoli/porta-80-http/).
+Per comprendere meglio metodi, header, richieste e risposte consulta anche la guida Hackita alla [porta 80 e al protocollo HTTP](/articoli/porta-80-http/).
 
 ***
 
@@ -601,7 +601,7 @@ curl -sk \
 
 Se il marker resta presente, verifica il cache status.
 
-Quando un valore controllato viene inserito negli header della risposta, il problema può concatenarsi con una [HTTP Header Injection](https://hackita.it/articoli/http-header-injection/) o con una [CRLF Injection](https://hackita.it/articoli/crlf-injection/).
+Quando un valore controllato viene inserito negli header della risposta, il problema può concatenarsi con una [HTTP Header Injection](/articoli/http-header-injection/) o con una [CRLF Injection](/articoli/crlf-injection/).
 
 ***
 
@@ -692,7 +692,7 @@ Location: https://target.example:1337/login
 
 Se il redirect viene memorizzato e la porta o il protocollo non partecipano alla chiave, gli utenti possono ricevere una destinazione errata.
 
-Se la destinazione è controllabile, l’impatto può concatenarsi con un [Open Redirect](https://hackita.it/articoli/open-redirect/).
+Se la destinazione è controllabile, l’impatto può concatenarsi con un [Open Redirect](/articoli/open-redirect/).
 
 ***
 
@@ -1291,13 +1291,13 @@ Devi dimostrare:
 4. richiesta pulita che riceve il payload;
 5. compatibilità con CSP e browser.
 
-Per payload, contesti e bypass consulta l’articolo dedicato alla [XSS](https://hackita.it/articoli/xss/).
+Per payload, contesti e bypass consulta l’articolo dedicato alla [XSS](/articoli/xss/).
 
 ***
 
 ## Tecnica 18 — Concatenazione con HTTP Request Smuggling
 
-Il [HTTP Request Smuggling](https://hackita.it/articoli/http-request-smuggling/) sfrutta una differenza nel modo in cui front-end e back-end delimitano le richieste.
+Il [HTTP Request Smuggling](/articoli/http-request-smuggling/) sfrutta una differenza nel modo in cui front-end e back-end delimitano le richieste.
 
 Quando una cache è coinvolta, lo smuggling può:
 
@@ -1321,7 +1321,7 @@ Non aggiungere payload CL.TE o TE.CL a questo articolo: devono rimanere nella gu
 
 ## Param Miner con Burp Suite
 
-**Param Miner** è un’estensione di [Burp Suite](https://hackita.it/articoli/burp-suite/) utile per individuare input nascosti.
+**Param Miner** è un’estensione di [Burp Suite](/articoli/burp-suite/) utile per individuare input nascosti.
 
 Può cercare:
 

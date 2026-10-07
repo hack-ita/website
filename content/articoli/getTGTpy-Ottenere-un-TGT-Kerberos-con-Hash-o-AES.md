@@ -24,7 +24,7 @@ tags:
 
 > `getTGT.py` fa una cosa sola: manda un AS-REQ al DC e torna con un TGT salvato in un file `.ccache`. Ma per capire **perché** questo è utile in un pentest, devi capire cosa gli stai dando in input e cosa ti torna indietro.
 
-`getTGT.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) ed è il punto di ingresso nel mondo dei ticket Kerberos da Linux. Ogni volta che in un attacco su [Active Directory](https://hackita.it/articoli/active-directory/) trovi un hash NTLM o una chiave AES e vuoi muoverti lateralmente senza usare NTLM, passi da qui.
+`getTGT.py` fa parte di [Impacket](/articoli/impacket/) ed è il punto di ingresso nel mondo dei ticket Kerberos da Linux. Ogni volta che in un attacco su [Active Directory](/articoli/active-directory/) trovi un hash NTLM o una chiave AES e vuoi muoverti lateralmente senza usare NTLM, passi da qui.
 
 ***
 
@@ -55,7 +55,7 @@ impacket-getTGT corp.local/john.doe:Password123 -dc-ip 10.10.10.5
 
 ### Scenario 2 — NT hash (Overpass-the-Hash)
 
-Hai l'NT hash dell'utente — ottenuto da [credential dumping](https://hackita.it/articoli/credential-dumping/), secretsdump, LSASS dump. L'NT hash **è** la chiave RC4 di Kerberos: sono la stessa cosa crittograficamente. Puoi quindi usarlo direttamente per costruire la pre-autenticazione nell'AS-REQ e ottenere un TGT Kerberos valido.
+Hai l'NT hash dell'utente — ottenuto da [credential dumping](/articoli/credential-dumping/), secretsdump, LSASS dump. L'NT hash **è** la chiave RC4 di Kerberos: sono la stessa cosa crittograficamente. Puoi quindi usarlo direttamente per costruire la pre-autenticazione nell'AS-REQ e ottenere un TGT Kerberos valido.
 
 Questo si chiama **Overpass-the-Hash**: converte un attacco NTLM (Pass-the-Hash) in un attacco Kerberos, evitando il traffico NTLM più facilmente rilevabile.
 
@@ -158,7 +158,7 @@ Se hai sia l'NT hash che la chiave AES, **usa sempre l'AES**. RC4 in un ambiente
 * `getTGT.py` → fa l'AS-REQ → ottieni un **TGT** (ticket per richiedere altri ticket)
 * `getST.py` → fa il TGS-REQ usando il TGT → ottieni un **Service Ticket** (ticket per un servizio specifico)
 
-In pratica: `getTGT` è sempre il primo step. `getST` viene dopo, o quando hai già un TGT e vuoi fare Constrained Delegation, RBCD, o impersonation (vedi [getST.py](https://hackita.it/articoli/getst/)).
+In pratica: `getTGT` è sempre il primo step. `getST` viene dopo, o quando hai già un TGT e vuoi fare Constrained Delegation, RBCD, o impersonation (vedi [getST.py](/articoli/getst/)).
 
 ```bash
 # Flusso completo: hash → TGT → Service Ticket → shell
@@ -225,14 +225,14 @@ sudo ntpdate DC_IP
 
 **Articoli correlati:**
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [Kerberos: architettura e flusso](https://hackita.it/articoli/kerberos/)
-* [TGT — Ticket Granting Ticket in profondità](https://hackita.it/articoli/tgt/)
-* [getST.py — Service Ticket e Delegation](https://hackita.it/articoli/getst/)
-* [Credential Dumping su Windows](https://hackita.it/articoli/credential-dumping/)
-* [Mimikatz: sekurlsa::ekeys per chiavi AES](https://hackita.it/articoli/mimikatz/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
-* [Active Directory: guida all'exploitation](https://hackita.it/articoli/active-directory/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [Kerberos: architettura e flusso](/articoli/kerberos/)
+* [TGT — Ticket Granting Ticket in profondità](/articoli/tgt/)
+* [getST.py — Service Ticket e Delegation](/articoli/getst/)
+* [Credential Dumping su Windows](/articoli/credential-dumping/)
+* [Mimikatz: sekurlsa::ekeys per chiavi AES](/articoli/mimikatz/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
+* [Active Directory: guida all'exploitation](/articoli/active-directory/)
 
 > Uso esclusivo in ambienti autorizzati.
 

@@ -101,7 +101,7 @@ mysql -h 10.10.10.40 -u root -pmysql
 
 ### Credenziali da file di configurazione
 
-Se hai già accesso al filesystem (LFI, [NFS](https://hackita.it/articoli/porta-2049-nfs/), [iSCSI](https://hackita.it/articoli/porta-3260-iscsi/), webshell):
+Se hai già accesso al filesystem (LFI, [NFS](/articoli/porta-2049-nfs/), [iSCSI](/articoli/porta-3260-iscsi/), webshell):
 
 ```bash
 # WordPress
@@ -222,7 +222,7 @@ SELECT User, Host, authentication_string FROM mysql.user;
 
 **Tipi di hash:**
 
-* `*` prefix → mysql\_native\_password (MySQL 5.x style) → [hashcat](https://hackita.it/articoli/hashcat/) mode 300
+* `*` prefix → mysql\_native\_password (MySQL 5.x style) → [hashcat](/articoli/hashcat/) mode 300
 * `$A$` prefix → caching\_sha2\_password (MySQL 8.x) → hashcat mode 28500
 * Vuoto → nessuna password
 
@@ -332,7 +332,7 @@ curl "http://10.10.10.40/cmd.php?c=id"
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
-RCE come `www-data`. Per il [privilege escalation](https://hackita.it/articoli/linux-privesc/).
+RCE come `www-data`. Per il [privilege escalation](/articoli/linux-privesc/).
 
 ### Se non conosci la document root
 
@@ -357,7 +357,7 @@ ssh-rsa AAAA...your_public_key... attacker@kali
 ' INTO OUTFILE '/root/.ssh/authorized_keys';
 ```
 
-Se MySQL gira come root → [SSH](https://hackita.it/articoli/ssh/) diretto come root.
+Se MySQL gira come root → [SSH](/articoli/ssh/) diretto come root.
 
 ### Crontab injection
 
@@ -426,8 +426,8 @@ SELECT sys_exec('net localgroup Administrators backdoor /add');
 
 ## 7. MySQL in SQL Injection (via web app)
 
-Se non hai accesso diretto alla porta 3306 ma hai una [SQL Injection](https://hackita.it/articoli/sql-injection/) nell'applicazione web, puoi sfruttarla per accedere al database MySQL e dumpare dati sensibili.\
-Per automatizzare completamente l’exploitation e ottenere accesso al database o una shell, puoi usare [sqlmap](https://hackita.it/articoli/sqlmap/).
+Se non hai accesso diretto alla porta 3306 ma hai una [SQL Injection](/articoli/sql-injection/) nell'applicazione web, puoi sfruttarla per accedere al database MySQL e dumpare dati sensibili.\
+Per automatizzare completamente l’exploitation e ottenere accesso al database o una shell, puoi usare [sqlmap](/articoli/sqlmap/).
 
 ### sqlmap completo
 
@@ -484,17 +484,17 @@ Percorso 4: INTO OUTFILE → SSH key injection → SSH as root
 Percorso 5: UDF → os command → reverse shell as mysql → linpeas → privesc
 ```
 
-Per la [linux enumeration completa](https://hackita.it/articoli/linux-enumeration/) e le [tecniche di privilege escalation](https://hackita.it/articoli/linux-privesc/) dopo aver ottenuto una shell.
+Per la [linux enumeration completa](/articoli/linux-enumeration/) e le [tecniche di privilege escalation](/articoli/linux-privesc/) dopo aver ottenuto una shell.
 
 ### Credenziali MySQL → Lateral Movement
 
 Le password trovate nel database vanno testate ovunque (credential reuse):
 
-* [SSH](https://hackita.it/articoli/ssh/) sullo stesso server e su altri server
-* [SMB](https://hackita.it/articoli/smb/) se l'ambiente è Windows/AD
-* [RDP](https://hackita.it/articoli/porta-3389-rdp/) su workstation
+* [SSH](/articoli/ssh/) sullo stesso server e su altri server
+* [SMB](/articoli/smb/) se l'ambiente è Windows/AD
+* [RDP](/articoli/porta-3389-rdp/) su workstation
 * Web login di altre applicazioni
-* [cPanel](https://hackita.it/articoli/porta-2082-cpanel/) (le password cPanel e MySQL sono spesso identiche)
+* [cPanel](/articoli/porta-2082-cpanel/) (le password cPanel e MySQL sono spesso identiche)
 
 ## 9. Detection & Hardening
 
@@ -569,8 +569,8 @@ Per approfondire la sicurezza di MySQL e le tecniche di test:
 * [OWASP WSTG — Testing for SQL Injection](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05-Testing_for_SQL_Injection)
 * [HackTricks — Pentesting MySQL](https://book.hacktricks.xyz/network-services-pentesting/pentesting-mysql)
 
-Se vuoi continuare a migliorare lato offensivo e imparare queste tecniche sul campo, puoi vedere la [formazione 1:1](https://hackita.it/servizi).
+Se vuoi continuare a migliorare lato offensivo e imparare queste tecniche sul campo, puoi vedere la [formazione 1:1](/servizi).
 
-Se invece vuoi testare vulnerabilità reali, validare la sicurezza della tua infrastruttura o formare il team della tua azienda, vai su [Servizi](https://hackita.it/servizi).
+Se invece vuoi testare vulnerabilità reali, validare la sicurezza della tua infrastruttura o formare il team della tua azienda, vai su [Servizi](/servizi).
 
-Se questo contenuto ti è stato utile e vuoi supportare il progetto HackIta, puoi farlo da [Supporto](https://hackita.it/supporto).
+Se questo contenuto ti è stato utile e vuoi supportare il progetto HackIta, puoi farlo da [Supporto](/supporto).

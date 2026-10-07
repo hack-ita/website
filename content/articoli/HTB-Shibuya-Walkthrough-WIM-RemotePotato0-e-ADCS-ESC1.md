@@ -163,9 +163,9 @@ Con una shell attiva, si raccoglie il dominio con SharpHound:
 .\SharpHound.exe -c all
 ```
 
-L'analisi in BloodHound mostra che `simon.watson` ha una sessione attiva su `AWSJPDC0522` — normale, è la propria shell SSH. Ma guardando le sessioni della macchina compare anche un secondo utente, `nigel.mills`. Per un approfondimento su come enumerare e abusare di questo tipo di sessioni attive, anche oltre BloodHound, vedi la nostra guida [HasSession](https://hackita.it/articoli/has-session/).
+L'analisi in BloodHound mostra che `simon.watson` ha una sessione attiva su `AWSJPDC0522` — normale, è la propria shell SSH. Ma guardando le sessioni della macchina compare anche un secondo utente, `nigel.mills`. Per un approfondimento su come enumerare e abusare di questo tipo di sessioni attive, anche oltre BloodHound, vedi la nostra guida [HasSession](/articoli/has-session/).
 
-Per confermarlo da riga di comando serve `qwinsta`, che però su una shell non interattiva (come SSH senza TTY completo) restituisce "No session exists". Il trucco è forzare un logon di **tipo 9** con RunasCs — approfondiamo cosa significa nel dettaglio nella nostra guida ai [logon type di Windows](https://hackita.it/articoli/logon-type-windows/) — con credenziali anche fittizie, che servono solo a "sbloccare" il contesto necessario e non vengono verificate:
+Per confermarlo da riga di comando serve `qwinsta`, che però su una shell non interattiva (come SSH senza TTY completo) restituisce "No session exists". Il trucco è forzare un logon di **tipo 9** con RunasCs — approfondiamo cosa significa nel dettaglio nella nostra guida ai [logon type di Windows](/articoli/logon-type-windows/) — con credenziali anche fittizie, che servono solo a "sbloccare" il contesto necessario e non vengono verificate:
 
 ```powershell
 .\RunasCs.exe hackita hackita qwinsta -l 9
@@ -211,7 +211,7 @@ proxychains certipy find -vulnerable -u nigel.mills -p '<password>' -dc-ip 127.0
 
 L'enumerazione rivela una Certification Authority con un template personalizzato i cui permessi di enrollment sono aperti a un gruppo a cui l'utente appartiene, e — punto chiave — il template consente all'utente di **specificare autonomamente il Subject Alternative Name** della richiesta di certificato (`Enrollee Supplies Subject: true`), oltre a permettere l'autenticazione client. Certipy lo segnala esplicitamente come vulnerabile a ESC1 (e, in questo caso, anche a ESC2/ESC3 come varianti collegate).
 
-Questa combinazione è la definizione tecnica di **ESC1**: un utente a bassi privilegi può richiedere un certificato dichiarando di essere qualcun altro — in questo caso l'account amministrativo del dominio — e ottenere un certificato valido per autenticarsi come quell'utente. Approfondiamo la meccanica di questa tecnica, passo per passo, nel nostro articolo dedicato a [ESC1](https://hackita.it/articoli/esc1-adcs/).
+Questa combinazione è la definizione tecnica di **ESC1**: un utente a bassi privilegi può richiedere un certificato dichiarando di essere qualcun altro — in questo caso l'account amministrativo del dominio — e ottenere un certificato valido per autenticarsi come quell'utente. Approfondiamo la meccanica di questa tecnica, passo per passo, nel nostro articolo dedicato a [ESC1](/articoli/esc1-adcs/).
 
 La richiesta si fa con `certipy req`, specificando il template vulnerabile e lo UPN dell'account da impersonare:
 
@@ -237,7 +237,7 @@ proxychains evil-winrm -i 127.0.0.1 -u _admin -H <hash_ntlm>
 
 ## Considerazioni finali
 
-Shibuya è un buon esempio di come una singola macchina possa incatenare tecniche molto diverse tra loro: enumerazione Kerberos "silenziosa", un errore di igiene informatica banale (password nel campo descrizione), un vettore forense poco battuto (hive di registro dentro backup WIM), un attacco di relay di sessione locale (RemotePotato0), e infine una misconfigurazione ADCS da manuale. Se ADCS è un argomento che vi interessa approfondire, sul blog trattiamo anche [ESC2](https://hackita.it/articoli/esc2-adcs/) e [ESC3](https://hackita.it/articoli/esc3-adcs/), oltre alla guida completa che copre l'intero spettro delle tecniche ESC1–ESC16.
+Shibuya è un buon esempio di come una singola macchina possa incatenare tecniche molto diverse tra loro: enumerazione Kerberos "silenziosa", un errore di igiene informatica banale (password nel campo descrizione), un vettore forense poco battuto (hive di registro dentro backup WIM), un attacco di relay di sessione locale (RemotePotato0), e infine una misconfigurazione ADCS da manuale. Se ADCS è un argomento che vi interessa approfondire, sul blog trattiamo anche [ESC2](/articoli/esc2-adcs/) e [ESC3](/articoli/esc3-adcs/), oltre alla guida completa che copre l'intero spettro delle tecniche ESC1–ESC16.
 
 ***
 

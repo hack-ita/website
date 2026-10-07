@@ -15,7 +15,7 @@ tags:
   - osint
 ---
 
-HostRecon è uno script [PowerShell](https://hackita.it/articoli/powershell/) per situational awareness su sistemi Windows, progettato per raccogliere rapidamente informazioni sull'host locale e il contesto Active Directory. A differenza di tool focalizzati su privilege escalation, HostRecon si concentra sulla comprensione dell'ambiente: chi sono, dove sono, cosa posso raggiungere. In questa guida impari a usare HostRecon per orientarti dopo aver ottenuto accesso iniziale.
+HostRecon è uno script [PowerShell](/articoli/powershell/) per situational awareness su sistemi Windows, progettato per raccogliere rapidamente informazioni sull'host locale e il contesto Active Directory. A differenza di tool focalizzati su privilege escalation, HostRecon si concentra sulla comprensione dell'ambiente: chi sono, dove sono, cosa posso raggiungere. In questa guida impari a usare HostRecon per orientarti dopo aver ottenuto accesso iniziale.
 
 ### Posizione nella Kill Chain
 
@@ -529,7 +529,7 @@ Fix: AMSI bypass o offusca lo script prima dell'upload.
 
 **HostRecon vs Seatbelt?**
 
-HostRecon per situational awareness generale. [Seatbelt](https://hackita.it/articoli/seatbelt/) per security-focused enumeration.
+HostRecon per situational awareness generale. [Seatbelt](/articoli/seatbelt/) per security-focused enumeration.
 
 **Funziona su host non in dominio?**
 
@@ -545,7 +545,7 @@ Alcuni AV possono flaggare. Usa AMSI bypass o versione offuscata.
 
 **HostRecon enum altri host?**
 
-No, solo l'host locale. Per remote enum usa [PowerView](https://hackita.it/articoli/powerview/) o [CrackMapExec](https://hackita.it/articoli/crackmapexec/).
+No, solo l'host locale. Per remote enum usa [PowerView](/articoli/powerview/) o [CrackMapExec](/articoli/crackmapexec/).
 
 **Quanto è rumoroso?**
 
@@ -564,6 +564,6 @@ Medio. Genera query AD e share enum che possono essere loggati.
 
 ***
 
-*Uso consentito solo in ambienti autorizzati. Per penetration test professionali: [hackita.it/servizi](https://hackita.it/servizi). Supporta HackIta: [hackita.it/supporto](https://hackita.it/supporto).*
+*Uso consentito solo in ambienti autorizzati. Per penetration test professionali: [hackita.it/servizi](/servizi). Supporta HackIta: [hackita.it/supporto](/supporto).*
 
 **Repository**: [dafthack/HostRecon](https://github.com/dafthack/HostRecon)

@@ -22,9 +22,9 @@ tags:
 
 `dcomexec.py` esegue comandi su host Windows remoti attraverso oggetti DCOM come `ShellWindows`, `ShellBrowserWindow` e `MMC20.Application`. Supporta password e hash NTLM, può eseguire un singolo comando o aprire una shell semi-interattiva e non crea servizi o scheduled task. Richiede TCP 135 e una porta RPC dinamica; TCP 445 è necessario soltanto per recuperare l’output tramite una share amministrativa.
 
-`dcomexec.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) ed è uno strumento di lateral movement per ambienti Windows e Active Directory.
+`dcomexec.py` fa parte di [Impacket](/articoli/impacket/) ed è uno strumento di lateral movement per ambienti Windows e Active Directory.
 
-A differenza di `psexec.py` e `smbexec.py`, non crea un servizio remoto. A differenza di [atexec.py](https://hackita.it/articoli/atexec/), non utilizza il Task Scheduler. L’esecuzione avviene attivando un oggetto COM remoto attraverso DCOM e richiamando i metodi esposti dall’oggetto selezionato.
+A differenza di `psexec.py` e `smbexec.py`, non crea un servizio remoto. A differenza di [atexec.py](/articoli/atexec/), non utilizza il Task Scheduler. L’esecuzione avviene attivando un oggetto COM remoto attraverso DCOM e richiamando i metodi esposti dall’oggetto selezionato.
 
 La tecnica è stata documentata originariamente da Matt Nelson nel 2017 attraverso l’abuso remoto di `MMC20.Application` e di altri oggetti COM.
 
@@ -94,8 +94,8 @@ ShellBrowserWindow  → alternativa da verificare sulla build target
 
 Per un confronto più ampio puoi consultare:
 
-* [wmiexec.py](https://hackita.it/articoli/wmiexec/)
-* [smbexec.py](https://hackita.it/articoli/smbexec/)
+* [wmiexec.py](/articoli/wmiexec/)
+* [smbexec.py](/articoli/smbexec/)
 
 ***
 
@@ -283,8 +283,8 @@ impacket-dcomexec \
 
 Gli hash possono essere recuperati durante un assessment autorizzato con strumenti come:
 
-* [Mimikatz](https://hackita.it/articoli/mimikatz/)
-* [secretsdump.py](https://hackita.it/articoli/secretsdump/)
+* [Mimikatz](/articoli/mimikatz/)
+* [secretsdump.py](/articoli/secretsdump/)
 
 ***
 
@@ -629,14 +629,14 @@ impacket-dcomexec -object MMC20 \
 
 ## Articoli Correlati
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [atexec.py: esecuzione via Task Scheduler](https://hackita.it/articoli/atexec/)
-* [wmiexec.py: esecuzione remota via WMI](https://hackita.it/articoli/wmiexec/)
-* [smbexec.py: esecuzione remota via SMB](https://hackita.it/articoli/smbexec/)
-* [PSExec, SMBExec e WMIExec](https://hackita.it/articoli/smbexec-psexec-wmiexec/)
-* [Mimikatz: estrazione delle credenziali](https://hackita.it/articoli/mimikatz/)
-* [secretsdump.py con Impacket](https://hackita.it/articoli/secretsdump/)
-* [Active Directory: guida offensiva](https://hackita.it/articoli/active-directory/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [atexec.py: esecuzione via Task Scheduler](/articoli/atexec/)
+* [wmiexec.py: esecuzione remota via WMI](/articoli/wmiexec/)
+* [smbexec.py: esecuzione remota via SMB](/articoli/smbexec/)
+* [PSExec, SMBExec e WMIExec](/articoli/smbexec-psexec-wmiexec/)
+* [Mimikatz: estrazione delle credenziali](/articoli/mimikatz/)
+* [secretsdump.py con Impacket](/articoli/secretsdump/)
+* [Active Directory: guida offensiva](/articoli/active-directory/)
 
 ***
 

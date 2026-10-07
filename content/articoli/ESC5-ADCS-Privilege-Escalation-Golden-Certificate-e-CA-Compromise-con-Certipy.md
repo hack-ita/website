@@ -353,9 +353,9 @@ Molto meno di ESC1 ma **molto più potente**.
 ***
 
 > Guida completa AD CS escalation:
-> [https://hackita.it/articoli/adcs-esc1-esc16](https://hackita.it/articoli/adcs-esc1-esc16/)Continua con:
-> [https://hackita.it/articoli/esc6-adcs](https://hackita.it/articoli/esc6-adcs/) · [https://hackita.it/articoli/esc7-adcs](https://hackita.it/articoli/esc7-adcs/)Supporta HackIta:
-> [https://hackita.it/supporto](https://hackita.it/supporto)Pentest Active Directory o formazione offensiva:
-> [https://hackita.it/servizi](https://hackita.it/servizi)Riferimenti tecnici:
+> [https://hackita.it/articoli/adcs-esc1-esc16](/articoli/adcs-esc1-esc16/)Continua con:
+> [https://hackita.it/articoli/esc6-adcs](/articoli/esc6-adcs/) · [https://hackita.it/articoli/esc7-adcs](/articoli/esc7-adcs/)Supporta HackIta:
+> [https://hackita.it/supporto](/supporto)Pentest Active Directory o formazione offensiva:
+> [https://hackita.it/servizi](/servizi)Riferimenti tecnici:
 > [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
 > [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)

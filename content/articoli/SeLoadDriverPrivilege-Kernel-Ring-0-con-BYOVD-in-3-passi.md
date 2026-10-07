@@ -299,9 +299,9 @@ SeLoadDriverPrivilege è l'unico privilegio di questa serie che porta a ring-0. 
 
 **Articoli correlati:**
 
-* [SeDebugPrivilege](https://hackita.it/articoli/sedebugprivilege/) — LSASS dump senza kernel (bloccato da PPL)
-* [SeTcbPrivilege](https://hackita.it/articoli/setcbprivilege/) — TCB e token creation avanzata
+* [SeDebugPrivilege](/articoli/sedebugprivilege/) — LSASS dump senza kernel (bloccato da PPL)
+* [SeTcbPrivilege](/articoli/setcbprivilege/) — TCB e token creation avanzata
 
 **Riferimenti:** [EoPLoadDriver](https://github.com/TarlogicSecurity/EoPLoadDriver) · [LOLDrivers](https://www.loldrivers.io) · [EDRSandBlast](https://github.com/wavestone-cdt/EDRSandBlast) · [ExploitCapcom](https://github.com/tandasat/ExploitCapcom) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/load-and-unload-device-drivers)
 
-Per assessment su kernel security e BYOVD exposure: [hackita.it/supporto](https://hackita.it/supporto)
+Per assessment su kernel security e BYOVD exposure: [hackita.it/supporto](/supporto)

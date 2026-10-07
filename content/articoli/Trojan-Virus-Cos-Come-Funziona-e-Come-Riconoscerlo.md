@@ -35,7 +35,7 @@ I tre termini vengono confusi di continuo, ma descrivono meccanismi opposti:
 | Come si diffonde          | Inganna l'utente perché lo installi     | Esecuzione di un file infetto | Sfrutta reti e vulnerabilità |
 | Caratteristica principale | Mascheramento per ottenere l'esecuzione | Replicazione tramite ospite   | Propagazione autonoma        |
 
-[Virus](https://hackita.it/articoli/virus-informatico/) e [worm](https://hackita.it/articoli/worm/) sono definiti soprattutto da *come si moltiplicano*; un trojan è definito da *come inganna* per farsi eseguire, non dalla propagazione. Le categorie, però, si sovrappongono spesso più di quanto i nomi suggeriscano: un trojan può scaricare un ransomware, aprire una backdoor persistente o installare le componenti che trasformano il dispositivo in parte di una [botnet](https://hackita.it/articoli/botnet/) — Emotet, che vedremo tra poco, è nato come trojan bancario ed è finito per distribuire ransomware per conto di altri gruppi criminali.
+[Virus](/articoli/virus-informatico/) e [worm](/articoli/worm/) sono definiti soprattutto da *come si moltiplicano*; un trojan è definito da *come inganna* per farsi eseguire, non dalla propagazione. Le categorie, però, si sovrappongono spesso più di quanto i nomi suggeriscano: un trojan può scaricare un ransomware, aprire una backdoor persistente o installare le componenti che trasformano il dispositivo in parte di una [botnet](/articoli/botnet/) — Emotet, che vedremo tra poco, è nato come trojan bancario ed è finito per distribuire ransomware per conto di altri gruppi criminali.
 
 ## Come Funziona un Trojan
 

@@ -21,11 +21,11 @@ tags:
 
 # ACL Abuse in Active Directory: Permessi, Escalation e DCSync
 
-In Active Directory ogni oggetto ha un Security Descriptor che contiene una DACL — la lista di regole che definisce chi può fare cosa su quell'oggetto. Permessi come [GenericAll](https://hackita.it/articoli/genericall/), [WriteDACL](https://hackita.it/articoli/writedacl/) o [ForceChangePassword](https://hackita.it/articoli/forcechangepassword/) assegnati a utenti sbagliati aprono path di escalation diretti verso Domain Admin — senza exploit, senza vulnerabilità software, solo abusando della configurazione esistente.
+In Active Directory ogni oggetto ha un Security Descriptor che contiene una DACL — la lista di regole che definisce chi può fare cosa su quell'oggetto. Permessi come [GenericAll](/articoli/genericall/), [WriteDACL](/articoli/writedacl/) o [ForceChangePassword](/articoli/forcechangepassword/) assegnati a utenti sbagliati aprono path di escalation diretti verso Domain Admin — senza exploit, senza vulnerabilità software, solo abusando della configurazione esistente.
 
 ***
 
-Gli ACL abuse sono tra i path di escalation più comuni nei pentest su [Active Directory](https://hackita.it/articoli/active-directory/) enterprise. Non richiedono credenziali privilegiate di partenza — bastano permessi eccessivi su oggetti AD, spesso assegnati anni prima per esigenze operative e mai rimossi. [BloodHound](https://hackita.it/articoli/bloodhound/) li visualizza come edge nel grafo: [GenericWrite](https://hackita.it/articoli/genericwrite/), [WriteDACL](https://hackita.it/articoli/writedacl/), [ForceChangePassword](https://hackita.it/articoli/forcechangepassword/), `Owns` — ognuno è un path potenziale verso l'alto.
+Gli ACL abuse sono tra i path di escalation più comuni nei pentest su [Active Directory](/articoli/active-directory/) enterprise. Non richiedono credenziali privilegiate di partenza — bastano permessi eccessivi su oggetti AD, spesso assegnati anni prima per esigenze operative e mai rimossi. [BloodHound](/articoli/bloodhound/) li visualizza come edge nel grafo: [GenericWrite](/articoli/genericwrite/), [WriteDACL](/articoli/writedacl/), [ForceChangePassword](/articoli/forcechangepassword/), `Owns` — ognuno è un path potenziale verso l'alto.
 
 > **Key Takeaway:** Un singolo permesso eccessivo su un oggetto AD può essere sufficiente per arrivare a Domain Admin. La catena tipica è: permesso su utente/gruppo → reset password o aggiunta a gruppo privilegiato → escalation completa.
 
@@ -41,7 +41,7 @@ Prima di abusare un permesso, serve capire cosa lo genera. Ogni oggetto AD ha un
 * **DACL** (Discretionary ACL) — le regole di accesso: chi può leggere, scrivere, eliminare
 * **SACL** (System ACL) — le regole di auditing: quali azioni vengono loggate
 
-La DACL è una lista di **ACE** (Access Control Entry). Ogni ACE è una tripletta: trustee (SID), tipo (Allow/Deny), diritto (es. WriteDACL). Le ACE possono essere esplicite (assegnate direttamente sull'oggetto) o ereditate (arrivano da un container padre, tipo un'[OU](https://hackita.it/articoli/organizational-unit/)).
+La DACL è una lista di **ACE** (Access Control Entry). Ogni ACE è una tripletta: trustee (SID), tipo (Allow/Deny), diritto (es. WriteDACL). Le ACE possono essere esplicite (assegnate direttamente sull'oggetto) o ereditate (arrivano da un container padre, tipo un'[OU](/articoli/organizational-unit/)).
 
 ![Security Descriptor, DACL, SACL](data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzAwIDM4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIzODAiIGZpbGw9IiNmZmZmZmYiLz4KPHJlY3QgeD0iNDAiIHk9IjIwIiB3aWR0aD0iNjIwIiBoZWlnaHQ9IjUwIiByeD0iNiIgZmlsbD0iIzExMTExMSIvPgo8dGV4dCB4PSIzNTAiIHk9IjUyIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjIwIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5PZ2dldHRvIEFjdGl2ZSBEaXJlY3Rvcnk8L3RleHQ+Cgo8cmVjdCB4PSI4MCIgeT0iMTAwIiB3aWR0aD0iNTQwIiBoZWlnaHQ9IjI2MCIgcng9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzExMTExMSIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjM1MCIgeT0iMTI4IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMTExMTExIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TZWN1cml0eSBEZXNjcmlwdG9yPC90ZXh0PgoKPHJlY3QgeD0iMTEwIiB5PSIxNTAiIHdpZHRoPSIxODAiIGhlaWdodD0iNDAiIHJ4PSI0IiBmaWxsPSIjZGMyNjI2Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTc1IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Pd25lcjwvdGV4dD4KCjxyZWN0IHg9IjExMCIgeT0iMjA1IiB3aWR0aD0iNDgwIiBoZWlnaHQ9IjkwIiByeD0iNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTExMTExIiBzdHJva2Utd2lkdGg9IjIiLz4KPHRleHQgeD0iMTUwIiB5PSIyMjgiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiMxMTExMTEiPkRBQ0w8L3RleHQ+CjxyZWN0IHg9IjEzMCIgeT0iMjQwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI0IiBmaWxsPSIjMTExMTExIi8+Cjx0ZXh0IHg9IjIzMCIgeT0iMjU3IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjEyIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BQ0UgQWxsb3cgLSZndDsgU0lEIC0mZ3Q7IFdyaXRlREFDTDwvdGV4dD4KPHJlY3QgeD0iMzUwIiB5PSIyNDAiIHdpZHRoPSIyMjAiIGhlaWdodD0iMjQiIGZpbGw9IiNkYzI2MjYiLz4KPHRleHQgeD0iNDYwIiB5PSIyNTciIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkFDRSBEZW55IC0mZ3Q7IFNJRCAtJmd0OyBXcml0ZVByb3BlcnR5PC90ZXh0PgoKPHJlY3QgeD0iMTEwIiB5PSIzMTAiIHdpZHRoPSI0ODAiIGhlaWdodD0iNDAiIHJ4PSI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxMTExMTEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNCwzIi8+Cjx0ZXh0IHg9IjM1MCIgeT0iMzM1IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMTExMTExIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TQUNMIC0gcmVnb2xlIGRpIGF1ZGl0aW5nIChFdmVudCBJRCA0NjYyIC8gNTEzNik8L3RleHQ+Cjwvc3ZnPgo=)
 
@@ -53,19 +53,19 @@ Windows valuta le ACE in un ordine preciso: le Deny esplicite vengono prima dell
 
 | ACE che hai                                                             | Su quale oggetto                                            | Cosa puoi fare                                                                                                                        | Comando rapido                                                  |
 | ----------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| [GenericAll](https://hackita.it/articoli/genericall/)                   | Utente                                                      | Reset pwd, SPN, Shadow Creds                                                                                                          | `Set-DomainUserPassword`                                        |
-| [GenericAll](https://hackita.it/articoli/genericall/)                   | Gruppo                                                      | Aggiungiti ([AddMember](https://hackita.it/articoli/addmember/))                                                                      | `Add-DomainGroupMember`                                         |
-| [GenericAll](https://hackita.it/articoli/genericall/)                   | Computer                                                    | [RBCD](https://hackita.it/articoli/rbcd/)                                                                                             | `impacket-rbcd -action write`                                   |
-| [GenericWrite](https://hackita.it/articoli/genericwrite/)               | Utente                                                      | [WriteSPN](https://hackita.it/articoli/writespn/) → Kerberoast, [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/) | `Set-DomainObject -Set @{serviceprincipalname='x/y'}`           |
-| [GenericWrite](https://hackita.it/articoli/genericwrite/)               | Computer                                                    | [WriteAccountRestrictions](https://hackita.it/articoli/writeaccountrestrictions/) → RBCD                                              | `impacket-rbcd -action write`                                   |
-| [WriteDACL](https://hackita.it/articoli/writedacl/)                     | Dominio                                                     | Concediti DCSync rights                                                                                                               | `Add-DomainObjectAcl -Rights DCSync`                            |
-| [WriteDACL](https://hackita.it/articoli/writedacl/)                     | Qualsiasi                                                   | Concediti GenericAll                                                                                                                  | `Add-DomainObjectAcl -Rights All`                               |
-| [WriteOwner](https://hackita.it/articoli/writeowner/)                   | Qualsiasi                                                   | Prendi ownership → WriteDACL                                                                                                          | `Set-DomainObjectOwner`                                         |
-| [ForceChangePassword](https://hackita.it/articoli/forcechangepassword/) | Utente                                                      | Reset pwd senza conoscerla                                                                                                            | `Set-DomainUserPassword`                                        |
+| [GenericAll](/articoli/genericall/)                   | Utente                                                      | Reset pwd, SPN, Shadow Creds                                                                                                          | `Set-DomainUserPassword`                                        |
+| [GenericAll](/articoli/genericall/)                   | Gruppo                                                      | Aggiungiti ([AddMember](/articoli/addmember/))                                                                      | `Add-DomainGroupMember`                                         |
+| [GenericAll](/articoli/genericall/)                   | Computer                                                    | [RBCD](/articoli/rbcd/)                                                                                             | `impacket-rbcd -action write`                                   |
+| [GenericWrite](/articoli/genericwrite/)               | Utente                                                      | [WriteSPN](/articoli/writespn/) → Kerberoast, [Shadow Credentials](/articoli/shadow-credentials/) | `Set-DomainObject -Set @{serviceprincipalname='x/y'}`           |
+| [GenericWrite](/articoli/genericwrite/)               | Computer                                                    | [WriteAccountRestrictions](/articoli/writeaccountrestrictions/) → RBCD                                              | `impacket-rbcd -action write`                                   |
+| [WriteDACL](/articoli/writedacl/)                     | Dominio                                                     | Concediti DCSync rights                                                                                                               | `Add-DomainObjectAcl -Rights DCSync`                            |
+| [WriteDACL](/articoli/writedacl/)                     | Qualsiasi                                                   | Concediti GenericAll                                                                                                                  | `Add-DomainObjectAcl -Rights All`                               |
+| [WriteOwner](/articoli/writeowner/)                   | Qualsiasi                                                   | Prendi ownership → WriteDACL                                                                                                          | `Set-DomainObjectOwner`                                         |
+| [ForceChangePassword](/articoli/forcechangepassword/) | Utente                                                      | Reset pwd senza conoscerla                                                                                                            | `Set-DomainUserPassword`                                        |
 | `AllExtendedRights`                                                     | Utente                                                      | Reset pwd                                                                                                                             | `Set-DomainUserPassword`                                        |
-| [Self / AddSelf](https://hackita.it/articoli/addself/)                  | Gruppo                                                      | Aggiungiti (solo te)                                                                                                                  | `Add-ADGroupMember -Members attacker`                           |
-| [GenericAll / WriteDACL](https://hackita.it/articoli/writedacl/)        | OU                                                          | Aggiunta di ACE ereditabili sugli oggetti figli                                                                                       | `dacledit.py -inheritance`                                      |
-| [WriteDACL](https://hackita.it/articoli/writedacl/)                     | [AdminSDHolder](https://hackita.it/articoli/adminsdholder/) | Backdoor persistente (SDProp ogni ora)                                                                                                | `Add-DomainObjectAcl -TargetIdentity AdminSDHolder -Rights All` |
+| [Self / AddSelf](/articoli/addself/)                  | Gruppo                                                      | Aggiungiti (solo te)                                                                                                                  | `Add-ADGroupMember -Members attacker`                           |
+| [GenericAll / WriteDACL](/articoli/writedacl/)        | OU                                                          | Aggiunta di ACE ereditabili sugli oggetti figli                                                                                       | `dacledit.py -inheritance`                                      |
+| [WriteDACL](/articoli/writedacl/)                     | [AdminSDHolder](/articoli/adminsdholder/) | Backdoor persistente (SDProp ogni ora)                                                                                                | `Add-DomainObjectAcl -TargetIdentity AdminSDHolder -Rights All` |
 
 ***
 
@@ -92,7 +92,7 @@ bloodyAD --host <DC_IP> -d corp.local -u attacker -p 'Password123!' \
 
 Sono due comandi diversi: `get writable` elenca cosa puoi effettivamente scrivere, `get object --attr nTSecurityDescriptor --resolve-sd` mostra la DACL completa di un oggetto specifico.
 
-**Attenzione:** la query PowerView trova solo le ACE assegnate direttamente al tuo SID. Non copre i permessi ottenuti tramite gruppi, gruppi annidati, `Authenticated Users` o `Domain Users`. Un permesso può esistere senza comparire in questa ricerca — [BloodHound](https://hackita.it/articoli/bloodhound/) risolve il problema perché calcola i diritti effettivi attraverso tutta la catena di gruppi. Carica i dati con SharpHound e usa le query predefinite "Shortest Paths to Domain Admins" o "Find Principals with DCSync Rights".
+**Attenzione:** la query PowerView trova solo le ACE assegnate direttamente al tuo SID. Non copre i permessi ottenuti tramite gruppi, gruppi annidati, `Authenticated Users` o `Domain Users`. Un permesso può esistere senza comparire in questa ricerca — [BloodHound](/articoli/bloodhound/) risolve il problema perché calcola i diritti effettivi attraverso tutta la catena di gruppi. Carica i dati con SharpHound e usa le query predefinite "Shortest Paths to Domain Admins" o "Find Principals with DCSync Rights".
 
 ***
 
@@ -100,7 +100,7 @@ Sono due comandi diversi: `get writable` elenca cosa puoi effettivamente scriver
 
 ### Self / AddSelf su Gruppo
 
-Con l'edge [AddSelf](https://hackita.it/articoli/addself/) puoi aggiungere **solo te stesso** al gruppo target — non altri account.
+Con l'edge [AddSelf](/articoli/addself/) puoi aggiungere **solo te stesso** al gruppo target — non altri account.
 
 ```powershell
 Add-ADGroupMember -Identity 'TargetGroup' -Members attacker
@@ -121,7 +121,7 @@ Get-DomainGroupMember -Identity 'TargetGroup'
 
 ### AdminSDHolder — Persistenza a Cascata
 
-[AdminSDHolder](https://hackita.it/articoli/adminsdholder/) è un container speciale in AD. Ogni ora circa il processo **SDProp** copia le sue ACL su tutti gli oggetti protetti del dominio — Domain Admins, krbtgt, Administrator e altri. Se hai `WriteDACL` su AdminSDHolder, puoi inserire una backdoor che si auto-propaga a ogni ciclo su tutti gli oggetti privilegiati del dominio.
+[AdminSDHolder](/articoli/adminsdholder/) è un container speciale in AD. Ogni ora circa il processo **SDProp** copia le sue ACL su tutti gli oggetti protetti del dominio — Domain Admins, krbtgt, Administrator e altri. Se hai `WriteDACL` su AdminSDHolder, puoi inserire una backdoor che si auto-propaga a ogni ciclo su tutti gli oggetti privilegiati del dominio.
 
 ```powershell
 Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,DC=corp,DC=local' `
@@ -136,7 +136,7 @@ Rimuovere il permesso da AdminSDHolder non rimuove automaticamente quelli già p
 
 ### GenericAll su Utente
 
-Con [GenericAll](https://hackita.it/articoli/genericall/) hai il controllo completo sull'oggetto utente. Puoi resettare la password, aggiungere un SPN per il [targeted Kerberoasting](https://hackita.it/articoli/kerberos/) o configurare [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/).
+Con [GenericAll](/articoli/genericall/) hai il controllo completo sull'oggetto utente. Puoi resettare la password, aggiungere un SPN per il [targeted Kerberoasting](/articoli/kerberos/) o configurare [Shadow Credentials](/articoli/shadow-credentials/).
 
 ```powershell
 # Reset password senza conoscere quella attuale
@@ -167,7 +167,7 @@ Get-DomainUser targetuser -Properties serviceprincipalname
 
 ### GenericWrite su Utente
 
-[GenericWrite](https://hackita.it/articoli/genericwrite/) **non** equivale al controllo completo e non concede automaticamente il reset della password. Permette di modificare attributi scrivibili sfruttabili come `servicePrincipalName` ([WriteSPN](https://hackita.it/articoli/writespn/)), `msDS-KeyCredentialLink` ([Shadow Credentials](https://hackita.it/articoli/shadow-credentials/)) e, quando applicabile, `scriptPath`.
+[GenericWrite](/articoli/genericwrite/) **non** equivale al controllo completo e non concede automaticamente il reset della password. Permette di modificare attributi scrivibili sfruttabili come `servicePrincipalName` ([WriteSPN](/articoli/writespn/)), `msDS-KeyCredentialLink` ([Shadow Credentials](/articoli/shadow-credentials/)) e, quando applicabile, `scriptPath`.
 
 ```powershell
 # Logon script — esegui codice al prossimo login dell'utente
@@ -181,7 +181,7 @@ Set-DomainObject -Identity targetuser -Set @{serviceprincipalname='fake/spn'}
 
 ### GenericAll su Gruppo
 
-Puoi aggiungere qualsiasi account al gruppo — incluso Domain Admins ([AddMember](https://hackita.it/articoli/addmember/), a differenza di AddSelf che limita a te stesso).
+Puoi aggiungere qualsiasi account al gruppo — incluso Domain Admins ([AddMember](/articoli/addmember/), a differenza di AddSelf che limita a te stesso).
 
 ```powershell
 Add-DomainGroupMember -Identity 'Domain Admins' -Members attacker
@@ -197,7 +197,7 @@ bloodyAD --host <DC_IP> -d corp.local -u attacker -p 'Password123!' \
 
 ### GenericAll / GenericWrite su Computer → RBCD
 
-Path diretto verso [RBCD](https://hackita.it/articoli/rbcd/) tramite l'edge [WriteAccountRestrictions](https://hackita.it/articoli/writeaccountrestrictions/) — scrivi `msDS-AllowedToActOnBehalfOfOtherIdentity` e impersona Administrator sulla macchina.
+Path diretto verso [RBCD](/articoli/rbcd/) tramite l'edge [WriteAccountRestrictions](/articoli/writeaccountrestrictions/) — scrivi `msDS-AllowedToActOnBehalfOfOtherIdentity` e impersona Administrator sulla macchina.
 
 **Prerequisito:** serve controllare un principal con proprie chiavi Kerberos — tipicamente un account computer di cui conosci le credenziali o che hai creato tu (es. via MachineAccountQuota). Il solo diritto sul computer target non crea questo principal, va procurato separatamente.
 
@@ -216,7 +216,7 @@ Get-ADComputer TARGETPC -Properties msDS-AllowedToActOnBehalfOfOtherIdentity
 
 ### WriteDACL su Dominio → DCSync
 
-Con [WriteDACL](https://hackita.it/articoli/writedacl/) sull'oggetto dominio puoi concederti i permessi di replica e fare [DCSync](https://hackita.it/articoli/dcsync/). Servono entrambi i diritti estesi `DS-Replication-Get-Changes` e `DS-Replication-Get-Changes-All`.
+Con [WriteDACL](/articoli/writedacl/) sull'oggetto dominio puoi concederti i permessi di replica e fare [DCSync](/articoli/dcsync/). Servono entrambi i diritti estesi `DS-Replication-Get-Changes` e `DS-Replication-Get-Changes-All`.
 
 ```powershell
 Add-DomainObjectAcl -TargetIdentity 'DC=corp,DC=local' `
@@ -292,7 +292,7 @@ bloodyAD --host <DC_IP> -d corp.local -u attacker -p 'Password123!' \
 
 ### GenericAll / WriteDACL su OU → Compromissione a Cascata
 
-Controllare un'[OU](https://hackita.it/articoli/organizational-unit/) non è come controllare i singoli oggetti al suo interno: serve un'ACE **ereditabile** che si propaghi ai figli — per aggiungerla serve `WriteDACL` o il controllo completo `GenericAll`; `GenericWrite` da solo non basta perché non tocca la DACL. Con `CreateChild`/`DeleteChild` puoi anche creare o eliminare oggetti nell'OU, e se l'OU ha GPO collegate, [WriteGPLink](https://hackita.it/articoli/writegplink/) o GenericWrite sulla GPO stessa aprono un path alternativo via Group Policy.
+Controllare un'[OU](/articoli/organizational-unit/) non è come controllare i singoli oggetti al suo interno: serve un'ACE **ereditabile** che si propaghi ai figli — per aggiungerla serve `WriteDACL` o il controllo completo `GenericAll`; `GenericWrite` da solo non basta perché non tocca la DACL. Con `CreateChild`/`DeleteChild` puoi anche creare o eliminare oggetti nell'OU, e se l'OU ha GPO collegate, [WriteGPLink](/articoli/writegplink/) o GenericWrite sulla GPO stessa aprono un path alternativo via Group Policy.
 
 ```bash
 python3 dacledit.py -action write -rights FullControl -inheritance \
@@ -308,13 +308,13 @@ BloodHound CE non usa più solo i macro-diritti storici — distingue edge speci
 
 | Edge                                                                              | Significato                                      |
 | --------------------------------------------------------------------------------- | ------------------------------------------------ |
-| [AddMember](https://hackita.it/articoli/addmember/)                               | Può aggiungere principal arbitrari a un gruppo   |
-| [AddSelf](https://hackita.it/articoli/addself/)                                   | Può aggiungere soltanto se stesso                |
-| [ForceChangePassword](https://hackita.it/articoli/forcechangepassword/)           | Può resettare la password                        |
-| [WriteSPN](https://hackita.it/articoli/writespn/)                                 | Può modificare gli SPN                           |
-| [AddKeyCredentialLink](https://hackita.it/articoli/shadow-credentials/)           | Può impostare Shadow Credentials                 |
-| [WriteAccountRestrictions](https://hackita.it/articoli/writeaccountrestrictions/) | Può configurare il path RBCD                     |
-| [WriteGPLink](https://hackita.it/articoli/writegplink/)                           | Può modificare il collegamento GPO su OU/dominio |
+| [AddMember](/articoli/addmember/)                               | Può aggiungere principal arbitrari a un gruppo   |
+| [AddSelf](/articoli/addself/)                                   | Può aggiungere soltanto se stesso                |
+| [ForceChangePassword](/articoli/forcechangepassword/)           | Può resettare la password                        |
+| [WriteSPN](/articoli/writespn/)                                 | Può modificare gli SPN                           |
+| [AddKeyCredentialLink](/articoli/shadow-credentials/)           | Può impostare Shadow Credentials                 |
+| [WriteAccountRestrictions](/articoli/writeaccountrestrictions/) | Può configurare il path RBCD                     |
+| [WriteGPLink](/articoli/writegplink/)                           | Può modificare il collegamento GPO su OU/dominio |
 | `GetChanges` + `GetChangesAll`                                                    | Combinati, producono l'edge DCSync               |
 
 Nota: `GetChanges` da solo non basta per DCSync — serve la combinazione con `GetChangesAll`.
@@ -361,13 +361,13 @@ PowerView: [repository e commit realmente utilizzati]
 
 ## Scenario Reale
 
-BloodHound mostra che il tuo account ha [WriteDACL](https://hackita.it/articoli/writedacl/) sull'oggetto dominio `DC=corp,DC=local`. Il path verso DCSync è diretto:
+BloodHound mostra che il tuo account ha [WriteDACL](/articoli/writedacl/) sull'oggetto dominio `DC=corp,DC=local`. Il path verso DCSync è diretto:
 
 1. Esegui un backup effettivo del Security Descriptor con `impacket-dacledit -action backup`
 2. Ti concedi `DS-Replication-Get-Changes` e `DS-Replication-Get-Changes-All`
 3. Esegui `impacket-secretsdump` e dumpi tutti gli hash del dominio incluso `krbtgt`
 4. Ripristini il backup con `-action restore`
-5. Con l'hash di `krbtgt` forgi un [Golden Ticket](https://hackita.it/articoli/golden-ticket/) per la persistenza
+5. Con l'hash di `krbtgt` forgi un [Golden Ticket](/articoli/golden-ticket/) per la persistenza
 
 Il flow non richiede l'appartenenza iniziale a Domain Admins, ma presuppone che l'account controllato disponga già di WriteDACL sull'oggetto dominio — un diritto di per sé estremamente potente, non un privilegio banale da ottenere.
 
@@ -394,9 +394,9 @@ Il flow non richiede l'appartenenza iniziale a Domain Admins, ma presuppone che 
 
 ## Mitigazione
 
-* Audit periodico degli ACL con [BloodHound](https://hackita.it/articoli/bloodhound/) — rimuovere tutti i permessi non giustificati su oggetti sensibili
+* Audit periodico degli ACL con [BloodHound](/articoli/bloodhound/) — rimuovere tutti i permessi non giustificati su oggetti sensibili
 * Configurare correttamente Advanced Audit Policy e SACL sugli oggetti ad alto valore, non solo abilitare il Security Log
-* Usare [AdminSDHolder](https://hackita.it/articoli/adminsdholder/) correttamente — protegge automaticamente i gruppi privilegiati, ma verificare periodicamente che non contenga ACE indesiderate
+* Usare [AdminSDHolder](/articoli/adminsdholder/) correttamente — protegge automaticamente i gruppi privilegiati, ma verificare periodicamente che non contenga ACE indesiderate
 * Principio del **least privilege** su service account e deleghe — rivedere periodicamente chi ha WriteDACL o GenericWrite su oggetti di dominio
 * Alert su Event ID 4662, 4670 e 5136 per oggetti ad alto valore (Domain Admins, krbtgt, dominio root)
 
@@ -419,7 +419,7 @@ Se hai fatto un backup reale del Security Descriptor puoi ripristinarlo. Il prob
 
 L'ACL abuse è spesso il modo più silenzioso per scalare privilegi in Active Directory — non genera traffico di rete anomalo, non sfrutta vulnerabilità software, e usa le stesse API di amministrazione legittime. Ogni permesso eccessivo su un oggetto AD è un path potenziale verso l'alto.
 
-La difesa richiede visibilità: senza Advanced Audit Policy configurata e alerting su Event ID 4662, 5136 e 4670, questi attacchi passano completamente inosservati. [BloodHound](https://hackita.it/articoli/bloodhound/) è lo strumento migliore sia per l'attacco che per la difesa — chi lo usa prima vince.
+La difesa richiede visibilità: senza Advanced Audit Policy configurata e alerting su Event ID 4662, 5136 e 4670, questi attacchi passano completamente inosservati. [BloodHound](/articoli/bloodhound/) è lo strumento migliore sia per l'attacco che per la difesa — chi lo usa prima vince.
 
 ***
 

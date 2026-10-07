@@ -24,7 +24,7 @@ tags:
 
 Il risultato non è una semplice lista di dati, ma una **mappa delle relazioni**: un dominio può portare a un IP, l'IP a un ASN, l'ASN a un'organizzazione, l'organizzazione ad altri domini o infrastrutture e così via. Questo permette di fare **pivot** da un'informazione all'altra e scoprire connessioni che sarebbero difficili da individuare analizzando i dati separatamente.
 
-Maltego utilizza **Entity** per rappresentare gli elementi che stai analizzando e **Transform** per ottenere nuovi dati collegati a quegli elementi. Può interrogare fonti come DNS, WHOIS, certificati, breach database, social media e API di servizi esterni. È qui che emerge la sua differenza rispetto a strumenti come [TheHarvester](https://hackita.it/articoli/theharvester/) e [Recon-ng](https://hackita.it/articoli/reconng/): Maltego è pensato soprattutto per **correlare e visualizzare le informazioni raccolte**, costruendo un grafo che rende immediatamente visibili le relazioni tra i dati.
+Maltego utilizza **Entity** per rappresentare gli elementi che stai analizzando e **Transform** per ottenere nuovi dati collegati a quegli elementi. Può interrogare fonti come DNS, WHOIS, certificati, breach database, social media e API di servizi esterni. È qui che emerge la sua differenza rispetto a strumenti come [TheHarvester](/articoli/theharvester/) e [Recon-ng](/articoli/reconng/): Maltego è pensato soprattutto per **correlare e visualizzare le informazioni raccolte**, costruendo un grafo che rende immediatamente visibili le relazioni tra i dati.
 
 ## Maltego in 30 Secondi
 
@@ -135,7 +135,7 @@ Metadata della credenziale (hash, formato, se disponibile)
 Ipotesi di password reuse — da VALIDARE, mai da assumere
 ```
 
-Se il dataset include un hash, va craccato offline con [hashcat](https://hackita.it/articoli/hashcat/) prima di poter anche solo ipotizzare un riutilizzo; se include solo l'email, hai un indizio di esposizione, non una credenziale. Maltego ti dà la correlazione, non la prova.
+Se il dataset include un hash, va craccato offline con [hashcat](/articoli/hashcat/) prima di poter anche solo ipotizzare un riutilizzo; se include solo l'email, hai un indizio di esposizione, non una credenziale. Maltego ti dà la correlazione, non la prova.
 
 **Pivot:** dal profilo LinkedIn trovato, un transform verso "Company from LinkedIn" ti dà lo storico datore di lavoro — utile per costruire pattern di username aziendali.
 
@@ -363,9 +363,9 @@ rm -rf ~/.maltego/cache/*
 | Tool                                                      | Punto di forza                   | Limite                                    | Uso tipico                                      |
 | --------------------------------------------------------- | -------------------------------- | ----------------------------------------- | ----------------------------------------------- |
 | Maltego                                                   | Correlazione visuale multi-hop   | Dipende da transform/provider configurati | OSINT + attack surface, presentazione risultati |
-| [Recon-ng](https://hackita.it/articoli/reconng/)          | Workflow CLI scriptabile         | Nessuna visualizzazione grafica nativa    | Recon automatizzato/ripetibile                  |
-| [SpiderFoot](https://hackita.it/articoli/spiderfoot/)     | Automazione molto ampia, GUI web | Genera più rumore, meno controllo fine    | Broad OSINT, monitoraggio continuo              |
-| [TheHarvester](https://hackita.it/articoli/theharvester/) | Velocissimo per email/subdomain  | Scope volutamente ristretto               | Primo giro rapido di recon                      |
+| [Recon-ng](/articoli/reconng/)          | Workflow CLI scriptabile         | Nessuna visualizzazione grafica nativa    | Recon automatizzato/ripetibile                  |
+| [SpiderFoot](/articoli/spiderfoot/)     | Automazione molto ampia, GUI web | Genera più rumore, meno controllo fine    | Broad OSINT, monitoraggio continuo              |
+| [TheHarvester](/articoli/theharvester/) | Velocissimo per email/subdomain  | Scope volutamente ristretto               | Primo giro rapido di recon                      |
 | Gephi                                                     | Analisi di grafo pura            | Non raccoglie dati OSINT da solo          | Analisi su dataset già estratti                 |
 
 Non sono necessariamente in competizione: un workflow comune è raccolta rapida con TheHarvester/Recon-ng, poi correlazione visuale in Maltego, poi validazione attiva con Nmap/Shodan sui candidati emersi.

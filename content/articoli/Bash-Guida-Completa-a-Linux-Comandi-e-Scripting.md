@@ -129,7 +129,7 @@ grep "error" logfile.txt | sort | uniq -c
 find /var/log -type f -name "*.log"
 ```
 
-Il modello mentale Unix è sempre lo stesso: tanti piccoli strumenti, combinati con `|`, per ottenere un risultato complesso. Per l'elenco completo dei comandi più usati vedi [top 100 comandi Linux](https://hackita.it/articoli/top-100-comandi-linux/).
+Il modello mentale Unix è sempre lo stesso: tanti piccoli strumenti, combinati con `|`, per ottenere un risultato complesso. Per l'elenco completo dei comandi più usati vedi [top 100 comandi Linux](/articoli/top-100-comandi-linux/).
 
 ## Variabili
 
@@ -232,7 +232,7 @@ chmod 750 script.sh            # permessi numerici precisi
 chown utente:gruppo file.sh    # cambia proprietario
 ```
 
-I permessi non sono un dettaglio burocratico: una configurazione troppo permissiva su uno script eseguito da root è una delle porte d'ingresso più comuni per l'escalation di privilegi. Guida completa: [privilege escalation Linux](https://hackita.it/articoli/linux-privesc/).
+I permessi non sono un dettaglio burocratico: una configurazione troppo permissiva su uno script eseguito da root è una delle porte d'ingresso più comuni per l'escalation di privilegi. Guida completa: [privilege escalation Linux](/articoli/linux-privesc/).
 
 ## Condizionali
 
@@ -370,7 +370,7 @@ Bash non è solo comodità per sysadmin. In un contesto offensivo — sempre su 
 
 **LOLBins e binari con permessi elevati.** Molti binari che invocano una shell al loro interno, se eseguiti con privilegi elevati (es. via sudo o SUID), permettono di ottenere una shell privilegiata. Esempi concreti su [GTFOBins](https://gtfobins.org/).
 
-**Cron job mal configurati.** Script Bash lanciati da root via cron, con variabili non quotate o path relativi, sono una fonte concreta di vulnerabilità reali. Approfondimento su [crontab](https://hackita.it/articoli/crontab/).
+**Cron job mal configurati.** Script Bash lanciati da root via cron, con variabili non quotate o path relativi, sono una fonte concreta di vulnerabilità reali. Approfondimento su [crontab](/articoli/crontab/).
 
 **Reverse shell.** Diverse reverse shell one-liner sfruttano la redirezione dei file descriptor di Bash per aprire una connessione verso una macchina attaccante.
 
@@ -418,4 +418,4 @@ Scripting avanzato
 Bash e sicurezza
 ```
 
-Da qui, i passi naturali sono approfondire i [100 comandi Linux più usati](https://hackita.it/articoli/top-100-comandi-linux/), capire come [privilege escalation Linux](https://hackita.it/articoli/linux-privesc/) sfrutta spesso proprio script e permessi mal configurati, e studiare [GTFOBins](https://hackita.it/articoli/gtfobins/) e [crontab](https://hackita.it/articoli/crontab/) per vedere Bash applicata concretamente in un contesto offensivo.
+Da qui, i passi naturali sono approfondire i [100 comandi Linux più usati](/articoli/top-100-comandi-linux/), capire come [privilege escalation Linux](/articoli/linux-privesc/) sfrutta spesso proprio script e permessi mal configurati, e studiare [GTFOBins](/articoli/gtfobins/) e [crontab](/articoli/crontab/) per vedere Bash applicata concretamente in un contesto offensivo.

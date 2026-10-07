@@ -25,7 +25,7 @@ Tutto quello che segue va usato solo su lab, CTF, HTB/PG o ambienti per cui hai 
 
 ## Cos'è Inveigh e come funziona
 
-Inveigh intercetta richieste LLMNR/NBNS (e spesso WPAD) e vi risponde fingendosi la risorsa cercata, inducendo il client a tentare un'autenticazione NTLM verso il tuo host — autenticazione che puoi catturare e, in alcuni casi, tentare di rilanciare (relay) su un altro sistema. È l'equivalente "Windows-side" di [Responder](https://hackita.it/articoli/responder/), utile quando sei già dentro una rete via un foothold Windows e non vuoi (o non puoi) spostarti su Kali.
+Inveigh intercetta richieste LLMNR/NBNS (e spesso WPAD) e vi risponde fingendosi la risorsa cercata, inducendo il client a tentare un'autenticazione NTLM verso il tuo host — autenticazione che puoi catturare e, in alcuni casi, tentare di rilanciare (relay) su un altro sistema. È l'equivalente "Windows-side" di [Responder](/articoli/responder/), utile quando sei già dentro una rete via un foothold Windows e non vuoi (o non puoi) spostarti su Kali.
 
 Quello che ottieni tipicamente non è un "hash NTLM" in senso stretto, ma un **NetNTLM challenge/response**: una struttura che lega uno username, un dominio e una risposta crittografica legata alla sfida inviata dal server — craccabile offline con la stessa logica di un hash, ma tecnicamente un oggetto diverso.
 
@@ -99,7 +99,7 @@ Invoke-Inveigh -Inspect -ConsoleOutput Y
 
 Richieste ricorrenti per nomi non risolti indicano che una sessione di capture ha senso. È solo osservazione, non cattura: quando confermi il pattern, riavvia senza `-Inspect`.
 
-Se non vedi nulla dopo un paio di minuti, il problema è quasi sempre l'assenza di traffico reale nel lab (o la subnet sbagliata), non uno strumento "rotto" — puoi validare lato rete anche con [TShark](https://hackita.it/articoli/tshark/) da una macchina Linux di supporto, se disponibile.
+Se non vedi nulla dopo un paio di minuti, il problema è quasi sempre l'assenza di traffico reale nel lab (o la subnet sbagliata), non uno strumento "rotto" — puoi validare lato rete anche con [TShark](/articoli/tshark/) da una macchina Linux di supporto, se disponibile.
 
 ## LLMNR e NBNS: cattura di base
 
@@ -171,7 +171,7 @@ Il formato `utente::dominio:challenge:response:blob` è tipico di NetNTLMv2; gli
 
 Il supporto al relay è una funzionalità della versione PowerShell/legacy, distinta dal ramo C#/.NET. Funziona solo se il target non richiede SMB signing e se l'account catturato ha privilegi sufficienti sul target — in lab lo scopo è dimostrare l'impatto (o l'efficacia delle mitigazioni), non generare rumore.
 
-Prima di qualunque relay, vale la pena mappare la superficie AD con [BloodHound](https://hackita.it/articoli/bloodhound/) per capire quali account e percorsi hanno davvero senso da testare.
+Prima di qualunque relay, vale la pena mappare la superficie AD con [BloodHound](/articoli/bloodhound/) per capire quali account e percorsi hanno davvero senso da testare.
 
 ```powershell
 . .\Inveigh-Relay.ps1
@@ -237,7 +237,7 @@ Un PID `4` (System) su quelle porte indica servizi Windows nativi già in ascolt
 * Enforcement di SMB signing, per rendere inefficace il relay anche se una cattura riesce
 * Ridurre la dipendenza da NTLM dove possibile, a favore di Kerberos
 
-Prima di arrivare al relay, un giro di enumerazione con [smbclient](https://hackita.it/articoli/smbclient/) o [Enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) aiuta a capire cosa vale davvero la pena testare.
+Prima di arrivare al relay, un giro di enumerazione con [smbclient](/articoli/smbclient/) o [Enum4linux-ng](/articoli/enum4linux-ng/) aiuta a capire cosa vale davvero la pena testare.
 
 ## Scenario pratico su una macchina HTB/PG
 
@@ -383,7 +383,7 @@ Dipende dalla posizione: Inveigh è comodo se sei già su un foothold Windows, R
 
 ## Link utili su HackIta
 
-Per il confronto diretto con lo strumento equivalente da Linux vedi [Responder](https://hackita.it/articoli/responder/); per validare il traffico di rete anche visivamente, [Wireshark](https://hackita.it/articoli/wireshark/) o [TShark](https://hackita.it/articoli/tshark/) da terminale; per l'enumerazione SMB/AD prima di un relay, [smbclient](https://hackita.it/articoli/smbclient/), [Enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) e [CrackMapExec](https://hackita.it/articoli/crackmapexec/); per capire dove porta un account catturato, [BloodHound](https://hackita.it/articoli/bloodhound/).
+Per il confronto diretto con lo strumento equivalente da Linux vedi [Responder](/articoli/responder/); per validare il traffico di rete anche visivamente, [Wireshark](/articoli/wireshark/) o [TShark](/articoli/tshark/) da terminale; per l'enumerazione SMB/AD prima di un relay, [smbclient](/articoli/smbclient/), [Enum4linux-ng](/articoli/enum4linux-ng/) e [CrackMapExec](/articoli/crackmapexec/); per capire dove porta un account catturato, [BloodHound](/articoli/bloodhound/).
 
 ## Riferimenti ufficiali
 

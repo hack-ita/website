@@ -87,9 +87,9 @@ Questo output mostra che una specifica **interfaccia RPC** è stata pubblicata s
 
 Se vuoi approfondire RPC e servizi Windows correlati, vedi anche:
 
-* [https://hackita.it/articoli/porta-135-msrpc](https://hackita.it/articoli/porta-135-rpc/)
-* [https://hackita.it/articoli/wmi](https://hackita.it/articoli/wmic/)
-* [https://hackita.it/articoli/post-exploitation](https://hackita.it/articoli/post-exploitation/)
+* [https://hackita.it/articoli/porta-135-msrpc](/articoli/porta-135-rpc/)
+* [https://hackita.it/articoli/wmi](/articoli/wmic/)
+* [https://hackita.it/articoli/post-exploitation](/articoli/post-exploitation/)
 
 ## 4. Errori comuni nell’analisi RPC
 
@@ -177,7 +177,7 @@ Bloccare solo la 135 non basta: se il range RPC rimane aperto, molti servizi di 
 ***
 
 Se vuoi sostenere il progetto:
-[https://hackita.it/supporto](https://hackita.it/supporto)
+[https://hackita.it/supporto](/supporto)
 
 Se vuoi testare la sicurezza della tua azienda o ricevere supporto 1:1:
-[https://hackita.it/servizi](https://hackita.it/servizi)
+[https://hackita.it/servizi](/servizi)

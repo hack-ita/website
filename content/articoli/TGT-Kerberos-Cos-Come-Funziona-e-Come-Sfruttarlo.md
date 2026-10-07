@@ -22,7 +22,7 @@ tags:
 
 # TGT Kerberos: Funzionamento, Dump e Attacchi nel Pentesting
 
-Il TGT (Ticket Granting Ticket) è il cuore del protocollo [Kerberos](https://hackita.it/articoli/kerberos/): è il ticket che un utente riceve al login e che gli permette di richiedere accesso ai servizi del dominio senza reinserire la password. Per un attaccante, il TGT è un obiettivo primario — chi controlla il TGT controlla l'identità.
+Il TGT (Ticket Granting Ticket) è il cuore del protocollo [Kerberos](/articoli/kerberos/): è il ticket che un utente riceve al login e che gli permette di richiedere accesso ai servizi del dominio senza reinserire la password. Per un attaccante, il TGT è un obiettivo primario — chi controlla il TGT controlla l'identità.
 
 ## Cos'è il TGT e cosa contiene
 
@@ -80,7 +80,7 @@ CLIENT                            KDC (Domain Controller)
 
 ## Ticket flags — cosa significano
 
-I flag su un ticket Kerberos (visibili in [Rubeus](https://hackita.it/articoli/rubeus/) dump, `klist`, file `.kirbi`/`.ccache`) indicano proprietà importanti:
+I flag su un ticket Kerberos (visibili in [Rubeus](/articoli/rubeus/) dump, `klist`, file `.kirbi`/`.ccache`) indicano proprietà importanti:
 
 | Flag                 | Significato                              | Rilevanza offensiva                         |
 | -------------------- | ---------------------------------------- | ------------------------------------------- |
@@ -95,7 +95,7 @@ I flag su un ticket Kerberos (visibili in [Rubeus](https://hackita.it/articoli/r
 
 ## Dump del TGT — da memoria e da disco
 
-Il TGT viene memorizzato nel processo **LSASS** su Windows. Con i permessi giusti puoi estrarlo con [Rubeus](https://hackita.it/articoli/rubeus/) o [Mimikatz](https://hackita.it/articoli/mimikatz/) e riusarlo su un altro host.
+Il TGT viene memorizzato nel processo **LSASS** su Windows. Con i permessi giusti puoi estrarlo con [Rubeus](/articoli/rubeus/) o [Mimikatz](/articoli/mimikatz/) e riusarlo su un altro host.
 
 **Rubeus — dump da memoria**
 
@@ -162,13 +162,13 @@ smbclient.py -k -no-pass //DC01.corp.local/C$ -U corp.local/administrator
 nxc smb DC01.corp.local --use-kcache
 ```
 
-Gli stessi principi valgono usando [WMIExec](https://hackita.it/articoli/wmiexec/), [PsExec](https://hackita.it/articoli/psexec/) o [Evil-WinRM](https://hackita.it/articoli/evilwinrm/) — l'unica differenza è il protocollo usato per l'esecuzione remota, non il modo in cui il ticket viene presentato al KDC.
+Gli stessi principi valgono usando [WMIExec](/articoli/wmiexec/), [PsExec](/articoli/psexec/) o [Evil-WinRM](/articoli/evilwinrm/) — l'unica differenza è il protocollo usato per l'esecuzione remota, non il modo in cui il ticket viene presentato al KDC.
 
 > **Detection:** quando inietti un TGT già esistente il KDC non emette necessariamente un nuovo Event 4768, perché non sta creando un nuovo ticket. Quando invece il ticket viene usato per richiedere un Service Ticket, genera **Event ID 4769**. Un 4769 senza 4768 precedente coerente sullo stesso account/host è un'anomalia da correlare. MITRE classifica questo riutilizzo come [T1550.003](https://attack.mitre.org/techniques/T1550/003/) — Pass the Ticket.
 
 ## Overpass-the-Hash / Pass-the-Key
 
-Hai l'NT hash di un utente (da [Mimikatz](https://hackita.it/articoli/mimikatz/) o da [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)): puoi usarlo per richiedere un TGT Kerberos valido, convertendo l'attacco da NTLM a Kerberos.
+Hai l'NT hash di un utente (da [Mimikatz](/articoli/mimikatz/) o da [Pass-the-Hash](/articoli/pass-the-hash/)): puoi usarlo per richiedere un TGT Kerberos valido, convertendo l'attacco da NTLM a Kerberos.
 
 * **Overpass-the-Hash:** usa l'NT hash (RC4) → richiede TGT con cifratura RC4
 * **Pass-the-Key:** usa la chiave AES (128 o 256 bit) → più coerente con ambienti moderni
@@ -201,7 +201,7 @@ Sul DC, ogni richiesta TGT genera Event 4768. Il campo `TicketEncryptionType` in
 
 ## Unconstrained Delegation — raccolta TGT privilegiati
 
-Un server configurato con **Unconstrained Delegation** riceve TGT **inoltrabili** dagli utenti che vi effettuano l'accesso, e può conservarli per impersonare l'utente verso altri servizi. Puoi identificare questi server in dominio con [BloodHound](https://hackita.it/articoli/bloodhound/), cercando nodi con l'attributo `unconstraineddelegation` a true.
+Un server configurato con **Unconstrained Delegation** riceve TGT **inoltrabili** dagli utenti che vi effettuano l'accesso, e può conservarli per impersonare l'utente verso altri servizi. Puoi identificare questi server in dominio con [BloodHound](/articoli/bloodhound/), cercando nodi con l'attributo `unconstraineddelegation` a true.
 
 **Scenario di attacco:**
 
@@ -231,7 +231,7 @@ Se un account ha **"Do not require Kerberos preauthentication"** abilitato, chiu
 1. Crackare la password offline (dal materiale cifrato dell'AS-REP)
 2. Usare quella password per ottenere un TGT normale con pre-auth
 
-L'attacco è trattato in dettaglio in [AS-REP Roasting](https://hackita.it/articoli/as-rep-roasting/).
+L'attacco è trattato in dettaglio in [AS-REP Roasting](/articoli/as-rep-roasting/).
 
 ```bash
 # Identifica account vulnerabili e richiedi materiale crackabile
@@ -249,7 +249,7 @@ getTGT.py corp.local/username:plaintext_password
 
 ## Golden Ticket — TGT forgiato
 
-Con l'hash di **krbtgt** (ottenuto da [DCSync](https://hackita.it/articoli/dcsync/) o dump del NTDS) puoi forgiare TGT arbitrari — per qualsiasi utente, con qualsiasi gruppo, con qualsiasi scadenza. Approfondito in [Golden Ticket](https://hackita.it/articoli/golden-ticket/).
+Con l'hash di **krbtgt** (ottenuto da [DCSync](/articoli/dcsync/) o dump del NTDS) puoi forgiare TGT arbitrari — per qualsiasi utente, con qualsiasi gruppo, con qualsiasi scadenza. Approfondito in [Golden Ticket](/articoli/golden-ticket/).
 
 ```powershell
 # Mimikatz — RC4
@@ -283,7 +283,7 @@ psexec.py -k -no-pass corp.local/administrator@DC01.corp.local
 
 ## TGT e privilegi reali
 
-Possedere un TGT **non rende automaticamente Domain Admin**. Il ticket permette di operare con l'identità e i privilegi associati all'account rappresentato — l'accesso effettivo dipende da gruppi, ACL e autorizzazioni dei servizi. Lo stesso principio vale per attacchi correlati come [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/) o [RBCD](https://hackita.it/articoli/rbcd/): ottenere un ticket non equivale ad ottenere privilegi che l'account non aveva già.
+Possedere un TGT **non rende automaticamente Domain Admin**. Il ticket permette di operare con l'identità e i privilegi associati all'account rappresentato — l'accesso effettivo dipende da gruppi, ACL e autorizzazioni dei servizi. Lo stesso principio vale per attacchi correlati come [Shadow Credentials](/articoli/shadow-credentials/) o [RBCD](/articoli/rbcd/): ottenere un ticket non equivale ad ottenere privilegi che l'account non aveva già.
 
 I difensori possono validare il PAC di un ticket contro i dati reali in AD: gruppi impossibili, buffer PAC mancanti o metadati che non coincidono con LDAP sono indicatori concreti di un ticket forgiato, quando i servizi implementano questa verifica.
 
@@ -324,7 +324,7 @@ Il Golden Ticket resta comunque efficace anche con Credential Guard attivo, perc
 
 | Problema                                | Causa probabile                                  | Soluzione                                                                                      |
 | --------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| `KDC_ERR_PREAUTH_FAILED` con getTGT.py  | Password o hash errati                           | Verifica hash con [secretsdump](https://hackita.it/articoli/dcsync/), prova password in chiaro |
+| `KDC_ERR_PREAUTH_FAILED` con getTGT.py  | Password o hash errati                           | Verifica hash con [secretsdump](/articoli/dcsync/), prova password in chiaro |
 | `KDC_ERR_C_PRINCIPAL_UNKNOWN`           | Utente non esiste o username errato              | Usa FQDN completo `corp.local/username`                                                        |
 | Pass-the-Ticket: permesso negato su SMB | Ticket scaduto o è un Service Ticket, non un TGT | Verifica con `klist`, controlla ACL                                                            |
 | `KRB5CCNAME` non riconosciuto           | Percorso relativo o variabile non esportata      | `export KRB5CCNAME=/path/assoluto/ticket.ccache`                                               |
@@ -406,8 +406,8 @@ SPN non trovato:        usa FQDN, non IP
 
 **Altri articoli correlati:**
 
-* [Kerberoasting](https://hackita.it/articoli/kerberos/)
-* [DPAPI](https://hackita.it/articoli/dpapi/)
-* [NTLM Relay](https://hackita.it/articoli/ntlm-relay/)
+* [Kerberoasting](/articoli/kerberos/)
+* [DPAPI](/articoli/dpapi/)
+* [NTLM Relay](/articoli/ntlm-relay/)
 
 > Uso esclusivo in ambienti autorizzati (HTB, HackLab, lab privati, pentest autorizzati).

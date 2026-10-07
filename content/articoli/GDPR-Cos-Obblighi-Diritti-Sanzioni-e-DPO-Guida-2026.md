@@ -30,7 +30,7 @@ Se gestisci un sito, un e-commerce, un'azienda o semplicemente lavori con dati d
 
 Due parole chiave:
 
-* **Regolamento**: a differenza di una direttiva (come la [NIS2](https://hackita.it/articoli/nis2/)), si applica direttamente in tutti gli Stati membri, senza che ognuno debba scrivere una propria legge di recepimento.
+* **Regolamento**: a differenza di una direttiva (come la [NIS2](/articoli/nis2/)), si applica direttamente in tutti gli Stati membri, senza che ognuno debba scrivere una propria legge di recepimento.
 * **Protezione dei dati**: l'obiettivo non è bloccare l'uso dei dati, ma dare regole e controllo alle persone a cui i dati appartengono.
 
 ## GDPR in parole semplici
@@ -162,11 +162,11 @@ Il GDPR non impone espressamente un penetration test, ma questo requisito rende 
 
 Per chi fa sicurezza offensiva, molte delle cause tipiche di violazioni di dati sono note:
 
-* una [SQL injection](https://hackita.it/articoli/sql-injection/) che permette di leggere un intero database di clienti;
-* un database esposto su Internet, come [MySQL sulla porta 3306](https://hackita.it/articoli/porta-3306-mysql/);
-* una vulnerabilità non ancora corretta, come uno [zero-day](https://hackita.it/articoli/zero-day/) su un prodotto esposto;
-* un [file di backup dimenticato sul server web](https://hackita.it/articoli/backup-exposure/);
-* account compromessi con [credential stuffing](https://hackita.it/articoli/credential-stuffing/) o [phishing](https://hackita.it/articoli/phishing/).
+* una [SQL injection](/articoli/sql-injection/) che permette di leggere un intero database di clienti;
+* un database esposto su Internet, come [MySQL sulla porta 3306](/articoli/porta-3306-mysql/);
+* una vulnerabilità non ancora corretta, come uno [zero-day](/articoli/zero-day/) su un prodotto esposto;
+* un [file di backup dimenticato sul server web](/articoli/backup-exposure/);
+* account compromessi con [credential stuffing](/articoli/credential-stuffing/) o [phishing](/articoli/phishing/).
 
 In tutti questi casi, un test di sicurezza periodico, con report conservato, è anche una prova di diligenza ai fini dell'articolo 32.
 
@@ -201,7 +201,7 @@ Un **data breach**, o violazione dei dati personali, è una violazione di sicure
 
 Esempio: un ransomware cifra il gestionale di uno studio medico e i dati dei pazienti sono stati copiati. Il rischio per le persone è alto: serve notifica al Garante entro 72 ore e comunicazione ai pazienti.
 
-Se l'azienda rientra anche nella NIS2, i tempi sono ancora più stretti: la pre-notifica all'autorità è entro 24 ore. Ne parliamo nella guida alla [direttiva NIS 2](https://hackita.it/articoli/nis2/).
+Se l'azienda rientra anche nella NIS2, i tempi sono ancora più stretti: la pre-notifica all'autorità è entro 24 ore. Ne parliamo nella guida alla [direttiva NIS 2](/articoli/nis2/).
 
 ## Sanzioni GDPR: multe fino a 20 milioni di euro
 

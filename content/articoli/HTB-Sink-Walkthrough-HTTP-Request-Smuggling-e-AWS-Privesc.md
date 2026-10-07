@@ -65,7 +65,7 @@ L'app espone anche alcune funzionalità utili come punto d'appoggio per l'attacc
 
 ## 2. HTTP Request Smuggling
 
-Prima di lanciare qualsiasi payload, è stato necessario capire davvero **perché** il bug esiste, non solo copiare un exploit. Il ragionamento è stato ricostruito passo passo. Per una guida di riferimento più generale sull'HTTP Request Smuggling (CL.TE, TE.CL, cache poisoning, furto cookie), vedi anche [HTTP Request Smuggling: Desync, Cache Poisoning e Cookie Theft](https://hackita.it/articoli/http-request-smuggling/) su Hackita.
+Prima di lanciare qualsiasi payload, è stato necessario capire davvero **perché** il bug esiste, non solo copiare un exploit. Il ragionamento è stato ricostruito passo passo. Per una guida di riferimento più generale sull'HTTP Request Smuggling (CL.TE, TE.CL, cache poisoning, furto cookie), vedi anche [HTTP Request Smuggling: Desync, Cache Poisoning e Cookie Theft](/articoli/http-request-smuggling/) su Hackita.
 
 ### 2.1 Content-Length vs Transfer-Encoding
 
@@ -374,7 +374,7 @@ echo "<Plaintext>" | base64 -d | tar -xzO
 
 Il tar estratto contiene `servers.yml`, con dentro le credenziali di un utente amministrativo del servizio (host `vault.sink.htb`), usate poi per arrivare a **root** sulla macchina.
 
-> **Approfondimento — strumenti per AWS pentesting.** Non usati direttamente su questa macchina, ma parte del panorama offensive su AWS: **Pacu** (exploitation attiva di privilege escalation IAM), **ScoutSuite** e **Prowler** (audit/mappatura delle misconfigurazioni), **PMapper** (il "BloodHound" di AWS, grafo dei percorsi di escalation), **cloud\_enum** (scoperta di bucket/risorse pubbliche per nome azienda). Guide operative complete: [AWS Pentesting: IAM, S3, EC2, IMDS e Privilege Escalation](https://hackita.it/articoli/aws-security/) e [AWS Privilege Escalation](https://hackita.it/articoli/aws-privilege-escalation/) su Hackita.
+> **Approfondimento — strumenti per AWS pentesting.** Non usati direttamente su questa macchina, ma parte del panorama offensive su AWS: **Pacu** (exploitation attiva di privilege escalation IAM), **ScoutSuite** e **Prowler** (audit/mappatura delle misconfigurazioni), **PMapper** (il "BloodHound" di AWS, grafo dei percorsi di escalation), **cloud\_enum** (scoperta di bucket/risorse pubbliche per nome azienda). Guide operative complete: [AWS Pentesting: IAM, S3, EC2, IMDS e Privilege Escalation](/articoli/aws-security/) e [AWS Privilege Escalation](/articoli/aws-privilege-escalation/) su Hackita.
 
 ***
 

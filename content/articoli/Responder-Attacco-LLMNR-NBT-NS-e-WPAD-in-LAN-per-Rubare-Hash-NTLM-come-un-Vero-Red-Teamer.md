@@ -41,7 +41,7 @@ Responder è un tool di poisoning e rogue-service che risponde alle richieste di
 
 ### NTLM vs NetNTLMv2: cosa cattura davvero Responder
 
-Quello che Responder raccoglie **non è l'hash NTLM statico** memorizzato sul sistema (quello si estrae con Mimikatz o [secretsdump](https://hackita.it/articoli/secretsdump/)), ma un **NetNTLMv2 challenge-response**: un valore calcolato al momento dell'autenticazione a partire dall'hash NTLM dell'utente più un challenge casuale. Per questo NetNTLMv2:
+Quello che Responder raccoglie **non è l'hash NTLM statico** memorizzato sul sistema (quello si estrae con Mimikatz o [secretsdump](/articoli/secretsdump/)), ma un **NetNTLMv2 challenge-response**: un valore calcolato al momento dell'autenticazione a partire dall'hash NTLM dell'utente più un challenge casuale. Per questo NetNTLMv2:
 
 * non è direttamente riutilizzabile per pass-the-hash — va prima craccato offline per ottenere la password in chiaro, oppure sfruttato subito via relay prima che scada;
 * è più lento da craccare dell'NTLM puro, perché il formato include il challenge nel calcolo dell'hash.
@@ -234,7 +234,7 @@ Sequenza tipica: il browser cerca `wpad.corp.local` via DNS, fallisce, fa fallba
 [HTTP] NTLMv2 Hash     : john.doe::CORP:1122334455667788:E8D3F1A9...
 ```
 
-Per la fase di scanning della rete che precede questi attacchi vedi la [guida Netcat](https://hackita.it/articoli/netcat/) per test di connettività rapidi sulle porte coinvolte.
+Per la fase di scanning della rete che precede questi attacchi vedi la [guida Netcat](/articoli/netcat/) per test di connettività rapidi sulle porte coinvolte.
 
 ## Cracking degli Hash Catturati
 
@@ -270,11 +270,11 @@ hashcat -m 5600 all_hashes.txt -a 3 ?u?l?l?l?l?d?d?d?d!
 john --show all_hashes.txt
 ```
 
-Consulta [John the Ripper](https://hackita.it/articoli/john-the-ripper/) e [Hashcat](https://hackita.it/articoli/hashcat/) per le tecniche di cracking avanzate.
+Consulta [John the Ripper](/articoli/john-the-ripper/) e [Hashcat](/articoli/hashcat/) per le tecniche di cracking avanzate.
 
 ## Responder vs ntlmrelayx: Qual È la Differenza?
 
-Sono due strumenti complementari, non alternativi: Responder cattura (poisoning + rogue service), [ntlmrelayx](https://hackita.it/articoli/ntlmrelayx/) inoltra l'autenticazione a un target reale in tempo reale, prima che si esaurisca.
+Sono due strumenti complementari, non alternativi: Responder cattura (poisoning + rogue service), [ntlmrelayx](/articoli/ntlmrelayx/) inoltra l'autenticazione a un target reale in tempo reale, prima che si esaurisca.
 
 | Tool                 | Funzione                                               |
 | -------------------- | ------------------------------------------------------ |
@@ -333,7 +333,7 @@ Relay
    +-- altri servizi compatibili con autenticazione NTLM
 ```
 
-Relay verso LDAP/LDAPS è particolarmente rilevante quando in rete è presente un [AD CS](https://hackita.it/articoli/ad-cs/): un'autenticazione relayata su LDAPS combinata con un template ADCS mal configurato può portare a un attack path completo — argomento che approfondiamo nell'articolo dedicato ad AD CS, qui resta un ramo avanzato da tenere presente più che una guida completa.
+Relay verso LDAP/LDAPS è particolarmente rilevante quando in rete è presente un [AD CS](/articoli/ad-cs/): un'autenticazione relayata su LDAPS combinata con un template ADCS mal configurato può portare a un attack path completo — argomento che approfondiamo nell'articolo dedicato ad AD CS, qui resta un ramo avanzato da tenere presente più che una guida completa.
 
 ## Post-Compromise Attack Paths
 
@@ -363,7 +363,7 @@ Responder -> NTLM Relay -> LDAP/LDAPS -> AD attack path (vedi AD CS)
 Accesso ottenuto -> dump credenziali (Mimikatz) -> nuovo hash NTLM -> pass-the-hash -> lateral movement
 ```
 
-Esempio concreto del Ramo D, con [Mimikatz](https://hackita.it/articoli/mimikatz/) eseguito dopo aver ottenuto shell su una workstation:
+Esempio concreto del Ramo D, con [Mimikatz](/articoli/mimikatz/) eseguito dopo aver ottenuto shell su una workstation:
 
 ```
 mimikatz # sekurlsa::logonpasswords
@@ -373,19 +373,19 @@ Domain            : CORP
 NTLM              : a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6
 ```
 
-Se quell'hash appartiene a un Domain Admin loggato sulla workstation, il passo successivo è [pass-the-hash](https://hackita.it/articoli/pass-the-hash/) verso il Domain Controller:
+Se quell'hash appartiene a un Domain Admin loggato sulla workstation, il passo successivo è [pass-the-hash](/articoli/pass-the-hash/) verso il Domain Controller:
 
 ```bash
 impacket-psexec -hashes :a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6 CORP/DA_Admin@192.168.1.10
 ```
 
-E da lì, [DCSync](https://hackita.it/articoli/dcsync/) per dumpare l'intero database credenziali del dominio:
+E da lì, [DCSync](/articoli/dcsync/) per dumpare l'intero database credenziali del dominio:
 
 ```bash
 impacket-secretsdump CORP/DA_Admin@192.168.1.10 -hashes :a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6
 ```
 
-Se in dominio, il [Kerberoasting](https://hackita.it/articoli/kerberoasting/) è un'alternativa al cracking NetNTLMv2 quando l'hash catturato non si rompe: prendi di mira direttamente i service account.
+Se in dominio, il [Kerberoasting](/articoli/kerberoasting/) è un'alternativa al cracking NetNTLMv2 quando l'hash catturato non si rompe: prendi di mira direttamente i service account.
 
 ## Tecniche Stealth e Defense Evasion
 
@@ -464,7 +464,7 @@ Verifica sempre gli ID correnti su [attack.mitre.org](https://attack.mitre.org) 
 | ----------------------------------------------------- | -------------------------------------------------------------------- |
 | Responder                                             | LLMNR/NBT-NS/mDNS/WPAD poisoning da Linux                            |
 | Inveigh                                               | Poisoning equivalente da host Windows (PowerShell/.NET)              |
-| [ntlmrelayx](https://hackita.it/articoli/ntlmrelayx/) | Relay puro dell'autenticazione NTLM                                  |
+| [ntlmrelayx](/articoli/ntlmrelayx/) | Relay puro dell'autenticazione NTLM                                  |
 | mitm6                                                 | Poisoning IPv6/DHCPv6 abbinato ad attacchi AD                        |
 | Pretender                                             | Spoofing/name resolution più recente, alternativa attiva a Responder |
 

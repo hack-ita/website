@@ -128,7 +128,7 @@ Endpoint API storici che potrebbero essere ancora attivi o parzialmente funziona
 echo "target.com" | waybackurls | grep "?" | sort -u > params.txt
 ```
 
-URL con parametri GET. Passali a strumenti come [Arjun](https://hackita.it/articoli/arjun/) o sqlmap per testing di injection.
+URL con parametri GET. Passali a strumenti come [Arjun](/articoli/arjun/) o sqlmap per testing di injection.
 
 ### Filtrare URL unici per path
 
@@ -247,7 +247,7 @@ Waybackurls alimenta la fase di discovery senza generare traffico verso il targe
 
 **Flusso operativo:**
 
-**Waybackurls (URL storico)** → [Httpx](https://hackita.it/articoli/httpx/) (verifica live) → [Nuclei](https://hackita.it/articoli/nuclei/) (vuln scan su endpoint trovati)
+**Waybackurls (URL storico)** → [Httpx](/articoli/httpx/) (verifica live) → [Nuclei](/articoli/nuclei/) (vuln scan su endpoint trovati)
 
 **Passaggio dati:**
 
@@ -404,4 +404,4 @@ Dipende dal dominio. Archive.org ha dati dal 1996 per alcuni siti.
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

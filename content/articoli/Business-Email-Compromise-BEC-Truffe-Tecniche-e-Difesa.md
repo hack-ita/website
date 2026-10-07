@@ -26,14 +26,14 @@ Il **Business Email Compromise** (**BEC**), in italiano conosciuto anche come **
 
 ## BEC significato: perché non è il solito phishing
 
-Il BEC è una forma di [phishing](https://hackita.it/articoli/phishing/) mirato (*spear phishing*), ma con una differenza cruciale: **le email BEC quasi mai contengono allegati infetti o link malevoli**, gli elementi che i filtri antispam sono addestrati a riconoscere. Sono messaggi puliti, scritti bene, spesso costruiti dopo settimane di osservazione dell'azienda bersaglio: organigramma, stile di comunicazione, gerarchie interne, abitudini operative, perfino il linguaggio tipico del CEO o del responsabile amministrativo.
+Il BEC è una forma di [phishing](/articoli/phishing/) mirato (*spear phishing*), ma con una differenza cruciale: **le email BEC quasi mai contengono allegati infetti o link malevoli**, gli elementi che i filtri antispam sono addestrati a riconoscere. Sono messaggi puliti, scritti bene, spesso costruiti dopo settimane di osservazione dell'azienda bersaglio: organigramma, stile di comunicazione, gerarchie interne, abitudini operative, perfino il linguaggio tipico del CEO o del responsabile amministrativo.
 
 Per questo il BEC bypassa i controlli tecnici tradizionali: non sfrutta una vulnerabilità del software, sfrutta la **fiducia** tra le persone.
 
 ## Come funziona un attacco BEC, passo per passo
 
 1. **Ricognizione**: l'attaccante studia l'azienda tramite social network (LinkedIn in primis), sito web, comunicati stampa e, se possibile, email già compromesse.
-2. **Accesso o impersonificazione**: o compromette davvero un account email (tramite phishing, credenziali rubate o un [data breach](https://hackita.it/articoli/data-breach/) precedente), oppure crea un dominio e un indirizzo molto simili a quello reale (per esempio `azienda-spa.com` invece di `aziendaspa.com`).
+2. **Accesso o impersonificazione**: o compromette davvero un account email (tramite phishing, credenziali rubate o un [data breach](/articoli/data-breach/) precedente), oppure crea un dominio e un indirizzo molto simili a quello reale (per esempio `azienda-spa.com` invece di `aziendaspa.com`).
 3. **Osservazione silenziosa**: se ha accesso reale alla casella, spesso monitora per settimane le conversazioni, aspettando il momento giusto, come una trattativa commerciale in corso.
 4. **Il colpo**: invia (o inserisce in una conversazione reale) un messaggio che richiede un bonifico urgente, un cambio di IBAN per un pagamento già previsto, o dati riservati.
 5. **Pressione psicologica**: urgenza, riservatezza ("non parlarne con nessun altro"), autorità (il messaggio sembra venire dal capo o da un partner fidato).
@@ -95,7 +95,7 @@ Il dettaglio da notare: nessun link, nessun allegato sospetto. Solo una conversa
 
 ## BEC e intelligenza artificiale
 
-Il BEC si sta evolvendo con l'IA generativa: email sempre più naturali, senza gli errori grammaticali che un tempo erano un segnale rivelatore, e in alcuni casi persino deepfake vocali o video per rafforzare la credibilità di una richiesta urgente (una tecnica che si sovrappone al [vishing](https://hackita.it/articoli/vishing/)). L'FBI ha già attribuito oltre **30 milioni di dollari** di perdite BEC del 2025 a schemi con una componente IA confermata. La difesa non cambia nella sostanza: nessuna richiesta finanziaria urgente va autorizzata senza una verifica indipendente, qualunque sia il mezzo con cui arriva.
+Il BEC si sta evolvendo con l'IA generativa: email sempre più naturali, senza gli errori grammaticali che un tempo erano un segnale rivelatore, e in alcuni casi persino deepfake vocali o video per rafforzare la credibilità di una richiesta urgente (una tecnica che si sovrappone al [vishing](/articoli/vishing/)). L'FBI ha già attribuito oltre **30 milioni di dollari** di perdite BEC del 2025 a schemi con una componente IA confermata. La difesa non cambia nella sostanza: nessuna richiesta finanziaria urgente va autorizzata senza una verifica indipendente, qualunque sia il mezzo con cui arriva.
 
 ## Domande frequenti sul Business Email Compromise
 

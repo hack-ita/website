@@ -18,7 +18,7 @@ tags:
 
 # BloodyAD: Guida Definitiva al Framework di Privilege Escalation in Active Directory
 
-BloodyAD è il "coltellino svizzero" per la privilege escalation in [Active Directory](https://hackita.it/articoli/active-directory/) tramite LDAP. Dove [BloodHound](https://hackita.it/articoli/bloodhound/) ti mostra i path di escalation, BloodyAD te li esegue — dalla modifica di password a RBCD, Shadow Credentials, DCSync e il recente Bad Successor su Windows Server 2025. Tutto via LDAP, senza PowerShell, senza .NET, da Linux o Windows, anche attraverso un proxy SOCKS.
+BloodyAD è il "coltellino svizzero" per la privilege escalation in [Active Directory](/articoli/active-directory/) tramite LDAP. Dove [BloodHound](/articoli/bloodhound/) ti mostra i path di escalation, BloodyAD te li esegue — dalla modifica di password a RBCD, Shadow Credentials, DCSync e il recente Bad Successor su Windows Server 2025. Tutto via LDAP, senza PowerShell, senza .NET, da Linux o Windows, anche attraverso un proxy SOCKS.
 
 Creato da CravateRouge e basato sulla libreria MSLDAP di @skelsec, è il complemento naturale di BloodHound in qualsiasi assessment AD.
 
@@ -44,7 +44,7 @@ Il workflow classico è:
 * Python puro → funziona da Linux senza PowerShell
 * LDAP diretto → meno rumore di strumenti che spawna processi
 * Supporta tutti i metodi di autenticazione AD (password, hash, ticket, cert)
-* SOCKS proxy nativo → usabile tramite C2 come [Sliver](https://hackita.it/articoli/sliver-c2/) o [Havoc](https://hackita.it/articoli/havoc/)
+* SOCKS proxy nativo → usabile tramite C2 come [Sliver](/articoli/sliver-c2/) o [Havoc](/articoli/havoc/)
 * autobloody companion → esegue interi path BloodHound automaticamente
 
 ***
@@ -151,7 +151,7 @@ bloodyAD --host 10.10.10.5 -d corp.local -u admin \
   get object Administrator
 ```
 
-> Il formato `:HASH` è la stessa convenzione usata da [Impacket](https://hackita.it/articoli/impacket/) — se sai fare `psexec.py -hashes :HASH ...`, BloodyAD funziona allo stesso modo.
+> Il formato `:HASH` è la stessa convenzione usata da [Impacket](/articoli/impacket/) — se sai fare `psexec.py -hashes :HASH ...`, BloodyAD funziona allo stesso modo.
 
 ### Pass-the-Ticket (PTT / Kerberos)
 
@@ -1142,16 +1142,16 @@ Con l'AD Recycle Bin attivo, un oggetto cancellato diventa "recycled" e mantiene
 
 ## Articoli correlati
 
-* [Active Directory — exploitation](https://hackita.it/articoli/active-directory/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/) — trova i path che BloodyAD esegue
-* [Impacket](https://hackita.it/articoli/impacket/) — getST, secretsdump, addcomputer
-* [Mimikatz](https://hackita.it/articoli/mimikatz/) — dump credenziali post-escalation
-* [Kerberoasting](https://hackita.it/articoli/kerberos/) — exploitation SPN trovati con get search
-* [DCSync](https://hackita.it/articoli/dcsync/) — dopo aver ottenuto i diritti di replica
-* [Shadow Credentials](https://hackita.it/articoli/shadow-credentials/) — approfondimento PKINIT abuse
-* [Rubeus](https://hackita.it/articoli/rubeus/) — operazioni Kerberos post-escalation
-* [ntlmrelayx.py](https://hackita.it/articoli/ntlmrelayx/) — relay + RBCD/Shadow Creds
-* [PowerShell](https://hackita.it/articoli/powershell/) — alternativa Windows per AD enum
+* [Active Directory — exploitation](/articoli/active-directory/)
+* [BloodHound](/articoli/bloodhound/) — trova i path che BloodyAD esegue
+* [Impacket](/articoli/impacket/) — getST, secretsdump, addcomputer
+* [Mimikatz](/articoli/mimikatz/) — dump credenziali post-escalation
+* [Kerberoasting](/articoli/kerberos/) — exploitation SPN trovati con get search
+* [DCSync](/articoli/dcsync/) — dopo aver ottenuto i diritti di replica
+* [Shadow Credentials](/articoli/shadow-credentials/) — approfondimento PKINIT abuse
+* [Rubeus](/articoli/rubeus/) — operazioni Kerberos post-escalation
+* [ntlmrelayx.py](/articoli/ntlmrelayx/) — relay + RBCD/Shadow Creds
+* [PowerShell](/articoli/powershell/) — alternativa Windows per AD enum
 
 ***
 

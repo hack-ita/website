@@ -175,7 +175,7 @@ done
 
 ## 6️⃣ Toolchain Integration
 
-**Flusso:** [Masscan](https://hackita.it/articoli/masscan/) (porta 445) → **Smbmap (share enum)** → [Rpcclient](https://hackita.it/articoli/rpcclient/)/[NetExec](https://hackita.it/articoli/netexec/) (lateral movement)
+**Flusso:** [Masscan](/articoli/masscan/) (porta 445) → **Smbmap (share enum)** → [Rpcclient](/articoli/rpcclient/)/[NetExec](/articoli/netexec/) (lateral movement)
 
 | Tool       | Share enum | Permessi | RCE | Ricerca file |
 | ---------- | ---------- | -------- | --- | ------------ |
@@ -257,4 +257,4 @@ Single host: 2-5 sec. /24: 3-5 min in loop.
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

@@ -86,7 +86,7 @@ Il tasso di successo per singolo tentativo è tipicamente stimato tra lo 0,1% e 
 
 * **Breach di terze parti** — database di servizi compromessi, spesso aggregati in collection più grandi
 * **Infostealer** — malware che estrae credenziali da browser e le carica su C2 controllati dall'attaccante
-* **Phishing** — credenziali raccolte da campagne AiTM o fake login page (vedi [credential harvesting](https://hackita.it/articoli/credential-harvesting/))
+* **Phishing** — credenziali raccolte da campagne AiTM o fake login page (vedi [credential harvesting](/articoli/credential-harvesting/))
 * **Dark web market** — combo list vendute come commodity
 
 ```bash
@@ -107,7 +107,7 @@ curl "https://haveibeenpwned.com/api/v3/breachedaccount/user@company.com" \
 | **Password spraying**   | Poche password comuni per molti account | Medio      | Basso (progettato per eluderlo) |
 | **Brute force**         | Dizionario/permutazioni su un account   | Molto alto | Alto                            |
 
-In un pentest la distinzione è sostanziale: il credential stuffing verifica se le credenziali dei dipendenti sono già compromesse e riusate; il [password spraying](https://hackita.it/articoli/password-spraying/) verifica l'efficacia delle policy password.
+In un pentest la distinzione è sostanziale: il credential stuffing verifica se le credenziali dei dipendenti sono già compromesse e riusate; il [password spraying](/articoli/password-spraying/) verifica l'efficacia delle policy password.
 
 ***
 

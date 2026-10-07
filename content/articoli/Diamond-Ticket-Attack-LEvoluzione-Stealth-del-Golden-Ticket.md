@@ -26,7 +26,7 @@ tags:
 
 ## Glossario rapido
 
-Per il protocollo Kerberos completo vedi [Kerberos — autenticazione in Active Directory](https://hackita.it/articoli/kerberos/).
+Per il protocollo Kerberos completo vedi [Kerberos — autenticazione in Active Directory](/articoli/kerberos/).
 
 * **PAC (Privilege Attribute Certificate)**: Struttura nel TGT che lista i gruppi dell'utente. Il KDC la costruisce al momento dell'AS-REQ. Il Diamond Ticket la sostituisce con una versione manipolata, mantenendo tutto il resto del ticket originale.
 * **KDC Signature**: Firma crittografica del PAC con la chiave del KDC (krbtgt). Garantisce l'integrità del PAC. Il Diamond Ticket deve ri-firmare il PAC con la stessa chiave dopo averlo modificato.
@@ -77,10 +77,10 @@ Nato come risposta diretta ai sistemi di detection che rilevano l'assenza di AS-
 
 | Tecnica                                                         | Cosa usi                         | AS-REQ nei log | PAC autentico      | Richiede DA? | Contatta DC? |
 | --------------------------------------------------------------- | -------------------------------- | -------------- | ------------------ | ------------ | ------------ |
-| [Silver Ticket](https://hackita.it/articoli/silver-ticket/)     | Hash service account             | No             | No                 | No           | No           |
-| [Golden Ticket](https://hackita.it/articoli/golden-ticket/)     | krbtgt hash                      | No             | No                 | Sì           | No           |
+| [Silver Ticket](/articoli/silver-ticket/)     | Hash service account             | No             | No                 | No           | No           |
+| [Golden Ticket](/articoli/golden-ticket/)     | krbtgt hash                      | No             | No                 | Sì           | No           |
 | **Diamond Ticket**                                              | krbtgt hash + TGT reale          | **Sì**         | **Parzialmente**   | Sì           | **Sì**       |
-| [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/) | krbtgt hash + PAC reale S4U2Self | Sì             | **Sì (autentico)** | Sì           | Sì           |
+| [Sapphire Ticket](/articoli/sapphire-ticket/) | krbtgt hash + PAC reale S4U2Self | Sì             | **Sì (autentico)** | Sì           | Sì           |
 
 Il Diamond Ticket colma il gap di detection principale del Golden Ticket. Il Sapphire Ticket va ancora oltre — ma richiede un'interazione più complessa col KDC.
 
@@ -168,7 +168,7 @@ Prima di modificare il PAC, hai bisogno di un TGT reale come "base". Hai tre opz
 
 ### Opzione A — `/tgtdeleg` (nessuna credenziale aggiuntiva)
 
-`/tgtdeleg` è un flag [Rubeus](https://hackita.it/articoli/rubeus/) che sfrutta il meccanismo di delega Kerberos GSS-API per estrarre un TGT delegabile dalla sessione corrente — senza conoscere la password dell'utente. Richiede di essere già in una sessione Windows autenticata.
+`/tgtdeleg` è un flag [Rubeus](/articoli/rubeus/) che sfrutta il meccanismo di delega Kerberos GSS-API per estrarre un TGT delegabile dalla sessione corrente — senza conoscere la password dell'utente. Richiede di essere già in una sessione Windows autenticata.
 
 ```powershell
 # Estrai TGT dalla sessione corrente via tgtdeleg
@@ -206,7 +206,7 @@ sekurlsa::tickets /export
 
 ### Con Rubeus — metodo base
 
-[Rubeus](https://hackita.it/articoli/rubeus/) usa il subcommand `diamond`. Il parametro chiave è `/krbkey` (chiave krbtgt AES256) — diverso da `/aes256` usato per `golden` e `silver`.
+[Rubeus](/articoli/rubeus/) usa il subcommand `diamond`. Il parametro chiave è `/krbkey` (chiave krbtgt AES256) — diverso da `/aes256` usato per `golden` e `silver`.
 
 ```powershell
 # Diamond Ticket con credenziali utente (Rubeus fa tutto: AS-REQ + patch PAC)
@@ -351,7 +351,7 @@ impacket-wmiexec -k -no-pass corp.local/Administrator@TARGET
 impacket-smbexec -k -no-pass corp.local/Administrator@TARGET
 ```
 
-Per lateral movement sistematico su subnet intere, [NetExec](https://hackita.it/articoli/netexec/):
+Per lateral movement sistematico su subnet intere, [NetExec](/articoli/netexec/):
 
 ```bash
 netexec smb 192.168.1.0/24 --use-kcache -x 'whoami'
@@ -518,13 +518,13 @@ Il Diamond Ticket non raggiunge il cloud direttamente. Ma se usi il Diamond Tick
 
 ## Mitigazione e prevenzione
 
-* **Proteggi l'hash krbtgt** come asset primario — vedi [Golden Ticket](https://hackita.it/articoli/golden-ticket/) per il path completo verso krbtgt.
+* **Proteggi l'hash krbtgt** come asset primario — vedi [Golden Ticket](/articoli/golden-ticket/) per il path completo verso krbtgt.
 * **Doppio reset krbtgt periodico (almeno semestrale)**: Riduce la finestra di utilizzo. Usa [New-KrbtgtKeys.ps1](https://github.com/microsoft/New-KrbtgtKeys.ps1).
 * **Microsoft Defender for Identity**: È lo strumento più efficace per rilevare Diamond Ticket tramite PAC anomaly detection. Configuralo e verifica che gli alert siano attivi per T1558.001.
 * **AES-only enforcement** (`msDS-SupportedEncryptionTypes = 24`): Non previene il Diamond ma forza l'uso di AES — aumenta il costo dell'attacco e riduce i vettori di downgrade.
 * **PAC validation** sui servizi critici: Forza i servizi a contattare il DC per validare il PAC → Diamond Ticket rilevato anche senza MDI.
-* **Monitora [DCSync](https://hackita.it/articoli/dcsync/)** in tempo reale (Event ID 4662 con diritti di replica) — l'hash krbtgt arriva tipicamente via DCSync.
-* **Mappa i path verso krbtgt con [BloodHound](https://hackita.it/articoli/bloodhound/)** e rimuovi le deleghe non necessarie.
+* **Monitora [DCSync](/articoli/dcsync/)** in tempo reale (Event ID 4662 con diritti di replica) — l'hash krbtgt arriva tipicamente via DCSync.
+* **Mappa i path verso krbtgt con [BloodHound](/articoli/bloodhound/)** e rimuovi le deleghe non necessarie.
 * **Kerberos Armoring (FAST)**: Impatto **limitato** sul Diamond Ticket. FAST cifra il canale AS-REQ/AS-REP tra client e KDC — ma il Diamond Ticket usa un AS-REQ reale (quindi FAST non lo blocca) e il TGT è già cifrato con la chiave krbtgt (che l'attaccante ha). FAST protegge il canale di autenticazione, non la validità del PAC. Vale abilitarlo per mitigare altri vettori Kerberos (AS-REP Roasting, downgrade), ma non risolve il problema Diamond.
 * **Monitora KDCOptions anomali** nei log 4768/4769 — pattern di tool come Rubeus senza `/opsec` sono rilevabili.
 * **Monitora DCSync con alert immediato** (Event ID 4662): DCSync è il vettore più comune per ottenere l'hash krbtgt. In ambienti con MDI, un DCSync da IP non autorizzato genera alert immediato. Se l'attaccante fa DCSync da un account legittimo con diritti di replica o da un DC secondario compromesso, l'operazione appare normale — pianifica la risposta anche per questo scenario.
@@ -533,7 +533,7 @@ Il Diamond Ticket non raggiunge il cloud direttamente. Ma se usi il Diamond Tick
 
 ## Confronto: Silver / Golden / Diamond / Sapphire
 
-|                 | [Silver Ticket](https://hackita.it/articoli/silver-ticket/) | [Golden Ticket](https://hackita.it/articoli/golden-ticket/) | **Diamond Ticket**    | [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/) |
+|                 | [Silver Ticket](/articoli/silver-ticket/) | [Golden Ticket](/articoli/golden-ticket/) | **Diamond Ticket**    | [Sapphire Ticket](/articoli/sapphire-ticket/) |
 | --------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | --------------------- | --------------------------------------------------------------- |
 | Hash richiesto  | Service account                                             | krbtgt                                                      | krbtgt                | krbtgt                                                          |
 | TGT di partenza | N/A (forgia TGS)                                            | Forgiato offline                                            | **Reale (da AS-REQ)** | Reale (da AS-REQ)                                               |
@@ -554,7 +554,7 @@ Il Diamond Ticket non raggiunge il cloud direttamente. Ma se usi il Diamond Tick
 
 ## Quick Reference
 
-**1. Ottieni krbtgt AES256 key via [DCSync](https://hackita.it/articoli/dcsync/):**
+**1. Ottieni krbtgt AES256 key via [DCSync](/articoli/dcsync/):**
 
 ```powershell
 lsadump::dcsync /domain:corp.local /user:krbtgt
@@ -643,26 +643,26 @@ Sì. Doppio reset krbtgt. L'account low-privilege usato per l'AS-REQ va anche lu
 
 Il Diamond Ticket è la risposta tecnica all'evoluzione dei sistemi di detection: quando MDI e i SIEM hanno imparato a rilevare il Golden Ticket tramite l'assenza di AS-REQ, la comunità offensiva ha risposto rendendo il ticket di partenza reale. Con `/ldap` e `/opsec`, il profilo del Diamond Ticket è quasi indistinguibile da un'autenticazione legittima.
 
-Questo è il pattern ricorrente di Kerberos ticket attacks: ogni mitigazione genera una variante più sofisticata. Il [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/) porta questa evoluzione al livello successivo con un PAC completamente autentico.
+Questo è il pattern ricorrente di Kerberos ticket attacks: ogni mitigazione genera una variante più sofisticata. Il [Sapphire Ticket](/articoli/sapphire-ticket/) porta questa evoluzione al livello successivo con un PAC completamente autentico.
 
-La difesa non può basarsi solo sul rilevamento dei singoli ticket — deve partire dalla protezione dell'hash krbtgt tramite controllo degli accessi, monitoring [DCSync](https://hackita.it/articoli/dcsync/) in tempo reale, e mapping dei path con [BloodHound](https://hackita.it/articoli/bloodhound/). Se l'hash non esce, Diamond e Golden non esistono.
+La difesa non può basarsi solo sul rilevamento dei singoli ticket — deve partire dalla protezione dell'hash krbtgt tramite controllo degli accessi, monitoring [DCSync](/articoli/dcsync/) in tempo reale, e mapping dei path con [BloodHound](/articoli/bloodhound/). Se l'hash non esce, Diamond e Golden non esistono.
 
 ***
 
 ## Articoli correlati
 
-* [Kerberos — autenticazione in Active Directory](https://hackita.it/articoli/kerberos/)
-* [Golden Ticket](https://hackita.it/articoli/golden-ticket/)
-* [Silver Ticket](https://hackita.it/articoli/silver-ticket/)
-* [Sapphire Ticket](https://hackita.it/articoli/sapphire-ticket/)
-* [DCSync](https://hackita.it/articoli/dcsync/)
-* [Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/)
-* [Rubeus](https://hackita.it/articoli/rubeus/)
-* [Impacket](https://hackita.it/articoli/impacket/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/)
-* [Mimikatz](https://hackita.it/articoli/mimikatz/)
-* [NetExec](https://hackita.it/articoli/netexec/)
-* [Active Directory — exploitation](https://hackita.it/articoli/active-directory/)
+* [Kerberos — autenticazione in Active Directory](/articoli/kerberos/)
+* [Golden Ticket](/articoli/golden-ticket/)
+* [Silver Ticket](/articoli/silver-ticket/)
+* [Sapphire Ticket](/articoli/sapphire-ticket/)
+* [DCSync](/articoli/dcsync/)
+* [Pass-the-Ticket](/articoli/pass-the-ticket/)
+* [Rubeus](/articoli/rubeus/)
+* [Impacket](/articoli/impacket/)
+* [BloodHound](/articoli/bloodhound/)
+* [Mimikatz](/articoli/mimikatz/)
+* [NetExec](/articoli/netexec/)
+* [Active Directory — exploitation](/articoli/active-directory/)
 
 ***
 

@@ -164,7 +164,7 @@ Tre concetti spesso confusi da chi inizia:
 
 * **FTP bounce**: il server FTP effettua una connessione verso una destinazione indicata dal client, sfruttando il comando `PORT`. È specifico del protocollo FTP.
 * **Proxy**: inoltra traffico tra client e destinazione secondo un modello di proxying esplicito (es. SOCKS, HTTP proxy).
-* **Pivot**: usa un sistema compromesso o comunque accessibile come punto intermedio per raggiungere una rete altrimenti non raggiungibile direttamente. Approfondimento: [pivoting](https://hackita.it/articoli/pivoting/).
+* **Pivot**: usa un sistema compromesso o comunque accessibile come punto intermedio per raggiungere una rete altrimenti non raggiungibile direttamente. Approfondimento: [pivoting](/articoli/pivoting/).
 
 FTP bounce non equivale automaticamente ad avere accesso alla rete interna: la tecnica permette di sfruttare il server FTP per effettuare determinate connessioni verso altri host, ma cosa sia effettivamente raggiungibile dipende da routing, firewall e configurazione del server FTP stesso.
 

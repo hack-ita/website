@@ -21,7 +21,7 @@ Il **Subdomain Takeover** avviene quando un record DNS (tipicamente un CNAME) pu
 
 Phishing perfetto — certificato SSL valido, dominio aziendale reale, l'utente non ha modo di distinguerlo. I cookie impostati su `.target.com` sono leggibili dal subdomain controllato → **session hijacking cross-subdomain**.
 
-Satellite della [guida pillar Misc & Infra Attacks](https://hackita.it/articoli/misc-infra-attacks-guida-completa/). Vedi anche: [Open Redirect](https://hackita.it/articoli/open-redirect/), [Session Hijacking](https://hackita.it/articoli/session-hijacking/).
+Satellite della [guida pillar Misc & Infra Attacks](/articoli/misc-infra-attacks-guida-completa/). Vedi anche: [Open Redirect](/articoli/open-redirect/), [Session Hijacking](/articoli/session-hijacking/).
 
 Riferimenti: [HackTricks Subdomain Takeover](https://book.hacktricks.wiki/en/pentesting-web/domain-subdomain-takeover.html), [Can I Take Over XYZ](https://github.com/EdOverflow/can-i-take-over-xyz), [OWASP Testing Subdomain Takeover](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/10-Test_for_Subdomain_Takeover).
 
@@ -211,4 +211,4 @@ IMPATTO
 
 ***
 
-> I tuoi record DNS puntano a servizi ancora attivi? I cookie hanno `Domain=.target.com`? [Penetration test HackIta](https://hackita.it/servizi). Dal CNAME dimenticato all'account takeover: [formazione 1:1](https://hackita.it/formazione).
+> I tuoi record DNS puntano a servizi ancora attivi? I cookie hanno `Domain=.target.com`? [Penetration test HackIta](/servizi). Dal CNAME dimenticato all'account takeover: [formazione 1:1](/formazione).

@@ -570,7 +570,7 @@ done
 
 ### Certificati ADCS — uso in ambienti Active Directory
 
-In ambienti Windows con ADCS ([Active Directory Certificate Services](https://hackita.it/articoli/adcs-esc1-esc16/)), OpenSSL è usato per gestire i certificati generati durante attacchi ESC8/ESC11.
+In ambienti Windows con ADCS ([Active Directory Certificate Services](/articoli/adcs-esc1-esc16/)), OpenSSL è usato per gestire i certificati generati durante attacchi ESC8/ESC11.
 
 ```bash
 # Converti certificato .pem ricevuto da ntlmrelayx in .pfx
@@ -824,11 +824,11 @@ Per la maggior parte dei comandi CLI nulla. I breaking changes di 4.0 riguardano
 
 ## Articoli correlati
 
-* [ADCS ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/) — certificati AD in pentest
-* [ntlmrelayx.py](https://hackita.it/articoli/ntlmrelayx/) — ESC8/ESC11 e relay verso ADCS
-* [Python](https://hackita.it/articoli/python/) — automazione con ssl module
-* [Bash](https://hackita.it/articoli/bash/) — script per monitoraggio certificati
-* [Active Directory — exploitation](https://hackita.it/articoli/active-directory/)
+* [ADCS ESC1-ESC16](/articoli/adcs-esc1-esc16/) — certificati AD in pentest
+* [ntlmrelayx.py](/articoli/ntlmrelayx/) — ESC8/ESC11 e relay verso ADCS
+* [Python](/articoli/python/) — automazione con ssl module
+* [Bash](/articoli/bash/) — script per monitoraggio certificati
+* [Active Directory — exploitation](/articoli/active-directory/)
 
 ***
 

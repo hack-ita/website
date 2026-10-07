@@ -68,7 +68,7 @@ Questa è la distinzione più importante dell'intero argomento, e i media spesso
 | **Esempio**        | Un sito pubblico qualsiasi                           | La tua casella email, l'home banking                   | Un servizio .onion                                           |
 | **Natura**         | Pubblico per definizione                             | In gran parte attività quotidiane legittime            | Mix di anonimato legittimo e attività illegali               |
 
-In una frase: **il dark web è un sottoinsieme del deep web**, non il suo sinonimo. Tutto il dark web è deep web, ma quasi tutto il deep web non ha nulla a che fare col dark web. Per un approfondimento specifico sul tema, abbiamo una guida dedicata al [dark web](https://hackita.it/articoli/dark-web/).
+In una frase: **il dark web è un sottoinsieme del deep web**, non il suo sinonimo. Tutto il dark web è deep web, ma quasi tutto il deep web non ha nulla a che fare col dark web. Per un approfondimento specifico sul tema, abbiamo una guida dedicata al [dark web](/articoli/dark-web/).
 
 ## Serve Tor per accedere al deep web?
 
@@ -80,11 +80,11 @@ Tor è una rete e un insieme di strumenti per la privacy, usata ogni giorno sopr
 
 **Usare Tor non è illegale**: è un software scaricabile liberamente, impiegato ogni giorno da giornalisti, attivisti, persone che vivono sotto regimi censori e semplici utenti che vogliono più privacy.
 
-Il dark web vero e proprio, i suoi marketplace, i rischi concreti di navigarci e la sua legalità li trattiamo in modo approfondito nella guida dedicata al [dark web](https://hackita.it/articoli/dark-web/): qui basta ricordare che è **una parte del deep web**, non il suo sinonimo, e che la liceità dipende sempre da cosa si fa una volta dentro, non dall'accesso in sé.
+Il dark web vero e proprio, i suoi marketplace, i rischi concreti di navigarci e la sua legalità li trattiamo in modo approfondito nella guida dedicata al [dark web](/articoli/dark-web/): qui basta ricordare che è **una parte del deep web**, non il suo sinonimo, e che la liceità dipende sempre da cosa si fa una volta dentro, non dall'accesso in sé.
 
 ## Deep web, dark web e dati rubati
 
-Una precisazione importante: **"deep web" non è sinonimo di "mercato criminale"**. La stragrande maggioranza del deep web è fatta di email, home banking e aree riservate del tutto legittime. È nella parte criminale del dark web, non nel deep web in generale, che circolano credenziali, numeri di carte e identità rubate provenienti da [data breach](https://hackita.it/articoli/data-breach/), spesso in vendita su forum e marketplace a poche ore da una violazione. Per questo esistono servizi di **dark web monitoring**: strumenti che cercano automaticamente le credenziali di un'azienda o di una persona in questi mercati, per avvisare prima che vengano sfruttate.
+Una precisazione importante: **"deep web" non è sinonimo di "mercato criminale"**. La stragrande maggioranza del deep web è fatta di email, home banking e aree riservate del tutto legittime. È nella parte criminale del dark web, non nel deep web in generale, che circolano credenziali, numeri di carte e identità rubate provenienti da [data breach](/articoli/data-breach/), spesso in vendita su forum e marketplace a poche ore da una violazione. Per questo esistono servizi di **dark web monitoring**: strumenti che cercano automaticamente le credenziali di un'azienda o di una persona in questi mercati, per avvisare prima che vengano sfruttate.
 
 A livello personale, un primo controllo gratuito e alla portata di tutti è verificare se la propria email compare in violazioni note tramite servizi come Have I Been Pwned, che non richiede di accedere al dark web per funzionare.
 

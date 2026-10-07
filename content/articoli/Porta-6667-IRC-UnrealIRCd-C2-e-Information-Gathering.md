@@ -344,7 +344,7 @@ cat /etc/unrealircd/unrealircd.conf | grep -iE "password|pass|oper"
 
 La configurazione IRC contiene password OPER, link password (per collegare server IRC tra loro) e a volte credenziali di servizi esterni.
 
-Per l'escalation completa: [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/).
+Per l'escalation completa: [Linux Privilege Escalation](/articoli/linux-privesc/).
 
 ## 8. Detection & Hardening
 
@@ -377,4 +377,4 @@ Per l'escalation completa: [Linux Privilege Escalation](https://hackita.it/artic
 
 Riferimento: RFC 1459 (IRC Protocol), CVE-2010-2075, HackTricks IRC, OSCP methodology. Uso esclusivo in ambienti autorizzati. [https://hackviser.com/tactics/pentesting/services/irc](https://hackviser.com/tactics/pentesting/services/irc)
 
-> La community è il cuore di HackIta. [Supporta il progetto](https://hackita.it/dona) per mantenere le guide gratuite e indipendenti, o porta le tue skill al livello successivo con la [formazione 1:1](https://hackita.it/formazione).
+> La community è il cuore di HackIta. [Supporta il progetto](/dona) per mantenere le guide gratuite e indipendenti, o porta le tue skill al livello successivo con la [formazione 1:1](/formazione).

@@ -24,7 +24,7 @@ tags:
 
 ## Cos'è ldapsearch e Dove si Incastra nel Workflow
 
-`ldapsearch` sta bene tra recon e AD enumeration: prima valida raggiungibilità e TLS, poi interroga la RootDSE per capire i naming context, infine esegue query mirate per costruire una mappa di utenti/gruppi/computer. Quando vuoi ragionare in termini di percorsi di attacco (sessioni, ACL, deleghe) piuttosto che di singoli record, il passo successivo naturale è [BloodHound](https://hackita.it/articoli/bloodhound/) — `ldapsearch` resta comunque utile lì come verifica puntuale ("questa OU è visibile con queste credenziali?").
+`ldapsearch` sta bene tra recon e AD enumeration: prima valida raggiungibilità e TLS, poi interroga la RootDSE per capire i naming context, infine esegue query mirate per costruire una mappa di utenti/gruppi/computer. Quando vuoi ragionare in termini di percorsi di attacco (sessioni, ACL, deleghe) piuttosto che di singoli record, il passo successivo naturale è [BloodHound](/articoli/bloodhound/) — `ldapsearch` resta comunque utile lì come verifica puntuale ("questa OU è visibile con queste credenziali?").
 
 ## Installazione e Verifica
 
@@ -198,7 +198,7 @@ ldapsearch -x -H ldap://10.10.10.10 -D "jdoe@example.com" -W \
 dn sAMAccountName servicePrincipalName
 ```
 
-La presenza di uno SPN non è di per sé una vulnerabilità: identifica un account associato a un servizio, che può meritare una verifica successiva nel percorso di assessment (tipicamente [Kerberoasting](https://hackita.it/articoli/kerberoasting/)) — non un risultato exploitabile da solo.
+La presenza di uno SPN non è di per sé una vulnerabilità: identifica un account associato a un servizio, che può meritare una verifica successiva nel percorso di assessment (tipicamente [Kerberoasting](/articoli/kerberoasting/)) — non un risultato exploitabile da solo.
 
 ## Output Pulito e Performance
 
@@ -246,10 +246,10 @@ nc -vz 10.10.10.10 389
 | Tool                                                        | Quando usarlo                                                        |
 | ----------------------------------------------------------- | -------------------------------------------------------------------- |
 | `ldapsearch`                                                | Precisione: controllo totale su bind, scope, filtri, attributi       |
-| [NetExec](https://hackita.it/articoli/netexec/)             | Enumeration operativa rapida SMB/LDAP, validazione credenziali       |
-| [BloodHound](https://hackita.it/articoli/bloodhound/)       | Relazioni e attack path (ACL, sessioni, deleghe), non singoli record |
-| [enum4linux-ng](https://hackita.it/articoli/enum4linux-ng/) | Enumerazione SMB/RPC quando LDAP è limitato o chiuso                 |
-| [rpcclient](https://hackita.it/articoli/rpcclient/)         | Informazioni RPC/SAM/dominio via SMB                                 |
+| [NetExec](/articoli/netexec/)             | Enumeration operativa rapida SMB/LDAP, validazione credenziali       |
+| [BloodHound](/articoli/bloodhound/)       | Relazioni e attack path (ACL, sessioni, deleghe), non singoli record |
+| [enum4linux-ng](/articoli/enum4linux-ng/) | Enumerazione SMB/RPC quando LDAP è limitato o chiuso                 |
+| [rpcclient](/articoli/rpcclient/)         | Informazioni RPC/SAM/dominio via SMB                                 |
 
 NetExec supporta anche l'enumerazione LDAP con null bind, utile come verifica rapida prima di scrivere query `ldapsearch` mirate:
 

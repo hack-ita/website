@@ -48,7 +48,7 @@ kerbrute userenum -d search.htb --dc 10.129.229.57 user.txt
 
 Tre utenti validi. Bene — ma senza password non andiamo da nessuna parte. Tentativo AS-REP Roasting con GetNPUsers: nessuno dei tre ha pre-auth disabilitata. Password spray con credenziali comuni: niente.
 
-In questa fase ho anche tentato di esplorare la superficie ADCS — il certificator scanner identifica **ESC8** (Web Enrollment su HTTP senza Channel Binding). Ho provato relay con ntlmrelayx verso `http://search.htb/certsrv/certfnsh.asp --adcs` combinato con PetitPotam per la coercion. Il relay riceveva connessioni ma non produceva certificati — probabile bug di impacket 0.13.1 nella gestione del path URL completo in modalità ADCS. Strada abbandonata. Per il funzionamento teorico dell'attacco: [ESC8 – NTLM Relay ad ADCS](https://hackita.it/articoli/esc8-adcs/).
+In questa fase ho anche tentato di esplorare la superficie ADCS — il certificator scanner identifica **ESC8** (Web Enrollment su HTTP senza Channel Binding). Ho provato relay con ntlmrelayx verso `http://search.htb/certsrv/certfnsh.asp --adcs` combinato con PetitPotam per la coercion. Il relay riceveva connessioni ma non produceva certificati — probabile bug di impacket 0.13.1 nella gestione del path URL completo in modalità ADCS. Strada abbandonata. Per il funzionamento teorico dell'attacco: [ESC8 – NTLM Relay ad ADCS](/articoli/esc8-adcs/).
 
 La svolta arriva guardando meglio il sito. Non il testo — le **immagini**. Nel carosello c'è una foto con un'agenda aperta. Leggendo con attenzione si distingue:
 

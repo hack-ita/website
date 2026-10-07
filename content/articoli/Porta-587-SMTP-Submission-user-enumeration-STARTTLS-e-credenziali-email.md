@@ -123,7 +123,7 @@ smtp-user-enum -M VRFY -U /usr/share/wordlists/users.txt -t 10.10.10.25 -p 587
  10.10.10.25: administrator does not exist
 ```
 
-**Lettura dell'output:** tre utenti validi confermati: `admin`, `info`, `hr`. Questi diventano target per il credential spray. Per correlare gli utenti con quelli di Active Directory, consulta la [guida all'enumerazione LDAP](https://hackita.it/articoli/porta-389-ldap/).
+**Lettura dell'output:** tre utenti validi confermati: `admin`, `info`, `hr`. Questi diventano target per il credential spray. Per correlare gli utenti con quelli di Active Directory, consulta la [guida all'enumerazione LDAP](/articoli/porta-389-ldap/).
 
 ### User enumeration con RCPT TO (più affidabile)
 
@@ -202,7 +202,7 @@ hydra -L users.txt -p "Spring2026!" smtp://10.10.10.25:587 -t 2 -W 10
 [STATUS] attack finished, 0 valid passwords found
 ```
 
-**Cosa fai dopo:** con credenziali valide, accedi alla mailbox (IMAP/OWA) e puoi inviare email come quell'utente. Prova le stesse credenziali su altri servizi: OWA, VPN, AD. Per massimizzare il [password reuse](https://hackita.it/articoli/brute-force/), testa su tutti i servizi esposti.
+**Cosa fai dopo:** con credenziali valide, accedi alla mailbox (IMAP/OWA) e puoi inviare email come quell'utente. Prova le stesse credenziali su altri servizi: OWA, VPN, AD. Per massimizzare il [password reuse](/articoli/brute-force/), testa su tutti i servizi esposti.
 
 **STARTTLS stripping test**
 
@@ -283,7 +283,7 @@ dig +short TXT default._domainkey.target.com
 (nessun record DKIM)
 ```
 
-**Lettura dell'output:** SPF con `~all` (softfail, non rejectano). DMARC con `p=none` (solo monitoring, non blocca). Nessun DKIM. Questo dominio è vulnerabile a email spoofing perché nessuna policy è in enforcement. Per testare, usa `swaks` come spiegato nella guida alle [tecniche di social engineering](https://hackita.it/articoli/phishing/).
+**Lettura dell'output:** SPF con `~all` (softfail, non rejectano). DMARC con `p=none` (solo monitoring, non blocca). Nessun DKIM. Questo dominio è vulnerabile a email spoofing perché nessuna policy è in enforcement. Per testare, usa `swaks` come spiegato nella guida alle [tecniche di social engineering](/articoli/phishing/).
 
 **Invio email spoofata (con credenziali)**
 
@@ -513,4 +513,4 @@ L'enumerazione RCPT TO genera log visibili. Per ridurre rumore: enumera da IP di
 
 Tutti i comandi e le tecniche sono destinati esclusivamente ad ambienti autorizzati: penetration test con contratto, lab, CTF. Riferimento: RFC 6409, RFC 8314, CVE-2023-51764. Approfondimento: [https://www.speedguide.net/port.php?port=587](https://www.speedguide.net/port.php?port=587)
 
-> Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+> Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

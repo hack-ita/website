@@ -23,7 +23,7 @@ tags:
 
 Un keylogger è un software o un dispositivo hardware che registra gli input da tastiera, di nascosto rispetto a chi la sta usando. È probabilmente la forma di sorveglianza digitale più diretta che esista: a seconda dell'implementazione può catturare credenziali, messaggi e altri dati digitati — non serve necessariamente interpretare traffico di rete o decifrare comportamenti, spesso basta leggere quello che la vittima ha scritto.
 
-> **In breve:** un keylogger registra ogni tasto digitato su un dispositivo, all'insaputa di chi lo usa. Può essere un software installato come componente di uno [spyware](https://hackita.it/articoli/spyware/) o un [trojan](https://hackita.it/articoli/trojan/), oppure un piccolo dispositivo hardware collegato fisicamente tra tastiera e computer.
+> **In breve:** un keylogger registra ogni tasto digitato su un dispositivo, all'insaputa di chi lo usa. Può essere un software installato come componente di uno [spyware](/articoli/spyware/) o un [trojan](/articoli/trojan/), oppure un piccolo dispositivo hardware collegato fisicamente tra tastiera e computer.
 
 ## Come Funziona un Keylogger
 

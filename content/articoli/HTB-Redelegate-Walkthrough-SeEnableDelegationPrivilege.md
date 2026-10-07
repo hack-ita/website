@@ -17,7 +17,7 @@ tags:
 
 # HTB Redelegate Walkthrough: da FTP anonimo a Domain Admin con Constrained Delegation
 
-Redelegate è una macchina Windows di difficoltà "Hard" su Hack The Box (rilasciata e ritirata il 17 luglio 2025, creata da Geiseric), incentrata su enumerazione MSSQL, password spraying e abuso della delega Kerberos vincolata tramite [SeEnableDelegationPrivilege](https://hackita.it/articoli/seenabledelegationprivilege/). Se non hai ancora chiaro cosa significhi quel privilegio e come funzionano S4U2Self/S4U2Proxy, ti conviene leggere prima quell'articolo — qui diamo per scontato che tu sappia già la teoria e ci concentriamo sul percorso pratico sulla macchina.
+Redelegate è una macchina Windows di difficoltà "Hard" su Hack The Box (rilasciata e ritirata il 17 luglio 2025, creata da Geiseric), incentrata su enumerazione MSSQL, password spraying e abuso della delega Kerberos vincolata tramite [SeEnableDelegationPrivilege](/articoli/seenabledelegationprivilege/). Se non hai ancora chiaro cosa significhi quel privilegio e come funzionano S4U2Self/S4U2Proxy, ti conviene leggere prima quell'articolo — qui diamo per scontato che tu sappia già la teoria e ci concentriamo sul percorso pratico sulla macchina.
 
 ## Ricognizione
 
@@ -103,7 +103,7 @@ Con le credenziali dell'utente Helpdesk si raccolgono i dati con SharpHound o Ru
 netexec ldap dc.redelegate.vl -u <utente> -p '<password>' --bloodhound --collection All --dns-server 10.129.234.50
 ```
 
-Analizzando il grafo in [BloodHound](https://hackita.it/articoli/bloodhound/) emerge un classico caso di [ACL abuse](https://hackita.it/articoli/acl-abuse/): l'utente Helpdesk ha `ForceChangePassword` su un altro utente, che a sua volta ha `GenericAll` sull'oggetto computer `FS01$` — ed è anche membro di un gruppo con accesso Remote Management (WinRM).
+Analizzando il grafo in [BloodHound](/articoli/bloodhound/) emerge un classico caso di [ACL abuse](/articoli/acl-abuse/): l'utente Helpdesk ha `ForceChangePassword` su un altro utente, che a sua volta ha `GenericAll` sull'oggetto computer `FS01$` — ed è anche membro di un gruppo con accesso Remote Management (WinRM).
 
 ## Prima shell
 
@@ -125,7 +125,7 @@ Da qui si recupera la user flag.
 
 ## Il privilegio chiave
 
-Un controllo di `whoami /priv` rivela che l'utente ha sia `SeMachineAccountPrivilege` sia **[SeEnableDelegationPrivilege](https://hackita.it/articoli/seenabledelegationprivilege/)** — la combinazione che apre la strada alla privesc finale.
+Un controllo di `whoami /priv` rivela che l'utente ha sia `SeMachineAccountPrivilege` sia **[SeEnableDelegationPrivilege](/articoli/seenabledelegationprivilege/)** — la combinazione che apre la strada alla privesc finale.
 
 `MachineAccountQuota` risulta impostata a `0`, quindi la via della delega non vincolata "pulita" (creare un account macchina nuovo) è chiusa. Ma l'utente ha già `GenericAll` su `FS01$`, un account computer esistente — condizione perfetta per la delega vincolata.
 
@@ -144,7 +144,7 @@ Si cambia la password dell'account FS01$ per averne il pieno controllo:
 netexec smb dc.redelegate.vl -u <target-user> -p 'NuovaPassword123!' -M change-password -o USER='FS01$' NEWPASS='Password123!'
 ```
 
-E si richiede il ticket di servizio [Kerberos](https://hackita.it/articoli/kerberos/) impersonando l'account macchina del Domain Controller (`dc`) — non `administrator`, che su questa macchina è protetto contro la delega, esattamente come spiegato nell'articolo di teoria:
+E si richiede il ticket di servizio [Kerberos](/articoli/kerberos/) impersonando l'account macchina del Domain Controller (`dc`) — non `administrator`, che su questa macchina è protetto contro la delega, esattamente come spiegato nell'articolo di teoria:
 
 ```bash
 getST.py 'redelegate.vl/FS01$:Password123!' -spn ldap/dc.redelegate.vl -impersonate dc
@@ -172,4 +172,4 @@ E si recupera la root flag dal desktop dell'Administrator.
 
 FTP anonimo → KeePass craccato con dizionario mirato → credenziali MSSQL locali → enumerazione domain account via RID brute-force su MSSQL → password spray con lo stesso schema → abuso ACL (ForceChangePassword → GenericAll) → shell WinRM → **SeEnableDelegationPrivilege** + `GenericAll` su un account computer esistente → delega vincolata su `ldap/` verso il DC, impersonando l'account macchina del DC invece di Administrator (protetto) → DCSync → Domain Admin.
 
-Se la parte di delega vincolata non ti è chiara nel dettaglio — perché serve impersonare `dc` invece di `administrator`, cosa significano i flag di `userAccountControl`, o come depurare gli errori Kerberos più comuni — trovi tutto approfondito nell'[articolo dedicato a SeEnableDelegationPrivilege](https://hackita.it/articoli/seenabledelegationprivilege/).
+Se la parte di delega vincolata non ti è chiara nel dettaglio — perché serve impersonare `dc` invece di `administrator`, cosa significano i flag di `userAccountControl`, o come depurare gli errori Kerberos più comuni — trovi tutto approfondito nell'[articolo dedicato a SeEnableDelegationPrivilege](/articoli/seenabledelegationprivilege/).

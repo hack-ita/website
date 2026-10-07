@@ -23,7 +23,7 @@ tags:
 
 `GetADComputers.py` interroga un Domain Controller tramite LDAP e restituisce gli oggetti computer del dominio con `sAMAccountName`, hostname DNS, sistema operativo e versione. L’opzione corretta per aggiungere un indirizzo IPv4 è `-resolveIP`. Il tool supporta password, hash NTLM, Kerberos, ccache e chiavi AES, ma non mostra `PasswordLastSet`, `LastLogon`, stato dell’account, ruoli, servizi o vulnerabilità.
 
-`GetADComputers.py` è uno degli script inclusi in [Impacket](https://hackita.it/articoli/impacket/) e serve a costruire rapidamente un inventario LDAP dei computer presenti in un dominio Active Directory.
+`GetADComputers.py` è uno degli script inclusi in [Impacket](/articoli/impacket/) e serve a costruire rapidamente un inventario LDAP dei computer presenti in un dominio Active Directory.
 
 A differenza di scanner di rete e framework più estesi, non effettua una scansione delle porte e non verifica se le macchine siano accese. Interroga il database di Active Directory e stampa soltanto gli attributi richiesti dal proprio parser.
 
@@ -295,7 +295,7 @@ impacket-GetADComputers corp.local/user \
   -dc-ip 10.10.10.5
 ```
 
-Quando l’LM hash non è disponibile, la forma `:NTHASH` è normalmente sufficiente. Per il funzionamento generale di questa modalità consulta anche la guida al [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/).
+Quando l’LM hash non è disponibile, la forma `:NTHASH` è normalmente sufficiente. Per il funzionamento generale di questa modalità consulta anche la guida al [Pass-the-Hash](/articoli/pass-the-hash/).
 
 Il successo dipende dalle policy del dominio e dai meccanismi di autenticazione consentiti dal Domain Controller.
 
@@ -532,7 +532,7 @@ ldapsearch -LLL -x \
   operatingSystemVersion
 ```
 
-Questa alternativa permette di modificare liberamente filtro e attributi. Consulta anche la guida Hackita a [ldapsearch](https://hackita.it/articoli/ldapsearch/).
+Questa alternativa permette di modificare liberamente filtro e attributi. Consulta anche la guida Hackita a [ldapsearch](/articoli/ldapsearch/).
 
 ***
 
@@ -643,7 +643,7 @@ Non collegare automaticamente queste date a RBCD, Shadow Credentials o computer 
 
 ## Alternativa con NetExec
 
-[NetExec](https://hackita.it/articoli/netexec/) supporta query LDAP raw:
+[NetExec](/articoli/netexec/) supporta query LDAP raw:
 
 ```bash
 nxc ldap 10.10.10.5 \
@@ -723,13 +723,13 @@ Questa soluzione restituisce più attributi rispetto a `GetADComputers.py`, ma r
 
 ### GetADUsers.py
 
-[GetADUsers.py](https://hackita.it/articoli/getadusers/) è focalizzato sugli account utente e usa attributi differenti.
+[GetADUsers.py](/articoli/getadusers/) è focalizzato sugli account utente e usa attributi differenti.
 
 Le opzioni dei due script non sono intercambiabili: `GetADComputers.py`, per esempio, non possiede `-all` né `-outputfile`.
 
 ### BloodHound
 
-[BloodHound](https://hackita.it/articoli/bloodhound/) non è un semplice sostituto della tabella generata da `GetADComputers.py`.
+[BloodHound](/articoli/bloodhound/) non è un semplice sostituto della tabella generata da `GetADComputers.py`.
 
 Raccoglie relazioni, ACL, delegazioni, gruppi, sessioni e percorsi di attacco che il tool Impacket non analizza.
 
@@ -1221,14 +1221,14 @@ DNS risolto = online  → falso
 
 ## Articoli Hackita correlati
 
-* [Impacket: suite e strumenti](https://hackita.it/articoli/impacket/)
-* [GetADUsers.py: enumerazione utenti Active Directory](https://hackita.it/articoli/getadusers/)
-* [ldapsearch: query LDAP da Linux](https://hackita.it/articoli/ldapsearch/)
-* [NetExec: enumerazione e verifica dei servizi](https://hackita.it/articoli/netexec/)
-* [BloodHound: relazioni e attack path Active Directory](https://hackita.it/articoli/bloodhound/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
-* [SMB: protocollo e porta 445](https://hackita.it/articoli/smb/)
-* [Active Directory: guida generale](https://hackita.it/articoli/active-directory/)
+* [Impacket: suite e strumenti](/articoli/impacket/)
+* [GetADUsers.py: enumerazione utenti Active Directory](/articoli/getadusers/)
+* [ldapsearch: query LDAP da Linux](/articoli/ldapsearch/)
+* [NetExec: enumerazione e verifica dei servizi](/articoli/netexec/)
+* [BloodHound: relazioni e attack path Active Directory](/articoli/bloodhound/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
+* [SMB: protocollo e porta 445](/articoli/smb/)
+* [Active Directory: guida generale](/articoli/active-directory/)
 
 ***
 

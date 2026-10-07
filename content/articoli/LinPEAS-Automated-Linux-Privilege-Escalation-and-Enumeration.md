@@ -18,7 +18,7 @@ tags:
 
 Once you have a low-privilege shell on a Linux target, the next problem is finding the path to root. Manual enumeration works, but it's slow and inconsistent — you'll miss things. LinPEAS automates the entire process: it runs hundreds of checks across SUID binaries, sudo rules, cron jobs, writable paths, credentials in config files, kernel version against known CVEs, and dozens of other vectors, then highlights the most promising findings in color-coded output so you can prioritize immediately.
 
-LinPEAS is part of the [PEASS-ng suite](https://github.com/peass-ng/PEASS-ng) by Carlos Polop. It's a shell script with no external dependencies — it runs anywhere `/bin/sh` is available, including restricted environments. It's one of the most used tools in authorized Linux engagements — see [HackITA's penetration testing tools guide](https://hackita.it/articoli/tool-penetration-testing/) for the full toolkit overview. For the broader Linux privilege escalation methodology that LinPEAS automates, see [HackITA's Linux privesc guide](https://hackita.it/articoli/linux-privesc/).
+LinPEAS is part of the [PEASS-ng suite](https://github.com/peass-ng/PEASS-ng) by Carlos Polop. It's a shell script with no external dependencies — it runs anywhere `/bin/sh` is available, including restricted environments. It's one of the most used tools in authorized Linux engagements — see [HackITA's penetration testing tools guide](/articoli/tool-penetration-testing/) for the full toolkit overview. For the broader Linux privilege escalation methodology that LinPEAS automates, see [HackITA's Linux privesc guide](/articoli/linux-privesc/).
 
 ***
 
@@ -161,7 +161,7 @@ If `python` or `python3` is SUID:
 python3 -c 'import os; os.execl("/bin/sh", "sh", "-p")'
 ```
 
-The `-p` flag preserves the effective UID (root) when spawning the shell. Without it, many shells drop privileges on launch. For a dedicated breakdown of SUID exploitation paths, see [HackITA's SUID guide](https://hackita.it/articoli/suid/).
+The `-p` flag preserves the effective UID (root) when spawning the shell. Without it, many shells drop privileges on launch. For a dedicated breakdown of SUID exploitation paths, see [HackITA's SUID guide](/articoli/suid/).
 
 **World-writable cron jobs** — A cron script that runs as root but is writable by your user is a direct path to root. LinPEAS identifies writable cron scripts and highlights them in red. Check manually with:
 

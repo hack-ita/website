@@ -23,7 +23,7 @@ tags:
 
 `ticketer.py` forgia ticket Kerberos localmente senza contattare il DC — se hai l'hash di `krbtgt` crei un Golden Ticket valido per qualsiasi servizio del dominio; se hai l'hash di un account di servizio crei un Silver Ticket valido per quel servizio specifico. Nessun traffico verso il DC, tutto offline.
 
-`ticketer.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) ed è lo strumento per la **persistenza a lungo termine** in un dominio compromesso. La differenza fondamentale rispetto a [getTGT.py](https://hackita.it/articoli/gettgt/) — che richiede un ticket legittimo al DC — è che ticketer.py costruisce il ticket da zero localmente, manipolando il PAC (Privilege Attribute Certificate) a piacimento.
+`ticketer.py` fa parte di [Impacket](/articoli/impacket/) ed è lo strumento per la **persistenza a lungo termine** in un dominio compromesso. La differenza fondamentale rispetto a [getTGT.py](/articoli/gettgt/) — che richiede un ticket legittimo al DC — è che ticketer.py costruisce il ticket da zero localmente, manipolando il PAC (Privilege Attribute Certificate) a piacimento.
 
 Sorgente verificato: [fortra/impacket — ticketer.py](https://github.com/fortra/impacket/blob/master/examples/ticketer.py)
 
@@ -338,15 +338,15 @@ impacket-secretsdump -k -no-pass -just-dc corp.local/Administrator@DC01.corp.loc
 
 **Articoli correlati:**
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [Kerberos: architettura e flusso](https://hackita.it/articoli/kerberos/)
-* [Golden Ticket: persistenza nel dominio](https://hackita.it/articoli/golden-ticket/)
-* [Silver Ticket: accesso al servizio](https://hackita.it/articoli/silver-ticket/)
-* [DCSync: ottieni hash krbtgt](https://hackita.it/articoli/dcsync/)
-* [lookupsid.py — ottieni il SID del dominio](https://hackita.it/articoli/lookupsid/)
-* [getTGT.py — ticket legittimo da hash](https://hackita.it/articoli/gettgt/)
-* [getST.py — S4U e delegation](https://hackita.it/articoli/getst/)
-* [Mimikatz — dump krbtgt da LSASS](https://hackita.it/articoli/mimikatz/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [Kerberos: architettura e flusso](/articoli/kerberos/)
+* [Golden Ticket: persistenza nel dominio](/articoli/golden-ticket/)
+* [Silver Ticket: accesso al servizio](/articoli/silver-ticket/)
+* [DCSync: ottieni hash krbtgt](/articoli/dcsync/)
+* [lookupsid.py — ottieni il SID del dominio](/articoli/lookupsid/)
+* [getTGT.py — ticket legittimo da hash](/articoli/gettgt/)
+* [getST.py — S4U e delegation](/articoli/getst/)
+* [Mimikatz — dump krbtgt da LSASS](/articoli/mimikatz/)
 
 > Uso esclusivo in ambienti autorizzati.
 

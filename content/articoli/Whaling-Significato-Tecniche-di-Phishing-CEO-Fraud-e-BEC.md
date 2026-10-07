@@ -20,7 +20,7 @@ tags:
 
 # Whaling: Cos'è l'Attacco ai Dirigenti e Come Funziona
 
-Il **whaling** è una forma di [spear phishing](https://hackita.it/articoli/spear-phishing/) rivolta specificamente a dirigenti, CEO, CFO e membri del consiglio di amministrazione: le "balene" (*whales*) da cui prende il nome, bersagli di alto valore per via dell'autorità e dell'accesso che hanno all'interno di un'organizzazione. Funziona in due direzioni: un dirigente può essere il **bersaglio diretto** di un messaggio ingannevole, oppure un attaccante può **impersonare** quel dirigente per dare ordini a chi lavora sotto la sua autorità, tipicamente al reparto finanziario.
+Il **whaling** è una forma di [spear phishing](/articoli/spear-phishing/) rivolta specificamente a dirigenti, CEO, CFO e membri del consiglio di amministrazione: le "balene" (*whales*) da cui prende il nome, bersagli di alto valore per via dell'autorità e dell'accesso che hanno all'interno di un'organizzazione. Funziona in due direzioni: un dirigente può essere il **bersaglio diretto** di un messaggio ingannevole, oppure un attaccante può **impersonare** quel dirigente per dare ordini a chi lavora sotto la sua autorità, tipicamente al reparto finanziario.
 
 Con l'arrivo di cloni vocali e video deepfake, il whaling è passato dalla semplice email contraffatta a videochiamate che imitano in tempo reale l'aspetto e la voce di un dirigente reale, con perdite che in alcuni casi hanno superato le decine di milioni di dollari in un solo episodio.
 
@@ -33,7 +33,7 @@ Un punto spesso frainteso: non ogni attacco che coinvolge un dirigente è whalin
 | **Il dirigente come bersaglio**            | L'attaccante inganna direttamente il CEO o un altro dirigente, per esempio con una pagina di raccolta credenziali su misura o una richiesta legale fittizia |
 | **Il dirigente come identità impersonata** | L'attaccante finge di essere il dirigente per convincere qualcun altro (tipicamente la finanza) a eseguire un pagamento o concedere un accesso              |
 
-Solo il primo caso rientra nella definizione più stretta di whaling; il secondo, pur essendo strettamente collegato e spesso trattato insieme, è più propriamente una forma di [Business Email Compromise](https://hackita.it/articoli/business-email-compromise/) basata sull'impersonificazione di un dirigente. Nella pratica, i due schemi vengono spesso discussi insieme perché condividono la stessa logica: sfruttare l'autorità di una figura di vertice.
+Solo il primo caso rientra nella definizione più stretta di whaling; il secondo, pur essendo strettamente collegato e spesso trattato insieme, è più propriamente una forma di [Business Email Compromise](/articoli/business-email-compromise/) basata sull'impersonificazione di un dirigente. Nella pratica, i due schemi vengono spesso discussi insieme perché condividono la stessa logica: sfruttare l'autorità di una figura di vertice.
 
 ## Come funziona un attacco di whaling
 

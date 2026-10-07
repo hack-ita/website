@@ -98,7 +98,7 @@ Gli strumenti che userai concretamente:
 * **Metasploit SOCKS proxy** — utile per integrare il routing con exploit MSF, ma aggiunge overhead
 * **Ligolo-ng** — se non lo conosci ancora, è probabilmente il tool più comodo per Dante: crea una TUN interface vera invece di appoggiarsi a SOCKS, il che significa che puoi usare nmap direttamente senza proxychains
 
-> Per una guida pratica su Chisel e su quando usarlo rispetto a Ligolo, leggi [Chisel: TCP Tunneling over HTTP per Pivoting e Post-Exploitation](https://hackita.it/articoli/chisel/) su HackIta.
+> Per una guida pratica su Chisel e su quando usarlo rispetto a Ligolo, leggi [Chisel: TCP Tunneling over HTTP per Pivoting e Post-Exploitation](/articoli/chisel/) su HackIta.
 
 Il punto critico che molti sottovalutano: **un Meterpreter che fa routing attraverso un tunnel Chisel è lento e instabile**. Se vuoi usare MSF su macchine interne, devi gestire bene la catena o ti ritrovi con sessioni che muoiono nel momento sbagliato.
 

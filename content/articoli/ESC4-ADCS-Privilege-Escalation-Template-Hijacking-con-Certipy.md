@@ -180,7 +180,7 @@ Set-ADObject "CN=NomeTemplate,CN=Certificate Templates,CN=Public Key Services,CN
   -Add @{pKIExtendedKeyUsage=$EKUs;"msPKI-Certificate-Application-Policy"=$EKUs}
 ```
 
-`1.3.6.1.5.5.7.3.2` è Client Authentication — permette al certificato di essere usato per autenticarsi verso il DC via PKINIT. `1.3.6.1.4.1.311.20.2.2` è Smart Card Logon — richiesto da molti DC per supportare PKINIT correttamente. Si aggiungono sempre in coppia. Il DN completo del template lo trovi nell'output di Certify o BloodHound sotto `Distinguished Name`. Per capire cosa fa ogni OID, vedi la [guida agli EKU OID in ADCS](https://hackita.it/articoli/adcs-eku-oid-offensive/).
+`1.3.6.1.5.5.7.3.2` è Client Authentication — permette al certificato di essere usato per autenticarsi verso il DC via PKINIT. `1.3.6.1.4.1.311.20.2.2` è Smart Card Logon — richiesto da molti DC per supportare PKINIT correttamente. Si aggiungono sempre in coppia. Il DN completo del template lo trovi nell'output di Certify o BloodHound sotto `Distinguished Name`. Per capire cosa fa ogni OID, vedi la [guida agli EKU OID in ADCS](/articoli/adcs-eku-oid-offensive/).
 
 Verifica che la modifica sia andata a buon fine:
 
@@ -312,7 +312,7 @@ Potrebbe non avere visibilità completa sugli ACL. Verifica con Certify da Windo
 
 ## Risorse correlate
 
-* [EKU OID in ADCS: guida offensiva completa — hackita.it](https://hackita.it/articoli/adcs-eku-oid-offensive/)
-* [Attacchi ADCS ESC1–ESC16 — hackita.it](https://hackita.it/articoli/adcs-esc1-esc16/)
+* [EKU OID in ADCS: guida offensiva completa — hackita.it](/articoli/adcs-eku-oid-offensive/)
+* [Attacchi ADCS ESC1–ESC16 — hackita.it](/articoli/adcs-esc1-esc16/)
 * [Certipy — GitHub](https://github.com/ly4k/Certipy)
 * [Certified Pre-Owned — SpecterOps](https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf)

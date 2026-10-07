@@ -257,7 +257,7 @@ ZAP si posiziona come scanner di vulnerabilità dopo la fase di discovery.
 
 **Flusso operativo:**
 
-[WhatWeb](https://hackita.it/articoli/whatweb/)/Wappalyzer (tech ID) → [Dirsearch](https://hackita.it/articoli/dirsearch/) (content discovery) → **ZAP (vuln scan + manual testing)** → Exploitation
+[WhatWeb](/articoli/whatweb/)/Wappalyzer (tech ID) → [Dirsearch](/articoli/dirsearch/) (content discovery) → **ZAP (vuln scan + manual testing)** → Exploitation
 
 | Feature               | ZAP           | Burp Suite Pro | Nikto    | Nuclei         |
 | --------------------- | ------------- | -------------- | -------- | -------------- |
@@ -289,7 +289,7 @@ Usa ZAP per intercettare la richiesta, inietta payload SQLi manualmente. Conferm
 
 **Fase 4 — Data Exfiltration (10 min)**
 
-Dump credenziali admin dal database via SQL injection. Per approfondire le tecniche di [SQL injection](https://hackita.it/articoli/sqlinjection/), consulta la nostra guida dedicata.
+Dump credenziali admin dal database via SQL injection. Per approfondire le tecniche di [SQL injection](/articoli/sqlinjection/), consulta la nostra guida dedicata.
 
 **Fase 5 — Post-exploitation (20 min)**
 
@@ -412,4 +412,4 @@ Sì. Configura il proxy upstream nelle opzioni di connessione di ZAP.
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

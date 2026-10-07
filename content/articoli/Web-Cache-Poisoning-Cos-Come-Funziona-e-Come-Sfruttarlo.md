@@ -343,7 +343,7 @@ curl -s "https://target.com/api/invite" \
 # → Cachata → tutti i link di invito puntano a evil.com → token rubati
 ```
 
-Vedi anche: [password-reset-attack](https://hackita.it/articoli/password-reset-attack/), [account-takeover](https://hackita.it/articoli/account-takeover/).
+Vedi anche: [password-reset-attack](/articoli/password-reset-attack/), [account-takeover](/articoli/account-takeover/).
 
 ### + Request Smuggling → Poisoning Invisibile
 
@@ -362,7 +362,7 @@ X-Forwarded-Host: evil.com
 Foo: bar
 ```
 
-La request "smugglata" viene processata come se arrivasse da un client legittimo → la cache salva la risposta con `X-Forwarded-Host: evil.com`. Nessun header anomalo nelle request dell'attaccante visibili nei log. Vedi: [http-request-smuggling](https://hackita.it/articoli/http-request-smuggling/).
+La request "smugglata" viene processata come se arrivasse da un client legittimo → la cache salva la risposta con `X-Forwarded-Host: evil.com`. Nessun header anomalo nelle request dell'attaccante visibili nei log. Vedi: [http-request-smuggling](/articoli/http-request-smuggling/).
 
 ***
 
@@ -562,4 +562,4 @@ Non usare header client-controllabili (`X-Forwarded-*`) per generare contenuto d
 
 ***
 
-> Il tuo CDN include `X-Forwarded-Host` nella cache key? Un header anomalo può rendere la tua homepage irraggiungibile per un'ora con una sola request. [Penetration test HackIta](https://hackita.it/servizi). [Formazione 1:1](https://hackita.it/formazione).
+> Il tuo CDN include `X-Forwarded-Host` nella cache key? Un header anomalo può rendere la tua homepage irraggiungibile per un'ora con una sola request. [Penetration test HackIta](/servizi). [Formazione 1:1](/formazione).

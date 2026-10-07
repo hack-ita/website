@@ -18,9 +18,9 @@ tags:
 
 # Come enumerare account Windows via SAMR con samrdump.py
 
-`samrdump.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) e sfrutta il protocollo MS-SAMR per enumerare account utente e i loro attributi su un sistema Windows, via SMB. Interroga il **primo dominio SAM restituito** dal target, elenca i suoi utenti e per ognuno recupera un set di attributi (nome completo, commenti, contatore password errate, stato dell'account). **Non enumera gruppi, alias, membri di gruppo, né condivisioni** — nonostante alcune guide online (anche note) lo diano per scontato, il codice attuale non chiama nessuna funzione per farlo.
+`samrdump.py` fa parte di [Impacket](/articoli/impacket/) e sfrutta il protocollo MS-SAMR per enumerare account utente e i loro attributi su un sistema Windows, via SMB. Interroga il **primo dominio SAM restituito** dal target, elenca i suoi utenti e per ognuno recupera un set di attributi (nome completo, commenti, contatore password errate, stato dell'account). **Non enumera gruppi, alias, membri di gruppo, né condivisioni** — nonostante alcune guide online (anche note) lo diano per scontato, il codice attuale non chiama nessuna funzione per farlo.
 
-A differenza di [GetADUsers.py](https://hackita.it/articoli/getadusers/) che usa LDAP e deve puntare al DC, samrdump funziona contro qualsiasi host Windows — workstation, member server, DC — purché l'account con cui ti autentichi sia autorizzato a fare chiamate SAMR remote su quel target. Non è automatico: dipende dalla policy `RestrictRemoteSAM` del target, di cui parliamo più sotto.
+A differenza di [GetADUsers.py](/articoli/getadusers/) che usa LDAP e deve puntare al DC, samrdump funziona contro qualsiasi host Windows — workstation, member server, DC — purché l'account con cui ti autentichi sia autorizzato a fare chiamate SAMR remote su quel target. Non è automatico: dipende dalla policy `RestrictRemoteSAM` del target, di cui parliamo più sotto.
 
 Riferimento ufficiale: [fortra/impacket — samrdump.py](https://github.com/fortra/impacket/blob/master/examples/samrdump.py)
 
@@ -184,7 +184,7 @@ Il RID identifica l'account all'interno del dominio; unito al SID del dominio fo
 impacket-lookupsid corp.local/user:pass@10.10.10.5 | head -5
 ```
 
-Con RID e SID del dominio puoi poi costruire ticket Kerberos forgiati (vedi [Golden Ticket](https://hackita.it/articoli/golden-ticket/)).
+Con RID e SID del dominio puoi poi costruire ticket Kerberos forgiati (vedi [Golden Ticket](/articoli/golden-ticket/)).
 
 ## samrdump.py funziona senza credenziali?
 
@@ -211,9 +211,9 @@ Da Windows 10 1607 / Server 2016 in poi, il descrittore di sicurezza predefinito
 | Tool                                                     | Protocollo  | Info principali                                                          |
 | -------------------------------------------------------- | ----------- | ------------------------------------------------------------------------ |
 | `samrdump.py`                                            | SAMR/SMB    | RID, nome completo, commenti, gruppo primario, contatori, stato base     |
-| [rpcclient](https://hackita.it/articoli/rpcclient/)      | RPC/SMB     | Utenti, gruppi, membri — più flessibile ma richiede sessione interattiva |
-| [lookupsid.py](https://hackita.it/articoli/lookupsid/)   | MS-LSAT/SMB | RID bruteforce, utile per costruire il SID completo                      |
-| [GetADUsers.py](https://hackita.it/articoli/getadusers/) | LDAP        | `sAMAccountName`, email, `pwdLastSet`, `lastLogon`                       |
+| [rpcclient](/articoli/rpcclient/)      | RPC/SMB     | Utenti, gruppi, membri — più flessibile ma richiede sessione interattiva |
+| [lookupsid.py](/articoli/lookupsid/)   | MS-LSAT/SMB | RID bruteforce, utile per costruire il SID completo                      |
+| [GetADUsers.py](/articoli/getadusers/) | LDAP        | `sAMAccountName`, email, `pwdLastSet`, `lastLogon`                       |
 | BloodHound                                               | LDAP+SMB    | Relazioni, gruppi, sessioni, attack path                                 |
 
 ```bash
@@ -317,13 +317,13 @@ impacket-samrdump -csv corp.local/user:pass@TARGET | awk -F, '$8=="True"'
 
 ## Articoli correlati
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [SMB](https://hackita.it/articoli/smb/)
-* [rpcdump.py](https://hackita.it/articoli/rpcdump/)
-* [rpcclient](https://hackita.it/articoli/rpcclient/)
-* [lookupsid.py](https://hackita.it/articoli/lookupsid/)
-* [GetADUsers.py](https://hackita.it/articoli/getadusers/)
-* [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)
-* [Golden Ticket](https://hackita.it/articoli/golden-ticket/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [SMB](/articoli/smb/)
+* [rpcdump.py](/articoli/rpcdump/)
+* [rpcclient](/articoli/rpcclient/)
+* [lookupsid.py](/articoli/lookupsid/)
+* [GetADUsers.py](/articoli/getadusers/)
+* [Pass-the-Hash](/articoli/pass-the-hash/)
+* [Golden Ticket](/articoli/golden-ticket/)
 
 > Uso esclusivo in ambienti autorizzati.

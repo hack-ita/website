@@ -197,7 +197,7 @@ Le share con sufisso `$` sono condivisioni amministrative nascoste:
 
 L'accesso a queste richiede privilegi amministrativi sul target.
 
-Scopri cos'è [SMB](https://hackita.it/articoli/smb/) e come testarne la sicurezza nella nostra guida approfondita.
+Scopri cos'è [SMB](/articoli/smb/) e come testarne la sicurezza nella nostra guida approfondita.
 
 ## Modalità Connessione e Interazione
 
@@ -340,7 +340,7 @@ smbclient //192.168.1.100/C$ -U administrator%P@ssw0rd123
 
 **Attenzione:** Questo metodo espone la password nella command line history.
 
-Per capire come funziona **[NTLM](https://hackita.it/articoli/ntlm/)** il protocollo di autenticazione di Windows dietro SMB, e come sfruttarne le vulnerabilità, leggi la nostra guida completa:
+Per capire come funziona **[NTLM](/articoli/ntlm/)** il protocollo di autenticazione di Windows dietro SMB, e come sfruttarne le vulnerabilità, leggi la nostra guida completa:
 
 ### Autenticazione con File Credenziali
 
@@ -376,7 +376,7 @@ smbclient //server.domain.local/share -k
 
 L'opzione `-k` indica a smbclient di utilizzare il ticket Kerberos invece di NTLM.
 
-Per approfondire **[Kerberos](https://hackita.it/articoli/kerberos/)** il principale protocollo di autenticazione negli ambienti Active Directory, leggi la guida completa:
+Per approfondire **[Kerberos](/articoli/kerberos/)** il principale protocollo di autenticazione negli ambienti Active Directory, leggi la guida completa:
 
 ### Specifica Dominio Windows
 
@@ -819,7 +819,7 @@ Usa tar mode per efficienza: `smbclient //target/share -U user -Tc exfil.tar '*'
 
 Se questo contenuto ti è stato utile e vuoi contribuire alla crescita di HackITA, puoi supportare direttamente il progetto qui:
 
-👉 [https://hackita.it/supporta](https://hackita.it/supporta)
+👉 [https://hackita.it/supporta](/supporta)
 
 Il tuo supporto ci permette di sviluppare lab realistici, guide tecniche avanzate e scenari offensivi multi-step pensati per professionisti della sicurezza.
 
@@ -829,6 +829,6 @@ Il tuo supporto ci permette di sviluppare lab realistici, guide tecniche avanzat
 
 Se rappresenti un’azienda e vuoi valutare concretamente la resilienza della tua infrastruttura contro attacchi mirati, oppure sei un professionista/principiante che vuole migliorare con simulazioni reali:
 
-👉 [https://hackita.it/servizi](https://hackita.it/servizi)
+👉 [https://hackita.it/servizi](/servizi)
 
 Red Team assessment su misura, simulazioni complete di kill chain e percorsi formativi avanzati progettati per ambienti enterprise reali.

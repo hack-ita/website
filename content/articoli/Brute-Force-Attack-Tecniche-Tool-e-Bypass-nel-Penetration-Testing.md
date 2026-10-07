@@ -197,7 +197,7 @@ ffuf -u "https://target.com/api/auth/login" \
   -rate 10  # Lento per evitare lockout
 ```
 
-Leggi la [guida completa a ffuf](https://hackita.it/articoli/ffuf/).
+Leggi la [guida completa a ffuf](/articoli/ffuf/).
 
 ### Hydra
 
@@ -215,7 +215,7 @@ hydra -l admin -P passwords.txt target.com http-get /admin/ -t 16
 hydra -l root -P passwords.txt target.com ssh -t 4
 ```
 
-Anche qui c'è l'abbiamo,non ti facciamo mancare nulla. Vedi i [comandi segreti di Hydra](https://hackita.it/articoli/hydra/).
+Anche qui c'è l'abbiamo,non ti facciamo mancare nulla. Vedi i [comandi segreti di Hydra](/articoli/hydra/).
 
 ### Burp Intruder
 
@@ -237,7 +237,7 @@ Per password spraying (Sniper):
 
 ***
 
-Dai ,vi vogliamo bene.Vi facciamo anche questo regalo: la [guida a Burp Suite](https://hackita.it/articoli/burp-suite/).
+Dai ,vi vogliamo bene.Vi facciamo anche questo regalo: la [guida a Burp Suite](/articoli/burp-suite/).
 
 ## Rate Limit Bypass — Quando C'è Ma Non Basta
 
@@ -520,4 +520,4 @@ POST-EXPLOITATION
 
 Riferimenti: [OWASP Credential Stuffing Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html), [OWASP Brute Force Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/04-Testing_for_Brute_Force), [HackTricks Brute Force](https://book.hacktricks.wiki/en/generic-methodologies-and-resources/brute-force.html), [SecLists Password Lists](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
 
-Leggi la [Guida Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/). Vedi anche: [2FA Bypass](https://hackita.it/articoli/2fa-bypass/), [Password Reset Attack](https://hackita.it/articoli/password-reset-attack/), [Privilege Escalation Web](https://hackita.it/articoli/privilege-escalation-web/).
+Leggi la [Guida Auth & Access Control](/articoli/auth-access-control-guida-completa/). Vedi anche: [2FA Bypass](/articoli/2fa-bypass/), [Password Reset Attack](/articoli/password-reset-attack/), [Privilege Escalation Web](/articoli/privilege-escalation-web/).

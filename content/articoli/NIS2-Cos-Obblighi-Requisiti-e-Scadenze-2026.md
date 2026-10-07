@@ -151,7 +151,7 @@ Se emerge una mancanza di diligenza o di supervisione, la responsabilità può r
 
 ## NIS2 e GDPR: differenze e sovrapposizioni
 
-Sono due normative diverse, che spesso si attivano insieme. Per i dettagli sul regolamento privacy c'è la [guida al GDPR](https://hackita.it/articoli/gdpr/).
+Sono due normative diverse, che spesso si attivano insieme. Per i dettagli sul regolamento privacy c'è la [guida al GDPR](/articoli/gdpr/).
 
 |                     | **GDPR**                       | **NIS2**                                          |
 | ------------------- | ------------------------------ | ------------------------------------------------- |
@@ -167,11 +167,11 @@ Un attacco ransomware con esfiltrazione di dati clienti può far scattare **entr
 
 Chi lavora in red team o pentest vede la NIS2 da un'altra angolazione: le misure richieste sono, di fatto, **le contromisure alle tecniche che usiamo ogni giorno**.
 
-* **"Gestione delle vulnerabilità" e "valutazione dell'efficacia"** significano assessment e penetration test periodici, e patch rapide anche contro gli [zero-day](https://hackita.it/articoli/zero-day/). Un servizio esposto come [RDP sulla porta 3389](https://hackita.it/articoli/porta-3389-rdp/) è uno dei punti d'ingresso classici dei ransomware.
-* **"Controllo accessi" e MFA** sono la risposta a tecniche come [password spraying](https://hackita.it/articoli/password-spraying/) e [credential stuffing](https://hackita.it/articoli/credential-stuffing/): senza secondo fattore, una password riutilizzata basta.
-* **"Formazione" e igiene informatica** servono contro il [phishing](https://hackita.it/articoli/phishing/), ancora oggi tra i vettori iniziali più comuni.
-* **"Gestione degli incidenti"** richiede di capire in che punto della [Cyber Kill Chain](https://hackita.it/articoli/cyber-kill-chain/) si trova l'attaccante, perché la notifica chiede impatto e indicatori di compromissione.
-* **Analisi dei rischi in ambienti Windows** vuol dire guardare con occhi critici [Active Directory](https://hackita.it/articoli/active-directory/): è il cuore della maggior parte delle reti aziendali, e quando cade cade tutto.
+* **"Gestione delle vulnerabilità" e "valutazione dell'efficacia"** significano assessment e penetration test periodici, e patch rapide anche contro gli [zero-day](/articoli/zero-day/). Un servizio esposto come [RDP sulla porta 3389](/articoli/porta-3389-rdp/) è uno dei punti d'ingresso classici dei ransomware.
+* **"Controllo accessi" e MFA** sono la risposta a tecniche come [password spraying](/articoli/password-spraying/) e [credential stuffing](/articoli/credential-stuffing/): senza secondo fattore, una password riutilizzata basta.
+* **"Formazione" e igiene informatica** servono contro il [phishing](/articoli/phishing/), ancora oggi tra i vettori iniziali più comuni.
+* **"Gestione degli incidenti"** richiede di capire in che punto della [Cyber Kill Chain](/articoli/cyber-kill-chain/) si trova l'attaccante, perché la notifica chiede impatto e indicatori di compromissione.
+* **Analisi dei rischi in ambienti Windows** vuol dire guardare con occhi critici [Active Directory](/articoli/active-directory/): è il cuore della maggior parte delle reti aziendali, e quando cade cade tutto.
 
 ### Due controlli rapidi per iniziare l'inventario
 
@@ -195,7 +195,7 @@ Poi si guarda da fuori, come farebbe un attaccante. Solo su sistemi tuoi o che h
 nmap -sV --top-ports 1000 --open <IP-autorizzato>
 ```
 
-Per un audit di hardening rapido su un host Linux puoi usare [Lynis](https://hackita.it/articoli/lynis/), mentre per vedere cosa è visibile dall'esterno su Internet puoi partire da [Shodan](https://hackita.it/articoli/shodan/). Per approfondire la scansione, c'è la guida a [Nmap](https://hackita.it/articoli/nmap/).
+Per un audit di hardening rapido su un host Linux puoi usare [Lynis](/articoli/lynis/), mentre per vedere cosa è visibile dall'esterno su Internet puoi partire da [Shodan](/articoli/shodan/). Per approfondire la scansione, c'è la guida a [Nmap](/articoli/nmap/).
 
 Questi controlli non rendono nessuno "conforme NIS2", ma sono il tipo di evidenza concreta che un'ispezione vuole vedere: un inventario reale, non un file Excel dimenticato.
 

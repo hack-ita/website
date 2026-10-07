@@ -43,7 +43,7 @@ SMB anonimo non restituisce share — serve tornare con credenziali.
 
 ## VHost enumeration
 
-Con il dominio noto si usa [ffuf](https://hackita.it/articoli/ffuf/) per cercare altri virtual host:
+Con il dominio noto si usa [ffuf](/articoli/ffuf/) per cercare altri virtual host:
 
 ```bash
 ffuf -u https://10.10.11.102 -H "Host: FUZZ.windcorp.htb" \
@@ -63,7 +63,7 @@ Il sito è una pagina corporate con un form "Contact Us" che invia i dati via GE
 
 Feroxbuster con estensione `-x asp` trova `test.asp` — una pagina che si aggiorna automaticamente con i dati inviati dal form. Il contenuto del campo `message` viene scritto lì e poi incluso in `preview.asp`.
 
-Il primo tentativo è XSS — `<script>alert(1)</script>` funziona, la pagina esegue il JavaScript. Ma in questo caso non c'è nessun utente che visita la pagina lato server, quindi uno XSS reflected o stored non porta da nessuna parte offensivamente. Per capire quando e perché lo XSS stored è sfruttabile in altri contesti, vedi la [guida su hackita.it](https://hackita.it/articoli/xss-stored/).
+Il primo tentativo è XSS — `<script>alert(1)</script>` funziona, la pagina esegue il JavaScript. Ma in questo caso non c'è nessun utente che visita la pagina lato server, quindi uno XSS reflected o stored non porta da nessuna parte offensivamente. Per capire quando e perché lo XSS stored è sfruttabile in altri contesti, vedi la [guida su hackita.it](/articoli/xss-stored/).
 
 L'estensione `.asp` suggerisce altro. ASP Classic processa il codice tra `<% %>` lato server prima di inviare la risposta. Se quell'input finisce scritto in `test.asp` che viene poi incluso nella pagina, qualsiasi payload ASP iniettato viene eseguito dal server — è una SSTI su ASP Classic.
 
@@ -213,7 +213,7 @@ windcorp\diegocruz
 
 ## ADCS ESC4 → Administrator
 
-Per una guida completa su ESC4 — permessi, metodi di exploitation e detection — leggi la [guida dedicata su hackita.it](https://hackita.it/articoli/esc4-adcs/).
+Per una guida completa su ESC4 — permessi, metodi di exploitation e detection — leggi la [guida dedicata su hackita.it](/articoli/esc4-adcs/).
 
 ### Enumeration
 
@@ -234,7 +234,7 @@ pkiextendedkeyusage         : Server Authentication
 Full Control Principals     : WINDCORP\webdevelopers
 ```
 
-diegocruz è in `webdevelopers` → **GenericAll** sul template. Il template permette di specificare il soggetto del certificato (`ENROLLEE_SUPPLIES_SUBJECT`), ma ha solo Server Authentication come EKU — inutile per autenticarsi come utente AD. Serve aggiungere gli OID giusti. Per capire quali OID contano e perché, vedi la [guida agli EKU OID in ADCS](https://hackita.it/articoli/adcs-eku-oid-offensive/).
+diegocruz è in `webdevelopers` → **GenericAll** sul template. Il template permette di specificare il soggetto del certificato (`ENROLLEE_SUPPLIES_SUBJECT`), ma ha solo Server Authentication come EKU — inutile per autenticarsi come utente AD. Serve aggiungere gli OID giusti. Per capire quali OID contano e perché, vedi la [guida agli EKU OID in ADCS](/articoli/adcs-eku-oid-offensive/).
 
 ### Modifica del template (ESC4)
 
@@ -382,7 +382,7 @@ mynmap → ASP SSTI → SYSTEM (Docker webserver01)
 
 ## Risorse correlate
 
-* [EKU OID in ADCS: guida offensiva completa — hackita.it](https://hackita.it/articoli/adcs-eku-oid-offensive/)
-* [Attacchi ADCS ESC1–ESC16 con Certipy — hackita.it](https://hackita.it/articoli/adcs-esc1-esc16/)
+* [EKU OID in ADCS: guida offensiva completa — hackita.it](/articoli/adcs-eku-oid-offensive/)
+* [Attacchi ADCS ESC1–ESC16 con Certipy — hackita.it](/articoli/adcs-esc1-esc16/)
 * [CVE-2021-28079 — Jamovi XSS PoC — GitHub](https://github.com/g33xter/CVE-2021-28079)
 * [Certified Pre-Owned whitepaper — SpecterOps](https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf)

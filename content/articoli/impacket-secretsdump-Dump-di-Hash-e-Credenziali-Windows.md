@@ -26,7 +26,7 @@ tags:
 
 ***
 
-`secretsdump.py` (distribuito come `impacket-secretsdump` su Kali) è parte del framework [Impacket](https://hackita.it/articoli/impacket/). È lo strumento di credential dumping remoto più usato nei pentest Windows perché non richiede upload di tool sul target — tutto avviene via protocolli di rete standard, usando le credenziali dell'account compromesso.
+`secretsdump.py` (distribuito come `impacket-secretsdump` su Kali) è parte del framework [Impacket](/articoli/impacket/). È lo strumento di credential dumping remoto più usato nei pentest Windows perché non richiede upload di tool sul target — tutto avviene via protocolli di rete standard, usando le credenziali dell'account compromesso.
 
 > secretsdump usa tre meccanismi distinti — DCSync via DRSUAPI, Volume Shadow Copy, e lettura del registro remoto. La scelta del meccanismo dipende dal tipo di target (DC vs workstation) e dai privilegi disponibili.
 
@@ -202,7 +202,7 @@ copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYS
 
 ## Alternativa: NetExec
 
-[NetExec](https://hackita.it/articoli/netexec/) offre un'interfaccia più semplice per il DCSync con lo stesso risultato:
+[NetExec](/articoli/netexec/) offre un'interfaccia più semplice per il DCSync con lo stesso risultato:
 
 ```bash
 # DCSync con password
@@ -219,7 +219,7 @@ nxc smb <DC_IP> -u administrator -p Password123! --ntds --users krbtgt
 
 ## Scenario Reale: Da Utente AD a Dump Completo del Dominio
 
-Hai compromesso un account con diritti DCSync (identificato via [BloodHound](https://hackita.it/articoli/bloodhound/)):
+Hai compromesso un account con diritti DCSync (identificato via [BloodHound](/articoli/bloodhound/)):
 
 ```bash
 # 1. Dump selettivo — prima krbtgt e administrator per il massimo impatto
@@ -301,7 +301,7 @@ Sì: `impacket-secretsdump -hashes :NThash corp.local/user@<DC_IP> -just-dc`
 
 impacket-secretsdump è lo strumento più diretto per estrarre credenziali in un pentest AD: nessun agente, nessun binario sul target, nessun AV da bypassare — solo protocolli Windows autenticati. Con DCSync, basta un account con diritti di replica per ottenere tutti gli hash del dominio in pochi secondi.
 
-La difesa efficace richiede monitoring degli Event ID 4662 e 4688, e una revisione dei permessi di replica — verificando con [BloodHound](https://hackita.it/articoli/bloodhound/) quali account non-DC hanno `DS-Replication-Get-Changes-All`.
+La difesa efficace richiede monitoring degli Event ID 4662 e 4688, e una revisione dei permessi di replica — verificando con [BloodHound](/articoli/bloodhound/) quali account non-DC hanno `DS-Replication-Get-Changes-All`.
 
 ***
 

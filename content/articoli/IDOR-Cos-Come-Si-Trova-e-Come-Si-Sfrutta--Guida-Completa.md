@@ -26,7 +26,7 @@ Risultato: cambi un numero nell'URL o in un parametro JSON, e leggi i dati di qu
 
 IDOR rientra nella categoria **Broken Access Control** (OWASP A01:2021) — la vulnerabilità più diffusa nelle applicazioni web moderne. Nelle API REST viene chiamata anche **BOLA** (Broken Object Level Authorization). Il nome cambia, il problema è lo stesso: nessun controllo sull'autorizzazione a livello di singolo oggetto.
 
-Vedi anche: [auth-access-control-guida-completa](https://hackita.it/articoli/auth-access-control-guida-completa/), [broken-access-control](https://hackita.it/articoli/broken-access-control/), [account-takeover](https://hackita.it/articoli/account-takeover/).
+Vedi anche: [auth-access-control-guida-completa](/articoli/auth-access-control-guida-completa/), [broken-access-control](/articoli/broken-access-control/), [account-takeover](/articoli/account-takeover/).
 
 ***
 
@@ -381,7 +381,7 @@ Oppure via token theft:
 3. Usa quel token per autenticarti come target → Account Takeover immediato
 ```
 
-Vedi: [account-takeover](https://hackita.it/articoli/account-takeover/), [password-reset-attack](https://hackita.it/articoli/password-reset-attack/).
+Vedi: [account-takeover](/articoli/account-takeover/), [password-reset-attack](/articoli/password-reset-attack/).
 
 ***
 
@@ -526,4 +526,4 @@ In alcuni casi. Se l'applicazione espone ID in risposta a chiamate API (es. list
 
 ***
 
-> Accesso non autorizzato ai dati dei tuoi utenti, modifiche su account altrui, data breach silenziosi: IDOR è spesso la vulnerabilità che fa più danni con meno rumore. [Penetration test HackIta](https://hackita.it/servizi). [Formazione 1:1](https://hackita.it/formazione).
+> Accesso non autorizzato ai dati dei tuoi utenti, modifiche su account altrui, data breach silenziosi: IDOR è spesso la vulnerabilità che fa più danni con meno rumore. [Penetration test HackIta](/servizi). [Formazione 1:1](/formazione).

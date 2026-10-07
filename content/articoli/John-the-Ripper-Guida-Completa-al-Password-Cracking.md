@@ -23,7 +23,7 @@ tags:
 
 # Come Crackare Password con John the Ripper: Guida Completa Hash e Wordlist
 
-Hai trovato un file `.kdbx`, una chiave SSH protetta da passphrase, un archivio ZIP cifrato, o un disco BitLocker? **John the Ripper** (JtR) è il password cracker offline più flessibile in circolazione: auto-rileva il formato dell'hash, supporta 470+ tipi nella versione Jumbo, e include una famiglia di script `*2john` che estraggono hash craccabili da qualsiasi file cifrato — ZIP, SSH, KeePass, BitLocker, Office, WPA — per poi craccarli offline con una wordlist. Dove [hashcat](https://hackita.it/articoli/hashcat/) vince in velocità GPU su hash comuni, John vince in copertura di formati: quando trovi un file strano in un backup, John è spesso l'unica strada praticabile.
+Hai trovato un file `.kdbx`, una chiave SSH protetta da passphrase, un archivio ZIP cifrato, o un disco BitLocker? **John the Ripper** (JtR) è il password cracker offline più flessibile in circolazione: auto-rileva il formato dell'hash, supporta 470+ tipi nella versione Jumbo, e include una famiglia di script `*2john` che estraggono hash craccabili da qualsiasi file cifrato — ZIP, SSH, KeePass, BitLocker, Office, WPA — per poi craccarli offline con una wordlist. Dove [hashcat](/articoli/hashcat/) vince in velocità GPU su hash comuni, John vince in copertura di formati: quando trovi un file strano in un backup, John è spesso l'unica strada praticabile.
 
 **Cosa imparerai:**
 
@@ -33,13 +33,13 @@ Hai trovato un file `.kdbx`, una chiave SSH protetta da passphrase, un archivio 
 * Come usare i tool `*2john` per crackare ZIP, SSH, KeePass, PDF, Office
 * La differenza operativa tra John e hashcat e quando usare quale
 
-**Prerequisiti:** hash catturati durante post-exploitation (con [credential dumping](https://hackita.it/articoli/credential-dumping/)) e una wordlist come rockyou o [SecLists](https://hackita.it/articoli/wordlist/).
+**Prerequisiti:** hash catturati durante post-exploitation (con [credential dumping](/articoli/credential-dumping/)) e una wordlist come rockyou o [SecLists](/articoli/wordlist/).
 
 ***
 
 ## John vs Hashcat – Quando usare quale
 
-|                        | **John the Ripper**                      | **[Hashcat](https://hackita.it/articoli/hashcat/)** |
+|                        | **John the Ripper**                      | **[Hashcat](/articoli/hashcat/)** |
 | ---------------------- | ---------------------------------------- | --------------------------------------------------- |
 | **Velocità**           | CPU (lento su hash veloci)               | GPU (10-1000× più veloce)                           |
 | **Formati supportati** | 470+ (Jumbo)                             | \~400 (ma i più comuni)                             |
@@ -209,7 +209,7 @@ john --mask='?w2026' --wordlist=rockyou.txt --format=nt hashes.txt
 
 ## 4. Hash da Linux – Shadow File
 
-Dopo privilege escalation su Linux ([linux-privesc](https://hackita.it/articoli/linux-privesc/)), dumpa il file shadow e cracca offline.
+Dopo privilege escalation su Linux ([linux-privesc](/articoli/linux-privesc/)), dumpa il file shadow e cracca offline.
 
 ```bash
 # Sul target (come root)
@@ -237,7 +237,7 @@ password123      (www-data)
 
 ### NTLM da SAM/NTDS
 
-Hash estratti dal dump AD (secretsdump, mimikatz) — vedi [credential dumping](https://hackita.it/articoli/credential-dumping/).
+Hash estratti dal dump AD (secretsdump, mimikatz) — vedi [credential dumping](/articoli/credential-dumping/).
 
 ```bash
 # File formato: username:RID:LMhash:NThash:::
@@ -254,7 +254,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt --format=nt nt.txt
 
 ### NTLMv2 da Responder
 
-Hash catturati con [Responder](https://hackita.it/articoli/responder/) durante un attacco NTLM relay su [SMB](https://hackita.it/articoli/smb/).
+Hash catturati con [Responder](/articoli/responder/) durante un attacco NTLM relay su [SMB](/articoli/smb/).
 
 ```bash
 # File formato Responder (Logs/SMB-NTLMv2-*.txt)
@@ -267,7 +267,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt \
 
 ### Kerberos TGS (Kerberoasting)
 
-Hash TGS catturati durante [Kerberoasting](https://hackita.it/articoli/kerberos/) su [Active Directory](https://hackita.it/articoli/active-directory/).
+Hash TGS catturati durante [Kerberoasting](/articoli/kerberos/) su [Active Directory](/articoli/active-directory/).
 
 ```bash
 # Hash formato: $krb5tgs$23$*username*$domain$*SPN*$hash
@@ -1256,13 +1256,13 @@ KeePass:          hashcat -m 13400 -a 0 hashes.txt rockyou.txt
 
 **Guide correlate su hackita.it:**
 
-* [Hashcat: GPU Password Cracking](https://hackita.it/articoli/hashcat/)
-* [Credential Dumping: Come Estrarre Hash da Windows e Linux](https://hackita.it/articoli/credential-dumping/)
-* [Responder: Hash Capture NTLM e NTLMv2](https://hackita.it/articoli/responder/)
-* [Kerberoasting: Attacchi a Service Account AD](https://hackita.it/articoli/kerberos/)
-* [SMB: NTLM Relay e Pass-the-Hash](https://hackita.it/articoli/smb/)
-* [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/)
-* [Wordlist e SecLists: Guida Operativa](https://hackita.it/articoli/wordlist/)
+* [Hashcat: GPU Password Cracking](/articoli/hashcat/)
+* [Credential Dumping: Come Estrarre Hash da Windows e Linux](/articoli/credential-dumping/)
+* [Responder: Hash Capture NTLM e NTLMv2](/articoli/responder/)
+* [Kerberoasting: Attacchi a Service Account AD](/articoli/kerberos/)
+* [SMB: NTLM Relay e Pass-the-Hash](/articoli/smb/)
+* [Linux Privilege Escalation](/articoli/linux-privesc/)
+* [Wordlist e SecLists: Guida Operativa](/articoli/wordlist/)
 
 ## Riferimenti
 

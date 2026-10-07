@@ -123,7 +123,7 @@ Un server NTP compromesso o un rogue NTP server può desincronizzare i sistemi, 
 * Manipolazione dei timestamp nei log (cancellazione forense)
 * Bypass di time-based security controls (OTP, token temporali)
 
-Per UDP su cui NTP opera, vedi [UDP](https://hackita.it/articoli/udp/). Per Kerberos che dipende da NTP, vedi [Kerberos](https://hackita.it/articoli/kerberos/)
+Per UDP su cui NTP opera, vedi [UDP](/articoli/udp/). Per Kerberos che dipende da NTP, vedi [Kerberos](/articoli/kerberos/)
 
 ***
 
@@ -395,20 +395,20 @@ Mitigare NTP è semplice: disabilitare monlist, migrare a chrony, abilitare NTS.
 
 Approfondisci i protocolli correlati:
 
-* [UDP: il trasporto di NTP](https://hackita.it/articoli/udp/)
-* [DNS: altro protocollo di infrastruttura critica](https://hackita.it/articoli/dns/)
-* [DHCP: distribuzione del server NTP via option 42](https://hackita.it/articoli/dhcp/)
-* [Kerberos: dipendenza critica da NTP](https://hackita.it/articoli/kerberos/)
-* [TLS/SSL: validità temporale dei certificati](https://hackita.it/articoli/tls-ssl/)
-* [SNMP: altro protocollo UDP di management](https://hackita.it/articoli/snmp/)
-* [IP Internet Protocol: il livello di rete](https://hackita.it/articoli/ip-internet-protocol/)
+* [UDP: il trasporto di NTP](/articoli/udp/)
+* [DNS: altro protocollo di infrastruttura critica](/articoli/dns/)
+* [DHCP: distribuzione del server NTP via option 42](/articoli/dhcp/)
+* [Kerberos: dipendenza critica da NTP](/articoli/kerberos/)
+* [TLS/SSL: validità temporale dei certificati](/articoli/tls-ssl/)
+* [SNMP: altro protocollo UDP di management](/articoli/snmp/)
+* [IP Internet Protocol: il livello di rete](/articoli/ip-internet-protocol/)
 
 Riferimento ufficiale: [RFC 5905 — Network Time Protocol Version 4](https://datatracker.ietf.org/doc/html/rfc5905)
 
 ***
 
 Un server NTP con monlist attivo in un assessment è sempre una finding. Se vuoi sapere quante ne trovi nella tua infrastruttura:
-[hackita.it/servizi](https://hackita.it/servizi)
+[hackita.it/servizi](/servizi)
 
 HackITA è il tuo riferimento tecnico gratuito. Tienilo attivo:
-[hackita.it/supporto](https://hackita.it/supporto)
+[hackita.it/supporto](/supporto)

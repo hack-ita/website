@@ -27,7 +27,7 @@ Un server SSH esposto direttamente a Internet è normalmente soggetto a scansion
 
 Questa guida copre l'hardening SSH completo dalla prospettiva di chi fa sicurezza: ogni impostazione spiegata con il "perché", più la **prospettiva del pentester** — quello che un auditor testa durante un SSH security assessment.
 
-**Prerequisiti:** accesso root al server. Articolo complementare a [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/) — una volta dentro un sistema, la configurazione SSH è tra i primi vettori di persistence che un attaccante cerca.
+**Prerequisiti:** accesso root al server. Articolo complementare a [Linux Privilege Escalation](/articoli/linux-privesc/) — una volta dentro un sistema, la configurazione SSH è tra i primi vettori di persistence che un attaccante cerca.
 
 ***
 
@@ -615,8 +615,8 @@ Uso:          ssh server-interno
 
 **Guide correlate su hackita.it:**
 
-* [Linux Privilege Escalation](https://hackita.it/articoli/linux-privesc/)
-* [Credential Dumping: Come Estrarre Hash](https://hackita.it/articoli/credential-dumping/)
+* [Linux Privilege Escalation](/articoli/linux-privesc/)
+* [Credential Dumping: Come Estrarre Hash](/articoli/credential-dumping/)
 
 ## Riferimenti
 

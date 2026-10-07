@@ -79,7 +79,7 @@ Il download ufficiale è disponibile solo dal sito Tenable: [tenable.com/downloa
 
 * Sul server Nessus: privilegi di amministratore/root per installare e avviare il servizio
 * Sui target: nessun permesso per scan non-credentialed; account con privilegi (locale o dominio) per scan credentialed completi
-* Rete: il server Nessus deve raggiungere i target sulle porte da scansionare — se sei dietro un firewall o devi raggiungere una subnet interna, serve prima il [pivoting](https://hackita.it/articoli/pivoting)
+* Rete: il server Nessus deve raggiungere i target sulle porte da scansionare — se sei dietro un firewall o devi raggiungere una subnet interna, serve prima il [pivoting](/articoli/pivoting)
 
 ## Come installare Nessus
 
@@ -253,7 +253,7 @@ Uno scan credentialed trova sistematicamente molte più vulnerabilità di uno no
 Scan → Credentials → SSH
 ```
 
-Se non hai chiaro il funzionamento di base del protocollo, vedi la guida a [SSH](https://hackita.it/articoli/ssh/). Tre metodi di autenticazione:
+Se non hai chiaro il funzionamento di base del protocollo, vedi la guida a [SSH](/articoli/ssh/). Tre metodi di autenticazione:
 
 ```
 Password       — username/password, sconsigliato in produzione (credenziali salvate in Nessus)
@@ -282,7 +282,7 @@ Scan → Credentials → Windows
 Tipo: Password, oppure Kerberos per ambienti AD
 ```
 
-Serve un account con privilegi di amministratore locale (o dominio) sul target per un audit completo. Per capire meglio cosa Nessus interroga in questa fase, vedi la guida a [SMB](https://hackita.it/articoli/smb/).
+Serve un account con privilegi di amministratore locale (o dominio) sul target per un audit completo. Per capire meglio cosa Nessus interroga in questa fase, vedi la guida a [SMB](/articoli/smb/).
 
 ## Port Range e Performance
 
@@ -317,7 +317,7 @@ Enable:
 - Credenziali HTTP (se disponibili)
 ```
 
-Per la parte di validazione manuale sulle applicazioni web trovate vulnerabili, [Burp Suite](https://hackita.it/articoli/burp-suite/) resta lo strumento di riferimento.
+Per la parte di validazione manuale sulle applicazioni web trovate vulnerabili, [Burp Suite](/articoli/burp-suite/) resta lo strumento di riferimento.
 
 ### Esempio: filtro dinamico per CVE specifica
 
@@ -359,7 +359,7 @@ Ogni finding include: **Plugin Name** (il check specifico eseguito), **Severity*
 
 Strategia di triage: non farti sommergere da centinaia di risultati Info/Low. Filtra prima su Critical e High disabilitando il raggruppamento (icona ingranaggio → Disable Groups) per una vista dettagliata.
 
-Findings tipici in un Credentialed Patch Audit: patch OS/applicazioni mancanti (per versione e numero patch), applicazioni vulnerabili (Firefox, curl, ecc.), plugin family "Local Security Checks", problemi di configurazione, rischi di privilege escalation (approfondimenti su [Linux privilege escalation](https://hackita.it/articoli/linux-privesc/) e [Windows privilege escalation](https://hackita.it/articoli/privilege-escalation-windows/)).
+Findings tipici in un Credentialed Patch Audit: patch OS/applicazioni mancanti (per versione e numero patch), applicazioni vulnerabili (Firefox, curl, ecc.), plugin family "Local Security Checks", problemi di configurazione, rischi di privilege escalation (approfondimenti su [Linux privilege escalation](/articoli/linux-privesc/) e [Windows privilege escalation](/articoli/privilege-escalation-windows/)).
 
 ### Esempio reale: leggere un finding Critical
 
@@ -390,7 +390,7 @@ Come lo leggi:
 Come decidi se è vero positivo o falso positivo:
 
 * Scan credentialed? Se sì, e il plugin ha verificato la versione della patch installata (non solo il banner SMB), è quasi certamente un vero positivo
-* Scan non-credentialed? Il plugin potrebbe aver dedotto la vulnerabilità solo dalla risposta del protocollo — verifica manualmente prima di segnalarlo come critico (es. `nmap --script smb-vuln-ms17-010` per conferma incrociata, vedi la guida a [Nmap](https://hackita.it/articoli/nmap/))
+* Scan non-credentialed? Il plugin potrebbe aver dedotto la vulnerabilità solo dalla risposta del protocollo — verifica manualmente prima di segnalarlo come critico (es. `nmap --script smb-vuln-ms17-010` per conferma incrociata, vedi la guida a [Nmap](/articoli/nmap/))
 * Il servizio è raggiungibile davvero dall'attaccante? Un finding Critical su un host irraggiungibile da fuori la rete interna ha priorità diversa da uno esposto su Internet
 
 Una CVE nota come EternalBlue (MS17-010) con scan credentialed che conferma la versione della patch è un caso da manuale: vero positivo, azione immediata.
@@ -437,7 +437,7 @@ Un punto da tenere ben distinto: gli external ASV scan (Approved Scanning Vendor
 | Patch assessment         | Sì     | No                           |
 | Compliance               | Sì     | No                           |
 
-[Nmap](https://hackita.it/articoli/nmap/) è principalmente uno strumento di discovery ed enumeration; Nessus è progettato principalmente per vulnerability assessment. I due strumenti sono complementari, non alternativi: un flusso tipico usa Nmap per la discovery iniziale e Nessus per l'assessment di vulnerabilità sui servizi trovati.
+[Nmap](/articoli/nmap/) è principalmente uno strumento di discovery ed enumeration; Nessus è progettato principalmente per vulnerability assessment. I due strumenti sono complementari, non alternativi: un flusso tipico usa Nmap per la discovery iniziale e Nessus per l'assessment di vulnerabilità sui servizi trovati.
 
 ## Quale scan Nessus scegliere?
 
@@ -515,7 +515,7 @@ REPORTING
   spesso correlati con le prove di exploitation raccolte manualmente
 ```
 
-Il ruolo esatto di Nessus: accelera enormemente l'enumeration e dà una mappa di priorità, ma non è né il punto di partenza (serve la recon prima, es. con [Nmap](https://hackita.it/articoli/nmap/)) né il punto di arrivo (serve la validazione con strumenti come [Metasploit](https://hackita.it/articoli/metasploit/) e l'exploitation dopo). I finding confermati possono poi essere organizzati in un report tramite uno strumento dedicato come [Dradis](https://hackita.it/articoli/dradis-reporting). Chi tratta l'output di Nessus come report finale senza passare per la validazione sta consegnando un documento di falsi positivi mescolati a veri rischi, indistinguibili tra loro.
+Il ruolo esatto di Nessus: accelera enormemente l'enumeration e dà una mappa di priorità, ma non è né il punto di partenza (serve la recon prima, es. con [Nmap](/articoli/nmap/)) né il punto di arrivo (serve la validazione con strumenti come [Metasploit](/articoli/metasploit/) e l'exploitation dopo). I finding confermati possono poi essere organizzati in un report tramite uno strumento dedicato come [Dradis](/articoli/dradis-reporting). Chi tratta l'output di Nessus come report finale senza passare per la validazione sta consegnando un documento di falsi positivi mescolati a veri rischi, indistinguibili tra loro.
 
 ## Cheat Sheet Finale
 

@@ -19,7 +19,7 @@ tags:
 
 # SeEnableDelegationPrivilege in Active Directory: guida completa a delega Kerberos, S4U e privesc
 
-Se stai facendo un lab di [Active Directory](https://hackita.it/articoli/active-directory/) (Hack The Box, VulnLab, o un ambiente autorizzato) e BloodHound ti mostra che il tuo utente ha il privilegio **SeEnableDelegationPrivilege**, ti starai chiedendo cos'è esattamente e se è sfruttabile. In breve: è un diritto di Windows che decide chi, nel dominio, può far "impersonare" un utente da un altro account verso un servizio — un meccanismo chiamato delega Kerberos, pensato per usi legittimi ma che diventa un bersaglio di privesc molto potente in mani sbagliate.
+Se stai facendo un lab di [Active Directory](/articoli/active-directory/) (Hack The Box, VulnLab, o un ambiente autorizzato) e BloodHound ti mostra che il tuo utente ha il privilegio **SeEnableDelegationPrivilege**, ti starai chiedendo cos'è esattamente e se è sfruttabile. In breve: è un diritto di Windows che decide chi, nel dominio, può far "impersonare" un utente da un altro account verso un servizio — un meccanismo chiamato delega Kerberos, pensato per usi legittimi ma che diventa un bersaglio di privesc molto potente in mani sbagliate.
 
 SeEnableDelegationPrivilege è uno di quei privilegi di Active Directory che spesso sembrano secondari in BloodHound, ma che in un lab autorizzato possono diventare il punto d'ingresso per una catena di abuso molto potente. In questa guida vediamo in modo chiaro e pratico quando basta da solo e quando serve un altro appiglio, come funzionano davvero delega non vincolata (unconstrained), vincolata (constrained) e RBCD, perché S4U2Self e S4U2Proxy sono il cuore della tecnica, cosa significano i valori di `userAccountControl` che compaiono nei tool, e quali errori, log e segnali usare per riconoscerla anche lato difesa.
 
@@ -42,7 +42,7 @@ Per completare l'attacco ti serve **anche uno di questi**:
 * **Per la via non vincolata (unconstrained)**: la capacità di creare un nuovo account macchina (`SeMachineAccountPrivilege` più `MachineAccountQuota > 0`), oppure il controllo di un account computer/utente già esistente
 * **Per la via vincolata (constrained)**: `GenericAll` o `GenericWrite` su un account (utente o computer) di cui puoi già gestire credenziali, oppure il possesso diretto di credenziali/hash di un account esistente
 
-Verifica sempre con BloodHound cosa controlli realmente: cerca edge di [ACL abuse](https://hackita.it/articoli/acl-abuse/) come `GenericAll`/`GenericWrite` verso oggetti Computer, partendo dal tuo utente compromesso, e controlla se `whoami /priv` mostra anche [SeMachineAccountPrivilege](https://hackita.it/articoli/semachineaccountquota/). Se `SeEnableDelegationPrivilege` è l'unico privilegio che hai, senza nessun altro controllo, la strada è bloccata — devi prima trovare un modo per ottenere quel controllo (es. reset password via gruppo Helpdesk, abuso ACL, ecc.).
+Verifica sempre con BloodHound cosa controlli realmente: cerca edge di [ACL abuse](/articoli/acl-abuse/) come `GenericAll`/`GenericWrite` verso oggetti Computer, partendo dal tuo utente compromesso, e controlla se `whoami /priv` mostra anche [SeMachineAccountPrivilege](/articoli/semachineaccountquota/). Se `SeEnableDelegationPrivilege` è l'unico privilegio che hai, senza nessun altro controllo, la strada è bloccata — devi prima trovare un modo per ottenere quel controllo (es. reset password via gruppo Helpdesk, abuso ACL, ecc.).
 
 ## Le tre varianti di delega a confronto
 
@@ -50,13 +50,13 @@ Verifica sempre con BloodHound cosa controlli realmente: cerca edge di [ACL abus
 | -------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Non vincolata (Unconstrained)**                              | Sì (o un account esistente compromesso, utente o computer) | No sull'attributo di delega, ma serve un SPN che punti al tuo host per far arrivare l'autenticazione | Molto alto — furto di QUALSIASI TGT | Se puoi anche forzare una vittima ad autenticarsi (coercion)                                                                    | Bloccata se `MachineAccountQuota=0` e non hai già un account da riusare; serve coercion (PrinterBug/Coercer/PetitPotam)                                                                               |
 | **Vincolata (Constrained)**                                    | No, riusa un account esistente su cui hai controllo        | Sì, specifico in `msDS-AllowedToDelegateTo`                                                          | Alto ma mirato                      | Caso più comune nei lab: hai `GenericAll`/`GenericWrite` su un account macchina                                                 | In teoria solo verso l'SPN autorizzato, ma il nome del servizio nel ticket è testo modificabile lato client (vedi sezione SPN più sotto), quindi spesso si estende ad altri servizi sullo stesso host |
-| **[RBCD](https://hackita.it/articoli/rbcd/) (Resource-Based)** | Sì, se serve un account "attaccante"                       | Sì, ma configurato sul lato del bersaglio                                                            | Alto                                | Quando controlli l'attributo `msDS-AllowedToActOnBehalfOfOtherIdentity` del bersaglio (non serve `SeEnableDelegationPrivilege`) | Richiede `MachineAccountQuota > 0` per creare un account, oppure un account esistente da usare come "attaccante"                                                                                      |
+| **[RBCD](/articoli/rbcd/) (Resource-Based)** | Sì, se serve un account "attaccante"                       | Sì, ma configurato sul lato del bersaglio                                                            | Alto                                | Quando controlli l'attributo `msDS-AllowedToActOnBehalfOfOtherIdentity` del bersaglio (non serve `SeEnableDelegationPrivilege`) | Richiede `MachineAccountQuota > 0` per creare un account, oppure un account esistente da usare come "attaccante"                                                                                      |
 
 `SeEnableDelegationPrivilege` è coinvolto solo nelle prime due varianti — con RBCD la configurazione sta dal lato del servizio bersaglio, e basta il permesso di scrittura su quel singolo attributo, non serve questo privilegio a livello di dominio.
 
 ## Enumerare gli account già configurati per delega
 
-Prima di configurare qualcosa tu, vale la pena controllare se qualche account nel dominio è **già** impostato per la delega (spesso per errore o per configurazioni legacy). Il modo più rapido resta una raccolta dati con [SharpHound](https://hackita.it/articoli/sharphound/) seguita da un'analisi in [BloodHound](https://hackita.it/articoli/bloodhound/), ma esistono anche strade manuali via Impacket:
+Prima di configurare qualcosa tu, vale la pena controllare se qualche account nel dominio è **già** impostato per la delega (spesso per errore o per configurazioni legacy). Il modo più rapido resta una raccolta dati con [SharpHound](/articoli/sharphound/) seguita da un'analisi in [BloodHound](/articoli/bloodhound/), ma esistono anche strade manuali via Impacket:
 
 ```bash
 findDelegation.py dominio.local/hackita:'Hackita123'
@@ -127,7 +127,7 @@ Da qui esce l'intero NTDS.dit: Domain Admin raggiunto.
 
 ### Percorso Linux (Impacket / bloodyAD)
 
-Stessa logica, tool diversi — utile quando lavori solo da Kali senza Evil-WinRM. Per la modifica degli attributi useremo [bloodyAD](https://hackita.it/articoli/bloodyad/), che gestisce da solo la somma dei flag su `userAccountControl` invece di farteli calcolare a mano:
+Stessa logica, tool diversi — utile quando lavori solo da Kali senza Evil-WinRM. Per la modifica degli attributi useremo [bloodyAD](/articoli/bloodyad/), che gestisce da solo la somma dei flag su `userAccountControl` invece di farteli calcolare a mano:
 
 ```bash
 # 1) Crea l'account macchina
@@ -206,7 +206,7 @@ netexec smb dc.dominio.local -u hackita -p 'Hackita123' -M change-password -o US
 
 Qui arriva la parte che pochi spiegano davvero bene.
 
-**Perché serve un TGT, non basta una password?** In [Kerberos](https://hackita.it/articoli/kerberos/), ogni richiesta di ticket di servizio (TGS) parte da un TGT valido. Il TGT dimostra "questo account si è autenticato con successo", il TGS dimostra "questo account è autorizzato per questo specifico servizio". `getST.py` fa entrambi i passaggi per te: prima ottiene un TGT per l'account macchina compromesso, poi lo usa per il resto della catena.
+**Perché serve un TGT, non basta una password?** In [Kerberos](/articoli/kerberos/), ogni richiesta di ticket di servizio (TGS) parte da un TGT valido. Il TGT dimostra "questo account si è autenticato con successo", il TGS dimostra "questo account è autorizzato per questo specifico servizio". `getST.py` fa entrambi i passaggi per te: prima ottiene un TGT per l'account macchina compromesso, poi lo usa per il resto della catena.
 
 **S4U2Self**: permette al tuo account macchina di ottenere un ticket di servizio *per se stesso*, per conto di un altro utente — anche senza che quell'utente si sia mai autenticato. Il KDC (il Domain Controller) si fida del nome utente che gli fornisci in questa richiesta: non serve la password dell'Administrator, basta il nome. Il risultato è un ticket "forwardable" (grazie al flag impostato allo Step 1) che dimostra "Administrator ha parlato con me".
 
@@ -230,7 +230,7 @@ In quel caso, la strada resta comunque aperta: invece di impersonare `administra
 getST.py 'dominio.local/HACKITA$:Hackita123' -spn ldap/dc.dominio.local -impersonate dc
 ```
 
-Un account macchina di un Domain Controller ha naturalmente i permessi di replica sul dominio — quindi un ticket LDAP ottenuto impersonandolo è sufficiente per un DCSync completo, esattamente come se avessi impersonato Administrator con successo. Nota che qui serve un `msDS-AllowedToDelegateTo` verso `ldap/`, non `cifs/`, perché il DCSync via LDAP passa dal protocollo di replica di Active Directory. Questo è esattamente lo scenario della macchina HTB Redelegate — trovi il [walkthrough completo di HTB Redelegate](https://hackita.it/articoli/htb-redelegate-walkthrough/).
+Un account macchina di un Domain Controller ha naturalmente i permessi di replica sul dominio — quindi un ticket LDAP ottenuto impersonandolo è sufficiente per un DCSync completo, esattamente come se avessi impersonato Administrator con successo. Nota che qui serve un `msDS-AllowedToDelegateTo` verso `ldap/`, non `cifs/`, perché il DCSync via LDAP passa dal protocollo di replica di Active Directory. Questo è esattamente lo scenario della macchina HTB Redelegate — trovi il [walkthrough completo di HTB Redelegate](/articoli/htb-redelegate-walkthrough/).
 
 ### Step 5 — Usa il ticket per dumpare le credenziali
 
@@ -238,7 +238,7 @@ Un account macchina di un Domain Controller ha naturalmente i permessi di replic
 KRB5CCNAME=administrator@cifs_dc.dominio.local@DOMINIO.LOCAL.ccache secretsdump.py -k -no-pass dc.dominio.local
 ```
 
-Da qui esce l'intero NTDS.dit — hash NTLM e chiavi Kerberos di ogni account, incluso l'Administrator, tramite [secretsdump](https://hackita.it/articoli/secretsdump/) e più in generale [credential dumping](https://hackita.it/articoli/credential-dumping/). Da lì, autenticazione diretta con [wmiexec](https://hackita.it/articoli/wmiexec/) o Evil-WinRM usando l'hash: Domain Admin raggiunto.
+Da qui esce l'intero NTDS.dit — hash NTLM e chiavi Kerberos di ogni account, incluso l'Administrator, tramite [secretsdump](/articoli/secretsdump/) e più in generale [credential dumping](/articoli/credential-dumping/). Da lì, autenticazione diretta con [wmiexec](/articoli/wmiexec/) o Evil-WinRM usando l'hash: Domain Admin raggiunto.
 
 ## I numeri di userAccountControl, spiegati (finalmente)
 

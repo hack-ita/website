@@ -144,7 +144,7 @@ AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/...
 REDIS_URL=redis://:RedisP@ss@10.10.10.50:6379
 ```
 
-Credenziali per [MySQL](https://hackita.it/articoli/porta-3306-mysql/), [Redis](https://hackita.it/articoli/porta-6379-redis/), [AWS](https://hackita.it/articoli/aws-privilege-escalation/).
+Credenziali per [MySQL](/articoli/porta-3306-mysql/), [Redis](/articoli/porta-6379-redis/), [AWS](/articoli/aws-privilege-escalation/).
 
 ```bash
 # History dei layer (rivela comandi del Dockerfile)
@@ -256,9 +256,9 @@ Anche senza la console, il traceback Python espone:
 
 Se Flask non è in debug mode ma è esposto sulla 5000:
 
-* Testa per [SQL injection](https://hackita.it/articoli/sqlmap/) nei parametri
+* Testa per [SQL injection](/articoli/sqlmap/) nei parametri
 * Testa per SSTI (Server-Side Template Injection): `{{7*7}}` nei parametri
-* Directory bruteforce con [Gobuster](https://hackita.it/articoli/web-pentest/)
+* Directory bruteforce con [Gobuster](/articoli/web-pentest/)
 
 ***
 
@@ -373,4 +373,4 @@ Se è Synology:
 
 Riferimento: Docker Registry API v2, Werkzeug debugger security, UPnP SOAP exploitation, HackTricks. Uso esclusivo in ambienti autorizzati.
 
-> [hackita.it/supporto](https://hackita.it/supporto) — [hackita.it/servizi](https://hackita.it/servizi).
+> [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

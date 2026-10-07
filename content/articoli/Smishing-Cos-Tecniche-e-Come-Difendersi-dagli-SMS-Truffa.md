@@ -20,7 +20,7 @@ tags:
 
 # Smishing: Come Funziona il Phishing via SMS
 
-Lo **smishing** (*SMS phishing*, phishing via SMS) è una truffa o anche detto scam, in cui l'attaccante invia un messaggio di testo che sembra provenire da una banca, un corriere, un ente pubblico o un servizio di pagamento, per spingere la vittima a cliccare un link malevolo, chiamare un numero o rivelare dati sensibili. È la versione via SMS del [phishing](https://hackita.it/articoli/phishing/), e in Italia è ormai il **secondo canale di truffa digitale** dopo l'email.
+Lo **smishing** (*SMS phishing*, phishing via SMS) è una truffa o anche detto scam, in cui l'attaccante invia un messaggio di testo che sembra provenire da una banca, un corriere, un ente pubblico o un servizio di pagamento, per spingere la vittima a cliccare un link malevolo, chiamare un numero o rivelare dati sensibili. È la versione via SMS del [phishing](/articoli/phishing/), e in Italia è ormai il **secondo canale di truffa digitale** dopo l'email.
 
 Secondo i dati di Polizia Postale e associazioni dei consumatori, le email di phishing rappresentano circa il **38,1%** delle truffe segnalate, seguite dagli SMS fraudolenti con circa il **28,4%**. Il Cert-AgID, nel suo report 2025 sulle campagne malevole in Italia, ha registrato **3.620 campagne** in un anno, con un aumento di circa il **55%** degli attacchi diretti a dispositivi Android, spesso innescati proprio da un link ricevuto via SMS.
 
@@ -53,7 +53,7 @@ Una variante diffusa è la richiesta di una piccola somma, spesso tra **1 e 3 eu
 | **Falso avviso bancario**       | Un pagamento sospetto o un accesso anomalo al conto, con invito a "verificare" cliccando un link                                                                                                        |
 | **Falso circuito di pagamento** | SMS a nome di Nexi o altri circuiti, che segnala un addebito sospetto e chiede di richiamare un numero con urgenza                                                                                      |
 | **Falso ente pubblico**         | Agenzia delle Entrate, INPS o Comune, con richiesta di rimborso o pagamento di una presunta sanzione                                                                                                    |
-| **Codice di autorizzazione**    | Il messaggio chiede di inserire un codice ricevuto via SMS su un sito falso, spesso come primo passo di un attacco che prosegue poi con una chiamata di [vishing](https://hackita.it/articoli/vishing/) |
+| **Codice di autorizzazione**    | Il messaggio chiede di inserire un codice ricevuto via SMS su un sito falso, spesso come primo passo di un attacco che prosegue poi con una chiamata di [vishing](/articoli/vishing/) |
 
 Un caso reale: nel 2026 una campagna a tema **Nexi** ha colpito diversi utenti italiani con un SMS che segnalava un pagamento sospetto di importo elevato, invitando a chiamare un numero per "bloccare" l'operazione, un primo passo tipico verso una truffa più articolata condotta poi per telefono.
 
@@ -87,9 +87,9 @@ La risposta giusta dipende da cosa hai fatto dopo aver cliccato:
 
 ## Smishing e sicurezza aziendale
 
-Lo smishing non colpisce solo i privati: è spesso il primo passo di un attacco più ampio contro un'azienda, soprattutto quando il bersaglio è un dipendente con accesso a sistemi aziendali. Un SMS che sembra provenire dall'IT interno, con un link a una falsa pagina di login, può bastare a sottrarre credenziali aziendali vere, con conseguenze ben più gravi di una singola truffa da pochi euro: nel peggiore dei casi, l'accesso a sistemi interni e un vero e proprio [data breach](https://hackita.it/articoli/data-breach/).
+Lo smishing non colpisce solo i privati: è spesso il primo passo di un attacco più ampio contro un'azienda, soprattutto quando il bersaglio è un dipendente con accesso a sistemi aziendali. Un SMS che sembra provenire dall'IT interno, con un link a una falsa pagina di login, può bastare a sottrarre credenziali aziendali vere, con conseguenze ben più gravi di una singola truffa da pochi euro: nel peggiore dei casi, l'accesso a sistemi interni e un vero e proprio [data breach](/articoli/data-breach/).
 
-Per questo, nella formazione aziendale contro il [phishing](https://hackita.it/articoli/phishing/), è sempre più comune includere anche simulazioni di smishing, non solo di email, perché i dipendenti tendono a fidarsi più facilmente di un messaggio sul telefono personale che di un'email sul computer di lavoro.
+Per questo, nella formazione aziendale contro il [phishing](/articoli/phishing/), è sempre più comune includere anche simulazioni di smishing, non solo di email, perché i dipendenti tendono a fidarsi più facilmente di un messaggio sul telefono personale che di un'email sul computer di lavoro.
 
 ## Smishing, phishing e vishing: le differenze
 
@@ -97,7 +97,7 @@ Per questo, nella formazione aziendale contro il [phishing](https://hackita.it/a
 | --------------------------------------------------- | --------------- | ----------------------------------------------------- |
 | **Phishing**                                        | Email           | Falsa fattura o avviso di sicurezza con link malevolo |
 | **Smishing**                                        | SMS             | Falso avviso di consegna o blocco conto con link      |
-| **[Vishing](https://hackita.it/articoli/vishing/)** | Chiamata vocale | Finto operatore bancario che chiede un OTP            |
+| **[Vishing](/articoli/vishing/)** | Chiamata vocale | Finto operatore bancario che chiede un OTP            |
 
 Gli attacchi spesso combinano i canali in sequenza: un SMS che chiede di richiamare un numero, seguito da una telefonata di un finto operatore che porta avanti la truffa. Riconoscere un solo canale non basta: bisogna restare diffidenti verso tutta la catena di contatto, non solo verso il primo messaggio.
 

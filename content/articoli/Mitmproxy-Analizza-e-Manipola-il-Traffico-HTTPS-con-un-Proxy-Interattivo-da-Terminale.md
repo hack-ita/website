@@ -30,7 +30,7 @@ Il progetto include tre interfacce sullo stesso motore: **mitmproxy** (TUI inter
 
 Quando configuri il client per usare mitmproxy come proxy, ogni richiesta HTTP o HTTPS passa attraverso il proxy prima di raggiungere il server. mitmproxy presenta un certificato firmato con la propria CA — che dev'essere installata nel client — così da "aprire" TLS sul tratto client→proxy e ricostruirlo sul tratto proxy→server. Il risultato è accesso completo al traffico in chiaro, anche se la connessione originale usa HTTPS.
 
-Questo lo rende diverso da uno sniffer di rete come [tcpdump](https://hackita.it/articoli/tcpdump/) o [TShark](https://hackita.it/articoli/tshark/), che catturano pacchetti ma non vedono il contenuto TLS senza le chiavi di sessione. Se invece hai bisogno di MITM a livello di rete (ARP spoofing, spoofing L2 per forzare traffico verso il proxy), strumenti come [Bettercap](https://hackita.it/articoli/bettercap/) o [Ettercap](https://hackita.it/articoli/ettercap/) si occupano del layer inferiore — mitmproxy lavora sulla parte HTTP/HTTPS.
+Questo lo rende diverso da uno sniffer di rete come [tcpdump](/articoli/tcpdump/) o [TShark](/articoli/tshark/), che catturano pacchetti ma non vedono il contenuto TLS senza le chiavi di sessione. Se invece hai bisogno di MITM a livello di rete (ARP spoofing, spoofing L2 per forzare traffico verso il proxy), strumenti come [Bettercap](/articoli/bettercap/) o [Ettercap](/articoli/ettercap/) si occupano del layer inferiore — mitmproxy lavora sulla parte HTTP/HTTPS.
 
 ## Installazione e sanity check su Kali Linux
 
@@ -217,7 +217,7 @@ Hardening: enforce dell'authorization server-side, rate limit, audit su accessi 
 
 ### WPAD e proxy auto-discovery in lab
 
-In reti Windows, alcuni client tentano di scoprire automaticamente un proxy via WPAD. Questo può forzare traffico verso un proxy non autorizzato e potenzialmente esporre autenticazioni NTLM — vettore classico abbinato a tool come [Responder](https://hackita.it/articoli/responder/). mitmproxy può ricevere quel traffico se si posiziona come destinazione WPAD in un lab controllato, ma la parte di avvelenamento DNS/LLMNR che porta il traffico lì è gestita da strumenti diversi.
+In reti Windows, alcuni client tentano di scoprire automaticamente un proxy via WPAD. Questo può forzare traffico verso un proxy non autorizzato e potenzialmente esporre autenticazioni NTLM — vettore classico abbinato a tool come [Responder](/articoli/responder/). mitmproxy può ricevere quel traffico se si posiziona come destinazione WPAD in un lab controllato, ma la parte di avvelenamento DNS/LLMNR che porta il traffico lì è gestita da strumenti diversi.
 
 Hardening: disabilitare WPAD dove non serve, bloccare LLMNR/NBT-NS, monitorare richieste DNS verso `wpad` e autenticazioni NTLM verso host insoliti.
 

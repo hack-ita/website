@@ -286,9 +286,9 @@ searchsploit sap netweaver
 
 Scansione rete → SAP Management Console su `10.10.10.100:50013` senza auth. Dall'MC ho estratto: versione kernel 7.53 (patch level basso), 4 work process attivi, parametri di sicurezza (lunghezza minima password: 6 caratteri, no lockout policy configurata).
 
-SAP Gateway sulla 3300 accettava RFC esterne. Con `BAPI_USER_GETLIST` ho enumerato 2400 utenti SAP. Ho testato `SAP*:06071992` su client 000 → **login riuscito**. Da SAP\* ho aperto la transazione SE16 → tabella `RFCDES` → 12 RFC Destinations verso altri sistemi SAP e database [Oracle](https://hackita.it/articoli/porta-1521-oracle/) con credenziali in chiaro. La tabella `USR02` conteneva gli hash password di tutti i 2400 utenti.
+SAP Gateway sulla 3300 accettava RFC esterne. Con `BAPI_USER_GETLIST` ho enumerato 2400 utenti SAP. Ho testato `SAP*:06071992` su client 000 → **login riuscito**. Da SAP\* ho aperto la transazione SE16 → tabella `RFCDES` → 12 RFC Destinations verso altri sistemi SAP e database [Oracle](/articoli/porta-1521-oracle/) con credenziali in chiaro. La tabella `USR02` conteneva gli hash password di tutti i 2400 utenti.
 
-Con `SXPG_COMMAND_EXECUTE` ho ottenuto OS command execution come utente `<sid>adm` → shell → `/etc/shadow` → [Hashcat](https://hackita.it/articoli/hashcat/) → root.
+Con `SXPG_COMMAND_EXECUTE` ho ottenuto OS command execution come utente `<sid>adm` → shell → `/etc/shadow` → [Hashcat](/articoli/hashcat/) → root.
 
 Il sistema SAP conteneva: 15 anni di dati finanziari, stipendi di 10.000 dipendenti, contratti fornitori, ordini di acquisto, dati clienti.
 
@@ -418,4 +418,4 @@ Tutto ciò che un'azienda gestisce: stipendi e dati HR di tutti i dipendenti, fa
 
 Riferimento: SAP Security Notes, OWASP SAP Security, pysap, ERPScan, HackTricks SAP. Uso esclusivo in ambienti autorizzati.
 
-> SAP è il cuore della tua azienda — e l'utente SAP\* ha ancora la password del 1992? [Penetration test SAP HackIta](https://hackita.it/servizi) specializzato in ambienti ERP enterprise. Per padroneggiare l'exploitation SAP: [formazione 1:1 avanzata](https://hackita.it/formazione).
+> SAP è il cuore della tua azienda — e l'utente SAP\* ha ancora la password del 1992? [Penetration test SAP HackIta](/servizi) specializzato in ambienti ERP enterprise. Per padroneggiare l'exploitation SAP: [formazione 1:1 avanzata](/formazione).

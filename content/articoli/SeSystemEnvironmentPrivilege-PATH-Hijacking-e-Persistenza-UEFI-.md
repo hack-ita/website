@@ -337,9 +337,9 @@ SeSystemEnvironmentPrivilege copre due scenari distinti: PATH hijacking pratico 
 
 **Articoli correlati:**
 
-* [SeRestorePrivilege](https://hackita.it/articoli/serestoreprivilege/) — binary replacement alternativo più diretto
-* [SeLoadDriverPrivilege](https://hackita.it/articoli/seloaddriverprivilege/) — kernel persistence via driver
+* [SeRestorePrivilege](/articoli/serestoreprivilege/) — binary replacement alternativo più diretto
+* [SeLoadDriverPrivilege](/articoli/seloaddriverprivilege/) — kernel persistence via driver
 
 **Riferimenti:** [Chipsec](https://github.com/chipsec/chipsec) · [LoJax research ESET](https://www.eset.com/int/about/newsroom/press-releases/eset-discovers-first-uefi-rootkit-in-the-wild/) · [Microsoft Docs](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/modify-firmware-environment-values)
 
-Per assessment che includono analisi firmware e persistenza avanzata: [hackita.it/supporto](https://hackita.it/supporto)
+Per assessment che includono analisi firmware e persistenza avanzata: [hackita.it/supporto](/supporto)

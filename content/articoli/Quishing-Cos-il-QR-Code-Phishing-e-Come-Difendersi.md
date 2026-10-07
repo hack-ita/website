@@ -20,7 +20,7 @@ tags:
 
 # Quishing: Funzionamento e Come Evitare l'Attacco
 
-Il **quishing** è una forma di [phishing](https://hackita.it/articoli/phishing/) che usa un QR code per nascondere un URL malevolo, portando la vittima verso una pagina falsa, un download dannoso o un servizio fraudolento. Il termine nasce dall'unione di *QR* e *phishing*.
+Il **quishing** è una forma di [phishing](/articoli/phishing/) che usa un QR code per nascondere un URL malevolo, portando la vittima verso una pagina falsa, un download dannoso o un servizio fraudolento. Il termine nasce dall'unione di *QR* e *phishing*.
 
 Microsoft ha rilevato oltre **145 milioni di attacchi QR-code phishing** tra luglio 2025 e giugno 2026 tramite Microsoft Defender for Office 365: nel primo trimestre del 2026 il volume mensile è salito da 7,6 a 18,7 milioni di tentativi (+146%), per poi scendere a circa 8,3 milioni a giugno, un andamento che mostra un fenomeno in forte crescita ma altalenante, non una linea solo ascendente. Secondo l'ESET Threat Report sul primo semestre 2026, i QR code malevoli comparivano in circa l'**11%** delle email di phishing rilevate nel periodo analizzato.
 
@@ -62,7 +62,7 @@ Un caso reale: nel 2025 il Dipartimento dei Trasporti di New York ha emesso un a
 
 Una tendenza in crescita è l'uso del quishing contro le aziende: un'email che sembra provenire dalle risorse umane, dall'amministrazione o da un fornitore, con un QR code al posto di un link testuale. Secondo le analisi di Microsoft, nei primi mesi del 2026 i **PDF sono stati il vettore principale** di queste campagne (fino al 70% dei casi a marzo), prima che aumentasse anche la quota di documenti Word. Il QR può ridurre l'efficacia dei controlli che analizzano direttamente il testo e gli URL in chiaro di un'email, soprattutto quando il codice è dentro un'immagine o un allegato: non significa che ogni filtro lo ignori, ma è un punto cieco reale per molti sistemi pensati per il testo.
 
-Il problema si aggrava perché il clic avviene spesso su uno **smartphone personale, non gestito dall'azienda**: la mail originale transita nei sistemi di sicurezza aziendali, ma la scansione del QR e l'apertura del sito malevolo avvengono fuori da quel perimetro (reti, VPN, filtri sul traffico web), rendendo l'attacco più difficile da intercettare. Alcuni casi documentati combinano il quishing con tecniche da [Business Email Compromise](https://hackita.it/articoli/business-email-compromise/), impersonando un dirigente o un responsabile HR per aumentare la pressione a scansionare in fretta.
+Il problema si aggrava perché il clic avviene spesso su uno **smartphone personale, non gestito dall'azienda**: la mail originale transita nei sistemi di sicurezza aziendali, ma la scansione del QR e l'apertura del sito malevolo avvengono fuori da quel perimetro (reti, VPN, filtri sul traffico web), rendendo l'attacco più difficile da intercettare. Alcuni casi documentati combinano il quishing con tecniche da [Business Email Compromise](/articoli/business-email-compromise/), impersonando un dirigente o un responsabile HR per aumentare la pressione a scansionare in fretta.
 
 ## Come riconoscere un QR code malevolo
 
@@ -106,8 +106,8 @@ Questo è lo stesso approccio "guarda prima di aprire" che vale per qualunque li
 |                                                       | Canale                  | Esempio tipico                                       |
 | ----------------------------------------------------- | ----------------------- | ---------------------------------------------------- |
 | **Phishing**                                          | Email con link testuale | Falsa fattura con link malevolo                      |
-| **[Smishing](https://hackita.it/articoli/smishing/)** | SMS                     | Falso avviso di consegna con link                    |
-| **[Vishing](https://hackita.it/articoli/vishing/)**   | Chiamata vocale         | Finto operatore bancario                             |
+| **[Smishing](/articoli/smishing/)** | SMS                     | Falso avviso di consegna con link                    |
+| **[Vishing](/articoli/vishing/)**   | Chiamata vocale         | Finto operatore bancario                             |
 | **Quishing**                                          | Codice QR               | Falso pagamento di parcheggio o menu con QR malevolo |
 
 Il quishing si distingue dagli altri per il meccanismo tecnico: non è il canale di consegna a cambiare radicalmente (può arrivare via email, SMS o essere fisicamente stampato), ma il fatto che il link sia **nascosto dentro un'immagine** fino al momento della scansione.

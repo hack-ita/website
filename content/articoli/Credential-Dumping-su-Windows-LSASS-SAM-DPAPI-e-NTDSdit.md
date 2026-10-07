@@ -23,7 +23,7 @@ tags:
 
 # Credential Dumping su Windows: LSASS, SAM, LSA e DPAPI
 
-Il credential dumping è l'estrazione di credenziali — hash NTLM, ticket Kerberos, password in chiaro — dalla memoria di processo (LSASS), dal database locale (SAM), dai segreti LSA o da vault cifrati (DPAPI e Credential Manager). Le credenziali ottenute alimentano [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/), [lateral movement](https://hackita.it/articoli/lateral-movement/) e DCSync.
+Il credential dumping è l'estrazione di credenziali — hash NTLM, ticket Kerberos, password in chiaro — dalla memoria di processo (LSASS), dal database locale (SAM), dai segreti LSA o da vault cifrati (DPAPI e Credential Manager). Le credenziali ottenute alimentano [Pass-the-Hash](/articoli/pass-the-hash/), [lateral movement](/articoli/lateral-movement/) e DCSync.
 
 ***
 
@@ -237,7 +237,7 @@ dpapi::chrome /in:"%LOCALAPPDATA%\Google\Chrome\User Data\Default\Login Data"
 dpapi::chrome /in:"%LOCALAPPDATA%\Google\Chrome\User Data\Default\Login Data" /masterkey:<key>
 ```
 
-Per la guida completa a DPAPI vedi l'articolo dedicato: [DPAPI](https://hackita.it/articoli/dpapi/).
+Per la guida completa a DPAPI vedi l'articolo dedicato: [DPAPI](/articoli/dpapi/).
 
 ***
 
@@ -302,7 +302,7 @@ lsassy -u administrator -H :NThash <TARGET_IP>
 lsassy -u administrator -p Password123! <TARGET_IP> -m procdump  # via procdump
 ```
 
-Per la guida completa: [secretsdump](https://hackita.it/articoli/secretsdump/).
+Per la guida completa: [secretsdump](/articoli/secretsdump/).
 
 ***
 

@@ -21,7 +21,7 @@ tags:
 
 Subfinder è il tool di subdomain enumeration passiva più rapido dell'ecosistema ProjectDiscovery. Interroga oltre 30 data source — certificate transparency, motori di ricerca, API di threat intelligence — senza inviare una singola query DNS al target. In meno di 30 secondi restituisce centinaia di subdomain che altri strumenti richiederebbero minuti per trovare.
 
-La velocità di Subfinder lo rende ideale come primo step nella pipeline di recon: lanci Subfinder, pipi l'output in [Httpx](https://hackita.it/articoli/httpx/) per il probe, poi in [Nuclei](https://hackita.it/articoli/nuclei/) per il vulnerability scanning — il tutto in una singola riga di comando.
+La velocità di Subfinder lo rende ideale come primo step nella pipeline di recon: lanci Subfinder, pipi l'output in [Httpx](/articoli/httpx/) per il probe, poi in [Nuclei](/articoli/nuclei/) per il vulnerability scanning — il tutto in una singola riga di comando.
 
 Kill chain: **Reconnaissance passiva** (MITRE ATT\&CK T1590.002).
 
@@ -197,7 +197,7 @@ comm -13 <(sort baseline.txt) <(sort current.txt)
 
 **Flusso:**
 
-**Subfinder** → [Httpx](https://hackita.it/articoli/httpx/) → [Aquatone](https://hackita.it/articoli/aquatone/) / [Nuclei](https://hackita.it/articoli/nuclei/)
+**Subfinder** → [Httpx](/articoli/httpx/) → [Aquatone](/articoli/aquatone/) / [Nuclei](/articoli/nuclei/)
 
 | Tool        | Velocità | Fonti | Bruteforce | Passivo |
 | ----------- | -------- | ----- | ---------- | ------- |
@@ -288,4 +288,4 @@ Subfinder è 100% passivo — nessun traffico verso il target. Zero detection.
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

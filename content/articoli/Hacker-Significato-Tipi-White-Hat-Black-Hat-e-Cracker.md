@@ -29,7 +29,7 @@ Da qui la comunità stessa ha sentito il bisogno di distinguere ruoli diversi �
 
 ## Hacker vs Cracker: la Differenza che Conta
 
-Nel gergo tecnico originale, l'hacker è chi esplora e comprende i sistemi per curiosità o per migliorarli; il **cracker** è chi usa le stesse competenze per violare sistemi altrui senza autorizzazione. È un termine storico, nato nella stessa comunità che ha coniato "hacker" per marcare la distinzione — oggi nella cybersecurity professionale è più comune parlare di **black hat**, o semplicemente di **cybercriminale** nel linguaggio giornalistico, anche se i tre termini non sono perfettamente intercambiabili. Per l'approfondimento completo: [White Hat, Black Hat e Grey Hat: le Differenze](https://hackita.it/articoli/white-hat-black-hat-grey-hat/).
+Nel gergo tecnico originale, l'hacker è chi esplora e comprende i sistemi per curiosità o per migliorarli; il **cracker** è chi usa le stesse competenze per violare sistemi altrui senza autorizzazione. È un termine storico, nato nella stessa comunità che ha coniato "hacker" per marcare la distinzione — oggi nella cybersecurity professionale è più comune parlare di **black hat**, o semplicemente di **cybercriminale** nel linguaggio giornalistico, anche se i tre termini non sono perfettamente intercambiabili. Per l'approfondimento completo: [White Hat, Black Hat e Grey Hat: le Differenze](/articoli/white-hat-black-hat-grey-hat/).
 
 Quella distinzione binaria, però, è troppo semplice per descrivere davvero chi opera nel settore oggi. Nel tempo si sono aggiunte sfumature, ognuna con un proprio "colore".
 
@@ -38,7 +38,7 @@ Quella distinzione binaria, però, è troppo semplice per descrivere davvero chi
 In sintesi, prima di guardarli uno per uno:
 
 * **White Hat (hacker etico)** — opera sempre con autorizzazione esplicita, per migliorare la sicurezza
-* **Black Hat** — accede senza autorizzazione per profitto o danno, spesso tramite [virus o ransomware](https://hackita.it/articoli/virus-informatico/); in Italia può integrare il reato di accesso abusivo a sistema informatico (art. 615-ter c.p.), a cui si possono aggiungere altre fattispecie a seconda di cosa viene fatto una volta dentro
+* **Black Hat** — accede senza autorizzazione per profitto o danno, spesso tramite [virus o ransomware](/articoli/virus-informatico/); in Italia può integrare il reato di accesso abusivo a sistema informatico (art. 615-ter c.p.), a cui si possono aggiungere altre fattispecie a seconda di cosa viene fatto una volta dentro
 * **Grey Hat** — via di mezzo ambigua, agisce senza permesso ma senza intento dannoso; l'assenza di intento malevolo non equivale però ad avere un'autorizzazione, e la legalità dipende comunque dalla giurisdizione
 * **Blue Hat, script kiddie, hacktivist, state-sponsored** — categorie minori che usano criteri diversi tra loro (invito, competenza, motivazione, affiliazione) più che una scala comune di autorizzazione, e non sono terminologie standardizzate allo stesso livello di White/Black/Grey Hat
 
@@ -50,19 +50,19 @@ In sintesi, prima di guardarli uno per uno:
 
 Ruoli come red teamer e bug bounty hunter non sono altri "colori": sono professioni che si esercitano dentro la categoria white hat, con obiettivi diversi tra loro — se ne parla nel dettaglio più avanti.
 
-Per l'approfondimento completo, con esempi e sfumature legali di ciascuna categoria: [White Hat, Black Hat e Grey Hat: le Differenze](https://hackita.it/articoli/white-hat-black-hat-grey-hat/).
+Per l'approfondimento completo, con esempi e sfumature legali di ciascuna categoria: [White Hat, Black Hat e Grey Hat: le Differenze](/articoli/white-hat-black-hat-grey-hat/).
 
 Sapere a quale "colore" appartiene chi opera con permesso non basta, però, a capire cosa fa davvero sul lavoro: qui i titoli professionali si moltiplicano, e vale la pena distinguerli.
 
 ## Ethical Hacker, Penetration Tester, Red Teamer: Ruoli Diversi
 
-I termini si sovrappongono nel linguaggio comune ma indicano ruoli distinti — un ethical hacker può lavorare come penetration tester, red teamer, bug bounty hunter o security researcher a seconda dell'obiettivo dell'incarico. Il quadro completo, con le differenze tra ciascun ruolo: [Ethical Hacker: Cos'è e Cosa Fa](https://hackita.it/articoli/ethical-hacker/).
+I termini si sovrappongono nel linguaggio comune ma indicano ruoli distinti — un ethical hacker può lavorare come penetration tester, red teamer, bug bounty hunter o security researcher a seconda dell'obiettivo dell'incarico. Il quadro completo, con le differenze tra ciascun ruolo: [Ethical Hacker: Cos'è e Cosa Fa](/articoli/ethical-hacker/).
 
 Al di là dell'etichetta specifica, la giornata tipo di chi lavora in questo campo si somiglia parecchio.
 
 ## Cosa Fa Davvero un Hacker (Professionista)
 
-Il lavoro quotidiano di un hacker etico è meno cinematografico di quanto suggerisca la parola. In pratica: enumerazione di sistemi e servizi esposti con strumenti come [Nmap](https://hackita.it/articoli/nmap/), ricerca di misconfigurazioni e vulnerabilità note, sviluppo o adattamento di exploit, [escalation dei privilegi](https://hackita.it/articoli/windows-privilege-escalation/), movimento laterale — spesso dentro un dominio [Active Directory](https://hackita.it/articoli/active-directory/) — e, alla fine, un report dettagliato con impatto e raccomandazioni per il cliente. La parte di scrittura e comunicazione occupa spesso più tempo di quella "offensiva" vera e propria.
+Il lavoro quotidiano di un hacker etico è meno cinematografico di quanto suggerisca la parola. In pratica: enumerazione di sistemi e servizi esposti con strumenti come [Nmap](/articoli/nmap/), ricerca di misconfigurazioni e vulnerabilità note, sviluppo o adattamento di exploit, [escalation dei privilegi](/articoli/windows-privilege-escalation/), movimento laterale — spesso dentro un dominio [Active Directory](/articoli/active-directory/) — e, alla fine, un report dettagliato con impatto e raccomandazioni per il cliente. La parte di scrittura e comunicazione occupa spesso più tempo di quella "offensiva" vera e propria.
 
 Le competenze che servono davvero: reti (TCP/IP, protocolli), sistemi operativi (Windows e Linux a fondo), almeno un linguaggio di scripting (Python è lo standard), basi di programmazione per capire il codice che si sta attaccando, e — spesso sottovalutato — capacità di scrivere report chiari per un pubblico non tecnico.
 
@@ -70,13 +70,13 @@ Se tutto questo — trovare vulnerabilità, sfruttarle in modo controllato, docu
 
 ## Come Diventare un Hacker Etico
 
-Il percorso più comune parte dalle fondamenta (reti, sistemi operativi, un linguaggio di scripting), passa per la pratica in ambienti legali come HackTheBox o TryHackMe, arriva a una certificazione pratica riconosciuta — OSCP, CRTO e CPTS su tutte — e si consolida con una specializzazione ([web application security](https://hackita.it/articoli/attacchi-applicazioni-web/), [Active Directory](https://hackita.it/articoli/active-directory/), mobile, cloud). Non serve una laurea specifica: contano competenze dimostrabili, e una certificazione pratica o una writeup di CTF pesano più di un titolo di studio generico.
+Il percorso più comune parte dalle fondamenta (reti, sistemi operativi, un linguaggio di scripting), passa per la pratica in ambienti legali come HackTheBox o TryHackMe, arriva a una certificazione pratica riconosciuta — OSCP, CRTO e CPTS su tutte — e si consolida con una specializzazione ([web application security](/articoli/attacchi-applicazioni-web/), [Active Directory](/articoli/active-directory/), mobile, cloud). Non serve una laurea specifica: contano competenze dimostrabili, e una certificazione pratica o una writeup di CTF pesano più di un titolo di studio generico.
 
-La guida passo-passo completa, con la tabella delle certificazioni, i tempi realistici e gli errori più comuni da evitare: [Come Diventare Ethical Hacker: la Guida Pratica](https://hackita.it/articoli/come-diventare-ethical-hacker/).
+La guida passo-passo completa, con la tabella delle certificazioni, i tempi realistici e gli errori più comuni da evitare: [Come Diventare Ethical Hacker: la Guida Pratica](/articoli/come-diventare-ethical-hacker/).
 
 Se preferisci un percorso guidato invece di muoverti da solo tra corsi e certificazioni, Hackita offre anche materiale di studio, supporto e formazione 1:1 — anche in videochiamata — per chi vuole avvicinarsi seriamente all'hacking etico: scrivi a **[info@hackita.it](mailto:info@hackita.it)** o usa il modulo di contatto in fondo a questa pagina.
 
-Se invece vuoi prima farti un'idea pratica di cosa significhi davvero "hackerare" un sistema, dai un'occhiata ai [walkthrough](https://hackita.it/categorie/walkthroughs/) di Hackita: sono simulazioni guidate, passo dopo passo, di come si compromette una macchina in ambienti legali come HackTheBox.
+Se invece vuoi prima farti un'idea pratica di cosa significhi davvero "hackerare" un sistema, dai un'occhiata ai [walkthrough](/categorie/walkthroughs/) di Hackita: sono simulazioni guidate, passo dopo passo, di come si compromette una macchina in ambienti legali come HackTheBox.
 
 C'è però un prerequisito che viene prima di qualsiasi competenza tecnica, ed è quello su cui si gioca davvero la differenza tra una carriera e una denuncia.
 

@@ -33,7 +33,7 @@ This guide covers how Evilginx works internally, how to map it to a professional
 
 ## What Is an AiTM Attack?
 
-In a classic AiTM (adversary-in-the-middle) attack, the attacker's server sits between the victim and the legitimate service. The victim interacts with the real login page, completes MFA, and authenticates successfully — the entire session passes through the attacker's reverse proxy in real time. For a broader look at how man-in-the-middle techniques work at the network level, see HackITA's guide to [Man in the Middle](https://hackita.it/articoli/man-in-the-middle/).
+In a classic AiTM (adversary-in-the-middle) attack, the attacker's server sits between the victim and the legitimate service. The victim interacts with the real login page, completes MFA, and authenticates successfully — the entire session passes through the attacker's reverse proxy in real time. For a broader look at how man-in-the-middle techniques work at the network level, see HackITA's guide to [Man in the Middle](/articoli/man-in-the-middle/).
 
 ```
 Victim Browser
@@ -53,9 +53,9 @@ Session Cookie Issued
 Captured by the Proxy
 ```
 
-The moment the legitimate service (e.g., Microsoft Entra ID) issues the authenticated session cookie, Evilginx intercepts it. That cookie represents a valid, post-MFA authenticated session — replaying it from another machine can open the victim's account without a new authentication challenge, the same underlying idea as classic [session hijacking](https://hackita.it/articoli/session-hijacking/), just applied to a modern, MFA-protected login flow instead of a bare unauthenticated cookie.
+The moment the legitimate service (e.g., Microsoft Entra ID) issues the authenticated session cookie, Evilginx intercepts it. That cookie represents a valid, post-MFA authenticated session — replaying it from another machine can open the victim's account without a new authentication challenge, the same underlying idea as classic [session hijacking](/articoli/session-hijacking/), just applied to a modern, MFA-protected login flow instead of a bare unauthenticated cookie.
 
-This is fundamentally different from traditional credential [phishing](https://hackita.it/articoli/phishing/). Stolen credentials alone are useless if MFA is enforced. A stolen post-MFA session token is immediately actionable — this is the core reason AiTM / reverse proxy phishing has become a favored technique against Microsoft Entra ID and other IdPs where MFA isn't phishing-resistant.
+This is fundamentally different from traditional credential [phishing](/articoli/phishing/). Stolen credentials alone are useless if MFA is enforced. A stolen post-MFA session token is immediately actionable — this is the core reason AiTM / reverse proxy phishing has become a favored technique against Microsoft Entra ID and other IdPs where MFA isn't phishing-resistant.
 
 ## Internal Architecture
 
@@ -75,7 +75,7 @@ Evilginx isn't just "a proxy" — it's a self-contained stack with several compo
 
 **Limits**: it doesn't work against phishing-resistant authentication bound to the origin at the protocol level — FIDO2/WebAuthn (passkeys, hardware keys), Windows Hello for Business, and certificate-based authentication all qualify, provided the tenant enforces a phishing-resistant Authentication Strength so a weaker fallback method can't be used instead. Token Protection can also reduce the value of a stolen token in supported scenarios, but it isn't a universal browser-session defense.
 
-**Countermeasures**: phishing-resistant MFA with Authentication Strength enforced, Continuous Access Evaluation, Conditional Access, and monitoring for post-auth IP mismatches. For a broader map of how authentication and authorization weaknesses fit together beyond this one technique, see HackITA's [Auth & Access Control](https://hackita.it/articoli/auth-access-control-guida-completa/) guide.
+**Countermeasures**: phishing-resistant MFA with Authentication Strength enforced, Continuous Access Evaluation, Conditional Access, and monitoring for post-auth IP mismatches. For a broader map of how authentication and authorization weaknesses fit together beyond this one technique, see HackITA's [Auth & Access Control](/articoli/auth-access-control-guida-completa/) guide.
 
 ### Why TLS Doesn't Save the Victim Here
 
@@ -124,7 +124,7 @@ blacklist unauth
 
 `blacklist unauth` blocks unauthenticated visits — threat intel crawlers will probe any newly issued TLS certificate within hours of it appearing in Certificate Transparency logs, so this reduces exposure to automated scanning.
 
-DNS must be resolving through your VPS before enabling any phishlet — otherwise the ACME HTTP-based challenge fails. Verify propagation with `dig NS yourdomain.com` before proceeding. For a deep dive into how HTTP/HTTPS and TLS work at the protocol level, see HackITA's guide to [HTTP and HTTPS](https://hackita.it/articoli/http-https/).
+DNS must be resolving through your VPS before enabling any phishlet — otherwise the ACME HTTP-based challenge fails. Verify propagation with `dig NS yourdomain.com` before proceeding. For a deep dive into how HTTP/HTTPS and TLS work at the protocol level, see HackITA's guide to [HTTP and HTTPS](/articoli/http-https/).
 
 ## Common Operational Issues
 
@@ -268,7 +268,7 @@ The forked GoPhish repository is maintained at `github.com/kgretzky/gophish`, do
 
 ## Differences from Evilginx 2
 
-Hackita already has a guide on [Evilginx 2](https://hackita.it/articoli/evilginx2/), focused on 2FA bypass via MITM phishing proxy. The main differences that justify a separate guide for Evilginx 3: TLS management moved to certmagic for native Let's Encrypt auto-renewal; support for session tokens in HTTP response bodies and headers, not just cookies; built-in example phishlets dropped from the main repository (community-maintained now); configuration format switched from custom to JSON (phishlets remain YAML); and official integration with a GoPhish fork for campaign management.
+Hackita already has a guide on [Evilginx 2](/articoli/evilginx2/), focused on 2FA bypass via MITM phishing proxy. The main differences that justify a separate guide for Evilginx 3: TLS management moved to certmagic for native Let's Encrypt auto-renewal; support for session tokens in HTTP response bodies and headers, not just cookies; built-in example phishlets dropped from the main repository (community-maintained now); configuration format switched from custom to JSON (phishlets remain YAML); and official integration with a GoPhish fork for campaign management.
 
 ## Why "Microsoft 365" Isn't One Scenario
 
@@ -354,7 +354,7 @@ A finding that stops at step 1 is not the same finding as one validated through 
 | Token Protection                                          | Reduces replay for supported native apps/resources; not a universal browser defense |
 | Conditional Access, device compliance, risk policies, CAE | Reduce exposure but aren't an absolute guarantee                                    |
 
-FIDO2/WebAuthn, Windows Hello for Business, and certificate-based authentication all bind the authentication assertion to the origin domain, which is what defeats AiTM at the protocol level — provided the tenant enforces a phishing-resistant Authentication Strength so a weaker fallback method isn't still permitted. See [2FA Bypass on Hackita](https://hackita.it/articoli/2fa-bypass/) for more on why phishing-resistant methods hold up where TOTP/SMS/push don't.
+FIDO2/WebAuthn, Windows Hello for Business, and certificate-based authentication all bind the authentication assertion to the origin domain, which is what defeats AiTM at the protocol level — provided the tenant enforces a phishing-resistant Authentication Strength so a weaker fallback method isn't still permitted. See [2FA Bypass on Hackita](/articoli/2fa-bypass/) for more on why phishing-resistant methods hold up where TOTP/SMS/push don't.
 
 ## End-of-Engagement Checklist
 

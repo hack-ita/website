@@ -79,9 +79,9 @@ Ogni modulo si attiva sugli eventi che "ascolta": non è un aggregatore che spar
 | Tool                                                      | Approccio                             | Quando preferirlo                                                     |
 | --------------------------------------------------------- | ------------------------------------- | --------------------------------------------------------------------- |
 | SpiderFoot                                                | Automazione + correlazione automatica | Attack surface mapping ampio, monitoraggio continuo                   |
-| [Maltego](https://hackita.it/articoli/maltego/)           | Pivot manuale + grafo visuale         | Investigazione mirata dove il pivot guidato conta più della copertura |
-| [Recon-ng](https://hackita.it/articoli/reconng/)          | Workflow modulare scriptabile         | Automazione CLI ripetibile, controllo fine su ogni step               |
-| [TheHarvester](https://hackita.it/articoli/theharvester/) | Raccolta mirata e veloce              | Primo giro rapido email/subdomain, senza bisogno di correlazione      |
+| [Maltego](/articoli/maltego/)           | Pivot manuale + grafo visuale         | Investigazione mirata dove il pivot guidato conta più della copertura |
+| [Recon-ng](/articoli/reconng/)          | Workflow modulare scriptabile         | Automazione CLI ripetibile, controllo fine su ogni step               |
+| [TheHarvester](/articoli/theharvester/) | Raccolta mirata e veloce              | Primo giro rapido email/subdomain, senza bisogno di correlazione      |
 
 Non sono alternativi tra loro: un workflow comune parte da TheHarvester o SpiderFoot per la raccolta ampia, poi passa a Maltego quando serve seguire una relazione specifica a mano.
 
@@ -341,9 +341,9 @@ Scanner di vulnerabilità dedicato
 | Tool                                        | Ruolo nella pipeline                                      |
 | ------------------------------------------- | --------------------------------------------------------- |
 | SpiderFoot                                  | Raccolta OSINT iniziale e correlazione                    |
-| [Amass](https://hackita.it/articoli/amass/) | Espansione subdomain più aggressiva                       |
-| [httpx](https://hackita.it/articoli/httpx/) | Validazione rapida di quali host rispondono su HTTP/HTTPS |
-| [Nmap](https://hackita.it/articoli/nmap/)   | Enumerazione servizi attiva sui target confermati         |
+| [Amass](/articoli/amass/) | Espansione subdomain più aggressiva                       |
+| [httpx](/articoli/httpx/) | Validazione rapida di quali host rispondono su HTTP/HTTPS |
+| [Nmap](/articoli/nmap/)   | Enumerazione servizi attiva sui target confermati         |
 
 ```bash
 python3 sf.py -s $TARGET -u footprint -o csv -f spider_out.csv

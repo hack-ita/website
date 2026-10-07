@@ -23,7 +23,7 @@ tags:
 
 `renameMachine.py` modifica l'attributo `sAMAccountName` di un computer account in AD. Da solo non fa niente di interessante. Combinato con CVE-2021-42278 e CVE-2021-42287, permette a qualsiasi utente di dominio di diventare Domain Admin sfruttando come il KDC gestisce i nomi degli account durante l'emissione dei ticket.
 
-`renameMachine.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) ed è stato introdotto specificamente per la catena d'attacco nota come **NoPac** (o **sAMAccountName Spoofing**), documentata nell'articolo dedicato [NoPac](https://hackita.it/articoli/nopac/). Qui ci concentriamo sul funzionamento del tool e sul perché ogni step della catena è necessario.
+`renameMachine.py` fa parte di [Impacket](/articoli/impacket/) ed è stato introdotto specificamente per la catena d'attacco nota come **NoPac** (o **sAMAccountName Spoofing**), documentata nell'articolo dedicato [NoPac](/articoli/nopac/). Qui ci concentriamo sul funzionamento del tool e sul perché ogni step della catena è necessario.
 
 ***
 
@@ -268,12 +268,12 @@ python3 noPac.py corp.local/user:pass -dc-ip DC_IP -dc-host DC01 \
 
 **Articoli correlati:**
 
-* [Impacket: suite completa](https://hackita.it/articoli/impacket/)
-* [NoPac: CVE-2021-42278 + CVE-2021-42287](https://hackita.it/articoli/nopac/)
-* [addcomputer.py — crea computer account](https://hackita.it/articoli/addcomputer/)
-* [getTGT.py — richiedi TGT con credenziali](https://hackita.it/articoli/gettgt/)
-* [getST.py — S4U2self e delegation](https://hackita.it/articoli/getst/)
-* [Active Directory: guida all'exploitation](https://hackita.it/articoli/active-directory/)
+* [Impacket: suite completa](/articoli/impacket/)
+* [NoPac: CVE-2021-42278 + CVE-2021-42287](/articoli/nopac/)
+* [addcomputer.py — crea computer account](/articoli/addcomputer/)
+* [getTGT.py — richiedi TGT con credenziali](/articoli/gettgt/)
+* [getST.py — S4U2self e delegation](/articoli/getst/)
+* [Active Directory: guida all'exploitation](/articoli/active-directory/)
 
 > Uso esclusivo in ambienti autorizzati.
 

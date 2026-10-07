@@ -60,7 +60,7 @@ Il ciclo di vita tipico è questo:
 
 Il punto cruciale è la fase 4: l'attacco avviene **prima** che i sistemi di difesa tradizionali, che si basano su firme di minacce già note, abbiano qualcosa da riconoscere.
 
-In una [Cyber Kill Chain](https://hackita.it/articoli/cyber-kill-chain/) lo zero-day viene usato in genere nelle fasi di sfruttamento e installazione: è il modo per entrare, ottenere esecuzione di codice o scalare i privilegi senza essere notati.
+In una [Cyber Kill Chain](/articoli/cyber-kill-chain/) lo zero-day viene usato in genere nelle fasi di sfruttamento e installazione: è il modo per entrare, ottenere esecuzione di codice o scalare i privilegi senza essere notati.
 
 ## Zero-Day vs N-Day: qual è la differenza?
 
@@ -103,7 +103,7 @@ Il trend più importante per chi difende è un altro: gli attaccanti si spostano
 | **Stuxnet**                                  | 2010 | Malware contro impianti nucleari iraniani, che sfruttava più zero-day Windows (di solito si citano quattro)                                             |
 | **FORCEDENTRY** (CVE-2021-30860)             | 2021 | Exploit *zero-click* su iMessage usato dallo spyware Pegasus di NSO Group, scoperto da Citizen Lab                                                      |
 | **Log4Shell** (CVE-2021-44228)               | 2021 | Vulnerabilità RCE in Apache Log4j, sfruttata su larga scala a pochi giorni dalla divulgazione                                                           |
-| **MOVEit Transfer** (CVE-2023-34362)         | 2023 | [SQL injection](https://hackita.it/articoli/sql-injection/) sfruttata dal gruppo Cl0p per rubare dati da centinaia di organizzazioni, prima della patch |
+| **MOVEit Transfer** (CVE-2023-34362)         | 2023 | [SQL injection](/articoli/sql-injection/) sfruttata dal gruppo Cl0p per rubare dati da centinaia di organizzazioni, prima della patch |
 | **Oracle E-Business Suite** (CVE-2025-61882) | 2025 | Zero-day sfruttato contro clienti Oracle in campagne di estorsione legate a Cl0p                                                                        |
 
 Nota che gli esempi recenti sono quasi tutti **software aziendale esposto su Internet**, non il classico PC di casa.
@@ -113,7 +113,7 @@ Nota che gli esempi recenti sono quasi tutti **software aziendale esposto su Int
 *Aggiornato al 3 ottobre 2026.* Due casi di settembre mostrano come funzionano oggi:
 
 * **Chrome**: il 3 settembre 2026 Google ha rilasciato una patch d'emergenza per **CVE-2026-85046**, un type confusion nel motore V8 sfruttato attivamente. È il sesto zero-day di Chrome del 2026 e il giorno dopo la CISA l'ha aggiunto al catalogo KEV.
-* **Windows**: il Patch Tuesday dell'8 settembre 2026 ha corretto due zero-day sfruttati in the wild, **CVE-2026-85880** (Windows ALPC) e **CVE-2026-81963** (Windows Update Stack), entrambi di *privilege escalation* locale fino a SYSTEM. Sono il tipo di bug che un attaccante usa **dopo** essere entrato, per prendere il controllo totale della macchina (vedi [privilege escalation su Windows](https://hackita.it/articoli/privilege-escalation-windows/)).
+* **Windows**: il Patch Tuesday dell'8 settembre 2026 ha corretto due zero-day sfruttati in the wild, **CVE-2026-85880** (Windows ALPC) e **CVE-2026-81963** (Windows Update Stack), entrambi di *privilege escalation* locale fino a SYSTEM. Sono il tipo di bug che un attaccante usa **dopo** essere entrato, per prendere il controllo totale della macchina (vedi [privilege escalation su Windows](/articoli/privilege-escalation-windows/)).
 
 Il filo comune: componenti molto diffusi, patch d'emergenza fuori ciclo e inserimento rapido nel catalogo KEV. I dettagli cambiano ogni settimana: controlla sempre le fonti ufficiali dei vendor.
 
@@ -163,15 +163,15 @@ Su Debian/Ubuntu, aggiornamenti pendenti:
 apt list --upgradable
 ```
 
-Per vedere cosa hai esposto su Internet, come farebbe un attaccante, puoi partire da [Shodan](https://hackita.it/articoli/shodan/). Se un servizio con una vulnerabilità nota è raggiungibile da fuori, qualcuno lo troverà.
+Per vedere cosa hai esposto su Internet, come farebbe un attaccante, puoi partire da [Shodan](/articoli/shodan/). Se un servizio con una vulnerabilità nota è raggiungibile da fuori, qualcuno lo troverà.
 
 ## Zero-day e sicurezza offensiva
 
-Chi fa red team o penetration test lavora in genere con vulnerabilità note: un pentest serve a trovare configurazioni sbagliate, patch mancanti e percorsi di attacco, non a scoprire zero-day. Strumenti come [Metasploit](https://hackita.it/articoli/metasploit/) raccolgono exploit per vulnerabilità già pubbliche.
+Chi fa red team o penetration test lavora in genere con vulnerabilità note: un pentest serve a trovare configurazioni sbagliate, patch mancanti e percorsi di attacco, non a scoprire zero-day. Strumenti come [Metasploit](/articoli/metasploit/) raccolgono exploit per vulnerabilità già pubbliche.
 
 La ricerca di zero-day è un'attività diversa, chiamata *vulnerability research*: analisi del codice, reverse engineering, fuzzing. Quando qualcuno ne trova uno in modo legittimo, la prassi è la **divulgazione responsabile**: segnalare al produttore e concedere un tempo ragionevole per correggere prima di pubblicare i dettagli (molti team usano un termine di circa 90 giorni).
 
-Dal punto di vista normativo, una buona gestione delle vulnerabilità e dei tempi di patching è un requisito concreto della [direttiva NIS 2](https://hackita.it/articoli/nis2/) e rientra nelle misure di sicurezza dell'[articolo 32 del GDPR](https://hackita.it/articoli/gdpr/).
+Dal punto di vista normativo, una buona gestione delle vulnerabilità e dei tempi di patching è un requisito concreto della [direttiva NIS 2](/articoli/nis2/) e rientra nelle misure di sicurezza dell'[articolo 32 del GDPR](/articoli/gdpr/).
 
 ## Domande frequenti sugli zero-day
 

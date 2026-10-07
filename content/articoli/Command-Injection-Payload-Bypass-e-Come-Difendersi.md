@@ -35,7 +35,7 @@ Nell'uso comune della sicurezza informatica, "command injection" e "OS command i
 
 In pratica: quando senti parlare di "command injection" in un contesto web, nella stragrande maggioranza dei casi si intende l'iniezione di comandi di sistema — l'OS command injection. La code injection è un problema diverso, anche se a volte le due tecniche possono combinarsi (un `eval()` vulnerabile può a sua volta richiamare una funzione che apre una shell).
 
-Questo articolo copre il concetto generale, dove si trova, come si testa e come ci si difende. Per l'approfondimento tecnico specifico su Linux/Windows e tecniche RCE avanzate, vedi la guida dedicata a [OS Command Injection](https://hackita.it/articoli/os-command-injection/). La command injection fa parte della più ampia famiglia delle vulnerabilità di injection — per una panoramica di come si inserisce rispetto a [LDAP injection](https://hackita.it/articoli/ldap-injection/), [XPath injection](https://hackita.it/articoli/xpath-injection/) e alle altre categorie, vedi la [guida completa agli attacchi alle applicazioni web](https://hackita.it/articoli/attacchi-applicazioni-web/).
+Questo articolo copre il concetto generale, dove si trova, come si testa e come ci si difende. Per l'approfondimento tecnico specifico su Linux/Windows e tecniche RCE avanzate, vedi la guida dedicata a [OS Command Injection](/articoli/os-command-injection/). La command injection fa parte della più ampia famiglia delle vulnerabilità di injection — per una panoramica di come si inserisce rispetto a [LDAP injection](/articoli/ldap-injection/), [XPath injection](/articoli/xpath-injection/) e alle altre categorie, vedi la [guida completa agli attacchi alle applicazioni web](/articoli/attacchi-applicazioni-web/).
 
 ## Come Funziona: il Meccanismo
 
@@ -119,7 +119,7 @@ Ogni linguaggio ha le proprie funzioni "pericolose" da cercare durante una code 
 | **Java**               | `Runtime.exec()` con stringa concatenata (non l'overload ad array)   | `; id`, `&& id`              |
 | **.NET**               | `Process.Start()` con argomenti costruiti per concatenazione         | `& whoami`, `&& whoami`      |
 
-**Vettori indiretti da conoscere.** Il percorso verso l'esecuzione di comandi non passa sempre da una di queste funzioni chiamate direttamente. Una [SQL injection](https://hackita.it/articoli/sql-injection/) che raggiunge `xp_cmdshell` (MSSQL) o una UDF di sistema MySQL *degenera* in esecuzione di comandi una volta ottenuto l'accesso — resta una SQL injection nella causa, non una command injection "pura" fin dall'inizio, ma il risultato finale è lo stesso. Allo stesso modo, un parser che passa il contenuto di un file o di un campo a un comando esterno (conversione immagini, elaborazione di metadati) può introdurre command injection senza che il codice contenga nessuna delle funzioni elencate sopra — motivo per cui la code review da sola non basta sempre, serve anche testare il comportamento reale dell'applicazione.
+**Vettori indiretti da conoscere.** Il percorso verso l'esecuzione di comandi non passa sempre da una di queste funzioni chiamate direttamente. Una [SQL injection](/articoli/sql-injection/) che raggiunge `xp_cmdshell` (MSSQL) o una UDF di sistema MySQL *degenera* in esecuzione di comandi una volta ottenuto l'accesso — resta una SQL injection nella causa, non una command injection "pura" fin dall'inizio, ma il risultato finale è lo stesso. Allo stesso modo, un parser che passa il contenuto di un file o di un campo a un comando esterno (conversione immagini, elaborazione di metadati) può introdurre command injection senza che il codice contenga nessuna delle funzioni elencate sopra — motivo per cui la code review da sola non basta sempre, serve anche testare il comportamento reale dell'applicazione.
 
 ## Come Testare una Command Injection
 
@@ -131,7 +131,7 @@ Ogni linguaggio ha le proprie funzioni "pericolose" da cercare durante una code 
 
 ### Test Manuale con Burp Suite
 
-Prima di automatizzare, vale la pena capire il flusso manuale con [Burp Suite](https://hackita.it/articoli/burp-suite/) — è quello che userai comunque per confermare o investigare un caso dubbio:
+Prima di automatizzare, vale la pena capire il flusso manuale con [Burp Suite](/articoli/burp-suite/) — è quello che userai comunque per confermare o investigare un caso dubbio:
 
 1. **Intercetta la richiesta** che richiama la funzionalità sospetta (es. `GET /ping?host=127.0.0.1`).
 2. **Manda la richiesta a Repeater** e stabilisci una baseline: qual è la risposta normale, quanto tempo impiega.
@@ -146,7 +146,7 @@ Prima di automatizzare, vale la pena capire il flusso manuale con [Burp Suite](h
 commix --url="http://10.10.10.50/ping.php?host=127.0.0.1" --batch
 ```
 
-Per i casi in cui la vulnerabilità è raggiunta tramite un parametro POST o richiede autenticazione, Commix supporta anche request salvate da Burp Suite tramite l'opzione `--requestfile`. Per il fuzzing manuale con ffuf o Burp Intruder, la [wordlist dedicata al command injection](https://hackita.it/articoli/wordlist/) di SecLists è il punto di partenza standard.
+Per i casi in cui la vulnerabilità è raggiunta tramite un parametro POST o richiede autenticazione, Commix supporta anche request salvate da Burp Suite tramite l'opzione `--requestfile`. Per il fuzzing manuale con ffuf o Burp Intruder, la [wordlist dedicata al command injection](/articoli/wordlist/) di SecLists è il punto di partenza standard.
 
 ## Command Injection e WAF
 
@@ -231,7 +231,7 @@ La difesa più solida è strutturale, non un filtro aggiunto in un secondo momen
 
 **La command injection funziona sia su Linux che su Windows?** Sì, con sintassi diverse: su Linux i separatori tipici sono `;`, `&&`, `|`; su Windows si usano `&`, `&&`, `|` con `cmd.exe`, o l'equivalente in PowerShell con `;` come separatore di pipeline.
 
-**Qual è la differenza tra command injection e SQL injection?** La command injection sfrutta un interprete di comandi di sistema; la [SQL injection](https://hackita.it/articoli/sql-injection/) sfrutta un database. Possono incontrarsi: una SQL injection che raggiunge `xp_cmdshell` degenera in esecuzione di comandi di sistema.
+**Qual è la differenza tra command injection e SQL injection?** La command injection sfrutta un interprete di comandi di sistema; la [SQL injection](/articoli/sql-injection/) sfrutta un database. Possono incontrarsi: una SQL injection che raggiunge `xp_cmdshell` degenera in esecuzione di comandi di sistema.
 
 **Quali funzioni PHP possono causare command injection?** Principalmente `system()`, `exec()`, `shell_exec()`, `passthru()` e l'operatore backtick — tutte funzioni che passano una stringa a una shell.
 

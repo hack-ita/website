@@ -23,8 +23,8 @@ I filtri XSS sono l'ostacolo che separa un tester mediocre da uno efficace. Ogni
 
 Questa guida cataloga le tecniche di bypass più efficaci per i filtri server-side più comuni. Non basta conoscere un payload: devi capire **perché** il filtro non lo blocca.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)\
-→ Per bypass specifici dei WAF commerciali: [XSS WAF Bypass](https://hackita.it/articoli/xss-waf-bypass/)
+→ Torna alla guida principale: [XSS Completo](/articoli/xss/)\
+→ Per bypass specifici dei WAF commerciali: [XSS WAF Bypass](/articoli/xss-waf-bypass/)
 
 ***
 
@@ -361,7 +361,7 @@ XSStrike analizza la response e genera payload specifici per il filtro rilevato.
 1. Intercetta la richiesta
 2. Invia a Intruder
 3. Segna il parametro vulnerabile come posizione
-4. Usa payload list da [XSS Payload List](https://hackita.it/articoli/xss-payload-list/)
+4. Usa payload list da [XSS Payload List](/articoli/xss-payload-list/)
 5. Analizza le response per lunghezza anomala (filtro che rimuove) o contenuto (reflection)
 
 ***
@@ -385,9 +385,9 @@ XSStrike analizza la response e genera payload specifici per il filtro rilevato.
 
 ###### *Disclaimer: Usa queste tecniche solo su sistemi con autorizzazione esplicita scritta. Attività non autorizzate su sistemi altrui costituiscono reato penale (art. 615-ter c.p.).*
 
-Vuoi migliorare davvero le tue competenze offensive con un percorso **1:1**? Vai su [HackIta Formazione](https://hackita.it/servizi).
-Se invece vuoi testare la sicurezza della tua azienda con un assessment professionale, trovi tutto su [HackIta Servizi](https://hackita.it/servizi).
-Se questo contenuto ti è stato utile e vuoi supportare il progetto, puoi farlo su [HackIta Supporto](https://hackita.it/supporto).
+Vuoi migliorare davvero le tue competenze offensive con un percorso **1:1**? Vai su [HackIta Formazione](/servizi).
+Se invece vuoi testare la sicurezza della tua azienda con un assessment professionale, trovi tutto su [HackIta Servizi](/servizi).
+Se questo contenuto ti è stato utile e vuoi supportare il progetto, puoi farlo su [HackIta Supporto](/supporto).
 Per un approfondimento esterno lato difesa, utile anche la [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html).
 
 (\[1]): [https://cheatsheetseries.owasp.org/cheatsheets/Cross\_Site\_Scripting\_Prevention\_Cheat\_Sheet.html](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html?utm_source=chatgpt.com) "Cross Site Scripting Prevention - OWASP Cheat Sheet Series"

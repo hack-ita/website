@@ -15,7 +15,7 @@ tags:
   - phising
 ---
 
-Gophish è il framework open-source di riferimento per condurre campagne di [phishing](https://hackita.it/articoli/phishing/) simulation durante penetration test e red team engagement. Fornisce tutto il necessario: server SMTP integration, landing page builder, email template designer e reporting dettagliato. In questa guida impari a configurare Gophish, creare campagne convincenti e catturare credenziali per dimostrare il rischio phishing ai tuoi clienti.
+Gophish è il framework open-source di riferimento per condurre campagne di [phishing](/articoli/phishing/) simulation durante penetration test e red team engagement. Fornisce tutto il necessario: server SMTP integration, landing page builder, email template designer e reporting dettagliato. In questa guida impari a configurare Gophish, creare campagne convincenti e catturare credenziali per dimostrare il rischio phishing ai tuoi clienti.
 
 ## Posizione nella Kill Chain
 
@@ -23,9 +23,9 @@ Gophish opera nelle fasi di Delivery e Initial Access:
 
 | Fase           | Tool Precedente                                                           | Gophish                | Tool Successivo                                            |
 | -------------- | ------------------------------------------------------------------------- | ---------------------- | ---------------------------------------------------------- |
-| Recon          | [TheHarvester](https://hackita.it/articoli/theharvester/) email collection | → Target list creation | → Campaign launch                                          |
+| Recon          | [TheHarvester](/articoli/theharvester/) email collection | → Target list creation | → Campaign launch                                          |
 | Delivery       | Campaign ready                                                            | → Email delivery       | → User click                                               |
-| Initial Access | User clicks                                                               | → Credential capture   | → [Evilginx2](https://hackita.it/articoli/evilginx2/) proxy |
+| Initial Access | User clicks                                                               | → Credential capture   | → [Evilginx2](/articoli/evilginx2/) proxy |
 | Reporting      | Campaign complete                                                         | → Generate report      | → Client presentation                                      |
 
 ## Installazione e Setup
@@ -364,10 +364,10 @@ linkedin.com → linkedln.com (i → l)
 
 | Gophish +                                          | Risultato        | Workflow                            |
 | -------------------------------------------------- | ---------------- | ----------------------------------- |
-| [Evilginx2](https://hackita.it/articoli/evilginx2/) | 2FA bypass       | Gophish delivery → Evilginx landing |
-| [BeEF](https://hackita.it/articoli/beef/)           | Browser hooking  | Landing include BeEF hook           |
-| [Maltego](https://hackita.it/articoli/maltego/)     | Target OSINT     | Maltego emails → Gophish targets    |
-| [SET](https://hackita.it/articoli/set/)             | Payload delivery | Gophish link → SET payload          |
+| [Evilginx2](/articoli/evilginx2/) | 2FA bypass       | Gophish delivery → Evilginx landing |
+| [BeEF](/articoli/beef/)           | Browser hooking  | Landing include BeEF hook           |
+| [Maltego](/articoli/maltego/)     | Target OSINT     | Maltego emails → Gophish targets    |
+| [SET](/articoli/set/)             | Payload delivery | Gophish link → SET payload          |
 
 ## Confronto: Gophish vs Alternative
 
@@ -469,7 +469,7 @@ Coordina con il cliente, usa dominio plausibile, non targetizzare IT staff se no
 
 **Gophish funziona con 2FA?**
 
-Gophish cattura solo credenziali. Per 2FA bypass, integra con [Evilginx2](https://hackita.it/articoli/evilginx2/).
+Gophish cattura solo credenziali. Per 2FA bypass, integra con [Evilginx2](/articoli/evilginx2/).
 
 **Quanto deve durare una campagna?**
 
@@ -477,10 +477,10 @@ Tipicamente 1-5 giorni. Più lunga = più dati, ma più rischio di rilevamento.
 
 **È legale fare phishing simulation?**
 
-Solo con autorizzazione scritta del cliente. Per campagne professionali, [hackita.it/servizi](https://hackita.it/servizi).
+Solo con autorizzazione scritta del cliente. Per campagne professionali, [hackita.it/servizi](/servizi).
 
 ***
 
-*Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).*
+*Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).*
 
 **Risorse**: [Gophish GitHub](https://github.com/gophish/gophish) | [Gophish Docs](https://docs.getgophish.com/)

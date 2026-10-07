@@ -23,7 +23,7 @@ tags:
 
 ## Perché SVG è diverso da PNG o JPEG
 
-PNG e JPEG sono formati binari raster: pixel e metadati, nessun codice eseguibile. SVG è testo XML puro, con tag come `<script>`, `<foreignObject>`, gestori di evento (`onload`, `onerror`, `onmouseover`) e, soprattutto, la possibilità di dichiarare un `DOCTYPE` con entità esterne — la stessa meccanica che rende pericoloso qualsiasi parser XML mal configurato (vedi [XXE](https://hackita.it/articoli/xxe/) e [XXE Injection](https://hackita.it/articoli/xxe-injection/) per la teoria completa).
+PNG e JPEG sono formati binari raster: pixel e metadati, nessun codice eseguibile. SVG è testo XML puro, con tag come `<script>`, `<foreignObject>`, gestori di evento (`onload`, `onerror`, `onmouseover`) e, soprattutto, la possibilità di dichiarare un `DOCTYPE` con entità esterne — la stessa meccanica che rende pericoloso qualsiasi parser XML mal configurato (vedi [XXE](/articoli/xxe/) e [XXE Injection](/articoli/xxe-injection/) per la teoria completa).
 
 Il problema nasce quando un browser o una libreria server-side trattano l'SVG come "solo un'immagine" e in realtà lo interpretano come documento attivo.
 
@@ -57,11 +57,11 @@ O con `<script>` esplicito:
 | `<svg>` inline nell'HTML                                                           | Sì               | Il DOM del parent include lo script          |
 | Upload servito con `Content-Type: image/svg+xml` e aperto direttamente nel browser | Sì               | La vittima naviga il file come documento     |
 
-Questo è il motivo per cui un semplice controllo "estensione .svg = immagine, va bene" è insufficiente: dipende tutto da come il file viene servito e referenziato dopo l'upload. Per la superficie generale di upload malevoli vedi [File Upload Attack](https://hackita.it/articoli/file-upload-attack/).
+Questo è il motivo per cui un semplice controllo "estensione .svg = immagine, va bene" è insufficiente: dipende tutto da come il file viene servito e referenziato dopo l'upload. Per la superficie generale di upload malevoli vedi [File Upload Attack](/articoli/file-upload-attack/).
 
 ## SVG XXE: entità esterne dentro l'XML
 
-Essendo XML, un SVG può dichiarare un DOCTYPE con entità esterne, la tecnica classica di [XXE Injection](https://hackita.it/articoli/xxe-injection/):
+Essendo XML, un SVG può dichiarare un DOCTYPE con entità esterne, la tecnica classica di [XXE Injection](/articoli/xxe-injection/):
 
 ```xml
 <?xml version="1.0" standalone="yes"?>
@@ -89,7 +89,7 @@ Caso reale noto: **ImageTragick (CVE-2016-3714)**, dove ImageMagick elaborava SV
 * **Log del parser**: errori XML con riferimenti a `file://`, `http://`, `ftp://` in un campo che dovrebbe contenere solo un'immagine sono un segnale forte
 * **WAF/IDS**: regole che intercettano `<!DOCTYPE`, `<!ENTITY`, `<script`, `onload=`, `onerror=` dentro payload con `Content-Type: image/svg+xml` o estensione `.svg`
 * **EDR/monitoring outbound**: un processo di image processing (ImageMagick, librsvg) che genera traffico di rete inatteso è quasi sempre XXE-driven SSRF
-* **Header di risposta**: verificare che i file SVG serviti abbiano `Content-Disposition: attachment` e `X-Content-Type-Options: nosniff` — dettagli approfonditi in [Security Headers](https://hackita.it/articoli/security-headers/)
+* **Header di risposta**: verificare che i file SVG serviti abbiano `Content-Disposition: attachment` e `X-Content-Type-Options: nosniff` — dettagli approfonditi in [Security Headers](/articoli/security-headers/)
 
 ## Mitigazioni
 
@@ -102,7 +102,7 @@ Caso reale noto: **ImageTragick (CVE-2016-3714)**, dove ImageMagick elaborava SV
 
 * Sanitizzare l'SVG rimuovendo `<script>`, gestori `on*`, `<foreignObject>` prima di servirlo — librerie come DOMPurify (client) o SVG sanitizer dedicati (server) fanno questo lavoro
 * Servire sempre gli SVG upload con `Content-Disposition: attachment`, mai renderizzarli inline nel DOM della tua applicazione
-* Applicare una [CSP](https://hackita.it/articoli/xss-csp-bypass/) restrittiva come ulteriore livello, non come unica difesa
+* Applicare una [CSP](/articoli/xss-csp-bypass/) restrittiva come ulteriore livello, non come unica difesa
 
 **La mitigazione più efficace resta evitare il problema alla radice.** Se la tua applicazione deve offrire agli utenti un set di icone o badge personalizzabili (avatar, loghi di sezione, elementi UI), usare una libreria di icone SVG già pronte e verificate come [IcoSix](https://www.icosix.com/) elimina completamente la superficie d'attacco: l'utente sceglie da un set controllato, non carica file arbitrari che il tuo backend deve poi parsare.
 

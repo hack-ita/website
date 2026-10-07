@@ -132,7 +132,7 @@ Qui `1=1` è sempre vero. Se il sito continua a mostrare la pagina "contact" (ch
 index.php?id=587' and 1=2-- -
 ```
 
-con `1=2` sempre falso, il sito torna alla pagina "main". Questo conferma al 100% che il parametro `id` è vulnerabile: possiamo iniettare condizioni SQL arbitrarie e "leggere" il risultato osservando quale pagina viene mostrata. Da qui si può già impostare uno script che, carattere per carattere, estrae informazioni dal database (ad esempio la versione con `substring(@@version,1,1)='...'`), oppure affidarsi a uno strumento come [sqlmap](https://hackita.it/articoli/sqlmap/) per automatizzare l'intero processo di enumerazione del database.
+con `1=2` sempre falso, il sito torna alla pagina "main". Questo conferma al 100% che il parametro `id` è vulnerabile: possiamo iniettare condizioni SQL arbitrarie e "leggere" il risultato osservando quale pagina viene mostrata. Da qui si può già impostare uno script che, carattere per carattere, estrae informazioni dal database (ad esempio la versione con `substring(@@version,1,1)='...'`), oppure affidarsi a uno strumento come [sqlmap](/articoli/sqlmap/) per automatizzare l'intero processo di enumerazione del database.
 
 ## Analisi del sorgente e SQL injection annidata
 
@@ -164,7 +164,7 @@ $inc = getPathFromTpl($conn,$tpl);
 
 `$tpl = getTplFromID($conn);` chiama la prima funzione e salva il suo risultato in `$tpl`. `$inc = getPathFromTpl($conn,$tpl);` prende quel `$tpl` e lo passa alla seconda funzione, salvando il suo risultato in `$inc`. Più avanti nel file c'è la riga che rende tutto pericoloso: `include("$inc");`. In PHP, `include()` prende un file e lo esegue come se il suo contenuto facesse parte del programma stesso — non lo mostra soltanto, lo *esegue*. E qui viene chiamato su `$inc`, un valore che, come vedremo, un utente esterno può manipolare completamente.
 
-Il primo ostacolo per arrivarci è il controllo `intval($_GET['id']) == $_GET['id']`. Sembra un controllo serio, ma nasconde un problema classico di PHP. `intval()` prende una stringa e ne estrae solo la parte numerica iniziale, scartando il resto: `intval("25 qualcosa")` restituisce `25`. Il problema è il doppio uguale `==`: in PHP confronta due valori convertendoli allo stesso tipo prima del confronto, invece di richiedere che siano identici. Quindi `25 == "25 qualcosa"` risulta `true`, perché PHP converte la stringa a numero e confronta `25` con `25`. Basterebbe usare il triplo uguale `===` (che pretende stesso tipo *e* stesso valore) per bloccare questo trucco. È lo stesso tipo di insidia descritta nel nostro approfondimento sulla [SQL injection](https://hackita.it/articoli/sql-injection/): un controllo che sembra validare l'input in realtà lo lascia passare, a patto che inizi con una cifra valida.
+Il primo ostacolo per arrivarci è il controllo `intval($_GET['id']) == $_GET['id']`. Sembra un controllo serio, ma nasconde un problema classico di PHP. `intval()` prende una stringa e ne estrae solo la parte numerica iniziale, scartando il resto: `intval("25 qualcosa")` restituisce `25`. Il problema è il doppio uguale `==`: in PHP confronta due valori convertendoli allo stesso tipo prima del confronto, invece di richiedere che siano identici. Quindi `25 == "25 qualcosa"` risulta `true`, perché PHP converte la stringa a numero e confronta `25` con `25`. Basterebbe usare il triplo uguale `===` (che pretende stesso tipo *e* stesso valore) per bloccare questo trucco. È lo stesso tipo di insidia descritta nel nostro approfondimento sulla [SQL injection](/articoli/sql-injection/): un controllo che sembra validare l'input in realtà lo lascia passare, a patto che inizi con una cifra valida.
 
 Il punto interessante è che si tratta di **due query concatenate**, una dietro l'altra:
 
@@ -268,7 +268,7 @@ Entrambe le strade portano allo stesso risultato: una tty completa, invece di un
 
 ## Escalation a un secondo utente via cron poisoning
 
-Con shell come `www-data`, le credenziali del database sono visibili direttamente nel sorgente PHP recuperato in precedenza. Connettendosi al database (vedi la nostra guida su [MySQL sulla porta 3306](https://hackita.it/articoli/porta-3306-mysql/) per il contesto sul protocollo), la tabella `config` del database `neddy` contiene una entry particolarmente interessante:
+Con shell come `www-data`, le credenziali del database sono visibili direttamente nel sorgente PHP recuperato in precedenza. Connettendosi al database (vedi la nostra guida su [MySQL sulla porta 3306](/articoli/porta-3306-mysql/) per il contesto sul protocollo), la tabella `config` del database `neddy` contiene una entry particolarmente interessante:
 
 ```
 | 86 | checkrelease | /home/guly/checkbase.pl;/home/guly/checkplugins.pl; |
@@ -298,7 +298,7 @@ proc on /proc type proc (rw,relatime,hidepid=2)
 
 `/proc` è una cartella speciale di Linux che non contiene file "normali", ma informazioni live su ogni processo in esecuzione sul sistema — ogni processo ha lì dentro una sua sottocartella con dati leggibili. Comandi come `ps` non "sanno" davvero chi sta girando sul sistema: leggono semplicemente il contenuto di `/proc` e lo mostrano formattato. L'opzione `hidepid=2` dice al kernel: mostra a ogni utente solo le informazioni sui *propri* processi, nascondendo quelle di tutti gli altri.
 
-La conseguenza pratica è che `ps aux` (o `ps awuxx`) mostra solo i processi del proprio utente, e questo rende **inutile uno strumento come `pspy`**, molto usato in privilege escalation Linux proprio per osservare in tempo reale cosa esegue root (ad esempio comandi lanciati da cron). Con `hidepid=2` attivo, pspy semplicemente non vede nulla di quello che root sta facendo. È un buon esempio di come i permessi assegnati ai [gruppi Linux](https://hackita.it/articoli/group-linux-privilege-escalation/) e la configurazione del filesystem possano bloccare tecniche di enumerazione altrimenti standard.
+La conseguenza pratica è che `ps aux` (o `ps awuxx`) mostra solo i processi del proprio utente, e questo rende **inutile uno strumento come `pspy`**, molto usato in privilege escalation Linux proprio per osservare in tempo reale cosa esegue root (ad esempio comandi lanciati da cron). Con `hidepid=2` attivo, pspy semplicemente non vede nulla di quello che root sta facendo. È un buon esempio di come i permessi assegnati ai [gruppi Linux](/articoli/group-linux-privilege-escalation/) e la configurazione del filesystem possano bloccare tecniche di enumerazione altrimenti standard.
 
 **noexec su tmp, dev/shm e var/tmp.** Controllando le cartelle usate solitamente per scrivere file temporanei:
 
@@ -332,7 +332,7 @@ Il primo indizio utile arriva dall'output di `id`:
 uid=1000(guly) gid=1000(guly) groups=1000(guly),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),47(grub),108(netdev)
 ```
 
-Tra i gruppi elencati, `grub` salta all'occhio: non è uno dei gruppi standard che ti aspetteresti su un'installazione Debian pulita (a differenza di `cdrom`, `audio`, `video`, che sono normalissimi). Un modo pratico per orientarsi su quali gruppi Linux siano "di sistema" e quali possano invece nascondere un vettore di privilege escalation è il nostro approfondimento su [gruppi Linux e privilege escalation](https://hackita.it/articoli/group-linux-privilege-escalation/) — la logica di fondo è sempre la stessa: un gruppo insolito, associato al tuo utente, di solito esiste per darti accesso a qualcosa di specifico, e vale la pena chiedersi a cosa.
+Tra i gruppi elencati, `grub` salta all'occhio: non è uno dei gruppi standard che ti aspetteresti su un'installazione Debian pulita (a differenza di `cdrom`, `audio`, `video`, che sono normalissimi). Un modo pratico per orientarsi su quali gruppi Linux siano "di sistema" e quali possano invece nascondere un vettore di privilege escalation è il nostro approfondimento su [gruppi Linux e privilege escalation](/articoli/group-linux-privilege-escalation/) — la logica di fondo è sempre la stessa: un gruppo insolito, associato al tuo utente, di solito esiste per darti accesso a qualcosa di specifico, e vale la pena chiedersi a cosa.
 
 Cerchiamo quindi quali file appartengono a quel gruppo:
 

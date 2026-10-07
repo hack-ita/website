@@ -20,11 +20,11 @@ tags:
 
 Il Sapphire Ticket usa S4U2Self+U2U — due estensioni del protocollo Kerberos — per ottenere il PAC (Privilege Attribute Certificate, cioè la lista dei gruppi) di un utente privilegiato **direttamente dal KDC**, senza mai forgiarlo. Quel PAC autentico viene iniettato nel proprio TGT legittimo e re-firmato con l'hash krbtgt. Il risultato: AS-REQ reale nei log, PAC completamente autentico, attributi identici a quelli del KDC. La variante più difficile da rilevare della serie. Creato da Charlie Bromberg (@ShutdownRepo, 2022)
 
-**Se sei alle prime armi:** In Active Directory, l'autenticazione passa per Kerberos — un sistema di "biglietti" (ticket) che provano la tua identità senza ritrasmettere la password ogni volta. Il KDC (Key Distribution Center), che gira sui Domain Controller, emette questi ticket. Il Sapphire Ticket è una tecnica che finge di essere un utente privilegiato (es. Domain Admin) creando un ticket praticamente identico a uno emesso dal KDC stesso — ma senza averne l'autorizzazione. È la variante più sofisticata di una famiglia di attacchi che comprende [Golden Ticket](https://hackita.it/articoli/golden-ticket/), [Silver Ticket](https://hackita.it/articoli/silver-ticket/) e [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/). Per capirlo a fondo, è utile conoscere prima come funziona [Kerberos](https://hackita.it/articoli/kerberos/).
+**Se sei alle prime armi:** In Active Directory, l'autenticazione passa per Kerberos — un sistema di "biglietti" (ticket) che provano la tua identità senza ritrasmettere la password ogni volta. Il KDC (Key Distribution Center), che gira sui Domain Controller, emette questi ticket. Il Sapphire Ticket è una tecnica che finge di essere un utente privilegiato (es. Domain Admin) creando un ticket praticamente identico a uno emesso dal KDC stesso — ma senza averne l'autorizzazione. È la variante più sofisticata di una famiglia di attacchi che comprende [Golden Ticket](/articoli/golden-ticket/), [Silver Ticket](/articoli/silver-ticket/) e [Diamond Ticket](/articoli/diamond-ticket/). Per capirlo a fondo, è utile conoscere prima come funziona [Kerberos](/articoli/kerberos/).
 
 ## Glossario rapido
 
-Per il protocollo Kerberos completo vedi [Kerberos — autenticazione in Active Directory](https://hackita.it/articoli/kerberos/).
+Per il protocollo Kerberos completo vedi [Kerberos — autenticazione in Active Directory](/articoli/kerberos/).
 
 * **S4U2Self (Service for User to Self)**: Estensione Kerberos che permette a un servizio di richiedere un TGS per sé stesso a nome di un altro utente — senza conoscerne la password. Il KDC restituisce un TGS che include il PAC autentico dell'utente impersonato.
 * **U2U (User-to-User authentication)**: Estensione Kerberos che permette autenticazione tra due utenti senza una chiave di servizio a lungo termine. Invece di cifrare il TGS con la chiave di un servizio, lo cifra con la session key di un TGT — accessibile solo a chi ha quel TGT.
@@ -73,9 +73,9 @@ Il Sapphire Ticket è classificato **[T1558.001](https://attack.mitre.org/techni
 
 | Tecnica                                                       | Hash richiesto  | PAC                         | AS-REQ nei log | Richiede DA? | Difficoltà detection |
 | ------------------------------------------------------------- | --------------- | --------------------------- | -------------- | ------------ | -------------------- |
-| [Silver Ticket](https://hackita.it/articoli/silver-ticket/)   | Service account | Forgiato                    | No             | No           | Media                |
-| [Golden Ticket](https://hackita.it/articoli/golden-ticket/)   | krbtgt          | Forgiato                    | No             | Sì           | Alta                 |
-| [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/) | krbtgt          | Parzialmente autentico      | Sì             | Sì           | Molto alta           |
+| [Silver Ticket](/articoli/silver-ticket/)   | Service account | Forgiato                    | No             | No           | Media                |
+| [Golden Ticket](/articoli/golden-ticket/)   | krbtgt          | Forgiato                    | No             | Sì           | Alta                 |
+| [Diamond Ticket](/articoli/diamond-ticket/) | krbtgt          | Parzialmente autentico      | Sì             | Sì           | Molto alta           |
 | **Sapphire Ticket**                                           | krbtgt          | **Completamente autentico** | **Sì**         | **Sì**       | **Massima**          |
 
 Il Sapphire è il punto finale dell'evoluzione: ogni variante precedente lascia una traccia forgiata nel PAC. Il Sapphire non ne lascia nessuna — il PAC è firmato dal KDC stesso.
@@ -84,7 +84,7 @@ Il Sapphire è il punto finale dell'evoluzione: ogni variante precedente lascia 
 
 ## Sapphire vs Diamond: la differenza che conta
 
-|                               | [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/) | Sapphire Ticket                           |
+|                               | [Diamond Ticket](/articoli/diamond-ticket/) | Sapphire Ticket                           |
 | ----------------------------- | ------------------------------------------------------------- | ----------------------------------------- |
 | Come ottiene il PAC           | Modifica il PAC legittimo (aggiunge gruppi)                   | Ottiene il PAC autentico via S4U2Self+U2U |
 | PAC firmato da                | Attaccante (con krbtgt key)                                   | **KDC stesso** per l'utente target        |
@@ -154,7 +154,7 @@ impacket-secretsdump corp.local/Administrator:pass@DC_IP -just-dc-user krbtgt
 # → krbtgt:aes256-cts-hmac-sha1-96:<64 char hex>
 ```
 
-> **NTLM ≠ AES256:** Non esiste conversione diretta. Usa sempre DCSync per estrarre le chiavi AES. Vedi [DCSync](https://hackita.it/articoli/dcsync/).
+> **NTLM ≠ AES256:** Non esiste conversione diretta. Usa sempre DCSync per estrarre le chiavi AES. Vedi [DCSync](/articoli/dcsync/).
 
 ***
 
@@ -185,7 +185,7 @@ python3 ticketer.py \
 
 ### Con Impacket da Linux (metodo principale)
 
-**ticketer.py** di [Impacket](https://hackita.it/articoli/impacket/) ha supporto nativo per il Sapphire Ticket tramite la combinazione `-request` + `-impersonate` (implementato da ShutdownRepo, PR #1411 su Impacket):
+**ticketer.py** di [Impacket](/articoli/impacket/) ha supporto nativo per il Sapphire Ticket tramite la combinazione `-request` + `-impersonate` (implementato da ShutdownRepo, PR #1411 su Impacket):
 
 ```bash
 # Forma completa
@@ -432,21 +432,21 @@ Set-ADAccountPassword -Identity krbtgt -Reset \
 
 ## Mitigazione e prevenzione
 
-* **Proteggi l'hash krbtgt** — è il requisito fondamentale per tutti i ticket della serie. Vedi [Golden Ticket](https://hackita.it/articoli/golden-ticket/) per la catena completa verso krbtgt.
+* **Proteggi l'hash krbtgt** — è il requisito fondamentale per tutti i ticket della serie. Vedi [Golden Ticket](/articoli/golden-ticket/) per la catena completa verso krbtgt.
 * **Doppio reset krbtgt periodico** (almeno semestrale). Usa [New-KrbtgtKeys.ps1](https://github.com/microsoft/New-KrbtgtKeys.ps1).
 * **Monitora Event ID 4769 con `ENC-TKT-IN-SKEY`**: È il segnale più specifico del Sapphire Ticket. Imposta un alert SIEM su tutte le 4769 con questo flag — sono rarissime in ambienti normali.
-* **Monitora [DCSync](https://hackita.it/articoli/dcsync/)** (Event ID 4662) in tempo reale — l'hash krbtgt arriva tipicamente via DCSync.
+* **Monitora [DCSync](/articoli/dcsync/)** (Event ID 4662) in tempo reale — l'hash krbtgt arriva tipicamente via DCSync.
 * **Microsoft Defender for Identity**: Configura gli alert per T1558.001 e verifica che PAC validation e U2U anomaly siano inclusi.
 * **PAC validation** sui servizi critici: Può rilevare la discrepanza tra PAC TGT e PAC TGS (campi `PAC_REQUESTOR_SID` e `PAC_ATTRIBUTES_INFO`) — raro ma efficace.
 * **AES-only enforcement** (`msDS-SupportedEncryptionTypes = 24`): Non previene il Sapphire ma forza AES, riducendo i vettori di downgrade. CVE-2026-20833 (Microsoft 2026) sta accelerando il phase-out di RC4 nei service ticket.
-* **Mappa i path verso krbtgt con [BloodHound](https://hackita.it/articoli/bloodhound/)** e rimuovi deleghe non necessarie.
+* **Mappa i path verso krbtgt con [BloodHound](/articoli/bloodhound/)** e rimuovi deleghe non necessarie.
 * **Network monitoring porta 88**: Cattura Kerberos traffic e cerca pacchetti con `additional-tickets` + `ENC-TKT-IN-SKEY` — è l'unico modo per rilevare il Sapphire Ticket senza MDI.
 
 ***
 
 ## Confronto: Silver / Golden / Diamond / Sapphire
 
-|                        | [Silver Ticket](https://hackita.it/articoli/silver-ticket/) | [Golden Ticket](https://hackita.it/articoli/golden-ticket/) | [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/) | **Sapphire Ticket**      |
+|                        | [Silver Ticket](/articoli/silver-ticket/) | [Golden Ticket](/articoli/golden-ticket/) | [Diamond Ticket](/articoli/diamond-ticket/) | **Sapphire Ticket**      |
 | ---------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------- | ------------------------ |
 | Hash richiesto         | Service account                                             | krbtgt                                                      | krbtgt                                                        | krbtgt                   |
 | TGT di partenza        | N/A                                                         | Forgiato offline                                            | Reale (AS-REQ)                                                | Reale (AS-REQ)           |
@@ -469,7 +469,7 @@ Set-ADAccountPassword -Identity krbtgt -Reset \
 
 ## Quick Reference
 
-**1. Estrai krbtgt AES256 key via [DCSync](https://hackita.it/articoli/dcsync/):**
+**1. Estrai krbtgt AES256 key via [DCSync](/articoli/dcsync/):**
 
 ```bash
 impacket-secretsdump corp.local/Administrator:pass@DC_IP -just-dc-user krbtgt
@@ -565,18 +565,18 @@ Il pattern di questa serie Kerberos è sempre lo stesso: ogni mitigazione genera
 
 ## Articoli correlati
 
-* [Kerberos — autenticazione in Active Directory](https://hackita.it/articoli/kerberos/)
-* [Golden Ticket](https://hackita.it/articoli/golden-ticket/)
-* [Silver Ticket](https://hackita.it/articoli/silver-ticket/)
-* [Diamond Ticket](https://hackita.it/articoli/diamond-ticket/)
-* [DCSync](https://hackita.it/articoli/dcsync/)
-* [Pass-the-Ticket](https://hackita.it/articoli/pass-the-ticket/)
-* [Impacket](https://hackita.it/articoli/impacket/)
-* [Rubeus](https://hackita.it/articoli/rubeus/)
-* [BloodHound](https://hackita.it/articoli/bloodhound/)
-* [Mimikatz](https://hackita.it/articoli/mimikatz/)
-* [NetExec](https://hackita.it/articoli/netexec/)
-* [Active Directory — exploitation](https://hackita.it/articoli/active-directory/)
+* [Kerberos — autenticazione in Active Directory](/articoli/kerberos/)
+* [Golden Ticket](/articoli/golden-ticket/)
+* [Silver Ticket](/articoli/silver-ticket/)
+* [Diamond Ticket](/articoli/diamond-ticket/)
+* [DCSync](/articoli/dcsync/)
+* [Pass-the-Ticket](/articoli/pass-the-ticket/)
+* [Impacket](/articoli/impacket/)
+* [Rubeus](/articoli/rubeus/)
+* [BloodHound](/articoli/bloodhound/)
+* [Mimikatz](/articoli/mimikatz/)
+* [NetExec](/articoli/netexec/)
+* [Active Directory — exploitation](/articoli/active-directory/)
 
 ***
 

@@ -561,4 +561,4 @@ Trattalo come compromesso: revoca/ruota subito, controlla i log del provider per
 
 ***
 
-*Documentazione ufficiale: [TruffleHog su GitHub](https://github.com/trufflesecurity/trufflehog), [Gitleaks su GitHub](https://github.com/gitleaks/gitleaks). Per l'enumerazione cloud dopo aver trovato una chiave, vedi la nostra guida al pentest AWS, e [LinEnum su HackIta](https://hackita.it/articoli/linenum/) per i secret già presenti su Linux.*
+*Documentazione ufficiale: [TruffleHog su GitHub](https://github.com/trufflesecurity/trufflehog), [Gitleaks su GitHub](https://github.com/gitleaks/gitleaks). Per l'enumerazione cloud dopo aver trovato una chiave, vedi la nostra guida al pentest AWS, e [LinEnum su HackIta](/articoli/linenum/) per i secret già presenti su Linux.*

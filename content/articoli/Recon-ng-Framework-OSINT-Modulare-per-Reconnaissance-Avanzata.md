@@ -19,7 +19,7 @@ Recon-ng automatizza la raccolta di intelligence open source attraverso un frame
 
 ### Cosa imparerai
 
-Questo articolo copre l'installazione e configurazione del marketplace di moduli, gestione workspace e database SQLite integrato, tecniche di pivoting tra entità (domini→host→contatti→credenziali), creazione di resource script per automazione, integrazione con altri tool OSINT come [maltego](https://hackita.it/articoli/maltego/) e [spiderfoot](https://hackita.it/articoli/spiderfoot/), best practices OPSEC per evitare detection durante raccolta passiva, e strategie di export per alimentare fasi successive dell'attack chain.
+Questo articolo copre l'installazione e configurazione del marketplace di moduli, gestione workspace e database SQLite integrato, tecniche di pivoting tra entità (domini→host→contatti→credenziali), creazione di resource script per automazione, integrazione con altri tool OSINT come [maltego](/articoli/maltego/) e [spiderfoot](/articoli/spiderfoot/), best practices OPSEC per evitare detection durante raccolta passiva, e strategie di export per alimentare fasi successive dell'attack chain.
 
 ## Setup e Installazione
 
@@ -512,7 +512,7 @@ wget -r http://dev.targetcorp.com/.git
 git-dumper http://dev.targetcorp.com/.git targetcorp_source
 ```
 
-Source code contiene credenziali database hardcoded in `config.php`. Accesso database → credential stuffing su `mail.targetcorp.com` (Microsoft 365) usando [https://hackita.it/articoli/crackmapexec](https://hackita.it/articoli/crackmapexec/).
+Source code contiene credenziali database hardcoded in `config.php`. Accesso database → credential stuffing su `mail.targetcorp.com` (Microsoft 365) usando [https://hackita.it/articoli/crackmapexec](/articoli/crackmapexec/).
 
 ### Fase 4: Privilege Escalation (BloodHound + Mimikatz)
 
@@ -945,4 +945,4 @@ rm -rf ~/.recon-ng/keys.db
 
 **Disclaimer**: Recon-ng deve essere utilizzato esclusivamente su sistemi e domini per i quali si possiede autorizzazione esplicita scritta. L'uso non autorizzato di strumenti OSINT può violare policy aziendali, termini di servizio di API provider, e leggi sulla privacy (GDPR, CCPA). Repository ufficiale: [https://github.com/lanmaster53/recon-ng](https://github.com/lanmaster53/recon-ng)
 
-Vuoi supportare HackIta? Visita [https://hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [https://hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [https://hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [https://hackita.it/servizi](/servizi).

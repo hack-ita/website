@@ -18,7 +18,7 @@ tags:
 
 # rpcdump.py: Enumerare Endpoint RPC, UUID e Named Pipe su Windows
 
-`rpcdump.py` fa parte di [Impacket](https://hackita.it/articoli/impacket/) e interroga l'**Endpoint Mapper** di Windows ([porta 135](https://hackita.it/articoli/porta-135-rpc/)) per farsi restituire la lista di tutte le interfacce RPC registrate sull'host: UUID, protocollo, binding (porta dinamica o named pipe). Non esegue comandi sul target — è pura enumerazione, complementare a quella che fai con [rpcclient](https://hackita.it/articoli/rpcclient/) sulle stesse named pipe. Il risultato è una mappa di cosa gira sull'host e su quali canali è raggiungibile.
+`rpcdump.py` fa parte di [Impacket](/articoli/impacket/) e interroga l'**Endpoint Mapper** di Windows ([porta 135](/articoli/porta-135-rpc/)) per farsi restituire la lista di tutte le interfacce RPC registrate sull'host: UUID, protocollo, binding (porta dinamica o named pipe). Non esegue comandi sul target — è pura enumerazione, complementare a quella che fai con [rpcclient](/articoli/rpcclient/) sulle stesse named pipe. Il risultato è una mappa di cosa gira sull'host e su quali canali è raggiungibile.
 
 **Attenzione fin da subito:** la presenza di un'interfaccia nell'output non equivale a una vulnerabilità. Dimostra solo che quell'interfaccia è registrata sull'Endpoint Mapper. Perché diventi realmente sfruttabile servono altre condizioni: il binding deve essere raggiungibile da remoto (`ncacn_ip_tcp` o `ncacn_np`, non `ncalrpc` che è solo locale), il bind RPC deve completarsi, l'utente deve avere i privilegi richiesti, e il servizio deve avere una configurazione debole o una vulnerabilità applicabile.
 
@@ -29,14 +29,14 @@ Documentazione protocollo: [MS-RPCE — Microsoft RPC Protocol](https://learn.mi
 
 L'**Endpoint Mapper** (porta TCP/135) è il servizio Windows che mappa i client RPC ai servizi registrati. Quando un servizio RPC si avvia, si registra comunicando il proprio **UUID** (identificatore dell'interfaccia), il **protocollo** (`ncacn_ip_tcp`, `ncacn_np`, `ncalrpc`) e la **porta o named pipe** su cui ascolta.
 
-`rpcdump.py` interroga questo registro e restituisce tutto, poi tenta di abbinare ogni UUID a un servizio noto per renderlo leggibile. Si usa tipicamente in fase di [enumeration](https://hackita.it/articoli/enumeration/), dopo aver identificato la porta 135 aperta con [Nmap](https://hackita.it/articoli/nmap/), per capire quali servizi (Task Scheduler, SAM, Service Control Manager, WMI) sono esposti e quindi potenzialmente attaccabili — con la riserva vista sopra sulla differenza tra presenza e sfruttabilità.
+`rpcdump.py` interroga questo registro e restituisce tutto, poi tenta di abbinare ogni UUID a un servizio noto per renderlo leggibile. Si usa tipicamente in fase di [enumeration](/articoli/enumeration/), dopo aver identificato la porta 135 aperta con [Nmap](/articoli/nmap/), per capire quali servizi (Task Scheduler, SAM, Service Control Manager, WMI) sono esposti e quindi potenzialmente attaccabili — con la riserva vista sopra sulla differenza tra presenza e sfruttabilità.
 
 ## rpcdump richiede credenziali?
 
 Dipende dalla porta. Guardando il codice sorgente attuale:
 
 * **Porta 135 e 593:** nessuna autenticazione — l'Endpoint Mapper risponde senza credenziali su questi due canali
-* **Porta 139 e 445:** le credenziali (password o [Pass-the-Hash](https://hackita.it/articoli/pass-the-hash/)) vengono applicate per l'autenticazione SMB, necessaria per raggiungere l'Endpoint Mapper via `\pipe\epmapper`
+* **Porta 139 e 445:** le credenziali (password o [Pass-the-Hash](/articoli/pass-the-hash/)) vengono applicate per l'autenticazione SMB, necessaria per raggiungere l'Endpoint Mapper via `\pipe\epmapper`
 * **Porta 443:** le credenziali vengono usate solo per l'autenticazione al proxy RPC (RPC-over-HTTP), non a livello MSRPC
 
 `rpcdump.py` **non implementa Kerberos** — non esistono flag `-k` o `-no-pass` in questa versione del tool.
@@ -74,7 +74,7 @@ impacket-rpcdump -port 593 corp.local/user:pass@10.10.10.5
 impacket-rpcdump -target-ip 10.10.10.5 corp.local/user:pass@DC01
 ```
 
-**Quando 135 è filtrato:** `rpcdump` raggiunge specificamente l'Endpoint Mapper attraverso `\pipe\epmapper` via [SMB](https://hackita.it/articoli/smb/) (porta 445), autenticando con [NTLM](https://hackita.it/articoli/ntlm/). Questo non rende automaticamente raggiungibili tutte le altre interfacce RPC dell'host — ogni servizio ha comunque il proprio binding (dinamico o su named pipe specifica) che va verificato separatamente.
+**Quando 135 è filtrato:** `rpcdump` raggiunge specificamente l'Endpoint Mapper attraverso `\pipe\epmapper` via [SMB](/articoli/smb/) (porta 445), autenticando con [NTLM](/articoli/ntlm/). Questo non rende automaticamente raggiungibili tutte le altre interfacce RPC dell'host — ogni servizio ha comunque il proprio binding (dinamico o su named pipe specifica) che va verificato separatamente.
 
 ## Output e come leggerlo
 
@@ -117,10 +117,10 @@ Durante un penetration test autorizzato, gli endpoint da controllare con priorit
 
 | UUID                                                                            | Interfaccia                               | Binding tipico                                           | Rilevanza                                                                                                                      | Cosa NON dimostra                                           |
 | ------------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| `E3514235-4B06-11D1-AB04-00C04FC2DCD2`                                          | MS-DRSR / DRSUAPI                         | TCP dinamico (nessuna named pipe)                        | Replica AD, percorso [DCSync](https://hackita.it/articoli/dcsync/)                                                             | Non dimostra il possesso dei diritti di replica             |
-| `91AE6020-9E3C-11CF-8D7C-00AA00C091BE`                                          | MS-ICPR / ICertPassage                    | `\pipe\cert` o TCP dinamico                              | Interfaccia RPC di una CA AD CS, verificabile poi con [Certipy](https://hackita.it/articoli/certipy/)                          | Non dimostra che relay o ESC siano sfruttabili              |
-| `367ABB81-9844-35F1-AD32-98F038001003`                                          | MS-SCMR                                   | `\pipe\svcctl` o TCP                                     | Gestione servizi remoti — [psexec.py](https://hackita.it/articoli/psexec/), [smbexec.py](https://hackita.it/articoli/smbexec/) | Non dimostra privilegi amministrativi                       |
-| `86D35949-83C9-4044-B424-DB363231FD0C`                                          | MS-TSCH / ITaskSchedulerService (moderno) | TCP dinamico                                             | Task Scheduler moderno, usato da [atexec.py](https://hackita.it/articoli/atexec/) anche via `\pipe\atsvc` su SMB               | Non dimostra il diritto di creare o avviare task            |
+| `E3514235-4B06-11D1-AB04-00C04FC2DCD2`                                          | MS-DRSR / DRSUAPI                         | TCP dinamico (nessuna named pipe)                        | Replica AD, percorso [DCSync](/articoli/dcsync/)                                                             | Non dimostra il possesso dei diritti di replica             |
+| `91AE6020-9E3C-11CF-8D7C-00AA00C091BE`                                          | MS-ICPR / ICertPassage                    | `\pipe\cert` o TCP dinamico                              | Interfaccia RPC di una CA AD CS, verificabile poi con [Certipy](/articoli/certipy/)                          | Non dimostra che relay o ESC siano sfruttabili              |
+| `367ABB81-9844-35F1-AD32-98F038001003`                                          | MS-SCMR                                   | `\pipe\svcctl` o TCP                                     | Gestione servizi remoti — [psexec.py](/articoli/psexec/), [smbexec.py](/articoli/smbexec/) | Non dimostra privilegi amministrativi                       |
+| `86D35949-83C9-4044-B424-DB363231FD0C`                                          | MS-TSCH / ITaskSchedulerService (moderno) | TCP dinamico                                             | Task Scheduler moderno, usato da [atexec.py](/articoli/atexec/) anche via `\pipe\atsvc` su SMB               | Non dimostra il diritto di creare o avviare task            |
 | `1FF70682-0A51-30E8-076D-740BE8CEE98B`                                          | MS-TSCH / ATSvc legacy                    | `\pipe\atsvc`                                            | Task Scheduler legacy (comando AT), usato solo da at.exe                                                                       | Non indica che il sistema supporti ancora operazioni legacy |
 | `378E52B0-C0A9-11CF-822D-00AA0051E40F`                                          | MS-TSCH / SASec                           | `\pipe\atsvc`                                            | Gestione sicurezza dei task legacy                                                                                             | Non dimostra accesso amministrativo                         |
 | `12345678-1234-ABCD-EF00-0123456789AB`                                          | MS-RPRN (Print Spooler)                   | `\pipe\spoolss`                                          | Superficie coercizione — PrinterBug/SpoolSample                                                                                | Non dimostra che PrintNightmare sia presente                |
@@ -140,7 +140,7 @@ Durante un penetration test autorizzato, gli endpoint da controllare con priorit
 | `4B324FC8-1670-01D3-1278-5A47BF6EE188` | MS-SRVS (Server Service)      | `\pipe\srvsvc`                            | Share, sessioni, connessioni                                                                                                                                                     |
 | `6BFFD098-A112-3610-9833-46C3F87E345A` | MS-WKST (Workstation Service) | `\pipe\wkssvc`                            | Info su workstation, dominio, utenti connessi                                                                                                                                    |
 | `82273FDC-E32A-18C3-3F78-827929DC23EA` | MS-EVEN (Eventlog Remoting)   | `\pipe\eventlog`                          | Lettura remota degli event log — utile per enumerare sessioni utente pregresse (vedi tool community LogHunter). Oggetto di CVE-2025-29969 (scrittura file arbitraria via TOCTOU) |
-| `9556DC99-828C-11CF-A37E-00AA003240C7` | MS-WMI / IWbemServices        | DCOM, TCP dinamico                        | Query WMI e gestione remota — è l'interfaccia sfruttata da [wmiexec.py](https://hackita.it/articoli/wmiexec/)                                                                    |
+| `9556DC99-828C-11CF-A37E-00AA003240C7` | MS-WMI / IWbemServices        | DCOM, TCP dinamico                        | Query WMI e gestione remota — è l'interfaccia sfruttata da [wmiexec.py](/articoli/wmiexec/)                                                                    |
 | `F309AD18-D86A-11D0-A075-00C04FB68820` | MS-WMI / IWbemLevel1Login     | DCOM, TCP dinamico                        | Login e inizializzazione sessioni WMI                                                                                                                                            |
 
 **Nota su WMI:** `8BC3F05E-D86B-11D0-A075-00C04FB68820` che vedi spesso citato non è l'UUID dell'interfaccia `IWbemServices` — è il **CLSID** usato per l'attivazione WMI via DCOM (`WbemLevel1Login`). L'interfaccia che esegue effettivamente le query è `IWbemServices`, UUID `9556DC99-828C-11CF-A37E-00AA003240C7`.
@@ -228,8 +228,8 @@ Sapere non solo quale UUID triggera un alert, ma quale opnum lo fa, ti dice esat
 
 | Interfaccia | UUID                                   | Opnum critico                                      | Cosa rileva                                                                  |
 | ----------- | -------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------- |
-| MS-SCMR     | `367ABB81-9844-35F1-AD32-98F038001003` | `0xC` (RCreateServiceW) / `0x18` (RCreateServiceA) | Creazione servizio remoto — [psexec.py](https://hackita.it/articoli/psexec/) |
-| MS-TSCH     | `86D35949-83C9-4044-B424-DB363231FD0C` | `0x1` (SchRpcRegisterTask)                         | Registrazione task — [atexec.py](https://hackita.it/articoli/atexec/)        |
+| MS-SCMR     | `367ABB81-9844-35F1-AD32-98F038001003` | `0xC` (RCreateServiceW) / `0x18` (RCreateServiceA) | Creazione servizio remoto — [psexec.py](/articoli/psexec/) |
+| MS-TSCH     | `86D35949-83C9-4044-B424-DB363231FD0C` | `0x1` (SchRpcRegisterTask)                         | Registrazione task — [atexec.py](/articoli/atexec/)        |
 | MS-EFSR     | `C681D488-D850-11D0-8C52-00C04FD90F7E` | `0x0` / `0x4`                                      | Chiamate coercizione PetitPotam                                              |
 | MS-RRP      | `338CD001-2244-31F1-AAAA-900038001003` | — (l'intera interfaccia è sensibile)               | Accesso remoto al registro                                                   |
 
@@ -247,7 +247,7 @@ Sul fronte opposto, chi fa ricerca su queste interfacce usa tool come **MS-RPC-F
 | `MSRPC SessionError: access_denied`            | Autenticazione SMB fallita o negata                                   | Verifica credenziali, prova un altro utente                                                                                |
 | `DCE/RPC connection failed`                    | Firewall blocca porte alte dinamiche                                  | Usa `-port 445` per passare da SMB                                                                                         |
 | Output vuoto                                   | Host non ha Endpoint Mapper attivo                                    | Verifica con nmap che 135/445 siano aperte                                                                                 |
-| Nessuna interfaccia utile su target aggiornati | Sessioni null disabilitate (default da Windows 10 Anniversary in poi) | Prova con credenziali valide anche minime, o verifica `\pipe\samr` con [rpcclient](https://hackita.it/articoli/rpcclient/) |
+| Nessuna interfaccia utile su target aggiornati | Sessioni null disabilitate (default da Windows 10 Anniversary in poi) | Prova con credenziali valide anche minime, o verifica `\pipe\samr` con [rpcclient](/articoli/rpcclient/) |
 
 ## Domande frequenti
 

@@ -1740,7 +1740,7 @@ LSE usa funzioni bash standard, facile da customizzare per chi sa bash.
 
 **Q: LSE funziona su sistemi BSD (FreeBSD, OpenBSD)?**
 
-A: No ufficialmente. LSE è designed per Linux. Molti comandi (come `ps`, `find`) hanno sintassi diversa su BSD. Alcuni check potrebbero funzionare, ma non è garantito. Per BSD usa tool specifici come [bsd-privesc-check](https://hackita.it/articoli/bsd-enumeration-tools/).
+A: No ufficialmente. LSE è designed per Linux. Molti comandi (come `ps`, `find`) hanno sintassi diversa su BSD. Alcuni check potrebbero funzionare, ma non è garantito. Per BSD usa tool specifici come [bsd-privesc-check](/articoli/bsd-enumeration-tools/).
 
 ***
 
@@ -1806,4 +1806,4 @@ L'autore di questo articolo e HackIta declinano ogni responsabilità per usi imp
 
 ***
 
-Vuoi supportare HackIta? Visita [hackita.it/supporto](https://hackita.it/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](https://hackita.it/servizi).
+Vuoi supportare HackIta? Visita [hackita.it/supporto](/supporto) per donazioni. Per penetration test professionali e formazione 1:1, scopri [hackita.it/servizi](/servizi).

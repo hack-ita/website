@@ -21,7 +21,7 @@ tags:
 
 Questa guida copre l'analisi di CSP e le tecniche di bypass più efficaci usate nei pentest professionali.
 
-→ Torna alla guida principale: [XSS Completo](https://hackita.it/articoli/xss/)
+→ Torna alla guida principale: [XSS Completo](/articoli/xss/)
 
 ***
 
@@ -299,7 +299,7 @@ curl -I https://target.com | grep -i content-security-policy
 
 *Disclaimer: Usa queste tecniche solo su sistemi con autorizzazione esplicita scritta. Attività non autorizzate su sistemi altrui costituiscono reato penale (art. 615-ter c.p.).*
 
-Vuoi migliorare davvero le tue competenze offensive con un percorso **1:1**? Vai su [HackIta Formazione](https://hackita.it/servizi).\
-Se invece vuoi testare la sicurezza della tua azienda con un assessment professionale, trovi tutto su [HackIta Servizi](https://hackita.it/servizi).\
-Se questo contenuto ti è stato utile e vuoi supportare il progetto, puoi farlo su [HackIta Supporto](https://hackita.it/supporto).\
+Vuoi migliorare davvero le tue competenze offensive con un percorso **1:1**? Vai su [HackIta Formazione](/servizi).\
+Se invece vuoi testare la sicurezza della tua azienda con un assessment professionale, trovi tutto su [HackIta Servizi](/servizi).\
+Se questo contenuto ti è stato utile e vuoi supportare il progetto, puoi farlo su [HackIta Supporto](/supporto).\
 Per un approfondimento esterno utile anche lato difesa, vedi il [CSP Evaluator di Google](https://csp-evaluator.withgoogle.com/).

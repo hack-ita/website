@@ -1,9 +1,12 @@
 ---
 title: 'GDPR: Cos''è, Obblighi, Diritti, Sanzioni e DPO (Guida 2026)'
 slug: gdpr
-description: 'GDPR: significato , come funziona e a chi si applica, principi, diritti, DPO, data breach in 72 ore e sanzioni fino a 20 milioni di euro o al 4% del fatturato'
+description: >-
+  GDPR: significato , come funziona e a chi si applica, principi, diritti, DPO,
+  data breach in 72 ore e sanzioni fino a 20 milioni di euro o al 4% del
+  fatturato
 image: /gdpr-regolamento-protezione-dati-privacy.webp
-draft: true
+draft: false
 date: 2026-10-08T23:21:26.471Z
 lastmod: 2026-10-08T23:21:28.093Z
 categories:

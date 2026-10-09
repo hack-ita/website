@@ -1,9 +1,12 @@
 ---
 title: 'Zero-Day: Cos''è, Come Funziona e Come Difendersi (2026)'
 slug: zero-day
-description: 'Cos''è un''attacco zero-day? Scopri cosa significa vulnerabilità zero-day, exploit , le differenze con n-day e CVE, esempi reali e come difenderti nel 2026.'
+description: >-
+  Cos'è un'attacco zero-day? Scopri cosa significa vulnerabilità zero-day,
+  exploit , le differenze con n-day e CVE, esempi reali e come difenderti nel
+  2026.
 image: /zero-day-vulnerability-exploit-cybersecurity.webp
-draft: true
+draft: false
 date: 2026-10-09T23:26:17.707Z
 lastmod: 2026-10-09T23:26:20.697Z
 categories:

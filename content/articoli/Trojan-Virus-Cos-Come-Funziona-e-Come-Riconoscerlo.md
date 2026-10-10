@@ -1,9 +1,12 @@
 ---
 title: 'Trojan Virus: Cos''è, Come Funziona e Come Riconoscerlo'
 slug: trojan
-description: 'Trojan: come si diffonde, quali danni può causare e come riconoscerlo. Confronto con virus e worm, principali tipologie ed esempi come Zeus ed Emotet.'
+description: >-
+  Trojan: come si diffonde, quali danni può causare e come riconoscerlo.
+  Confronto con virus e worm, principali tipologie ed esempi come Zeus ed
+  Emotet.
 image: /trojan-virus-malware-come-funziona.webp
-draft: true
+draft: false
 date: 2026-10-10T13:00:27.970Z
 lastmod: 2026-10-10T13:00:31.647Z
 categories:

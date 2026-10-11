@@ -19,7 +19,7 @@ tags:
 
 # ESC11 in Active Directory Certificate Services: NTLM relay verso l'interfaccia RPC della CA
 
-ESC11 è una tecnica di **privilege escalation via AD CS** che sfrutta un **NTLM relay verso l'interfaccia RPC della Certificate Authority**. A differenza di [ESC8](/articoli/esc8-adcs/), che colpisce l'endpoint web `/certsrv/`, ESC11 prende di mira direttamente l'interfaccia **RPC** usata dai client per richiedere certificati — niente browser, niente HTTP, solo RPC.
+ESC11 è una tecnica di **privilege escalation via AD CS** che sfrutta un **NTLM relay verso l'interfaccia RPC della Certificate Authority**. A differenza di [ESC8](https://hackita.it/articoli/esc8-adcs/), che colpisce l'endpoint web `/certsrv/`, ESC11 prende di mira direttamente l'interfaccia **RPC** usata dai client per richiedere certificati — niente browser, niente HTTP, solo RPC.
 
 Prima di entrare nel dettaglio, un glossario: se è la prima volta che leggi questi termini, eccoli in una riga ciascuno.
 
@@ -261,7 +261,7 @@ Un attacco di **NTLM relay verso l'interfaccia RPC** della Certificate Authority
 
 ### ESC11 è simile a ESC8?
 
-Sì nella logica (relay verso AD CS), ma [ESC8](/articoli/esc8-adcs/) colpisce l'endpoint web `/certsrv/`, mentre ESC11 colpisce l'interfaccia RPC/MS-ICPR.
+Sì nella logica (relay verso AD CS), ma [ESC8](https://hackita.it/articoli/esc8-adcs/) colpisce l'endpoint web `/certsrv/`, mentre ESC11 colpisce l'interfaccia RPC/MS-ICPR.
 
 ### ESC11 permette di arrivare a Domain Admin?
 
@@ -273,6 +273,6 @@ Non servono credenziali valide, ma serve comunque una tecnica di coercion funzio
 
 ***
 
-ESC11 è una delle tecniche AD CS dove il problema non è un certificate template mal configurato, ma la mancanza di una protezione di trasporto sulla CA stessa. Per il quadro completo delle escalation vedi la [guida ESC1-ESC16](/articoli/adcs-esc1-esc16/).
+ESC11 è una delle tecniche AD CS dove il problema non è un certificate template mal configurato, ma la mancanza di una protezione di trasporto sulla CA stessa. Per il quadro completo delle escalation vedi la [guida ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
 
 Tool usato in questa guida: [Certipy](https://github.com/ly4k/Certipy).

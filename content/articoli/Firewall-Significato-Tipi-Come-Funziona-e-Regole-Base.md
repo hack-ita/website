@@ -1,9 +1,11 @@
 ---
 title: 'Firewall: Significato, Tipi, Come Funziona e Regole Base'
 slug: firewall
-description: 'Firewall: cos''è, significato, come funziona, cosa fa, tipi (stateful, NGFW, WAF), regole base, comandi ufw e Windows e come lo vede un pentester con Nmap.'
+description: >-
+  Firewall: cos'è, significato, come funziona, cosa fa, tipi (stateful, NGFW,
+  WAF), regole base, comandi ufw e Windows e come lo vede un pentester con Nmap.
 image: /firewall-sicurezza-rete-network-protection.webp
-draft: true
+draft: false
 date: 2026-10-11T23:33:58.182Z
 lastmod: 2026-10-11T23:34:02.426Z
 categories:

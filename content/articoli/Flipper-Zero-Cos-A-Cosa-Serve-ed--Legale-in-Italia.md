@@ -1,9 +1,12 @@
 ---
 title: 'Flipper Zero: Cos''è, A Cosa Serve ed È Legale in Italia?'
 slug: flipper-zero
-description: 'Flipper Zero: cos''è, come funziona e cosa può fare tra RFID, NFC, Sub-GHz e BadUSB. Scopri firmware custom e cosa è legale fare in Italia e cosa è illegale'
+description: >-
+  Flipper Zero: cos'è, come funziona e cosa può fare tra RFID, NFC, Sub-GHz e
+  BadUSB. Scopri firmware custom e cosa è legale fare in Italia e cosa è
+  illegale
 image: /flipper-zero-hacking-radio-rfid-nfc.webp
-draft: true
+draft: false
 date: 2026-10-11T23:38:24.913Z
 lastmod: 2026-10-11T23:38:25.904Z
 categories:

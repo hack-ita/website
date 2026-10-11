@@ -1,9 +1,11 @@
 ---
 title: 'Kali Linux: Cos''è, A Cosa Serve, Tool e Installazione'
 slug: kali-linux
-description: 'Kali Linux: cos''è, a cosa serve, come installarlo, come imparare e quali sono i principali tool per penetration test, cybersecurity, forensics e red team.'
+description: >-
+  Kali Linux: cos'è, a cosa serve, come installarlo, come imparare e quali sono
+  i principali tool per penetration test, cybersecurity, forensics e red team.
 image: /kali-linux-distribuzione-pentest-ethical-hacking.webp
-draft: true
+draft: false
 date: 2026-10-11T23:35:47.973Z
 lastmod: 2026-10-11T23:35:48.992Z
 categories:

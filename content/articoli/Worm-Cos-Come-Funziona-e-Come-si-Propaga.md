@@ -1,9 +1,12 @@
 ---
 title: 'Worm: Cos''è, Come Funziona e Come si Propaga'
 slug: worm
-description: 'Scopri cos''è un worm informatico, come funziona e si propaga, le differenze con virus e ransomware, i casi famosi e come riconoscere un''infezione sulla rete.'
+description: >-
+  Scopri cos'è un worm informatico, come funziona e si propaga, le differenze
+  con virus e ransomware, i casi famosi e come riconoscere un'infezione sulla
+  rete.
 image: /worm-informatico-come-funziona-propagazione.webp
-draft: true
+draft: false
 date: 2026-10-11T12:13:36.016Z
 lastmod: 2026-10-11T12:13:37.753Z
 categories:

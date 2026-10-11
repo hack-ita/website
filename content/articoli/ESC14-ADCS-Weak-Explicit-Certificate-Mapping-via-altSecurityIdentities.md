@@ -10,10 +10,10 @@ categories:
 subcategories:
   - privilege-escalation
 tags:
-  - ad
-  - adcs
-  - esc
-  - ''
+  - ESC14
+  - AD CS
+  - Active Directory
+  - Certipy
 ---
 
 # ESC14 in Active Directory Certificate Services: weak explicit certificate mapping via altSecurityIdentities
@@ -144,7 +144,7 @@ Certify.exe request /template:ExtMail
 
 Via PKINIT, questo percorso richiede che il DC sia ancora in **modalità compatibile** (non Full Enforcement) rispetto allo strong certificate binding. Dal 9 settembre 2025 Microsoft ha reso l'enforcement forte **permanente**, senza più possibilità di tornare a Compatibility Mode: su un DC aggiornato a quella data, questo scenario via PKINIT **non funziona più**.
 
-Resta teoricamente percorribile via **Schannel**, ma solo se quel servizio ha un proprio mapping debole configurato in modo permissivo (vedi anche [ESC10](/articoli/esc10-adcs/), che tratta esattamente questa superficie) — non darlo per scontato, verificalo.
+Resta teoricamente percorribile via **Schannel**, ma solo se quel servizio ha un proprio mapping debole configurato in modo permissivo (vedi anche [ESC10](https://hackita.it/articoli/esc10-adcs/), che tratta esattamente questa superficie) — non darlo per scontato, verificalo.
 
 ### Se non funziona
 
@@ -301,6 +301,6 @@ No. Basta ottenere un certificato legittimo che soddisfi il mapping — il probl
 
 ***
 
-Per il quadro completo delle escalation vedi la [guida ESC1-ESC16](/articoli/adcs-esc1-esc16/). Continua con [ESC15](/articoli/esc15-adcs/) (EKUwu, CVE-2024-49019) o [ESC16](/articoli/esc16-adcs/).
+Per il quadro completo delle escalation vedi la [guida ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/). Continua con [ESC15](https://hackita.it/articoli/esc15-adcs/) (EKUwu, CVE-2024-49019) o [ESC16](https://hackita.it/articoli/esc16-adcs/).
 
 Ricerca originale di riferimento: [ADCS ESC14 Abuse Technique — SpecterOps](https://specterops.io/blog/2024/02/28/adcs-esc14-abuse-technique/). Tool usati in questa guida: Certify, Rubeus, [Certipy](https://github.com/ly4k/Certipy).

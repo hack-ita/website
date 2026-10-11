@@ -264,15 +264,11 @@ Configurazione sicura per Schannel:
 CertificateMappingMethods = 0x18
 ```
 
-Questo valore forza il mapping basato su validazione forte (SID), eliminando la componente "solo UPN".
+Questo valore forza il mapping basato su validazione forte (SID), eliminando la componente "solo UPN". È la mitigazione diretta per la variante Schannel descritta in questa guida.
 
-Da abilitare anche, su tutti i Domain Controller:
+> Non serve (e da settembre 2025 non ha più senso) impostare manualmente `StrongCertificateBindingEnforcement = 2`: quella chiave riguardava il mapping Kerberos, non Schannel, e dagli aggiornamenti di sicurezza di settembre 2025 l'enforcement forte è comunque permanente e non più disattivabile via registro. Non confonderla con la mitigazione di questa pagina.
 
-```text
-StrongCertificateBindingEnforcement = 2
-```
-
-Le due impostazioni coprono percorsi diversi (Schannel la prima, Kerberos la seconda): vanno applicate entrambe, non una in alternativa all'altra.
+In generale: tieni i DC aggiornati con le patch correnti e verifica `CertificateMappingMethods` su **tutti** i sistemi che accettano autenticazione client via Schannel, non solo sui DC.
 
 ***
 
@@ -284,7 +280,7 @@ Una vulnerabilità dovuta a un **weak certificate mapping in Schannel**, che per
 
 ### ESC10 riguarda Kerberos?
 
-No. Il percorso descritto qui riguarda **Schannel** (LDAPS, IIS HTTPS). Kerberos/PKINIT ha un proprio controllo equivalente, governato da `StrongCertificateBindingEnforcement`.
+No. Il percorso descritto qui riguarda **Schannel** (LDAPS, IIS HTTPS). Kerberos/PKINIT ha un proprio meccanismo di enforcement separato, ormai permanente dagli aggiornamenti di sicurezza di settembre 2025.
 
 ### ESC10 richiede AD CS?
 
@@ -292,10 +288,10 @@ Sì, serve comunque ottenere un certificato client authentication valido: la vul
 
 ### Qual è la differenza tra ESC9 e ESC10?
 
-[ESC9](/articoli/esc9-adcs/) sfrutta certificati emessi **senza** la SID security extension. ESC10 riguarda invece **come Schannel interpreta** quell'estensione (o la ignora) durante il mapping.
+[ESC9](https://hackita.it/articoli/esc9-adcs/) sfrutta certificati emessi **senza** la SID security extension. ESC10 riguarda invece **come Schannel interpreta** quell'estensione (o la ignora) durante il mapping.
 
 ***
 
-ESC10 è una delle tecniche più "silenziose" di abuso dei certificati in AD, perché non tocca il template né la CA: lavora tutto sul mapping lato DC. Per il quadro completo delle escalation AD CS vedi la [guida ESC1-ESC16](/articoli/adcs-esc1-esc16/).
+ESC10 è una delle tecniche più "silenziose" di abuso dei certificati in AD, perché non tocca il template né la CA: lavora tutto sul mapping lato DC. Per il quadro completo delle escalation AD CS vedi la [guida ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
 
 Tool usato in questa guida: [Certipy](https://github.com/ly4k/Certipy).

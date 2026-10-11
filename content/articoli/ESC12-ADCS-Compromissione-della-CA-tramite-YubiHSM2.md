@@ -208,6 +208,6 @@ ESC5 riguarda ACL deboli su oggetti PKI (chi può modificare cosa in AD). ESC12 
 
 ***
 
-Ricerca originale di riferimento: [ESC12 — Shell Access to ADCS CA with YubiHSM](https://pkiblog.knobloch.info/esc12-shell-access-to-adcs-ca-with-yubihsm/). Per il quadro completo delle escalation AD CS vedi la [guida ESC1-ESC16](/articoli/adcs-esc1-esc16/).
+Ricerca originale di riferimento: [ESC12 — Shell Access to ADCS CA with YubiHSM](https://pkiblog.knobloch.info/esc12-shell-access-to-adcs-ca-with-yubihsm/). Per il quadro completo delle escalation AD CS vedi la [guida ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/).
 
 Tool usato per l'autenticazione finale: [Certipy](https://github.com/ly4k/Certipy).

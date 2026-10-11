@@ -19,7 +19,7 @@ tags:
 
 # ESC13 in Active Directory Certificate Services: Issuance Policy OID collegata a un gruppo AD
 
-ESC13 è una tecnica di privilege escalation via AD CS basata su un meccanismo legittimo di Windows — l'**Authentication Mechanism Assurance (AMA)** — sfruttato quando è configurato male. A differenza di ESC1 o ESC4, qui non si tocca nessuna ACL né si modifica nessun utente: il certificato stesso diventa la prova di appartenenza a un gruppo.
+ESC13 è una tecnica di escalation via AD CS basata su un meccanismo legittimo di Windows — l'**Authentication Mechanism Assurance (AMA)** — sfruttato quando è configurato male. A differenza di ESC1 o ESC4, qui non si tocca nessuna ACL né si modifica nessun utente: il certificato stesso diventa la prova di appartenenza a un gruppo.
 
 Un glossario prima di entrare nel merito:
 
@@ -235,6 +235,6 @@ No. Dipende interamente dai privilegi reali del gruppo collegato — vanno verif
 
 ***
 
-Per il quadro completo delle escalation AD CS vedi la [guida ESC1-ESC16](/articoli/adcs-esc1-esc16/). Continua con [ESC14](/articoli/esc14-adcs/) (weak explicit certificate mapping via `altSecurityIdentities`) o [ESC15](/articoli/esc15-adcs/) (EKUwu, CVE-2024-49019).
+Per il quadro completo delle escalation AD CS vedi la [guida ESC1-ESC16](https://hackita.it/articoli/adcs-esc1-esc16/). Continua con [ESC14](https://hackita.it/articoli/esc14-adcs/) (weak explicit certificate mapping via `altSecurityIdentities`) o [ESC15](https://hackita.it/articoli/esc15-adcs/) (EKUwu, CVE-2024-49019).
 
 Ricerca originale di riferimento: [ADCS ESC13 Abuse Technique — SpecterOps](https://specterops.io/blog/2024/02/14/adcs-esc13-abuse-technique/). Tool usato in questa guida: [Certipy](https://github.com/ly4k/Certipy).

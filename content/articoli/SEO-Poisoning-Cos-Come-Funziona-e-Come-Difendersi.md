@@ -1,9 +1,12 @@
 ---
 title: 'SEO Poisoning: Cos''È, Come Funziona e Come Difendersi'
 slug: seo-poisoning
-description: 'SEO poisoning (avvelenamento SEO): malware, cloaking e Gootloader portano pagine false in cima a Google. Riconoscile e controlla se il tuo sito è compromesso.'
+description: >-
+  SEO poisoning (avvelenamento SEO): malware, cloaking e Gootloader portano
+  pagine false in cima a Google. Riconoscile e controlla se il tuo sito è
+  compromesso.
 image: /seo-poisoning-risultati-google-malevoli.webp
-draft: true
+draft: false
 date: 2026-10-12T18:20:08.001Z
 lastmod: 2026-10-12T18:20:05.283Z
 categories:

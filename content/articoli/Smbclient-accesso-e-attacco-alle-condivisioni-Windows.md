@@ -1,7 +1,7 @@
 ---
 title: 'Smbclient: Accesso e Attacco Alle Condivisioni Windows'
 slug: smbclient
-description: 'Con smbclient puoi accedere, leggere e scrivere file su condivisioni SMB. Scopri come usarlo per attacchi interni, enumeration e pivoting in AD.'
+description: 'Con smbclient puoi accedere, leggere e scrivere file su condivisioni SMB. Scopri come usarlo per pentest, attacchi interni, enumeration e pivoting in AD.'
 image: /smbcliehnt.webp
 draft: false
 date: 2026-01-24T00:00:00.000Z
@@ -814,21 +814,3 @@ Usa tar mode per efficienza: `smbclient //target/share -U user -Tc exfil.tar '*'
 ***
 
 **Disclaimer Legale:** Smbclient è uno strumento legittimo per amministrazione sistemi e penetration testing autorizzato. L'utilizzo non autorizzato su reti e sistemi non di proprietà costituisce reato penale. Ottenere sempre permesso esplicito scritto prima di condurre assessment di sicurezza. Questo contenuto è esclusivamente educativo per professionisti della sicurezza informatica.
-
-## HackITA — Supporta la Crescita della Formazione Offensiva
-
-Se questo contenuto ti è stato utile e vuoi contribuire alla crescita di HackITA, puoi supportare direttamente il progetto qui:
-
-👉 [https://hackita.it/supporta](/supporta)
-
-Il tuo supporto ci permette di sviluppare lab realistici, guide tecniche avanzate e scenari offensivi multi-step pensati per professionisti della sicurezza.
-
-***
-
-## Vuoi Testare la Tua Azienda o Portare le Tue Skill al Livello Successivo?
-
-Se rappresenti un’azienda e vuoi valutare concretamente la resilienza della tua infrastruttura contro attacchi mirati, oppure sei un professionista/principiante che vuole migliorare con simulazioni reali:
-
-👉 [https://hackita.it/servizi](/servizi)
-
-Red Team assessment su misura, simulazioni complete di kill chain e percorsi formativi avanzati progettati per ambienti enterprise reali.

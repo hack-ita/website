@@ -28,6 +28,14 @@ const Home: Collection = {
       isTitle: true,
       required: true,
     },
+    {
+      type: "string",
+      name: "description",
+      label: "Meta Description (SEO)",
+      description:
+        "Shown in Google results and as the homepage meta description (~150-160 characters).",
+      ui: { component: "textarea" },
+    },
 
     /* =====================
      * About Section

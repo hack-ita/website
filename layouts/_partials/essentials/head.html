@@ -13,12 +13,14 @@
 <meta name="description" content="{{ with .Description }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description | default "HackIta - Offensive security blog" }}{{ end }}">
 <link rel="canonical" href="{{ .Permalink }}">
 
-{{/* hreflang: Italian original + English (GTranslate en. sub-domain) + x-default.
-     Rendered on the hackita.it pages; the en.hackita.it side is served by
-     GTranslate. Skipped on noindex term pages. */}}
+{{/* hreflang: Italian source (hackita.it) + one tag per live translated
+     sub-domain (params.gtranslate.languages) + x-default. The translated sides
+     are served by GTranslate. Skipped on noindex term pages. */}}
 {{ if ne .Kind "term" }}
 <link rel="alternate" hreflang="it" href="{{ .Permalink }}">
-<link rel="alternate" hreflang="en" href="{{ printf "https://en.hackita.it%s" .RelPermalink }}">
+{{- range site.Params.gtranslate.languages }}
+<link rel="alternate" hreflang="{{ .code }}" href="https://{{ .code }}.hackita.it{{ $.RelPermalink }}">
+{{- end }}
 <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
 {{ end }}
 

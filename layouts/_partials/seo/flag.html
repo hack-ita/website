@@ -1,0 +1,10 @@
+{{- /* Inline SVG flag by code (it, gb, de, fr, es, pt). No <defs>/ids so it can
+       be duplicated safely. Call: {{ partial "seo/flag.html" "gb" }} */ -}}
+{{- $c := . -}}
+{{- if eq $c "it" -}}<svg class="lang-flag-svg" width="20" height="14" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect width="1" height="2" x="2" fill="#ce2b37"/></svg>
+{{- else if eq $c "gb" -}}<svg class="lang-flag-svg" width="20" height="14" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#c8102e" stroke-width="4"/><rect x="25" width="10" height="30" fill="#fff"/><rect y="10" width="60" height="10" fill="#fff"/><rect x="27" width="6" height="30" fill="#c8102e"/><rect y="12" width="60" height="6" fill="#c8102e"/></svg>
+{{- else if eq $c "de" -}}<svg class="lang-flag-svg" width="20" height="14" viewBox="0 0 5 3" aria-hidden="true"><rect width="5" height="3" fill="#ffce00"/><rect width="5" height="2" fill="#dd0000"/><rect width="5" height="1" fill="#000"/></svg>
+{{- else if eq $c "fr" -}}<svg class="lang-flag-svg" width="20" height="14" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#0055a4"/><rect width="1" height="2" x="2" fill="#ef4135"/></svg>
+{{- else if eq $c "es" -}}<svg class="lang-flag-svg" width="20" height="14" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#c60b1e"/><rect width="3" height="1" y="0.5" fill="#ffc400"/></svg>
+{{- else if eq $c "pt" -}}<svg class="lang-flag-svg" width="20" height="14" viewBox="0 0 5 3" aria-hidden="true"><rect width="5" height="3" fill="#da291c"/><rect width="2" height="3" fill="#046a38"/></svg>
+{{- end -}}

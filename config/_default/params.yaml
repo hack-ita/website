@@ -1,7 +1,22 @@
 images:
   - /images/hackita-hero.webp
+# GTranslate multilingual (translated sub-domains; source = Italian at the root).
+# IMPORTANT: add a language to `languages` ONLY after its sub-domain is live in
+# GTranslate AND its CNAME resolves (https://<code>.hackita.it returns 200).
+# A dead sub-domain here would point hreflang/switcher at nothing (bad SEO).
+# Each entry drives the language switcher, hreflang, and og:locale:alternate.
 gtranslate:
   enable: true
+  languages:
+    - code: en
+      name: English
+      locale: en_US
+      flag: gb
+    # Uncomment each once its sub-domain CNAME resolves (200):
+    # - { code: de, name: Deutsch, locale: de_DE, flag: de }
+    # - { code: fr, name: "Français", locale: fr_FR, flag: fr }
+    # - { code: es, name: "Español", locale: es_ES, flag: es }
+    # - { code: pt, name: "Português", locale: pt_PT, flag: pt }
 description: 'Hackita è il blog italiano di cybersecurity, sicurezza informatica ed ethical hacking: guide pratiche su penetration testing, red team, Active Directory e CTF.'
 reading_speed: 315
 header:

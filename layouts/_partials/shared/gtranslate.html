@@ -1,43 +1,45 @@
 {{- /*
-  Custom language switcher for GTranslate Pro sub-domain setup (en.hackita.it).
-  A hand-built dropdown (native <select> can't show flag images) with inline SVG
-  flags + language names, themed to match the header. Links are set by JS at
-  runtime so they stay correct on both hackita.it and en.hackita.it (GTranslate
-  rewrites server-side hrefs; our JS overrides them after load). Marked
+  Custom multilingual language switcher for the GTranslate sub-domain setup.
+  Italian is the source (hackita.it root); each live language in
+  params.gtranslate.languages is a sub-domain (<code>.hackita.it). A hand-built
+  dropdown (native <select> can't show flag images) with inline SVG flags; links
+  are set by JS at runtime so they're correct on every sub-domain. Marked
   translate="no" so GTranslate doesn't translate the language labels.
-  Toggle with params.gtranslate.enable.
 */ -}}
 {{- if site.Params.gtranslate.enable }}
 <details class="lang-switcher notranslate" translate="no" data-lang-switcher>
   <summary aria-haspopup="listbox" aria-label="Seleziona lingua / Select language">
-    <span class="lang-flag" data-current-flag></span>
+    <span class="lang-flag" data-current-flag>{{ partial "seo/flag.html" "it" }}</span>
     <span class="lang-name" data-current-name>Italiano</span>
     <svg class="lang-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </summary>
   <ul class="lang-menu" role="listbox">
     <li>
       <a role="option" data-lang="it" hreflang="it" href="/">
-        <span class="lang-flag"><svg width="20" height="14" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect width="1" height="2" x="2" fill="#ce2b37"/></svg></span>
-        <span>Italiano</span>
+        <span class="lang-flag">{{ partial "seo/flag.html" "it" }}</span><span>Italiano</span>
       </a>
     </li>
+    {{- range site.Params.gtranslate.languages }}
     <li>
-      <a role="option" data-lang="en" hreflang="en" href="/">
-        <span class="lang-flag"><svg width="20" height="14" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#c8102e" stroke-width="4"/><rect x="25" width="10" height="30" fill="#fff"/><rect y="10" width="60" height="10" fill="#fff"/><rect x="27" width="6" height="30" fill="#c8102e"/><rect y="12" width="60" height="6" fill="#c8102e"/></svg></span>
-        <span>English</span>
+      <a role="option" data-lang="{{ .code }}" hreflang="{{ .code }}" href="/">
+        <span class="lang-flag">{{ partial "seo/flag.html" .flag }}</span><span>{{ .name }}</span>
       </a>
     </li>
+    {{- end }}
   </ul>
 </details>
 <script>
 (function(){
   var el=document.querySelector('[data-lang-switcher]');if(!el)return;
   var path=location.pathname+location.search+location.hash;
-  var base=location.hostname.replace(/^en\./,'');
-  var cur=/^en\./.test(location.hostname)?'en':'it';
+  var host=location.hostname;
+  var codes=[];el.querySelectorAll('a[data-lang]').forEach(function(a){var l=a.getAttribute('data-lang');if(l!=='it')codes.push(l);});
+  var m=host.match(/^([a-z]{2})\./);
+  var cur=(m&&codes.indexOf(m[1])>-1)?m[1]:'it';
+  var base=(cur==='it')?host:host.slice(cur.length+1);
   el.querySelectorAll('a[data-lang]').forEach(function(a){
     var l=a.getAttribute('data-lang');
-    a.href='https://'+(l==='en'?'en.':'')+base+path;
+    a.href='https://'+(l==='it'?'':l+'.')+base+path;
     a.classList.toggle('is-active',l===cur);
   });
   var c=el.querySelector('a[data-lang="'+cur+'"]');

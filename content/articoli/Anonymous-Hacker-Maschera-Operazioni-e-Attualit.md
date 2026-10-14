@@ -1,9 +1,11 @@
 ---
 title: 'Anonymous Hacker: Maschera, Operazioni e Attualità'
 slug: anonymous
-description: 'Chi sono gli Anonymous, da dove nasce la maschera di Guy Fawkes, le operazioni più famose (Chanology, Payback, Tunisia) e cosa fanno ancora oggi nel 2026.'
+description: >-
+  Chi sono gli Anonymous, da dove nasce la maschera di Guy Fawkes, le operazioni
+  più famose (Chanology, Payback, Tunisia) e cosa fanno ancora oggi nel 2026.
 image: /anonymous-hacker-hacktivist-guy-fawkes-mask.webp
-draft: true
+draft: false
 date: 2026-10-08T16:20:46.250Z
 lastmod: 2026-10-08T16:21:15.909Z
 categories:

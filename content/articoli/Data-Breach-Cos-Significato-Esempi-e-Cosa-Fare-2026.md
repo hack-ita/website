@@ -1,9 +1,12 @@
 ---
 title: 'Data Breach: Cos''è, Significato, Esempi e Cosa Fare (2026)'
 slug: data-breach
-description: 'Data breach, come funziona e cos''è una violazione dei dati, cause, esempi reali, regola delle 72 ore, costi 2026 e cosa fare se i tuoi dati vengono rubati.'
+description: >-
+  Data breach, come funziona e cos'è una violazione dei dati, cause, esempi
+  reali, regola delle 72 ore, costi 2026 e cosa fare se i tuoi dati vengono
+  rubati.
 image: /data-breach-violazione-dati-personali.webp
-draft: true
+draft: false
 date: 2026-10-10T23:30:43.326Z
 lastmod: 2026-10-10T23:30:54.768Z
 categories:

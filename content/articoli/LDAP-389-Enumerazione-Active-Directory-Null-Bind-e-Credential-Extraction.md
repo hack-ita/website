@@ -1,10 +1,7 @@
 ---
-title: 'LDAP 389: Enumerazione Active Directory, Null Bind e Credential Extraction'
+title: 'Porta 389 LDAP: Enumerazione e Pentest in Active Directory'
 slug: porta-389-ldap
-description: >-
-  LDAP porta 389: guida completa all’enumerazione Active Directory con null
-  bind, estrazione di utenti, gruppi, SPN e tecniche offensive per ottenere
-  credenziali e preparare la privilege escalation.
+description: 'LDAP 389 PORT: Null bind, utenti, gruppi e SPN, credenziali esposte, LDAP relay e injection: tecniche di enumerazione e misconfigurazioni in Active Directory.'
 image: /9ac49e51-a47e-4a10-8cba-b8fca57b2f64.webp
 draft: false
 date: 2026-02-01T00:00:00.000Z
@@ -13,16 +10,19 @@ categories:
 subcategories:
   - active-directory
 tags:
-  - porta-windows
-  - ''
+  - LDAP
+  - Active Directory
+  - ldapsearch
+  - Null Bind
+  - LDAPS
 featured: true
 ---
 
 # Porta 389 LDAP: Enumerare Active Directory e Dominare la Rete
 
-> **Executive Summary** — La porta 389 LDAP è il punto di accesso diretto ad Active Directory e a qualsiasi directory service basato su LDAP. In un pentest, questa porta espone l'intera struttura organizzativa: utenti, gruppi, computer, policy, SPN e relazioni di trust. Questo articolo copre enumerazione base e avanzata, tecniche offensive come null bind abuse, password spraying via LDAP e Kerberoasting facilitato da query LDAP, fino all'integrazione completa nella kill chain. Ogni comando è copy-paste ready con output reali.
+La porta 389 LDAP è il punto di accesso diretto ad Active Directory e a qualsiasi directory service basato su LDAP. In un pentest, questa porta espone l'intera struttura organizzativa: utenti, gruppi, computer, policy, SPN e relazioni di trust. Questo articolo copre enumerazione base e avanzata, tecniche offensive come null bind abuse, password spraying via LDAP e Kerberoasting facilitato da query LDAP, fino all'integrazione completa nella kill chain. Ogni comando è copy-paste ready con output reali.
 
-TL;DR — 3 punti chiave
+**3 punti chiave**
 
 * LDAP (porta 389) può permettere null bind/anonymous → testa sempre senza credenziali
 * Una singola query LDAP può enumerare utenti, gruppi e SPN dell’intero dominio
@@ -42,23 +42,23 @@ La porta 389 è registrata IANA come `ldap` su TCP e UDP. In pratica, LDAP opera
 
 Le varianti operative sono LDAP cleartext (porta 389), LDAPS con TLS nativo (porta 636), LDAP con StartTLS (porta 389 con upgrade), Global Catalog (porta 3268/3269 per query cross-domain).
 
-```
-Misconfig: Anonymous bind / null bind abilitato
-Impatto: chiunque può interrogare la directory senza credenziali e ottenere utenti, gruppi, OU, computer
-Come si verifica: ldapsearch -x -H ldap://[target] -b "" -s base namingContexts
-```
+## Misconfigurazioni LDAP: impatto e verifica
 
-```
-Misconfig: LDAP signing non obbligatorio
-Impatto: attacchi relay/MitM su LDAP (NTLM relay to LDAP per privilege escalation)
-Come si verifica: nmap -p 389 --script ldap-rootdse [target] e verificare supportedControl per 1.2.840.113556.1.4.473
-```
+| Misconfigurazione                                             | Impatto                                                                                                                                                                                      | Come si verifica                                                                                                    |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Anonymous Bind / Null Bind abilitato**                      | Permette di interrogare la directory senza credenziali e può esporre utenti, gruppi, OU e computer, in base ai permessi configurati.                                                         | `ldapsearch -x -H ldap://<target> -b "" -s base namingContexts`                                                     |
+| **LDAP Signing non obbligatorio**                             | Può esporre le connessioni LDAP ad attacchi relay e Man-in-the-Middle, se sono soddisfatte le condizioni necessarie.                                                                         | `nmap -p 389 --script ldap-rootdse <target>` e verifica della policy LDAP Signing sul Domain Controller.            |
+| **Attributi sensibili accessibili a utenti non privilegiati** | Informazioni riservate, comprese eventuali credenziali archiviate impropriamente in `description`, `comment` o attributi personalizzati, possono essere leggibili dagli account autorizzati. | `ldapsearch -x -H ldap://<target> -D "<user_DN>" -W -b "DC=corp,DC=local" "(objectClass=user)" description comment` |
 
-```
-Misconfig: Attributi sensibili leggibili da utenti non privilegiati
-Impatto: password in Description, comment o altri campi custom visibili a qualsiasi authenticated user
-Come si verifica: ldapsearch -x -H ldap://[target] -D "[user]" -w "[pass]" -b "DC=corp,DC=local" "(objectClass=user)" description comment
-```
+### Note operative
+
+**Anonymous Bind / Null Bind:** il comando interroga la RootDSE per recuperare i naming context senza autenticazione. Un risultato positivo non implica necessariamente che siano accessibili tutti gli oggetti della directory.
+
+**LDAP Signing:** lo script `ldap-rootdse` raccoglie informazioni LDAP, ma non conferma da solo se la firma sia obbligatoria. Verifica la policy *Domain controller: LDAP server signing requirements* e gli eventi pertinenti nel registro *Directory Service*.
+
+**Attributi sensibili:** usa un account di test autorizzato e verifica quali attributi siano effettivamente leggibili. L'opzione `-W` richiede la password interattivamente senza inserirla direttamente nel comando.
+
+Tutte le verifiche vanno eseguite esclusivamente su sistemi per i quali si dispone di autorizzazione.
 
 ## 2. Enumerazione Base
 

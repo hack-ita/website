@@ -1,9 +1,12 @@
 ---
 title: 'Cyber Security: Cos''è, Tipi, Minacce e Come Difendersi'
 slug: cyber-security
-description: 'Cyber Security e sicurezza informatica: cos''è, minacce e difese per aziende e privati, ethical hacking, penetration test, red team, blue team, SOC e analisi.'
+description: >-
+  Cyber Security e sicurezza informatica: cos'è, minacce e difese per aziende e
+  privati, ethical hacking, penetration test, red team, blue team, SOC e
+  analisi.
 image: /cyber-security-sicurezza-informatica-protezione-reti.webp
-draft: true
+draft: false
 date: 2026-10-13T23:42:01.292Z
 categories:
   - guides-resources

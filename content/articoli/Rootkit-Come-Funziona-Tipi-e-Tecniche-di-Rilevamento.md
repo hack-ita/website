@@ -1,9 +1,11 @@
 ---
 title: 'Rootkit: Come Funziona, Tipi e Tecniche di Rilevamento'
 slug: rootkit
-description: 'Rootkit: scopri cos’è, come funziona e quali sono i tipi più comuni. Tecniche di rilevamento, esempi reali e metodi per rimuoverlo su Linux e Windows.'
+description: >-
+  Rootkit: scopri cos’è, come funziona e quali sono i tipi più comuni. Tecniche
+  di rilevamento, esempi reali e metodi per rimuoverlo su Linux e Windows.
 image: /rootkit-cosa-e-come-funziona-rilevamento.webp
-draft: true
+draft: false
 date: 2026-10-15T12:24:38.164Z
 lastmod: 2026-10-15T12:24:41.042Z
 categories:

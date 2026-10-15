@@ -1,9 +1,11 @@
 ---
 title: 'Vishing: Cos''è, Tecniche e Come Difendersi nel 2026'
 slug: vishing
-description: 'Vishing e phishing telefonico: scopri tecniche, spoofing e voice cloning con IA, come gli attaccanti manipolano le vittime e come riconoscere una truffa.'
+description: >-
+  Vishing e phishing telefonico: scopri tecniche, spoofing e voice cloning con
+  IA, come gli attaccanti manipolano le vittime e come riconoscere una truffa.
 image: /vishing-phishing-vocale-chiamate-truffa.webp
-draft: true
+draft: false
 date: 2026-10-15T23:45:56.054Z
 lastmod: 2026-10-15T23:46:16.564Z
 categories:

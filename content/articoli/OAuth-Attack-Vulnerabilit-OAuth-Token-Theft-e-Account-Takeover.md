@@ -1,9 +1,7 @@
 ---
-title: 'OAuth Attack: Vulnerabilità OAuth, Token Theft e Account Takeover'
+title: 'OAuth Pentesting: Exploit, Token Theft e Account Takeover'
 slug: oauth-attack
-description: >-
-  Scopri come sfruttare vulnerabilità OAuth: redirect_uri manipulation, CSRF
-  senza state, token leak nel Referer e takeover account nel pentesting web.
+description: ' OAuth e OIDC Pentest: verifica redirect_uri, state, vulnerabilità, PKCE, scope escalation e token leak con PoC, bypass, criteri di validazione e mitigazioni.'
 image: /oauth-attack.webp
 draft: false
 date: 2026-03-17T00:00:00.000Z
@@ -12,7 +10,11 @@ categories:
 subcategories:
   - owasp
 tags:
-  - csrf
+  - OAuth Pentesting
+  - OAuth Vulnerabilities
+  - Account Takeover
+  - Open Redirect
+  - OAuth CSRF
 ---
 
 OAuth è ovunque: "Accedi con Google", "Sign in with GitHub", "Login with Facebook". L'utente non crea un account — delega l'autenticazione a un provider fidato. Semplice, comodo, sicuro. Tranne quando l'implementazione ha buchi — e nella mia esperienza, ne ha quasi sempre. OAuth è un protocollo complesso con decine di parametri, redirect multipli, e flussi diversi (Authorization Code, Implicit, Client Credentials). Ogni passaggio è un'opportunità per l'attaccante.

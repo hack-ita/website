@@ -1,9 +1,11 @@
 ---
 title: 'Adware: Pubblicità Indesiderata, Rischi E Come Rimuoverlo'
 slug: adware
-description: 'Adware: scopri cos''è e come riconoscere pubblicità indesiderate, bundling, raccolta dati, rischi per la sicurezza e come rimuoverlo da PC e smartphone.'
+description: >-
+  Adware: scopri cos'è e come riconoscere pubblicità indesiderate, bundling,
+  raccolta dati, rischi per la sicurezza e come rimuoverlo da PC e smartphone.
 image: /adware-malware-pubblicita-indesiderata.webp
-draft: true
+draft: false
 date: 2026-10-19T12:46:49.165Z
 categories:
   - guides-resources

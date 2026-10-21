@@ -1,9 +1,12 @@
 ---
 title: 'Spear Phishing: Cos''è ,Significato e Come Funziona '
 slug: spear-phishing
-description: 'Spear phishing: significato, cos''è, come funziona un attacco mirato e differenze dal phishing di massa, whaling e BEC, con un caso reale da 46 milioni.'
+description: >-
+  Spear phishing: significato, cos'è, come funziona un attacco mirato e
+  differenze dal phishing di massa, whaling e BEC, con un caso reale da 46
+  milioni.
 image: /spear-phishing-email-mirato-social-engineering.webp
-draft: true
+draft: false
 date: 2026-10-21T00:03:32.727Z
 lastmod: 2026-10-21T00:03:33.955Z
 categories:

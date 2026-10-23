@@ -1,9 +1,12 @@
 ---
 title: 'Quishing: Cos''è il QR Code Phishing e Come Difendersi'
 slug: quishing
-description: 'Quishing: significato e cos''è l''attacco di phishing con QR code, come funziona, dove compare, come riconoscere un codice falso e verificarlo prima di aprirlo.'
+description: >-
+  Quishing: significato e cos'è l'attacco di phishing con QR code, come
+  funziona, dove compare, come riconoscere un codice falso e verificarlo prima
+  di aprirlo.
 image: /quishing-qr-code-phishing-cybersecurity.webp
-draft: true
+draft: false
 date: 2026-10-23T00:13:02.274Z
 lastmod: 2026-10-23T00:13:08.184Z
 categories:

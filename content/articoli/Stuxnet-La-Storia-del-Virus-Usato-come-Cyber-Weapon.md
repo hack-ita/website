@@ -1,9 +1,11 @@
 ---
 title: 'Stuxnet: La Storia del Virus Usato come Cyber-Weapon'
 slug: stuxnet
-description: 'Stuxnet, il virus usato come cyber-weapon: cos''è, come sabotò le centrifughe di Natanz, i 4 zero-day sfruttati, i danni e l''impatto sulla cybersecurity.'
+description: >-
+  Stuxnet, il virus usato come cyber-weapon: cos'è, come sabotò le centrifughe
+  di Natanz, i 4 zero-day sfruttati, i danni e l'impatto sulla cybersecurity.
 image: /stuxnet-malware-cyberwarfare-scada.webp
-draft: true
+draft: false
 date: 2026-10-23T00:17:00.316Z
 lastmod: 2026-10-23T00:18:59.613Z
 categories:

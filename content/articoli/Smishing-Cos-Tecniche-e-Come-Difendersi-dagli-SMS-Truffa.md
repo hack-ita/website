@@ -3,8 +3,8 @@ title: 'Smishing: Cos''è, Tecniche e Come Difendersi dagli SMS Truffa'
 slug: smishing
 description: 'Smishing: cos''è il phishing via SMS, come funziona, i principali scam e attacchi in Italia, il rischio malware Android e come riconoscere e fermare le truffe.'
 image: /smishing-sms-phishing-truffa-telefonica.webp
-draft: false
-date: 2026-10-19T23:49:22.424Z
+draft: true
+date: 2026-11-06T23:49:22.424Z
 lastmod: 2026-10-24T23:52:09.056Z
 categories:
   - guides-resources

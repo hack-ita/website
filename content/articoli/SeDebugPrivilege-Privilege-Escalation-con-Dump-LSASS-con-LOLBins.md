@@ -333,7 +333,7 @@ Su Windows 7 non esiste PPL né Credential Guard: comsvcs.dll funziona senza ecc
 
 ## FAQ
 
-**Cos'è SeDebugPrivilege in parole semplici?**
+**Cos'è SeDebugPrivilege Windows??**
 È il permesso Windows che consente di aprire con accesso completo qualunque altro processo sul sistema, bypassando i controlli DACL normali. In pratica la chiave per leggere la memoria di `lsass.exe` e accedere alle credenziali di tutti gli utenti in sessione.
 
 **Chi ha SeDebugPrivilege di default?**

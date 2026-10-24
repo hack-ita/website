@@ -1,14 +1,11 @@
 ---
 title: 'Smishing: Cos''è, Tecniche e Come Difendersi dagli SMS Truffa'
 slug: smishing
-description: >-
-  Smishing: cos'è il phishing via SMS, come funziona, i principali scam e
-  attacchi in Italia, il rischio malware Android e come riconoscere e fermare le
-  truffe.
+description: 'Smishing: cos''è il phishing via SMS, come funziona, i principali scam e attacchi in Italia, il rischio malware Android e come riconoscere e fermare le truffe.'
 image: /smishing-sms-phishing-truffa-telefonica.webp
 draft: false
 date: 2026-10-19T23:49:22.424Z
-lastmod: 2026-10-19T23:52:09.056Z
+lastmod: 2026-10-24T23:52:09.056Z
 categories:
   - guides-resources
 subcategories:
@@ -50,12 +47,12 @@ Una variante diffusa è la richiesta di una piccola somma, spesso tra **1 e 3 eu
 
 ## I tipi di smishing più diffusi in Italia
 
-| Tipo                            | Come si presenta                                                                                                                                                                                        |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Pacco in giacenza**           | SMS a nome di Poste, GLS, BRT, DHL o Amazon: una consegna bloccata, un indirizzo incompleto, una tassa di sdoganamento da pagare                                                                        |
-| **Falso avviso bancario**       | Un pagamento sospetto o un accesso anomalo al conto, con invito a "verificare" cliccando un link                                                                                                        |
-| **Falso circuito di pagamento** | SMS a nome di Nexi o altri circuiti, che segnala un addebito sospetto e chiede di richiamare un numero con urgenza                                                                                      |
-| **Falso ente pubblico**         | Agenzia delle Entrate, INPS o Comune, con richiesta di rimborso o pagamento di una presunta sanzione                                                                                                    |
+| Tipo                            | Come si presenta                                                                                                                                                                      |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pacco in giacenza**           | SMS a nome di Poste, GLS, BRT, DHL o Amazon: una consegna bloccata, un indirizzo incompleto, una tassa di sdoganamento da pagare                                                      |
+| **Falso avviso bancario**       | Un pagamento sospetto o un accesso anomalo al conto, con invito a "verificare" cliccando un link                                                                                      |
+| **Falso circuito di pagamento** | SMS a nome di Nexi o altri circuiti, che segnala un addebito sospetto e chiede di richiamare un numero con urgenza                                                                    |
+| **Falso ente pubblico**         | Agenzia delle Entrate, INPS o Comune, con richiesta di rimborso o pagamento di una presunta sanzione                                                                                  |
 | **Codice di autorizzazione**    | Il messaggio chiede di inserire un codice ricevuto via SMS su un sito falso, spesso come primo passo di un attacco che prosegue poi con una chiamata di [vishing](/articoli/vishing/) |
 
 Un caso reale: nel 2026 una campagna a tema **Nexi** ha colpito diversi utenti italiani con un SMS che segnalava un pagamento sospetto di importo elevato, invitando a chiamare un numero per "bloccare" l'operazione, un primo passo tipico verso una truffa più articolata condotta poi per telefono.
@@ -96,10 +93,10 @@ Per questo, nella formazione aziendale contro il [phishing](/articoli/phishing/)
 
 ## Smishing, phishing e vishing: le differenze
 
-|                                                     | Canale          | Esempio tipico                                        |
-| --------------------------------------------------- | --------------- | ----------------------------------------------------- |
-| **Phishing**                                        | Email           | Falsa fattura o avviso di sicurezza con link malevolo |
-| **Smishing**                                        | SMS             | Falso avviso di consegna o blocco conto con link      |
+|                                   | Canale          | Esempio tipico                                        |
+| --------------------------------- | --------------- | ----------------------------------------------------- |
+| **Phishing**                      | Email           | Falsa fattura o avviso di sicurezza con link malevolo |
+| **Smishing**                      | SMS             | Falso avviso di consegna o blocco conto con link      |
 | **[Vishing](/articoli/vishing/)** | Chiamata vocale | Finto operatore bancario che chiede un OTP            |
 
 Gli attacchi spesso combinano i canali in sequenza: un SMS che chiede di richiamare un numero, seguito da una telefonata di un finto operatore che porta avanti la truffa. Riconoscere un solo canale non basta: bisogna restare diffidenti verso tutta la catena di contatto, non solo verso il primo messaggio.

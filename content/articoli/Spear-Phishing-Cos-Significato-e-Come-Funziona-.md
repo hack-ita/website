@@ -1,14 +1,11 @@
 ---
 title: 'Spear Phishing: Cos''è ,Significato e Come Funziona '
 slug: spear-phishing
-description: >-
-  Spear phishing: significato, cos'è, come funziona un attacco mirato e
-  differenze dal phishing di massa, whaling e BEC, con un caso reale da 46
-  milioni.
+description: 'Spear phishing: significato, cos''è, come funziona un attacco mirato e differenze dal phishing di massa, whaling e BEC, con un caso reale da 46 milioni.'
 image: /spear-phishing-email-mirato-social-engineering.webp
 draft: false
 date: 2026-10-21T00:03:32.727Z
-lastmod: 2026-10-21T00:03:33.955Z
+lastmod: 2026-10-28T00:03:33.955Z
 categories:
   - guides-resources
 subcategories:
@@ -52,10 +49,10 @@ La differenza non è il canale o il contenuto in sé, ma lo **sforzo di ricogniz
 
 Questi tre termini vengono spesso confusi perché sono strettamente imparentati:
 
-| Tipo                                                                                    | Bersaglio                                                       | Relazione con lo spear phishing                                                                              |
-| --------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| **Spear phishing**                                                                      | Individui o ruoli specifici                                     | Il termine generale per qualsiasi phishing mirato                                                            |
-| **Whaling**                                                                             | Dirigenti e membri del consiglio di amministrazione (*C-suite*) | Un sottoinsieme di spear phishing: stesso principio, bersagli di altissimo livello                           |
+| Tipo                                                                  | Bersaglio                                                       | Relazione con lo spear phishing                                                                              |
+| --------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Spear phishing**                                                    | Individui o ruoli specifici                                     | Il termine generale per qualsiasi phishing mirato                                                            |
+| **Whaling**                                                           | Dirigenti e membri del consiglio di amministrazione (*C-suite*) | Un sottoinsieme di spear phishing: stesso principio, bersagli di altissimo livello                           |
 | **[Business Email Compromise](/articoli/business-email-compromise/)** | Team finanziari, contabilità fornitori                          | Spesso usa lo spear phishing come vettore iniziale, ma punta specificamente a manipolare pagamenti aziendali |
 
 In pratica: lo spear phishing è la tecnica, whaling e BEC sono applicazioni specifiche di quella tecnica verso bersagli o obiettivi particolari.

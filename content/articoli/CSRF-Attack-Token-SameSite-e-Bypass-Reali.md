@@ -47,7 +47,7 @@ Nel CSRF la tessera è il cookie di sessione, il volantino è la pagina dell'att
 
 ### Il flusso dell'attacco
 
-![Flusso di un attacco CSRF](/images/csrf-attack-flow.svg)
+![Flusso di un attacco CSRF](/images/csrf-defense-in-depth.svg)
 
 ```text
 1. The victim is authenticated on target.com (session cookie in the browser)

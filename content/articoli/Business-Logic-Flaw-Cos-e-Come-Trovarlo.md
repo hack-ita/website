@@ -113,7 +113,7 @@ Per il **business logic testing** conta più il metodo degli strumenti. Checklis
 * Hai confrontato quello che mostra il frontend, quello che viaggia nella richiesta e quello che salva il backend?
 * Dopo ogni test hai controllato **lo stato** (saldo, ordine, ruolo), non solo il codice HTTP?
 
-![Business logic testing loop: map the workflow, list the assumptions, break each assumption, observe the server state, chain the impact]()
+![Business Logic Flaw: ciclo di test dalla mappa del flusso alla catena di impatto]()
 
 Il trucco mentale è uno: **cerca i "NO"**. Individua le cose che l'applicazione dice di non permettere e prova a farle lo stesso.
 
@@ -259,7 +259,7 @@ Una password cambiata senza alcun token: il controllo esisteva, ma scattava solo
 
 Il flusso previsto è creare l'ordine, pagare, confermare. Il server controlla davvero che il pagamento sia avvenuto prima della conferma?
 
-![Workflow bypass: the confirm endpoint is called directly, skipping the payment step]()
+![Workflow bypass: conferma ordine senza passare dal pagamento]()
 
 ```bash
 # Put a keyboard in the cart, then create an order: it starts as "pending"
@@ -302,7 +302,7 @@ Il modulo coupon è una miniera. Checklist: riuso, stacking, differenza maiuscol
 
 **Soglia aggirabile.** Lo sconto del 10% vale solo sopra 1000 euro, ma la regola è controllata una sola volta, al momento di applicare il codice:
 
-![Discount threshold trick: add items above the threshold, apply the coupon, remove items, the discount stays]()
+![Race condition: controllo e scrittura non atomici sul coupon]()
 
 ```bash
 # 1998 total, above the 1000 threshold
@@ -350,7 +350,7 @@ Se il campo codice accetta caratteri speciali, controlla anche la query dietro: 
 
 "Un coupon per utente" è una regola che si rompe se mandi molte richieste nello stesso istante: il server controlla "non ancora usato" per tutte prima che la prima segni "usato". Approfondimento nell'articolo sulle [race condition](https://hackita.it/articoli/race-condition/).
 
-![Race condition: two requests both read the flag as unused before either one writes it]()
+![Trucco della soglia sconto: la regola è controllata una sola volta]()
 
 Il test minimo con strumenti nativi:
 
@@ -778,5 +778,7 @@ Descrivendo regola attesa, test, risultato osservato, impatto verificato e corre
 ## Conclusione
 
 I Business Logic Flaw (chiamali logic flaw o logical flaws: cambia il nome, non il metodo) premiano chi capisce il business prima del codice. Mappa il flusso, scrivi le regole, rompile una alla volta e controlla lo stato finale. Per approfondire le gare tra richieste parti dall'articolo sulle [race condition](https://hackita.it/articoli/race-condition/).
+
+Se vuoi portarti dietro un pezzo di Hackita mentre studi, nello [shop di Hackita](https://shop.hackita.it/) trovi il merchandising per chi vive di pentest e bug bounty.
 
 Per allenarti, i laboratori di [PortSwigger Web Security Academy](https://portswigger.net/web-security/logic-flaws) coprono la maggior parte dei pattern di questa guida.

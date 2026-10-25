@@ -1,0 +1,30 @@
+<svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#111111"/>
+    </marker>
+    <marker id="r2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="900" height="320" fill="#ffffff"/>
+  <text x="450" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#111111">SameSite=Lax: Blocks POST, Allows Top-Level GET</text>
+
+  <rect x="40" y="70" width="380" height="90" rx="8" fill="#111111"/>
+  <text x="230" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Cross-site POST (fetch, form, XHR)</text>
+  <text x="230" y="122" text-anchor="middle" font-size="12" fill="#ffffff">Cookie withheld</text>
+  <text x="230" y="140" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">BLOCKED</text>
+
+  <rect x="480" y="70" width="380" height="90" rx="8" fill="#dc2626"/>
+  <text x="670" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Top-level GET (link, img, redirect)</text>
+  <text x="670" y="122" text-anchor="middle" font-size="12" fill="#ffffff">Cookie sent as usual</text>
+  <text x="670" y="140" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">ALLOWED</text>
+
+  <rect x="480" y="190" width="380" height="100" rx="8" fill="none" stroke="#dc2626" stroke-width="3"/>
+  <text x="670" y="215" text-anchor="middle" font-size="14" fill="#111111" font-weight="700">If the server accepts GET for a</text>
+  <text x="670" y="235" text-anchor="middle" font-size="14" fill="#111111" font-weight="700">state-changing action (or honors</text>
+  <text x="670" y="255" text-anchor="middle" font-size="14" fill="#111111" font-weight="700">?_method=POST), Lax gives no protection.</text>
+
+  <line x1="670" y1="162" x2="670" y2="188" stroke="#dc2626" stroke-width="3" marker-end="url(#r2)"/>
+  <text x="450" y="300" text-anchor="middle" font-size="13" fill="#555555">Strict blocks both. None sends the cookie in every case - needs Secure.</text>
+</svg>

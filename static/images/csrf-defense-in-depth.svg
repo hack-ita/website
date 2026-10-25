@@ -1,0 +1,15 @@
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect width="900" height="300" fill="#ffffff"/>
+  <text x="450" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#111111">Defense in Depth: No Single Layer Is Enough</text>
+
+  <rect x="60" y="70" width="780" height="50" rx="8" fill="#111111"/>
+  <text x="450" y="101" text-anchor="middle" font-size="15" fill="#ffffff" font-weight="700">1. CSRF token - synchronizer token, tied to the session, checked on every request</text>
+
+  <rect x="60" y="135" width="780" height="50" rx="8" fill="#111111"/>
+  <text x="450" y="166" text-anchor="middle" font-size="15" fill="#ffffff" font-weight="700">2. SameSite=Strict/Lax on the session cookie - defense in depth, not the only layer</text>
+
+  <rect x="60" y="200" width="780" height="50" rx="8" fill="#dc2626"/>
+  <text x="450" y="231" text-anchor="middle" font-size="15" fill="#ffffff" font-weight="700">3. Origin/Referer check as a fallback - reject when neither header is trustworthy</text>
+
+  <text x="450" y="280" text-anchor="middle" font-size="13" fill="#555555">XSS defeats all three: a script running on your own page needs no cross-site request.</text>
+</svg>

@@ -1,13 +1,10 @@
 ---
-title: Categorie
-url: "/categorie/"
+url: /categorie/
 sitemap:
   disable: false
-hero_title: Tutto HackITA diviso in percorsi chiari.
-description: >-
-  8 categorie, centinaia di articoli, tutti pensati per portarti da zero ai lab
-  OSCP / OSWE: web hacking, Linux, Windows, networking, CVE, walkthrough e guide
-  veloci. Scegli il percorso e inizia a sporcarti le mani.
+title: Categorie Ethical Hacking e Cybersecurity | Hackita
+hero_title: Percorsi di Ethical Hacking e Cybersecurity
+description: 'Esplora le 8 categorie di Hackita: Web Hacking, Linux, Windows, networking, CVE, walkthrough e guide pratiche per imparare l’ethical hacking e allenarti nei lab OSCP e OSWE.'
 image: /images/categories.jpeg
 ---
 

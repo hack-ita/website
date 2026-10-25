@@ -1,0 +1,15 @@
+{{- /*
+  Link render hook. Converts absolute internal links (https://hackita.it/...)
+  to root-relative paths so they resolve on whichever language sub-domain the
+  visitor is on (GTranslate keeps relative links on the current host). Runs at
+  build time, so it covers every current and future article regardless of how
+  the link was authored in TinaCMS. shop./en./de./... sub-domains and external
+  links are left untouched.
+*/ -}}
+{{- $u := .Destination -}}
+{{- if eq $u "https://hackita.it" -}}
+  {{- $u = "/" -}}
+{{- else if strings.HasPrefix $u "https://hackita.it/" -}}
+  {{- $u = strings.TrimPrefix "https://hackita.it" $u -}}
+{{- end -}}
+<a href="{{ $u | safeURL }}"{{ with .Title }} title="{{ . | safeHTML }}"{{ end }}{{ if strings.HasPrefix $u "http" }} rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>

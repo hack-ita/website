@@ -47,7 +47,7 @@ Nel CSRF la tessera è il cookie di sessione, il volantino è la pagina dell'att
 
 ### Il flusso dell'attacco
 
-![CSRF attack flow]()
+![Flusso di un attacco CSRF](/images/csrf-attack-flow.svg)
 
 ```text
 1. The victim is authenticated on target.com (session cookie in the browser)
@@ -175,7 +175,7 @@ Su Salesforce esiste l'impostazione di sessione *Require CSRF protection on GET 
 
 Il token anti CSRF (*anti csrf token*) è una stringa segreta e imprevedibile che il server genera e poi si aspetta di ritrovare in ogni richiesta che cambia stato; l'attaccante non può leggerla da un altro sito, quindi non può falsificare la richiesta. Un token presente non significa però un token validato. Queste quattro tecniche di *CSRF bypass*, che ritrovi anche nei lab di PortSwigger sulla validazione del token, coprono la maggior parte dei casi reali.
 
-![CSRF token validation bypass]()
+![Quattro modi in cui si aggira il token CSRF](/images/csrf-token-bypass.svg)
 
 ### 1. Validazione dipendente dal metodo HTTP
 
@@ -257,7 +257,7 @@ Un **double submit cookie firmato** (il token è un HMAC calcolato lato server s
 
 Per capire SameSite serve prima la differenza tra **site** e **origin**. Un *site* è il dominio registrabile (TLD+1, es. `example.com`) e considera lo schema: `http://example.com` e `https://example.com` sono cross-site tra loro. Un *origin* è più specifico: schema, host e porta. Una richiesta può essere cross-origin ma same-site (due sottodomini dello stesso dominio), mai il contrario.
 
-![SameSite cookie behavior]()
+![Comportamento di SameSite Lax](/images/csrf-samesite-lax.svg)
 
 * **Strict**: il cookie non viene mai inviato in una richiesta cross-site, nemmeno cliccando un link da un altro sito. Protegge di più, ma può rompere flussi come "apri un link ricevuto via email e resta loggato".
 * **Lax** (default nei browser moderni dal 2020, se il sito non imposta esplicitamente un valore): il cookie viene inviato in una richiesta cross-site solo se è una **GET avviata da una navigazione di primo livello** dell'utente (un link cliccato, non un'immagine o uno script in background). POST, richieste di background e iframe restano bloccate.
@@ -350,7 +350,7 @@ Per il pentester questi messaggi sono utili: un errore diverso tra "token missin
 
 La *cross site request forgery prevention* seria è a più livelli: nessuno dei tre basta da solo. La protezione dal cross site request forgery si basa su un token anti CSRF validato, su `SameSite` e su un controllo di `Origin`.
 
-![CSRF defense in depth]()
+![Difesa a livelli contro il CSRF](/images/csrf-defense-in-depth.svg)
 
 **Synchronizer token**, la difesa di riferimento per le app con stato: un token segreto, imprevedibile, generato dal server e legato alla sessione. Va inviato in un campo hidden del form o in un header personalizzato, mai in un cookie da solo e mai nell'URL. Il server rifiuta la richiesta se il token manca o non corrisponde a quello associato alla sessione:
 

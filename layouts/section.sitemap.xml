@@ -3,10 +3,11 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 {{- range .RegularPages }}
 {{- if not (default false .Params.sitemap.disable) }}
+{{- $lm := .Lastmod }}{{ if $lm.After now }}{{ $lm = now }}{{ end }}
   <url>
     <loc>{{ .Permalink }}</loc>
     {{- if not .Lastmod.IsZero }}
-    <lastmod>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <lastmod>{{ $lm.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
     {{- end }}
   </url>
 {{- end }}

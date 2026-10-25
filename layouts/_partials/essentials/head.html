@@ -47,5 +47,8 @@
 {{ partial "opengraph.html" . }}
 {{ partial "twitter_cards.html" . }}
 
+{{/* Per-language SEO localizer for GTranslate sub-domains */}}
+{{ partial "seo/localize.html" . }}
+
 {{/* Google Analytics 4 — renders only when services.googleAnalytics.ID is set */}}
 {{ template "_internal/google_analytics.html" . }}

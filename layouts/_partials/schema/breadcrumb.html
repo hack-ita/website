@@ -1,39 +1,17 @@
-{{/* schema/breadcrumb.html */}}
-
+{{/* BreadcrumbList — .Ancestors already includes the home page, so we do NOT
+     add a separate "Home" root (that produced a duplicate). Positions derive
+     from the list. Item URLs are localized per sub-domain by the SEO localizer
+     JS; GTranslate rewrites the visible crumb labels. */}}
 {{ $items := slice }}
-{{ $position := 1 }}
-
+{{ $pos := 0 }}
 {{ if not .IsHome }}
-
-  {{ $items = $items | append (dict
-    "@type" "ListItem"
-    "position" $position
-    "name" "Home"
-    "item" site.BaseURL
-  ) }}
-
   {{ range .Ancestors.Reverse }}
-    {{ $position = add $position 1 }}
-    {{ $items = $items | append (dict
-      "@type" "ListItem"
-      "position" $position
-      "name" .Title
-      "item" .Permalink
-    ) }}
+    {{ $pos = add $pos 1 }}
+    {{ $items = $items | append (dict "@type" "ListItem" "position" $pos "name" (cond .IsHome "Home" .Title) "item" .Permalink) }}
   {{ end }}
-
-  {{ if gt (len $items) 1 }}
-    {{ $position = add $position 1 }}
-    {{ $items = $items | append (dict
-      "@type" "ListItem"
-      "position" $position
-      "name" .Title
-      "item" .Permalink
-    ) }}
-  {{ end }}
-
+  {{ $pos = add $pos 1 }}
+  {{ $items = $items | append (dict "@type" "ListItem" "position" $pos "name" .Title "item" .Permalink) }}
 {{ end }}
-
 {{ if gt (len $items) 1 }}
 <script type="application/ld+json">
 {

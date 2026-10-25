@@ -1,16 +1,17 @@
+{{- $brand := site.Params.brand | default "HackITA" -}}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "@id": "{{ site.BaseURL }}#homepage",
-  "url": "{{ site.BaseURL }}",
-  "name": "{{ site.Title }}",
+  "@id": "{{ .Permalink }}#webpage",
+  "url": "{{ .Permalink }}",
+  "name": "{{ $brand }}",
+  "inLanguage": "it-IT",
   "isPartOf": {
     "@id": "{{ site.BaseURL }}#website"
   },
   "about": {
-    "@type": "Blog",
-    "name": "{{ site.Title }}"
+    "@id": "{{ site.BaseURL }}#organization"
   }
 }
 </script>

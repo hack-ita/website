@@ -1,11 +1,18 @@
+{{- $org := printf "%s#organization" site.BaseURL -}}
+{{- $desc := cond (ne (string .Description) "") (string .Description) (.Summary | plainify) -}}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "@id": "{{ .Permalink }}#article",
-  "headline": "{{ .Title }}",
-  "description": "{{ with .Description }}{{ . }}{{ else }}{{ .Summary | plainify }}{{ end }}",
+  "headline": {{ .Title | jsonify | safeJS }},
+  "description": {{ $desc | jsonify | safeJS }},
   "url": "{{ .Permalink }}",
+  "inLanguage": "it-IT",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ .Permalink }}"
+  },
   {{ with .Params.image }}
   "image": {
     "@type": "ImageObject",
@@ -16,18 +23,13 @@
   {{ with .Lastmod }}
   "dateModified": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",
   {{ end }}
-  "author": {
-    "@type": "Organization",
-    "name": "{{ site.Title }}"
-  },
-  "publisher": {
-    "@id": "{{ site.BaseURL }}#organization"
-  },
-  {{ with .Params.categories }}
-  "articleSection": {{ jsonify . }},
-  {{ end }}
-  {{ with .Params.tags }}
-  "keywords": "{{ delimit . ", " }}"
-  {{ end }}
+  "author": { "@id": "{{ $org }}" },
+  "publisher": { "@id": "{{ $org }}" }
+  {{- with .Params.categories }},
+  "articleSection": {{ jsonify . | safeJS }}
+  {{- end }}
+  {{- with .Params.tags }},
+  "keywords": {{ (delimit . ", ") | jsonify | safeJS }}
+  {{- end }}
 }
 </script>

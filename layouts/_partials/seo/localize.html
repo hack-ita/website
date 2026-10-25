@@ -1,0 +1,43 @@
+{{- /*
+  Per-language SEO localizer. The site is built once (Italian, hackita.it) and
+  GTranslate serves <code>.hackita.it by proxying + rewriting navigable URLs —
+  but it does NOT rewrite og:locale, JSON-LD @id values (they carry #fragments)
+  or inLanguage. This script, on each translated sub-domain, fixes:
+    - og:locale  -> the page's own locale (en_US, de_DE, ...)
+    - og:locale:alternate -> every OTHER locale incl. it_IT, never the page's own
+    - JSON-LD @id/url/isPartOf/mainEntityOfPage/breadcrumb items -> this sub-domain
+    - inLanguage on WebSite/WebPage/BlogPosting -> this language
+  The global Organization entity (@id .../#organization) and publisher/author
+  references are kept on hackita.it on purpose (one brand across languages).
+  The base domain is derived from location.hostname so there is no literal for
+  GTranslate to rewrite. On hackita.it itself it no-ops (templates are correct).
+*/ -}}
+<script>
+(function(){
+  var OG={en:'en_US',de:'de_DE',fr:'fr_FR',es:'es_ES',pt:'pt_PT'};
+  var BCP={en:'en-US',de:'de-DE',fr:'fr-FR',es:'es-ES',pt:'pt-PT'};
+  var parts=location.hostname.split('.');
+  var lang=(parts.length>2 && OG[parts[0]])?parts[0]:'it';
+  if(lang==='it')return;
+  var base=parts.slice(1).join('.');
+  var origin=location.origin;
+  var re=new RegExp('https://(?:[a-z]{2}\.)?'+base.replace(/\./g,'\.'),'g');
+  function L(u){return (typeof u==='string')?u.replace(re,origin):u;}
+  var ol=document.querySelector('meta[property="og:locale"]');if(ol)ol.setAttribute('content',OG[lang]);
+  Array.prototype.forEach.call(document.querySelectorAll('meta[property="og:locale:alternate"]'),function(e){e.parentNode.removeChild(e);});
+  var alts=['it_IT'];for(var k in OG){if(k!==lang)alts.push(OG[k]);}
+  alts.forEach(function(v){var e=document.createElement('meta');e.setAttribute('property','og:locale:alternate');e.setAttribute('content',v);document.head.appendChild(e);});
+  Array.prototype.forEach.call(document.querySelectorAll('script[type="application/ld+json"]'),function(s){
+    var d;try{d=JSON.parse(s.textContent);}catch(e){return;}
+    if(d['@type']!=='Organization'){
+      if(d['@id'])d['@id']=L(d['@id']);
+      if(d.url)d.url=L(d.url);
+      if(d.isPartOf&&d.isPartOf['@id'])d.isPartOf['@id']=L(d.isPartOf['@id']);
+      if(d.mainEntityOfPage&&d.mainEntityOfPage['@id'])d.mainEntityOfPage['@id']=L(d.mainEntityOfPage['@id']);
+      if(d['@type']==='WebSite'||d['@type']==='WebPage'||d['@type']==='BlogPosting')d.inLanguage=BCP[lang];
+      if(d.itemListElement&&d.itemListElement.forEach)d.itemListElement.forEach(function(it){if(it.item)it.item=L(it.item);});
+    }
+    try{s.textContent=JSON.stringify(d);}catch(e){}
+  });
+})();
+</script>

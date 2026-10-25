@@ -1,0 +1,40 @@
+<svg viewBox="0 0 920 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#111111"/>
+    </marker>
+    <marker id="r1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="900" height="300" fill="#ffffff"/>
+  <text x="450" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#111111">CSRF: The Browser Does the Attacker's Work</text>
+
+  <rect x="20" y="70" width="190" height="80" rx="8" fill="#111111"/>
+  <text x="115" y="104" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Victim</text>
+  <text x="115" y="124" text-anchor="middle" font-size="12" fill="#ffffff">logged in on</text>
+  <text x="115" y="140" text-anchor="middle" font-size="12" fill="#ffffff">target.com</text>
+
+  <rect x="260" y="70" width="190" height="80" rx="8" fill="#dc2626"/>
+  <text x="355" y="104" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">evil.com</text>
+  <text x="355" y="124" text-anchor="middle" font-size="12" fill="#ffffff">auto-submit form</text>
+  <text x="355" y="140" text-anchor="middle" font-size="12" fill="#ffffff">or fetch()</text>
+
+  <rect x="500" y="70" width="190" height="80" rx="8" fill="#111111"/>
+  <text x="595" y="104" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Browser</text>
+  <text x="595" y="124" text-anchor="middle" font-size="12" fill="#ffffff">attaches session</text>
+  <text x="595" y="140" text-anchor="middle" font-size="12" fill="#ffffff">cookie automatically</text>
+
+  <rect x="700" y="70" width="190" height="80" rx="8" fill="#111111"/>
+  <text x="795" y="104" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">target.com</text>
+  <text x="795" y="124" text-anchor="middle" font-size="12" fill="#ffffff">sees a valid</text>
+  <text x="795" y="140" text-anchor="middle" font-size="12" fill="#ffffff">authenticated request</text>
+
+  <line x1="212" y1="110" x2="258" y2="110" stroke="#111111" stroke-width="2.5" marker-end="url(#a1)"/>
+  <line x1="452" y1="110" x2="498" y2="110" stroke="#111111" stroke-width="2.5" marker-end="url(#a1)"/>
+  <line x1="692" y1="110" x2="698" y2="110" stroke="#dc2626" stroke-width="3" marker-end="url(#r1)"/>
+
+  <rect x="150" y="210" width="600" height="60" rx="8" fill="none" stroke="#dc2626" stroke-width="3"/>
+  <text x="450" y="236" text-anchor="middle" font-size="15" fill="#111111" font-weight="700">The victim clicked nothing.</text>
+  <text x="450" y="256" text-anchor="middle" font-size="13" fill="#111111">Email changed, funds moved, admin created - one page load.</text>
+</svg>

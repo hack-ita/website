@@ -113,7 +113,7 @@ Per il **business logic testing** conta più il metodo degli strumenti. Checklis
 * Hai confrontato quello che mostra il frontend, quello che viaggia nella richiesta e quello che salva il backend?
 * Dopo ogni test hai controllato **lo stato** (saldo, ordine, ruolo), non solo il codice HTTP?
 
-![Business Logic Flaw: ciclo di test dalla mappa del flusso alla catena di impatto]()
+![Business Logic Flaw testing loop]()
 
 Il trucco mentale è uno: **cerca i "NO"**. Individua le cose che l'applicazione dice di non permettere e prova a farle lo stesso.
 
@@ -259,7 +259,7 @@ Una password cambiata senza alcun token: il controllo esisteva, ma scattava solo
 
 Il flusso previsto è creare l'ordine, pagare, confermare. Il server controlla davvero che il pagamento sia avvenuto prima della conferma?
 
-![Workflow bypass: conferma ordine senza passare dal pagamento]()
+![Workflow bypass skipping payment]()
 
 ```bash
 # Put a keyboard in the cart, then create an order: it starts as "pending"
@@ -302,7 +302,7 @@ Il modulo coupon è una miniera. Checklist: riuso, stacking, differenza maiuscol
 
 **Soglia aggirabile.** Lo sconto del 10% vale solo sopra 1000 euro, ma la regola è controllata una sola volta, al momento di applicare il codice:
 
-![Race condition: controllo e scrittura non atomici sul coupon]()
+![Race condition coupon]()
 
 ```bash
 # 1998 total, above the 1000 threshold
@@ -350,7 +350,7 @@ Se il campo codice accetta caratteri speciali, controlla anche la query dietro: 
 
 "Un coupon per utente" è una regola che si rompe se mandi molte richieste nello stesso istante: il server controlla "non ancora usato" per tutte prima che la prima segni "usato". Approfondimento nell'articolo sulle [race condition](https://hackita.it/articoli/race-condition/).
 
-![Trucco della soglia sconto: la regola è controllata una sola volta]()
+![Discount threshold trick]()
 
 Il test minimo con strumenti nativi:
 

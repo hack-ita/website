@@ -2,25 +2,26 @@
 sitemap:
   disable: false
   priority: 1
-title: Hackita — Sicurezza Informatica, Pentest e Guide Pratiche
-description: Guide, analisi e tutorial su sicurezza informatica, penetration testing e strumenti come WPScan, sqlmap e Metasploit.
+description: 'Guide, analisi e tutorial su sicurezza informatica, penetration testing e strumenti come WPScan, sqlmap e Metasploit.'
 image: /images/hackita-hero.webp
-# Hugo's embedded opengraph/twitter_cards templates read `images` (plural).
 images:
   - /images/hackita-hero.webp
+title: 'Hackita — Sicurezza Informatica, Pentest e Guide Pratiche'
 about:
   enable: true
   image: /images/hackita-hero.webp
-  title: IL PROGETTO HACKITA
+  title: 'Hackita: Ethical Hacking, Pentesting e Cybersecurity'
   content: |-
-    Hackita è un progetto italiano dedicato all’ethical hacking, alla cybersecurity e alla sicurezza informatica. Nasce per colmare un vuoto nel panorama italiano e avvicinare sempre più persone a una disciplina affascinante, indispensabile e in continua evoluzione.
+    ## Hackita: Ethical Hacking e Sicurezza Informatica
 
-    Attraverso contenuti organizzati in 8 categorie principali, pubblichiamo guide operative, walkthrough e approfondimenti tecnici che affrontano la sicurezza sia dal punto di vista offensivo sia da quello difensivo. Comprendere come avvengono gli attacchi è il primo passo per riconoscerli, prevenirli e costruire difese più efficaci. 
+    Hackita è un progetto italiano dedicato all’ethical hacking, alla cybersecurity e al penetration testing. Attraverso guide tecniche, tutorial operativi, walkthrough e approfondimenti, aiutiamo appassionati, professionisti e aspiranti ethical hacker a sviluppare competenze concrete nella sicurezza informatica.
 
-    Hackita non è soltanto un blog: offre formazione 1:1, percorsi per aziende, servizi di penetration testing e attività Red Team. Con shop.hackita.it portiamo inoltre la cultura hacker oltre lo schermo, attraverso prodotti dedicati alla nostra community.
+    I contenuti affrontano otto aree tematiche e approfondiscono tecniche, strumenti e metodologie utilizzati nella sicurezza dei sistemi e delle reti. Dal Web Hacking all’enumerazione di Windows e Linux, da Active Directory al networking e all’analisi delle vulnerabilità, Hackita propone risorse pratiche per comprendere come funzionano gli attacchi, individuare i punti deboli e imparare a testarli in ambienti autorizzati.
 
-    Stiamo costruendo un progetto unico nel panorama italiano per qualità, completezza e approccio pratico. Puntiamo all’eccellenza, lavoriamo ogni giorno per raggiungerla e siamo determinati a rendere Hackita il punto di riferimento italiano per chi vuole conoscere, imparare e vivere davvero il mondo della cybersecurity.
+    **Hackita è anche formazione e attività professionale.** Offriamo formazione individuale 1:1, percorsi dedicati alle aziende e servizi di penetration testing e Red Team per valutare la sicurezza di infrastrutture, sistemi e applicazioni. Con [shop.hackita.it](https://shop.hackita.it/) portiamo inoltre il progetto oltre i contenuti tecnici, con prodotti dedicati alla community.
 
-    Tutti i contenuti e i servizi di Hackita hanno finalità esclusivamente legali, etiche e formative: conoscere per proteggere, mai per danneggiare.
+    Il nostro obiettivo è contribuire alla crescita della cybersecurity in Italia attraverso conoscenze approfondite, esempi pratici e un approccio tecnico che unisce studio e applicazione. Vogliamo rendere Hackita un punto di riferimento per chi desidera imparare l’ethical hacking, approfondire il penetration testing e sviluppare competenze realmente utili nel campo della sicurezza informatica.
+
+    Tutti i contenuti e i servizi sono destinati ad attività legali, etiche e formative: **conoscere le tecniche offensive per comprendere le vulnerabilità e proteggere i sistemi.**
 ---
 

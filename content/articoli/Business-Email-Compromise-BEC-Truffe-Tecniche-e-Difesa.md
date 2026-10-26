@@ -1,9 +1,11 @@
 ---
 title: 'Business Email Compromise (BEC): Truffe, Tecniche e Difesa'
 slug: business-email-compromise
-description: 'BEC spiegato semplice: cos''è la truffa del CEO, come funziona un attacco Business Email Compromise, un caso reale e come proteggere la tua azienda.'
+description: >-
+  BEC spiegato semplice: cos'è la truffa del CEO, come funziona un attacco
+  Business Email Compromise, un caso reale e come proteggere la tua azienda.
 image: /business-email-compromise-bec-frode-email-aziendale.webp
-draft: true
+draft: false
 date: 2026-10-26T23:54:59.051Z
 lastmod: 2026-10-26T23:55:31.830Z
 categories:

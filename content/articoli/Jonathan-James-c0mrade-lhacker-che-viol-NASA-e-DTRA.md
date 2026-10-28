@@ -4,7 +4,7 @@ slug: jonathan-james
 description: 'Jonathan James, alias c0mrade: storia dell''hacker minorenne che violò NASA e DTRA, fu incarcerato e venne poi coinvolto nelle indagini sul caso TJX nel 2008.'
 image: /jonathan-james-c0mrade-hacker-nasa-dtra.webp
 draft: true
-date: 2026-10-25T13:05:39.729Z
+date: 2026-11-09T13:05:39.729Z
 lastmod: 2026-10-25T13:14:39.508Z
 categories:
   - guides-resources

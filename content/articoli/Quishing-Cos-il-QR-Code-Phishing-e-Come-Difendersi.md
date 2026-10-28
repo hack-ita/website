@@ -4,8 +4,8 @@ slug: quishing
 description: 'Quishing: significato e cos''è l''attacco di phishing con QR code, come funziona, dove compare, come riconoscere un codice falso e verificarlo prima di aprirlo.'
 image: /quishing-qr-code-phishing-cybersecurity.webp
 draft: true
-date: 2026-10-23T00:13:02.274Z
-lastmod: 2026-10-23T00:13:08.184Z
+date: 2026-11-01T00:13:02.274Z
+lastmod: 2026-11-01T00:13:08.184Z
 categories:
   - guides-resources
 subcategories:
@@ -103,12 +103,12 @@ Questo è lo stesso approccio "guarda prima di aprire" che vale per qualunque li
 
 ## Quishing e altri tipi di phishing: le differenze
 
-|                                                       | Canale                  | Esempio tipico                                       |
-| ----------------------------------------------------- | ----------------------- | ---------------------------------------------------- |
-| **Phishing**                                          | Email con link testuale | Falsa fattura con link malevolo                      |
+|                                     | Canale                  | Esempio tipico                                       |
+| ----------------------------------- | ----------------------- | ---------------------------------------------------- |
+| **Phishing**                        | Email con link testuale | Falsa fattura con link malevolo                      |
 | **[Smishing](/articoli/smishing/)** | SMS                     | Falso avviso di consegna con link                    |
 | **[Vishing](/articoli/vishing/)**   | Chiamata vocale         | Finto operatore bancario                             |
-| **Quishing**                                          | Codice QR               | Falso pagamento di parcheggio o menu con QR malevolo |
+| **Quishing**                        | Codice QR               | Falso pagamento di parcheggio o menu con QR malevolo |
 
 Il quishing si distingue dagli altri per il meccanismo tecnico: non è il canale di consegna a cambiare radicalmente (può arrivare via email, SMS o essere fisicamente stampato), ma il fatto che il link sia **nascosto dentro un'immagine** fino al momento della scansione.
 

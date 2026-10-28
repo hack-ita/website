@@ -1,0 +1,36 @@
+<svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="900" height="260" fill="#ffffff"/>
+  <text x="450" y="34" text-anchor="middle" font-size="20" font-weight="bold" fill="#111111">Business Logic Testing Loop</text>
+  <g stroke="#111111" stroke-width="2">
+    <rect x="20" y="80" width="150" height="90" rx="8" fill="#111111"/>
+    <rect x="200" y="80" width="150" height="90" rx="8" fill="#ffffff"/>
+    <rect x="380" y="80" width="150" height="90" rx="8" fill="#dc2626"/>
+    <rect x="560" y="80" width="150" height="90" rx="8" fill="#ffffff"/>
+    <rect x="740" y="80" width="140" height="90" rx="8" fill="#111111"/>
+  </g>
+  <g font-size="16" text-anchor="middle" font-weight="bold">
+    <text x="95" y="118" fill="#ffffff">1. Map</text>
+    <text x="95" y="142" fill="#ffffff" font-weight="normal" font-size="13">the workflow</text>
+    <text x="275" y="118" fill="#111111">2. List</text>
+    <text x="275" y="142" fill="#111111" font-weight="normal" font-size="13">the assumptions</text>
+    <text x="455" y="118" fill="#ffffff">3. Break</text>
+    <text x="455" y="142" fill="#ffffff" font-weight="normal" font-size="13">each assumption</text>
+    <text x="635" y="118" fill="#111111">4. Observe</text>
+    <text x="635" y="142" fill="#111111" font-weight="normal" font-size="13">server state</text>
+    <text x="810" y="118" fill="#ffffff">5. Chain</text>
+    <text x="810" y="142" fill="#ffffff" font-weight="normal" font-size="13">the impact</text>
+  </g>
+  <g stroke="#dc2626" stroke-width="3" fill="none" marker-end="url(#a)">
+    <line x1="172" y1="125" x2="198" y2="125"/>
+    <line x1="352" y1="125" x2="378" y2="125"/>
+    <line x1="532" y1="125" x2="558" y2="125"/>
+    <line x1="712" y1="125" x2="738" y2="125"/>
+  </g>
+  <path d="M810 172 L810 215 L275 215 L275 174" stroke="#dc2626" stroke-width="3" fill="none" stroke-dasharray="8 6" marker-end="url(#a)"/>
+  <text x="542" y="238" text-anchor="middle" font-size="14" fill="#111111">New rule discovered? Go back and test it</text>
+</svg>

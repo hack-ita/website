@@ -1,0 +1,35 @@
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#111111"/>
+    </marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="900" height="300" fill="#ffffff"/>
+  <text x="450" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#111111">Workflow Bypass: Skipping the Payment Step</text>
+  <text x="20" y="78" font-size="14" font-weight="bold" fill="#111111">Intended flow</text>
+  <g stroke="#111111" stroke-width="2" font-size="15" text-anchor="middle">
+    <rect x="20" y="90" width="170" height="60" rx="8" fill="#111111"/>
+    <rect x="250" y="90" width="170" height="60" rx="8" fill="#111111"/>
+    <rect x="480" y="90" width="170" height="60" rx="8" fill="#111111"/>
+    <rect x="710" y="90" width="170" height="60" rx="8" fill="#111111"/>
+  </g>
+  <g font-size="15" text-anchor="middle" fill="#ffffff" font-weight="bold">
+    <text x="105" y="126">1. Create order</text>
+    <text x="335" y="126">2. Address</text>
+    <text x="565" y="126">3. Payment</text>
+    <text x="795" y="126">4. Confirm</text>
+  </g>
+  <g stroke="#111111" stroke-width="2.5" fill="none" marker-end="url(#k)">
+    <line x1="192" y1="120" x2="248" y2="120"/>
+    <line x1="422" y1="120" x2="478" y2="120"/>
+    <line x1="652" y1="120" x2="708" y2="120"/>
+  </g>
+  <text x="20" y="210" font-size="14" font-weight="bold" fill="#dc2626">Attack: the server never checks that step 3 happened</text>
+  <path d="M105 152 L105 190 L795 190 L795 154" stroke="#dc2626" stroke-width="3.5" fill="none" stroke-dasharray="9 6" marker-end="url(#r)"/>
+  <rect x="480" y="90" width="170" height="60" rx="8" fill="none" stroke="#dc2626" stroke-width="3"/>
+  <text x="565" y="254" text-anchor="middle" font-size="14" fill="#111111">POST /api/order/confirm  -&gt;  200 "confirmed" (order unpaid)</text>
+  <text x="565" y="278" text-anchor="middle" font-size="13" fill="#dc2626">Fix: confirm only if order.status == "paid"</text>
+</svg>

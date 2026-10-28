@@ -1,0 +1,36 @@
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="900" height="300" fill="#ffffff"/>
+  <text x="450" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#111111">Discount Threshold Trick: Rule Checked Only Once</text>
+  <g stroke="#111111" stroke-width="2" text-anchor="middle">
+    <rect x="20" y="80" width="190" height="110" rx="8" fill="#111111"/>
+    <rect x="250" y="80" width="190" height="110" rx="8" fill="#ffffff"/>
+    <rect x="480" y="80" width="190" height="110" rx="8" fill="#dc2626" stroke="#dc2626"/>
+    <rect x="710" y="80" width="170" height="110" rx="8" fill="#111111"/>
+  </g>
+  <g text-anchor="middle" font-weight="bold">
+    <text x="115" y="112" font-size="15" fill="#ffffff">1. Add 2 laptops</text>
+    <text x="115" y="146" font-size="22" fill="#ffffff">1998.00</text>
+    <text x="115" y="172" font-size="13" fill="#ffffff" font-weight="normal">above the 1000 threshold</text>
+    <text x="345" y="112" font-size="15" fill="#111111">2. Apply BIG10</text>
+    <text x="345" y="146" font-size="22" fill="#111111">-10%</text>
+    <text x="345" y="172" font-size="13" fill="#111111" font-weight="normal">rule checked here only</text>
+    <text x="575" y="112" font-size="15" fill="#ffffff">3. Remove 1 laptop</text>
+    <text x="575" y="146" font-size="22" fill="#ffffff">999.00</text>
+    <text x="575" y="172" font-size="13" fill="#ffffff" font-weight="normal">below the threshold</text>
+    <text x="795" y="112" font-size="15" fill="#ffffff">4. Checkout</text>
+    <text x="795" y="146" font-size="22" fill="#ffffff">899.10</text>
+    <text x="795" y="172" font-size="13" fill="#ffffff" font-weight="normal">discount still applied</text>
+  </g>
+  <g stroke="#111111" stroke-width="2.5" fill="none" marker-end="url(#a4)">
+    <line x1="212" y1="135" x2="248" y2="135"/>
+    <line x1="442" y1="135" x2="478" y2="135"/>
+    <line x1="672" y1="135" x2="708" y2="135"/>
+  </g>
+  <text x="450" y="236" text-anchor="middle" font-size="15" fill="#111111">Expected total without the discount: 999.00</text>
+  <text x="450" y="264" text-anchor="middle" font-size="15" fill="#dc2626" font-weight="bold">Fix: re-evaluate every discount rule each time the cart changes</text>
+</svg>

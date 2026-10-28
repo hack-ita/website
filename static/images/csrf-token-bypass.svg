@@ -1,0 +1,35 @@
+<svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect width="900" height="340" fill="#ffffff"/>
+  <text x="450" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#111111">Token Validation: Four Ways It Breaks</text>
+
+  <g font-size="13">
+    <rect x="20" y="60" width="200" height="110" rx="8" fill="#111111"/>
+    <text x="120" y="88" text-anchor="middle" font-weight="700" fill="#ffffff">1. Method-dependent</text>
+    <text x="120" y="112" text-anchor="middle" fill="#ffffff">Checked on POST,</text>
+    <text x="120" y="130" text-anchor="middle" fill="#ffffff">not on GET</text>
+    <text x="120" y="152" text-anchor="middle" fill="#dc2626" font-weight="700">Fix: switch method</text>
+
+    <rect x="240" y="60" width="200" height="110" rx="8" fill="#111111"/>
+    <text x="340" y="88" text-anchor="middle" font-weight="700" fill="#ffffff">2. Presence-dependent</text>
+    <text x="340" y="112" text-anchor="middle" fill="#ffffff">Checked only if</text>
+    <text x="340" y="130" text-anchor="middle" fill="#ffffff">the field exists</text>
+    <text x="340" y="152" text-anchor="middle" fill="#dc2626" font-weight="700">Fix: remove the field</text>
+
+    <rect x="460" y="60" width="200" height="110" rx="8" fill="#111111"/>
+    <text x="560" y="88" text-anchor="middle" font-weight="700" fill="#ffffff">3. Not session-bound</text>
+    <text x="560" y="112" text-anchor="middle" fill="#ffffff">Any valid token</text>
+    <text x="560" y="130" text-anchor="middle" fill="#ffffff">from any account</text>
+    <text x="560" y="152" text-anchor="middle" fill="#dc2626" font-weight="700">Fix: attacker's own token</text>
+
+    <rect x="680" y="60" width="200" height="110" rx="8" fill="#dc2626"/>
+    <text x="780" y="88" text-anchor="middle" font-weight="700" fill="#ffffff">4. Naive double submit</text>
+    <text x="780" y="112" text-anchor="middle" fill="#ffffff">Cookie must just</text>
+    <text x="780" y="130" text-anchor="middle" fill="#ffffff">equal the field</text>
+    <text x="780" y="152" text-anchor="middle" fill="#ffffff" font-weight="700">Fix: cookie tossing</text>
+  </g>
+
+  <rect x="150" y="220" width="600" height="90" rx="8" fill="none" stroke="#111111" stroke-width="3"/>
+  <text x="450" y="248" text-anchor="middle" font-size="15" fill="#111111" font-weight="700">A real fix needs all three:</text>
+  <text x="450" y="272" text-anchor="middle" font-size="14" fill="#111111">token tied to the session + always required + constant-time compare</text>
+  <text x="450" y="294" text-anchor="middle" font-size="13" fill="#555555">Any single check removed reopens the bypass.</text>
+</svg>

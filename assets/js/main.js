@@ -210,7 +210,7 @@ const initCritical = () => {
               setTimeout(() => {
                 captchaWrapper.style.display = 'none';
                 submitButton.style.display = 'inline-flex';
-                submitButton.classList.remove('hidden');
+                submitButton.classList.remove('hidden', 'submit-hidden');
                 submitButton.classList.add('button-enter');
               }, 400);
             }, 800);

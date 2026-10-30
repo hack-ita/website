@@ -1,9 +1,11 @@
 ---
 title: 'Whaling: Significato, Tecniche di Phishing, CEO Fraud e BEC'
 slug: whaling
-description: 'Whaling: cos''è, come funziona un attacco ai dirigenti, differenze con spear phishing e BEC, casi reali di deepfake e difesa della cybersecurity aziendale.'
+description: >-
+  Whaling: cos'è, come funziona un attacco ai dirigenti, differenze con spear
+  phishing e BEC, casi reali di deepfake e difesa della cybersecurity aziendale.
 image: /whaling-phishing-dirigenti-ceo-frode-aziendale.webp
-draft: true
+draft: false
 date: 2026-10-30T00:07:59.645Z
 lastmod: 2026-10-30T00:08:01.032Z
 categories:

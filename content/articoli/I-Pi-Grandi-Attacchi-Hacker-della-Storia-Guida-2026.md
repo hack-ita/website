@@ -1,9 +1,11 @@
 ---
 title: I Più Grandi Attacchi Hacker della Storia (Guida 2026)
 slug: attacchi-hacker-piu-grandi-storia
-description: 'I più grandi attacchi hacker della storia: Yahoo, Stuxnet, WannaCry, NotPetya, Equifax, SolarWinds, Colonial Pipeline e le lezioni imparate.'
+description: >-
+  I più grandi attacchi hacker della storia: Yahoo, Stuxnet, WannaCry, NotPetya,
+  Equifax, SolarWinds, Colonial Pipeline e le lezioni imparate.
 image: /piu-grandi-attacchi-hacker-della-storia-cybersecurity.webp
-draft: true
+draft: false
 date: 2026-10-31T00:28:23.591Z
 lastmod: 2026-10-31T00:30:59.403Z
 categories:

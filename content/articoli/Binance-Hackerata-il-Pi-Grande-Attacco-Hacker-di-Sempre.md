@@ -33,7 +33,12 @@ Binance è stata hackerata il 29 ottobre 2026: l'attacco hacker a Binance (Binan
 | Prelievi / depositi                 | Prelievi sospesi, ripristino graduale; depositi operativi (aggiornamento Binance del 30 ottobre) |
 | Root cause ufficiale                | Non ancora pubblicato                                                                            |
 
-**Come leggere questo articolo.** Tengo separati tre livelli: i *fatti dichiarati da Binance*, la *ricostruzione on-chain di TRM Labs* e le *ipotesi ancora da verificare*. L'accesso iniziale, la compromissione del sistema di firma e l'identità degli attaccanti sono attribuiti alle rispettive fonti e non sono una conferma indipendente del root cause. Ultimo aggiornamento: 31 ottobre 2026. Se Binance pubblica il post-mortem, aggiorneremo questa analisi.
+**Come leggere questo articolo.** Sulla vicenda di Binance hackerata circolano già molte cifre e ipotesi diverse, quindi tengo separati tre livelli: i *fatti dichiarati da Binance*, la *ricostruzione on-chain di TRM Labs* e le *ipotesi ancora da verificare*. L'accesso iniziale, la compromissione del sistema di firma e l'identità degli attaccanti sono attribuiti alle rispettive fonti e non sono una conferma indipendente del root cause.
+
+**Aggiornamenti.**
+
+* 31 ottobre 2026: pubblicazione, con l'avviso ufficiale di Binance del 30 ottobre (depositi operativi, prelievi graduali, Proof of Reserves entro il 2 novembre).
+* Prossimo aggiornamento: il post-mortem tecnico di Binance e i risultati del Proof of Reserves, appena pubblicati.
 
 ## Binance hackerata: cosa è successo, in ordine
 
@@ -41,11 +46,11 @@ Nella sera del 29 ottobre, miliardi di dollari in crypto hanno cominciato a lasc
 
 Binance ha confermato l'incidente di sicurezza e ha bloccato i prelievi. Ecco la cronologia dell'attacco hacker, ricostruita da TRM Labs:
 
-![Timeline dell'attacco hacker a Binance del 29 ottobre 2026, dalla preparazione ai congelamenti dei fondi]()
+![Binance hack timeline October 28-30 2026]()
 
 Il dettaglio più importante non è nella sera dell'attacco, ma nelle 36 ore prima: l'attaccante ha preparato, testato e provato il codice su altri wallet prima di installarlo su un wallet di Binance. Non è stato un colpo improvvisato: è stata un'operazione pianificata, con prova generale inclusa.
 
-## Quanto è stato rubato e quanto è stato congelato
+## Furto crypto a Binance: quanto è stato rubato e quanto è stato congelato
 
 TRM valuta ogni trasferimento al prezzo del momento e arriva a circa 6,36 miliardi. Ai prezzi attuali gli stessi asset valgono circa 6,23 miliardi. Binance parla di circa 6,3 miliardi. Ecco la ripartizione per rete:
 
@@ -68,9 +73,9 @@ I fondi congelati hanno due numeri, e non vanno confusi. TRM conta circa 2,7 mil
 * **World Liberty Financial:** 27,8 milioni di USD1.
 * **Security Council di Arbitrum:** circa 30 milioni di dollari in ETH e ARB.
 
-Il dato che pesa di più è l'altro: l'attaccante controlla ancora circa 2,4 miliardi di dollari in ETH e BTC, fuori dalla portata di qualsiasi emittente. Anche dopo i congelamenti, quella cifra da sola supera qualsiasi furto crypto precedente. Per questo il furto a Binance è già il più grande hack di criptovalute di sempre (the largest crypto hack ever).
+Il dato che pesa di più è l'altro: l'attaccante controlla ancora circa 2,4 miliardi di dollari in ETH e BTC, fuori dalla portata di qualsiasi emittente. Anche dopo i congelamenti, quella cifra da sola supera qualsiasi furto crypto precedente. Per questo il furto crypto a Binance è già il più grande furto di criptovalute di sempre, il più grande hack crypto della storia (the largest crypto hack ever).
 
-## L'ultimo aggiornamento di Binance (30 ottobre)
+## Binance hackerata: l'ultimo aggiornamento ufficiale (30 ottobre)
 
 Nell'avviso del 30 ottobre, riportato da [CyberInsider](https://cyberinsider.com/binance-security-incident-6-3-billion/) e da [Bloomingbit](https://en.bloomingbit.io/feed/news/123338), Binance dichiara:
 
@@ -91,7 +96,7 @@ Qui nessuno ha forzato la cassaforte. Secondo l'analisi di TRM, l'attaccante ha 
 
 Nelle prime ore Binance aveva parlato di un laptop compromesso di un ingegnere DevOps, che avrebbe permesso all'attaccante di raggiungere un container di servizio e inviare prelievi non autorizzati. Il co-CEO Richard Teng ha poi precisato che l'attacco è stato un processo più complesso e non il semplice abuso dei permessi di una persona. Binance ha anche detto di non aver trovato evidenze di una fuga di chiavi private. Le due cose sono compatibili: far firmare al sistema richieste scelte dall'attaccante non richiede di rubare la chiave.
 
-## EIP-7702 e le 50 autorizzazioni
+## Binance e EIP-7702: le 50 autorizzazioni che hanno svuotato l'hot wallet
 
 Su Ethereum l'attacco hacker a Binance ha un meccanismo preciso. [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702), introdotto con l'aggiornamento Pectra di maggio 2025, permette a un wallet normale di far eseguire a uno smart contract il proprio comportamento, firmando una *autorizzazione*. Da quel momento ogni chiamata al wallet esegue il codice di quel contratto, finché il wallet non firma una nuova autorizzazione.
 
@@ -107,17 +112,17 @@ Questo è il punto che molte ricostruzioni sbagliano. EIP-7702 spiega **come è 
 
 L'ipotesi iniziale, autorizzazioni ottenute con phishing, copre solo Ethereum. Nella stessa mezz'ora, wallet con tipi di chiave e schemi di firma diversi hanno prodotto firme valide per l'attaccante. Per TRM la spiegazione più probabile è una sola: chi attacca ha messo le mani sul sistema che firma i prelievi degli hot wallet. Binance non ha confermato questo punto, e non c'è ancora una prova pubblica di quale componente sia stato compromesso per primo.
 
-![Ricostruzione del percorso d'attacco al sistema di firma di Binance: ipotesi di Binance e valutazione di TRM Labs, non root cause confermato]()
+![Binance hack reconstructed attack path]()
 
 Se leggi questo con l'occhio del red team, la sequenza ricalca la [Cyber Kill Chain](https://hackita.it/articoli/cyber-kill-chain/): preparazione lunga, un ingresso probabile da un endpoint DevOps, un passaggio verso un container (un [container escape](https://hackita.it/articoli/container-escape/) o un abuso di permessi, da capire dal post-mortem), poi [lateral movement](https://hackita.it/articoli/lateral-movement/) fino ai sistemi di firma e infine l'azione sull'obiettivo in un'unica raffica.
 
 ## Chi ha hackerato Binance: il gruppo TraderTraitor
 
-TRM attribuisce l'attacco a TraderTraitor con alta fiducia, e Chainalysis è sulla stessa linea parlando di attacco probabilmente opera di questo gruppo. È lo stesso gruppo che l'FBI ha indicato come responsabile dell'hack di Bybit del 2025. Al momento in cui scriviamo, l'attribuzione di questo attacco arriva da società private di analisi blockchain.
+Per il furto crypto a Binance, TRM attribuisce l'attacco a TraderTraitor con alta fiducia, e Chainalysis è sulla stessa linea parlando di attacco probabilmente opera di questo gruppo. È lo stesso gruppo che l'FBI ha indicato come responsabile dell'hack di Bybit del 2025. Al momento in cui scriviamo, l'attribuzione di questo attacco arriva da società private di analisi blockchain. TraderTraitor è un gruppo di hacker della Corea del Nord, noto nell'intelligence anche con altri nomi (come Jade Sleet e UNC4899) e spesso ricondotto all'ecosistema Lazarus Group.
 
 Gli indizi in comune con i colpi nordcoreani precedenti sono tre: piccoli prelievi da Tornado Cash per finanziare il wallet dell'operatore, una preparazione iniziata molto prima del furto e firme ottenute in anticipo ed eseguite in un'unica raffica. Cambia invece il riciclaggio: dopo Bybit si usarono molto i bridge cross-chain, qui si vedono grandi swap con market maker e protocolli di lending.
 
-## Dove sono finiti i soldi
+## Dove sono finiti i soldi rubati a Binance
 
 Per battere i congelamenti, l'attaccante ha venduto in fretta stablecoin che sapeva di poter perdere. Circa 325 milioni di USDT sono stati ceduti a market maker tramite UniswapX per circa 122.300 ETH, con uno sconto superiore al 10% rispetto al prezzo di mercato. Un secondo wallet ha depositato 60 milioni di USDT su Aave e ha preso in prestito circa 19.760 ETH, dopodiché Aave ha congelato i mercati interessati.
 
@@ -125,7 +130,7 @@ I 18.270 BTC sono entrati in una peel chain: lo stesso importo viene spezzato in
 
 ## Binance hackerata: i miei soldi sono al sicuro?
 
-Dopo l'hack, Binance dice che i fondi degli utenti sono al sicuro e che coprirà tutte le perdite con il fondo SAFU e con fondi aziendali. Un analista di Fundstrat citato da [CNBC](https://www.cnbc.com/2026/10/30/billions-in-crypto-frozen-in-binance-hack-heres-what-happens-next-.html) non vede al momento un rischio significativo per la solvibilità dell'exchange. I depositi sono operativi, i prelievi sono sospesi e saranno riattivati per fasi. Sul mercato, Bitcoin è sceso di oltre il 4% dopo la notizia.
+Anche se Binance è stata hackerata, l'exchange dice che i fondi degli utenti sono al sicuro e che coprirà tutte le perdite con il fondo SAFU e con fondi aziendali. Un analista di Fundstrat citato da [CNBC](https://www.cnbc.com/2026/10/30/billions-in-crypto-frozen-in-binance-hack-heres-what-happens-next-.html) non vede al momento un rischio significativo per la solvibilità dell'exchange. I depositi sono operativi, i prelievi sono sospesi e saranno riattivati per fasi. Sul mercato, Bitcoin è sceso di oltre il 4% dopo la notizia.
 
 Quello che devi fare tu, concretamente:
 
@@ -134,13 +139,13 @@ Quello che devi fare tu, concretamente:
 * Attiva una chiave hardware o una passkey e la whitelist degli indirizzi di prelievo, se non l'hai già fatto.
 * Nessun servizio legittimo ti chiede mai le chiavi private o la frase di recupero.
 
-## Cosa ha gestito bene Binance e cosa no
+## Binance hackerata: cosa ha gestito bene e cosa no
 
 **Gestito bene.** Binance ha riconosciuto l'incidente in poche ore, pubblicamente su X, senza nascondersi dietro a una "manutenzione programmata". Ha bloccato i prelievi subito, ha mantenuto i depositi attivi, si è impegnata a coprire le perdite con cifre concrete e ha promesso un post-mortem tecnico quando i fatti saranno verificati. Il coordinamento con Tether, Circle, Ripple, World Liberty Financial e il Security Council di Arbitrum ha permesso di congelare circa 2,7 miliardi in poche ore, un risultato che in un furto del genere non è scontato.
 
 **Gestito meno bene.** La prima versione pubblica, un laptop compromesso, è stata poi inquadrata dal co-CEO come un quadro più complesso del solo abuso dei permessi di una persona. Dire che non risultano chiavi private rubate non rassicura molto se il problema è il sistema che firma i prelievi. E, valutazione nostra finché non arriva il post-mortem, sembra mancato un freno automatico efficace: venti minuti sono bastati per portare via la parte più grande dei fondi, su dieci blockchain.
 
-## Cosa insegna ai team di sicurezza
+## Cosa insegna questo furto crypto ai team di sicurezza
 
 La lezione utile per chi difende non è "Binance ha sbagliato", è che una firma valida non prova che la richiesta sia legittima. Le contromisure indicate da TRM per i team di tesoreria sono concrete:
 
@@ -150,6 +155,23 @@ La lezione utile per chi difende non è "Binance ha sbagliato", è che una firma
 * Separare infrastruttura di firma e percorsi di approvazione per chain e per livello di wallet: qui un solo attore ha ottenuto firme valide su dieci chain in poche ore.
 
 Nella sezione tecnica qui sotto trovi come verificarlo nella pratica.
+
+## In sintesi: cosa sappiamo su Binance hackerata
+
+* Binance è stata hackerata il 29 ottobre 2026: circa 6,3 miliardi di dollari rubati da wallet su dieci blockchain, il più grande furto crypto mai registrato.
+* Su Ethereum l'attaccante ha usato EIP-7702 con 50 autorizzazioni; secondo TRM il sistema che firma i prelievi è stato probabilmente compromesso (non confermato da Binance).
+* TRM e Chainalysis attribuiscono l'attacco a TraderTraitor, il gruppo nordcoreano già dietro l'hack di Bybit.
+* Circa 2,7 miliardi (TRM) o 3 miliardi (Binance) risultano congelati; l'attaccante ne controlla ancora circa 2,4 miliardi.
+* Binance copre le perdite con il fondo SAFU e con fondi aziendali: depositi operativi, prelievi sospesi con ripristino graduale.
+
+## Glossario rapido: hot wallet, nonce, SAFU e Proof of Reserves
+
+* **Hot wallet:** wallet collegato a internet che un exchange usa per pagare i prelievi dei clienti. Più è pieno, più vale per un attaccante.
+* **Nonce:** contatore delle transazioni di un wallet. Con EIP-7702 un'autorizzazione vale solo al nonce per cui è stata firmata.
+* **Sweeper contract:** contratto che svuota un wallet mandando tutto a un indirizzo scelto da chi lo controlla.
+* **Peel chain:** tecnica di riciclaggio in cui una somma grande viene spezzata in pezzi sempre più piccoli e spostata a catena, per rendere difficile il tracciamento.
+* **SAFU:** il fondo di emergenza di Binance per coprire le perdite degli utenti.
+* **Proof of Reserves:** prova pubblicata dall'exchange per mostrare che gli asset dei clienti sono coperti da riserve.
 
 ## Domande frequenti su Binance hackerata (Binance hacked)
 
@@ -164,6 +186,10 @@ Circa 6,3 miliardi di dollari secondo Binance, circa 6,36 miliardi secondo TRM L
 ### Chi ha hackerato Binance?
 
 TRM Labs e Chainalysis attribuiscono l'attacco al gruppo nordcoreano TraderTraitor, lo stesso indicato per il furto di Bybit del 2025. L'attribuzione arriva da società di analisi blockchain.
+
+### Che cos'è TraderTraitor?
+
+È un gruppo di hacker della Corea del Nord, indicato da TRM e Chainalysis come autore dell'attacco a Binance e dall'FBI come responsabile dell'hack di Bybit del 2025. È spesso ricondotto all'ecosistema Lazarus Group.
 
 ### Come hanno hackerato Binance?
 
@@ -184,6 +210,10 @@ All'inizio le notizie parlavano di depositi e prelievi sospesi. Nell'aggiornamen
 ### Binance rimborserà gli utenti?
 
 Binance ha dichiarato che nessun utente subirà perdite: copertura tramite fondo SAFU e fondi aziendali, con circa l'80% degli asset rubati già sostituito.
+
+### Quando riaprono i prelievi su Binance?
+
+Binance ha detto che il ripristino sarà graduale e subordinato ai controlli di sicurezza. Le stime riportate dai media indicano il periodo tra il 31 ottobre e il 1° novembre (Bloomberg cita la co-fondatrice Yi He, che parlava di domenica), ma non è una data garantita: controlla gli annunci ufficiali di Binance.
 
 ### Binance rischia il fallimento dopo essere stata hackerata?
 
@@ -227,73 +257,73 @@ C'è un'implicazione che spesso sfugge, e che qui indichiamo come analisi nostra
 
 Il controllo è una chiamata RPC `eth_getCode`. Un wallet normale restituisce `0x`; un wallet delegato restituisce `0xef0100` seguito dall'indirizzo del contratto. L'esempio usa l'indirizzo che gli explorer etichettano come Binance 14 (verifica l'etichetta su Etherscan prima di citarlo):
 
-````bash
+```bash
 # Check whether an Ethereum address has an EIP-7702 delegation set
 # "result":"0x"                          -> plain wallet, no delegation
 # "result":"0xef0100<20-byte address>"   -> wallet delegates to that contract
 curl -s -X POST https://ethereum-rpc.publicnode.com \
   -H 'Content-Type: application/json' \
-    --data '{"jsonrpc":"2.0","id":1,"method":"eth_getCode","params":["0x28C6c06298d514Db089934071355E5743bf21d60","latest"]}'
-    ```
+  --data '{"jsonrpc":"2.0","id":1,"method":"eth_getCode","params":["0x28C6c06298d514Db089934071355E5743bf21d60","latest"]}'
+```
 
-    Due avvertenze. Primo: con `latest` vedi lo **stato attuale**, non quello dell'attacco. Binance dice di aver revocato le autorizzazioni, quindi un risultato `0x` oggi non dimostra che il wallet non fosse delegato il 29 ottobre. Per vedere lo stato di allora serve il numero di blocco della transazione di delega e un nodo archive. Secondo: un RPC pubblico va bene per studiare, non per un allarme di produzione.
+Due avvertenze. Primo: con `latest` vedi lo **stato attuale**, non quello dell'attacco. Binance dice di aver revocato le autorizzazioni, quindi un risultato `0x` oggi non dimostra che il wallet non fosse delegato il 29 ottobre. Per vedere lo stato di allora serve il numero di blocco della transazione di delega e un nodo archive. Secondo: un RPC pubblico va bene per studiare, non per un allarme di produzione.
 
-    ### Un monitor minimale per i wallet di tesoreria
+### Un monitor minimale per i wallet di tesoreria
 
-    Questo script controlla ogni 12 secondi un indirizzo e avvisa se compare una delega. Richiede `curl` e `jq`:
+Questo script controlla ogni 12 secondi un indirizzo e avvisa se compare una delega. Richiede `curl` e `jq`:
 
-    ```bash
-    #!/usr/bin/env bash
-    # Poll an Ethereum address every 12 seconds and alert if it becomes delegated (EIP-7702)
-    RPC="https://ethereum-rpc.publicnode.com"
-    WATCHED="0x28C6c06298d514Db089934071355E5743bf21d60"
+```bash
+#!/usr/bin/env bash
+# Poll an Ethereum address every 12 seconds and alert if it becomes delegated (EIP-7702)
+RPC="https://ethereum-rpc.publicnode.com"
+WATCHED="0x28C6c06298d514Db089934071355E5743bf21d60"
 
-    while true; do
-      code=$(curl -s -X POST "$RPC" -H 'Content-Type: application/json' \
-          --data "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getCode\",\"params\":[\"$WATCHED\",\"latest\"]}" | jq -r .result)
-            case "$code" in
-                0xef0100*) echo "$(date -u +%FT%TZ) ALERT: $WATCHED delegates to 0x${code:8:40}" ;;
-                    0x)        echo "$(date -u +%FT%TZ) ok: no delegation" ;;
-                        *)         echo "$(date -u +%FT%TZ) unexpected response: ${code:0:20}" ;;
-                          esac
-                            sleep 12
-                            done
-                            ```
+while true; do
+  code=$(curl -s -X POST "$RPC" -H 'Content-Type: application/json' \
+    --data "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getCode\",\"params\":[\"$WATCHED\",\"latest\"]}" | jq -r .result)
+  case "$code" in
+    0xef0100*) echo "$(date -u +%FT%TZ) ALERT: $WATCHED delegates to 0x${code:8:40}" ;;
+    0x)        echo "$(date -u +%FT%TZ) ok: no delegation" ;;
+    *)         echo "$(date -u +%FT%TZ) unexpected response: ${code:0:20}" ;;
+  esac
+  sleep 12
+done
+```
 
-                            In produzione la stessa logica va fatta su un nodo proprio e va affiancata a un controllo sulle transazioni di tipo `0x04` che nominano i tuoi indirizzi come authority.
+In produzione la stessa logica va fatta su un nodo proprio e va affiancata a un controllo sulle transazioni di tipo `0x04` che nominano i tuoi indirizzi come authority.
 
-                            ### La superficie d'attacco lato infrastruttura
+### La superficie d'attacco lato infrastruttura
 
-                            Binance ha parlato di un laptop DevOps e di un container di servizio. Non sappiamo come sia stato compromesso il laptop, che privilegi avesse il container o quale controllo di approvazione sia stato aggirato. Sono le tre domande a cui il post-mortem deve rispondere. Intanto, su qualsiasi host che esegue container con accesso a secrets o a servizi di firma, questo comando elenca container privilegiati, rete host e mount sensibili:
+Binance ha parlato di un laptop DevOps e di un container di servizio. Non sappiamo come sia stato compromesso il laptop, che privilegi avesse il container o quale controllo di approvazione sia stato aggirato. Sono le tre domande a cui il post-mortem deve rispondere. Intanto, su qualsiasi host che esegue container con accesso a secrets o a servizi di firma, questo comando elenca container privilegiati, rete host e mount sensibili:
 
-                            ```bash
-                            # List running containers with privileged flag, network mode and mounts (look for docker.sock)
-                            docker ps -q | xargs -r docker inspect \
-                              --format '{{.Name}} privileged={{.HostConfig.Privileged}} net={{.HostConfig.NetworkMode}} mounts={{range .Mounts}}{{.Source}}:{{.Destination}} {{end}}'
-                              ```
+```bash
+# List running containers with privileged flag, network mode and mounts (look for docker.sock)
+docker ps -q | xargs -r docker inspect \
+  --format '{{.Name}} privileged={{.HostConfig.Privileged}} net={{.HostConfig.NetworkMode}} mounts={{range .Mounts}}{{.Source}}:{{.Destination}} {{end}}'
+```
 
-                              Un container con `privileged=true`, rete host o il socket `/var/run/docker.sock` montato è un ponte facile verso l'host. Se l'API Docker è esposta in rete, il rischio cresce ancora: vedi l'articolo sulla [porta 2375 e l'API Docker](https://hackita.it/articoli/porta-2375-docker-api/).
+Un container con `privileged=true`, rete host o il socket `/var/run/docker.sock` montato è un ponte facile verso l'host. Se l'API Docker è esposta in rete, il rischio cresce ancora: vedi l'articolo sulla [porta 2375 e l'API Docker](https://hackita.it/articoli/porta-2375-docker-api/).
 
-                              ### Controlli che avrebbero cambiato la dinamica
+### Controlli che avrebbero cambiato la dinamica
 
-                              | Controllo | Cosa cambia |
-                              |---|---|
-                              | Policy engine separato dal firmatario | Un attaccante che compromette il servizio non può far firmare qualsiasi richiesta: la destinazione e l'importo vengono controllati da un sistema indipendente |
-                              | Whitelist di destinazioni e limiti per transazione e per finestra di tempo | Svuotare dieci wallet in venti minuti diventa molto più difficile |
-                              | Tetto ai saldi degli hot wallet con sweep automatico verso il cold | Anche un hot wallet compromesso vale meno |
-                              | Firmatari separati per chain e per livello di wallet | Una sola compromissione non produce firme valide su dieci reti |
-                              | Rifiuto per policy delle autorizzazioni EIP-7702 sui wallet di tesoreria, o uso di wallet a smart contract con regole proprie | Chiude il percorso della delega a uno sweeper |
-                              | Monitoraggio delle deleghe e allarme con revoca già pronta | Riduce il tempo tra prima delega e svuotamento |
-                              | Workstation amministrative dedicate, nessun accesso persistente alla produzione da laptop di sviluppo | Un laptop compromesso non basta per arrivare ai sistemi di firma |
+| Controllo                                                                                                                     | Cosa cambia                                                                                                                                                   |
+| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Policy engine separato dal firmatario                                                                                         | Un attaccante che compromette il servizio non può far firmare qualsiasi richiesta: la destinazione e l'importo vengono controllati da un sistema indipendente |
+| Whitelist di destinazioni e limiti per transazione e per finestra di tempo                                                    | Svuotare dieci wallet in venti minuti diventa molto più difficile                                                                                             |
+| Tetto ai saldi degli hot wallet con sweep automatico verso il cold                                                            | Anche un hot wallet compromesso vale meno                                                                                                                     |
+| Firmatari separati per chain e per livello di wallet                                                                          | Una sola compromissione non produce firme valide su dieci reti                                                                                                |
+| Rifiuto per policy delle autorizzazioni EIP-7702 sui wallet di tesoreria, o uso di wallet a smart contract con regole proprie | Chiude il percorso della delega a uno sweeper                                                                                                                 |
+| Monitoraggio delle deleghe e allarme con revoca già pronta                                                                    | Riduce il tempo tra prima delega e svuotamento                                                                                                                |
+| Workstation amministrative dedicate, nessun accesso persistente alla produzione da laptop di sviluppo                         | Un laptop compromesso non basta per arrivare ai sistemi di firma                                                                                              |
 
-                              ### Cosa deve chiarire il post-mortem
+### Cosa deve chiarire il post-mortem
 
-                              - Come è stato compromesso il laptop, e se il vettore è stato malware, supply chain o ingegneria sociale.
-                              - Con quali privilegi girava il container e se poteva raggiungere il sistema di firma.
-                              - Quale controllo di approvazione dei prelievi è stato aggirato o non ha scattato.
-                              - Come sono state ottenute in anticipo le 50 autorizzazioni firmate.
-                              - Perché i limiti di importo e velocità non hanno fermato i prelievi in venti minuti.
+* Come è stato compromesso il laptop, e se il vettore è stato malware, supply chain o ingegneria sociale.
+* Con quali privilegi girava il container e se poteva raggiungere il sistema di firma.
+* Quale controllo di approvazione dei prelievi è stato aggirato o non ha scattato.
+* Come sono state ottenute in anticipo le 50 autorizzazioni firmate.
+* Perché i limiti di importo e velocità non hanno fermato i prelievi in venti minuti.
 
-                              Fonti: [TRM Labs](https://www.trmlabs.com/resources/blog/north-korea-steals-usd-6-36-billion-from-binance-in-the-largest-hack-in-history), [CNBC](https://www.cnbc.com/2026/10/30/billions-in-crypto-frozen-in-binance-hack-heres-what-happens-next-.html), [CyberInsider](https://cyberinsider.com/binance-security-incident-6-3-billion/), [Bloomingbit](https://en.bloomingbit.io/feed/news/123338) e le specifiche [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702).
-                              
-````
+Fonti: [TRM Labs](https://www.trmlabs.com/resources/blog/north-korea-steals-usd-6-36-billion-from-binance-in-the-largest-hack-in-history), [CNBC](https://www.cnbc.com/2026/10/30/billions-in-crypto-frozen-in-binance-hack-heres-what-happens-next-.html), [CyberInsider](https://cyberinsider.com/binance-security-incident-6-3-billion/), [Bloomingbit](https://en.bloomingbit.io/feed/news/123338) e le specifiche [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702).
+
+**Autore:** Canio Campaniello, fondatore di HackITA.it, il primo blog italiano dedicato esclusivamente all'offensive security (oltre 500 articoli). Lavora su Active Directory, web application security ed exploit development, ha esperienza di bug bounty e di laboratori di attacco, e sta seguendo il percorso OSCE3. [Profilo LinkedIn](https://www.linkedin.com/in/canio-campaniello-525152407).

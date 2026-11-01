@@ -1,8 +1,8 @@
 ---
-title: 'NetExec (NXC): Guida Completa al Successore di CrackMapExec'
+title: 'NetExec (NXC): Tool e Comandi per Pentest Windows e AD'
 slug: netexec
-description: 'Guida operativa completa a NetExec (nxc): SMB, LDAP, WinRM, RDP, moduli avanzati, credential dumping, vulnerability scan e lateral movement in Active Directory'
-image: /Gemini_Generated_Image_jxrwbzjxrwbzjxrw.webp
+description: 'NetExec (NXC) è il tool per pentest Windows e Active Directory: installazione, moduli e comandi per SMB, LDAP, RDP, MSSQL, WinRM, SSH e FTP, successore di CME.'
+image: /netexec-nxc-network-enumeration-pentest-tool.webp
 draft: false
 date: 2026-01-24T00:00:00.000Z
 categories:
@@ -10,12 +10,16 @@ categories:
 subcategories:
   - recon
 tags:
-  - netexec
-  - nxc
+  - NetExec
+  - NXC
+  - CrackMapExec
+  - Active Directory
+  - SMB Enumeration
+  - LDAP Enumeration
 featured: false
 ---
 
-# NetExec (NXC): Pentest e Payload per Active Directory, SMB e LDAP
+# NetExec (NXC): Pentest e Payload per Active Directory
 
 NetExec (nxc) è il successore diretto di CrackMapExec — nato nel 2023 dopo l'abbandono del progetto originale. Stessa filosofia, codebase migliorata, moduli estesi, manutenzione attiva. Se usi ancora `crackmapexec` stai usando uno strumento fermo al 2021.
 

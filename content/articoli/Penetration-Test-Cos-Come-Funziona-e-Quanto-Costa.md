@@ -1,9 +1,12 @@
 ---
 title: 'Penetration Test: Cos''è, Come Funziona e Quanto Costa'
 slug: penetration-test
-description: 'Penetration Test: tipologie di pentest, le fasi operative e cosa contiene il report. Ecco quando serve e le differenze con vulnerability assessment e red team.'
+description: >-
+  Penetration Test: tipologie di pentest, le fasi operative e cosa contiene il
+  report. Ecco quando serve e le differenze con vulnerability assessment e red
+  team.
 image: /penetration-test-guida-tipologie-fasi-metodologia.webp
-draft: true
+draft: false
 date: 2026-11-01T01:10:01.204Z
 lastmod: 2026-11-01T01:10:03.912Z
 categories:

@@ -1,9 +1,12 @@
 ---
 title: 'Ligolo-ng: tunneling e pivoting senza proxychains su Kali'
 slug: ligolo-ng
-description: 'Ligolo-ng è il tool di tunneling e pivoting con interfaccia TUN: uso, installazione, proxy e agent, double pivot, Magic IP e come rilevarlo. Guida per pentest.'
+description: >-
+  Ligolo-ng è il tool di tunneling e pivoting con interfaccia TUN: uso,
+  installazione, proxy e agent, double pivot, Magic IP e come rilevarlo. Guida
+  per pentest.
 image: /ligolo-ng-tunneling-pivoting-tool.webp
-draft: true
+draft: false
 date: 2026-11-02T15:35:59.881Z
 categories:
   - tools

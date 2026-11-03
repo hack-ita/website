@@ -1,7 +1,7 @@
 ---
-title: 'Shodan: Guida a Dork, Query e Filtri Avanzati (2026)'
+title: 'Shodan: Cos’È e Come Si Usa, filtri, API Python e OSINT'
 slug: shodan
-description: 'Shodan: dork pratici per MongoDB, IoT, ICS e CVE, filtri avanzati, CLI, API, InternetDB e cheat sheet completo per reconnaissance passiva e pentest (2026).'
+description: 'Shodan Search per IP e servizi esposti, Shodan OSINT, Shodan Camera e Shodan API Python: filtri, query, dorks ed esempi per analizzare dispositivi connessi.'
 image: /shodan-search-engine-guide.webp
 draft: false
 date: 2026-02-25T00:00:00.000Z
@@ -10,753 +10,518 @@ categories:
 subcategories:
   - servizi
 tags:
-  - osint
+  - Shodan
+  - OSINT
+  - Cybersecurity
+  - Network Reconnaissance
+  - Internet of Things (IoT)
 ---
 
-# Shodan: guida al motore di ricerca per dispositivi e servizi esposti online
+# Shodan: guida completa a ricerca, filtri, API Python, OSINT e difesa
 
-## Cos'è Shodan
+Shodan è il motore di ricerca dei dispositivi collegati a Internet: server, router, telecamere, stampanti, database, impianti industriali. Google cerca pagine web, Shodan cerca **servizi esposti**. Per questo viene chiamato il motore di ricerca per hacker, ma lo usano ogni giorno anche i team di sicurezza per sapere cosa è visibile della propria azienda.
 
-Shodan è il motore di ricerca che indicizza dispositivi e servizi esposti su Internet, non pagine web. Scansiona continuamente l'intero spazio IPv4 pubblico (4.3 miliardi di indirizzi) raccogliendo banner, certificati, metadata e servizi esposti: porte [TCP](/articoli/tcp/)/[UDP](/articoli/udp/) aperte come webcam, router, server MongoDB, sistemi SCADA industriali, database senza autenticazione, pannelli di amministrazione esposti.
-
-Il database contiene snapshot storici: vedi non solo lo stato attuale di un dispositivo, ma anche quando è apparso online e quali vulnerabilità sono state patchate (o ignorate). Utile per threat intelligence, attack surface monitoring, ricerca honeypot.
-
-A differenza di scan attivi (nmap), Shodan è completamente passivo dal tuo punto di vista: interroghi un database già popolato, non tocchi il target. Per reconnaissance stealth, non ha eguali.
-
-Shodan si colloca nella kill chain in **Passive Reconnaissance**, prima dell'active scanning, quando vuoi intelligence senza contatto diretto col target.
+Questo tutorial su Shodan spiega cos'è Shodan e come funziona, come usare Shodan (registrazione, versione gratuita, filtri e query), la ricerca per IP, l'OSINT con Shodan, la ricerca di telecamere IP e dispositivi IoT (Internet of Things) dal punto di vista della difesa, la Shodan API con la API key e Python, la CLI, il confronto con Censys e ZoomEye, e come proteggere i tuoi sistemi.
 
 ***
 
-**Quando usarlo:** asset discovery esterno, ricerca CVE a scala internet, attack surface monitoring, reconnaissance passiva pre-engagement.
+## Cos'è Shodan e come funziona
 
-**Quando NON usarlo:** hai bisogno di dati in tempo reale (Shodan aggiorna ogni \~28-30 giorni, usa nmap), o serve deep analysis su certificati TLS (meglio Censys).
+Shodan (shodan.io) scansiona tutto lo spazio IPv4 e le porte più comuni, si collega ai servizi che trova e salva la loro risposta. Questa risposta si chiama `banner`. Il significato di `banner` è: il testo che un servizio manda quando ti connetti (nome del software, versione, intestazioni).
 
-### Come funziona la scansione
+Un risultato di Shodan contiene di solito:
 
-Shodan usa crawler distribuiti che scansionano in modo continuo circa 1.500 porte su tutto lo spazio IPv4. Per ogni porta aperta, il crawler invia una richiesta minima al servizio (banner grabbing) e salva la risposta grezza: è quello il "banner". Non naviga siti, non segue link — si limita a bussare a ogni porta e registrare cosa risponde.
+| Campo                    | Cosa dice                                         |
+| ------------------------ | ------------------------------------------------- |
+| IP e porta               | Dove risponde il servizio                         |
+| `banner`                 | La risposta grezza del servizio                   |
+| Prodotto e versione      | Per esempio `nginx 1.18.0` o `OpenSSH 8.9`        |
+| Organizzazione, ASN, ISP | Chi possiede quell'IP                             |
+| Paese e città            | Posizione stimata                                 |
+| Hostname e dominio       | Nomi DNS associati                                |
+| Certificato TLS          | Soggetto, emittente, scadenza                     |
+| Vulnerabilità (`vuln`)   | CVE associati alla versione trovata               |
+| Data                     | Quando Shodan ha visto il servizio l'ultima volta |
 
-Protocolli coperti: HTTP/HTTPS, FTP, SSH, Telnet, SNMP, SMTP, IMAP, RTSP, Modbus, S7comm, e decine di altri, inclusi i principali protocolli industriali (ICS/SCADA).
+Shodan è un motore di ricerca di cyber security perché risponde a una domanda semplice: "cosa vede un attaccante di me da Internet, senza toccarmi?". Cercare su Shodan non invia nessun pacchetto al bersaglio: leggi dati che Shodan ha già raccolto.
 
-I dati raccolti vengono poi indicizzati e resi ricercabili tramite i filtri. Il ciclo di scansione completo dell'intero IPv4 richiede circa 28-30 giorni, ma le porte più popolari (80, 443, 22) vengono ripassate più di frequente.
-
-### Anatomia di un risultato Shodan
-
-Ogni host restituito porta con sé diversi campi utili da saper leggere:
-
-| **Campo**             | **Cosa contiene**                                                          |
-| --------------------- | -------------------------------------------------------------------------- |
-| `ip_str`              | Indirizzo IP pubblico                                                      |
-| `port`                | Porta aperta trovata                                                       |
-| `hostnames`           | Hostname associati via reverse DNS                                         |
-| `org` / `isp`         | Proprietario del blocco IP / ISP                                           |
-| `asn`                 | Numero di sistema autonomo                                                 |
-| `location`            | Country/city/coordinate (approssimati, da IP geolocation)                  |
-| `data`                | Il banner grezzo restituito dal servizio                                   |
-| `product` / `version` | Software e versione rilevati (quando disponibili)                          |
-| `vulns`               | CVE associate (verified = confermata, unverified = dedotta dalla versione) |
-| `tags`                | Etichette Shodan (es. `honeypot`, `cloud`, `iot`)                          |
-| `ssl`                 | Dettagli certificato, se il servizio usa TLS                               |
-| `timestamp`           | Quando è stato osservato l'ultima volta                                    |
-
-**Nota sulle `vulns`:** una vulnerabilità "unverified" è dedotta solo dalla versione del software — può generare falsi positivi (es. distro enterprise con patch backportate ma stesso numero di versione). Va sempre verificata.
+**Attenzione alla data.** Un risultato può essere vecchio di giorni o settimane. Se Shodan dice che una porta è aperta, verifica sempre con una scansione tua (su sistemi tuoi o autorizzati) prima di scriverlo in un report.
 
 ***
 
-## Setup e Accesso
+## Shodan.io: account, versione gratuita e piani
 
-### Piani e prezzi (verificati 2026)
+Ti serve un account su shodan.io. Con l'account gratuito puoi cercare e usare l'API, ma con limiti: la ricerca con filtri e le pagine oltre la prima consumano i query credits, che si rinnovano ogni mese. Il significato di `query credits` è: i crediti che si consumano a ogni ricerca con filtri o a ogni pagina di risultati oltre la prima.
 
+| Piano                                                                | Per chi                     | Note                                                                         |
+| -------------------------------------------------------------------- | --------------------------- | ---------------------------------------------------------------------------- |
+| Gratuito                                                             | Prime prove                 | Pochi risultati, funzioni limitate, API con limite di 1 richiesta al secondo |
+| Membership (pagamento unico, circa 49 dollari quando ho controllato) | Studenti, pentester singoli | 100 query credits e 100 scan credits al mese, 16 IP monitorati               |
+| Freelancer, Small Business, Corporate                                | Team e aziende              | Più crediti, più IP monitorati, più filtri                                   |
+| Enterprise                                                           | Grandi aziende              | Dati in blocco e firehose                                                    |
+
+I prezzi cambiano: controllali sulla pagina ufficiale dei piani. Con una email universitaria Shodan offre un upgrade accademico gratuito. Alcuni filtri, come `vuln` e `tag`, dipendono dal piano: se una ricerca non restituisce nulla, il piano può essere il motivo e la sintassi può essere giusta.
+
+***
+
+## Come usare Shodan: la ricerca di base
+
+La sintassi è semplice:
+
+* Una parola da sola cerca nel `banner`. `Moxa Nport` trova i dispositivi Moxa Nport.
+* Un filtro ha la forma `filtro:valore`, **senza spazi** dopo i due punti.
+* Un valore con spazi va tra virgolette: `org:"Acme Corporation"`.
+* Più filtri si combinano separandoli con uno spazio: sono tutti in AND.
+* Il meno davanti a un filtro lo esclude: `-country:US`.
+
+Un primo esempio sul tuo mondo: il database MongoDB esposto in Italia.
+
+```text
+product:MongoDB country:IT
 ```
-FREE: query limitate, nessun filtro avanzato, max 100 risultati/query
-MEMBERSHIP: $49 one-time (lifetime) — sblocca filtri, CLI, 100 query credit/mese
-SMALL BUSINESS: da $359/mese — query credit alti, filtro "vuln"
-CORPORATE: pricing custom — filtro "tag", monitoraggio esteso
-```
 
-**Nota:** il prezzo Membership cambia periodicamente (promo a $5-9 ricorrono ogni anno, tienile d'occhio). Verifica sempre su [account.shodan.io/billing](https://account.shodan.io/billing) prima di comprare.
-
-### Shodan CLI installation
+Per vedere solo quanti sono, senza aprire i risultati, usa il conteggio (lo stesso numero lo trovi in alto nella pagina dei risultati):
 
 ```bash
+shodan count product:MongoDB country:IT
+```
+
+Una buona abitudine è partire sempre da un conteggio e restringere la ricerca finché il numero è gestibile.
+
+***
+
+## Shodan Search: filtri, dorks e query avanzate
+
+Questi sono i filtri che usi di continuo. Gli esempi sono la base di qualunque query Shodan e dei cosiddetti `dork`. Il significato di `dork` è: una ricerca costruita con filtri precisi per trovare un tipo specifico di sistema.
+
+| Filtro                 | Esempio                            | Cosa trova                                        |
+| ---------------------- | ---------------------------------- | ------------------------------------------------- |
+| `port:`                | `port:3389`                        | Servizi su una porta                              |
+| `net:`                 | `net:203.0.113.0/24`               | Tutto ciò che sta in un blocco di IP              |
+| `hostname:`            | `hostname:acme.example`            | Host con quel nome                                |
+| `org:`                 | `org:"Acme Corporation"`           | IP di un'organizzazione                           |
+| `asn:`                 | `asn:AS15169`                      | Un sistema autonomo                               |
+| `country:`             | `country:IT`                       | Paese (codice a due lettere)                      |
+| `city:`                | `city:Napoli`                      | Città                                             |
+| `product:`             | `product:nginx`                    | Software riconosciuto                             |
+| `version:`             | `product:nginx version:1.18.0`     | Versione precisa                                  |
+| `os:`                  | `os:"Windows Server 2012"`         | Sistema operativo stimato                         |
+| `http.title:`          | `http.title:"Index of /"`          | Titolo della pagina web                           |
+| `http.html:`           | `http.html:"admin login"`          | Testo nel corpo della pagina                      |
+| `http.favicon.hash:`   | `http.favicon.hash:-1234567890`    | Tutti i siti con la stessa icona                  |
+| `http.component:`      | `http.component:wordpress`         | Tecnologia web rilevata                           |
+| `ssl:`                 | `ssl:acme.example`                 | Testo nel certificato TLS                         |
+| `ssl.cert.subject.cn:` | `ssl.cert.subject.cn:acme.example` | Nome comune del certificato                       |
+| `has_ssl:`             | `has_ssl:true`                     | Solo servizi con TLS                              |
+| `has_screenshot:`      | `has_screenshot:true`              | Shodan ha catturato un'immagine                   |
+| `vuln:`                | `vuln:CVE-2021-44228`              | Host associati a un CVE (dipende dal piano)       |
+| `tag:`                 | `tag:ics`                          | Categoria assegnata da Shodan (dipende dal piano) |
+| `before:` / `after:`   | `after:01/10/2026`                 | Filtra per data della scansione                   |
+
+Il valore dell'hash della favicon (`http.favicon.hash`) è un numero che si calcola dall'icona del sito. Serve a trovare tutti i server che usano lo stesso pannello, anche con IP e domini diversi. Per questo è molto usato nella ricerca di infrastruttura.
+
+### Query Shodan per porta e servizio
+
+Servizi spesso lasciati esposti per errore. Per ogni riga, il numero ti dice quanto è diffusa l'esposizione:
+
+| Cosa cerchi                           | Query                                          |
+| ------------------------------------- | ---------------------------------------------- |
+| RDP esposto in un blocco di IP        | `port:3389 net:203.0.113.0/24`                 |
+| SSH su una porta insolita             | `product:OpenSSH -port:22`                     |
+| Database MongoDB senza autenticazione | `product:MongoDB "mongodb server information"` |
+| Elasticsearch aperto                  | `product:Elasticsearch port:9200`              |
+| Directory listing                     | `http.title:"Index of /"`                      |
+| Pannelli di login                     | `http.title:"login"`                           |
+| Server con una versione vecchia       | `product:Apache version:2.4.49`                |
+| Protocolli industriali                | `port:502` (Modbus)                            |
+
+Le stesse ricerche, in versione approfondita, le trovi negli articoli su [RDP](https://hackita.it/articoli/porta-3389-rdp/), [MongoDB](https://hackita.it/articoli/porta-27017-mongodb/) ed [Elasticsearch](https://hackita.it/articoli/porta-9200-elasticsearch/).
+
+### Shodan query examples: filtri combinati, esclusioni e CIDR
+
+Esempi pratici di Shodan search, da usare sul tuo perimetro o su sistemi autorizzati. Mostrano come si combinano i filtri.
+
+| Obiettivo                                    | Query                                    |
+| -------------------------------------------- | ---------------------------------------- |
+| Tutti i servizi di un blocco di IP           | `net:203.0.113.0/24`                     |
+| Solo i web server del blocco, esclusa la 443 | `net:203.0.113.0/24 port:80 -port:443`   |
+| Un'organizzazione, escluso un paese          | `org:"Acme Corporation" -country:US`     |
+| Un prodotto in una città                     | `product:nginx city:Napoli`              |
+| Una versione precisa di un software          | `product:Apache version:2.4.49`          |
+| Siti con la stessa icona                     | `http.favicon.hash:-1234567890`          |
+| Pannelli con un certo titolo, solo con TLS   | `http.title:"dashboard" has_ssl:true`    |
+| Servizi scansionati dopo una data            | `net:203.0.113.0/24 after:01/10/2026`    |
+| Host con un CVE (dipende dal piano)          | `net:203.0.113.0/24 vuln:CVE-2021-44228` |
+| Un hostname e i suoi sottodomini             | `hostname:acme.example`                  |
+
+Le regole da ricordare: i filtri si uniscono con lo spazio (AND), il meno esclude, le virgolette servono ai valori con spazi e il CIDR (`/24`) restringe la ricerca a un blocco di IP. Parti da un `shodan count`, poi aggiungi filtri finché il numero è gestibile.
+
+### Shodan IP Search: come cercare un indirizzo IP
+
+Per la ricerca per IP (Shodan search IP, ricerca di un indirizzo) hai tre modi:
+
+```bash
+# Everything Shodan knows about one IP
+shodan host 203.0.113.10
+
+# Same, with the history of past scans
+shodan host --history 203.0.113.10
+```
+
+La ricerca per IP si chiama anche host lookup. Nel sito basta incollare l'IP nella barra di ricerca, oppure aprire `https://www.shodan.io/host/8.8.8.8`. Per un'intera rete usi `net:`; per un dominio, `hostname:` o il comando `shodan domain`.
+
+### Shodan InternetDB: ricerca IP gratuita senza API key
+
+InternetDB è un servizio gratuito di Shodan che restituisce, per un IP, un riassunto: porte aperte, hostname, tag, CPE (software riconosciuto) e CVE associati. Non serve account né API key. Non ha il `banner` completo, ma per un controllo rapido su molti IP è comodo.
+
+```bash
+curl -s https://internetdb.shodan.io/8.8.8.8
+```
+
+Per controllare una lista di tuoi IP da script:
+
+```python
+import time
+import requests
+
+for ip in ["8.8.8.8", "1.1.1.1"]:
+    data = requests.get(f"https://internetdb.shodan.io/{ip}", timeout=10).json()
+    print(ip, "ports:", data.get("ports", []), "vulns:", data.get("vulns", []))
+    time.sleep(1)
+```
+
+***
+
+## Shodan OSINT e reconnaissance
+
+Nell'OSINT con Shodan l'obiettivo è la mappa dell'esposizione di un'organizzazione senza mandare un solo pacchetto. È la fase di reconnaissance e footprinting di un pentest.
+
+Il percorso tipico, passo dopo passo:
+
+1. **Trovi i blocchi di IP** dell'azienda (WHOIS, ASN, `org:`).
+2. **Elenchi i servizi esposti** con `net:` o `org:`.
+3. **Guardi le statistiche** per paese, porta e prodotto.
+4. **Cerchi versioni vulnerabili** con `product:`, `version:` e `vuln:`.
+5. **Verifichi** i candidati con una scansione tua, solo se autorizzato.
+
+Le statistiche si chiamano `facets`. Il significato di `facets` è: il riepilogo dei risultati raggruppato per un campo (porta, paese, prodotto).
+
+```bash
+shodan stats --facets port,country,product net:203.0.113.0/24
+```
+
+Comandi per lavorare sui domini e sul perimetro:
+
+```bash
+# DNS records and subdomains known to Shodan
+shodan domain example.com
+
+# Same, plus host details for every IP found
+shodan domain --details example.com
+
+# Honeypot likelihood of an IP (0.0 to 1.0)
+shodan honeyscore 203.0.113.10
+```
+
+Shodan non sostituisce gli strumenti di enumerazione: li affianca. Per i sottodomini e la mappa esterna ci sono [Amass](https://hackita.it/articoli/amass/), [Nmap](https://hackita.it/articoli/nmap/) per la verifica attiva e [Nuclei](https://hackita.it/articoli/nuclei/) per controllare le vulnerabilità sui candidati trovati. L'ordine corretto è sempre: Shodan per scoprire, Nmap per confermare, Nuclei o test manuali per verificare.
+
+***
+
+## Shodan Camera Search: ricerca di telecamere IP e webcam
+
+Le ricerche "Shodan camera", "IP camera" e "webcam search" sono tra le più cercate, perché le telecamere sono tra i dispositivi più esposti. Una telecamera su Internet con password di fabbrica o senza password mostra le immagini a chiunque.
+
+Quello che devi sapere:
+
+* Le telecamere vengono trovate dal `banner` (modello, produttore, protocollo come RTSP, porta 554) e a volte da uno screenshot catturato da Shodan.
+* Guardare un flusso video o provare le password di una telecamera che non è tua è accesso abusivo a un sistema informatico. Il fatto che sia "aperta" non lo rende lecito.
+* Per te la ricerca serve a controllare **le tue** telecamere.
+
+Controllo delle tue telecamere e degli apparati sul tuo perimetro:
+
+```bash
+# How many RTSP services are visible in your IP range
+shodan count port:554 net:203.0.113.0/24
+
+# List them with IP, port and product
+shodan search --fields ip_str,port,product port:554 net:203.0.113.0/24
+
+# Visible web interfaces with a screenshot in your range
+shodan count has_screenshot:true net:203.0.113.0/24
+```
+
+Se il conteggio non è zero, ogni risultato è una telecamera o un registratore da mettere dietro VPN o firewall. Il protocollo RTSP si approfondisce in [porta 554 RTSP](https://hackita.it/articoli/porta-554-rtsp/).
+
+Anche per altri dispositivi IoT e impianti industriali il principio è lo stesso: la ricerca serve a misurare l'esposizione, non ad entrare.
+
+***
+
+## Shodan API: API key, CLI e Python
+
+La Shodan API ti permette di fare le stesse ricerche da uno script. Ogni account ha una API key, che trovi in "My Account" su shodan.io. Per ottenere la API key serve solo registrarsi. La API key è personale: non pubblicarla mai su GitHub.
+
+**Installazione della CLI e della libreria Python:**
+
+```bash
+python3 -m venv shodan-env
+source shodan-env/bin/activate
 pip install shodan
-
-# Initialize con API key
-shodan init YOUR_API_KEY
-
-# Verify
+shodan init "$SHODAN_API_KEY"
 shodan info
 ```
 
-**Output:**
+`shodan init` salva la chiave. `shodan info` mostra i crediti rimasti.
 
-```
-Query credits available: 100
-Scan credits available: 100
-API key: *********************ABC123
-```
+**Comandi della CLI:**
 
-### API key location
+| Comando                                          | Cosa fa                                  |
+| ------------------------------------------------ | ---------------------------------------- |
+| `shodan search "query"`                          | Cerca e stampa i risultati               |
+| `shodan search --fields ip_str,port,org "query"` | Stampa solo i campi scelti               |
+| `shodan count "query"`                           | Conta i risultati                        |
+| `shodan stats --facets port,country "query"`     | Statistiche per campo                    |
+| `shodan host IP`                                 | Informazioni su un IP                    |
+| `shodan download file "query"`                   | Scarica i risultati in un file compresso |
+| `shodan parse --fields ip_str,port file.json.gz` | Legge un file scaricato                  |
+| `shodan convert file.json.gz csv`                | Converte in CSV                          |
+| `shodan domain example.com`                      | DNS e sottodomini                        |
+| `shodan myip`                                    | Il tuo IP pubblico                       |
+| `shodan honeyscore IP`                           | Probabilità di honeypot                  |
+| `shodan alert create nome rete`                  | Crea un avviso su una rete               |
+| `shodan scan submit IP`                          | Chiede a Shodan di scansionare (attivo)  |
+| `shodan trends`                                  | Dati storici                             |
 
-```
-Web → Account → API Key
-```
+Il `parse` lavora in locale sul file scaricato e non consuma crediti. Questo flusso è il più comodo: scarichi una volta, poi filtri quante volte vuoi.
 
 ```bash
-export SHODAN_API_KEY="abc123..."
+shodan download acme-exposure product:nginx net:203.0.113.0/24
+shodan parse --fields ip_str,port,org acme-exposure.json.gz
+shodan parse --fields ip_str,port -f port:443 acme-exposure.json.gz
+shodan convert acme-exposure.json.gz csv
 ```
 
+### Shodan API Python: esempi pratici di ricerca
+
+La chiave la leggi da una variabile d'ambiente (`export SHODAN_API_KEY=...`), non la scrivi nel codice.
+
 ```python
+import os
 import shodan
-api = shodan.Shodan("abc123...")
+
+api = shodan.Shodan(os.environ["SHODAN_API_KEY"])
+
+try:
+    # Search with a filter: nginx servers in a network block
+    results = api.search("product:nginx net:203.0.113.0/24")
+    print("Total results:", results["total"])
+
+    for match in results["matches"]:
+        print(match["ip_str"], match["port"], match.get("org", "-"))
+
+except shodan.APIError as error:
+    print("Shodan error:", error)
 ```
 
-***
-
-## Query di base
-
-### Esempio: database MongoDB esposti
-
-```
-Search: "MongoDB Server Information" port:27017 -authentication
-```
-
-```
-Total results: 47,832
-
-IP: 203.0.113.50
-Port: 27017
-Organization: Amazon AWS
-Location: United States, Virginia
-Banner:
-  MongoDB Server Information
-  Version: 4.2.8
-  databases: ["admin", "production_db", "user_data"]
-
-[No authentication required]
-```
-
-🎓 **Nota:** decine di migliaia di MongoDB senza autenticazione. Cliccando sull'IP vedi dettagli completi e storico.
-
-### Filtri principali
-
-| **Filtro**  | **Esempio**            | **Risultato**            |
-| ----------- | ---------------------- | ------------------------ |
-| `port:`     | `port:22`              | Server SSH               |
-| `country:`  | `country:IT`           | Dispositivi in Italia    |
-| `city:`     | `city:Milan`           | Localizzati a Milano     |
-| `org:`      | `org:"Google"`         | IP di proprietà Google   |
-| `hostname:` | `hostname:example.com` | Dominio specifico        |
-| `product:`  | `product:Apache`       | Server web Apache        |
-| `version:`  | `version:2.4.41`       | Versione specifica       |
-| `vuln:`     | `vuln:CVE-2014-0160`   | Vulnerabile a Heartbleed |
-| `os:`       | `os:Windows`           | Sistemi Windows          |
-
-```
-apache port:443 country:US
-→ Server Apache HTTPS negli USA
-
-mongodb port:27017 -authentication city:London
-→ MongoDB senza protezione a Londra
-```
-
-### Filtri avanzati
-
-| **Filtro**                | **Esempio**                           | **Uso**                                                                              |
-| ------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
-| `after:` / `before:`      | `after:"01/01/2026"`                  | Limita per data di scansione                                                         |
-| `net:`                    | `net:192.168.1.0/24`                  | Cerca in un range/CIDR                                                               |
-| `has_vuln:`               | `has_vuln:true`                       | Solo host con almeno una CVE associata                                               |
-| `has_screenshot:`         | `has_screenshot:true`                 | Solo host con screenshot disponibile                                                 |
-| `tag:`                    | `tag:honeypot`                        | Filtra per etichetta Shodan (piano avanzato)                                         |
-| `ssl.cert.subject.cn:`    | `ssl.cert.subject.cn:"*.example.com"` | Subdomain enum via certificato SSL                                                   |
-| `http.title:`             | `http.title:"Admin Panel"`            | Cerca nel titolo della pagina HTTP                                                   |
-| `isp:`                    | `isp:"Fastweb"`                       | Filtra per ISP                                                                       |
-| `http.favicon.hash:`      | `http.favicon.hash:-247388890`        | Trova applicazioni con lo stesso favicon (fingerprint app, molto usato in web recon) |
-| `ssl.jarm:` / `ssl.ja3s:` | `ssl.jarm:"07d..."`                   | Fingerprinting TLS del server (identifica configurazioni/tool identici)              |
-| `http.waf:`               | `http.waf:cloudflare`                 | Filtra per WAF rilevato (cloudflare, akamai, f5...)                                  |
-| `http.component:`         | `http.component:wordpress`            | Filtra per tecnologia/CMS rilevata (wordpress, jquery, php...)                       |
-
-### Faceting — vedere il quadro d'insieme
-
-Prima di scendere nei singoli host, i facet aggregano i risultati e mostrano i pattern (porte più comuni, paesi, prodotti). Utile per non perdersi tra migliaia di risultati:
-
-```bash
-shodan stats --facets country apache
-```
-
-```
-Top 10 Results for Facet: country
-US    8,336,729
-DE    4,512,172
-CN    1,470,434
-```
-
-```bash
-shodan stats --facets ssl.version net:78.13.0.0/16
-```
-
-Mostra la distribuzione delle versioni SSL/TLS in quel range — utile per individuare protocolli obsoleti (SSLv2/v3) da bonificare.
-
-**Approccio consigliato:** prima `shodan count` per stimare la scala, poi `shodan stats --facets` per vedere i pattern, infine query mirata per i singoli host.
-
-### Shodan CLI search
-
-```bash
-shodan search "apache country:IT"
-```
-
-```
-203.0.113.10    Apache httpd 2.4.41    Italy
-203.0.113.20    Apache httpd 2.4.38    Italy
-203.0.113.30    Apache httpd 2.2.22    Italy [OBSOLETO!]
-```
-
-***
-
-## GEO: leggere paese, città, ASN e cluster geografici
-
-`country` e `city` filtrano per posizione dichiarata dal geolocation IP, che si basa su registrazione RIR — non sempre coincide con l'ubicazione fisica reale (specialmente per cloud provider).
-
-`org` filtra per proprietario dell'IP block (es. "Amazon", "Fastweb") — utile ma un'azienda può avere infrastruttura sparsa su più org (CDN, cloud terzi). Quando `org` non basta, usa `asn:` per il numero di sistema autonomo esatto:
-
-```
-asn:AS16509
-→ Tutti gli host nel blocco Amazon (ASN preciso)
-```
-
-**Mappare esposizioni in Italia:**
-
-```
-country:IT port:502
-→ Dispositivi Modbus (industriali) esposti in Italia
-```
-
-**Shodan Maps** (funzione web) mostra i risultati su mappa geografica — utile per vedere cluster industriali o cloud concentrati in una regione (es. PLC Siemens concentrati in Germania e Italia).
-
-**Quando usare cosa:**
-
-* `country`/`city` → visione macro, primo filtro
-* `org` → quando conosci il nome del cloud/hosting provider
-* `asn` → quando `org` è ambiguo o l'azienda ha multipli ASN
-
-***
-
-## Tecniche operative
-
-### Scenario 1 — Asset discovery per organizzazione
-
-**Contesto:** pentest per un cliente. Serve mappare tutti gli asset esterni.
-
-```
-org:"Example Corp"
-```
-
-```
-Total: 156 hosts
-
-IP: 203.0.113.10
-  Port 80: Apache httpd
-  Port 443: Apache httpd (SSL cert: *.example.com)
-  Port 22: OpenSSH 8.2
-
-IP: 203.0.113.20
-  Port 3306: MySQL 5.7.38
-```
-
-**Export:**
-
-```bash
-shodan search 'org:"Example Corp"' --fields ip_str,port,product --separator , > assets.csv
-```
-
-**Analisi:** 156 host trovati (il cliente dichiarava "\~50" = inventario incompleto). MySQL esposto su IP pubblico = priorità alta.
-
-### Scenario 2 — Vulnerability hunting basato su CVE
-
-```bash
-shodan search vuln:CVE-2021-44228
-```
-
-```
-Total results: 183,492 host potenzialmente vulnerabili
-
-IP: 198.51.100.10
-  Product: Apache Tomcat 9.0.50
-  Port: 8080
-  Vulnerability: CVE-2021-44228 (Log4Shell)
-  Severity: CRITICAL (CVSS 10.0)
-```
-
-Per la verifica automatica delle CVE trovate, vedi [Nuclei](/articoli/nuclei/).
-
-### Scenario 3 — Industrial Control Systems (ICS/SCADA)
-
-```
-"Siemens SIMATIC" port:102
-```
-
-```
-Total: 2,847 Siemens PLC esposti
-
-IP: 192.0.2.50
-  Product: Siemens SIMATIC S7-1200
-  Port: 102 (protocollo S7comm)
-  Location: Italy, Milan
-```
-
-**Altre query ICS:**
-
-```
-port:502          # Modbus
-port:47808         # BACnet (building automation)
-"Allen-Bradley" port:44818   # Rockwell
-scada country:US
-```
-
-***
-
-## Tecniche avanzate
-
-### Dorking
-
-```
-"Server: SQ-WEBCAM" -auth          # Webcam senza password
-product:Redis -authentication       # Redis non protetto
-port:9200 "cluster_name"            # Elasticsearch aperto
-"default password" port:80          # Credenziali default
-ssl.cert.subject.cn:"*.company.com" # Subdomain via certificato SSL
-```
-
-### Honeypot detection
+**Informazioni su un singolo host (host lookup):**
 
 ```python
+import os
 import shodan
-api = shodan.Shodan(API_KEY)
-result = api.host('target-ip')
 
-if 'tags' in result and 'honeypot' in result['tags']:
-    print("[!] Possibile honeypot")
+api = shodan.Shodan(os.environ["SHODAN_API_KEY"])
 
-honeypot_orgs = ['Censys', 'Shodan', 'ShadowServer', 'GreyNoise']
-if result.get('org') in honeypot_orgs:
-    print("[!] Organizzazione di ricerca")
+try:
+    host = api.host("8.8.8.8")
+    print("Organization:", host.get("org", "n/a"))
+    print("Open ports:", host["ports"])
+    for service in host["data"]:
+        print(service["port"], service.get("product", "unknown"))
+except shodan.APIError as error:
+    print("Shodan error:", error)
 ```
 
-### Integrazione con Metasploit
-
-```bash
-shodan search 'product:"ProFTPD" version:1.3.5' --fields ip_str > proftpd_targets.txt
-```
-
-```bash
-msfconsole
-use exploit/unix/ftp/proftpd_133c_backdoor
-set RHOSTS file:/path/to/proftpd_targets.txt
-run
-```
-
-### Monitoraggio via API
+**Scorrere tutti i risultati con il cursore** (consuma un credito ogni 100 risultati):
 
 ```python
-import shodan, time
+import os
+import shodan
 
-api = shodan.Shodan(API_KEY)
-query = 'mongodb port:27017 country:IT -authentication'
-last_count = 0
+api = shodan.Shodan(os.environ["SHODAN_API_KEY"])
 
-while True:
-    results = api.search(query)
-    current = results['total']
-    if current > last_count:
-        print(f"[!] {current - last_count} nuove esposizioni MongoDB")
-    last_count = current
-    time.sleep(3600)
+for banner in api.search_cursor("port:554 net:203.0.113.0/24"):
+    print(banner["ip_str"], banner["port"], banner.get("product", "unknown"))
 ```
 
-### Scenario 4 — Cloud asset discovery (AWS/Azure/GCP)
+**Cercare exploit pubblici per un software (Shodan exploit search)** (l'API degli exploit è separata dalla ricerca dei dispositivi):
 
-**Contesto:** il cliente usa AWS ma non sa esattamente cosa è esposto.
+```python
+import os
+import shodan
 
-```
-org:"Amazon.com" ssl.cert.subject.cn:"*.client-company.com"
-```
+api = shodan.Shodan(os.environ["SHODAN_API_KEY"])
 
-```
-IP: 18.204.55.123 (AWS us-east-1)
-  Port 443: nginx
-  SSL cert: app.client-company.com
-
-IP: 52.44.199.87 (AWS us-west-2)
-  Port 22: OpenSSH 8.2
-  Port 3000: Node.js API server
+exploits = api.exploits.search("apache 2.4.49")
+print("Exploits found:", exploits["total"])
 ```
 
-**Analisi:** Node.js su porta 3000 esposto = server di sviluppo in produzione? Deployment multi-regione (us-east + us-west).
+**Streaming API:** le API di Shodan sono tre: REST (le ricerche viste sopra), Streaming e Trends. Lo Streaming ti manda i `banner` in tempo reale mentre Shodan li raccoglie. Serve un piano che lo includa.
 
-**Azure:** `org:"Microsoft" hostname:*.azurewebsites.net`
-**GCP:** `org:"Google" hostname:*.cloud.goog`
+```python
+import os
+import shodan
 
-**Se non trovi nulla:**
+api = shodan.Shodan(os.environ["SHODAN_API_KEY"])
 
-1. Nome organizzazione diverso → prova per ASN: `asn:AS16509` (Amazon)
-2. Troppi risultati → aggiungi specificità: `org:"Amazon" city:"Virginia" product:nginx`
-3. Dati non aggiornati → Shodan aggiorna ogni \~30 giorni, valuta uno scan on-demand: `shodan scan submit <ip>`
+# Prints every new banner Shodan collects for these ports, stop with Ctrl+C
+for banner in api.stream.ports([3389, 5900]):
+    print(banner["ip_str"], banner["port"])
+```
 
-Per la parte di sfruttamento successiva alla discovery (es. metadata cloud raggiungibili), vedi [SSRF e cloud metadata](/articoli/ssrf/).
+Con l'API gratuita il limite è una richiesta al secondo: se fai cicli, metti `time.sleep(1)` tra una chiamata e l'altra.
 
 ***
 
-## Toolchain: Shodan → Nmap → Exploitation
+## Shodan nella catena di un pentest
+
+Il flusso completo, da Shodan all'exploitation, in un incarico autorizzato:
+
+| Fase          | Strumento                                                   | Cosa fai                                                                  |
+| ------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Scoperta      | Shodan, Amass                                               | Trovi IP, domini, servizi esposti                                         |
+| Conferma      | [Nmap](https://hackita.it/articoli/nmap/)                   | Verifichi che porte e versioni siano ancora quelle                        |
+| Vulnerabilità | [Nuclei](https://hackita.it/articoli/nuclei/), test manuali | Controlli i candidati                                                     |
+| Sfruttamento  | Metasploit, exploit manuali                                 | Solo se previsto dal contratto                                            |
+| Report        |                                                             | Lo screenshot di Shodan è una prova di esposizione, non di compromissione |
+
+Esempio di conferma con Nmap sui risultati di Shodan, salvati in un file:
 
 ```bash
-# 1. Shodan broad search
-shodan search 'org:"Target Corp"' --fields ip_str > targets.txt
-
-# 2. Nmap dettagliato
+shodan parse --fields ip_str acme-exposure.json.gz | sort -u > targets.txt
 nmap -sV -sC -iL targets.txt -oA nmap_scan
-
-# 3. Filtra servizi vulnerabili
-grep "open" nmap_scan.gnmap | grep "3306" > mysql_targets.txt
 ```
 
-**Estensione con Nuclei** (verifica automatica di CVE note su larga scala):
-
-```bash
-shodan search 'http.component:wordpress' --fields ip_str > wp_targets.txt
-cat wp_targets.txt | nuclei -t cves/ -o nuclei_results.txt
-```
-
-Shodan trova i target per tecnologia, Nuclei verifica automaticamente le CVE note su quella tecnologia.
-
-## Dalla scoperta su Shodan alla verifica di una misconfigurazione
-
-Esempio di flusso completo, dalla query a Shodan alla conferma della vulnerabilità (in lab/pentest autorizzato).
-
-**Fase 1 — Reconnaissance**
-
-```bash
-shodan search 'mongodb country:IT -authentication' --fields ip_str,port,product
-```
-
-```
-203.0.113.75,27017,MongoDB 4.2.8
-```
-
-**Fase 2 — Verifica**
-
-```bash
-nc -zv 203.0.113.75 27017
-# Connection successful
-
-mongo 203.0.113.75:27017
-```
-
-```
-> show dbs
-admin           0.000GB
-production_db   2.345GB
-```
-
-**Fase 3 — Enumerazione (solo per confermare l'impatto, mai oltre)**
-
-```javascript
-> db.customers.count()
-45678
-```
-
-🎓 **CRITICAL:** un database di produzione raggiungibile senza autenticazione, da milioni di IP nel mondo, è la misconfigurazione più comune trovata via Shodan.
-
-**Totale:** \~5 minuti da query Shodan a conferma della vulnerabilità. Senza Shodan, individuare questo host tra milioni di IP avrebbe richiesto giorni di scanning manuale.
-
-Se vuoi approfondire come si sfrutta un MongoDB esposto una volta trovato, leggi [porta 27017 MongoDB](/articoli/porta-27017-mongodb/).
+Questa scansione è attiva: falla solo su IP che ti appartengono o per cui hai un'autorizzazione scritta.
 
 ***
 
-### Shodan CLI Commands
+## Shodan vs Censys, ZoomEye e FOFA: alternative a confronto
 
-| **Comando**         | **Funzione**                    | **Esempio**                                         |
-| ------------------- | ------------------------------- | --------------------------------------------------- |
-| `shodan search`     | Cerca nel database              | `shodan search apache`                              |
-| `shodan host`       | Lookup di un IP specifico       | `shodan host 8.8.8.8`                               |
-| `shodan count`      | Conta i risultati               | `shodan count mongodb`                              |
-| `shodan stats`      | Facet/statistiche aggregate     | `shodan stats --facets country apache`              |
-| `shodan download`   | Salva risultati su file         | `shodan download results.json.gz apache`            |
-| `shodan parse`      | Parsa risultati salvati         | `shodan parse --fields ip_str,port results.json.gz` |
-| `shodan convert`    | Converte formato risultati      | `shodan convert results.json.gz csv`                |
-| `shodan scan`       | Invia scan on-demand            | `shodan scan submit 1.2.3.4`                        |
-| `shodan alert`      | Crea alert di monitoraggio      | `shodan alert create "MiaRete" 1.2.3.0/24`          |
-| `shodan honeyscore` | Probabilità che sia un honeypot | `shodan honeyscore 1.2.3.4`                         |
+| Motore  | Punto di forza                                                             | Limite                                              |
+| ------- | -------------------------------------------------------------------------- | --------------------------------------------------- |
+| Shodan  | Interfaccia semplice, filtri, API, CLI, ottimo per IoT e servizi           | Molti filtri dipendono dal piano                    |
+| Censys  | Dati sui certificati TLS e sulle configurazioni, buon per asset management | Sintassi di query diversa                           |
+| ZoomEye | Copertura forte su Asia e Cina                                             | Meno usato in Occidente                             |
+| FOFA    | Simile a ZoomEye, molto diffuso in Cina                                    | Interfaccia e documentazione meno curate in inglese |
+| Google  | Pagine web, non servizi                                                    | Non vede porte e `banner`                           |
+
+Per un confronto vero tra Shodan e Censys conviene lanciare la stessa query su entrambi: le differenze nei risultati (date, porte, versioni) ti dicono quale dei due vede meglio il tuo perimetro. In un lavoro serio si usano insieme.
 
 ***
 
-## Performance e query su larga scala
+## Limiti di Shodan e errori da evitare
 
-**Rate limit:**
+| Limite                                        | Conseguenza                                                                                                                                                                                    |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| I dati sono vecchi                            | Un servizio chiuso ieri può comparire ancora                                                                                                                                                   |
+| Non vede tutte le porte                       | Una porta rara può non essere mai scansionata                                                                                                                                                  |
+| Il CVE nel risultato è dedotto dalla versione | Può essere un falso positivo (versione corretta con patch del distributore)                                                                                                                    |
+| Gli `honeypot` sembrano sistemi veri          | Il significato di `honeypot` è: un sistema esca fatto apposta per attirare e registrare gli attaccanti. Un host con troppi servizi strani e vulnerabili va controllato con `shodan honeyscore` |
+| Non vede dietro firewall e VPN                | Mostra solo ciò che è raggiungibile da Internet                                                                                                                                                |
+| Account gratuito con pochi risultati          | Per analisi grandi servono crediti                                                                                                                                                             |
 
+Errori comuni nelle query: spazi dopo i due punti (`port: 22` non funziona), virgolette dimenticate sui valori con spazi, filtri a pagamento che sembrano "non trovare nulla".
+
+***
+
+## Aspetti legali: Shodan è legale?
+
+Cercare su Shodan è legale: stai leggendo un indice pubblico, e il bersaglio non riceve niente. Diventa un problema quando passi all'azione:
+
+* **Ricerca passiva** su Shodan: lecita.
+* **`shodan scan`**, cioè chiedere a Shodan di scansionare un IP: è reconnaissance attiva. Fallo solo su IP tuoi o autorizzati.
+* **Connettersi** a un servizio trovato, aprire un pannello, provare password, vedere un flusso video: è accesso a un sistema informatico altrui. Senza autorizzazione è reato in Italia (art. 615-ter del Codice penale) e in quasi tutti i Paesi.
+* Se trovi un'esposizione che non è tua: non toccare i dati, segnalala al proprietario o a un CERT e dai tempo per correggere.
+
+Questa non è una consulenza legale.
+
+***
+
+## Come difendersi da Shodan
+
+Il modo migliore per non finire nei risultati è non esporre il servizio. Nell'ordine:
+
+**1. Conosci cosa vede Shodan di te.** Controlla ogni settimana il tuo perimetro:
+
+```bash
+shodan count net:203.0.113.0/24
+shodan stats --facets port,product net:203.0.113.0/24
+shodan host 203.0.113.10
 ```
-Free tier: 1 query/secondo
-Membership/API a pagamento: nessun rate limit rigido
+
+**2. Shodan Monitor e alerts.** Shodan Monitor (monitor.shodan.io) controlla i tuoi IP e ti manda una notifica quando compare un nuovo servizio, una porta aperta o una vulnerabilità. Da terminale crei un avviso (alert) su una rete:
+
+```bash
+shodan alert create "Office network" 203.0.113.0/24
+shodan alert list
 ```
 
-**Bulk export in Python:**
+**3. Chiudi ciò che non serve su Internet.** RDP, SSH, database, pannelli di amministrazione e telecamere non devono essere raggiungibili da tutta Internet. Mettili dietro una VPN. Un esempio di regola base su Linux per tenere SSH solo dalla rete interna:
+
+```bash
+sudo iptables -A INPUT -p tcp --dport 22 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 22 -j DROP
+```
+
+**4. Cambia le credenziali di fabbrica** di telecamere, router e dispositivi IoT, e disattiva UPnP sul router. Aggiorna il firmware.
+
+**5. Non fidarti del "bloccare Shodan".** Bloccare gli IP dei suoi scanner non ti protegge: gli attaccanti usano scanner propri, Censys e altri motori. Un servizio esposto resta esposto.
+
+**6. Togli le informazioni inutili dai `banner`.** Nascondi la versione del server web e dei servizi (per esempio `ServerTokens Prod` in Apache o `server_tokens off;` in nginx). Non sostituisce le patch, ma toglie dati gratis a chi fa reconnaissance.
+
+**7. Applica le patch.** Se Shodan associa un CVE alla tua versione, un attaccante lo vede in dieci secondi.
+
+**8. Cerca l'esposizione prima degli altri.** Fai ripetere la scansione con Nmap sul tuo perimetro e confrontala con Shodan: le differenze sono servizi che non sapevi di avere.
+
+**Per controllare un avviso da Python:**
 
 ```python
+import os
 import shodan
-api = shodan.Shodan(API_KEY)
 
-query = 'apache country:US'
-page = 1
-all_results = []
+api = shodan.Shodan(os.environ["SHODAN_API_KEY"])
 
-while True:
-    try:
-        results = api.search(query, page=page)
-        all_results.extend(results['matches'])
-        if page * 100 >= results['total']:
-            break
-        page += 1
-    except shodan.APIError as e:
-        print(f"Errore: {e}")
-        break
+for alert in api.alerts():
+    print(alert["name"], alert["filters"]["ip"])
 ```
 
-**Limite:** ogni query credit consuma fino a 100 risultati. Con Membership hai 100 credit/mese = 10.000 risultati scaricabili.
+**Cosa monitorare:** nuove porte aperte su IP pubblici, servizi con `banner` che rivelano versioni, certificati TLS di domini che non riconosci, nuovi host nel tuo blocco di IP. Gli avvisi di Shodan, uniti ai log del firewall, bastano per accorgertene presto.
 
-***
-
-## Troubleshooting
-
-**Nessun risultato per un servizio che sai essere esposto**
-Shodan non ha scansionato di recente, o il servizio è ora dietro firewall.
-
-```bash
-shodan scan submit <ip-target>
-shodan scan list
-```
-
-Attendi 24-48h perché i risultati compaiano nel database.
-
-**Errore API key**
-
-```
-APIError: Invalid API key
-```
-
-```bash
-shodan init <api-key-corretta>
-shodan info
-```
-
-**Query credit esauriti**
-
-```
-APIError: Query credits exhausted
-```
-
-```bash
-shodan info   # controlla credit residui
-```
-
-Il reset è mensile per Membership e piani a pagamento.
-
-***
-
-## API — panoramica dei metodi principali
-
-| **Metodo**             | **Funzione**                                      | **Consuma credit**                            |
-| ---------------------- | ------------------------------------------------- | --------------------------------------------- |
-| `/shodan/host/{ip}`    | Lookup completo di un IP                          | No                                            |
-| `/shodan/host/search`  | Ricerca con filtri                                | Sì, se ci sono filtri o pagine oltre la prima |
-| `/shodan/host/count`   | Solo conteggio risultati + facet, senza dati host | No                                            |
-| `/shodan/scan`         | Richiede scan on-demand su un IP                  | Sì (scan credit)                              |
-| `/dns/domain/{domain}` | Info DNS/subdomain su un dominio                  | Sì                                            |
-
-```python
-import shodan
-api = shodan.Shodan(API_KEY)
-
-# Ricerca (consuma query credit)
-results = api.search('apache country:IT')
-
-# Lookup singolo host (non consuma query credit)
-host = api.host('8.8.8.8')
-
-# Solo conteggio (non consuma query credit)
-total = api.count('mongodb -authentication')
-```
-
-Regola pratica: usa `count` o `host` quando ti serve solo un numero o un lookup puntuale — risparmi i query credit per le ricerche con filtri.
-
-### InternetDB — lookup rapido senza API key
-
-Per un lookup veloce di un singolo IP, senza registrazione né API key, Shodan offre **InternetDB**: un endpoint gratuito che restituisce solo porte aperte, hostname, CVE e tag — niente banner completo.
-
-```bash
-curl https://internetdb.shodan.io/8.8.8.8
-```
-
-```json
-{
-  "ip": "8.8.8.8",
-  "ports": [53, 443],
-  "hostnames": ["dns.google"],
-  "cpes": [],
-  "vulns": [],
-  "tags": []
-}
-```
-
-**Quando usarlo:** script di massa che devono controllare rapidamente migliaia di IP senza gestire credit o autenticazione. **Limite:** aggiornato solo settimanalmente, e non ha i dettagli del banner — per quello serve l'API completa.
-
-### Shodan Trends
-
-Oltre alla ricerca puntuale, [trends.shodan.io](https://trends.shodan.io) mostra l'andamento storico di protocolli e prodotti nel tempo — utile per vedere, ad esempio, la crescita di MQTT (IoT) o il calo di Telnet su scala globale. Non supporta tutti i filtri della ricerca principale, ma è un buon modo per contestualizzare un dato puntuale in un trend più ampio.
-
-***
-
-## Limitazioni di Shodan
-
-* **IPv6:** copertura parziale, la priorità resta lo spazio IPv4
-* **NAT/VPN/Cloudflare:** Shodan vede l'IP esposto, non necessariamente l'host reale dietro un proxy o CDN
-* **Host offline al momento della query:** i dati possono essere datati fino a \~30 giorni
-* **Porte non scansionate:** copre \~1.500 porte, non tutte le 65.535 possibili — un servizio su porta non standard può sfuggire
-* **Banner obsoleti:** un servizio patchato di recente potrebbe ancora mostrare la versione vecchia fino al prossimo giro di scansione
-* **Falsi positivi sulle vulnerabilità:** le CVE "unverified" sono dedotte dalla versione, non confermate attivamente
-
-***
-
-## Best practice d'uso
-
-1. Parti largo (`country`, `org`) poi restringi con filtri più specifici
-2. Usa `shodan count` prima di lanciare ricerche pesanti, per stimare la scala
-3. Verifica sempre con uno scan attivo (nmap) prima di trarre conclusioni operative — Shodan è un punto di partenza, non l'ultima parola
-4. Non fidarti ciecamente del banner: può essere stato modificato, o il servizio patchato senza cambio versione
-5. Affianca Censys quando serve analisi certificati/TLS più profonda
-
-***
-
-## Shodan vs Censys vs ZoomEye
-
-| **Tool**    | **Focus**               | **Copertura** | **Punto di forza**             |
-| ----------- | ----------------------- | ------------- | ------------------------------ |
-| **Shodan**  | Servizi/porte           | IPv4 completo | IoT/ICS, storico               |
-| **Censys**  | Certificati/TLS         | IPv4 completo | Analisi crittografica profonda |
-| **ZoomEye** | Copertura Asia-Pacifico | Regionale     | Tracking C2/malware            |
-
-**Usa Shodan quando:** serve info su servizi/porte, reconnaissance IoT/ICS, confronto storico.
-**Usa Censys quando:** serve analisi certificati/TLS approfondita.
-**Usa ZoomEye quando:** target/copertura è concentrata in area Asia-Pacifico.
-
-**Nota:** Shodan trova cosa è esposto, ma non fa vulnerability assessment approfondito come uno scanner dedicato — serve poi uno scanner attivo per la verifica.
-
-***
-
-## Perché è rilevante oggi (2026)
-
-L'attack surface continua ad espandersi: esplosione IoT (oltre 50 miliardi di dispositivi nel 2026), migrazione cloud, infrastrutture da remote work. Shodan resta l'unico tool con scansione globale continua a questa scala. I difensori lo usano per attack surface monitoring (cosa ho esposto per errore?). Gli attaccanti lo usano per identificare target prima della disclosure pubblica di una CVE. I team di threat intelligence correlano i dati Shodan con exploit database per difesa predittiva.
-
-***
-
-## OPSEC — cosa lascia visibile chi lo usa
-
-**Rumorosità dal tuo lato:** zero, è query passiva al database. Ma Shodan stesso, quando scansiona internet, è rilevabile:
-
-```
-- Source IP nei range noti di Shodan (216.117.2.0/24)
-- User-Agent: Shodan/1.0
-- Pattern di scan sequenziale e prevedibile
-```
-
-Se invece usi la Scan API per uno scan on-demand, quello parte dal **tuo** IP — a quel punto sì che conta l'evasion (VPN/proxy diverso per scan, rate limiting, scan solo su porte specifiche).
-
-Non c'è un Event ID locale da monitorare: la detection è lato network, via firewall log e IDS/SIEM sul traffico in ingresso.
-
-***
-
-## Detection & Evasion
-
-**Cosa monitora il Blue Team:**
-
-```
-- Range IP di Shodan (216.117.2.0/24 e altri)
-- User-Agent: "Shodan/1.0"
-- Pattern di scansione prevedibili
-```
-
-```bash
-# Bloccare Shodan a livello firewall
-iptables -A INPUT -s 216.117.2.0/24 -j DROP
-iptables -A INPUT -s 216.117.2.0/24 -j LOG --log-prefix "SHODAN_SCAN: "
-```
-
-**Nota:** le query al database sono passive. L'evasion si applica solo se usi la Scan API per scan custom (quello sì è active scanning dal tuo IP).
-
-***
-
-## Hardening — difendersi da Shodan
-
-1. Esponi solo i servizi strettamente necessari
-2. Blocca i range IP di Shodan via firewall
-3. Nascondi versioni nei banner (`ServerTokens Prod` su Apache)
-4. Mai servizi senza autenticazione su IP pubblico
-5. Monitora te stesso: `shodan host <tuo-ip>` periodicamente
-6. Servizi critici dietro VPN/bastion, mai esposti direttamente
-
-```apache
-# httpd.conf
-ServerTokens Prod
-ServerSignature Off
-```
+Usa le tecniche di questo articolo solo su sistemi tuoi o per cui hai un'autorizzazione scritta.
 
 ***
 
 ## FAQ
 
-**Shodan è legale?**
-Sì, interrogare il database è legale (informazione pubblica). Accedere a dispositivi trovati senza autorizzazione è illegale (CFAA, GDPR).
+**Cos'è Shodan?** È un motore di ricerca che indicizza dispositivi e servizi collegati a Internet (server, router, telecamere, database) invece delle pagine web.
 
-**Shodan aggiorna in tempo reale?**
-No, il ciclo di scansione completo è \~28-30 giorni. Per dati in tempo reale serve uno scan attivo (nmap) o la Scan API a pagamento.
+**Come funziona Shodan?** Scansiona gli indirizzi IP e le porte, si collega ai servizi, salva la loro risposta (il `banner`) e la rende ricercabile con parole e filtri.
 
-**Shodan serve per un pentest esterno?**
-Sì, per la fase di asset discovery e reconnaissance passiva, prima dello scanning attivo.
+**Shodan è legale?** Cercare nei suoi dati è legale. Connettersi ai sistemi trovati, o scansionarli, senza autorizzazione no.
 
-**Shodan trova anche dispositivi in Italia?**
-Sì, con `country:IT` — copre l'intero spazio IPv4 pubblico, Italia inclusa.
+**Shodan è gratis?** Esiste un account gratuito con funzioni e risultati limitati. Per più crediti e filtri serve la Membership o un piano superiore. Con email universitaria c'è un upgrade accademico gratuito.
 
-**Differenza tra Shodan e Censys?**
-Shodan copre più ampiamente servizi/IoT con dati storici; Censys è più forte su certificati e analisi TLS.
+**Come si usa Shodan per cercare un IP?** Incolli l'IP nella barra di ricerca o usi `shodan host IP` da terminale. Per una rete intera si usa `net:`.
 
-**Posso rimuovere i miei IP da Shodan?**
-Non esiste una procedura di rimozione ufficiale. Puoi solo bloccare i range IP di Shodan via firewall.
+**Come trovo la mia API key?** La trovi in "My Account" su shodan.io dopo la registrazione. Si inizializza la CLI con `shodan init` seguito dalla chiave.
 
-***
+**Posso usare Shodan con Python?** Sì, con la libreria ufficiale: `pip install shodan`, poi `shodan.Shodan(chiave)` con i metodi `search()`, `host()` e `search_cursor()`.
 
-## Cheat sheet query
+**Cosa si può trovare con Shodan?** Server web e database esposti, pannelli di amministrazione, telecamere, stampanti, router, dispositivi industriali e IoT, certificati TLS, versioni di software.
 
-| **Scenario**             | **Query Shodan**                                                                                                               |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| MongoDB senza auth       | `mongodb port:27017 -authentication` — approfondisci su [porta 27017 MongoDB](/articoli/porta-27017-mongodb/) |
-| Elasticsearch aperto     | `port:9200 "cluster_name"` — approfondisci su [porta 9200 Elasticsearch](/articoli/porta-9200-elasticsearch/) |
-| Webcam esposte           | `"Server: SQ-WEBCAM"`                                                                                                          |
-| RDP esposto              | `port:3389 country:US` — approfondisci su [porta 3389 RDP](/articoli/porta-3389-rdp/)                         |
-| Log4Shell                | `vuln:CVE-2021-44228`                                                                                                          |
-| ICS/SCADA                | `port:502` (Modbus) / `port:102` (Siemens)                                                                                     |
-| SSH versione specifica   | `product:"OpenSSH" version:"7.4"`                                                                                              |
-| WordPress esposti        | `http.component:wordpress`                                                                                                     |
-| Jenkins esposti          | `"X-Jenkins"`                                                                                                                  |
-| Grafana esposti          | `title:"Grafana"`                                                                                                              |
-| Docker API esposta       | `port:2375 "Docker"`                                                                                                           |
-| VPN endpoint             | `"OpenVPN" port:1194`                                                                                                          |
-| NAS esposti              | `product:"Synology" OR product:"QNAP"`                                                                                         |
-| phpMyAdmin esposto       | `title:"phpMyAdmin"`                                                                                                           |
-| Server dietro Cloudflare | `http.waf:cloudflare`                                                                                                          |
+**Shodan trova dispositivi vulnerabili?** Mostra le versioni dei servizi e i CVE associati. Il CVE è dedotto dalla versione e va confermato: può essere un falso positivo.
 
-***
+**Qual è la differenza tra Shodan e Censys?** Shodan è più orientato a dispositivi e servizi, con filtri e API molto usati. Censys è forte sui certificati e sulle configurazioni. I risultati si completano a vicenda.
 
-## Disclaimer
+**Posso bloccare Shodan?** Non serve: bloccare i suoi IP non ferma gli altri scanner. L'unica difesa vera è non esporre servizi inutili e tenere tutto aggiornato.
 
-Shodan è un search engine pubblico. Interrogare il database è legale. Accedere a dispositivi trovati senza autorizzazione è illegale (Computer Fraud and Abuse Act, GDPR per dati UE, equivalenti nazionali). Usa questa intelligence solo in penetration test autorizzati, inventario asset di tua proprietà, o ricerca con responsible disclosure.
-
-**Sito:** [shodan.io](https://www.shodan.io)
-**API Docs:** [developer.shodan.io/api](https://developer.shodan.io/api)
+**Shodan è sicuro da usare?** Sì, la ricerca è passiva. Il rischio è tuo se poi ti colleghi a sistemi altrui senza permesso.

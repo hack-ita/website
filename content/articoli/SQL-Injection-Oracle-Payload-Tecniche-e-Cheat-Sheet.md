@@ -1,9 +1,12 @@
 ---
 title: 'SQL Injection Oracle: Payload, Tecniche e Cheat Sheet'
 slug: sql-injection-oracle
-description: 'SQL injection su Oracle: payload UNION, error-based, blind e time-based, enumerazione con DUAL, test out-of-band, rischi di escalation ,exploit e difese.'
+description: >-
+  SQL injection su Oracle: payload UNION, error-based, blind e time-based,
+  enumerazione con DUAL, test out-of-band, rischi di escalation ,exploit e
+  difese.
 image: /oracle-sql-injection-pentest-cheat-sheet-hackita.webp
-draft: true
+draft: false
 date: 2026-11-08T10:34:10.018Z
 categories:
   - web-hacking

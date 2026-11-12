@@ -1,10 +1,11 @@
 ---
 title: 'Gary McKinnon: l’Hacker “Solo” che Violò NASA e Pentagono'
 slug: gary-mckinnon
-description: |
-  Gary McKinnon, conosciuto online come Solo, violò 97 computer di NASA e forze armate USA cercando prove sugli UFO, diventando un caso storico dell'hacking.
+description: >
+  Gary McKinnon, conosciuto online come Solo, violò 97 computer di NASA e forze
+  armate USA cercando prove sugli UFO, diventando un caso storico dell'hacking.
 image: /gary-mckinnon-hacker-nasa-ufo-solo.webp
-draft: true
+draft: false
 date: 2026-11-12T13:24:01.613Z
 lastmod: 2026-10-28T13:24:14.943Z
 categories:

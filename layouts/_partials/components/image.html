@@ -32,11 +32,17 @@ sources that need resizing, are processed now.
     {{/* else: already WebP + no resize -> serve original, no re-encode */}}
     {{ end }}
 
+    {{/* Always give the browser the real size, so the page does not jump while images load (CLS). The size of the
+         processed image is the one served; CSS classes still decide how large it is shown. */}}
+    {{ $outWidth := $width }}{{ $outHeight := $height }}
+    {{ if in (slice "jpg" "jpeg" "png" "webp" "gif") (lower (strings.TrimPrefix "." (path.Ext $img.RelPermalink))) }}
+        {{ $outWidth = $img.Width }}{{ $outHeight = $img.Height }}
+    {{ end }}
     <img
         src="{{ $img.RelPermalink }}"
         alt="{{ $alt }}"
-        {{ if $width }}width="{{ $width }}"{{ end }}
-        {{ if $height }}height="{{ $height }}"{{ end }}
+        {{ if $outWidth }}width="{{ $outWidth }}"{{ end }}
+        {{ if $outHeight }}height="{{ $outHeight }}"{{ end }}
         class="{{ $class }}"
         {{ if $highFetchPrio }}
         fetchpriority="high"

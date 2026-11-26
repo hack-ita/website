@@ -171,3 +171,6 @@
 
 # SQL Injections
 /articoli/sql-injection-guida-completa            /articoli/sql-injection-classica/                   301
+
+# Typo fixed in the subcategory name (26/11/2026)
+/subcategories/expoit/                              /subcategories/exploit/                             301

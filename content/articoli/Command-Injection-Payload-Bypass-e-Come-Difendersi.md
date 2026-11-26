@@ -8,7 +8,7 @@ date: 2026-10-02T16:19:19.817Z
 categories:
   - web-hacking
 subcategories:
-  - expoit
+  - exploit
 tags:
   - Command Injection
   - OS Command Injection

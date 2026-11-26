@@ -1,0 +1,10 @@
+{{- /* The language the page is written in: "it" (the site), or the code listed for its slug in
+       data/content_languages.yaml (the English articles written for backlinks and guest posts). */ -}}
+{{- $lang := "it" -}}
+{{- with .Params.slug -}}
+  {{- $slug := . -}}
+  {{- range $code, $slugs := site.Data.content_languages -}}
+    {{- if in $slugs $slug }}{{ $lang = $code }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $lang -}}

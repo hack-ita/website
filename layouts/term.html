@@ -14,7 +14,7 @@
       </span>
 
       <h1 id="category-title" class="text-dark dark:text-light hero-heading uppercase">
-        {{ .Params.hero_title }}
+        {{ .Params.hero_title | default .Title }}
       </h1>
 
       {{ with .Description }}

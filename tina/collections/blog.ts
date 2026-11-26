@@ -131,7 +131,7 @@ const Blog: Collection = {
         { label: "Critical", value: "critical" },
         { label: "Easy", value: "easy" },
         { label: "Enum", value: "enum" },
-        { label: "Exploit", value: "expoit" },
+        { label: "Exploit", value: "exploit" },
         { label: "Filesystem", value: "filesystem" },
         { label: "Hard", value: "hard" },
         { label: "High", value: "high" },

@@ -9,7 +9,7 @@ lastmod: 2026-02-21T00:00:00.000Z
 categories:
   - tools
 subcategories:
-  - expoit
+  - exploit
 tags:
   - bruteforce
 ---

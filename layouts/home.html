@@ -29,12 +29,14 @@
           <div class="swiper-slide cursor-pointer {{ if eq $i 0 }}pb-5 swiper-slide-active{{ else }}py-5{{ end }}">
             <article class="space-y-2 px-5">
               <h2 class="heading-sm text-dark dark:text-light transition-colors title">
-                {{ .Title }}
+                <a href="{{ .RelPermalink }}" class="hover:underline">{{ .Title }}</a>
               </h2>
               <div class="dets space-y-2">
-                <p class="text-dark dark:text-light line-clamp-4">
-                  {{ .Description }}
-                </p>
+                <a href="{{ .RelPermalink }}" class="block" tabindex="-1" aria-hidden="true">
+                  <p class="text-dark dark:text-light line-clamp-4">
+                    {{ .Description }}
+                  </p>
+                </a>
                 {{ partial "components/link.html" (dict "label" "Continua a leggere" "title" .Title "url" .RelPermalink) }}
               </div>
             </article>
@@ -214,9 +216,9 @@
       
       <!-- Text Column -->
       <div class="space-y-10 lg:w-1/2"  >
-        <p class="text-dark dark:text-light text-balance">
-          {{ .content | safeHTML }}
-        </p>
+        <div class="text-dark dark:text-light prose prose-gray dark:prose-invert max-w-none">
+          {{ .content | markdownify }}
+        </div>
         {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di piú" "url" "/about/") }}
       </div>
 

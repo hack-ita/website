@@ -1,7 +1,7 @@
 ---
 title: 'Formazione 1:1'
 description: >-
-  Scopri il tuo potenziale nel mondo dell’ethical hacking.<br> Con un percorso personalizzato e guidato, ti aiutiamo a diventare uno dei migliori hacker etici al mondo.
+  Scopri il tuo potenziale nel mondo dell’ethical hacking. Con un percorso personalizzato e guidato, ti aiutiamo a diventare uno dei migliori hacker etici al mondo.
 image: /images/formazione.jpg
 ---
 

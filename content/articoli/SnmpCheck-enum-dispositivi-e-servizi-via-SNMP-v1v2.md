@@ -570,5 +570,5 @@ Se vuoi accelerare davvero (OSCP/HTB/PG) con sessioni pratiche 1:1, trovi tutto 
 
 Per aziende: assessment, hardening e test controllati (solo con autorizzazione) sono disponibili su: /servizi/.
 
-(1): [https://www.kali.org/tools/snmpcheck/?utm\_source=chatgpt.com](https://www.kali.org/tools/snmpcheck/?utm_source=chatgpt.com) "snmpcheck | Kali Linux Tools"
-(2): [https://www.nothink.org/codes/snmpcheck/?utm\_source=chatgpt.com](https://www.nothink.org/codes/snmpcheck/?utm_source=chatgpt.com) "Snmpcheck"
+(1): [https://www.kali.org/tools/snmpcheck/](https://www.kali.org/tools/snmpcheck/) "snmpcheck | Kali Linux Tools"
+(2): [https://www.nothink.org/codes/snmpcheck/](https://www.nothink.org/codes/snmpcheck/) "Snmpcheck"

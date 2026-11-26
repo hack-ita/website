@@ -2,11 +2,21 @@
    IMPORTS & PLUGINS
 =========================== */
 @import "tailwindcss";
+
 @plugin "@tailwindcss/typography";
 @source "hugo_stats.json";
 @source inline("h-20, rotate-45, -rotate-45", "top-23", "top-30", "overflow-hidden");
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Images carry their real width and height (components/image.html), so the browser keeps their place while they
+   load (CLS). The size shown is still decided by the classes: without this rule an image with only a height class
+   (e.g. the logo, h-25) would take the width attribute and stretch. Base layer: every utility class wins over it. */
+@layer base {
+  :where(img[width][height]) {
+    width: auto;
+  }
+}
 
 /* ===========================
    THEME VARIABLES

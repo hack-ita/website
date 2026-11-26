@@ -2,7 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 {{- range .Data.Pages }}
-{{- if .Permalink }}
+{{- /* Tag and category term pages are noindex (essentials/head.html): a sitemap lists only indexable pages. */}}
+{{- if and .Permalink (ne .Kind "term") (not (default false .Params.sitemap.disable)) }}
 {{- $lm := .Lastmod }}{{ if $lm.After now }}{{ $lm = now }}{{ end }}
   <url>
     <loc>{{ .Permalink }}</loc>

@@ -496,4 +496,4 @@ Se vuoi una mano pratica (lab guidati, metodo OSCP-style, troubleshooting rapido
 Se sei un’azienda e ti serve un assessment o un test autorizzato (con report e remediation), i servizi sono qui: /servizi/.
 
 (1): [https://www.kali.org/tools/netdiscover/](https://www.kali.org/tools/netdiscover/) "netdiscover | Kali Linux Tools"
-(2): [https://pkg.kali.org/pkg/netdiscover](https://pkg.kali.org/pkg/netdiscover?utm_source=chatgpt.com) "netdiscover"
+(2): [https://pkg.kali.org/pkg/netdiscover](https://pkg.kali.org/pkg/netdiscover) "netdiscover"

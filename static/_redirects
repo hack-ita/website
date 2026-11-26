@@ -165,7 +165,7 @@
 /articoli/crontab-backdoor                          /articoli/crontab/                                  301
 
 # System pages
-/formazione                                         /servizi/                                           301
+/formazione                                         /servizi/formazione/                                301
 /supporta                                           /supporto/                                          301
 /dona                                               /supporto/                                          301
 

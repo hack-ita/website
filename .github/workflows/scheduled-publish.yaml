@@ -2,8 +2,10 @@ name: Scheduled Publish
 
 on:
   schedule:
-    # Runs at 23:00 UTC daily (00:00 CET/01:00 CEST Italy time)
-    - cron: "0 23 * * *"
+    # Runs at 00:30 UTC daily (01:30 CET/02:30 CEST Italy time): after midnight UTC, so Hugo no longer sees
+    # today's posts (dated 00:00 UTC) as future posts. The push below triggers ONE Netlify build, and only on
+    # nights when a post is actually published (before, a scheduled function rebuilt the site every night).
+    - cron: "30 0 * * *"
   workflow_dispatch: # Manual trigger option
 
 permissions:
@@ -51,13 +53,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content/
-          git commit -m "🤖 Publish scheduled posts [skip ci]
+          git commit -m "🤖 Publish scheduled posts
           
           Published on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
           git push
           
           echo "✅ Changes pushed to repository"
-          echo "ℹ️  Netlify deploy will be triggered automatically at 02:00 Italy time via cron-job.org"
+          echo "ℹ️  This push triggers the Netlify production build"
 
       - name: Workflow summary
         if: always()
@@ -67,7 +69,7 @@ jobs:
           if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
             echo "✅ **Posts published and pushed to repository**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "⏰ **Netlify scheduled function will auto-deploy at 02:00 Italy time**" >> $GITHUB_STEP_SUMMARY
+            echo "🚀 **This push triggers the Netlify production build**" >> $GITHUB_STEP_SUMMARY
           else
             echo "ℹ️ **No posts were ready to publish**" >> $GITHUB_STEP_SUMMARY
           fi

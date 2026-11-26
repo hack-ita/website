@@ -6,7 +6,8 @@
      (content/categories/<name>/_index.md), are indexable hubs. */}}
 {{ $hub := and (eq .Kind "term") (eq .Data.Plural "categories") .File }}
 {{ $thinList := and (eq .Kind "taxonomy") (in (slice "tags" "subcategories") .Data.Plural) }}
-{{ if or (and (eq .Kind "term") (not $hub)) $thinList .Params.noindex }}
+{{ $noindex := or (and (eq .Kind "term") (not $hub)) $thinList .Params.noindex }}
+{{ if $noindex }}
 <meta name="robots" content="noindex,follow">
 {{ else }}
 <meta name="robots" content="index, follow">
@@ -25,7 +26,7 @@
 {{ if ne $lang "it" }}
 <link rel="alternate" hreflang="{{ $lang }}" href="{{ .Permalink }}">
 <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
-{{ else if or (ne .Kind "term") $hub }}
+{{ else if not $noindex }}
 <link rel="alternate" hreflang="it" href="{{ .Permalink }}">
 {{- range site.Params.gtranslate.languages }}
 <link rel="alternate" hreflang="{{ .code }}" href="https://{{ .code }}.hackita.it{{ $.RelPermalink }}">

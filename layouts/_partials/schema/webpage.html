@@ -5,7 +5,7 @@
   "@id": "{{ .Permalink }}#webpage",
   "url": "{{ .Permalink }}",
   "name": "{{ .Title }}",
-  "inLanguage": "it-IT",
+  "inLanguage": "{{ cond (eq (partial "seo/content-lang.html" .) "it") "it-IT" (partial "seo/content-lang.html" .) }}",
   "isPartOf": {
     "@id": "{{ site.BaseURL }}#website"
   }

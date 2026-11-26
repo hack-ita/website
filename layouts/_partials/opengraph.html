@@ -22,9 +22,15 @@
 <meta property="og:site_name" content="{{ site.Params.brand | default "HackITA" }}">
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $desc | plainify | truncate 200 }}">
+{{- $lang := partial "seo/content-lang.html" . }}
+{{- if eq $lang "it" }}
 <meta property="og:locale" content="it_IT">
 {{- range site.Params.gtranslate.languages }}
 <meta property="og:locale:alternate" content="{{ .locale }}">
+{{- end }}
+{{- else }}
+{{- /* an article written in English: its own locale, no translated copies */}}
+<meta property="og:locale" content="{{ cond (eq $lang "en") "en_US" $lang }}">
 {{- end }}
 <meta property="og:type" content="{{ $ogtype }}">
 {{- range $images }}

@@ -8,7 +8,7 @@ date: 2026-02-18T00:00:00.000Z
 categories:
   - tools
 subcategories:
-  - expoit
+  - exploit
 tags:
   - msfvenom
   - metasploit

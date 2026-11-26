@@ -1,0 +1,8 @@
+# Articles written in a language other than Italian, listed by slug.
+# Read by layouts/_partials/seo/content-lang.html: <html lang>, og:locale, inLanguage and hreflang follow it.
+# Kept here and not in the front matter so that saving an article in TinaCMS never drops it.
+en:
+  - linpeas-privesc-guide
+  - evilginx3-aitm-mfa-bypass
+  - ssh-pentesting-guide
+  - phishing-techniques-red-team

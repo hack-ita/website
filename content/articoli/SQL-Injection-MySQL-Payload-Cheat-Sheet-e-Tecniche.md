@@ -8,7 +8,7 @@ date: 2026-10-11T18:27:22.419Z
 categories:
   - web-hacking
 subcategories:
-  - expoit
+  - exploit
 tags:
   - SQL Injection
   - MySQL

@@ -11,7 +11,7 @@ date: 2026-07-30T00:00:00.000Z
 categories:
   - tools
 subcategories:
-  - expoit
+  - exploit
 tags:
   - impacket
   - getuserspns

@@ -11,7 +11,7 @@ date: 2026-11-08T10:34:10.018Z
 categories:
   - web-hacking
 subcategories:
-  - expoit
+  - exploit
 tags:
   - SQL Injection
   - Oracle Database

@@ -8,7 +8,7 @@ date: 2026-09-21T00:00:00.000Z
 categories:
   - web-hacking
 subcategories:
-  - expoit
+  - exploit
 tags:
   - OAuth
   - Access Token

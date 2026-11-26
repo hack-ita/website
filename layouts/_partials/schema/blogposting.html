@@ -8,7 +8,7 @@
   "headline": {{ .Title | jsonify | safeJS }},
   "description": {{ $desc | jsonify | safeJS }},
   "url": "{{ .Permalink }}",
-  "inLanguage": "it-IT",
+  "inLanguage": "{{ cond (eq (partial "seo/content-lang.html" .) "it") "it-IT" (partial "seo/content-lang.html" .) }}",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{ .Permalink }}"

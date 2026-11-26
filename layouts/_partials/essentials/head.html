@@ -2,7 +2,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-{{ if eq .Kind "term" }}
+{{/* Tag and subcategory pages are noindex; the 8 categories, each with its own page and description
+     (content/categories/<name>/_index.md), are indexable hubs. */}}
+{{ $hub := and (eq .Kind "term") (eq .Data.Plural "categories") .File }}
+{{ $thinList := and (eq .Kind "taxonomy") (in (slice "tags" "subcategories") .Data.Plural) }}
+{{ $noindex := or (and (eq .Kind "term") (not $hub)) $thinList .Params.noindex }}
+{{ if $noindex }}
 <meta name="robots" content="noindex,follow">
 {{ else }}
 <meta name="robots" content="index, follow">
@@ -15,8 +20,13 @@
 
 {{/* hreflang: Italian source (hackita.it) + one tag per live translated
      sub-domain (params.gtranslate.languages) + x-default. The translated sides
-     are served by GTranslate. Skipped on noindex term pages. */}}
-{{ if ne .Kind "term" }}
+     are served by GTranslate. Skipped on noindex term pages. An article written in
+     English (data/content_languages.yaml) declares only itself, as "en" and x-default. */}}
+{{ $lang := partial "seo/content-lang.html" . }}
+{{ if ne $lang "it" }}
+<link rel="alternate" hreflang="{{ $lang }}" href="{{ .Permalink }}">
+<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
+{{ else if not $noindex }}
 <link rel="alternate" hreflang="it" href="{{ .Permalink }}">
 {{- range site.Params.gtranslate.languages }}
 <link rel="alternate" hreflang="{{ .code }}" href="https://{{ .code }}.hackita.it{{ $.RelPermalink }}">

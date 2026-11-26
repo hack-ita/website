@@ -31,6 +31,15 @@ ignore = "bash scripts/netlify-ignore.sh"
 # CSS/JS cross-origin from hackita.it. Those files use Subresource Integrity
 # (integrity + crossorigin="anonymous"), which requires CORS — without it the
 # browser blocks them and the translated pages render unstyled / without JS.
+# Security headers for every page (HSTS is already sent by Netlify).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
 [[headers]]
   for = "/css/*"
   [headers.values]

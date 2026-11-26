@@ -5,4 +5,5 @@ build:
   list: never
 sitemap:
   disable: true
+noindex: true
 ---

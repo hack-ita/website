@@ -38,10 +38,14 @@
           {{ with $alt }}data-title="{{ . }}"{{ end }}
           data-description="<a href='{{ $src }}' download class='underline underline-offset-4 hover:text-primary transition-colors'>Download Image</a>"
         >
+          {{- /* the cover is the largest image of the first screen: loaded at once (LCP), with its size (no layout shift) */ -}}
+          {{- $file := path.Join "static" $src -}}
           <img
             src="{{ $src }}"
             alt="{{ $alt }}"
-            loading="lazy"
+            {{ if fileExists $file }}{{ with imageConfig $file }}width="{{ .Width }}" height="{{ .Height }}"{{ end }}{{ end }}
+            loading="eager"
+            fetchpriority="high"
             decoding="async"
             {{ with $title }}title="{{ . }}"{{ end }}
             class="rounded-md cursor-zoom-in"

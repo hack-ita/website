@@ -5,7 +5,8 @@
 {{/* Tag and subcategory pages are noindex; the 8 categories, each with its own page and description
      (content/categories/<name>/_index.md), are indexable hubs. */}}
 {{ $hub := and (eq .Kind "term") (eq .Data.Plural "categories") .File }}
-{{ if and (eq .Kind "term") (not $hub) }}
+{{ $thinList := and (eq .Kind "taxonomy") (in (slice "tags" "subcategories") .Data.Plural) }}
+{{ if or (and (eq .Kind "term") (not $hub)) $thinList .Params.noindex }}
 <meta name="robots" content="noindex,follow">
 {{ else }}
 <meta name="robots" content="index, follow">

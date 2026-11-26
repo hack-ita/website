@@ -672,7 +672,8 @@ const initDeferred = () => {
           let highlighted = text;
 
           for (const word of terms) {
-            const regex = new RegExp(`(${word})`, "gi");
+            const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const regex = new RegExp(`(${escaped})`, "gi");
             highlighted = highlighted.replace(regex, "<mark>$1</mark>");
           }
 
@@ -886,7 +887,7 @@ const initDeferred = () => {
         // Detect if we're on a category page by checking the URL path
         const currentPath = window.location.pathname;
         const categoryPageMatch = currentPath.match(
-          /^\/categories\/([^\/]+)\/?$/,
+          /^\/categori(?:e|es)\/([^\/]+)\/?$/,
         );
         const isCategoryPage = !!categoryPageMatch;
         const currentCategory = categoryPageMatch

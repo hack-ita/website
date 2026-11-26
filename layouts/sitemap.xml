@@ -5,7 +5,8 @@
 {{- /* Tag and subcategory pages are noindex (essentials/head.html): a sitemap lists only indexable pages.
        The 8 categories with their own page are indexable hubs and stay in. */}}
 {{- $hub := and (eq .Kind "term") (eq .Data.Plural "categories") .File }}
-{{- if and .Permalink (or (ne .Kind "term") $hub) (not (default false .Params.sitemap.disable)) }}
+{{- $thinList := and (eq .Kind "taxonomy") (in (slice "tags" "subcategories") .Data.Plural) }}
+{{- if and .Permalink (or (ne .Kind "term") $hub) (not $thinList) (not .Params.noindex) (not (default false .Params.sitemap.disable)) }}
 {{- $lm := .Lastmod }}{{ if $lm.After now }}{{ $lm = now }}{{ end }}
   <url>
     <loc>{{ .Permalink }}</loc>

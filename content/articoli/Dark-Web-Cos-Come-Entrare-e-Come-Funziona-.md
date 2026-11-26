@@ -1,9 +1,7 @@
 ---
 title: 'Dark Web: Cos’è, Come Entrare e Come Funziona '
 slug: dark-web
-description: >-
-  Cos'è il dark web, la differenza con deep web e Tor, l'economia criminale che
-  ci circola davvero e cosa c'è di vero nelle leggende come le Red Room.
+description: 'Cos''è il dark web, la differenza con deep web e Tor, l''economia criminale che ci circola davvero e cosa c''è di vero nelle leggende come le Red Room.'
 image: /dark-web-cose-come-funziona.webp
 draft: false
 date: 2026-09-27T00:00:00.000Z
@@ -101,7 +99,68 @@ Il contenuto si divide grosso modo in due categorie, e la seconda occupa molto p
 
 **Uso legittimo.** Piattaforme di whistleblowing come SecureDrop, usate da testate come il New York Times e il Guardian per ricevere documenti da fonti anonime in sicurezza, e **GlobaLeaks**, framework simile usato anche in ambito anticorruzione; **OnionShare**, tool open source per condividere file in modo anonimo attraverso la rete Tor senza passare da un server terzo; specchi .onion di siti che vuoi restino raggiungibili anche sotto censura — BBC News, ProPublica e persino Facebook mantengono un proprio servizio .onion per questo motivo; forum di attivisti, dissidenti politici e giornalisti che operano sotto regimi che limitano la rete Tor stessa (Cina, Russia, Iran, Turchia). Una curiosità tecnica poco nota: non tutti i siti .onion sono pubblici allo stesso modo — un servizio può richiedere una chiave di autenticazione oltre al semplice indirizzo, restando invisibile e inaccessibile a chiunque non l'abbia ricevuta direttamente da chi lo gestisce.
 
-**Uso illecito.** Mercati che vendono dati rubati, credenziali compromesse (spesso il punto di arrivo di una campagna di [phishing](/articoli/phishing/) riuscita), [malware](/articoli/malware/) pronto all'uso, droghe, armi e beni contraffatti; forum di [black hat](/articoli/white-hat-black-hat-grey-hat/) dove si comprano e vendono exploit e accessi compromessi. I marketplace di questo tipo diventati più noti al grande pubblico — Silk Road e AlphaBay su tutti — sono stati smantellati da operazioni di polizia internazionali, con i gestori arrestati e i fondi sequestrati; Dream Market ha invece cessato le attività nel 2019 in circostanze meno chiare. Nessuno di questi esiste più, ed è la norma più che l'eccezione: un mercato che vende beni illegali online prima o poi finisce sotto indagine, chiuso o svuotato da chi lo gestiva. Questo articolo non nomina né linka alcun marketplace attualmente attivo. E ai margini più oscuri, materiale che le forze dell'ordine di tutto il mondo perseguono attivamente, incluso lo sfruttamento minorile. Su quest'ultimo punto non c'è nulla da spiegare oltre al fatto che esiste come priorità di contrasto internazionale: non è materiale su cui questo articolo entra nel merito in alcun modo.
+**Uso illecito.** Mercati che vendono dati rubati, credenziali compromesse (spesso il punto di arrivo di una campagna di [phishing](/articoli/phishing/) riuscita), [malware](/articoli/malware/) pronto all'uso, droghe, armi e beni contraffatti; forum di [black hat](/articoli/white-hat-black-hat-grey-hat/) dove si comprano e vendono exploit e accessi compromessi. I marketplace di questo tipo diventati più noti al grande pubblico — Silk Road e AlphaBay su tutti — sono stati smantellati da operazioni di polizia internazionali, con i gestori arrestati e i fondi sequestrati; Dream Market ha invece cessato le attività nel 2019 in circostanze meno chiare. Questi casi evidenziano la natura instabile dei marketplace criminali, che possono cessare improvvisamente le proprie attività a seguito di operazioni delle forze dell'ordine, sequestri o decisioni dei loro stessi gestori. Il Dark Web ospita anche contenuti e attività di estrema gravità, tra cui materiale legato allo sfruttamento minorile, oggetto di indagini e operazioni di contrasto a livello internazionale. Si tratta di fenomeni che esulano dagli obiettivi di questo approfondimento e che vengono citati esclusivamente per completezza del quadro.
+
+## Siti Dark Web
+
+**Nota:** I marketplace del Dark Web menzionati in questo articolo sono riportati esclusivamente a scopo informativo, educativo e di ricerca in ambito cybersecurity e Threat Intelligence. L'obiettivo è documentare l'evoluzione delle attività criminali online, analizzarne i rischi e sensibilizzare lettori e professionisti sulle minacce informatiche. HackITA non promuove, sostiene né incoraggia l'utilizzo di queste piattaforme o l'acquisto di beni e servizi illegali. Non vengono forniti link di accesso, indirizzi onion o indicazioni per effettuare transazioni.
+
+### Marketplace del Dark Web monitorati nel 2026
+
+Nel panorama del Dark Web esistono numerosi marketplace utilizzati per attività commerciali illegali. Alcuni operano su scala internazionale, mentre altri si rivolgono prevalentemente a specifiche aree geografiche o comunità linguistiche.
+
+Di seguito vengono riportati alcuni dei marketplace più citati nei monitoraggi e nelle analisi pubblicate nel 2026. La loro inclusione ha esclusivamente finalità documentale e di ricerca: non rappresenta una raccomandazione, una valutazione di affidabilità o un invito all'utilizzo.
+
+### Marketplace occidentali e internazionali
+
+| Marketplace                | Area e caratteristiche generali                                                                                           | Stato delle segnalazioni                                                                                           |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **TorZon Market**          | Marketplace generalista con presenza internazionale.                                                                      | Segnalato online nei monitoraggi di novembre 2026; citato da UNODC tra i principali mercati occidentali rimanenti. |
+| **WeTheNorth**             | Marketplace con orientamento prevalentemente canadese.                                                                    | Segnalato online il 24 novembre 2026.                                                                              |
+| **Black Ops**              | Marketplace generalista, con una componente significativa dedicata ai prodotti digitali.                                  | Segnalato online il 24 novembre 2026.                                                                              |
+| **Catharsis**              | Marketplace presente nell'ecosistema internazionale dei mercati underground.                                              | Segnalato online il 24 novembre 2026.                                                                              |
+| **Mars Market**            | Marketplace comparso nell'ecosistema successivo alla frammentazione dei grandi mercati precedenti.                        | Segnalato online il 24 novembre 2026.                                                                              |
+| **Vortex**                 | Marketplace presente in diverse directory di monitoraggio.                                                                | Segnalato online il 19 novembre 2026.                                                                              |
+| **Omega**                  | Marketplace presente nei monitoraggi dell'ecosistema underground.                                                         | Segnalato online il 19 novembre 2026.                                                                              |
+| **CannaExpress (CannaEx)** | Marketplace di nicchia riportato nelle directory specializzate.                                                           | Segnalato online il 19 novembre 2026; classificazione commerciale da verificare.                                   |
+| **Atlas Market**           | Marketplace presente nei sistemi di monitoraggio delle piattaforme underground.                                           | Segnalato online il 24 novembre 2026; informazioni pubbliche limitate.                                             |
+| **Flugsvamp 4.0**          | Marketplace svedese, documentato anche nel rapporto del CAN, centro di ricerca svedese sulle dipendenze e sulle sostanze. | Presenza documentata in un rapporto del 2026 e segnalazione online il 24 novembre 2026.                            |
+| **DrugHub**                | Marketplace prevalentemente associato al commercio di sostanze illegali.                                                  | Stato non univoco: alcuni monitoraggi lo segnalano online, mentre altri lo indicano offline nel novembre 2026.     |
+| **Awazon**                 | Marketplace emerso nel 2025 e ancora citato da alcune directory specializzate.                                            | Indicato come attivo da DNM Watch, ma scarsamente documentato e senza conferme indipendenti sufficienti.           |
+
+### Marketplace dell'ecosistema russofono
+
+Il panorama dei marketplace underground non è limitato alle piattaforme occidentali. Una parte molto significativa dell'economia criminale del Dark Web è costituita da mercati prevalentemente russofoni.
+
+Secondo un'analisi pubblicata da TRM Labs nell'ottobre 2026, questo ecosistema ha rappresentato circa il 95% del volume economico rilevato dai mercati darknet analizzati tra gennaio e settembre 2026, escludendo le transazioni in Monero.
+
+| Marketplace             | Area e caratteristiche generali                                                                                   | Attività documentata                                                                                            |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Kraken Market**       | Uno dei principali marketplace russofoni, con una forte presenza nell'economia underground dell'Europa orientale. | Indicato da TRM Labs come il maggiore marketplace darknet attualmente operativo nell'analisi dell'ottobre 2026. |
+| **Blacksprut**          | Marketplace appartenente all'ecosistema russofono.                                                                | Circa 140 milioni di dollari di volume transazionale rilevato da TRM Labs tra gennaio e settembre 2026.         |
+| **Mega Darknet Market** | Marketplace dell'ecosistema russofono, emerso nella fase successiva alla chiusura di Hydra.                       | Circa 90 milioni di dollari di volume transazionale rilevato nello stesso periodo.                              |
+| **OMG!OMG!**            | Marketplace prevalentemente associato all'ecosistema russofono.                                                   | Circa 50 milioni di dollari di volume transazionale rilevato nello stesso periodo.                              |
+
+I dati economici riportati per questi ultimi marketplace descrivono attività transazionali osservate nel periodo considerato e non costituiscono una verifica in tempo reale della raggiungibilità delle piattaforme.
+
+### Volatilità e attendibilità dei marketplace
+
+La presenza di un marketplace nelle directory specializzate non garantisce che sia ancora operativo, che i suoi gestori siano autentici o che le attività commerciali proseguano regolarmente.
+
+È importante considerare anche i casi di chiusura improvvisa, sequestri e cosiddetti *exit scam*, situazioni in cui i gestori interrompono le operazioni sottraendo i fondi degli utenti.
+
+Tra gli esempi più significativi degli ultimi anni figurano:
+
+* **Abacus Market**: cessazione delle operazioni nel luglio 2025, in circostanze riconducibili a un exit scam.
+* **Archetyp Market**: sequestrato dalle autorità tedesche nel giugno 2025.
+* **DarkMatter**: segnalato come exit scam nel 2026.
+* **Nexus Market**: segnalato come exit scam nel settembre 2026.
+
+Il fenomeno dimostra quanto sia instabile questo ecosistema e quanto rapidamente possano cambiare gli equilibri tra le piattaforme.
+
+Per chi si occupa di cybersecurity e Threat Intelligence, il monitoraggio di questi ambienti può offrire informazioni utili sull'evoluzione delle minacce, sulla circolazione di dati compromessi e sulle dinamiche del cybercrime organizzato.
+
+###### *Nota metodologica: gli stati riportati rappresentano osservazioni e segnalazioni disponibili in date specifiche del novembre 2026. Le informazioni provengono da fonti di monitoraggio e analisi pubbliche, non da una certificazione delle piattaforme. Non vengono forniti indirizzi onion, mirror o istruzioni di accesso.*
 
 ## L'Economia Sommersa: Non Solo Droga
 

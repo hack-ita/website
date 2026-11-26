@@ -9,6 +9,9 @@ TZ = "Europe/Oslo"
 publish = "public"
 # Force clean build by removing public directory first
 command = "npm run build"
+# Skip production builds (15 credits each) when only draft posts or repository files changed.
+# Fail-safe: any other change, or any doubt, builds as before. See scripts/netlify-ignore.sh.
+ignore = "bash scripts/netlify-ignore.sh"
 
 # This ensures Netlify doesn't cache between builds
 [build.processing]

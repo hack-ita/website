@@ -59,6 +59,35 @@
         </article>
       </li>
 
+      <!-- PayPal -->
+      <li>
+        <article class="rounded-md p-3 lg:p-5 flex flex-col gap-5 relative bg-primary overflow-hidden h-full">
+          <span class="size-30 rotate-30 bg-[#8d0202] absolute -right-10 -top-5"></span>
+
+          <header class="relative">
+            <span class="text-light text-sm uppercase">Donazione</span>
+            <h3 class="text-light hero-heading uppercase">PayPal</h3>
+          </header>
+
+          {{ partial "components/qr.html" (dict
+            "currency" "link"
+            "address" "https://www.paypal.com/paypalme/Hackita"
+            "alt" "QR code per donare a HackITA con PayPal"
+            "class" "mx-auto size-40"
+          ) }}
+
+          <p class="text-light text-center relative">paypal.me/Hackita</p>
+
+          <a
+            href="https://www.paypal.com/paypalme/Hackita"
+            target="_blank"
+            rel="noopener"
+            class="w-full rounded-md bg-light hover:shadow transition-shadow py-2 uppercase cursor-pointer text-center text-dark mt-auto">
+            Dona con PayPal
+          </a>
+        </article>
+      </li>
+
       <!-- XMR -->
       <li>
         <article class="rounded-md p-3 lg:p-5 flex flex-col gap-5 relative bg-primary overflow-hidden">

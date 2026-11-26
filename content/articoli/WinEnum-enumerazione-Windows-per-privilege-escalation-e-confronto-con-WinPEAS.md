@@ -507,6 +507,6 @@ Se cerchi [formazione 1:1 o servizi di penetration test per aziende](/servizi/),
 
 Per riferimento esterno sul tool, puoi consultare anche il modulo storico [Invoke-WinEnum in Empire](https://github.com/EmpireProject/Empire/blob/master/data/module_source/situational_awareness/host/Invoke-WinEnum.ps1).
 
-1: [https://hackita.it/supporto/?utm\_source=chatgpt.com](/supporto/?utm_source=chatgpt.com) "Supporto - HackIta"
-2: [https://hackita.it/servizi/?utm\_source=chatgpt.com](/servizi/?utm_source=chatgpt.com) "Servizi - HackIta"
+1: [https://hackita.it/supporto/](/supporto/) "Supporto - HackIta"
+2: [https://hackita.it/servizi/](/servizi/) "Servizi - HackIta"
 3: [https://github.com/EmpireProject/Empire/blob/master/data/module\_source/situational\_awareness/host/Invoke-WinEnum.ps1](https://github.com/EmpireProject/Empire/blob/master/data/module_source/situational_awareness/host/Invoke-WinEnum.ps1)?

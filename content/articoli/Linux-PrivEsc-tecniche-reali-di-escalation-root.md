@@ -619,8 +619,8 @@ Riferimento:
 
 Uso esclusivo in ambienti autorizzati.
 
-\[1]: [https://gtfobins.github.io/?utm\_source=chatgpt.com](https://gtfobins.github.io?utm_source=chatgpt.com) "GTFOBins"
-\[2]: [https://angelica.gitbook.io/hacktricks/linux-hardening/linux-privilege-escalation-checklist?utm\_source=chatgpt.com](https://angelica.gitbook.io/hacktricks/linux-hardening/linux-privilege-escalation-checklist?utm_source=chatgpt.com) "Checklist - Linux Privilege Escalation - HackTricks"
-\[3]: [https://ahmed-tarek.gitbook.io/security-notes/pentesting/net-pen/privilege-escalation/linux-privilege-escalation?utm\_source=chatgpt.com](https://ahmed-tarek.gitbook.io/security-notes/pentesting/net-pen/privilege-escalation/linux-privilege-escalation?utm_source=chatgpt.com) "Linux Privilege Escalation - Security Notes - GitBook"
+\[1]: [https://gtfobins.github.io/](https://gtfobins.github.io) "GTFOBins"
+\[2]: [https://angelica.gitbook.io/hacktricks/linux-hardening/linux-privilege-escalation-checklist](https://angelica.gitbook.io/hacktricks/linux-hardening/linux-privilege-escalation-checklist) "Checklist - Linux Privilege Escalation - HackTricks"
+\[3]: [https://ahmed-tarek.gitbook.io/security-notes/pentesting/net-pen/privilege-escalation/linux-privilege-escalation](https://ahmed-tarek.gitbook.io/security-notes/pentesting/net-pen/privilege-escalation/linux-privilege-escalation) "Linux Privilege Escalation - Security Notes - GitBook"
 
 > [hackita.it/supporto](/supporto) — [hackita.it/servizi](/servizi).

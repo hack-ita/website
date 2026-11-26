@@ -620,4 +620,4 @@ Se vuoi accelerare davvero (lab guidati, roadmap, troubleshooting), trovi la for
 
 Per aziende o team: assessment, hardening e test controllati su perimetri autorizzati li trovi qui: /servizi/.
 
-(1): [https://manpages.debian.org/testing/iputils-ping/ping.8.en.html?utm\_source=chatgpt.com](https://manpages.debian.org/testing/iputils-ping/ping.8.en.html?utm_source=chatgpt.com) "ping(8) — iputils-ping — Debian testing — Debian Manpages"
+(1): [https://manpages.debian.org/testing/iputils-ping/ping.8.en.html](https://manpages.debian.org/testing/iputils-ping/ping.8.en.html) "ping(8) — iputils-ping — Debian testing — Debian Manpages"

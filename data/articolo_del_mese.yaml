@@ -1,0 +1,7 @@
+# The most read article of the last 30 days (clicks from Google Search Console), shown first on /articoli/.
+# Written by SEO Boss (command: articolo-del-mese). Without this file the page shows the latest featured article.
+slug: dark-web
+mese: "2026-11"
+periodo: "2026-10-25 / 2026-11-23"
+clic: 1999
+fonte: "Google Search Console, ricerca web"

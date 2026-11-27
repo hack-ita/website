@@ -108,9 +108,9 @@
         <div class="overflow-y-scroll grow min-h-0">
           {{ .TableOfContents }}
         </div>
-        <div class="relative h-[20vh] shrink-0 mt-5">
-          <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="absolute inset-0 z-10"></a>
-          {{ partial "components/image.html" (dict "src" "images/shop_link_wide.jpeg" "alt" "Banner Hackita Shop: felpa, magliette e zaino della collezione 'Mentalità Offensiva' — scopri lo shop Hackita" "class" "size-full absolute inset-0 object-cover") }}
+        {{- /* the slot has the banner's own shape (3:1): the whole banner, nothing cut, nothing added */}}
+        <div class="relative aspect-[3/1] w-full shrink-0 mt-5">
+          {{ partial "components/shop-banner.html" (dict "class" "absolute inset-0 shop-banner--small" "shape" "riquadro" "where" "articolo-indice") }}
         </div>
       </div>
       </div>
@@ -122,10 +122,9 @@
 {{ if eq .Section "articoli" }}
 {{ partial "components/support-cta.html" . }}
 <div class="bg-mask pt-10 hidden lg:block">
-  <div class="relative h-80 max-w-7xl mx-auto">
-    <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="size-full absolute inset-0 z-10"></a>
+  <div class="relative aspect-[1659/404] max-w-7xl mx-auto">
     {{- /* desktop-only banner (hidden below lg): lazy, so phones never download it */ -}}
-    {{ partial "components/image.html" (dict "src" "images/shop_link_wider.jpeg" "alt" "Banner Hackita Shop: figura incappucciata con felpa, magliette e zaino del merchandising 'Mentalità Offensiva' — scopri lo shop Hackita" "class" "size-full absolute inset-0 object-cover") }}
+    {{ partial "components/shop-banner.html" (dict "class" "absolute inset-0 shop-banner--small" "shape" "fascia" "where" "articolo-fascia") }}
   </div>
 </div>
 {{/*  related articles  */}}

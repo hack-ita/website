@@ -1,0 +1,18 @@
+{{- /* The article shown first on /articoli/ (and preloaded in the head): the most read of the month from
+       data/articolo_del_mese.yaml when that article exists, else the latest featured one, else the latest.
+       Returns (dict "page" <page> "monthly" <true when it is the article of the month>). */ -}}
+{{- $section := site.GetPage "/articoli" -}}
+{{- $page := false -}}{{- $monthly := false -}}
+{{- with site.Data.articolo_del_mese -}}
+  {{- with .slug -}}
+    {{- with first 1 (where $section.RegularPages "Params.slug" .) -}}
+      {{- $page = index . 0 -}}{{- $monthly = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $page -}}
+  {{- with first 1 ((where $section.RegularPages "Params.featured" "eq" true) | default $section.RegularPages) -}}
+    {{- $page = index . 0 -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "page" $page "monthly" $monthly) -}}

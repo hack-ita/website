@@ -46,8 +46,7 @@
         </div>
       </div>
       <div class="size-full relative">
-        <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="absolute inset-0"></a>
-        {{ partial "components/image.html" (dict "src" "images/shop_link_wide.jpeg" "alt" "Banner Hackita Shop: felpa, magliette e zaino della collezione 'Mentalità Offensiva' — scopri lo shop Hackita" "highFetchPrio" "true") }}
+        {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[3/1] w-full shop-banner--small" "shape" "riquadro" "where" "home-alto" "priority" true) }}
       </div>
     </div>
 
@@ -196,9 +195,13 @@
 
     {{ partial "shared/article-carousel.html" (dict "articles" (after 6 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 10) "imageHeight" "h-70") }}
     
-    <div class="relative">
-      <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="absolute inset-0"></a>
-      {{ partial "components/image.html" (dict "src" "images/shop_link_wider.jpeg" "alt" "Banner Hackita Shop: figura incappucciata con felpa, magliette e zaino del merchandising 'Mentalità Offensiva' — scopri lo shop Hackita") }}
+    {{- /* wide version from tablet up, 3:1 version on phones (the wide one would be too small to read);
+           both lazy, so the hidden one is never downloaded */}}
+    <div class="relative hidden md:block">
+      {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[1659/404] w-full shop-banner--small" "shape" "fascia" "where" "home-articoli") }}
+    </div>
+    <div class="relative md:hidden">
+      {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[3/1] w-full shop-banner--small" "shape" "riquadro" "where" "home-articoli") }}
     </div>
 
   </div>
@@ -215,7 +218,7 @@
     {{ partial "components/heading.html" (dict "text" .title) }}
 
     <!-- Content -->
-    <div class="flex flex-col-reverse lg:flex-row gap-10 content-between">
+    <div class="flex flex-col-reverse lg:flex-row lg:items-center gap-10 content-between">
       
       <!-- Text Column -->
       <div class="space-y-10 lg:w-1/2"  >
@@ -227,7 +230,7 @@
 
       <!-- Image Column -->
       <figure class="lg:w-1/2"  >
-        {{ partial "components/image.html" (dict "src" .image "alt" .Title "class" "lg:w-150 lg:ml-auto") }}
+        {{ partial "components/image.html" (dict "src" .image "alt" .Title "class" "lg:w-150 mx-auto") }}
       </figure>
 
     </div>

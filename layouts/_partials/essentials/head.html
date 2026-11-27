@@ -20,9 +20,9 @@
 
 {{/* /articoli/: the "Ultimo articolo" block is the largest element of the first screen, and its picture is a CSS
      background the browser finds late, while the carousel images below compete with it. Preload it first.
-     Same choice as articoli/list.html: the featured article, else the latest one. */}}
+     Same choice as articoli/list.html (seo/featured-article.html). */}}
 {{ if and .IsSection (eq .Section "articoli") }}
-  {{ range first 1 ((where .RegularPages "Params.featured" "eq" true) | default .RegularPages) }}
+  {{ with (partial "seo/featured-article.html" .).page }}
     {{ with .Params.image }}{{ with resources.Get . }}
 <link rel="preload" as="image" href="{{ .RelPermalink }}" fetchpriority="high">
     {{ end }}{{ end }}

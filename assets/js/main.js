@@ -1445,3 +1445,35 @@ if (document.readyState === "loading") {
   document.documentElement.classList.add("reveal-ready");
 })();
 
+// Background videos marked data-lazy-video: the file is requested only when the video is about to enter the screen
+// (400 px before), so visitors who never scroll there do not download it. The poster shows until then.
+(() => {
+  const videos = document.querySelectorAll("video[data-lazy-video]");
+  if (!videos.length) return;
+  const start = (video) => {
+    video.querySelectorAll("source[data-src]").forEach((source) => {
+      source.src = source.dataset.src;
+      source.removeAttribute("data-src");
+    });
+    video.load();
+    const playing = video.play();
+    if (playing && playing.catch) playing.catch(() => {});
+  };
+  if (!("IntersectionObserver" in window)) {
+    videos.forEach(start);
+    return;
+  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          observer.unobserve(entry.target);
+          start(entry.target);
+        }
+      }
+    },
+    { rootMargin: "400px 0px" },
+  );
+  videos.forEach((video) => observer.observe(video));
+})();
+

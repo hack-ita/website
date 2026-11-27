@@ -108,9 +108,9 @@
         <div class="overflow-y-scroll grow min-h-0">
           {{ .TableOfContents }}
         </div>
-        {{- /* the slot has the banner's own shape (16:9): the whole banner, nothing cut, nothing added */}}
-        <div class="relative aspect-video w-full shrink-0 mt-5">
-          {{ partial "components/shop-banner.html" (dict "class" "absolute inset-0 shop-banner--small" "where" "articolo-indice") }}
+        {{- /* the slot has the banner's own shape (3:1): the whole banner, nothing cut, nothing added */}}
+        <div class="relative aspect-[3/1] w-full shrink-0 mt-5">
+          {{ partial "components/shop-banner.html" (dict "class" "absolute inset-0 shop-banner--small" "shape" "riquadro" "where" "articolo-indice") }}
         </div>
       </div>
       </div>
@@ -122,9 +122,9 @@
 {{ if eq .Section "articoli" }}
 {{ partial "components/support-cta.html" . }}
 <div class="bg-mask pt-10 hidden lg:block">
-  <div class="relative h-80 max-w-7xl mx-auto">
+  <div class="relative aspect-[1659/404] max-w-7xl mx-auto">
     {{- /* desktop-only banner (hidden below lg): lazy, so phones never download it */ -}}
-    {{ partial "components/shop-banner.html" (dict "class" "absolute inset-0" "where" "articolo-fascia") }}
+    {{ partial "components/shop-banner.html" (dict "class" "absolute inset-0 shop-banner--small" "shape" "fascia" "where" "articolo-fascia") }}
   </div>
 </div>
 {{/*  related articles  */}}

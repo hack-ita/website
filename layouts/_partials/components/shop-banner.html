@@ -3,7 +3,11 @@
        article band) without cutting "BUY NOW" or the products. The red glow, the passing shine and the button draw the
        eye; nothing moves for visitors who ask for reduced motion. Clicks are counted by GoatCounter.
        Params: class (size of the slot), where (name for the click count), priority (true for the first screen). */ -}}
-{{- $src := "images/shop-banner.webp" -}}
+{{- /* shape "fascia" (wide bands, about 4:1) or "riquadro" (small tiles, 3:1): two versions of the same banner
+       designed for those shapes; each slot uses the version's own proportions, so nothing is cut */ -}}
+{{- $shape := .shape | default "riquadro" -}}
+{{- $src := printf "images/shop-banner-%s.webp" $shape -}}
+{{- $max := cond (eq $shape "fascia") 1660 1200 -}}
 {{- $alt := "HackITA Shop: merch ufficiale HackITA, felpe, cappellini e zaini. Compra ora su shop.hackita.it" -}}
 {{- $backdrop := "" -}}
 {{- with resources.Get $src }}{{ $backdrop = .Resize "64x webp q50" }}{{ end -}}
@@ -14,7 +18,6 @@
   <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="" aria-hidden="true"
        class="shop-banner__backdrop" loading="lazy" decoding="async">
   {{- end }}
-  {{- /* 1400 px wide at most: the widest slot is the 1280 px article band */}}
-  {{ partial "components/image.html" (dict "src" $src "alt" $alt "class" "shop-banner__img" "width" 1400 "height" 1400 "highFetchPrio" (.priority | default false)) }}
+  {{ partial "components/image.html" (dict "src" $src "alt" $alt "class" "shop-banner__img" "width" $max "height" $max "highFetchPrio" (.priority | default false)) }}
   <span class="shop-banner__cta" aria-hidden="true">Vai allo shop &rarr;</span>
 </a>

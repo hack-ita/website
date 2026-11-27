@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="size-full relative">
-        {{ partial "components/shop-banner.html" (dict "class" "relative aspect-video w-full shop-banner--small" "where" "home-alto" "priority" true) }}
+        {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[3/1] w-full shop-banner--small" "shape" "riquadro" "where" "home-alto" "priority" true) }}
       </div>
     </div>
 
@@ -195,8 +195,13 @@
 
     {{ partial "shared/article-carousel.html" (dict "articles" (after 6 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 10) "imageHeight" "h-70") }}
     
-    <div class="relative">
-      {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[2034/773] w-full" "where" "home-articoli") }}
+    {{- /* wide version from tablet up, 3:1 version on phones (the wide one would be too small to read);
+           both lazy, so the hidden one is never downloaded */}}
+    <div class="relative hidden md:block">
+      {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[1659/404] w-full shop-banner--small" "shape" "fascia" "where" "home-articoli") }}
+    </div>
+    <div class="relative md:hidden">
+      {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[3/1] w-full shop-banner--small" "shape" "riquadro" "where" "home-articoli") }}
     </div>
 
   </div>

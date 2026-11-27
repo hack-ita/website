@@ -727,6 +727,8 @@ const initDeferred = () => {
           once: true,
           passive: true,
         });
+        // Get the search ready while the page is idle, so the first letter typed does not wait for it
+        (window.requestIdleCallback || ((fn) => setTimeout(fn, 1500)))(() => initPagefind());
 
         input.addEventListener("input", (e) => {
           clearTimeout(timer);
@@ -739,6 +741,8 @@ const initDeferred = () => {
           }
 
           setState("loading");
+          // start downloading the index pieces for this term while the debounce waits
+          if (pagefind && pagefind.preload) pagefind.preload(term);
 
           timer = setTimeout(async () => {
             if (!pagefind) {
@@ -751,18 +755,26 @@ const initDeferred = () => {
 
             try {
               const res = await pagefind.search(term);
+              if (term !== currentSearchTerm) return; // the user kept typing: a newer search will answer
 
               if (!res.results.length) {
                 setState("empty");
                 return;
               }
 
-              // Process all results with relevance scoring
+              // Only the best results (Pagefind's order), loaded together: loading every match one after the
+              // other made the search slow on common words
+              const loaded = await Promise.all(
+                res.results.slice(0, 10).map((hit) => hit.data().catch(() => null)),
+              );
+              if (term !== currentSearchTerm) return;
+
+              // Process the results with relevance scoring
               const scoredResults = [];
 
-              for (const hit of res.results) {
+              for (const data of loaded) {
+                if (!data) continue;
                 try {
-                  const data = await hit.data();
                   const score = calculateRelevance(data, term);
 
                   scoredResults.push({
@@ -831,7 +843,7 @@ const initDeferred = () => {
               error("Search failed:", e);
               setState("error");
             }
-          }, 200);
+          }, 150);
         });
 
         suggList.addEventListener(

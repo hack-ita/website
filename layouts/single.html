@@ -108,7 +108,8 @@
         <div class="overflow-y-scroll grow min-h-0">
           {{ .TableOfContents }}
         </div>
-        <div class="relative h-[20vh] shrink-0 mt-5">
+        {{- /* the slot has the banner's own shape (16:9): the whole banner, nothing cut, nothing added */}}
+        <div class="relative aspect-video w-full shrink-0 mt-5">
           {{ partial "components/shop-banner.html" (dict "class" "absolute inset-0 shop-banner--small" "where" "articolo-indice") }}
         </div>
       </div>

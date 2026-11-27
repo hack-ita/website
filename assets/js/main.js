@@ -429,7 +429,7 @@ const initDeferred = () => {
           const code = scope && scope.querySelector("pre code");
           if (!code) return;
           try {
-            await navigator.clipboard.writeText(code.innerText);
+            await navigator.clipboard.writeText(code.textContent.replace(/\n$/, ""));
             button.textContent = done;
             button.classList.add("is-done");
           } catch (e) {

@@ -15,7 +15,7 @@
 
 {{/* Title */}}
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Page.Title }} | Hackita{{ end }}</title>
-<meta name="description" content="{{ with .Description }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description | default "HackIta - Offensive security blog" }}{{ end }}">
+<meta name="description" content="{{ partial "seo/description.html" (dict "page" . "fallback" (site.Params.description | default "HackIta - Offensive security blog")) | plainify | truncate 160 }}">
 <link rel="canonical" href="{{ .Permalink }}">
 
 {{/* hreflang: Italian source (hackita.it) + one tag per live translated

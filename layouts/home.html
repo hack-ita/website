@@ -216,7 +216,7 @@
       
       <!-- Text Column -->
       <div class="space-y-10 lg:w-1/2"  >
-        <div class="text-dark dark:text-light prose prose-gray dark:prose-invert max-w-none">
+        <div class="text-dark dark:text-light prose prose-gray dark:prose-invert max-w-none prose-strong:text-primary prose-a:text-primary prose-a:font-semibold">
           {{ .content | markdownify }}
         </div>
         {{ partial "components/button.html" (dict "link" "true" "label" "Scopri di piú" "url" "/about/") }}

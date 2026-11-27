@@ -2,7 +2,7 @@
 sitemap:
   disable: false
   priority: 1
-description: 'Guide, analisi e tutorial su sicurezza informatica, penetration testing e strumenti come WPScan, sqlmap e Metasploit.'
+description: 'Hackita è il blog italiano di cybersecurity, sicurezza informatica ed ethical hacking: guide pratiche su penetration testing, red team, Active Directory e CTF.'
 image: /images/hackita-hero.webp
 images:
   - /images/hackita-hero.webp

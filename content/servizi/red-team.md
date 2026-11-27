@@ -1,7 +1,7 @@
 ---
 title: Red Team
 description: >-
-  Non solo test: una vera simulazione di attacco.<br> Agiamo come un gruppo di hacker reali per mettere alla prova persone, processi e tecnologie della tua azienda.<br> Scopri quanto sei davvero pronto a difenderti.
+  Non solo test: una vera simulazione di attacco. Agiamo come un gruppo di hacker reali per mettere alla prova persone, processi e tecnologie della tua azienda. Scopri quanto sei davvero pronto a difenderti.
 image: /images/red-team-new.jpeg
 ---
 

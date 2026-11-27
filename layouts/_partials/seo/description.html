@@ -1,0 +1,6 @@
+{{- /* The page's meta description: its own description, else data/meta_descriptions.yaml (pages whose TinaCMS form
+       has no description field), else the given fallback. */ -}}
+{{- $desc := "" -}}
+{{- with .page.Description }}{{ $desc = . }}{{ else }}{{ with index (site.Data.meta_descriptions | default dict) .page.RelPermalink }}{{ $desc = . }}{{ end }}{{ end -}}
+{{- if not $desc }}{{ $desc = .fallback }}{{ end -}}
+{{- return $desc -}}

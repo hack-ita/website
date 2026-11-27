@@ -1,7 +1,7 @@
 ---
 title: Corsi Per Aziende
 description: >-
-  Rendiamo la tua azienda più sicura con percorsi mirati di cybersecurity.<br> Formiamo il tuo team per prevenire, riconoscere e gestire le minacce informatiche.
+  Rendiamo la tua azienda più sicura con percorsi mirati di cybersecurity. Formiamo il tuo team per prevenire, riconoscere e gestire le minacce informatiche.
 image: /images/corsi-per-aziende-new.jpg
 ---
 

@@ -18,6 +18,17 @@
 <meta name="description" content="{{ partial "seo/description.html" (dict "page" . "fallback" (site.Params.description | default "HackIta - Offensive security blog")) | plainify | truncate 160 }}">
 <link rel="canonical" href="{{ .Permalink }}">
 
+{{/* /articoli/: the "Ultimo articolo" block is the largest element of the first screen, and its picture is a CSS
+     background the browser finds late, while the carousel images below compete with it. Preload it first.
+     Same choice as articoli/list.html: the featured article, else the latest one. */}}
+{{ if and .IsSection (eq .Section "articoli") }}
+  {{ range first 1 ((where .RegularPages "Params.featured" "eq" true) | default .RegularPages) }}
+    {{ with .Params.image }}{{ with resources.Get . }}
+<link rel="preload" as="image" href="{{ .RelPermalink }}" fetchpriority="high">
+    {{ end }}{{ end }}
+  {{ end }}
+{{ end }}
+
 {{/* hreflang: Italian source (hackita.it) + one tag per live translated
      sub-domain (params.gtranslate.languages) + x-default. The translated sides
      are served by GTranslate. Skipped on noindex term pages. An article written in

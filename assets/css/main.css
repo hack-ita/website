@@ -284,24 +284,44 @@ h1, h2 {
   @apply w-full p-3 bg-light-bg dark:bg-accent text-dark dark:text-light shadow-xl border border-dark/20 dark:border-light/20;
 }
 
-/* Suggestion list */
+/* Suggestion list: black cards with a red border and red title, like the article cards;
+   the first result inverted (red card, white title) */
 .suggestions {
-  @apply list-none m-0 mt-3 rounded-md p-0 bg-primary overflow-hidden shadow-2xl divide-y divide-dark/20;
+  @apply list-none m-0 mt-3 p-0 flex flex-col gap-3;
 }
 .suggestions li {
-  @apply p-3 cursor-pointer transition-colors text-light;
+  @apply p-4 rounded-md cursor-pointer transition-colors bg-black border border-primary text-light shadow-2xl;
 }
-
+.suggestions li a {
+  @apply block;
+}
 .suggestions li strong {
-  @apply uppercase;
+  @apply block mb-1 uppercase font-bold text-primary;
 }
-
-.suggestions li:hover {
-  @apply bg-primary;
+.suggestions li p {
+  @apply text-light/90;
 }
-
 .suggestions mark {
+  @apply bg-transparent text-primary font-bold;
+}
+.suggestions li strong mark {
+  @apply text-light;
+}
+.suggestions li:hover {
+  @apply border-light;
+}
+.suggestions li:first-child:not(.search-state) {
   @apply bg-primary;
+}
+.suggestions li:first-child:not(.search-state) strong,
+.suggestions li:first-child:not(.search-state) p {
+  @apply text-light;
+}
+.suggestions li:first-child:not(.search-state) mark {
+  @apply text-black;
+}
+.suggestions li:first-child:not(.search-state):hover {
+  @apply border-black;
 }
 
 /* Preview card */

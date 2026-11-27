@@ -402,57 +402,44 @@ const initDeferred = () => {
       safe(() => {
         if (!FEATURES.codeCopy) return;
 
-        const codeBlocks = $$("pre > code");
-        if (!codeBlocks.length) return;
+        // One listener for every block: the button sits in the terminal bar of the block
+        // (render-codeblock.html), nothing is recalculated while the page scrolls.
+        const english = (document.documentElement.lang || "").startsWith("en");
+        const label = english ? "Copy" : "Copia";
+        const done = english ? "Copied ✓" : "Copiato ✓";
+        const failed = english ? "Error" : "Errore";
 
-        codeBlocks.forEach((codeBlock, index) => {
+        // Code blocks without the terminal bar (not from a code fence): a button inside the block itself
+        $$("pre > code").forEach((codeBlock) => {
+          if (codeBlock.closest(".code-window")) return;
           const pre = codeBlock.parentElement;
-          if (!pre || pre.querySelector(".copy-btn")) return;
-
-          pre.style.position = "relative";
-          pre.style.overflow = "auto";
-
+          if (!pre || pre.querySelector(".code-copy")) return;
+          pre.classList.add("has-inline-copy");
           const button = document.createElement("button");
           button.type = "button";
-          button.className = "copy-btn";
-          button.textContent = "Copy";
-
-          // Position button relative to pre element
-          const updateButtonPosition = () => {
-            const rect = pre.getBoundingClientRect();
-            button.style.top = `${rect.top + 8}px`; // 8px = top-2
-            button.style.left = `${rect.right - button.offsetWidth - 8}px`; // 8px from right
-          };
-
+          button.className = "code-copy code-copy--inline";
+          button.textContent = label;
           pre.insertBefore(button, pre.firstChild);
-          updateButtonPosition();
+        });
 
-          // Update position on scroll
-          let scrollTimeout;
-          const handleScroll = () => {
-            button.style.opacity = "0.3";
-            clearTimeout(scrollTimeout);
-            updateButtonPosition();
-            scrollTimeout = setTimeout(() => {
-              button.style.opacity = "0.7";
-            }, 150);
-          };
-
-          window.addEventListener("scroll", updateButtonPosition);
-          window.addEventListener("resize", updateButtonPosition);
-          pre.addEventListener("scroll", handleScroll);
-
-          button.addEventListener("click", async () => {
-            try {
-              await navigator.clipboard.writeText(codeBlock.innerText);
-              button.textContent = "Copied!";
-              setTimeout(() => (button.textContent = "Copy"), 1500);
-            } catch (e) {
-              error("Copy failed:", e);
-              button.textContent = "Error";
-              setTimeout(() => (button.textContent = "Copy"), 1500);
-            }
-          });
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".code-copy");
+          if (!button) return;
+          const scope = button.closest(".code-window") || button.closest("pre");
+          const code = scope && scope.querySelector("pre code");
+          if (!code) return;
+          try {
+            await navigator.clipboard.writeText(code.innerText);
+            button.textContent = done;
+            button.classList.add("is-done");
+          } catch (e) {
+            error("Copy failed:", e);
+            button.textContent = failed;
+          }
+          setTimeout(() => {
+            button.textContent = label;
+            button.classList.remove("is-done");
+          }, 1600);
         });
         log("Code copy initialized");
       }, "CodeCopy"),
@@ -1427,3 +1414,29 @@ if (document.readyState === "loading") {
     });
   }
 }
+
+// Cards that appear while scrolling: one IntersectionObserver for every .reveal element.
+(() => {
+  const items = document.querySelectorAll(".reveal");
+  if (!items.length || !("IntersectionObserver" in window)) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      }
+    },
+    { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+  );
+  // cards already on screen are shown at once, the others when they enter
+  items.forEach((item) => {
+    const box = item.getBoundingClientRect();
+    if (box.top < window.innerHeight && box.bottom > 0) item.classList.add("is-visible");
+    else observer.observe(item);
+  });
+  document.documentElement.classList.add("reveal-ready");
+})();
+

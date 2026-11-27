@@ -1,0 +1,29 @@
+{{- /* "Sostieni HackITA" band at the end of every article: PayPal first, the other ways on /supporto/.
+       English for the articles written in English (data/content_languages.yaml). Clicks are counted by GoatCounter
+       (data-goatcounter-click). Outside the article text and ignored by the site search. */ -}}
+{{- $en := eq (partial "seo/content-lang.html" .) "en" -}}
+<section class="px-5 pt-10" aria-label="{{ cond $en "Support HackITA" "Sostieni HackITA" }}" data-pagefind-ignore>
+  <div class="support-cta max-w-7xl mx-auto">
+    <div class="support-cta__inner">
+      <div class="support-cta__text">
+        <p class="support-cta__prompt" aria-hidden="true">&gt; {{ cond $en "support_hackita" "sostieni_hackita" }}<span class="support-cta__cursor">_</span></p>
+        <p class="support-cta__question">{{ cond $en "Was this guide useful?" "Ti è stata utile questa guida?" }}</p>
+        <p class="support-cta__title hero-heading">{{ cond $en "Support" "Sostieni" }} <span>HackITA</span></p>
+        <p class="support-cta__body">
+          {{ cond $en "Your contribution helps us build new labs and free cybersecurity guides."
+                      "Il tuo contributo ci aiuta a sviluppare nuovi laboratori e guide gratuite sulla cybersecurity." }}
+        </p>
+      </div>
+      <div class="support-cta__actions">
+        <a class="support-cta__paypal" href="https://www.paypal.com/paypalme/Hackita" target="_blank" rel="noopener"
+           data-goatcounter-click="supporto-paypal-articolo" data-goatcounter-title="Dona con PayPal (articolo)">
+          {{ cond $en "Donate with PayPal" "Dona con PayPal" }}
+        </a>
+        <a class="support-cta__other" href="/supporto/"
+           data-goatcounter-click="supporto-altri-modi-articolo" data-goatcounter-title="Altri modi (articolo)">
+          {{ cond $en "Other ways (Bitcoin, Monero)" "Altri modi (Bitcoin, Monero)" }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

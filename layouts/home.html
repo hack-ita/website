@@ -8,11 +8,12 @@
     <div class="relative lg:col-span-5">
       <div class="swiper heroImgSwiper lg:h-[70vh]" role="region" aria-label="Featured blog images">
         <div class="swiper-wrapper">
-          {{ range first 5 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) }}
+          {{ range $i, $p := first 5 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) }}
           <div class="swiper-slide">
             <div class="lg:size-full relative">
-              <a href="{{ .RelPermalink }}" aria-label="{{ .Title }}" class="absolute inset-0"></a>
-              {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" "lg:size-full object-cover hover:scale-115 duration-300 transition-transform" "highFetchPrio" "true") }}
+              <a href="{{ $p.RelPermalink }}" aria-label="{{ $p.Title }}" class="absolute inset-0"></a>
+              {{- /* only the first slide is on the first screen: loaded at once; the others when they are about to show */ -}}
+              {{ partial "components/image.html" (dict "src" $p.Params.image "alt" $p.Title "class" "lg:size-full object-cover hover:scale-115 duration-300 transition-transform" "highFetchPrio" (eq $i 0)) }}
             </div>
           </div>
           {{ end }}
@@ -139,11 +140,13 @@
     loop
     muted
     playsinline
+    preload="none"
+    data-lazy-video
     poster="{{ "images/hackita-hero.webp" | relURL }}"
     class="absolute inset-0 size-full object-cover object-top-left"
     aria-hidden="true"
   >
-    <source src='{{ "videos/dev/articles_bg.mp4" | relURL }}' type="video/mp4" />
+    <source data-src='{{ "videos/dev/articles_bg.mp4" | relURL }}' type="video/mp4" />
   </video>
   <div class="absolute inset-0 bg-black opacity-50" aria-hidden="true"></div>
 

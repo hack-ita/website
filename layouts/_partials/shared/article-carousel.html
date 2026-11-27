@@ -40,7 +40,7 @@
           {{ range $articles }}
           <div class="swiper-slide">
             <a href="{{ .RelPermalink }}" class="block">
-              <article class="reveal flex flex-col items-stretch group h-full">
+              <article class="flex flex-col items-stretch group h-full">
                 <div class="overflow-hidden">
                   {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" (printf "%s w-full object-cover group-hover:scale-115 transition-transform duration-500" $imageHeight)) }}
                 </div>
@@ -111,7 +111,7 @@
       {{ range $articles }}
       <div class="swiper-slide">
         <a href="{{ .RelPermalink }}" class="block">
-          <article class="reveal flex flex-col items-stretch group h-full">
+          <article class="flex flex-col items-stretch group h-full">
             <div class="overflow-hidden">
               {{ partial "components/image.html" (dict "src" .Params.image "alt" .Title "class" (printf "%s w-full object-cover object-top group-hover:scale-115 transition-transform duration-500" $imageHeight)) }}
             </div>

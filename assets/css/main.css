@@ -408,11 +408,23 @@ pre:has(> code) {
   @apply relative overflow-x-auto;
 }
 
-.copy-btn {
-  @apply fixed rounded-md
-         bg-accent text-light text-xs
-         px-2 py-1 opacity-70
-         hover:opacity-100 transition z-10;
+/* Copy button in the terminal bar of each code block */
+.code-copy {
+  @apply rounded-md border border-light/40 text-light text-xs uppercase tracking-wide px-3 py-1 cursor-pointer transition-colors;
+}
+.code-copy:hover,
+.code-copy:focus-visible {
+  @apply border-primary text-primary;
+}
+.code-copy.is-done {
+  @apply bg-primary border-primary text-light;
+}
+/* blocks without the terminal bar: the button inside the block, top right */
+pre.has-inline-copy {
+  @apply relative;
+}
+.code-copy--inline {
+  @apply absolute top-2 right-2 bg-accent z-10;
 }
 
 /* ===========================
@@ -844,4 +856,19 @@ pre:has(> code) {
 }
 @media (prefers-reduced-motion: reduce) {
   .support-cta, .support-cta__cursor, .support-cta__paypal, .support-cta__paypal::after { animation: none; }
+}
+
+
+/* ===========================
+   Cards that appear while scrolling. The script only adds .reveal-ready to <html> when it runs
+   (main.js), so without it, and for visitors who ask for reduced motion, the cards are simply visible.
+=========================== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-ready .reveal:not(.is-visible) {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  .reveal-ready .reveal {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
 }

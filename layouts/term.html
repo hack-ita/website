@@ -85,7 +85,7 @@
     <ul class="flex flex-col gap-10">
         {{ range .Pages }}
           <li
-            class="post-item grid relative lg:grid-cols-5 gap-5 p-5 lg:p-3 bg-glass border border-dark/20 dark:border-light/20 rounded-md shadow-xl transition-shadow hover:shadow-primary/20"
+            class="reveal post-item grid relative lg:grid-cols-5 gap-5 p-5 lg:p-3 bg-glass border border-dark/20 dark:border-light/20 rounded-md shadow-xl transition-shadow hover:shadow-primary/20"
             {{ with .Params.categories }}
               data-categories="{{ delimit (apply . "urlize" ".") "," }}"
             {{ else }}

@@ -1,0 +1,5 @@
+# Meta description of pages whose TinaCMS form has no description field (a TinaCMS save could drop it from the
+# front matter). Keyed by the page address. A description in the page's own front matter always wins.
+"/servizi/": "Penetration test, red team e formazione in cybersecurity per aziende: simuliamo attacchi reali per trovare le vulnerabilità prima dei criminali."
+"/about/": "Chi c'è dietro HackITA: il progetto italiano di ethical hacking e sicurezza offensiva, con guide pratiche, lab reali e servizi di penetration testing."
+"/contatto/": "Contatta HackITA per penetration test, red team, formazione in cybersecurity per aziende o collaborazioni: ti rispondiamo al più presto."

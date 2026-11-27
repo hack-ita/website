@@ -15,7 +15,8 @@
 
 {{- $title := cond .IsHome site.Title .Title -}}
 {{- $desc := "" -}}
-{{- with .Description }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | plainify }}{{ else }}{{ $desc = site.Params.description }}{{ end }}{{ end -}}
+{{- $desc = partial "seo/description.html" (dict "page" . "fallback" "") -}}
+{{- if not $desc }}{{ with .Summary }}{{ $desc = . | plainify }}{{ else }}{{ $desc = site.Params.description }}{{ end }}{{ end -}}
 {{- $ogtype := cond (and .IsPage (eq .Section "articoli")) "article" "website" -}}
 
 <meta property="og:url" content="{{ .Permalink }}">

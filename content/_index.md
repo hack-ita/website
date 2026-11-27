@@ -2,7 +2,7 @@
 sitemap:
   disable: false
   priority: 1
-description: 'Guide, analisi e tutorial su sicurezza informatica, penetration testing e strumenti come WPScan, sqlmap e Metasploit.'
+description: 'Ethical hacking in italiano: guide pratiche di pentest su web, Active Directory, Linux e Windows, più penetration test e red team per aziende.'
 image: /images/hackita-hero.webp
 images:
   - /images/hackita-hero.webp

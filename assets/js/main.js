@@ -1429,7 +1429,8 @@ if (document.readyState === "loading") {
         }
       }
     },
-    { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+    // start the fade a little before the card reaches the screen, so nothing looks missing while scrolling
+    { rootMargin: "0px 0px 25% 0px", threshold: 0 },
   );
   // cards already on screen are shown at once, the others when they enter; a card inside a carousel is always
   // shown (the carousel hides its off-screen slides, so the observer would never see them enter)
@@ -1439,7 +1440,7 @@ if (document.readyState === "loading") {
       return;
     }
     const box = item.getBoundingClientRect();
-    if (box.top < window.innerHeight && box.bottom > 0) item.classList.add("is-visible");
+    if (box.top < window.innerHeight * 1.25 && box.bottom > 0) item.classList.add("is-visible");
     else observer.observe(item);
   });
   document.documentElement.classList.add("reveal-ready");

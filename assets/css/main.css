@@ -866,9 +866,9 @@ pre.has-inline-copy {
 @media (prefers-reduced-motion: no-preference) {
   .reveal-ready .reveal:not(.is-visible) {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(16px);
   }
   .reveal-ready .reveal {
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition: opacity 0.45s ease, transform 0.45s ease;
   }
 }

@@ -2,7 +2,7 @@
 sitemap:
   disable: false
   priority: 1
-description: 'Ethical hacking in italiano: guide pratiche di pentest su web, Active Directory, Linux e Windows, più penetration test e red team per aziende.'
+description: 'Hackita è il blog italiano di cybersecurity, sicurezza informatica ed ethical hacking: guide pratiche su penetration testing, red team, Active Directory e CTF.'
 image: /images/hackita-hero.webp
 images:
   - /images/hackita-hero.webp

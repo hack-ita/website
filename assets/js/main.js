@@ -1431,8 +1431,13 @@ if (document.readyState === "loading") {
     },
     { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
   );
-  // cards already on screen are shown at once, the others when they enter
+  // cards already on screen are shown at once, the others when they enter; a card inside a carousel is always
+  // shown (the carousel hides its off-screen slides, so the observer would never see them enter)
   items.forEach((item) => {
+    if (item.closest(".swiper")) {
+      item.classList.add("is-visible");
+      return;
+    }
     const box = item.getBoundingClientRect();
     if (box.top < window.innerHeight && box.bottom > 0) item.classList.add("is-visible");
     else observer.observe(item);

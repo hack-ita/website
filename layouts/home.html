@@ -46,8 +46,7 @@
         </div>
       </div>
       <div class="size-full relative">
-        <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="absolute inset-0"></a>
-        {{ partial "components/image.html" (dict "src" "images/shop_link_wide.jpeg" "alt" "Banner Hackita Shop: felpa, magliette e zaino della collezione 'Mentalità Offensiva' — scopri lo shop Hackita" "highFetchPrio" "true") }}
+        {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[2/1] w-full shop-banner--small" "where" "home-alto" "priority" true) }}
       </div>
     </div>
 
@@ -197,8 +196,7 @@
     {{ partial "shared/article-carousel.html" (dict "articles" (after 6 (where (where .Site.RegularPages "Section" "articoli") "Params.image" "!=" nil) | first 10) "imageHeight" "h-70") }}
     
     <div class="relative">
-      <a href="https://shop.hackita.it" target="_blank" rel="noopener noreferrer" aria-label="Visita lo shop Hackita" class="absolute inset-0"></a>
-      {{ partial "components/image.html" (dict "src" "images/shop_link_wider.jpeg" "alt" "Banner Hackita Shop: figura incappucciata con felpa, magliette e zaino del merchandising 'Mentalità Offensiva' — scopri lo shop Hackita") }}
+      {{ partial "components/shop-banner.html" (dict "class" "relative aspect-[2034/773] w-full" "where" "home-articoli") }}
     </div>
 
   </div>

@@ -1,0 +1,20 @@
+{{- /* HackITA Shop banner: the whole banner is always visible (object-contain), the space around it is filled by a
+       tiny blurred copy of the same picture, so it fits any slot (2:1 homepage, wide homepage band, article sidebar,
+       article band) without cutting "BUY NOW" or the products. The red glow, the passing shine and the button draw the
+       eye; nothing moves for visitors who ask for reduced motion. Clicks are counted by GoatCounter.
+       Params: class (size of the slot), where (name for the click count), priority (true for the first screen). */ -}}
+{{- $src := "images/shop-banner.webp" -}}
+{{- $alt := "HackITA Shop: merch ufficiale HackITA, felpe, cappellini e zaini. Compra ora su shop.hackita.it" -}}
+{{- $backdrop := "" -}}
+{{- with resources.Get $src }}{{ $backdrop = .Resize "64x webp q50" }}{{ end -}}
+<a href="https://shop.hackita.it" target="_blank" rel="noopener" class="shop-banner {{ .class }}"
+   aria-label="Vai allo shop HackITA" data-goatcounter-click="shop-banner-{{ .where | default "sito" }}"
+   data-goatcounter-title="Banner shop ({{ .where | default "sito" }})">
+  {{- with $backdrop }}
+  <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="" aria-hidden="true"
+       class="shop-banner__backdrop" loading="lazy" decoding="async">
+  {{- end }}
+  {{- /* 1400 px wide at most: the widest slot is the 1280 px article band */}}
+  {{ partial "components/image.html" (dict "src" $src "alt" $alt "class" "shop-banner__img" "width" 1400 "height" 1400 "highFetchPrio" (.priority | default false)) }}
+  <span class="shop-banner__cta" aria-hidden="true">Vai allo shop &rarr;</span>
+</a>

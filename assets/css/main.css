@@ -144,9 +144,10 @@ h1, h2 {
 /* ===========================
    Search UI
 =========================== */
+/* "Non sono un robot": black HackITA box, red border and text */
 .captcha-container {
-  background: #f9f9f9;
-  border: 2px solid #d3d3d3;
+  background: #000;
+  border: 2px solid var(--color-primary);
   border-radius: 4px;
   padding: 12px;
   display: inline-flex;
@@ -158,21 +159,22 @@ h1, h2 {
 }
 
 .captcha-container:hover {
-  background: #e8e8e8;
+  background: #120000;
+  box-shadow: 0 0 18px rgb(253 0 1 / 0.35);
 }
 
 .checkbox-wrapper {
   position: relative;
   width: 28px;
   height: 28px;
-  border: 2px solid #c1c1c1;
+  border: 2px solid var(--color-primary);
   border-radius: 3px;
-  background: white;
+  background: #000;
   transition: all 0.3s ease;
 }
 
 .checkbox-wrapper.checking {
-  border-color: #4285f4;
+  border-color: #fff;
 }
 
 .checkbox-wrapper.verified {
@@ -204,8 +206,8 @@ h1, h2 {
   height: 20px;
   margin-top: -10px;
   margin-left: -10px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #4285f4;
+  border: 3px solid rgb(255 255 255 / 0.2);
+  border-top: 3px solid var(--color-primary);
   border-radius: 50%;
   opacity: 0;
   transition: opacity 0.2s;
@@ -222,8 +224,11 @@ h1, h2 {
 }
 
 .captcha-text {
-  color: #000;
+  color: var(--color-primary);
   font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .captcha-logo {
@@ -231,7 +236,7 @@ h1, h2 {
   flex-direction: column;
   align-items: center;
   font-size: 8px;
-  color: #555;
+  color: var(--color-primary);
   margin-left: auto;
 }
 
@@ -871,4 +876,60 @@ pre.has-inline-copy {
   .reveal-ready .reveal {
     transition: opacity 0.45s ease, transform 0.45s ease;
   }
+}
+
+/* ===========================
+   Article cards on /articoli/: on hover the card lifts, glows red and a red light runs along its border.
+   Only transform/opacity/box-shadow change (cheap); nothing moves for visitors who ask for reduced motion.
+=========================== */
+.category-group .swiper {
+  padding-top: 8px;
+  padding-bottom: 18px;
+}
+.article-card {
+  position: relative;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.article-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(115deg, transparent 30%, var(--color-primary) 45%, #ff8080 50%, var(--color-primary) 55%, transparent 70%);
+  background-size: 300% 100%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.35s ease;
+}
+.article-card:hover,
+.article-card:focus-within {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px -12px rgb(253 0 1 / 0.6);
+}
+.article-card:hover::before,
+.article-card:focus-within::before {
+  opacity: 1;
+  animation: card-border-run 1.8s linear infinite;
+}
+@keyframes card-border-run {
+  from { background-position: 100% 0; }
+  to { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .article-card,
+  .article-card:hover { transform: none; transition: none; }
+  .article-card:hover::before { animation: none; }
+}
+
+
+/* The featured title on /articoli/ is a link inside the heading: it keeps the heading font
+   (the "* { font-body }" rule above would otherwise give the link the body font). */
+#featured-session-heading a {
+  font: inherit;
+  letter-spacing: inherit;
 }

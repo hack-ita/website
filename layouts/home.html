@@ -215,7 +215,7 @@
     {{ partial "components/heading.html" (dict "text" .title) }}
 
     <!-- Content -->
-    <div class="flex flex-col-reverse lg:flex-row gap-10 content-between">
+    <div class="flex flex-col-reverse lg:flex-row lg:items-center gap-10 content-between">
       
       <!-- Text Column -->
       <div class="space-y-10 lg:w-1/2"  >
@@ -227,7 +227,7 @@
 
       <!-- Image Column -->
       <figure class="lg:w-1/2"  >
-        {{ partial "components/image.html" (dict "src" .image "alt" .Title "class" "lg:w-150 lg:ml-auto") }}
+        {{ partial "components/image.html" (dict "src" .image "alt" .Title "class" "lg:w-150 mx-auto") }}
       </figure>
 
     </div>

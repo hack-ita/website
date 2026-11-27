@@ -242,6 +242,18 @@ const initDeferred = () => {
           .filter(Boolean);
         if (!words.length) return;
 
+        // Reserve the width of the longest word: the sentence around it never re-wraps while words are typed
+        target.style.display = "inline-block";
+        target.style.textAlign = "center";
+        let widest = 0;
+        for (const w of words) {
+          target.textContent = w;
+          widest = Math.max(widest, target.getBoundingClientRect().width);
+        }
+        target.style.minWidth = `${Math.ceil(widest)}px`;
+        target.style.maxWidth = "100%";
+        target.textContent = "";
+
         let wordIndex = 0,
           charIndex = 0,
           isDeleting = false,
@@ -347,43 +359,46 @@ const initDeferred = () => {
               span.dataset.animated = "true";
 
               const finalText = span.textContent.trim();
-              const isNumber = /^[0-9]+$/.test(finalText);
-              const duration = 2000;
+              // Keep the box exactly as it is during the effect: nothing moves, nothing disappears
+              const box = span.getBoundingClientRect();
+              span.style.display = "inline-block";
+              span.style.minWidth = `${Math.ceil(box.width)}px`;
+              span.style.minHeight = `${Math.ceil(box.height)}px`;
+              span.style.whiteSpace = "nowrap";
+              const done = () => {
+                span.textContent = finalText;
+              };
 
-              if (isNumber) {
-                const match = finalText.match(/^(\d+)(.*)$/);
-                if (!match) return;
+              const match = finalText.match(/^(\d+)(\D*)$/); // 593+ , 100% , 8
+              if (match) {
                 const target = parseInt(match[1], 10),
                   suffix = match[2] || "";
-                span.textContent = "0";
-
+                const duration = 1600;
                 const startTime = performance.now();
+                span.textContent = "0" + suffix;
                 const update = (time) => {
                   const progress = Math.min((time - startTime) / duration, 1);
-                  span.textContent = Math.floor(progress * target) + suffix;
+                  const eased = 1 - Math.pow(1 - progress, 3);
+                  span.textContent = Math.floor(eased * target) + suffix;
                   if (progress < 1) requestAnimationFrame(update);
-                  else span.textContent = finalText;
+                  else done();
                 };
-                setTimeout(() => requestAnimationFrame(update), 800);
+                requestAnimationFrame(update);
               } else {
-                const chars = "!<>-_\\/[]{}—=+*^?#________";
+                // letters resolve one by one; random characters are taken from the word itself, so the width
+                // barely changes, and the box keeps its size anyway
+                const pool = finalText.replace(/\s/g, "");
                 let frame = 0;
-                span.textContent = "";
-
                 const scramble = () => {
                   span.textContent = finalText
                     .split("")
-                    .map((char, i) =>
-                      i < frame
-                        ? finalText[i]
-                        : chars[Math.floor(Math.random() * chars.length)],
-                    )
+                    .map((char, i) => (i < frame || char === " " ? char : pool[Math.floor(Math.random() * pool.length)]))
                     .join("");
                   frame++;
-                  if (frame <= finalText.length) setTimeout(scramble, 30);
-                  else span.textContent = finalText;
+                  if (frame <= finalText.length) setTimeout(scramble, 45);
+                  else done();
                 };
-                setTimeout(scramble, 800);
+                scramble();
               }
             });
           },
